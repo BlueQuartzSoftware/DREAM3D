@@ -66,16 +66,16 @@ RenumberGrains::~RenumberGrains()
 // -----------------------------------------------------------------------------
 void RenumberGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Name of Array for Active Grains");
     option->setPropertyName("ActiveArrayName");
     option->setWidgetType(FilterParameter::StringWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

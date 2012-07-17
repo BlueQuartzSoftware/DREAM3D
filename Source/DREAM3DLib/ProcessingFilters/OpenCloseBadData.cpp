@@ -80,7 +80,7 @@ OpenCloseBadData::~OpenCloseBadData()
 // -----------------------------------------------------------------------------
 void OpenCloseBadData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Direction of Operation");
@@ -91,7 +91,7 @@ void OpenCloseBadData::setupFilterParameters()
     choices.push_back("Dilate");
     choices.push_back("Erode");
     option->setChoices(choices);
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -99,9 +99,9 @@ void OpenCloseBadData::setupFilterParameters()
     option->setPropertyName("NumIterations");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

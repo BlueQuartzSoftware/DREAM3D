@@ -69,14 +69,14 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
- std::vector<FilterParameter::Pointer> options;
+ std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Statistics File");
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -84,7 +84,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setPropertyName("XVoxels");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -92,7 +92,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setPropertyName("YVoxels");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -100,7 +100,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setPropertyName("ZVoxels");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -108,7 +108,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setPropertyName("XRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -116,7 +116,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setPropertyName("YRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -124,9 +124,9 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setPropertyName("ZRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)

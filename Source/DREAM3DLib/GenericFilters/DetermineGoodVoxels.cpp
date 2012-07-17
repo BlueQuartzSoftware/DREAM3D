@@ -60,9 +60,9 @@ DetermineGoodVoxels::~DetermineGoodVoxels()
 // -----------------------------------------------------------------------------
 void DetermineGoodVoxels::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

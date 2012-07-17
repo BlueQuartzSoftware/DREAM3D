@@ -90,16 +90,16 @@ FindLocalMisorientationGradients::~FindLocalMisorientationGradients()
 // -----------------------------------------------------------------------------
 void FindLocalMisorientationGradients::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Kernel Size");
     option->setPropertyName("KernelSize");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

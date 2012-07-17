@@ -103,7 +103,7 @@ MergeColonies::~MergeColonies()
 // -----------------------------------------------------------------------------
 void MergeColonies::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");
@@ -111,7 +111,7 @@ void MergeColonies::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -120,10 +120,10 @@ void MergeColonies::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

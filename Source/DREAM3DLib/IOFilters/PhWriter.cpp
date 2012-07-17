@@ -66,16 +66,16 @@ PhWriter::~PhWriter()
 // -----------------------------------------------------------------------------
 void PhWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)

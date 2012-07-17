@@ -108,7 +108,7 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   // Run the superclass first.
   //AlignSections::setupFilterParameters();
   // Now append our options
-  std::vector<FilterParameter::Pointer> options = getFilterParameters();
+  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
@@ -116,9 +116,9 @@ void AlignSectionsMutualInformation::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

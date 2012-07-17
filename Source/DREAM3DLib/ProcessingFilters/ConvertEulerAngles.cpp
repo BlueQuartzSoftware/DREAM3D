@@ -101,7 +101,7 @@ ConvertEulerAngles::~ConvertEulerAngles()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");
@@ -112,9 +112,9 @@ void ConvertEulerAngles::setupFilterParameters()
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     option->setChoices(choices);
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

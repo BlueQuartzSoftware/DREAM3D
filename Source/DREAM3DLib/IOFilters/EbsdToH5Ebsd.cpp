@@ -103,9 +103,9 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
 
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

@@ -75,16 +75,16 @@ AdjustVolume::~AdjustVolume()
 
 void AdjustVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
     option->setPropertyName("MaxIterations");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterParameters(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
