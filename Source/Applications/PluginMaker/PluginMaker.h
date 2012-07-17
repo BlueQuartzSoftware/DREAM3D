@@ -88,12 +88,11 @@ private:
   void readSettings();
   void readWindowSettings(QSettings &prefs);
   void writeWindowSettings(QSettings &prefs);
-  void previewFile(QString rTemplate, QString fileName);
-  void previewFile_QRC();
+  QString generateCmakeContents();
+  QString generateQrcContents();
 
 
-  QVector<PMDirGenerator*> m_GenObjects;
- // QVector<PMFileGenerator*> m_FilterClasses;
+  QMap<QTreeWidgetItem*,PMDirGenerator*> m_itemMap;
   QVector<FilterBundler> m_FilterBundles;
   QTreeWidgetItem* F_name;
   QTreeWidgetItem* F_doc;
