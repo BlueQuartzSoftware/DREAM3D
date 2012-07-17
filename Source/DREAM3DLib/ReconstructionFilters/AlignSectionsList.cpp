@@ -113,9 +113,9 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   if(true == m_InputFile.empty())
   {
-    ss << ": The Input file name must be set before executing this filter.";
+    ss << "The Input file name must be set before executing this filter.";
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
 
 

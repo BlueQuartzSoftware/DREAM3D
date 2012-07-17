@@ -105,7 +105,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
@@ -140,7 +140,7 @@ int DxWriter::writeFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }

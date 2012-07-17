@@ -70,7 +70,7 @@ void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   if(getInputFile().empty() == true)
   {
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), "The input file must be set before executing this filter.", -1);
+    addErrorMessage(getHumanLabel(), "The input file must be set before executing this filter.", -1);
   }
 }
 

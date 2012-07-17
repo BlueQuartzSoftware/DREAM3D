@@ -108,7 +108,7 @@ using namespace meshing;
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      PipelineMessage em (getNameOfClass(), #Message, err);\
+      PipelineMessage em (getHumanLabel(), #Message, err);\
       addErrorMessage(em);\
       notifyMessage(em);\
       return;   }
@@ -426,20 +426,20 @@ void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, s
     {
       ss.str(""); ss << getHumanLabel() << " needs the STL Output directory set";
       setErrorCondition(-387);
-      addErrorMessage(getNameOfClass(), ss.str(), -387);
+      addErrorMessage(getHumanLabel(), ss.str(), -387);
     }
     if (true == m_StlFilePrefix.empty())
     {
       ss.str(""); ss << getHumanLabel() << " needs the STL File Prefix set";
       setErrorCondition(-388);
-      addErrorMessage(getNameOfClass(), ss.str(), -388);
+      addErrorMessage(getHumanLabel(), ss.str(), -388);
     }
   }
   if (true == m_VtkOutputFile.empty())
   {
     ss.str(""); ss << getHumanLabel() << " needs the VTK output file set";
     setErrorCondition(-387);
-    addErrorMessage(getNameOfClass(), ss.str(), -387);
+    addErrorMessage(getHumanLabel(), ss.str(), -387);
   }
 
 

@@ -195,9 +195,10 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    ss.str("");
+    ss << "Stats Array Not Initialized correctly" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
 
 }
@@ -295,10 +296,10 @@ void PackPrimaryPhases::execute()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if (NULL == pp)
       {
-        ss << ": Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
+        ss << "Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
         ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
         ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
-        PipelineMessage em (getNameOfClass(), ss.str(), -666);
+        PipelineMessage em (getHumanLabel(), ss.str(), -666);
         addErrorMessage(em);
         setErrorCondition(-666);
         return;
@@ -678,7 +679,7 @@ int PackPrimaryPhases::writeVtkFile()
   if(outFile.is_open() == false)
   {
     std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
-    PipelineMessage em (getNameOfClass(), "Could not open Vtk File for writing from PackGrains", -1);
+    PipelineMessage em (getHumanLabel(), "Could not open Vtk File for writing from PackGrains", -1);
     addErrorMessage(em);
     setErrorCondition(-55);
     return -1;
