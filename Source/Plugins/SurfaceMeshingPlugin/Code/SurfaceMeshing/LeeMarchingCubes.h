@@ -134,8 +134,8 @@ class LeeMarchingCubes : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const std::string getHumanLabel() { return "Marching Cubes (Slice at a time)"; }
 
-    virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
     void execute();

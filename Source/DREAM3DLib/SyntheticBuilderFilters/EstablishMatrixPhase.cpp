@@ -73,7 +73,7 @@ EstablishMatrixPhase::~EstablishMatrixPhase()
 {
 }
 // -----------------------------------------------------------------------------
-void EstablishMatrixPhase::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

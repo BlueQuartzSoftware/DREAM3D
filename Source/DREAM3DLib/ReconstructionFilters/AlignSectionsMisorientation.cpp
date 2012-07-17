@@ -83,7 +83,7 @@ m_CrystalStructures(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 
 }
 
@@ -97,30 +97,30 @@ AlignSectionsMisorientation::~AlignSectionsMisorientation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::setupFilterOptions()
+void AlignSectionsMisorientation::setupFilterParameters()
 {
   // Run the superclass first.
-  //AlignSections::setupFilterOptions();
+  //AlignSections::setupFilterParameters();
   // Now append our options
-  std::vector<FilterOption::Pointer> options = getFilterOptions();
+  std::vector<FilterParameter::Pointer> options = getFilterParameters();
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
     option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  AlignSections::writeFilterOptions(writer);
+  AlignSections::writeFilterParameters(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
 

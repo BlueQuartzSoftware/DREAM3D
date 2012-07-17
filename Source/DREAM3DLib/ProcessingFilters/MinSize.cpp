@@ -65,7 +65,7 @@ m_CellPhases(NULL),
 m_FieldPhases(NULL),
 m_Active(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,22 +78,22 @@ MinSize::~MinSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::setupFilterOptions()
+void MinSize::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
     option->setPropertyName("MinAllowedGrainSize");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void MinSize::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
 }

@@ -90,7 +90,7 @@ m_CrystalStructures(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,35 +104,35 @@ EBSDSegmentGrains::~EBSDSegmentGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::setupFilterOptions()
+void EBSDSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
     option->setHumanLabel("Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
 #if 0
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Randomly Reorder Generated Grain Ids");
     option->setPropertyName("RandomizeGrainIds");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     options.push_back(option);
   }
 #endif
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }

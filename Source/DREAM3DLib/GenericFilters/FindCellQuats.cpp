@@ -74,7 +74,7 @@ FindCellQuats::~FindCellQuats()
 {
 }
 // -----------------------------------------------------------------------------
-void FindCellQuats::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

@@ -77,13 +77,9 @@ DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
 m_WorkerThread(NULL),
 m_MenuPipeline(NULL),
-m_DocErrorTabsIsOpen(false),
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+m_DocErrorTabsIsOpen(false)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   setupGui();
   checkIOFiles();
@@ -359,7 +355,7 @@ void PipelineBuilderWidget::setupGui()
     presetFilter->setText(0, "Statistics");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "DataContainerReader" << "FindSizes"  << "FindShapes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindODF" << "FindMDF" 
+    presetFilterList << "DataContainerReader" << "FindSizes"  << "FindShapes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindODF" << "FindMDF"
       << "FindAxisODF" << "FieldDataCSVWriter" << "DataContainerWriter";
     m_presetMap["Statistics"] = presetFilterList;
   }
@@ -1062,7 +1058,7 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
     //Remove favorite, graphically, from the DREAM3D interface
     filterLibraryTree->removeItemWidget(item, 0);
     delete item;
-  
+
     // Write these changes out to the preferences file
     emit fireWriteSettings();
   }

@@ -77,8 +77,8 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
       return "Determine Good Voxels";
     }
 
-    virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

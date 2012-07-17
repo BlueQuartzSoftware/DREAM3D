@@ -79,7 +79,7 @@ FindMDF::~FindMDF()
 {
 }
 // -----------------------------------------------------------------------------
-void FindMDF::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

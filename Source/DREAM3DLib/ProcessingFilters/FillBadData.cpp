@@ -64,7 +64,7 @@ m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -77,22 +77,22 @@ FillBadData::~FillBadData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FillBadData::setupFilterOptions()
+void FillBadData::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Defect Size");
     option->setPropertyName("MinAllowedDefectSize");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void FillBadData::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
 }

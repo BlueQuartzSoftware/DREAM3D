@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
 	//------ Created Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 	virtual void execute();
     virtual void preflight();

@@ -70,7 +70,7 @@ m_FieldPhases(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -83,22 +83,22 @@ MinNeighbors::~MinNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::setupFilterOptions()
+void MinNeighbors::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Number Neighbors");
     option->setPropertyName("MinNumNeighbors");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void MinNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
 }

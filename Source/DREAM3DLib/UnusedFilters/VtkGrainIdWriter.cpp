@@ -45,7 +45,7 @@ FileWriter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_WriteBinaryFiles(true)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -59,21 +59,21 @@ VtkGrainIdWriter::~VtkGrainIdWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdWriter::setupFilterOptions()
+void VtkGrainIdWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void VtkGrainIdWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }

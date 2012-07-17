@@ -171,6 +171,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      QString    m_BorderColorStyle;
      bool       m_IsSelected;
      bool       m_HasPreflightErrors;
+     QString m_OpenDialogLastDirectory;
 
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented

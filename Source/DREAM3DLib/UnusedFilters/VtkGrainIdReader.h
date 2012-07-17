@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Vtk File (Rectilinear Grid, Grain Ids Only)"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void preflight();
 

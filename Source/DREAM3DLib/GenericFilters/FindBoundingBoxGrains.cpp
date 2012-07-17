@@ -62,7 +62,7 @@ FindBoundingBoxGrains::~FindBoundingBoxGrains()
 {
 }
 // -----------------------------------------------------------------------------
-void FindBoundingBoxGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

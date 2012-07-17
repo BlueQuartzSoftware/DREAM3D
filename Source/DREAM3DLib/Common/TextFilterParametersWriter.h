@@ -33,22 +33,55 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "AbstractFilterOptionsWriter.h"
+#ifndef TEXTFilterParametersWRITER_H_
+#define TEXTFilterParametersWRITER_H_
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilterOptionsWriter::AbstractFilterOptionsWriter()
+#include <string>
+
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
+
+#include "AbstractFilterParametersWriter.h"
+/*
+ *
+ */
+class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParametersWriter
 {
-  // TODO Auto-generated constructor stub
+  public:
+    DREAM3D_SHARED_POINTERS(TextFilterParametersWriter)
+    DREAM3D_STATIC_NEW_MACRO(TextFilterParametersWriter)
+    DREAM3D_TYPE_MACRO_SUPER(TextFilterParametersWriter, AbstractFilterParametersWriter)
 
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilterOptionsWriter::~AbstractFilterOptionsWriter()
-{
-  // TODO Auto-generated destructor stub
-}
+    virtual ~TextFilterParametersWriter();
 
+    virtual int openOptionsGroup(AbstractFilter* filter);
+    virtual int closeOptionsGroup();
+    virtual int writeValue(const std::string name, const std::string value);
+
+    virtual int writeValue(const std::string name, int8_t value);
+    virtual int writeValue(const std::string name, int16_t value);
+    virtual int writeValue(const std::string name, int32_t value);
+    virtual int writeValue(const std::string name, int64_t value);
+    virtual int writeValue(const std::string name, uint8_t value);
+    virtual int writeValue(const std::string name, uint16_t value);
+    virtual int writeValue(const std::string name, uint32_t value);
+    virtual int writeValue(const std::string name, uint64_t value);
+    virtual int writeValue(const std::string name, float value);
+    virtual int writeValue(const std::string name, double value);
+
+    virtual int writeValue(const std::string name, QualityMetricFilter* f);
+
+
+  protected:
+    TextFilterParametersWriter();
+
+  private:
+    TextFilterParametersWriter(const TextFilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const TextFilterParametersWriter&); // Operator '=' Not Implemented
+};
+
+#endif /* TEXTFilterParametersWRITER_H_ */

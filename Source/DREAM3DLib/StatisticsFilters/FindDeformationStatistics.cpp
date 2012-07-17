@@ -81,7 +81,7 @@ m_NearestNeighborDistances(NULL)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -94,29 +94,29 @@ FindDeformationStatistics::~FindDeformationStatistics()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::setupFilterOptions()
+void FindDeformationStatistics::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Deformation Statistics File");
     option->setPropertyName("DeformationStatisticsFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("VTK Output File");
     option->setPropertyName("VtkOutputFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
     options.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("DeformationStatisticsFile", getDeformationStatisticsFile() );
   writer->writeValue("VtkOutputFile", getVtkOutputFile() );

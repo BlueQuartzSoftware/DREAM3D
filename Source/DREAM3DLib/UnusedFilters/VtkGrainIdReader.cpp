@@ -62,7 +62,7 @@ VtkGrainIdReader::~VtkGrainIdReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void VtkGrainIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 

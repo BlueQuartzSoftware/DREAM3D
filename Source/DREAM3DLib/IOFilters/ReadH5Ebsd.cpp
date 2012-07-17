@@ -101,7 +101,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 
   writer->writeValue("H5EbsdFile", getH5EbsdFile() );

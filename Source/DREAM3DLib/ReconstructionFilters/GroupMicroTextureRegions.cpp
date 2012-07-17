@@ -87,7 +87,7 @@ m_NumFields(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -100,26 +100,26 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::setupFilterOptions()
+void GroupMicroTextureRegions::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("C-Axis Alignment Tolerance");
     option->setPropertyName("CAxisTolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
     options.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
 }
