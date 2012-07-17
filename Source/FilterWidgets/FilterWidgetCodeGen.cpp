@@ -650,22 +650,14 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString());}\n", prop.c_str());
     }
-    else if(opt->getWidgetType() == FilterParameter::InputFileWidget)
-    {
-      //  fprintf(f, "   QObject* obj = qFindChild<QObject*>(this, \"%s\");\n", prop.c_str());
-
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
-      fprintf(f, "   if (lb) { lb->setText(p_%s.toString()); }\n", prop.c_str());
-      //   fprintf(f, "   bool ok = false;\n");
-      fprintf(f, "   set%s(p_%s.toString());\n", prop.c_str(), prop.c_str());
-      //    fprintf(f, "   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
-    }
-    else if(opt->getWidgetType() == FilterParameter::OutputFileWidget)
+    else if(opt->getWidgetType() == FilterParameter::InputFileWidget
+        || opt->getWidgetType() == FilterParameter::InputPathWidget
+        || opt->getWidgetType() == FilterParameter::OutputFileWidget
+        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(p_%s.toString()); }\n", prop.c_str());
       fprintf(f, "   set%s(p_%s.toString());\n", prop.c_str(), prop.c_str());
-//      fprintf(f, "   bool ok = false;\n   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
     }
     else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
@@ -692,7 +684,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     else
     {
-      fprintf(f, " #error: Class %s  Property %s  NOTHING WAS GENERATED TO READ/WRITE PROPERTY\n", hl.c_str(), prop.c_str());
+      fprintf(f, " #error: Class %s  Property %s  NOTHING WAS GENERATED TO READ/WRITE PROPERTY\n", filter.c_str(), prop.c_str());
     }
     fprintf(f, "  }\n");
   }
