@@ -4,22 +4,15 @@
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
-@section todoMain ToDo List for Version 3 Release
+@section bugs Bugs and Feature Requests
 @li Have a button that will close all the pipelines.
 @li Color the header of each pipeline in the pipeline building area.
-@li Have the software remember the file path to the last save location.
 @li Have a “Save” / “Save As” option in the “File” toolbar dropdown to save the Pipelines in addition to making it a favorite.
 @li Export into a format that can be read into Avizo Fire for visualisation and/or further analysis.
 @li A filter that finds all the twins in the microstructure and assigns them
 to another phase (phase 3), so that they can be visualised differently to the surrouding
 grains (phase 2) and grains that are untwinned (phase 1).
 @li Add filter to convert hex grid TSL .ang files into square grid .ang files
-
-@subsection bugs Outstanding Bugs
-@li EbsdToH5Ebsd - values are not being read back in properly for the start/stop z
-and for the Prefix and Suffix values
-@li PipelineBuilderWidget - Write current pipeline and all other "prefs" to the prefs
-file before running a pipeline
 
 
 

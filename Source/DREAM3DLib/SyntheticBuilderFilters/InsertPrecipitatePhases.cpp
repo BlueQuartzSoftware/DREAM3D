@@ -113,7 +113,7 @@ m_NumFields(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -127,22 +127,22 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 //
 // -----------------------------------------------------------------------------
 
-void InsertPrecipitatePhases::setupFilterOptions()
+void InsertPrecipitatePhases::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
     option->setPropertyName("PeriodicBoundaries");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
 }
@@ -195,9 +195,9 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning of '" << getNameOfClass() << "' Filter" << std::endl;
+    ss << "Stats Array Not Initialized At Beginning Correctly" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getNameOfClass(), ss.str(), -308);
+    addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
 }
 

@@ -72,7 +72,7 @@ FindNeighbors::~FindNeighbors()
 {
 }
 // -----------------------------------------------------------------------------
-void FindNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------
@@ -116,9 +116,12 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     sharedSurfaceAreaListPtr->SetName(DREAM3D::FieldData::SharedSurfaceAreaList);
     sharedSurfaceAreaListPtr->Resize(fields);
     m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
-    if (sharedSurfaceAreaListPtr.get() == NULL){
-      ss << "SurfaceAreaLists Array Not Initialized At Beginning of " << getNameOfClass() << " Filter" << std::endl;
+    if (sharedSurfaceAreaListPtr.get() == NULL)
+    {
+      ss.str("");
+      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-308);
+      addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
   }
 

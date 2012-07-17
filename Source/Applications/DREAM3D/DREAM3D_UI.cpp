@@ -77,13 +77,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
-  m_PipelineBuilderWidget(NULL),
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+  m_PipelineBuilderWidget(NULL)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
   setupUi(this);

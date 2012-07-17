@@ -45,7 +45,7 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_GoodVoxels(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -58,17 +58,17 @@ DetermineGoodVoxels::~DetermineGoodVoxels()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineGoodVoxels::setupFilterOptions()
+void DetermineGoodVoxels::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DetermineGoodVoxels::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DetermineGoodVoxels::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 
@@ -130,7 +130,7 @@ void DetermineGoodVoxels::execute()
     ss.str("");
     ss << getHumanLabel() << " - No filters have been added to do the analysis.";
     setErrorCondition(-100);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
 
@@ -155,7 +155,7 @@ void DetermineGoodVoxels::execute()
     ss.str("");
     ss << getHumanLabel() << " - QualityMetricFilter[0] is NULL";
     setErrorCondition(-100);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   BoolArrayType::Pointer baseArray = m_QualityMetricFilters[0]->getOutput();
@@ -166,7 +166,7 @@ void DetermineGoodVoxels::execute()
     ss.str("");
     ss << getHumanLabel() << " - baseArrayPtr is NULL";
     setErrorCondition(-101);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
 
@@ -178,7 +178,7 @@ void DetermineGoodVoxels::execute()
       ss.str("");
       ss << getHumanLabel() << " - currentArray is NULL";
       setErrorCondition(-102);
-      addErrorMessage(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return;
     }
 
@@ -188,7 +188,7 @@ void DetermineGoodVoxels::execute()
       ss.str("");
       ss << getHumanLabel() << " - currentArray returned NULL";
       setErrorCondition(-103);
-      addErrorMessage(getNameOfClass(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return;
     }
     for (int64_t p = 0; p < nPoints; ++p)

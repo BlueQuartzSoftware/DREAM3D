@@ -78,7 +78,7 @@ class GenerateGrainIds : public AbstractFilter
         setErrorCondition(-1);
         std::stringstream ss;
         ss << " DataContainer was NULL";
-        addErrorMessage(getNameOfClass(), ss.str(), -1);
+        addErrorMessage(getHumanLabel(), ss.str(), -1);
         return;
       }
       int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;

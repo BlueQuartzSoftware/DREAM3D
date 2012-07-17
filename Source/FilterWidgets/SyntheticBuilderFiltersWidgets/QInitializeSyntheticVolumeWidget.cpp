@@ -64,13 +64,9 @@
 //
 // -----------------------------------------------------------------------------
 QInitializeSyntheticVolumeWidget::QInitializeSyntheticVolumeWidget(QWidget* parent) :
-QFilterWidget(parent),
-#if defined(Q_WS_WIN)
-        m_OpenDialogLastDirectory("C:\\")
-#else
-        m_OpenDialogLastDirectory("~/")
-#endif
+QFilterWidget(parent)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   setupGui();

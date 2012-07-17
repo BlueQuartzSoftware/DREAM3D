@@ -59,7 +59,7 @@ m_MaxIterations(1),
 m_GrainIds(NULL),
 m_EquivalentDiameters(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -73,21 +73,21 @@ AdjustVolume::~AdjustVolume()
 //
 // -----------------------------------------------------------------------------
 
-void AdjustVolume::setupFilterOptions()
+void AdjustVolume::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
     option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void AdjustVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MaxIterations", getMaxIterations() );
 }

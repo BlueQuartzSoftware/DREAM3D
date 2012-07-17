@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT FindODF : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find ODF"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 	 /**
      * @brief Reimplemented from @see AbstractFilter class

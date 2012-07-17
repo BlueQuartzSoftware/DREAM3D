@@ -62,13 +62,9 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
     m_phaseTypeEdited(false),
     rotateslice(false),
     reorderarray(false),
-    aligneulers(false),
-#if defined(Q_WS_WIN)
-        m_OpenDialogLastDirectory("C:\\")
-#else
-        m_OpenDialogLastDirectory("~/")
-#endif
+    aligneulers(false)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   setupGui();
@@ -216,6 +212,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdBtn_clicked()
   m_H5EbsdFile->setText(p);
   on_m_H5EbsdFile_textChanged(m_H5EbsdFile->text() );
   m_H5EbsdFile->blockSignals(false);
+  m_OpenDialogLastDirectory = fi.path();
 }
 
 
@@ -352,6 +349,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       {
         on_addQualityMetric_clicked();
       }
+      m_OpenDialogLastDirectory = fi.path();
     }
   }
   else

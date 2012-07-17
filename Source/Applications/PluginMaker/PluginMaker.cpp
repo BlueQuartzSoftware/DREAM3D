@@ -73,6 +73,7 @@
 PluginMaker::PluginMaker(QWidget* parent) :
  QMainWindow(parent)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
 
   setupGui();
@@ -249,7 +250,7 @@ void PluginMaker::setupGui()
     m_itemMap[pluginH] = hPluginGen;
 
     PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin 
-                                                        // CPP and H files in a FilterBundler)
+                                                                                        // CPP and H files in a FilterBundler)
 
     FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc);
     m_FilterBundles.push_back(fb);
@@ -671,6 +672,7 @@ void PluginMaker::on_removeFilterBtn_clicked() {
 // -----------------------------------------------------------------------------
 void PluginMaker::on_treeWidget_itemSelectionChanged() {
   QString pluginName = cleanName(m_PluginName->text());
+
   QTreeWidgetItem* currentFile = treeWidget->currentItem();
   QString text = "";
 

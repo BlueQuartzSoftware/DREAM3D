@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
       return "Segment Grains";
     }
 
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

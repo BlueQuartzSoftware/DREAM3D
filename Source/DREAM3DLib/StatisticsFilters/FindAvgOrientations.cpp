@@ -73,7 +73,7 @@ FindAvgOrientations::~FindAvgOrientations()
 {
 }
 // -----------------------------------------------------------------------------
-void FindAvgOrientations::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 
