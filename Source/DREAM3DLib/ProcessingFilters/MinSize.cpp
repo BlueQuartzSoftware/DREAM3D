@@ -229,13 +229,13 @@ void MinSize::assign_badpoints()
   size_t count = 0;
   int kstride, jstride;
   int grainname, grain;
+  int neighbor;
   std::vector<int > n(numgrains + 1,0);
   while (counter != 0)
   {
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-
 		kstride = static_cast<int>( dims[0]*dims[1]*k );
 	    for (int j = 0; j < dims[1]; j++)
 	    {
@@ -272,7 +272,8 @@ void MinSize::assign_badpoints()
 					  if (current > most)
 					  {
 						most = current;
-					    m_Neighbors[count] = grain;
+//					    m_Neighbors[count] = grain;
+					    m_Neighbors[count] = neighpoint;
 					  }
 					}
 				  }
@@ -297,15 +298,21 @@ void MinSize::assign_badpoints()
 		  }
 		}
 	}
-
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
-      int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor >= 0)
+      grainname = m_GrainIds[j];
+      neighbor = m_Neighbors[j];
+      if (grainname < 0 && m_GrainIds[neighbor] >= 0)
       {
-        m_GrainIds[j] = neighbor;
-		m_CellPhases[j] = m_FieldPhases[neighbor];
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
+//		  m_GrainIds[j] = neighbor;
+//		  m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;
