@@ -88,8 +88,8 @@ void OpenCloseBadData::setupFilterOptions()
     option->setWidgetType(FilterOption::ChoiceWidget);
     option->setValueType("unsigned int");
     std::vector<std::string> choices;
-    choices.push_back("Open");
-    choices.push_back("Close");
+    choices.push_back("Dilate");
+    choices.push_back("Erode");
     option->setChoices(choices);
     options.push_back(option);
   }
@@ -249,7 +249,8 @@ void OpenCloseBadData::execute()
 					grain = m_GrainIds[neighpoint];
 					if (m_Direction == 0 && grain > 0)
 					{
-						m_Neighbors[neighpoint] = 0;
+//						m_Neighbors[neighpoint] = 0;
+						m_Neighbors[neighpoint] = count;
 					}
 					if ((grain > 0 && m_Direction == 1))
 					{
@@ -258,7 +259,8 @@ void OpenCloseBadData::execute()
 					  if (current > most)
 					  {
 						most = current;
-					    m_Neighbors[count] = grain;
+//					    m_Neighbors[count] = grain;
+					    m_Neighbors[count] = neighpoint;
 					  }
 					}
 				  }
@@ -287,15 +289,22 @@ void OpenCloseBadData::execute()
 		}
 
     }
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
 //	  if ((grain > 0 && m_Direction == 1) || (grain == 0 && m_Direction == 0))
-      if ((grainname == 0 && neighbor > 0 && m_Direction == 1) || (grainname > 0 && neighbor == 0 && m_Direction == 0))
+      if ((grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1) || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
       {
-        m_GrainIds[j] = neighbor;
-		    m_CellPhases[j] = m_FieldPhases[neighbor];
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
+//		  m_GrainIds[j] = neighbor;
+//		  m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;
