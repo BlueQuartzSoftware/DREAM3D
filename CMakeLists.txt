@@ -366,15 +366,10 @@ if (DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 endif()
    
-# Add installation rule for the User Manual
-if (DREAM3D_BUILD_QT_APPS)
-    install(FILES ${DREAM3DProj_SOURCE_DIR}/Documentation/DREAM3D_v2_Manual.docx
-    DESTINATION Docs)
-endif()
    
 # add the Command line utilities
 IF ( DREAM3D_BUILD_CLI_TOOLS )
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
+
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
@@ -383,29 +378,7 @@ if (DREAM3D_BUILD_TESTING)
 endif()
 
 # Should we build the documentation using DOxygen
-option(DREAM3D_BUILD_DOCS "Use Doxygen to create the User Manual, Tutorial, Developer and API documentation" OFF)
-if(DREAM3D_BUILD_DOCS)
-  FIND_PACKAGE(Doxygen)
-  if (NOT DOXYGEN_FOUND)
-    message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
-  endif()
-  
-  # Add a target that builds just the High Level User Manuals/Tutorial type documentation
-  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation ${PROJECT_BINARY_DIR}/Documentation)
-  
-  # Add a target that builds just the High Level User Manuals/Tutorial type documentation
-  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/v3 ${PROJECT_BINARY_DIR}/v3_Documentation)
-  
-  # Generating the API Docs will also include the other "Developer Documentation"
-  option(DREAM3D_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
-  if (DREAM3D_BUILD_API_DOCS)
-      set (DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/API-Documentation)
-      configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D.doxyfile.in 
-                     ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-      add_custom_target(Docs_API COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
-  endif()
-  
-endif()
+include (${PROJECT_SOURCE_DIR}/Documentation/CMakeLists.txt)
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)

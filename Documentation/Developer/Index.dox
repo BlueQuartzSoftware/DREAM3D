@@ -10,18 +10,12 @@ If you would like to make changes to the DREAM.3D applications then you will nee
 to be able to compile DREAM.3D your self. This page will attemp to describe the
 prerequisites that are needed to compile DREAM.3D
 
-@subpage codeguidelines Best Practices for Portable Code in DREAM.3D
-  This section details some basic coding guidelines for developers wishing to
-constribute to DREAM.3D
+@subpage writingplugins "Writing Plugins"
+These documents will show you what needs to be written in order to create a plugin
+for the DREAM.3D environment
 
-@subpage structurereaders "Structure Readers"
-How to write a "StructureReader" subclass in order to read previously existing
-microstructure representations into the Synthetic Builder module.
-
-@subpage microPreset "Microstructure Presets"
-The StatsGenerator has a few predefined sets of statistics for various types of
-microsrtuctures. The programmer can create more Preset classes by extending a
-few C++ classes and compiling the application.
+@subpage DataContainerStrategies "DataContainer Use Strategies"
+  How to properly use the Data Container object
 
 @subpage h5ebsdfile "HDF5 EBSD Data File"
   This page details the internal organization of the HDF5 file that contains the
@@ -35,28 +29,18 @@ voxel volume data.
  This page details some of the input/intermediate/output files that are used in the
 Surface Mesh Plugin.
 
-@subpage writingplugins "Writing Plugins"
-These documents will show you what needs to be written in order to create a plugin
-for the DREAM.3D environment
+@subpage codeguidelines Best Practices for Portable Code in DREAM.3D
+  This section details some basic coding guidelines for developers wishing to
+constribute to DREAM.3D
 
-@subpage DataContainerStrategies "DataContainer Use Strategies"
+@subpage structurereaders "Structure Readers"
+How to write a "StructureReader" subclass in order to read previously existing
+microstructure representations into the Synthetic Builder module.
 
-@section versionhistory Version History
-<b>Version 2</b>
-  This is a major release of the DREAM.3D suite of applications. This release includes
-all the following enhancments:
-
-@li Created CMake and Source code Templates for developers to easily create a new plugin
-@li Restructured lots of low level code for speed and memory enhancements
-@li Added ability to set the Reference Frame Origin and Stacking Order during the
-    import of EBSD data files
-@li Added ability to import Oxford Instrument/HKL .ctf files in addition to TSL .ang files
-@li Added flexible "Quality Metric" filters to the reconstruction plugin to determin
-which voxels are considered good or bad
-@li Updated to HDF5 Version 1.8.7
-
-
-
+@subpage microPreset "Microstructure Presets"
+The StatsGenerator has a few predefined sets of statistics for various types of
+microsrtuctures. The programmer can create more Preset classes by extending a
+few C++ classes and compiling the application.
 
 
 */

@@ -22,13 +22,13 @@ if (NOT DOXYGEN_FOUND)
 endif()
 
 SET (DOX_GENERATE_RTF "NO")
-option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" ON)
+option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
 if (DREAM3D_GENERATE_RTF STREQUAL "ON")
     SET (DOX_GENERATE_RTF "YES")
 endif()
   
 
-SET (DOX_GENERATE_HTML "NO")
+SET (DOX_GENERATE_HTML "YES")
 option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
 if (DREAM3D_GENERATE_HTML STREQUAL "ON")
     SET (DOX_GENERATE_HTML "YES")
@@ -36,7 +36,7 @@ endif()
 
 
 SET (DOX_GENERATE_LATEX "NO")
-option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" ON)
+option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" OFF)
 if (DREAM3D_GENERATE_LATEX STREQUAL "ON")
     SET (DOX_GENERATE_LATEX "YES")
     # Check for existence of LaTex executable files
@@ -91,7 +91,7 @@ if (DOX_GENERATE_HTML)
                      EPS_FILES "${LATEX_EPS_FILES}"
                      TITLE "${LATEX_TITLE}"
                      AUTHOR "${LATEX_AUTHOR}"
-                     GENERATE_HTML "${DOX_GENERATE_LATEX}"
+                     GENERATE_HTML "YES"
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
@@ -108,7 +108,7 @@ if (DOX_GENERATE_RTF)
                      AUTHOR "${LATEX_AUTHOR}"
                      GENERATE_HTML "NO"
                      GENERATE_LATEX "NO"
-                     GENERATE_RTF "${DOX_GENERATE_RTF}"
+                     GENERATE_RTF "YES"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
                      IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
 endif()
