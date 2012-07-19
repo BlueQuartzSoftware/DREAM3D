@@ -327,11 +327,10 @@ void PackPrimaryPhases::execute()
   for (size_t i = 0; i < primaryphases.size(); i++)
   {
     phase = primaryphases[i];
-	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = static_cast<float>( ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
-        / grainsizedist[i].size() );
+    grainsizediststep[i] = static_cast<float>(((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0)) / grainsizedist[i].size());
     float input = 0;
     float previoustotal = 0;
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();

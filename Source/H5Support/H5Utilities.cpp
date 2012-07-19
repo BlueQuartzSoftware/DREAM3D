@@ -181,7 +181,7 @@ hid_t H5Utilities::openHDF5Object(hid_t loc_id, const std::string &objName)
   HDF_ERROR_HANDLER_OFF;
   err = getObjectType(loc_id, objName, &obj_type);
   if (err < 0) {
-    std::cout << "Error: Unable to get object type for object: " << objName << std::endl;
+   // std::cout << "Error: Unable to get object type for object: " << objName << std::endl;
     HDF_ERROR_HANDLER_ON;
     return -1;
   }

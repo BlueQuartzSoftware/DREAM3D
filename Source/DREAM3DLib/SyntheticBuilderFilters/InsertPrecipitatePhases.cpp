@@ -273,7 +273,7 @@ void InsertPrecipitatePhases::execute()
 
 void  InsertPrecipitatePhases::place_precipitates()
 {
- notifyStatusMessage("Placing Precipitates");
+  notifyStatusMessage("Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
   DataContainer* m = getDataContainer();
@@ -289,22 +289,20 @@ void  InsertPrecipitatePhases::place_precipitates()
   typedef int64_t DimType;
 #endif
   DimType dims[3] =
-  { static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[1]),
-      static_cast<DimType>(udims[2]), };
+  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
   sizex = dims[0] * m->getXRes();
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
-  totalvol = sizex*sizey*sizez;
+  totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m->getTotalPoints();
   size_t currentnumgrains = m->getNumFieldTuples();
   if(currentnumgrains == 0)
   {
-	  m->resizeFieldDataArrays(1);
-	  dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
-	  currentnumgrains = 1;
+    m->resizeFieldDataArrays(1);
+    dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+    currentnumgrains = 1;
   }
   firstPrecipitateField = currentnumgrains;
   int phase;
@@ -323,8 +321,8 @@ void  InsertPrecipitatePhases::place_precipitates()
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
-	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-	  m_NumFields[i] = 0;
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      m_NumFields[i] = 0;
       precipitatephases.push_back(i);
       precipitatephasefractions.push_back(pp->getPhaseFraction());
       totalprecipitatefractions = totalprecipitatefractions + pp->getPhaseFraction();
@@ -332,7 +330,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   }
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
-    precipitatephasefractions[i] = static_cast<float>( precipitatephasefractions[i] / totalprecipitatefractions );
+    precipitatephasefractions[i] = static_cast<float>(precipitatephasefractions[i] / totalprecipitatefractions);
     if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i - 1];
   }
 
@@ -343,11 +341,10 @@ void  InsertPrecipitatePhases::place_precipitates()
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     phase = precipitatephases[i];
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     grainsizedist[i].resize(40);
     simgrainsizedist[i].resize(40);
-    grainsizediststep[i] = static_cast<float>( ((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0))
-        / grainsizedist[i].size() );
+    grainsizediststep[i] = static_cast<float>(((2 * pp->getMaxGrainDiameter()) - (pp->getMinGrainDiameter() / 2.0)) / grainsizedist[i].size());
     float input = 0;
     float previoustotal = 0;
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
@@ -378,33 +375,33 @@ void  InsertPrecipitatePhases::place_precipitates()
   float iter = 0;
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
-	  curphasevol[j] = 0;
-	  float curphasetotalvol = static_cast<float>( totalvol*totalprecipitatefractions*precipitatephasefractions[j] );
-	  while (curphasevol[j] < (factor * curphasetotalvol))
-	  {
-	    iter++;
-	    Seed++;
-	    phase = precipitatephases[j];
-		generate_precipitate(phase, static_cast<int>(Seed), &precip, m_ShapeTypes[phase], m_OrthoOps);
-		currentsizedisterror = check_sizedisterror(&precip);
-		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
-		{
-	      std::stringstream ss;
-	      ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
-	      notifyStatusMessage(ss.str());
+    curphasevol[j] = 0;
+    float curphasetotalvol = static_cast<float>(totalvol * totalprecipitatefractions * precipitatephasefractions[j]);
+    while (curphasevol[j] < (factor * curphasetotalvol))
+    {
+      iter++;
+      Seed++;
+      phase = precipitatephases[j];
+      generate_precipitate(phase, static_cast<int>(Seed), &precip, m_ShapeTypes[phase], m_OrthoOps);
+      currentsizedisterror = check_sizedisterror(&precip);
+      change = (currentsizedisterror) - (oldsizedisterror);
+      if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
+      {
+        std::stringstream ss;
+        ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
+        notifyStatusMessage(ss.str());
 
-	      m->resizeFieldDataArrays(currentnumgrains + 1);
-	      dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
-	      m_Active[currentnumgrains] = true;
-	      transfer_attributes(currentnumgrains, &precip);
-	      oldsizedisterror = currentsizedisterror;
-	      curphasevol[j] = curphasevol[j] + m_Volumes[currentnumgrains];
-	      //FIXME: Initialize the Grain with some sort of default data
-	      iter = 0;
-		  currentnumgrains++;
-		}
-	  }
+        m->resizeFieldDataArrays(currentnumgrains + 1);
+        dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
+        m_Active[currentnumgrains] = true;
+        transfer_attributes(currentnumgrains, &precip);
+        oldsizedisterror = currentsizedisterror;
+        curphasevol[j] = curphasevol[j] + m_Volumes[currentnumgrains];
+        //FIXME: Initialize the Grain with some sort of default data
+        iter = 0;
+        currentnumgrains++;
+      }
+    }
   }
 
   // initialize the sim and goal neighbor distribution for the primary phases
@@ -414,42 +411,42 @@ void  InsertPrecipitatePhases::place_precipitates()
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     phase = precipitatephases[i];
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-	neighbordist[i].resize(pp->getBinNumbers()->GetSize());
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    neighbordist[i].resize(pp->getBinNumbers()->GetSize());
     simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
-	VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
-	float normalizer = 0;
+    VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
+    float normalizer = 0;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-		neighbordist[i][j].resize(40);
-		float input = 0;
-		float previoustotal = 0;
-		float avg = Neighdist[0]->GetValue(j);
-		float stdev = Neighdist[1]->GetValue(j);
-		neighbordiststep[i] = 2;
-		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
-		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
-		{
-		  input = (float(k + 1) * neighbordiststep[i]);
-		  float logInput = logf(input);
-		  if(logInput <= avg)
-		  {
-			neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst )) - previoustotal;
-		  }
-		  if(logInput > avg)
-		  {
-			neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
-		  }
-		  previoustotal = previoustotal + neighbordist[i][j][k];
-		}
-		normalizer = normalizer + previoustotal;
+      neighbordist[i][j].resize(40);
+      float input = 0;
+      float previoustotal = 0;
+      float avg = Neighdist[0]->GetValue(j);
+      float stdev = Neighdist[1]->GetValue(j);
+      neighbordiststep[i] = 2;
+      float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+      for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+      {
+        input = (float(k + 1) * neighbordiststep[i]);
+        float logInput = logf(input);
+        if(logInput <= avg)
+        {
+          neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
+        }
+        if(logInput > avg)
+        {
+          neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
+        }
+        previoustotal = previoustotal + neighbordist[i][j][k];
+      }
+      normalizer = normalizer + previoustotal;
     }
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
-		{
-			neighbordist[i][j][k] = neighbordist[i][j][k]/normalizer;
-		}
+      for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+      {
+        neighbordist[i][j][k] = neighbordist[i][j][k] / normalizer;
+      }
     }
   }
 
@@ -469,25 +466,25 @@ void  InsertPrecipitatePhases::place_precipitates()
     ss << "Packing Grains - Placing Grain #" << i;
     notifyStatusMessage(ss.str());
 
-	PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
-	precipboundaryfraction = pp->getPrecipBoundaryFraction();
-    random = static_cast<float>( rg.genrand_res53() );
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
+    precipboundaryfraction = pp->getPrecipBoundaryFraction();
+    random = static_cast<float>(rg.genrand_res53());
     if(random <= precipboundaryfraction)
     {
       random2 = int(rg.genrand_res53() * double(totalPoints - 1));
       while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
       {
         random2++;
-        if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
+        if(random2 >= totalPoints) random2 = static_cast<int>(random2 - totalPoints);
       }
     }
     else if(random > precipboundaryfraction)
     {
-      random2 = static_cast<int>( rg.genrand_res53() * (totalPoints - 1) );
+      random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
       while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
       {
         random2++;
-        if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
+        if(random2 >= totalPoints) random2 = static_cast<int>(random2 - totalPoints);
       }
     }
     xc = find_xcoord(random2);
@@ -500,29 +497,29 @@ void  InsertPrecipitatePhases::place_precipitates()
     fillingerror = check_fillingerror(i, -1000);
     for (int iter = 0; iter < 10; iter++)
     {
-      random = static_cast<float>( rg.genrand_res53() );
+      random = static_cast<float>(rg.genrand_res53());
       if(random <= precipboundaryfraction)
       {
         random2 = int(rg.genrand_res53() * double(totalPoints - 1));
         while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
+          if(random2 >= totalPoints) random2 = static_cast<int>(random2 - totalPoints);
         }
       }
       else if(random > precipboundaryfraction)
       {
-        random2 = static_cast<int>( rg.genrand_res53() * (totalPoints - 1) );
+        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
         while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
+          if(random2 >= totalPoints) random2 = static_cast<int>(random2 - totalPoints);
         }
       }
       xc = find_xcoord(random2);
       yc = find_ycoord(random2);
       zc = find_zcoord(random2);
-	  oldxc = m_Centroids[3 * i];
+      oldxc = m_Centroids[3 * i];
       oldyc = m_Centroids[3 * i + 1];
       oldzc = m_Centroids[3 * i + 2];
       oldfillingerror = fillingerror;
@@ -543,12 +540,12 @@ void  InsertPrecipitatePhases::place_precipitates()
   // determine initial filling and neighbor distribution errors
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(10 * (numgrains-1));
+  int totalAdjustments = static_cast<int>(10 * (numgrains - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     std::stringstream ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notifyStatusMessage(ss.str());
+    if(iteration % 100 == 0) notifyStatusMessage(ss.str());
 
 //    change1 = 0;
 //    change2 = 0;
@@ -557,7 +554,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     // JUMP - this option moves one grain to a random spot in the volume
     if(option == 0)
     {
-      randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains-firstPrecipitateField));
+      randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains - firstPrecipitateField));
       if(randomgrain < firstPrecipitateField) randomgrain = firstPrecipitateField;
       if(randomgrain >= static_cast<int>(numgrains))
       {
@@ -565,25 +562,25 @@ void  InsertPrecipitatePhases::place_precipitates()
       }
       Seed++;
 
-	  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
       precipboundaryfraction = pp->getPrecipBoundaryFraction();
-	  random = static_cast<float>( rg.genrand_res53() );
+      random = static_cast<float>(rg.genrand_res53());
       if(random <= precipboundaryfraction)
       {
         random2 = int(rg.genrand_res53() * double(totalPoints - 1));
         while (m_SurfaceVoxels[random2] == 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
+          if(random2 >= totalPoints) random2 = static_cast<int>(random2 - totalPoints);
         }
       }
       else if(random > precipboundaryfraction)
       {
-        random2 = static_cast<int>( rg.genrand_res53() * (totalPoints - 1) );
+        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
         while (m_SurfaceVoxels[random2] != 0 || m_GrainIds[random2] >= firstPrecipitateField)
         {
           random2++;
-          if(random2 >= totalPoints) random2 = static_cast<int>( random2 - totalPoints );
+          if(random2 >= totalPoints) random2 = static_cast<int>(random2 - totalPoints);
         }
       }
       xc = find_xcoord(random2);
@@ -593,7 +590,7 @@ void  InsertPrecipitatePhases::place_precipitates()
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain)  );
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_precipitate(randomgrain, xc, yc, zc);
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
@@ -613,7 +610,7 @@ void  InsertPrecipitatePhases::place_precipitates()
     // NUDGE - this option moves one grain to a spot close to its current centroid
     if(option == 1)
     {
-      randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains-firstPrecipitateField));
+      randomgrain = firstPrecipitateField + int(rg.genrand_res53() * (numgrains - firstPrecipitateField));
       if(randomgrain < firstPrecipitateField) randomgrain = firstPrecipitateField;
       if(randomgrain >= static_cast<int>(numgrains))
       {
@@ -623,9 +620,9 @@ void  InsertPrecipitatePhases::place_precipitates()
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
-      xc = static_cast<float>( oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)) );
-      yc = static_cast<float>( oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)) );
-      zc = static_cast<float>( oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)) );
+      xc = static_cast<float>(oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)));
+      yc = static_cast<float>(oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)));
+      zc = static_cast<float>(oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)));
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_precipitate(randomgrain, xc, yc, zc);

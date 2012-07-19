@@ -365,12 +365,14 @@ int H5PrimaryStatsDataDelegate::readMDFWeights(hid_t pid, PrimaryStatsData* data
   mdfWeights.push_back(weight);
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
-
-  err = readVectorOfArrays(groupId, mdfWeights);
-  if (err >= 0) {
-    data->setMDF_Weights(mdfWeights);
+  if (groupId > 0)
+  {
+    err = readVectorOfArrays(groupId, mdfWeights);
+    if(err >= 0)
+    {
+      data->setMDF_Weights(mdfWeights);
+    }
   }
-
   err = H5Utilities::closeHDF5Object(groupId);
   return err;
 }
@@ -397,13 +399,14 @@ int H5PrimaryStatsDataDelegate::readODFWeights(hid_t pid, PrimaryStatsData* data
   odfWeights.push_back(weight);
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
-
-  err = readVectorOfArrays(groupId, odfWeights);
-  if(err >= 0)
+  if(groupId > 0)
   {
-    data->setODF_Weights(odfWeights);
+    err = readVectorOfArrays(groupId, odfWeights);
+    if(err >= 0)
+    {
+      data->setODF_Weights(odfWeights);
+    }
   }
-
   err |= H5Utilities::closeHDF5Object(groupId);
 
   return err;
@@ -432,13 +435,14 @@ int H5PrimaryStatsDataDelegate::readAxisODFWeights(hid_t pid, PrimaryStatsData* 
   odfWeights.push_back(weight);
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
-
-  err = readVectorOfArrays(groupId, odfWeights);
-  if(err >= 0)
+  if (groupId > 0)
   {
-    data->setAxisODF_Weights(odfWeights);
+    err = readVectorOfArrays(groupId, odfWeights);
+    if(err >= 0)
+    {
+      data->setAxisODF_Weights(odfWeights);
+    }
   }
-
   err |= H5Utilities::closeHDF5Object(groupId);
 
   return err;

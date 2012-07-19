@@ -277,16 +277,19 @@ int DataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
   std::stringstream ss;
-  int64_t volDims[3] =  { 0, 0, 0 };
-  float spacing[3] =  { 1.0f, 1.0f, 1.0f };
-  float origin[3] = { 0.0f, 0.0f, 0.0f };
+  int64_t volDims[3] =
+  { 0, 0, 0 };
+  float spacing[3] =
+  { 1.0f, 1.0f, 1.0f };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
   DataContainer* m = getDataContainer();
 
   hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
     ss.str("");
-    ss <<": Error opening input file '" << m_InputFile << "'";
+    ss << ": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;
@@ -296,17 +299,16 @@ int DataContainerReader::gatherData(bool preflight)
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss <<": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    ss << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;
   }
 
-
-  if (false == preflight)
+  if(false == preflight)
   {
     err = gatherMetaData(dcGid, volDims, spacing, origin);
-    if (err < 0)
+    if(err < 0)
     {
       err |= H5Gclose(dcGid);
       err |= H5Fclose(fileId);
@@ -318,37 +320,40 @@ int DataContainerReader::gatherData(bool preflight)
     m->setOrigin(origin);
   }
 
-  if (m_ReadCellData == true) {
-  err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
-  if(err < 0)
+  if(m_ReadCellData == true)
   {
-    err |= H5Gclose(dcGid);
-    err |= H5Fclose(fileId);
-    setErrorCondition(err);
-    return -1;
-  }
+    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  if (m_ReadFieldData == true) {
-  err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
-  if(err < 0)
+  if(m_ReadFieldData == true)
   {
-    err |= H5Gclose(dcGid);
-    err |= H5Fclose(fileId);
-    setErrorCondition(err);
-    return -1;
-  }
+    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  if (m_ReadEnsembleData == true) {
-  err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
-  if(err < 0)
+  if(m_ReadEnsembleData == true)
   {
-    err |= H5Gclose(dcGid);
-    err |= H5Fclose(fileId);
-    setErrorCondition(err);
-    return -1;
-  }
+    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
   err |= H5Gclose(dcGid);
