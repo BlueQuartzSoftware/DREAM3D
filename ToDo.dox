@@ -13,7 +13,8 @@ so it can be integrated with the other documentation pages.
 to another phase (phase 3), so that they can be visualised differently to the surrouding
 grains (phase 2) and grains that are untwinned (phase 1).
 @li Add filter to convert hex grid TSL .ang files into square grid .ang files
-
+@li Add splash Screen similar to ParaView where the various entities that have donated
+code or Funding are shown with their logos.
 
 
 
