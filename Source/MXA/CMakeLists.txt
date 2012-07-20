@@ -4,7 +4,6 @@
 #  BSD License: http://www.opensource.org/licenses/bsd-license.html
 #///////////////////////////////////////////////////////////////////////////////
 project(MXA)
-
 SET (MXA_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)
     SET (MXA_BUILT_AS_DYNAMIC_LIB 1)
