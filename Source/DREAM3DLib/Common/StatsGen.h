@@ -106,6 +106,7 @@ class DREAM3DLib_EXPORT StatsGen
     template<typename T>
     int GenLogNormalPlotData(float avg, float stdDev, T &x, T &y, int size)
     {
+	  size = 1000;
       int err = 0;
       float lognormin, lognormout, max, min;
       float s2 = powf(stdDev, 2);
