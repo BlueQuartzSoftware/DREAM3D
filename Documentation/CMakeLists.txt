@@ -7,8 +7,8 @@
 
 FIND_PACKAGE(Doxygen)
 if (NOT DOXYGEN_FOUND)
-    message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
-endif()
+    message(WARNING "Doxygen is needed to build the documentation. Please install it correctly")
+else()
   
 # Add a target that builds just the High Level User Manuals/Tutorial type documentation
 add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
@@ -25,3 +25,4 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/UserManual ${PROJECT_BINARY
   add_custom_target(APIDocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
 #endif()
   
+endif()
