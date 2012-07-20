@@ -17,13 +17,10 @@ grains (phase 2) and grains that are untwinned (phase 1).
 code or Funding are shown with their logos.
 
 
-
 @subsection statsgen StatsGenerator
 @li Update/Create a user manual for the stats generator - last parts need pasting
 @li Add menu for displaying help
-@li Can not open previously created stats files
 @li Add Kearns Factors for Hexagonal lattice presets.
-
 
 
 @section roadmap RoadMap (The way Forward)
