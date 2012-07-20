@@ -49,9 +49,6 @@
 #include "ui_PluginMaker.h"
 #include "FilterBundler.h"
 
-class PMDirGenerator;
-class PMFileGenerator;
-
 class PluginMaker : public QMainWindow, public Ui::PluginMaker
 {
   Q_OBJECT
@@ -91,8 +88,6 @@ private:
   QString generateCmakeContents();
   QString generateQrcContents();
 
-
-  QMap<QTreeWidgetItem*,PMDirGenerator*> m_itemMap;
   QVector<FilterBundler> m_FilterBundles;
   QTreeWidgetItem* F_name;
   QTreeWidgetItem* F_doc;
