@@ -140,8 +140,6 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
-    QString m_OpenDialogLastDirectory;
-
     QEbsdToH5EbsdWidget(const QEbsdToH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const QEbsdToH5EbsdWidget&); // Operator '=' Not Implemented
 };
