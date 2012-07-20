@@ -214,11 +214,7 @@ void CropVolume::execute()
   int m_XP = ( (m_XMax - m_XMin)+1 );
   int m_YP = ( (m_YMax - m_YMin)+1 );
   int m_ZP = ( (m_ZMax - m_ZMin)+1 );
-  float m_XStart = m_XMin * m->getXRes();
-  float m_YStart = m_YMin * m->getYRes();
-  float m_ZStart = m_ZMin * m->getZRes();
 
-  float x, y, z;
   int col, row, plane;
   int index;
   int index_old;
@@ -232,12 +228,9 @@ void CropVolume::execute()
     {
       for (int k = 0; k < m_XP; k++)
       {
-        x = (k * m->getXRes()) + m_XStart;
-        y = (j * m->getYRes()) + m_YStart;
-        z = (i * m->getZRes()) + m_ZStart;
-        col = int(x / m->getXRes());
-        row = int(y / m->getYRes());
-        plane = int(z / m->getZRes());
+        col = k + m_XMin;
+        row = j + m_YMin;
+        plane = i + m_ZMin;
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = ( (i * m_XP * m_YP) + (j * m_XP) + k );
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)

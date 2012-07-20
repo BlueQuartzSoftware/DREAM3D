@@ -320,7 +320,7 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
-  if(m_GrainIds[neighborpoint] == 0)
+  if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
 	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
 	  q1[0] = 1;

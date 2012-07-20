@@ -270,67 +270,71 @@ int StatsDataArray::readH5Data(hid_t parentId)
   int err = 0;
   std::string statsType;
   hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
-  if (gid < 0)
+  if(gid < 0)
   {
     return err;
   }
 
   std::list<std::string> names;
   err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
-  if (err < 0)
+  if(err < 0)
   {
     err |= H5Utilities::closeHDF5Object(gid);
     return err;
   }
 
-  for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter )
+  for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     int index = 0;
-	statsType = "";
+    statsType = "";
     StringUtils::stringToNum(index, *iter);
-	H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
     hid_t statId = H5Utilities::openHDF5Object(gid, *iter);
-    if (statId < 0)
+    if(statId < 0)
     {
       continue;
       err |= -1;
     }
-	if(statsType.compare(DREAM3D::HDF5::PrimaryStatsData) == 0)
-	{
-		PrimaryStatsData::Pointer data = PrimaryStatsData::New();
-	    data->readHDF5Data(statId);
-	    setStatsData(index, data);
-	}
-	if(statsType.compare(DREAM3D::HDF5::PrecipitateStatsData) == 0)
-	{
-		PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
-	    data->readHDF5Data(statId);
-	    setStatsData(index, data);
-	}
-	if(statsType.compare(DREAM3D::HDF5::TransformationStatsData) == 0)
-	{
-		TransformationStatsData::Pointer data = TransformationStatsData::New();
-	    data->readHDF5Data(statId);
-	    setStatsData(index, data);
-	}
-	if(statsType.compare(DREAM3D::HDF5::MatrixStatsData) == 0)
-	{
-		MatrixStatsData::Pointer data = MatrixStatsData::New();
-	    data->readHDF5Data(statId);
-	    setStatsData(index, data);
-	}
-	if(statsType.compare(DREAM3D::HDF5::BoundaryStatsData) == 0)
-	{
-		BoundaryStatsData::Pointer data = BoundaryStatsData::New();
-	    data->readHDF5Data(statId);
-	    setStatsData(index, data);
-	}
-	err |= H5Utilities::closeHDF5Object(statId);
+    if(statsType.compare(DREAM3D::HDF5::PrimaryStatsData) == 0)
+    {
+      PrimaryStatsData::Pointer data = PrimaryStatsData::New();
+      data->readHDF5Data(statId);
+      setStatsData(index, data);
+    }
+    else if(statsType.compare(DREAM3D::HDF5::PrecipitateStatsData) == 0)
+    {
+      PrecipitateStatsData::Pointer data = PrecipitateStatsData::New();
+      data->readHDF5Data(statId);
+      setStatsData(index, data);
+    }
+    else if(statsType.compare(DREAM3D::HDF5::TransformationStatsData) == 0)
+    {
+      TransformationStatsData::Pointer data = TransformationStatsData::New();
+      data->readHDF5Data(statId);
+      setStatsData(index, data);
+    }
+    else if(statsType.compare(DREAM3D::HDF5::MatrixStatsData) == 0)
+    {
+      MatrixStatsData::Pointer data = MatrixStatsData::New();
+      data->readHDF5Data(statId);
+      setStatsData(index, data);
+    }
+    else if(statsType.compare(DREAM3D::HDF5::BoundaryStatsData) == 0)
+    {
+      BoundaryStatsData::Pointer data = BoundaryStatsData::New();
+      data->readHDF5Data(statId);
+      setStatsData(index, data);
+    }
+    else
+    {
+      std::cout << "The Type of the stats data could not be read." << std::endl;
+      return -1100;
+    }
+    err |= H5Utilities::closeHDF5Object(statId);
   }
 
   // Do not forget to close the object
   err |= H5Utilities::closeHDF5Object(gid);
-
 
   return err;
 }

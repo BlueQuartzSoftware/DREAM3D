@@ -147,14 +147,6 @@ void StatsGeneratorUI::writeSettings()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::setupGui()
 {
-//  verticalLayout_2->removeWidget(m_SGWidget);
-//  m_SGWidget->hide();
-//  m_SGWidget->deleteLater();
-//  m_SGWidget = new PrimaryPhaseWidget(centralwidget);
-//  m_SGWidget->setObjectName(QString::fromUtf8("m_SGWidget"));
-//  verticalLayout_2->addWidget(m_SGWidget);
-//  m_SGWidget->show();
-  // Any tabs put on from the .ui file
   phaseTabs->clear();
 
   PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget;
@@ -724,73 +716,113 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 void StatsGeneratorUI::openFile(QString h5file)
 {
   int err = 0;
-  if (true == h5file.isEmpty()) // User cancelled the operation
+  // Make sure the file path is not empty and does exist on the system
+  if (true == h5file.isEmpty())
+  {
+    return;
+  }
+
+  QFileInfo fi(h5file);
+  if (fi.exists() == false)
   {
     return;
   }
 
   // Tell the RecentFileList to update itself then broadcast those changes.
   QRecentFileList::instance()->addFile(h5file);
-
   updateRecentFileList(h5file);
 
-  m_FilePath = h5file;
-  QFileInfo fi (m_FilePath);
-  QString ext = fi.suffix();
+  // Set the last directory that contains our file
   m_OpenDialogLastDirectory = fi.path();
+  m_FilePath = h5file;
   m_FileSelected = true;
-
 
   std::string path;
 
- // int err = 0;
-  size_t nPhases = 0;
-  // Delete any existing phases from the GUI (except the first one)
-  while (phaseTabs->count() != 1)
-  {
-    on_deletePhase_clicked();
-  }
+
+  // Delete any existing phases from the GUI
+  phaseTabs->clear();
 
   // Instantiate a Reader object
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
- // DataContainer::Pointer m = DataContainer::New();
- // pipeline->setDataContainer(m);
+  //FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  DataContainer::Pointer m = DataContainer::New();
+  //pipeline->setDataContainer(m);
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(m_FilePath.toStdString());
-  //reader->setDataContainer(m.get());
+  reader->setDataContainer(m.get());
   reader->setReadCellData(false);
   reader->setReadFieldData(false);
   reader->setReadEnsembleData(true);
-//  reader->execute();
-  pipeline->pushBack(reader);
-  pipeline->run();
-  err = pipeline->getErrorCondition();
+  reader->execute();
+//  pipeline->pushBack(reader);
+//  pipeline->run();
+  err = reader->getErrorCondition();
   if (err < 0)
   {
     this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
     return;
   }
 
-  DataContainer::Pointer m = pipeline->getDataContainer();
-
   // Get the number of Phases
-  nPhases = m->getNumEnsembleTuples();
+  size_t ensembles = m->getNumEnsembleTuples();
+
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles*1, NULL);
+
+  StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
 
-  SGWidget* sgwidget = NULL;
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects
-  for (size_t i = 1; i < nPhases; ++i)
+  for (size_t phase = 1; phase < ensembles; ++phase)
   {
-    // Create a new Default SGPhase
-    sgwidget = createNewSGWidget();
-    phaseTabs->addTab(sgwidget, sgwidget->getTabTitle());
-    sgwidget->extractStatsData(m, static_cast<int>(i));
+    if(phaseTypes[phase] == DREAM3D::PhaseType::BoundaryPhase)
+    {
+      BoundaryStatsData* bsd = BoundaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
+      phaseTabs->addTab(w, w->getTabTitle());
+      w->extractStatsData(m, static_cast<int>(phase));
+    }
+    else if(phaseTypes[phase] == DREAM3D::PhaseType::MatrixPhase)
+    {
+      MatrixStatsData* msd = MatrixStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
+      phaseTabs->addTab(w, w->getTabTitle());
+      w->extractStatsData(m, static_cast<int>(phase));
+    }
+    if(phaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* psd = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
+      phaseTabs->addTab(w, w->getTabTitle());
+      w->extractStatsData(m, static_cast<int>(phase));
+    }
+    if(phaseTypes[phase] == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* prisd = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
+      phaseTabs->addTab(w, w->getTabTitle());
+      w->extractStatsData(m, static_cast<int>(phase));
+    }
+    if(phaseTypes[phase] == DREAM3D::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tsd = TransformationStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
+      phaseTabs->addTab(w, w->getTabTitle());
+      w->extractStatsData(m, static_cast<int>(phase));
+    }
+    else
+    {
+
+    }
+
   }
 
   // Now delete the first Phase from the Combo which was left over from something else
   phaseTabs->setCurrentIndex(0);
-  on_deletePhase_clicked();
+  //on_deletePhase_clicked();
 
   // Set the window title correctly
   setWindowModified(false);
