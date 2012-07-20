@@ -320,7 +320,7 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   float cx1, cx2, cy1, cy2, cz1, cz2;
   float denom1, denom2;
 
-  if(m_GrainIds[neighborpoint] == 0)
+  if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
 	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
 	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
