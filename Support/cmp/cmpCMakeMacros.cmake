@@ -736,7 +736,7 @@ ENDMACRO()
 #   ${CMP_PROJECT_NAME}_VER_PATCH
 #
 #-------------------------------------------------------------------------------
-macro(cmpGenerateVersionString GENERATED_FILE_PATH NAMESPACE cmpProjectName)
+macro(cmpGenerateVersionString GENERATED_HEADER_PATH GENERATED_SOURCE_PATH NAMESPACE cmpProjectName)
     INCLUDE (${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
     
     if ( CMP_HAVE_TIME_GETTIMEOFDAY )
@@ -798,7 +798,8 @@ macro(cmpGenerateVersionString GENERATED_FILE_PATH NAMESPACE cmpProjectName)
 
     endif()
     set (PROJECT_PREFIX "${cmpProjectName}")
-    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GENERATED_FILE_PATH}  )
+    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GENERATED_HEADER_PATH}  )
+    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GENERATED_SOURCE_PATH}  )
     MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
 endmacro()
 
@@ -818,6 +819,7 @@ function(cmpVersionStringsFromGit)
     message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
     message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
     message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
+    message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
     endif()
     
     # Find Git executable
@@ -830,13 +832,14 @@ function(cmpVersionStringsFromGit)
         ERROR_VARIABLE git_error
         WORKING_DIRECTORY ${DREAM3DProj_SOURCE_DIR} 
          )
+        
+        # message(STATUS "DVERS: ${DVERS}")
             
         #-- Make sure that actually worked and if not just generate some dummy values
         if (DVERS STREQUAL "")
-            cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
+            cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
         else() 
             string(STRIP ${DVERS} DVERS)
-               # message(STATUS "DVERS: ${DVERS}")
             string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
                # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
                # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)

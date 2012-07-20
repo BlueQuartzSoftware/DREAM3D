@@ -57,7 +57,7 @@ SGWidget::~SGWidget()
 // -----------------------------------------------------------------------------
 void SGWidget::extractStatsData(DataContainer::Pointer m, int index)
 {
-
+  assert(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ int SGWidget::gatherStatsData(DataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 void SGWidget::on_m_GenerateDefaultData_clicked()
 {
-
+  assert(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ void SGWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 void SGWidget::dataWasEdited()
 {
-
+  assert(false);
 }
 
 // -----------------------------------------------------------------------------
