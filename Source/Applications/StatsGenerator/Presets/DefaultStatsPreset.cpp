@@ -95,6 +95,10 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset >= colorNames.size())
+    {
+      colorOffset = 0;
+    }
     alpha += 0.1f;
     beta += betaStep;
    }
