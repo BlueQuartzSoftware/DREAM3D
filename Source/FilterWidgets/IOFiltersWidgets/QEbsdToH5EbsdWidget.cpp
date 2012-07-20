@@ -68,7 +68,11 @@ QFilterWidget(parent),
 m_RotateSlice(true),
 m_ReorderArray(true)
 {
-  m_OpenDialogLastDirectory = QDir::homePath();
+  
+  if ( getOpenDialogLastDirectory().isEmpty() )
+  {
+    setOpenDialogLastDirectory( QDir::homePath() );
+  }
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   setupGui();
@@ -259,7 +263,7 @@ void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
   if (verifyPathExists(text, m_OutputFile) == true )
   {
     QFileInfo fi(text);
-    m_OpenDialogLastDirectory = fi.path();
+    setOpenDialogLastDirectory( fi.path() );
   }
   emit parametersChanged();
 }
@@ -299,13 +303,13 @@ void QEbsdToH5EbsdWidget::checkIOFiles()
 void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 {
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
-                                                 m_OpenDialogLastDirectory,
+                                                 getOpenDialogLastDirectory(),
                                                  tr("HDF5 EBSD Files (*.h5ebsd)") );
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
   m_OutputFile->setText(fi.absoluteFilePath());
-  m_OpenDialogLastDirectory = fi.path();
+  setOpenDialogLastDirectory( fi.path() );
 }
 
 // -----------------------------------------------------------------------------
@@ -314,14 +318,14 @@ void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 void QEbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if (!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    m_OpenDialogLastDirectory = outputFile;
+    getOpenDialogLastDirectory() = outputFile;
     m_InputDir->blockSignals(false);
   }
 }
