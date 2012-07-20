@@ -65,6 +65,7 @@
 #include "PMDirGenerator.h"
 #include "PMFileGenerator.h"
 #include "PMFilterGenerator.h"
+#include "PMGeneratorTreeItem.h"
 
 
 // -----------------------------------------------------------------------------
@@ -123,7 +124,7 @@ void PluginMaker::setupGui()
   generateButton->setToolTip("Generate File Structure");
 
 
-  QTreeWidgetItem* F_main = new QTreeWidgetItem(treeWidget);
+  PMGeneratorTreeItem* F_main = new PMGeneratorTreeItem(treeWidget);
   F_main->setText(0, "Unknown Plugin Name");
   {
      pathTemplate = "@PluginName@";
@@ -142,14 +143,14 @@ void PluginMaker::setupGui()
    }
 
 
-  QTreeWidgetItem* F_code = new QTreeWidgetItem(F_main);
+  PMGeneratorTreeItem* F_code = new PMGeneratorTreeItem(F_main);
   F_code->setText(0, tr("Code"));
 
 
-  F_doc = new QTreeWidgetItem(F_main);
+  F_doc = new PMGeneratorTreeItem(F_main);
   F_doc->setText(0, tr("Documentation"));
 
-  QTreeWidgetItem* cmake = new QTreeWidgetItem(F_main);
+  PMGeneratorTreeItem* cmake = new PMGeneratorTreeItem(F_main);
   cmake->setText(0, tr("CMakeLists.txt"));
   {
     pathTemplate = "@PluginName@";
@@ -160,6 +161,8 @@ void PluginMaker::setupGui()
                                                     resourceTemplate,
                                                     cmake,
                                                     this);
+
+    cmake->setFileGenPtr(gen);
     connect(m_PluginName, SIGNAL(textChanged(const QString &)),
             gen, SLOT(pluginNameChanged(const QString &)));
     connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
@@ -170,14 +173,12 @@ void PluginMaker::setupGui()
     connect(gen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
     gen->setDoesGenerateOutput(true);
-
-    m_itemMap[cmake] = gen;
   }
 
 
 
 
-  F_name = new QTreeWidgetItem(F_code);
+  F_name = new PMGeneratorTreeItem(F_code);
   F_name->setText(0, "Unknown Plugin Name");
   {
      pathTemplate = "@PluginName@/Code/@PluginName@Filters/";
@@ -198,7 +199,7 @@ void PluginMaker::setupGui()
 
 
 
-  QTreeWidgetItem* pluginCPP = new QTreeWidgetItem(F_code);
+  PMGeneratorTreeItem* pluginCPP = new PMGeneratorTreeItem(F_code);
   pluginCPP->setText(0, "Unknown Plugin Name");
     pathTemplate = "@PluginName@/Code/";
     QString resourceTemplate(":/Template/Code/Plugin.cpp.in");
@@ -208,6 +209,7 @@ void PluginMaker::setupGui()
                                                     resourceTemplate,
                                                     pluginCPP,
                                                     this);
+    pluginCPP->setFileGenPtr(cppPluginGen);
     cppPluginGen->setDisplaySuffix("Plugin.cpp");
     cppPluginGen->setDoesGenerateOutput(true);
     cppPluginGen->setNameChangeable(true);
@@ -221,10 +223,8 @@ void PluginMaker::setupGui()
     connect(cppPluginGen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
 
-    m_itemMap[pluginCPP] = cppPluginGen;
 
-
-  QTreeWidgetItem* pluginH = new QTreeWidgetItem(F_code);
+  PMGeneratorTreeItem* pluginH = new PMGeneratorTreeItem(F_code);
   pluginH->setText(0, "Unknown Plugin Name");
     pathTemplate = "@PluginName@/Code/";
     resourceTemplate = ":/Template/Code/Plugin.h.in";
@@ -234,6 +234,7 @@ void PluginMaker::setupGui()
                                                     resourceTemplate,
                                                     pluginH,
                                                     this);
+    pluginH->setFileGenPtr(hPluginGen);
     hPluginGen->setDisplaySuffix("Plugin.h");
     hPluginGen->setDoesGenerateOutput(true);
     hPluginGen->setNameChangeable(true);
@@ -247,8 +248,6 @@ void PluginMaker::setupGui()
     connect(hPluginGen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
 
-    m_itemMap[pluginH] = hPluginGen;
-
     PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin 
                                                                                         // CPP and H files in a FilterBundler)
 
@@ -258,7 +257,7 @@ void PluginMaker::setupGui()
 
 
 
-  QTreeWidgetItem* filterCPP = new QTreeWidgetItem(F_name);
+  PMGeneratorTreeItem* filterCPP = new PMGeneratorTreeItem(F_name);
   filterCPP->setText(0, "Unknown Plugin Name");
     pathTemplate = "@PluginName@/Code/@PluginName@Filters/";
     resourceTemplate = ":/Template/Code/Filter/Filter.cpp.in";
@@ -268,6 +267,7 @@ void PluginMaker::setupGui()
                                                     resourceTemplate,
                                                     filterCPP,
                                                     this);
+    filterCPP->setFileGenPtr(cppFilterGen);
     cppFilterGen->setDisplaySuffix("Filter.cpp");
     cppFilterGen->setDoesGenerateOutput(true);
     cppFilterGen->setNameChangeable(true);
@@ -281,10 +281,8 @@ void PluginMaker::setupGui()
     connect(cppFilterGen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
 
-    m_itemMap[filterCPP] = cppFilterGen;
 
-
-  QTreeWidgetItem* filterH = new QTreeWidgetItem(F_name);
+  PMGeneratorTreeItem* filterH = new PMGeneratorTreeItem(F_name);
   filterH->setText(0, "Unknown Plugin Name");
     pathTemplate = "@PluginName@/Code/@PluginName@Filters/";
     resourceTemplate = ":/Template/Code/Filter/Filter.h.in";
@@ -294,6 +292,7 @@ void PluginMaker::setupGui()
                                                     resourceTemplate,
                                                     filterH,
                                                     this);
+    filterH->setFileGenPtr(hFilterGen);
     hFilterGen->setDisplaySuffix("Filter.h");
     hFilterGen->setDoesGenerateOutput(true);
     hFilterGen->setNameChangeable(true);
@@ -307,15 +306,13 @@ void PluginMaker::setupGui()
     connect(hFilterGen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
 
-    m_itemMap[filterH] = hFilterGen;
 
-
-  QTreeWidgetItem* sourceList = new QTreeWidgetItem(F_name);
+  PMGeneratorTreeItem* sourceList = new PMGeneratorTreeItem(F_name);
   sourceList->setText(0, tr("SourceList.cmake"));
 
 
 
-  F_namefilters = new QTreeWidgetItem(F_doc);
+  F_namefilters = new PMGeneratorTreeItem(F_doc);
   F_namefilters->setText(0, "Unknown Plugin Name");
   {
        pathTemplate = "@PluginName@/Documentation/@PluginName@Filters";
@@ -334,11 +331,11 @@ void PluginMaker::setupGui()
      }
 
 
-  QTreeWidgetItem* pluginDocs = new QTreeWidgetItem(F_doc);
+  PMGeneratorTreeItem* pluginDocs = new PMGeneratorTreeItem(F_doc);
   pluginDocs->setText(0, "PluginDocumentation.qrc");
 
 
-  QTreeWidgetItem* filterHTML = new QTreeWidgetItem(F_namefilters);
+  PMGeneratorTreeItem* filterHTML = new PMGeneratorTreeItem(F_namefilters);
   filterHTML->setText(0, "Unknown Plugin Name");
     pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
     resourceTemplate = ":/Template/Documentation/Filter/Documentation.html.in";
@@ -348,6 +345,7 @@ void PluginMaker::setupGui()
                                                     resourceTemplate,
                                                     filterHTML,
                                                     this);
+    filterHTML->setFileGenPtr(htmlFilterDoc);
     htmlFilterDoc->setDisplaySuffix("Filter.html");
     htmlFilterDoc->setDoesGenerateOutput(true);
     htmlFilterDoc->setNameChangeable(true);
@@ -360,8 +358,7 @@ void PluginMaker::setupGui()
             htmlFilterDoc, SLOT(generateOutput()));
     connect(htmlFilterDoc, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
-    
-    m_itemMap[filterHTML] = htmlFilterDoc;
+
 
     FilterBundler fb2(cppFilterGen, hFilterGen, htmlFilterDoc);
     m_FilterBundles.push_back(fb2);
@@ -562,7 +559,7 @@ void PluginMaker::on_addFilterBtn_clicked()
       QString tempPluginName = cppgen->cleanName(m_PluginName->text());
       cppgen->setPluginName(tempPluginName);
 
-      m_itemMap[filt2cpp] = cppgen;
+      //m_itemMap[filt2cpp] = cppgen;
 
 
     /* This simulates the user clicking on the "Add Filter" button */
@@ -591,7 +588,7 @@ void PluginMaker::on_addFilterBtn_clicked()
       tempPluginName = hgen->cleanName(m_PluginName->text());
       hgen->setPluginName(tempPluginName);
   
-      m_itemMap[filt2h] = hgen;
+      //m_itemMap[filt2h] = hgen;
 
 
     /* This simulates the user clicking on the "Add Filter" button */
@@ -620,7 +617,7 @@ void PluginMaker::on_addFilterBtn_clicked()
       tempPluginName = htmlgen->cleanName(m_PluginName->text());
       htmlgen->setPluginName(tempPluginName);
 
-      m_itemMap[filt2html] = htmlgen;
+      //m_itemMap[filt2html] = htmlgen;
 
 
       FilterBundler filterpack(cppgen, hgen, htmlgen);
@@ -673,23 +670,29 @@ void PluginMaker::on_removeFilterBtn_clicked() {
 void PluginMaker::on_treeWidget_itemSelectionChanged() {
   QString pluginName = cleanName(m_PluginName->text());
 
-  QTreeWidgetItem* currentFile = treeWidget->currentItem();
+  PMGeneratorTreeItem* currentFile = dynamic_cast<PMGeneratorTreeItem*> ( treeWidget->currentItem() );
+  if (currentFile == NULL)
+  {
+    return;
+  }
+
   QString text = "";
 
-  if ( !m_itemMap.contains(currentFile) )
+  if ( currentFile->text(0).contains(".cmake") )
   {
-    if ( currentFile->text(0).contains(".cmake") )
-    {
-      text = generateCmakeContents();
-    }
-    else if ( currentFile->text(0).contains(".qrc") )
-    {
-      text = generateQrcContents();
-    }
+    text = generateCmakeContents();
+  }
+  else if ( currentFile->text(0).contains(".qrc") )
+  {
+    text = generateQrcContents();
   }
   else
   {
-    PMFileGenerator* fileGen = qobject_cast<PMFileGenerator*> (m_itemMap[currentFile]);
+    PMFileGenerator* fileGen = qobject_cast<PMFileGenerator*> ( currentFile->getFileGenPtr() );
+    if (!fileGen)
+    {
+      return;
+    }
     text = fileGen->generateFileContents();
   }
 

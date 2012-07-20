@@ -112,6 +112,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QFilterWidget* createDeepCopy();
 
+    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+
   signals:
     void dragStarted(QFilterWidget* widget);
     void parametersChanged();
@@ -159,7 +162,6 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
   protected:
      virtual void mousePressEvent( QMouseEvent* event );
      virtual void mouseReleaseEvent( QMouseEvent* event );
-//     virtual void mouseDoubleClickEvent( QMouseEvent* event );
      virtual void mouseMoveEvent( QMouseEvent* event );
 
   private:
@@ -171,14 +173,11 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      QString    m_BorderColorStyle;
      bool       m_IsSelected;
      bool       m_HasPreflightErrors;
-     QString m_OpenDialogLastDirectory;
+     static QString m_OpenDialogLastDirectory;
 
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented
-
 };
-
-
 
 #endif /* _QFILTERWIDGET_H_ */

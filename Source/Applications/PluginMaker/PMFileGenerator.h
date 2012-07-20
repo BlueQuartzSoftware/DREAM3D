@@ -64,10 +64,6 @@ class PMFileGenerator : public PMDirGenerator
    virtual void outputDirChanged (const QString &outputDir);
    virtual void generateOutput();
 
-  signals:
-   void outputError(const QString &message);
-   void filterSourceError(const QString &message);
-
 
   private:
    QString m_FileName;

@@ -61,7 +61,8 @@
 #define IMAGE_HEIGHT 17
 
 
-
+// Initialize private static member variable
+QString QFilterWidget::m_OpenDialogLastDirectory = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -73,7 +74,6 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
       m_IsSelected(false),
       m_HasPreflightErrors(false)
 {
-  m_OpenDialogLastDirectory = QDir::homePath();
 
   m_DeleteRect.setX(PADDING + BORDER);
   m_DeleteRect.setY(PADDING + BORDER);
