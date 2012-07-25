@@ -44,7 +44,10 @@
 DxReader::DxReader() :
 FileReader(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+m_GrainIds(NULL),
+m_XRes(1.0f),
+m_YRes(1.0f),
+m_ZRes(1.0f)
 {
   setupFilterParameters();
 }
@@ -70,6 +73,30 @@ void DxReader::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("X Res");
+    option->setPropertyName("XRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Y Res");
+    option->setPropertyName("YRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Z Res");
+    option->setPropertyName("ZRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -77,6 +104,9 @@ void DxReader::setupFilterParameters()
 void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
+    writer->writeValue("XRes", getXRes() );
+  writer->writeValue("YRes", getYRes() );
+  writer->writeValue("ZRes", getZRes() );
 }
 
 // -----------------------------------------------------------------------------
@@ -318,7 +348,7 @@ int DxReader::readFile()
 //  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
   getDataContainer()->setDimensions(nx, ny, nz);
 
-  getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);
+  getDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
 
   getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 

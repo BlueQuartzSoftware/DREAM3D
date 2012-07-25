@@ -75,6 +75,11 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
       m_HasPreflightErrors(false)
 {
 
+  if ( m_OpenDialogLastDirectory.isEmpty() )
+  {
+    m_OpenDialogLastDirectory = QDir::homePath();
+  }
+
   m_DeleteRect.setX(PADDING + BORDER);
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);

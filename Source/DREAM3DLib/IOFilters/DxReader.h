@@ -61,6 +61,10 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
     virtual ~DxReader();
 
+    DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    DREAM3D_INSTANCE_PROPERTY(float, YRes)
+    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
