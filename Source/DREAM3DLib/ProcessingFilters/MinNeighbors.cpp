@@ -70,7 +70,7 @@ m_FieldPhases(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -83,22 +83,22 @@ MinNeighbors::~MinNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::setupFilterOptions()
+void MinNeighbors::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Number Neighbors");
     option->setPropertyName("MinNumNeighbors");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void MinNeighbors::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
 }
@@ -224,16 +224,19 @@ void MinNeighbors::assign_badpoints()
     static_cast<DimType>(udims[2]),
   };
 
+  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
+  m_Neighbors = neighborsPtr->GetPointer(0);
+  neighborsPtr->initializeWithValues(-1);
+
   std::vector<int > remove;
-  size_t count = 1;
   int good = 1;
 //  int neighbor;
 //  int index = 0;
-  float x, y, z;
+//  float x, y, z;
   int current = 0;
   int most = 0;
-  int curgrain = 0;
-//  DimType row, plane;
+//  int curgrain = 0;
+ // DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
 
@@ -246,63 +249,94 @@ void MinNeighbors::assign_badpoints()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
   std::vector<int> currentvlist;
 
-//  int iter = 0;
-  std::vector<int > n(numgrains + 1);
-  while (count != 0)
+  size_t counter = 1;
+  size_t count = 0;
+  int kstride, jstride;
+  int grainname, grain;
+  int neighbor;
+  std::vector<int > n(numgrains + 1,0);
+  while (counter != 0)
   {
-    count = 0;
-    for (int i = 0; i < totalPoints; i++)
+    counter = 0;
+    for (int k = 0; k < dims[2]; k++)
     {
-      int grainname = m_GrainIds[i];
-      if (grainname < 0)
-      {
-        count++;
-        for (size_t c = 1; c < numgrains; c++)
-        {
-          n[c] = 0;
-        }
-        x = static_cast<float>(i % dims[0]);
-        y = static_cast<float>((i / dims[0]) % dims[1]);
-        z = static_cast<float>(i / (dims[0] * dims[1]));
-		current = 0;
-		most = 0;
-		curgrain = -1;
-		for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighpoint = i + neighpoints[j];
-          if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (dims[2] - 1)) good = 0;
-          if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (dims[1] - 1)) good = 0;
-          if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (dims[0] - 1)) good = 0;
-          if (good == 1)
-          {
-            int grain = m_GrainIds[neighpoint];
-			if (grain >= 0)
-            {
-	          n[grain]++;
-	          current = n[grain];
-	          if (current > most)
-	          {
-	            most = current;
-	            curgrain = grain;
-	          }
-            }
-          }
-        }
-        m_Neighbors[i] = curgrain;
-      }
-    }
+		kstride = static_cast<int>( dims[0]*dims[1]*k );
+	    for (int j = 0; j < dims[1]; j++)
+	    {
+			jstride = static_cast<int>( dims[0]*j );
+		    for (int i = 0; i < dims[0]; i++)
+		    {
+			  count = kstride+jstride+i;
+			  std::stringstream ss;
+		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+			  grainname = m_GrainIds[count];
+			  if (grainname < 0)
+			  {
+			    counter++;
+				current = 0;
+				most = 0;
+				for (int l = 0; l < 6; l++)
+				{
+				  good = 1;
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
+				  if (l == 0 && k == 0) good = 0;
+				  if (l == 5 && k == (dims[2] - 1)) good = 0;
+				  if (l == 1 && j == 0) good = 0;
+				  if (l == 4 && j == (dims[1] - 1)) good = 0;
+				  if (l == 2 && i == 0) good = 0;
+				  if (l == 3 && i == (dims[0] - 1)) good = 0;
+				  if (good == 1)
+				  {
+					grain = m_GrainIds[neighpoint];
+					if (grain >= 0)
+					{
+					  n[grain]++;
+					  current = n[grain];
+					  if (current > most)
+					  {
+						most = current;
+//					    m_Neighbors[count] = grain;
+					    m_Neighbors[count] = neighpoint;
+					  }
+					}
+				  }
+				}
+				for (int l = 0; l < 6; l++)
+				{
+//				  good = 1;
+				  neighpoint = static_cast<int>( count + neighpoints[l] );
+				  if (l == 0 && k == 0) good = 0;
+				  if (l == 5 && k == (dims[2] - 1)) good = 0;
+				  if (l == 1 && j == 0) good = 0;
+				  if (l == 4 && j == (dims[1] - 1)) good = 0;
+				  if (l == 2 && i == 0) good = 0;
+				  if (l == 3 && i == (dims[0] - 1)) good = 0;
+				  if (good == 1)
+				  {
+					grain = m_GrainIds[neighpoint];
+					if(grain >= 0) n[grain] = 0;
+				  }
+				}
+			}
+		  }
+		}
+	}
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
-      int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor >= 0)
+      grainname = m_GrainIds[j];
+      neighbor = m_Neighbors[j];
+      if (grainname < 0 && m_GrainIds[neighbor] >= 0)
       {
-        m_GrainIds[j] = neighbor;
-		    m_CellPhases[j] = m_FieldPhases[neighbor];
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
+//		  m_GrainIds[j] = neighbor;
+//		  m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
 //    std::stringstream ss;

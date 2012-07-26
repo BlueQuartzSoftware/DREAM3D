@@ -77,13 +77,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
-  m_PipelineBuilderWidget(NULL),
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+  m_PipelineBuilderWidget(NULL)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
   setupUi(this);
@@ -272,7 +268,7 @@ void DREAM3D_UI::setupGui()
   action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
 #endif
 
-  menubar->removeAction(menuPlugins->menuAction());
+ // menubar->removeAction(menuPlugins->menuAction());
 
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
@@ -288,7 +284,13 @@ void DREAM3D_UI::setupGui()
   // Now create our central widget
   m_PipelineBuilderWidget = new PipelineBuilderWidget(this);
   m_PipelineBuilderWidget->setStatusBar(this->statusBar());
+  m_PipelineBuilderWidget->setPipelineMenu(this->menuPipeline);
   centerWidget->layout()->addWidget(m_PipelineBuilderWidget);
+
+  connect(m_PipelineBuilderWidget, SIGNAL(fireWriteSettings()),
+          this, SLOT(writeSettings()) );
+  connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
+          this, SLOT(readSettings() ) );
 }
 
 
@@ -590,6 +592,7 @@ void DREAM3D_UI::loadPlugins()
       //std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
     }
   }
+#if 0
   if (NULL != m_PluginActionGroup)
   {
     QList<QAction*> actions = m_PluginActionGroup->actions();
@@ -598,6 +601,7 @@ void DREAM3D_UI::loadPlugins()
       menuPlugins->setEnabled(true);
     }
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------

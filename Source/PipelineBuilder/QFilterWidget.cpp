@@ -53,7 +53,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 
-#include "DREAM3DLib/Common/FilterOption.h"
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 #define PADDING 5
 #define BORDER 2
@@ -61,7 +61,8 @@
 #define IMAGE_HEIGHT 17
 
 
-
+// Initialize private static member variable
+QString QFilterWidget::m_OpenDialogLastDirectory = "";
 
 // -----------------------------------------------------------------------------
 //
@@ -73,6 +74,12 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
       m_IsSelected(false),
       m_HasPreflightErrors(false)
 {
+
+  if ( m_OpenDialogLastDirectory.isEmpty() )
+  {
+    m_OpenDialogLastDirectory = QDir::homePath();
+  }
+
   m_DeleteRect.setX(PADDING + BORDER);
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
@@ -263,14 +270,14 @@ void QFilterWidget::setupGui()
   setIsSelected(false);
   bool ok = false;
 
-  std::vector<FilterOption::Pointer> options = getFilter()->getFilterOptions();
+  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
   int optIndex = 0;
-  for (std::vector<FilterOption::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
-    FilterOption* option = (*iter).get();
-    FilterOption::WidgetType wType = option->getWidgetType();
+    FilterParameter* option = (*iter).get();
+    FilterParameter::WidgetType wType = option->getWidgetType();
 
-    if (wType == FilterOption::StringWidget)
+    if (wType == FilterParameter::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
@@ -280,7 +287,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setText(v.toString());
     }
-    else if (wType == FilterOption::IntWidget)
+    else if (wType == FilterParameter::IntWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
@@ -292,7 +299,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setText(v.toString());
     }
-    else if (wType == FilterOption::DoubleWidget)
+    else if (wType == FilterParameter::DoubleWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
@@ -304,7 +311,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setText(v.toString());
     }
-    else if (wType == FilterOption::InputFileWidget)
+    else if (wType == FilterParameter::InputFileWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
@@ -339,7 +346,42 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
-    else if (wType == FilterOption::OutputFileWidget)
+    else if (wType == FilterParameter::InputPathWidget)
+    {
+      QGridLayout* gridLayout = new QGridLayout();
+      gridLayout->setContentsMargins(0,0,0,0);
+
+      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
+      gridLayout->addWidget(label, 0, 0, 1, 1);
+
+      QFSDropLineEdit* fp = new QFSDropLineEdit(this);
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
+      QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+      fp->setCompleter(com);
+      QString theSlot("1");
+      theSlot.append("set");
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
+      theSlot.append("(const QString &)");
+     // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
+      QObject::connect( com, SIGNAL(activated(const QString &)),
+                      this, theSlot.toAscii());
+      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+                        this, theSlot.toAscii());
+//      connect(fp, SIGNAL(textChanged(const QString &)),
+//              this, SLOT(updateLineEdit(const QString &)));
+
+      gridLayout->addWidget(fp, 0, 1, 1, 1);
+
+      QPushButton* btn = new QPushButton("Select Folder");
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName() ));
+      gridLayout->addWidget(btn, 0, 2, 1, 1);
+
+      vertLayout->addLayout(gridLayout);
+      connect(btn, SIGNAL(clicked()), this, SLOT(selectInputPath()));
+      QVariant v = property(option->getPropertyName().c_str());
+      fp->setText(v.toString());
+    }
+    else if (wType == FilterParameter::OutputFileWidget)
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
@@ -369,7 +411,37 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
-    else if (wType == FilterOption::BooleanWidget)
+    else if (wType == FilterParameter::OutputPathWidget)
+    {
+      QGridLayout* gridLayout = new QGridLayout();
+      gridLayout->setContentsMargins(0,0,0,0);
+
+      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
+      gridLayout->addWidget(label, 0, 0, 1, 1);
+
+      QLineEdit* fp = new QLineEdit(this);
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
+      QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
+      fp->setCompleter(com);
+      QString theSlot("1");
+      theSlot.append("set");
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
+      theSlot.append("(const QString &)");
+
+      QObject::connect( fp, SIGNAL(textChanged(const QString &)),
+                        this, theSlot.toAscii());
+      gridLayout->addWidget(fp, 0, 1, 1, 1);
+
+      QPushButton* btn = new QPushButton("Select Folder...");
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName()));
+      gridLayout->addWidget(btn, 0, 2, 1, 1);
+
+      vertLayout->addLayout(gridLayout);
+      connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputPath()));
+      QVariant v = property(option->getPropertyName().c_str());
+      fp->setText(v.toString());
+    }
+    else if (wType == FilterParameter::BooleanWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QCheckBox* le = new QCheckBox(this);
@@ -379,12 +451,12 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setChecked(v.toBool());
     }
-    else if (wType == FilterOption::IntConstrainedWidget)
+    else if (wType == FilterParameter::IntConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QSpinBox* le = new QSpinBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
-      ConstrainedFilterOption<int>* filtOpt = dynamic_cast<ConstrainedFilterOption<int>* >(option);
+      ConstrainedFilterParameter<int>* filtOpt = dynamic_cast<ConstrainedFilterParameter<int>* >(option);
       if (filtOpt)
       {
         le->setRange(filtOpt->getMinimum(), filtOpt->getMaximum());
@@ -395,12 +467,12 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toInt());
     }
-    else if (wType == FilterOption::DoubleConstrainedWidget)
+    else if (wType == FilterParameter::DoubleConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QDoubleSpinBox* le = new QDoubleSpinBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
-      ConstrainedFilterOption<float>* filtOpt = dynamic_cast<ConstrainedFilterOption<float>* >(option);
+      ConstrainedFilterParameter<float>* filtOpt = dynamic_cast<ConstrainedFilterParameter<float>* >(option);
       if (filtOpt)
       {
         le->setRange(filtOpt->getMinimum(), filtOpt->getMaximum());
@@ -411,14 +483,14 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toDouble());
     }
-    else if (wType == FilterOption::ChoiceWidget)
+    else if (wType == FilterParameter::ChoiceWidget)
     {
-      ChoiceFilterOption* choiceFilterOption = ChoiceFilterOption::SafeObjectDownCast<FilterOption*, ChoiceFilterOption*>(option);
-      if (NULL == choiceFilterOption) { return; }
+      ChoiceFilterParameter* choiceFilterParameter = ChoiceFilterParameter::SafeObjectDownCast<FilterParameter*, ChoiceFilterParameter*>(option);
+      if (NULL == choiceFilterParameter) { return; }
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
       QComboBox* cb = new QComboBox(this);
       cb->setObjectName(QString::fromStdString(option->getPropertyName()));
-      std::vector<std::string> choices = choiceFilterOption->getChoices();
+      std::vector<std::string> choices = choiceFilterParameter->getChoices();
       for(unsigned int i = 0; i < choices.size(); ++i)
       {
         cb->addItem(QString::fromStdString(choices[i]));
@@ -505,12 +577,20 @@ void QFilterWidget::selectInputFile()
 {
   QObject* whoSent = sender();
 
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), "", tr("ALL Files (*.*)"));
+  QString file = QFileDialog::getOpenFileName(this,
+                                              tr("Select Input File"),
+                                              m_OpenDialogLastDirectory,
+                                              tr("ALL Files (*.*)"));
   if(true == file.isEmpty())
   {
     return;
   }
   bool ok = false;
+
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
+
   // for QButtons we prepended "btn_" to the end of the property name so strip that off
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
@@ -523,8 +603,55 @@ void QFilterWidget::selectInputFile()
   }
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter();
-  std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
-  for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  {
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
+    {
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
+      if(lb)
+      {
+        lb->setText(file);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::selectInputPath()
+{
+  QObject* whoSent = sender();
+
+  QString file = QFileDialog::getExistingDirectory(this,
+                                              tr("Select Input Folder"),
+                                              m_OpenDialogLastDirectory,
+                                              QFileDialog::ShowDirsOnly);
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  bool ok = false;
+
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
+
+  // for QButtons we prepended "btn_" to the end of the property name so strip that off
+  QString propName = whoSent->objectName();
+  propName = propName.remove(0, 4);
+
+  ok = setProperty(propName.toStdString().c_str(), file);
+  if (true == ok) { }
+  else
+  {
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+  }
+  // Now we need to find the specific filter that we are trying to set the value into
+  AbstractFilter::Pointer f = getFilter();
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
     if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
@@ -543,11 +670,15 @@ void QFilterWidget::selectInputFile()
 void QFilterWidget::selectOutputFile()
 {
   QObject* whoSent = sender();
-  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), "", tr("ALL Files (*.*)"));
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), m_OpenDialogLastDirectory, tr("ALL Files (*.*)"));
   if(true == file.isEmpty())
   {
     return;
   }
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
+
   bool ok = false;
   // for QButtons we prepended "btn_" to the end of the property name so strip that off
   QString propName = whoSent->objectName();
@@ -563,9 +694,9 @@ void QFilterWidget::selectOutputFile()
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter();
   // Get the options for that filter
-  std::vector<FilterOption::Pointer> opts = f->getFilterOptions();
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   // Loop on all the filter options to find the filter option we want to set
-  for (std::vector<FilterOption::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
     if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
@@ -585,15 +716,52 @@ void QFilterWidget::selectOutputFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 0
-void QFilterWidget::selectOutputFile(QString file)
+void QFilterWidget::selectOutputPath()
 {
-  if (true == file.isEmpty()) { return;}
   QObject* whoSent = sender();
+  QString file = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
+                                              m_OpenDialogLastDirectory, QFileDialog::ShowDirsOnly);
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
+
   bool ok = false;
-    ok = setProperty(whoSent->objectName().toStdString().c_str(), file);
+  // for QButtons we prepended "btn_" to the end of the property name so strip that off
+  QString propName = whoSent->objectName();
+  propName = propName.remove(0, 4);
+
+  ok = setProperty(propName.toStdString().c_str(), file);
+  if (true == ok) {}
+  else
+  {
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+  }
+
+  // Now we need to find the specific filter that we are trying to set the value into
+  AbstractFilter::Pointer f = getFilter();
+  // Get the options for that filter
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  // Loop on all the filter options to find the filter option we want to set
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  {
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
+    {
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
+      if(lb)
+      {
+        lb->setText(file);
+        // Setting the text into this QLineEdit will trigger the 'textChanged()' signal
+        // to be emitted by the QLineEdit which will cause the value to sent to
+        // the underlying filter instance which will trigger the SIGNAL parametersChanged()
+        // to be broadcast
+      }
+    }
+  }
 }
-#endif
 
 // -----------------------------------------------------------------------------
 //

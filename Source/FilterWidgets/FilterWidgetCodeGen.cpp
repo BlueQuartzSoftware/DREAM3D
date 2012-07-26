@@ -46,7 +46,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterOption.h"
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 
 #define GENERATE_FILTER_TEXT_LIST 0
@@ -97,7 +97,7 @@ template<typename T>
 void createHeaderFile( const std::string &group, const std::string &filter)
 {
   typename T::Pointer t = T::New();
-  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+  std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
 
   std::stringstream ss;
@@ -161,7 +161,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
  // Loop on all the filter options
   for(size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
 
@@ -287,7 +287,7 @@ void createOptionsWriterCode( const std::string &group, const std::string &filte
   std::string completePath = MXADir::toNativeSeparators(ss.str());
 //  if (MXADir::exists(completePath) == true)
 //  {
-//   std::cout << filter << ": FilterOptions file already exists in source directory. NOT generating FilterOptionsWriter." << std::endl;
+//   std::cout << filter << ": FilterParameters file already exists in source directory. NOT generating FilterParametersWriter." << std::endl;
 //   return;
 //  }
   std::string origHeaderFile = completePath;
@@ -461,7 +461,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
 
   createOptionsWriterCode<T>(group, filter);
   typename T::Pointer t = T::New();
-  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+  std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   std::stringstream ss;
   ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
@@ -514,7 +514,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   // Loop on all the options getting the defaults from a fresh instance of the filter class
   for (size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
@@ -539,7 +539,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fprintf(f, "  %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
   for (size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
@@ -559,7 +559,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fprintf(f, "  Q%sWidget* w = new Q%sWidget(NULL);\n", filter.c_str(), filter.c_str());
   for (size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
@@ -577,7 +577,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   // Loop on all the filter options
   for (size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
 
@@ -615,7 +615,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fprintf(f, "  prefs.setValue(\"Filter_Name\", \"%s\" );\n", filter.c_str());
   for (size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
 
@@ -629,58 +629,50 @@ void createSourceFile( const std::string &group, const std::string &filter)
 
   for (size_t i = 0; i < options.size(); ++i)
   {
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
     std::string hl = opt->getHumanLabel();
     fprintf(f, "  {\n   QVariant p_%s = prefs.value(\"%s\");\n", prop.c_str(), prop.c_str());
 
-    if(opt->getWidgetType() == FilterOption::StringWidget)
+    if(opt->getWidgetType() == FilterParameter::StringWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
     }
-    else if(opt->getWidgetType() == FilterOption::IntWidget)
+    else if(opt->getWidgetType() == FilterParameter::IntWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
     }
-    else if(opt->getWidgetType() == FilterOption::DoubleWidget)
+    else if(opt->getWidgetType() == FilterParameter::DoubleWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString());}\n", prop.c_str());
     }
-    else if(opt->getWidgetType() == FilterOption::InputFileWidget)
-    {
-      //  fprintf(f, "   QObject* obj = qFindChild<QObject*>(this, \"%s\");\n", prop.c_str());
-
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
-      fprintf(f, "   if (lb) { lb->setText(p_%s.toString()); }\n", prop.c_str());
-      //   fprintf(f, "   bool ok = false;\n");
-      fprintf(f, "   set%s(p_%s.toString());\n", prop.c_str(), prop.c_str());
-      //    fprintf(f, "   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
-    }
-    else if(opt->getWidgetType() == FilterOption::OutputFileWidget)
+    else if(opt->getWidgetType() == FilterParameter::InputFileWidget
+        || opt->getWidgetType() == FilterParameter::InputPathWidget
+        || opt->getWidgetType() == FilterParameter::OutputFileWidget
+        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(p_%s.toString()); }\n", prop.c_str());
       fprintf(f, "   set%s(p_%s.toString());\n", prop.c_str(), prop.c_str());
-//      fprintf(f, "   bool ok = false;\n   ok = setProperty(\"%s\", p_%s.toString());\n", prop.c_str(), prop.c_str() );
     }
-    else if(opt->getWidgetType() == FilterOption::BooleanWidget)
+    else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
       fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
     }
-    else if(opt->getWidgetType() == FilterOption::IntConstrainedWidget)
+    else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
     {
       fprintf(f, "assert(false);\n");
     }
-    else if(opt->getWidgetType() == FilterOption::DoubleConstrainedWidget)
+    else if(opt->getWidgetType() == FilterParameter::DoubleConstrainedWidget)
     {
       fprintf(f, "assert(false);\n");
     }
-    else if(opt->getWidgetType() == FilterOption::ChoiceWidget)
+    else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
       fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (cb) {\n");
@@ -692,7 +684,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     else
     {
-      fprintf(f, " #error: Class %s  Property %s  NOTHING WAS GENERATED TO READ/WRITE PROPERTY\n", hl.c_str(), prop.c_str());
+      fprintf(f, " #error: Class %s  Property %s  NOTHING WAS GENERATED TO READ/WRITE PROPERTY\n", filter.c_str(), prop.c_str());
     }
     fprintf(f, "  }\n");
   }
@@ -751,48 +743,48 @@ void createListFile( const std::string &group, const std::string &filter)
   fprintf(f, "FILTERNAME: %s\n", filter.c_str());
 
   typename T::Pointer t = T::New();
-   std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+   std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   fprintf(f, "** OPTIONS **\n");
 
     for (size_t i = 0; i < options.size(); ++i)
     {
 
-      FilterOption::Pointer opt = options[i];
+      FilterParameter::Pointer opt = options[i];
       std::string prop = opt->getPropertyName();
       std::string typ = opt->getValueType();
       std::string hl = opt->getHumanLabel();
       fprintf(f, "  NAME: %s\n", hl.c_str());
 
-      if(opt->getWidgetType() == FilterOption::IntWidget)
+      if(opt->getWidgetType() == FilterParameter::IntWidget)
       {
         fprintf(f, "  TYPE: Integer");
       }
-      else if(opt->getWidgetType() == FilterOption::DoubleWidget)
+      else if(opt->getWidgetType() == FilterParameter::DoubleWidget)
       {
         fprintf(f, "  TYPE: Double");
       }
-      else if(opt->getWidgetType() == FilterOption::InputFileWidget)
+      else if(opt->getWidgetType() == FilterParameter::InputFileWidget)
       {
         fprintf(f, "  TYPE: Input File");
       }
-      else if(opt->getWidgetType() == FilterOption::OutputFileWidget)
+      else if(opt->getWidgetType() == FilterParameter::OutputFileWidget)
       {
         fprintf(f, "  TYPE: Output File");
       }
-      else if(opt->getWidgetType() == FilterOption::BooleanWidget)
+      else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
       {
         fprintf(f, "  TYPE: Boolean (On or Off)");
       }
-      else if(opt->getWidgetType() == FilterOption::IntConstrainedWidget)
+      else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
       {
         fprintf(f, "  TYPE: Bounded Integer");
       }
-      else if(opt->getWidgetType() == FilterOption::DoubleConstrainedWidget)
+      else if(opt->getWidgetType() == FilterParameter::DoubleConstrainedWidget)
       {
         fprintf(f, "  TYPE: Bounded Double");
       }
-      else if(opt->getWidgetType() == FilterOption::ChoiceWidget)
+      else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
       {
         fprintf(f, "  TYPE: Choices");
       }
@@ -898,7 +890,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   return;
 #endif
   typename T::Pointer t = T::New();
-  std::vector<FilterOption::Pointer> options = t->getFilterOptions();
+  std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   std::stringstream ss;
   ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "/" << filter << ".html";
@@ -968,41 +960,41 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   for (size_t i = 0; i < options.size(); ++i)
   {
     fprintf(f, "<tr bgcolor=\"#E2E2E2\">\n");
-    FilterOption::Pointer opt = options[i];
+    FilterParameter::Pointer opt = options[i];
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
     std::string hl = opt->getHumanLabel();
     fprintf(f, "<td>%s</td>", hl.c_str());
 
-    if(opt->getWidgetType() == FilterOption::IntWidget)
+    if(opt->getWidgetType() == FilterParameter::IntWidget)
     {
       fprintf(f, "<td>Integer</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::DoubleWidget)
+    else if(opt->getWidgetType() == FilterParameter::DoubleWidget)
     {
       fprintf(f, "<td>Double</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::InputFileWidget)
+    else if(opt->getWidgetType() == FilterParameter::InputFileWidget)
     {
       fprintf(f, "<td>Input File</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::OutputFileWidget)
+    else if(opt->getWidgetType() == FilterParameter::OutputFileWidget)
     {
       fprintf(f, "<td>Output File</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::BooleanWidget)
+    else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
       fprintf(f, "<td>Boolean (On or Off)</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::IntConstrainedWidget)
+    else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
     {
       fprintf(f, "<td>Bounded Integer</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::DoubleConstrainedWidget)
+    else if(opt->getWidgetType() == FilterParameter::DoubleConstrainedWidget)
     {
       fprintf(f, "<td>Bounded Double</td>");
     }
-    else if(opt->getWidgetType() == FilterOption::ChoiceWidget)
+    else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
       fprintf(f, "<td>Choices</td>");
     }

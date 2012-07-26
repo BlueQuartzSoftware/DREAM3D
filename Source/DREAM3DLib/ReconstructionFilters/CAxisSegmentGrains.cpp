@@ -69,17 +69,18 @@ const static float m_pi = static_cast<float>(M_PI);
 CAxisSegmentGrains::CAxisSegmentGrains() :
 SegmentGrains(),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MisorientationTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
 m_Quats(NULL),
-m_Active(NULL),
 m_CellPhases(NULL),
+m_GoodVoxels(NULL),
+m_Active(NULL),
 m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
@@ -89,7 +90,7 @@ m_CrystalStructures(NULL)
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -104,35 +105,35 @@ CAxisSegmentGrains::~CAxisSegmentGrains()
 //
 // -----------------------------------------------------------------------------
 
-void CAxisSegmentGrains::setupFilterOptions()
+void CAxisSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
     option->setHumanLabel("C-Axis Misorientation Tolerance");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #if 0
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Randomly Reorder Generated Grain Ids");
     option->setPropertyName("RandomizeGrainIds");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #endif
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CAxisSegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
@@ -275,7 +276,7 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
     setErrorCondition(-1);
     std::stringstream ss;
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
 
@@ -319,7 +320,7 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   float cx1, cx2, cy1, cy2, cz1, cz2;
   float denom1, denom2;
 
-  if(m_GrainIds[neighborpoint] == 0)
+  if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
 	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
 	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];

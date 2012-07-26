@@ -84,13 +84,13 @@ class  SMVtkPolyDataWriter : public AbstractFilter
     * @brief This method will instantiate all the end user settable options/parameters
     * for this filter
     */
-    virtual void setupFilterOptions();
+    virtual void setupFilterParameters();
 
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void preflight();
 

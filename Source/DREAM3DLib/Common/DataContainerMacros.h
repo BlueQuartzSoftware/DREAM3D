@@ -42,7 +42,7 @@
     setErrorCondition(errCode##000);\
     std::stringstream _##Name##_ss;\
     _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
-    addErrorMessage(getNameOfClass(), _##Name##_ss.str(), errCode##000);\
+    addErrorMessage(getHumanLabel(), _##Name##_ss.str(), errCode##000);\
   }\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
   if (NULL == m_##Name ) {\
@@ -58,7 +58,7 @@
   {if (m_##Name##ArrayName.empty() == true){ \
     setErrorCondition(err##000);\
     ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
-    addErrorMessage(getNameOfClass(), ss.str(), err);\
+    addErrorMessage(getHumanLabel(), ss.str(), err);\
   }\
   std::string _s(#Name); \
   addRequired##DType(_s);\
@@ -66,7 +66,7 @@
   if (NULL == m_##Name ) {\
     ss.str(""); ss << "\nFilter " << getNameOfClass() << " requires " << #DType << " array '" << \
     m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
-    addErrorMessage(getNameOfClass(), ss.str(), err); \
+    addErrorMessage(getHumanLabel(), ss.str(), err); \
     setErrorCondition(err);\
   }}
 
@@ -76,7 +76,7 @@
   {\
     setErrorCondition(-10000);\
     ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; \
-    addErrorMessage(getNameOfClass(), ss.str(), -10000);\
+    addErrorMessage(getHumanLabel(), ss.str(), -10000);\
   }\
   std::string _s(#Name);\
   addCreated##DType(_s);\
@@ -95,7 +95,7 @@
         ss << "'" << m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
         setErrorCondition(-500);\
       }\
-      addErrorMessage(getNameOfClass(), ss.str(), -500);\
+      addErrorMessage(getHumanLabel(), ss.str(), -500);\
     } else {\
       p->initializeWithValues(initValue);\
       p->SetNumberOfComponents(NumComp);\

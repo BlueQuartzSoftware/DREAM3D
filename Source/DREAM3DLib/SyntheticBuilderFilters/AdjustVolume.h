@@ -76,8 +76,8 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Adjust Volume"; }
 
 
-    virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

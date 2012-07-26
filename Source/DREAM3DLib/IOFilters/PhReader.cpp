@@ -49,9 +49,12 @@
 PhReader::PhReader() :
 FileReader(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+m_GrainIds(NULL),
+m_XRes(1.0f),
+m_YRes(1.0f),
+m_ZRes(1.0f)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -65,26 +68,53 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::setupFilterOptions()
+void PhReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("X Res");
+    option->setPropertyName("XRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Y Res");
+    option->setPropertyName("YRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Z Res");
+    option->setPropertyName("ZRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
+    writer->writeValue("XRes", getXRes() );
+  writer->writeValue("YRes", getYRes() );
+  writer->writeValue("ZRes", getZRes() );
 }
 
 // -----------------------------------------------------------------------------
@@ -101,7 +131,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -4);
+    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -135,7 +165,7 @@ int  PhReader::readFile()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -156,7 +186,7 @@ int  PhReader::readFile()
     std::stringstream ss;
     ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
 
@@ -213,7 +243,7 @@ int  PhReader::readFile()
     ss << "ERROR: data size does not match header dimensions. ";
     ss << "\t" << index << "\t" << nz * nx * ny;
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), 1);
+    addErrorMessage(getHumanLabel(), ss.str(), 1);
     return -1;
     inFile.close();
   }
@@ -221,7 +251,7 @@ int  PhReader::readFile()
   // Read the data and stick it in the data Container
   getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
   getDataContainer()->setDimensions(nx, ny, nz);
-  getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);
+  getDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
   getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 
   tokens.clear();

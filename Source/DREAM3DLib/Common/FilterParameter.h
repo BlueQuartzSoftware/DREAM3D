@@ -34,20 +34,27 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FILTEROPTION_H_
-#define FILTEROPTION_H_
+#ifndef _FilterParameter_H_
+#define _FilterParameter_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-
-class FilterOption
+/**
+ * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
+ * @brief This class holds the various properties that an input parameter to a
+ * filter needs to describe itself.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 17, 2012
+ * @version 1.0
+ */
+class FilterParameter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FilterOption)
-    DREAM3D_STATIC_NEW_MACRO(FilterOption)
-    DREAM3D_TYPE_MACRO(FilterOption)
-    virtual ~FilterOption(){}
+    DREAM3D_SHARED_POINTERS(FilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(FilterParameter)
+    DREAM3D_TYPE_MACRO(FilterParameter)
+    virtual ~FilterParameter(){}
 
     enum WidgetType
     {
@@ -55,7 +62,9 @@ class FilterOption
       IntWidget,
       DoubleWidget,
       InputFileWidget,
+      InputPathWidget,
       OutputFileWidget,
+      OutputPathWidget,
       BooleanWidget,
       IntConstrainedWidget,
       DoubleConstrainedWidget,
@@ -68,61 +77,62 @@ class FilterOption
     DREAM3D_INSTANCE_PROPERTY(WidgetType, WidgetType)
     DREAM3D_INSTANCE_STRING_PROPERTY(ValueType)
     DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
 
   protected:
-    FilterOption() : m_ValueType("Not_Set"){}
+    FilterParameter() : m_ValueType("Not_Set"){}
 
   private:
-    FilterOption(const FilterOption&); // Copy Constructor Not Implemented
-    void operator=(const FilterOption&); // Operator '=' Not Implemented
+    FilterParameter(const FilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const FilterParameter&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-class ConstrainedFilterOption : public FilterOption
+class ConstrainedFilterParameter : public FilterParameter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ConstrainedFilterOption<T>)
-    DREAM3D_STATIC_NEW_MACRO(ConstrainedFilterOption<T>)
-    DREAM3D_TYPE_MACRO_SUPER(ConstrainedFilterOption<T>, FilterOption)
+    DREAM3D_SHARED_POINTERS(ConstrainedFilterParameter<T>)
+    DREAM3D_STATIC_NEW_MACRO(ConstrainedFilterParameter<T>)
+    DREAM3D_TYPE_MACRO_SUPER(ConstrainedFilterParameter<T>, FilterParameter)
 
-    virtual ~ConstrainedFilterOption(){}
+    virtual ~ConstrainedFilterParameter(){}
 
     DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
 
   protected:
-    ConstrainedFilterOption() {}
+    ConstrainedFilterParameter() {}
 
   private:
-    ConstrainedFilterOption(const ConstrainedFilterOption&); // Copy Constructor Not Implemented
-    void operator=(const ConstrainedFilterOption&); // Operator '=' Not Implemented
+    ConstrainedFilterParameter(const ConstrainedFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ConstrainedFilterParameter&); // Operator '=' Not Implemented
 };
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class ChoiceFilterOption : public FilterOption
+class ChoiceFilterParameter : public FilterParameter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ChoiceFilterOption)
-    DREAM3D_STATIC_NEW_MACRO(ChoiceFilterOption)
-    DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterOption, FilterOption)
+    DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
-    virtual ~ChoiceFilterOption(){}
+    virtual ~ChoiceFilterParameter(){}
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices)
 
   protected:
-    ChoiceFilterOption() {}
+    ChoiceFilterParameter() {}
 
   private:
-    ChoiceFilterOption(const ChoiceFilterOption&); // Copy Constructor Not Implemented
-    void operator=(const ChoiceFilterOption&); // Operator '=' Not Implemented
+    ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
 };
 
 
-#endif /* FILTEROPTION_H_ */
+#endif /* _FilterParameter_H_ */

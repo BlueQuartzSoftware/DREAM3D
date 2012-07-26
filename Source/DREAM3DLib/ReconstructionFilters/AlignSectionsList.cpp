@@ -66,7 +66,7 @@ AlignSectionsList::AlignSectionsList() :
 AlignSections(),
 m_GoodVoxels(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -79,25 +79,25 @@ AlignSectionsList::~AlignSectionsList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::setupFilterOptions()
+void AlignSectionsList::setupFilterParameters()
 {
   // Now append our options
-  std::vector<FilterOption::Pointer> options ;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }
@@ -113,9 +113,9 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   if(true == m_InputFile.empty())
   {
-    ss << ": The Input file name must be set before executing this filter.";
+    ss << "The Input file name must be set before executing this filter.";
     setErrorCondition(-1);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
 
 

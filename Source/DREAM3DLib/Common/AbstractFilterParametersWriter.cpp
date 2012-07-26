@@ -33,56 +33,22 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "AbstractFilterParametersWriter.h"
 
-#ifndef MeshSmoothingPlugin_H_
-#define MeshSmoothingPlugin_H_
-
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include "QtSupport/DREAM3DPluginInterface.h"
-
-
-/**
- * @class MeshSmoothingPlugin MeshSmoothingPlugin.h SurfaceMeshing/MeshSmoothingPlugin.h
- * @brief
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 10, 2012
- * @version 1.0
- */
-class MeshSmoothingPlugin : public QObject, public DREAM3DPluginInterface
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilterParametersWriter::AbstractFilterParametersWriter()
 {
-    Q_OBJECT
-    Q_INTERFACES(DREAM3DPluginInterface)
+  // TODO Auto-generated constructor stub
 
-  public:
-    MeshSmoothingPlugin();
-    virtual ~MeshSmoothingPlugin();
-    /**
-     * @brief Returns the name of the plugin
-     */
-    virtual QString getPluginName();
+}
 
-    /**
-     * @brief Register all the filters with the FilterWidgetFactory
-     */
-    virtual void registerFilterWidgets();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilterParametersWriter::~AbstractFilterParametersWriter()
+{
+  // TODO Auto-generated destructor stub
+}
 
-    /**
-     * @brief Writes the settings in the input gui to the Application's preference file
-     * @param prefs A valid QSettings pointer.
-     */
-    virtual void writeSettings(QSettings &prefs);
-
-    /**
-     * @brief Reads the settings from the Application's preference file and sets
-     * the input GUI widgets accordingly.
-     * @param prefs
-     */
-    virtual void readSettings(QSettings &prefs);
-
-  private:
-    MeshSmoothingPlugin(const MeshSmoothingPlugin&); // Copy Constructor Not Implemented
-    void operator=(const MeshSmoothingPlugin&); // Operator '=' Not Implemented
-};
-
-#endif /* MeshSmoothingPlugin_H_ */

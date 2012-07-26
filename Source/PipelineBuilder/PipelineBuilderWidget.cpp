@@ -52,6 +52,8 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QColor>
 #include <QtGui/QBrush>
+#include <QtGui/QMenu>
+#include <QtGui/QMenuBar>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -73,14 +75,11 @@ namespace Detail
 PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
 DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
+m_MenuPipeline(NULL),
 m_WorkerThread(NULL),
-m_DocErrorTabsIsOpen(false),
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+m_DocErrorTabsIsOpen(false)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   setupGui();
   checkIOFiles();
@@ -90,7 +89,40 @@ m_OpenDialogLastDirectory("~/")
 //
 // -----------------------------------------------------------------------------
 PipelineBuilderWidget::~PipelineBuilderWidget()
-{}
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
+{
+  this->m_MenuPipeline = menuPipeline;
+
+  m_actionClear = new QAction(m_MenuPipeline);
+  m_actionClear->setObjectName(QString::fromUtf8("actionClear"));
+  m_actionClear->setText(QApplication::translate("DREAM3D_UI", "Clear", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(m_actionClear);
+  connect(m_actionClear, SIGNAL(triggered()),
+          this, SLOT(actionClear_triggered()) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionClear_triggered()
+{
+  // Clear Any Existing Pipeline
+  m_PipelineViewWidget->clearWidgets();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMenu* PipelineBuilderWidget::getPipelineMenu()
+{
+  return m_MenuPipeline;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -323,7 +355,7 @@ void PipelineBuilderWidget::setupGui()
     presetFilter->setText(0, "Statistics");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "DataContainerReader" << "FindSizes"  << "FindShapes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindODF" << "FindMDF" 
+    presetFilterList << "DataContainerReader" << "FindSizes"  << "FindShapes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindODF" << "FindMDF"
       << "FindAxisODF" << "FieldDataCSVWriter" << "DataContainerWriter";
     m_presetMap["Statistics"] = presetFilterList;
   }
@@ -691,6 +723,8 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
     return;
   }
 
+  // Save the preferences file NOW in case something happens
+  emit fireWriteSettings();
 
   m_hasErrors = false;
   m_hasWarnings = false;
@@ -949,7 +983,7 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
       //Handle duplicate case
       else if(listLower == insertLower)
       {
-        QMessageBox::critical(this, QString("DREAM3D"), QString("A favorite named " + favoriteTitle + " already exists.\nPlease try again."));
+        QMessageBox::critical(this, QString("DREAM3D"), QString("A favorite named " + favoriteTitle + " already exists.\nPlease select another name."));
         delete favName;
         break;
       }
@@ -997,6 +1031,8 @@ void PipelineBuilderWidget::on_addFavoriteBtn_clicked() {
       }
     }
   }
+  // Tell everyone to save their preferences NOW instead of waiting until the app quits
+   emit fireWriteSettings();
 }
 
 // -----------------------------------------------------------------------------
@@ -1022,6 +1058,9 @@ void PipelineBuilderWidget::on_removeFavoriteBtn_clicked() {
     //Remove favorite, graphically, from the DREAM3D interface
     filterLibraryTree->removeItemWidget(item, 0);
     delete item;
+
+    // Write these changes out to the preferences file
+    emit fireWriteSettings();
   }
 }
 

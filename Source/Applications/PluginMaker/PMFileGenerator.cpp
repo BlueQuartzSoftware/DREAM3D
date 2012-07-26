@@ -162,10 +162,26 @@ void PMFileGenerator::generateOutput()
         QTextStream out(&f);
         out << text;
       }
-
     }
-
-
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMFileGenerator::generateFileContents() {
+  QString pluginName = getPluginName();
+  QString text = "";
+
+  //Open file
+  QFile rfile( getCodeTemplateResourcePath() );
+  if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+    QTextStream in(&rfile);
+    text = in.readAll();
+    text.replace("@PluginName@", pluginName);
+    QFileInfo fi( getFileName() );
+    QString className = fi.baseName();
+    text.replace("@ClassName@", className);
+    text.replace( "@HTML_FILE_NAME@", getFileName() );
+  }
+  return text;
+}

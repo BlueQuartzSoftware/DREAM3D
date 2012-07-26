@@ -59,7 +59,7 @@ m_XRes(1.0f),
 m_YRes(1.0f),
 m_ZRes(1.0f)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -72,33 +72,33 @@ RegularizeZSpacing::~RegularizeZSpacing()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::setupFilterOptions()
+void RegularizeZSpacing::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Z Positions File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("New Z Res");
     option->setPropertyName("ZRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ZRes", getZRes() );

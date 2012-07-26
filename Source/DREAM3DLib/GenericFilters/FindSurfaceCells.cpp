@@ -61,7 +61,7 @@ FindSurfaceCells::~FindSurfaceCells()
 {
 }
 // -----------------------------------------------------------------------------
-void FindSurfaceCells::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

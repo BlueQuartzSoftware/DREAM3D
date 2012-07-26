@@ -76,7 +76,7 @@ SegmentGrains::~SegmentGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 
@@ -110,7 +110,7 @@ void SegmentGrains::execute()
   {
     setErrorCondition(-1);
     ss << " DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   // int64_t totalPoints = m->getTotalPoints();

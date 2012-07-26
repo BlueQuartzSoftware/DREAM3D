@@ -69,7 +69,7 @@ m_SurfaceFields(NULL),
 m_Quats(NULL),
 m_CellEulerAngles(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -81,24 +81,24 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void YSChoiAbaqusReader::setupFilterOptions()
+void YSChoiAbaqusReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void YSChoiAbaqusReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
 }
@@ -116,7 +116,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 

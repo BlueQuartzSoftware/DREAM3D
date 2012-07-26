@@ -644,7 +644,7 @@ void PrimaryPhaseWidget::updateSizeDistributionPlot()
   m_SizeDistributionCurve->setData(xD, yD);
 #endif
 
-  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xCo[0] - (xCo[0] * 0.1), xMax * 1.10);
+  m_SizeDistributionPlot->setAxisScale(QwtPlot::xBottom, xCo[0] - (xCo[0] * 0.1), xCo[1] * 1.10);
   m_SizeDistributionPlot->setAxisScale(QwtPlot::yLeft, 0.0, yMax);
 
   m_SizeDistributionPlot->replot();
@@ -857,9 +857,11 @@ void PrimaryPhaseWidget::extractStatsData(DataContainer::Pointer m, int index)
   m_CrystalStructure = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
+  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_PhaseType = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
+  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);
   if (statsDataArray == NULL)
   {

@@ -33,12 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "TextFilterOptionsWriter.h"
+#include "TextFilterParametersWriter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextFilterOptionsWriter::TextFilterOptionsWriter()
+TextFilterParametersWriter::TextFilterParametersWriter()
 {
 
 }
@@ -46,31 +46,31 @@ TextFilterOptionsWriter::TextFilterOptionsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextFilterOptionsWriter::~TextFilterOptionsWriter()
+TextFilterParametersWriter::~TextFilterParametersWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::openOptionsGroup(AbstractFilter* filter)
-{
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::closeOptionsGroup()
+int TextFilterParametersWriter::openOptionsGroup(AbstractFilter* filter)
 {
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::closeOptionsGroup()
+{
+  return 0;
+}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, const std::string value)
+int TextFilterParametersWriter::writeValue(const std::string name, const std::string value)
 {
   int err = 0;
   return err;
@@ -80,7 +80,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, const std::strin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, int8_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, int8_t value)
 {
   int err = 0;
   return err;
@@ -89,7 +89,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, int8_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, int16_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, int16_t value)
 {
   int err = 0;
   return err;
@@ -98,7 +98,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, int16_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, int32_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, int32_t value)
 {
   int err = 0;
   return err;
@@ -107,7 +107,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, int32_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, int64_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, int64_t value)
 {
   int err = 0;
   return err;
@@ -116,7 +116,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, int64_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, uint8_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, uint8_t value)
 {
   int err = 0;
   return err;
@@ -125,7 +125,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, uint8_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, uint16_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, uint16_t value)
 {
   int err = 0;
   return err;
@@ -134,7 +134,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, uint16_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, uint32_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, uint32_t value)
 {
   int err = 0;
   return err;
@@ -143,7 +143,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, uint32_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, uint64_t value)
+int TextFilterParametersWriter::writeValue(const std::string name, uint64_t value)
 {
   int err = 0;
   return err;
@@ -152,7 +152,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, uint64_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, float value)
+int TextFilterParametersWriter::writeValue(const std::string name, float value)
 {
   int err = 0;
   return err;
@@ -161,7 +161,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, float value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, double value)
+int TextFilterParametersWriter::writeValue(const std::string name, double value)
 {
   int err = 0;
   return err;
@@ -170,7 +170,7 @@ int TextFilterOptionsWriter::writeValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterOptionsWriter::writeValue(const std::string name, QualityMetricFilter* f)
+int TextFilterParametersWriter::writeValue(const std::string name, QualityMetricFilter* f)
 {
   int err = 0;
   return err;
