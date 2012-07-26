@@ -74,6 +74,9 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Ph File (Grain Ids)"; }
@@ -97,6 +100,8 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     float* m_CellEulerAngles;
     int32_t* m_FieldPhases;
     float* m_FieldEulerAngles;
+    unsigned int* m_CrystalStructures;
+    unsigned int* m_PhaseTypes;
 
     PhReader(const PhReader&); //Not Implemented
     void operator=(const PhReader&); //Not Implemented
