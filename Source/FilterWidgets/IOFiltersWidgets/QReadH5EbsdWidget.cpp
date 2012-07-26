@@ -64,7 +64,10 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
     reorderarray(false),
     aligneulers(false)
 {
-  m_OpenDialogLastDirectory = QDir::homePath();
+  if ( getOpenDialogLastDirectory().isEmpty() )
+  {
+    setOpenDialogLastDirectory( QDir::homePath() );
+  }
   setupUi(this);
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   setupGui();
@@ -203,7 +206,7 @@ void QReadH5EbsdWidget::setupGui()
 void QReadH5EbsdWidget::on_m_H5EbsdBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
-                                                 m_OpenDialogLastDirectory,
+                                                 getOpenDialogLastDirectory(),
                                                  tr("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
@@ -212,7 +215,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdBtn_clicked()
   m_H5EbsdFile->setText(p);
   on_m_H5EbsdFile_textChanged(m_H5EbsdFile->text() );
   m_H5EbsdFile->blockSignals(false);
-  m_OpenDialogLastDirectory = fi.path();
+  setOpenDialogLastDirectory( fi.path() );
 }
 
 
@@ -349,7 +352,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       {
         on_addQualityMetric_clicked();
       }
-      m_OpenDialogLastDirectory = fi.path();
+      setOpenDialogLastDirectory( fi.path() );
     }
   }
   else

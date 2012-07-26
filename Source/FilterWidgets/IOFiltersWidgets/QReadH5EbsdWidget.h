@@ -83,7 +83,6 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     bool                        rotateslice;
     bool                        reorderarray;
     bool                        aligneulers;
-    QString                     m_OpenDialogLastDirectory;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
