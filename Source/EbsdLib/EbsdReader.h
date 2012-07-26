@@ -76,7 +76,7 @@ class EbsdLib_EXPORT EbsdReader
     /** @brief The Number of Columns of Data in the Ebsd Data file */
     EBSD_INSTANCE_PROPERTY(int, NumFields)
 
-    /** @brief The unchanged header from teh data file */
+    /** @brief The unchanged header from the data file */
     EBSD_INSTANCE_STRING_PROPERTY(OriginalHeader)
     /**
      * @brief Appends text to the current Original Header Text
