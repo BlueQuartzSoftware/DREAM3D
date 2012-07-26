@@ -65,9 +65,15 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputInfoFile)
 
-    //------ Required Cell Data
+    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read Ph File (Grain Ids)"; }
@@ -87,6 +93,10 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 
   private:
     int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
+    float* m_CellEulerAngles;
+    int32_t* m_FieldPhases;
+    float* m_FieldEulerAngles;
 
     PhReader(const PhReader&); //Not Implemented
     void operator=(const PhReader&); //Not Implemented

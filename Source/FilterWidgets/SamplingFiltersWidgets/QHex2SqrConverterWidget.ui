@@ -32,7 +32,7 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="5" column="0">
+   <item row="4" column="0">
     <widget class="Line" name="line_9">
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
@@ -42,7 +42,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="label_58">
      <property name="styleSheet">
       <string notr="true">QLabel 
@@ -56,7 +56,7 @@ font-size: 12px;
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
+   <item row="6" column="0">
     <layout class="QGridLayout" name="gridLayout_20">
      <item row="1" column="0">
       <widget class="QLabel" name="label_50">
@@ -231,7 +231,7 @@ font-size: 11px;
      </item>
     </layout>
    </item>
-   <item row="8" column="0">
+   <item row="7" column="0">
     <layout class="QHBoxLayout" name="_6">
      <item>
       <widget class="QLabel" name="label_17">
@@ -289,7 +289,7 @@ font-size: 11px;
      </item>
     </layout>
    </item>
-   <item row="9" column="0">
+   <item row="8" column="0">
     <widget class="QLabel" name="label_57">
      <property name="font">
       <font>
@@ -303,7 +303,7 @@ font-size: 11px;
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
+   <item row="9" column="0">
     <widget class="QListWidget" name="m_FileListView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
@@ -316,109 +316,12 @@ font-size: 11px;
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
+   <item row="10" column="0">
     <widget class="QLabel" name="m_ErrorMessage">
      <property name="text">
       <string>Error Messages</string>
      </property>
     </widget>
-   </item>
-   <item row="2" column="0">
-    <layout class="QGridLayout" name="gridLayout_2">
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="spacing">
-      <number>6</number>
-     </property>
-     <item row="1" column="0" colspan="2">
-      <widget class="QLabel" name="label_6">
-       <property name="styleSheet">
-        <string notr="true">QLabel 
-{
-font-style: italic;
-font-weight: bold;
-font-size: 12px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Conversion Parameters</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Stacking Order</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Z Spacing</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QRadioButton" name="m_StackLowToHigh">
-       <property name="text">
-        <string>Low To High</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="m_zSpacing">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>The spacing between each layer.</string>
-       </property>
-       <property name="text">
-        <string>0.25</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QRadioButton" name="m_StackHighToLow">
-       <property name="text">
-        <string>High To Low</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
    </item>
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
@@ -494,58 +397,93 @@ font-size: 11px;
     </layout>
    </item>
    <item row="1" column="0">
-    <layout class="QGridLayout" name="gridLayout_4">
+    <layout class="QGridLayout" name="gridLayout_2">
      <property name="topMargin">
-      <number>10</number>
+      <number>0</number>
      </property>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_7">
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <item row="1" column="0" colspan="2">
+      <widget class="QLabel" name="label_6">
        <property name="styleSheet">
         <string notr="true">QLabel 
 {
-	font-style: italic;font-weight: bold;
+font-style: italic;
+font-weight: bold;
 font-size: 12px;
 }</string>
        </property>
        <property name="text">
-        <string>Output Parameters</string>
+        <string>Conversion Parameters</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="m_xSpacing">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>The spacing between each layer.</string>
+       </property>
+       <property name="text">
+        <string>0.25</string>
        </property>
       </widget>
      </item>
      <item row="2" column="0">
-      <widget class="QLabel" name="label_53">
+      <widget class="QLabel" name="label_4">
        <property name="styleSheet">
-        <string>QLabel {
+        <string notr="true">QLabel {
 font-weight: bold;
 font-size: 11px;
 }</string>
        </property>
        <property name="text">
-        <string>Output File:</string>
+        <string>X Spacing</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QFSDropLineEdit" name="m_OutputFile">
-       <property name="toolTip">
-        <string>The absolute path to the output file</string>
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QPushButton" name="m_OutputFileBtn">
        <property name="text">
-        <string>Select</string>
+        <string>Y Spacing</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="3">
-      <widget class="Line" name="line_8">
-       <property name="frameShadow">
-        <enum>QFrame::Plain</enum>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="m_ySpacing">
+       <property name="text">
+        <string>0.25</string>
        </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="cursorPosition">
+        <number>4</number>
        </property>
       </widget>
      </item>

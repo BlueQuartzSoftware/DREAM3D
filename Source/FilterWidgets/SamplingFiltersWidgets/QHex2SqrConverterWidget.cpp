@@ -63,9 +63,7 @@
 //
 // -----------------------------------------------------------------------------
 QHex2SqrConverterWidget::QHex2SqrConverterWidget(QWidget *parent) :
-QFilterWidget(parent),
-m_RotateSlice(true),
-m_ReorderArray(true)
+QFilterWidget(parent)
 {
   
   if ( getOpenDialogLastDirectory().isEmpty() )
@@ -94,16 +92,10 @@ AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter()
 {
   bool ok = false;
   Hex2SqrConverter::Pointer filter =  Hex2SqrConverter::New();
-  filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
-  filter->setZResolution(m_zSpacing->text().toFloat(&ok));
-
-
-  filter->setRefFrameZDir( getRefFrameZDir() );
-  filter->setRotateSlice( m_RotateSlice );
-  filter->setReorderArray( m_ReorderArray );
-  filter->setAlignEulers( m_AlignEulers );
+  filter->setXResolution(m_xSpacing->text().toFloat(&ok));
+  filter->setYResolution(m_ySpacing->text().toFloat(&ok));
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -116,7 +108,7 @@ AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, filename);
   std::vector<std::string> realFileList;
   for(std::vector<std::string>::size_type i = 0; i < fileList.size(); ++i)
   {
@@ -155,7 +147,7 @@ QFilterWidget* QHex2SqrConverterWidget::createDeepCopy()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, filename);
 
   w->setEbsdFileList(fileList);
 
@@ -189,22 +181,10 @@ void QHex2SqrConverterWidget::setupGui()
   QObject::connect( com, SIGNAL(activated(const QString &)),
            this, SLOT(on_m_InputDir_textChanged(const QString &)));
 
-  QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
-  m_OutputFile->setCompleter(com1);
-  QObject::connect( com1, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_OutputFile_textChanged(const QString &)));
-
-  m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
+  m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
-  m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_zSpacing;
+  m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_xSpacing << m_ySpacing;
   m_ErrorMessage->setVisible(false);
-
-  m_StackingGroup = new QButtonGroup(this);
-  m_StackingGroup->addButton(m_StackLowToHigh);
-  m_StackingGroup->addButton(m_StackHighToLow);
-
-  connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
-          this, SLOT(stackingOrderChanged(bool)));
 
 }
 
@@ -227,11 +207,11 @@ void QHex2SqrConverterWidget::readOptions(QSettings &prefs)
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
   READ_SETTING(prefs, m_, TotalDigits, ok, i, 4 , Int);
-  READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
+  READ_STRING_SETTING(prefs, m_, xSpacing, "0.25");
+  READ_STRING_SETTING(prefs, m_, ySpacing, "0.25");
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
   READ_STRING_SETTING(prefs, m_, FileExt, "ang");
-  READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
 }
 
 // -----------------------------------------------------------------------------
@@ -246,24 +226,10 @@ void QHex2SqrConverterWidget::writeOptions(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, FileExt)
   WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
   WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
-  WRITE_STRING_SETTING(prefs, m_, zSpacing)
+  WRITE_STRING_SETTING(prefs, m_, xSpacing)
+  WRITE_STRING_SETTING(prefs, m_, ySpacing)
   WRITE_STRING_SETTING(prefs, m_, TotalDigits)
-  WRITE_STRING_SETTING(prefs, m_, OutputFile)
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::on_m_OutputFile_textChanged(const QString & text)
-{
-  if (verifyPathExists(text, m_OutputFile) == true )
-  {
-    QFileInfo fi(text);
-    setOpenDialogLastDirectory( fi.path() );
-  }
-  emit parametersChanged();
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -291,21 +257,6 @@ void QHex2SqrConverterWidget::checkIOFiles()
    {
      m_findEbsdMaxSliceAndPrefix();
    }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::on_m_OutputFileBtn_clicked()
-{
-  QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
-                                                 getOpenDialogLastDirectory(),
-                                                 tr("HDF5 EBSD Files (*.h5ebsd)") );
-  if ( true == file.isEmpty() ){ return;  }
-  QFileInfo fi (file);
-  QString ext = fi.suffix();
-  m_OutputFile->setText(fi.absoluteFilePath());
-  setOpenDialogLastDirectory( fi.path() );
 }
 
 // -----------------------------------------------------------------------------
@@ -339,10 +290,7 @@ void QHex2SqrConverterWidget::on_m_InputDir_textChanged(const QString & text)
     QString dirname = dir.dirName();
     dir.cdUp();
 
-    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ebsd";
-    outPath = QDir::toNativeSeparators(outPath);
-    m_OutputFile->setText(outPath);
-    verifyPathExists(m_OutputFile->text(), m_OutputFile);
+
     m_generateExampleEbsdInputFile();
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
@@ -352,26 +300,6 @@ void QHex2SqrConverterWidget::on_m_InputDir_textChanged(const QString & text)
   {
     m_FileListView->clear();
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-Ebsd::RefFrameZDir QHex2SqrConverterWidget::getRefFrameZDir()
-{
-	if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
-	if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
-  return Ebsd::UnknownRefFrameZDirection;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QHex2SqrConverterWidget::stackingOrderChanged(bool checked)
-{
-  m_generateExampleEbsdInputFile();
-    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -432,28 +360,21 @@ void QHex2SqrConverterWidget::on_m_FilePrefix_textChanged(const QString &string)
 //
 // -----------------------------------------------------------------------------
 std::vector<std::string> QHex2SqrConverterWidget::generateFileList(int start, int end, bool &hasMissingFiles,
-                                               bool stackLowToHigh, QString filename)
+                                               QString filename)
 {
   int index = 0;
   std::vector<std::string> fileList;
 
   for (int i = 0; i < (end-start)+1; ++i)
-    {
-      if (stackLowToHigh)
-      {
-         index = start + i;
-      }
-      else
-      {
-        index = end - i;
-      }
+  {
+      index = start + i;
       filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
           .arg(QString::number(index), m_TotalDigits->value(), '0')
           .arg(m_FileSuffix->text()).arg(m_FileExt->text());
       QString filePath = m_InputDir->text() + QDir::separator() + filename;
       filePath = QDir::toNativeSeparators(filePath);
       fileList.push_back(filePath.toStdString());
-    }
+  }
   return fileList;
 }
 
@@ -475,7 +396,7 @@ void QHex2SqrConverterWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, filename);
 
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
