@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EbsdImportWIDGET_H_
-#define EbsdImportWIDGET_H_
+#ifndef Hex2SqrConverterWidget_H_
+#define Hex2SqrConverterWidget_H_
 
 #include <string>
 #include <vector>
@@ -47,20 +47,20 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IOFilters/EbsdToH5Ebsd.h"
+#include "DREAM3DLib/SamplingFilters/Hex2SqrConverter.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 
 #include "PipelineBuilder/QFilterWidget.h"
 
 
-#include "ui_QEbsdToH5EbsdWidget.h"
+#include "ui_QHex2SqrConverterWidget.h"
 
 
 
 
 /**
- * @class QEbsdToH5EbsdWidget QEbsdToH5EbsdWidget.h Plugins/EbsdImport/UI/EbsdToH5EbsdWidget.h
+ * @class QHex2SqrConverterWidget QHex2SqrConverterWidget.h Plugins/EbsdImport/UI/Hex2SqrConverterWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
@@ -70,13 +70,13 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidget
+class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConverterWidget
 {
   Q_OBJECT
 
   public:
-    QEbsdToH5EbsdWidget(QWidget *parent = 0);
-    virtual ~QEbsdToH5EbsdWidget();
+    QHex2SqrConverterWidget(QWidget *parent = 0);
+    virtual ~QHex2SqrConverterWidget();
 
     virtual AbstractFilter::Pointer getFilter();
 
@@ -103,16 +103,13 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
      */
     void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleEbsdInputFile();
-    Ebsd::RefFrameZDir getRefFrameZDir();
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
-                                                   bool stackLowToHigh, QString filename);
+                                                   QString filename);
 
   protected slots:
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
-    void on_m_OutputFileBtn_clicked();
-    void on_m_RefFrameOptionsBtn_clicked();
 
     void on_m_FilePrefix_textChanged(const QString &string);
     void on_m_FileSuffix_textChanged(const QString &string);
@@ -123,25 +120,18 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     // slots to catch signals emittd by the various QLineEdit widgets
     void on_m_InputDir_textChanged(const QString & text);
-    void on_m_OutputFile_textChanged(const QString & text);
 
   private slots:
-    void stackingOrderChanged(bool checked);
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;
-    QButtonGroup*               m_zSpacingGroup;
-
-    bool m_RotateSlice;
-    bool m_ReorderArray;
-    bool m_AlignEulers;
+    QButtonGroup*               m_SpacingGroup;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
-    QEbsdToH5EbsdWidget(const QEbsdToH5EbsdWidget&); // Copy Constructor Not Implemented
-    void operator=(const QEbsdToH5EbsdWidget&); // Operator '=' Not Implemented
+    QHex2SqrConverterWidget(const QHex2SqrConverterWidget&); // Copy Constructor Not Implemented
+    void operator=(const QHex2SqrConverterWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* EbsdImportWIDGET_H_ */
+#endif /* Hex2SqrConverterWidget_H_ */
