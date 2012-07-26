@@ -74,15 +74,11 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
 
     virtual ~Hex2SqrConverter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, XResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, YResolution)
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReorderArray)
-    DREAM3D_INSTANCE_PROPERTY(bool, RotateSlice)
-    DREAM3D_INSTANCE_PROPERTY(bool, AlignEulers)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     virtual void preflight();
 

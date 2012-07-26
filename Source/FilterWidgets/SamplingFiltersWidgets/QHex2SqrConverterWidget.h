@@ -103,15 +103,13 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
      */
     void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleEbsdInputFile();
-    Ebsd::RefFrameZDir getRefFrameZDir();
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
-                                                   bool stackLowToHigh, QString filename);
+                                                   QString filename);
 
   protected slots:
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();
-    void on_m_OutputFileBtn_clicked();
 
     void on_m_FilePrefix_textChanged(const QString &string);
     void on_m_FileSuffix_textChanged(const QString &string);
@@ -122,20 +120,13 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
 
     // slots to catch signals emittd by the various QLineEdit widgets
     void on_m_InputDir_textChanged(const QString & text);
-    void on_m_OutputFile_textChanged(const QString & text);
 
   private slots:
-    void stackingOrderChanged(bool checked);
 
   private:
     QList<QWidget*>             m_WidgetList;
-    QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;
-    QButtonGroup*               m_zSpacingGroup;
-
-    bool m_RotateSlice;
-    bool m_ReorderArray;
-    bool m_AlignEulers;
+    QButtonGroup*               m_SpacingGroup;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 

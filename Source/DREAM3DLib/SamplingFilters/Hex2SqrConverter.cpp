@@ -61,18 +61,12 @@ class Hex2SqrConverterFunc : public Observable
 
     virtual ~Hex2SqrConverterFunc()
     {
-      if(*m_FileId > 0)
-      {
-     //   std::cout << "Hex2SqrConverterFunc Closing HDF5 File" << std::endl;
-        H5Utilities::closeFile(*m_FileId);
-      }
-    }
 
-    hid_t* m_FileId;
+	}
+
 
   protected:
-    Hex2SqrConverterFunc() :
-        m_FileId(NULL)
+    Hex2SqrConverterFunc()
     {
     }
 
@@ -86,7 +80,7 @@ class Hex2SqrConverterFunc : public Observable
 //
 // -----------------------------------------------------------------------------
 Hex2SqrConverter::Hex2SqrConverter() :
-    m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(1.0), m_ReorderArray(false), m_RotateSlice(false), m_AlignEulers(false)
+    m_ZStartIndex(0), m_ZEndIndex(0), m_XResolution(1.0), m_YResolution(1.0)
 {
 
 }
@@ -138,14 +132,6 @@ void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, s
     setErrorCondition(-1);
   }
 
-  if(m_OutputFile.empty() == true)
-  {
-    ss.str("");
-    ss << "The output file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), -12);
-    setErrorCondition(-1);
-  }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -166,105 +152,9 @@ void Hex2SqrConverter::execute()
   hid_t fileId = -1;
   // This is just a dummy variable to keep the macros happy
   Hex2SqrConverterFunc::Pointer m = Hex2SqrConverterFunc::New();
-  m->m_FileId = &fileId;
 
   // Start the Benchmark clock
   START_CLOCK()
-
-  if(m_OutputFile.empty() == true)
-  {
-    std::string s("Hex2SqrConverter Error: The output file was not set correctly or is empty. The current value is '");
-    s.append("'. Please set the output file before running the importer. ");
-
-    ss << "Hex2SqrConverter input filename was empty";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-    return;
-  }
-  // Make sure any directory path is also available as the user may have just typed
-  // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
-  {
-      std::stringstream ss;
-      PipelineMessage em (getHumanLabel(), ss.str(), -1);
-      addErrorMessage(em);
-      setErrorCondition(-1);
-      return;
-  }
-
-  // Create File
-  fileId = H5Utilities::createFile(m_OutputFile);
-  if(fileId < 0)
-  {
-    err = -1;
-    ss.str("");
-    ss << "The Output HDF5 file could not be created. Check Permissions, if the File is in use by another program.";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-    return;
-  }
-
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Z Resolution Scalar to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-  unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Stacking Order Scalar to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  std::string s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
-  err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Stacking Order Name Attribute to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  unsigned int flag = 0;
-  if(m_RotateSlice == true) flag = 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::RotateSlice, flag);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Rotate Slice Bool to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  flag = 0;
-  if(m_ReorderArray == true) flag = 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReorderArray, flag);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Reorder Array Bool to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  flag = 0;
-  if(m_AlignEulers == true) flag = 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::AlignEulers, flag);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Align Eulers Bool to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
 
   EbsdImporter::Pointer fileImporter;
 
@@ -273,26 +163,10 @@ void Hex2SqrConverter::execute()
   std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Could not write the Manufacturer Data to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(-1);
-    }
     fileImporter = H5AngImporter::New();
   }
   else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Could not write the Manufacturer Data to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(-1);
-    }
     fileImporter = H5CtfImporter::New();
   }
   else
@@ -335,8 +209,6 @@ void Hex2SqrConverter::execute()
    * which is going to cause problems because the data is going to be placed
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
-  int64_t biggestxDim = 0;
-  int64_t biggestyDim = 0;
   int totalSlicesImported = 0;
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
@@ -358,8 +230,6 @@ void Hex2SqrConverter::execute()
 
     fileImporter->getDims(xDim, yDim);
     fileImporter->getResolution(xRes, yRes);
-    if(xDim > biggestxDim) biggestxDim = xDim;
-    if(yDim > biggestyDim) biggestyDim = yDim;
 
     if(err < 0)
     {
@@ -377,71 +247,6 @@ void Hex2SqrConverter::execute()
     }
   }
 
-  // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Z Start Index Scalar to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  m_ZEndIndex = m_ZStartIndex + totalSlicesImported - 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the Z End Index Scalar to the HDF5 File";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the XPoints Scalar to HDF5 file";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the YPoints Scalar to HDF5 file";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the XResolution Scalar to HDF5 file";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Could not write the YResolution Scalar to HDF5 file";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-  }
-
-  if(false == getCancel())
-  {
-    // Write an Index data set which contains all the z index values which
-    // should help speed up the reading side of this file
-    std::vector<hsize_t> dims(1, indices.size());
-    err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
-  }
-  err = H5Utilities::closeFile(fileId);
-  // err = H5Fclose(fileId);
   m = Hex2SqrConverterFunc::NullPointer();
  notifyStatusMessage("Import Complete");
 }
