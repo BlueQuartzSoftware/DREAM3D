@@ -66,13 +66,13 @@
 QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
 QFilterWidget(parent),
 m_RotateSlice(true),
-m_ReorderArray(true),
-#if defined(Q_WS_WIN)
-m_OpenDialogLastDirectory("C:\\")
-#else
-m_OpenDialogLastDirectory("~/")
-#endif
+m_ReorderArray(true)
 {
+  
+  if ( getOpenDialogLastDirectory().isEmpty() )
+  {
+    setOpenDialogLastDirectory( QDir::homePath() );
+  }
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   setupGui();
@@ -223,20 +223,19 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   qint32 i;
   //double d;
 
+  // Run the input dir FIRST as the side effect of running this will be resetting much of the user
+  // interface widgets to their default values. We then get the values from the prefs object
+  // and populate the user interface widgets
+  READ_FILEPATH_SETTING(prefs, m_, InputDir, "");
+
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
+  READ_SETTING(prefs, m_, TotalDigits, ok, i, 4 , Int);
   READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
-
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
   READ_STRING_SETTING(prefs, m_, FileExt, "ang");
-
   READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
-
-  READ_FILEPATH_SETTING(prefs, m_, InputDir, ""); 
-
-  on_m_InputDir_textChanged(m_InputDir->text());
-
 }
 
 // -----------------------------------------------------------------------------
@@ -252,21 +251,22 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
   WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
   WRITE_STRING_SETTING(prefs, m_, zSpacing)
+  WRITE_STRING_SETTING(prefs, m_, TotalDigits)
   WRITE_STRING_SETTING(prefs, m_, OutputFile)
-
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 {
-  verifyPathExists(text, m_OutputFile);
+  if (verifyPathExists(text, m_OutputFile) == true )
+  {
+    QFileInfo fi(text);
+    setOpenDialogLastDirectory( fi.path() );
+  }
   emit parametersChanged();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -303,13 +303,13 @@ void QEbsdToH5EbsdWidget::checkIOFiles()
 void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 {
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
-                                                 m_OpenDialogLastDirectory,
+                                                 getOpenDialogLastDirectory(),
                                                  tr("HDF5 EBSD Files (*.h5ebsd)") );
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
   m_OutputFile->setText(fi.absoluteFilePath());
-  m_OpenDialogLastDirectory = fi.path();
+  setOpenDialogLastDirectory( fi.path() );
 }
 
 // -----------------------------------------------------------------------------
@@ -318,14 +318,14 @@ void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 void QEbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
-  QString outputFile = this->m_OpenDialogLastDirectory + QDir::separator();
+  QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if (!outputFile.isNull())
   {
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(outputFile));
     on_m_InputDir_textChanged(m_InputDir->text());
-    m_OpenDialogLastDirectory = outputFile;
+    getOpenDialogLastDirectory() = outputFile;
     m_InputDir->blockSignals(false);
   }
 }

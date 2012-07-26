@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 	  {
 	    if(m_FileName.empty() == true)
 	      {
-	      addErrorMessage(getNameOfClass(), "H5VoxelReader Error; Filename was empty", -1);
+	      addErrorMessage(getHumanLabel(), "H5VoxelReader Error; Filename was empty", -1);
 	        return -1;
 	      }
 	    OPEN_HDF5_FILE(fileId, m_FileName);
@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 	  {
 	    std::stringstream ss;
 	    ss << " Error Reading the " << dsetName;
-	    addErrorMessage(getNameOfClass(), ss.str(), err);
+	    addErrorMessage(getHumanLabel(), ss.str(), err);
 	    err = H5Gclose(scalarGid);
 	    err = H5Gclose(reconGid);
 	    return err;
@@ -144,7 +144,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
     {
       if(m_FileName.empty() == true)
         {
-        addErrorMessage(getNameOfClass(), "H5ReconVolumeReader Error; Filename was empty", -1);
+        addErrorMessage(getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1);
           return -1;
         }
       OPEN_HDF5_FILE(fileId, m_FileName);
@@ -159,7 +159,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
     {
       std::stringstream ss;
       ss <<  ": Error Reading the " << dsetName;
-      addErrorMessage(getNameOfClass(), ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss.str(), err);
       err |= H5Gclose(fieldGid);
       err |= H5Gclose(reconGid);
       return err;

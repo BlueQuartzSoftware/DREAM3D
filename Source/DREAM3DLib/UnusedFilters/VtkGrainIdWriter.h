@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid, Grain Ids Only)"; }
-    virtual void setupFilterOptions();
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 	virtual void preflight();
 

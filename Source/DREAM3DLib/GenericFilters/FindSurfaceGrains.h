@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const std::string getHumanLabel() { return "Find Surface Grains"; }
 
-	virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 	/**
      * @brief Reimplemented from @see AbstractFilter class

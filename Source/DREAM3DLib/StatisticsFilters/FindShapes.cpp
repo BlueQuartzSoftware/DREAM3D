@@ -89,7 +89,7 @@ m_StatsDataArray(NULL)
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -102,26 +102,26 @@ FindShapes::~FindShapes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindShapes::setupFilterOptions()
+void FindShapes::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Distribution Type");
     option->setPropertyName("DistributionType");
-    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setWidgetType(FilterParameter::ChoiceWidget);
 	  option->setValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");
     choices.push_back("Power");
     option->setChoices(choices);
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void FindShapes::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("DistributionType", getDistributionType() );
 }

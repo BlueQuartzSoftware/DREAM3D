@@ -230,3 +230,10 @@ QString PMDirGenerator::cleanName(QString name)
   name.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
   return name;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PMDirGenerator::generateFileContents() {
+  return "";
+}

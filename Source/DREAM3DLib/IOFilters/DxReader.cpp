@@ -44,9 +44,12 @@
 DxReader::DxReader() :
 FileReader(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+m_GrainIds(NULL),
+m_XRes(1.0f),
+m_YRes(1.0f),
+m_ZRes(1.0f)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -59,24 +62,51 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxReader::setupFilterOptions()
+void DxReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("X Res");
+    option->setPropertyName("XRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Y Res");
+    option->setPropertyName("YRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Z Res");
+    option->setPropertyName("ZRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
-void DxReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
+    writer->writeValue("XRes", getXRes() );
+  writer->writeValue("YRes", getYRes() );
+  writer->writeValue("ZRes", getZRes() );
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +123,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getNameOfClass(), ss.str(), -4);
+    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -128,7 +158,7 @@ int DxReader::readFile()
   {
     ss.clear();
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getNameOfClass(), ss.str(), -5);
+    addErrorMessage(getHumanLabel(), ss.str(), -5);
     setErrorCondition(-5);
     return -1;
   }
@@ -153,7 +183,7 @@ int DxReader::readFile()
     ss.clear();
     ss << ClassName() << " Runtime Error. The input file '" << getInputFile() << "' could not be"
         << " opened for reading. Do you have access to this file?";
-    addErrorMessage(getNameOfClass(), ss.str(), -6);
+    addErrorMessage(getHumanLabel(), ss.str(), -6);
     setErrorCondition(-498);
     return -498;
   }
@@ -184,7 +214,7 @@ int DxReader::readFile()
       {
         ss.clear();
         ss << "ERROR: Unable to read data dimensions from the header" << std::endl;
-        addErrorMessage(getNameOfClass(), ss.str(), -7);
+        addErrorMessage(getHumanLabel(), ss.str(), -7);
         setErrorCondition(-499);
         inFile.close();
         return -499;
@@ -246,7 +276,7 @@ int DxReader::readFile()
       {
         ss.clear();
         ss << "ERROR: Unable to locate the last header line" << std::endl;
-        addErrorMessage(getNameOfClass(), ss.str(), -8);
+        addErrorMessage(getHumanLabel(), ss.str(), -8);
         setErrorCondition(-496);
         inFile.close();
         return -496;
@@ -309,7 +339,7 @@ int DxReader::readFile()
     ss.clear();
     ss << "ERROR: data size does not match header dimensions" << std::endl;
     ss << "\t" << index << "\t" << nz * nx * ny << std::endl;
-    addErrorMessage(getNameOfClass(), ss.str(), -9);
+    addErrorMessage(getHumanLabel(), ss.str(), -9);
     setErrorCondition(-495);
     inFile.close();
     return -495;
@@ -318,7 +348,7 @@ int DxReader::readFile()
 //  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
   getDataContainer()->setDimensions(nx, ny, nz);
 
-  getDataContainer()->setResolution(1.0f, 1.0f, 1.0f);
+  getDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
 
   getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -34,63 +34,42 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef NODE_HPP_
-#define NODE_HPP_
+#ifndef _PMGENERATORTREEITEM_H_
+#define _PMGENERATORTREEITEM_H_
 
-namespace smooth
+#include <QtGui/QTreeWidgetItem>
+#include "PMDirGenerator.h"
+
+class PMGeneratorTreeItem : public QTreeWidgetItem
 {
 
-  class node
-  {
+  public:
+    PMGeneratorTreeItem(QTreeWidget *view, int type = Type) :
+    QTreeWidgetItem(view, type),
+    fileGenPtr(NULL)
+    {}
 
-    public:
-      node(){}
-      virtual ~node(){};
+    PMGeneratorTreeItem(PMDirGenerator* fileGen, QTreeWidget *view, int type = Type) :
+    QTreeWidgetItem(view, type),
+    fileGenPtr(fileGen)
+    {}
 
-#if 0
-      float& operator[](int i)
-      {
-        return pos[i];
-      }
-      float operator[](int i) const
-      {
-        return pos[i];
-      }
+    PMGeneratorTreeItem(QTreeWidgetItem *parent, int type = Type) :
+    QTreeWidgetItem(parent, type),
+    fileGenPtr(NULL)
+    {}
+
+    PMDirGenerator* getFileGenPtr() const { return fileGenPtr; }
+    void setFileGenPtr(PMDirGenerator* val) { fileGenPtr = val; }
+
+    virtual ~PMGeneratorTreeItem() {}
+
+  private:
+    PMDirGenerator* fileGenPtr;
+
+    PMGeneratorTreeItem(const PMGeneratorTreeItem& rhs);  // Copy Constructor Not Implemented
+    void operator=(const PMGeneratorTreeItem& rhs);       // Operator '=' Not Implemented
+
+};
+
 #endif
-      float pos[3];
-      int nId;
-      int nType;
-
-      void setValues(int node_id, int node_type, float position[3])
-      {
-        nId = node_id;
-        nType = node_type;
-        pos[0] = position[0];
-        pos[1] = position[1];
-        pos[2] = position[2];
-      }
-
-      float& getPos(int i)
-      {
-        return pos[i];
-      }
-      float getPos(int i) const
-      {
-        return pos[i];
-      }
-    private:
-
-  };
-
-
-  float distance(const node& n0, const node& n1)
-  {
-    float a = n0.getPos(0) - n1.getPos(0);
-    float b = n0.getPos(1) - n1.getPos(1);
-    float c = n0.getPos(2) - n1.getPos(2);
-    return sqrt(a * a + b * b + c * c);
-  }
-
-}
-
-#endif /* NODE_HPP_ */

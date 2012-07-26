@@ -54,7 +54,7 @@ m_ZRes(1.0f),
 m_GrainIds(NULL),
 m_CellPhases(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -67,69 +67,69 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::setupFilterOptions()
+void InitializeSyntheticVolume::setupFilterParameters()
 {
- std::vector<FilterOption::Pointer> options;
+ std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Statistics File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Voxels");
     option->setPropertyName("XVoxels");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Voxels");
     option->setPropertyName("YVoxels");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Voxels");
     option->setPropertyName("ZVoxels");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Res");
     option->setPropertyName("XRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Res");
     option->setPropertyName("YRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Res");
     option->setPropertyName("ZRes");
-    option->setWidgetType(FilterOption::DoubleWidget);
+    option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("X Voxels", getXVoxels() );
@@ -158,9 +158,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if(m_InputFile.empty() == true)
   {
-    ss << ": The intput file must be set before executing this filter.\n";
+    ss << "The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
-    addErrorMessage(getNameOfClass(), ss.str(), -800);
+    addErrorMessage(getHumanLabel(), ss.str(), -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -175,9 +175,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   addRequiredEnsembleData(DREAM3D::EnsembleData::ShapeTypes);
   if (m_ShapeTypes.get() ==  NULL || m_ShapeTypes->GetNumberOfTuples() == 0)
   {
-    ss << ": No ShapeTypes have been set and a shape type for each phase.\n";
+    ss << "No ShapeTypes have been set and a shape type for each phase.\n";
     setErrorCondition(-801);
-    addErrorMessage(getNameOfClass(), ss.str(), -801);
+    addErrorMessage(getHumanLabel(), ss.str(), -801);
   }
 
 }

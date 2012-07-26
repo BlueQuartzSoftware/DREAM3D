@@ -63,7 +63,7 @@ FindGrainCentroids::~FindGrainCentroids()
 {
 }
 // -----------------------------------------------------------------------------
-void FindGrainCentroids::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

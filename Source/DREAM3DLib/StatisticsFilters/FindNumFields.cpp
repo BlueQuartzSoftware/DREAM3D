@@ -61,7 +61,7 @@ FindNumFields::~FindNumFields()
 {
 }
 // -----------------------------------------------------------------------------
-void FindNumFields::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindNumFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

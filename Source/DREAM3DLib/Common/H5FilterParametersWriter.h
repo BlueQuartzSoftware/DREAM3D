@@ -33,58 +33,64 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _H5FilterParametersWRITER_H_
+#define _H5FilterParametersWRITER_H_
 
-#ifndef ABSTRACTFILTEROPTIONSWRITER_H_
-#define ABSTRACTFILTEROPTIONSWRITER_H_
+#include "hdf5.h"
 
 #include <string>
 
-class AbstractFilter;
-class QualityMetricFilter;
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
-class AbstractFilter;
-class QualityMetricFilter;
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "AbstractFilterParametersWriter.h"
+#include "QualityMetricFilter.h"
 
 /*
  *
  */
-class DREAM3DLib_EXPORT AbstractFilterOptionsWriter
+class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParametersWriter
 {
   public:
- //   DREAM3D_SHARED_POINTERS(AbstractFilterOptionsWriter)
-  //  DREAM3D_STATIC_NEW_MACRO(AbstractFilterOptionsWriter)
-    DREAM3D_TYPE_MACRO(AbstractFilterOptionsWriter)
+    DREAM3D_SHARED_POINTERS(H5FilterParametersWriter)
+    DREAM3D_STATIC_NEW_MACRO(H5FilterParametersWriter)
+    DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersWriter, AbstractFilterParametersWriter)
 
 
-    virtual ~AbstractFilterOptionsWriter();
+    virtual ~H5FilterParametersWriter();
 
-    virtual int openOptionsGroup(AbstractFilter* filter) = 0;
-    virtual int closeOptionsGroup() = 0;
+    DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
 
-    virtual int writeValue(const std::string name, const std::string value) = 0;
+    virtual int openOptionsGroup(AbstractFilter* filter);
+    virtual int closeOptionsGroup();
 
-    virtual int writeValue(const std::string name, int8_t value) = 0;
-    virtual int writeValue(const std::string name, int16_t value) = 0;
-    virtual int writeValue(const std::string name, int32_t value) = 0;
-    virtual int writeValue(const std::string name, int64_t value) = 0;
-    virtual int writeValue(const std::string name, uint8_t value) = 0;
-    virtual int writeValue(const std::string name, uint16_t value) = 0;
-    virtual int writeValue(const std::string name, uint32_t value) = 0;
-    virtual int writeValue(const std::string name, uint64_t value) = 0;
-    virtual int writeValue(const std::string name, float value) = 0;
-    virtual int writeValue(const std::string name, double value) = 0;
+    virtual int writeValue(const std::string name, const std::string value);
 
-    virtual int writeValue(const std::string name, QualityMetricFilter* f) = 0;
+    virtual int writeValue(const std::string name, int8_t value);
+    virtual int writeValue(const std::string name, int16_t value);
+    virtual int writeValue(const std::string name, int32_t value);
+    virtual int writeValue(const std::string name, int64_t value);
+    virtual int writeValue(const std::string name, uint8_t value);
+    virtual int writeValue(const std::string name, uint16_t value);
+    virtual int writeValue(const std::string name, uint32_t value);
+    virtual int writeValue(const std::string name, uint64_t value);
+    virtual int writeValue(const std::string name, float value);
+    virtual int writeValue(const std::string name, double value);
+
+    virtual int writeValue(const std::string name, QualityMetricFilter* f);
 
   protected:
-    AbstractFilterOptionsWriter();
+    H5FilterParametersWriter();
 
   private:
-    AbstractFilterOptionsWriter(const AbstractFilterOptionsWriter&); // Copy Constructor Not Implemented
-    void operator=(const AbstractFilterOptionsWriter&); // Operator '=' Not Implemented
+    hid_t m_CurrentGroupId;
+
+
+    H5FilterParametersWriter(const H5FilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5FilterParametersWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* ABSTRACTFILTEROPTIONSWRITER_H_ */
+#endif /* _H5FilterParametersWRITER_H_ */

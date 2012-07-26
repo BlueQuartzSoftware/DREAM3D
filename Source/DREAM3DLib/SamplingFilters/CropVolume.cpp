@@ -61,7 +61,7 @@ m_RenumberGrains(false),
 m_GrainIds(NULL),
 m_Active(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -74,69 +74,69 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::setupFilterOptions()
+void CropVolume::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min");
     option->setPropertyName("XMin");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Min");
     option->setPropertyName("YMin");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Min");
     option->setPropertyName("ZMin");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Max");
     option->setPropertyName("XMax");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Max");
     option->setPropertyName("YMax");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Max");
     option->setPropertyName("ZMax");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Renumber Grains");
     option->setPropertyName("RenumberGrains");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void CropVolume::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
@@ -214,11 +214,7 @@ void CropVolume::execute()
   int m_XP = ( (m_XMax - m_XMin)+1 );
   int m_YP = ( (m_YMax - m_YMin)+1 );
   int m_ZP = ( (m_ZMax - m_ZMin)+1 );
-  float m_XStart = m_XMin * m->getXRes();
-  float m_YStart = m_YMin * m->getYRes();
-  float m_ZStart = m_ZMin * m->getZRes();
 
-  float x, y, z;
   int col, row, plane;
   int index;
   int index_old;
@@ -232,12 +228,9 @@ void CropVolume::execute()
     {
       for (int k = 0; k < m_XP; k++)
       {
-        x = (k * m->getXRes()) + m_XStart;
-        y = (j * m->getYRes()) + m_YStart;
-        z = (i * m->getZRes()) + m_ZStart;
-        col = int(x / m->getXRes());
-        row = int(y / m->getYRes());
-        plane = int(z / m->getZRes());
+        col = k + m_XMin;
+        row = j + m_YMin;
+        plane = i + m_ZMin;
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = ( (i * m_XP * m_YP) + (j * m_XP) + k );
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)

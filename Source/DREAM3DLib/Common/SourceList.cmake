@@ -10,6 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 SET (DREAM3DLib_Common_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
@@ -22,9 +23,11 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/FilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
@@ -32,7 +35,6 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
-#  ${DREAM3DLib_SOURCE_DIR}/Common/PreFlightArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
@@ -44,13 +46,12 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterOptionsWriter.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterOptionsWriter.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterOptionsWriter.h
 )
 
 SET (DREAM3DLib_Common_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.cpp
@@ -59,6 +60,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
@@ -75,10 +77,8 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterOptionsWriter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterOptionsWriter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterOptionsWriter.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

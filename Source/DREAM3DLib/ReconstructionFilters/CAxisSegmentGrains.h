@@ -84,8 +84,8 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Segment Grains (C-Axis Misorientation)"; }
 
-    virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

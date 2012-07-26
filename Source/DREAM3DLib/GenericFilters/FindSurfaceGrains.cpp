@@ -58,7 +58,7 @@ FindSurfaceGrains::~FindSurfaceGrains()
 {
 }
 // -----------------------------------------------------------------------------
-void FindSurfaceGrains::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

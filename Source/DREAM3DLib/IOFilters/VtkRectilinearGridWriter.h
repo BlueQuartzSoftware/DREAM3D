@@ -97,8 +97,8 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
 
-    virtual void setupFilterOptions();
-    virtual void writeFilterOptions(AbstractFilterOptionsWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class

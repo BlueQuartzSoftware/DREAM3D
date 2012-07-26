@@ -41,7 +41,6 @@ class PMFilterGenerator : public PMFileGenerator
    QString m_ClassName;
 
 
-
 };
 
 #endif /* PMFILTERGENERATOR_H_ */

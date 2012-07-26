@@ -49,9 +49,6 @@
 #include "ui_PluginMaker.h"
 #include "FilterBundler.h"
 
-class PMDirGenerator;
-class PMFileGenerator;
-
 class PluginMaker : public QMainWindow, public Ui::PluginMaker
 {
   Q_OBJECT
@@ -68,6 +65,7 @@ protected slots:
 
   void on_m_PluginName_textChanged(const QString & text);
   void on_m_OutputDir_textChanged(const QString & text);
+
   void on_treeWidget_itemSelectionChanged();
   void generationError(const QString& test);
 
@@ -87,11 +85,9 @@ private:
   void readSettings();
   void readWindowSettings(QSettings &prefs);
   void writeWindowSettings(QSettings &prefs);
-  void previewFile(QString rTemplate, QString fileName);
+  QString generateCmakeContents();
+  QString generateQrcContents();
 
-
-  QVector<PMDirGenerator*> m_GenObjects;
- // QVector<PMFileGenerator*> m_FilterClasses;
   QVector<FilterBundler> m_FilterBundles;
   QTreeWidgetItem* F_name;
   QTreeWidgetItem* F_doc;

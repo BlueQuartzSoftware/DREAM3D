@@ -108,7 +108,7 @@ using namespace meshing;
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      PipelineMessage em (getNameOfClass(), #Message, err);\
+      PipelineMessage em (getHumanLabel(), #Message, err);\
       addErrorMessage(em);\
       notifyMessage(em);\
       return;   }
@@ -289,7 +289,7 @@ neigh(NULL),
 voxels(NULL),
 cSquare(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -305,99 +305,99 @@ LeeMarchingCubes::~LeeMarchingCubes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::setupFilterOptions()
+void LeeMarchingCubes::setupFilterParameters()
 {
 
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
 #if 0
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("DREAM3D Input Data File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
    This should be read from the file so we are NOT going to expose it to the user
   {
-    ChoiceFilterOption::Pointer option = ChoiceFilterOption::New();
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Reference Frame");
     option->setPropertyName("RefFrameZDir");
-    option->setWidgetType(FilterOption::ChoiceWidget);
+    option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("Ebsd::RefFrameZDir");
     option->setCastableValueType("unsigned int");
     std::vector<std::string> choices;
     choices.push_back("Low To High");
     choices.push_back("High To Low");
     option->setChoices(choices);
-    options.push_back(option);
+    parameters.push_back(option);
   }
 #endif
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Vtk PolyData Output File");
      option->setPropertyName("VtkOutputFile");
-     option->setWidgetType(FilterOption::OutputFileWidget);
+     option->setWidgetType(FilterParameter::OutputFileWidget);
      option->setValueType("string");
-     options.push_back(option);
+     parameters.push_back(option);
    }
 
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Write STL Files");
      option->setPropertyName("WriteSTLFile");
-     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("STL Output Directory");
      option->setPropertyName("StlOutputDirectory");
-     option->setWidgetType(FilterOption::OutputFileWidget);
+     option->setWidgetType(FilterParameter::OutputFileWidget);
      option->setValueType("string");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("STL Output Prefix");
      option->setPropertyName("StlFilePrefix");
-     option->setWidgetType(FilterOption::StringWidget);
+     option->setWidgetType(FilterParameter::StringWidget);
      option->setValueType("string");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Delete Temp Files");
      option->setPropertyName("DeleteTempFiles");
-     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Write Binary Vtk File");
      option->setPropertyName("WriteBinaryVTKFiles");
-     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
    {
-     FilterOption::Pointer option = FilterOption::New();
+     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Write Conformal Mesh");
      option->setPropertyName("WriteConformalMesh");
-     option->setWidgetType(FilterOption::BooleanWidget);
+     option->setWidgetType(FilterParameter::BooleanWidget);
      option->setValueType("bool");
-     options.push_back(option);
+     parameters.push_back(option);
    }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void LeeMarchingCubes::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("DeleteTempFiles", getWriteBinaryVTKFiles() );
   writer->writeValue("WriteSTLFile", getWriteSTLFile() );
@@ -426,20 +426,20 @@ void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, s
     {
       ss.str(""); ss << getHumanLabel() << " needs the STL Output directory set";
       setErrorCondition(-387);
-      addErrorMessage(getNameOfClass(), ss.str(), -387);
+      addErrorMessage(getHumanLabel(), ss.str(), -387);
     }
     if (true == m_StlFilePrefix.empty())
     {
       ss.str(""); ss << getHumanLabel() << " needs the STL File Prefix set";
       setErrorCondition(-388);
-      addErrorMessage(getNameOfClass(), ss.str(), -388);
+      addErrorMessage(getHumanLabel(), ss.str(), -388);
     }
   }
   if (true == m_VtkOutputFile.empty())
   {
     ss.str(""); ss << getHumanLabel() << " needs the VTK output file set";
     setErrorCondition(-387);
-    addErrorMessage(getNameOfClass(), ss.str(), -387);
+    addErrorMessage(getHumanLabel(), ss.str(), -387);
   }
 
 

@@ -33,60 +33,55 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "MeshSmoothingPlugin.h"
+#ifndef TEXTFilterParametersWRITER_H_
+#define TEXTFilterParametersWRITER_H_
 
-#include "PipelineBuilder/FilterWidgetManager.h"
-#include "FilterWidgets/QFilterWidgetFactory.hpp"
+#include <string>
 
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/QualityMetricFilter.h"
 
-Q_EXPORT_PLUGIN2(MeshSmoothingPlugin, MeshSmoothingPlugin)
-
-namespace Detail
+#include "AbstractFilterParametersWriter.h"
+/*
+ *
+ */
+class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParametersWriter
 {
-   const std::string MeshSmoothingPluginFile("MeshSmoothingPluginPlugin_debug");\
-   const std::string MeshSmoothingPluginDisplayName("Surface Meshing Debug");\
-   const std::string MeshSmoothingPluginBaseName("MeshSmoothingPlugin");\
-}
+  public:
+    DREAM3D_SHARED_POINTERS(TextFilterParametersWriter)
+    DREAM3D_STATIC_NEW_MACRO(TextFilterParametersWriter)
+    DREAM3D_TYPE_MACRO_SUPER(TextFilterParametersWriter, AbstractFilterParametersWriter)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-MeshSmoothingPlugin::MeshSmoothingPlugin()
-{
 
-}
+    virtual ~TextFilterParametersWriter();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-MeshSmoothingPlugin::~MeshSmoothingPlugin()
-{
-}
+    virtual int openOptionsGroup(AbstractFilter* filter);
+    virtual int closeOptionsGroup();
+    virtual int writeValue(const std::string name, const std::string value);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString MeshSmoothingPlugin::getPluginName()
-{
-  return QString::fromStdString(Detail::MeshSmoothingPluginDisplayName);
-}
+    virtual int writeValue(const std::string name, int8_t value);
+    virtual int writeValue(const std::string name, int16_t value);
+    virtual int writeValue(const std::string name, int32_t value);
+    virtual int writeValue(const std::string name, int64_t value);
+    virtual int writeValue(const std::string name, uint8_t value);
+    virtual int writeValue(const std::string name, uint16_t value);
+    virtual int writeValue(const std::string name, uint32_t value);
+    virtual int writeValue(const std::string name, uint64_t value);
+    virtual int writeValue(const std::string name, float value);
+    virtual int writeValue(const std::string name, double value);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MeshSmoothingPlugin::writeSettings(QSettings &prefs)
-{
+    virtual int writeValue(const std::string name, QualityMetricFilter* f);
 
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MeshSmoothingPlugin::readSettings(QSettings &prefs)
-{
+  protected:
+    TextFilterParametersWriter();
 
-}
+  private:
+    TextFilterParametersWriter(const TextFilterParametersWriter&); // Copy Constructor Not Implemented
+    void operator=(const TextFilterParametersWriter&); // Operator '=' Not Implemented
+};
 
-#include "MeshSmoothingPlugin/MeshSmoothingPlugin_RegisterKnownFilterWidgets.cpp"
-
+#endif /* TEXTFilterParametersWRITER_H_ */

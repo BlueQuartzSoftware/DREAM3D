@@ -63,7 +63,7 @@ FindGrainPhases::~FindGrainPhases()
 {
 }
 // -----------------------------------------------------------------------------
-void FindGrainPhases::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void FindGrainPhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------

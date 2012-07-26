@@ -68,7 +68,7 @@ m_WriteKAMs(false),
 m_WriteIPFColors(false),
 m_WriteBinaryFile(false)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -82,94 +82,94 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::setupFilterOptions()
+void VtkRectilinearGridWriter::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
-    option->setWidgetType(FilterOption::OutputFileWidget);
+    option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Grain Ids");
     option->setPropertyName("WriteGrainIds");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Phase Ids");
     option->setPropertyName("WritePhaseIds");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Band Contrasts");
     option->setPropertyName("WriteBandContrasts");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write KAM Value");
     option->setPropertyName("WriteKAMs");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write GAM Values");
     option->setPropertyName("WriteGAMs");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write LMG Values");
     option->setPropertyName("WriteLMGs");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Good Voxels");
     option->setPropertyName("WriteGoodVoxels");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write IPF Colors");
     option->setPropertyName("WriteIPFColors");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Binary File");
     option->setPropertyName("WriteBinaryFile");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteGrainIds", getWriteGrainIds() );
@@ -194,8 +194,8 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_OutputFile.empty() == true)
   {
-    ss << ": The output file must be set before executing this filter.";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    ss << "The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
@@ -261,7 +261,7 @@ void VtkRectilinearGridWriter::execute()
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
-      ss << ": Error creating parent path '" << parentPath << "'";
+      ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
@@ -346,8 +346,8 @@ void VtkRectilinearGridWriter::execute()
   if (err < 0)
   {
     std::stringstream ss;
-    ss << ": Error writing output vtk file '" << m_OutputFile << "'\n ";
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    ss << "Error writing output vtk file '" << m_OutputFile << "'\n ";
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
   }
 

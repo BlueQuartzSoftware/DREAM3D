@@ -56,7 +56,7 @@ m_ReadCellData(true),
 m_ReadFieldData(true),
 m_ReadEnsembleData(true)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -69,48 +69,48 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setupFilterOptions()
+void DataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
-    option->setWidgetType(FilterOption::InputFileWidget);
+    option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Read Cell Data");
     option->setPropertyName("ReadCellData");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Read Field Data");
     option->setPropertyName("ReadFieldData");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Read Ensemble Data");
     option->setPropertyName("ReadEnsembleData");
-    option->setWidgetType(FilterOption::BooleanWidget);
+    option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    options.push_back(option);
+    parameters.push_back(option);
   }
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadCellData", getReadCellData() );
@@ -128,14 +128,14 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
 
   if(m_InputFile.empty() == true)
   {
-    ss << ": The input file must be set before executing this filter.";
-    addErrorMessage(getNameOfClass(), ss.str(), 1);
+    ss << "The input file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), 1);
     setErrorCondition(-1);
   }
   else if (MXAFileInfo::exists(m_InputFile) == false)
   {
-    ss << ": The input file does not exist.";
-    PipelineMessage em (getNameOfClass(), ss.str(), -1);
+    ss << "The input file does not exist.";
+    PipelineMessage em (getHumanLabel(), ss.str(), -1);
     addErrorMessage(em);
     setErrorCondition(-1);
   }
@@ -163,7 +163,7 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
 
   if(m_InputFile.empty() == true)
   {
-    addErrorMessage(getNameOfClass(), "DataContainerReader Error; Filename was empty", -1);
+    addErrorMessage(getHumanLabel(), "DataContainerReader Error; Filename was empty", -1);
     return -1;
   }
   std::stringstream ss;
@@ -174,7 +174,7 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
     ss.str("");
     ss <<": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
@@ -184,7 +184,7 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
     ss.str("");
     ss <<": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
     setErrorCondition(-150);
-    addErrorMessage(getNameOfClass(), ss.str(), -150);
+    addErrorMessage(getHumanLabel(), ss.str(), -150);
     return -1;
   }
 
@@ -206,7 +206,7 @@ void DataContainerReader::execute()
     setErrorCondition(-1);
     std::stringstream ss;
     ss <<" DataContainer was NULL";
-    addErrorMessage(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
@@ -244,7 +244,7 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
    if(err < 0)
    {
-     PipelineMessage em (getNameOfClass(), "DataContainerReader Error Reading the Dimensions", err);
+     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
   addErrorMessage(em);
      setErrorCondition(-151);
      return -1;
@@ -253,7 +253,7 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
    err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
    if(err < 0)
    {
-     PipelineMessage em (getNameOfClass(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
+     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
   addErrorMessage(em);
      setErrorCondition(-152);
      return -1;
@@ -262,7 +262,7 @@ int DataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
    err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
    if(err < 0)
    {
-     PipelineMessage em (getNameOfClass(), "DataContainerReader Error Reading the Origin", err);
+     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
   addErrorMessage(em);
      setErrorCondition(-153);
      return -1;
@@ -277,18 +277,21 @@ int DataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
   std::stringstream ss;
-  int64_t volDims[3] =  { 0, 0, 0 };
-  float spacing[3] =  { 1.0f, 1.0f, 1.0f };
-  float origin[3] = { 0.0f, 0.0f, 0.0f };
+  int64_t volDims[3] =
+  { 0, 0, 0 };
+  float spacing[3] =
+  { 1.0f, 1.0f, 1.0f };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
   DataContainer* m = getDataContainer();
 
   hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
     ss.str("");
-    ss <<": Error opening input file '" << m_InputFile << "'";
+    ss << ": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;
   }
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
@@ -296,17 +299,16 @@ int DataContainerReader::gatherData(bool preflight)
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss <<": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    ss << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
     setErrorCondition(-150);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;
   }
 
-
-  if (false == preflight)
+  if(false == preflight)
   {
     err = gatherMetaData(dcGid, volDims, spacing, origin);
-    if (err < 0)
+    if(err < 0)
     {
       err |= H5Gclose(dcGid);
       err |= H5Fclose(fileId);
@@ -318,37 +320,40 @@ int DataContainerReader::gatherData(bool preflight)
     m->setOrigin(origin);
   }
 
-  if (m_ReadCellData == true) {
-  err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
-  if(err < 0)
+  if(m_ReadCellData == true)
   {
-    err |= H5Gclose(dcGid);
-    err |= H5Fclose(fileId);
-    setErrorCondition(err);
-    return -1;
-  }
+    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  if (m_ReadFieldData == true) {
-  err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
-  if(err < 0)
+  if(m_ReadFieldData == true)
   {
-    err |= H5Gclose(dcGid);
-    err |= H5Fclose(fileId);
-    setErrorCondition(err);
-    return -1;
-  }
+    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  if (m_ReadEnsembleData == true) {
-  err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
-  if(err < 0)
+  if(m_ReadEnsembleData == true)
   {
-    err |= H5Gclose(dcGid);
-    err |= H5Fclose(fileId);
-    setErrorCondition(err);
-    return -1;
-  }
+    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      err |= H5Fclose(fileId);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
   err |= H5Gclose(dcGid);
@@ -372,7 +377,7 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     ss.str("");
     ss << "Error opening HDF5 Group " << groupName << std::endl;
     setErrorCondition(-154);
-    addErrorMessage(getNameOfClass(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return -154;
   }
 

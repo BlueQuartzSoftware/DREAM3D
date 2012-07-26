@@ -65,7 +65,7 @@ m_CellPhases(NULL),
 m_FieldPhases(NULL),
 m_Active(NULL)
 {
-  setupFilterOptions();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,22 +78,22 @@ MinSize::~MinSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::setupFilterOptions()
+void MinSize::setupFilterParameters()
 {
-  std::vector<FilterOption::Pointer> options;
+  std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterOption::Pointer option = FilterOption::New();
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
     option->setPropertyName("MinAllowedGrainSize");
-    option->setWidgetType(FilterOption::IntWidget);
+    option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    options.push_back(option);
+    parameters.push_back(option);
   }
 
-  setFilterOptions(options);
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void MinSize::writeFilterOptions(AbstractFilterOptionsWriter* writer)
+void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
 }
@@ -229,13 +229,13 @@ void MinSize::assign_badpoints()
   size_t count = 0;
   int kstride, jstride;
   int grainname, grain;
+  int neighbor;
   std::vector<int > n(numgrains + 1,0);
   while (counter != 0)
   {
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-
 		kstride = static_cast<int>( dims[0]*dims[1]*k );
 	    for (int j = 0; j < dims[1]; j++)
 	    {
@@ -272,14 +272,14 @@ void MinSize::assign_badpoints()
 					  if (current > most)
 					  {
 						most = current;
-					    m_Neighbors[count] = grain;
+					    m_Neighbors[count] = neighpoint;
 					  }
 					}
 				  }
 				}
 				for (int l = 0; l < 6; l++)
 				{
-//				  good = 1;
+				  good = 1;
 				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
@@ -297,15 +297,20 @@ void MinSize::assign_badpoints()
 		  }
 		}
 	}
-
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
-      int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
-      if (grainname < 0 && neighbor >= 0)
+      grainname = m_GrainIds[j];
+      neighbor = m_Neighbors[j];
+      if (grainname < 0 && m_GrainIds[neighbor] >= 0)
       {
-        m_GrainIds[j] = neighbor;
-		m_CellPhases[j] = m_FieldPhases[neighbor];
+
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
       }
     }
 //    std::stringstream ss;
@@ -318,114 +323,35 @@ void MinSize::remove_smallgrains()
 {
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
 
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
-  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
-  alreadCheckedPtr->initializeWithZeros();
-
-  size_t size = 0;
-  int good = 0;
-  int neighbor = 0;
-  DimType col, row, plane;
   int gnum;
- // DimType currentgrain = 1;
 
-  int neighpoints[6];
-  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<int>(-dims[0]);
-  neighpoints[2] = static_cast<int>(-1);
-  neighpoints[3] = static_cast<int>(1);
-  neighpoints[4] = static_cast<int>(dims[0]);
-  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
+  int numgrains = m->getNumFieldTuples();
 
-  DimType numgrains = m->getNumFieldTuples();
-
-  nuclei.resize(numgrains, -1);
-
- // size_t maxGrain = 0;
-  // Reset all the Grain nucleus values to -1;
-  for (DimType i = 1; i < numgrains; i++)
-  {
-    nuclei[i] = -1;
-  }
+  std::vector<int> voxcounts;
+  voxcounts.resize(numgrains,0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    m_AlreadyChecked[i] = false;
     gnum = m_GrainIds[i];
-    if(gnum >= 0) nuclei[gnum] = static_cast<int>(i);
+    if(gnum >= 0) voxcounts[gnum]++;
   }
-  voxellists.resize(numgrains);
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	  notifyStatusMessage(ss.str());
-      size = 0;
-      int nucleus = nuclei[i];
-	  if(nucleus >= 0)
+	  if(voxcounts[i] >= static_cast<size_t>(m_MinAllowedGrainSize) )
 	  {
-		  voxellists[i].push_back(nucleus);
-		  assert(nucleus <= totalPoints);
-		  m_AlreadyChecked[nucleus] = true;
-		  size++;
-		  for (size_t j = 0; j < size; j++)
-		  {
-			int currentpoint = voxellists[i][j];
-			col = currentpoint % dims[0];
-			row = (currentpoint / dims[0]) % dims[1];
-			plane = currentpoint / (dims[0] * dims[1]);
-			for (size_t k = 0; k < 6; k++)
-			{
-			  good = 1;
-			  neighbor = currentpoint + neighpoints[k];
-			  if (k == 0 && plane == 0) good = 0;
-			  if (k == 5 && plane == (dims[2] - 1)) good = 0;
-			  if (k == 1 && row == 0) good = 0;
-			  if (k == 4 && row == (dims[1] - 1)) good = 0;
-			  if (k == 2 && col == 0) good = 0;
-			  if (k == 3 && col == (dims[0] - 1)) good = 0;
-			  if (good == 1 && m_AlreadyChecked[neighbor] == false)
-			  {
-				size_t grainname = static_cast<size_t>(m_GrainIds[neighbor]);
-				if (grainname == i)
-				{
-				  voxellists[i].push_back(neighbor);
-				  assert(neighbor <= totalPoints);
-				  m_AlreadyChecked[neighbor] = true;
-				  size++;
-				}
-			  }
-			}
-		  }
-		  if(voxellists[i].size() >= static_cast<size_t>(m_MinAllowedGrainSize) )
-		  {
-			m_Active[i] = true;
-		  }
-		  if(voxellists[i].size() < static_cast<size_t>(m_MinAllowedGrainSize) )
-		  {
-			m_Active[i] = false;
-			for (size_t b = 0; b < voxellists[i].size(); b++)
-			{
-			  int index = voxellists[i][b];
-			  m_GrainIds[index] = -1;
-			}
-		  }
+		m_Active[i] = true;
 	  }
-	  else if(nucleus < 0)
+	  else if(voxcounts[i] < static_cast<size_t>(m_MinAllowedGrainSize) )
 	  {
 		m_Active[i] = false;
 	  }
+  }
+  for (int64_t i = 0; i < totalPoints; i++)
+  {
+    gnum = m_GrainIds[i];
+    if(m_Active[gnum] == false) m_GrainIds[i] = -1;
   }
 }
