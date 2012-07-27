@@ -225,9 +225,9 @@ void DataContainerReader::execute()
   m->setResolution(spacing);
   m->setOrigin(origin);
 
-  m->clearCellData();
-  m->clearFieldData();
-  m->clearEnsembleData();
+  if(m_ReadCellData == true) m->clearCellData();
+  if(m_ReadFieldData == true) m->clearFieldData();
+  if(m_ReadEnsembleData == true) m->clearEnsembleData();
 
   // We are actually wanting to read the file so set preflight to false
   err = gatherData(false);

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,81 +33,76 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef Hex2SqrConverter_H_
+#define Hex2SqrConverter_H_
 
 
-#ifndef _PHReader_h_
-#define _PHReader_h_
 
-#include <string>
+#if defined (_MSC_VER)
+#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#endif
+
+
 #include <vector>
+#include <string>
+
+#include "MXA/Common/MXASetGetMacros.h"
+#include "MXA/MXA.h"
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/FileReader.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/AbstractPipeline.h"
+#include "DREAM3DLib/Common/Observer.h"
 
 /**
- * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
- * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
+ * @brief This class is used to import multiple EBSD files into an HDF5 file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Dr. Michael Groeber, US Air Force Research Laboratories
+ * @date March 23, 2011
+ * @version 1.2
+ *
  */
-class DREAM3DLib_EXPORT PhReader : public FileReader
+class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(PhReader)
-    DREAM3D_STATIC_NEW_MACRO(PhReader)
-    DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader)
+    DREAM3D_SHARED_POINTERS(Hex2SqrConverter)
+    DREAM3D_STATIC_NEW_MACRO(Hex2SqrConverter)
+    DREAM3D_TYPE_MACRO_SUPER(Hex2SqrConverter, AbstractFilter)
 
-    virtual ~PhReader();
+    virtual ~Hex2SqrConverter();
 
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputInfoFile)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    DREAM3D_INSTANCE_PROPERTY(float, XResolution)
+    DREAM3D_INSTANCE_PROPERTY(float, YResolution)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
 
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+    virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Read Ph File (Grain Ids)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-    virtual void preflight();
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+    virtual void execute();
 
   protected:
-    PhReader();
-
-    virtual int readHeader();
-    virtual int readFile();
+    Hex2SqrConverter();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_GrainIds;
-    int32_t* m_CellPhases;
-    float* m_CellEulerAngles;
-    int32_t* m_FieldPhases;
-    float* m_FieldEulerAngles;
-    unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
 
-    PhReader(const PhReader&); //Not Implemented
-    void operator=(const PhReader&); //Not Implemented
-
+    Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
+    void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented
 };
 
-#endif //_PHReader_h_
 
-
+#endif /* Hex2SqrConverter_H_ */
