@@ -309,6 +309,7 @@ int  PhReader::readFile()
   float ea1, ea2, ea3;
   inFile2 >> numgrains;
   FloatArrayType::Pointer m_FieldEulerData = FloatArrayType::CreateArray(3*numgrains, DREAM3D::FieldData::EulerAngles);
+  m_FieldEulerData->SetNumberOfComponents(3);
   Int32ArrayType::Pointer m_FieldPhaseData = Int32ArrayType::CreateArray(numgrains, DREAM3D::FieldData::Phases);
   for(int i=0;i<numgrains;i++)
   {
@@ -335,6 +336,7 @@ int  PhReader::readFile()
   getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
 
   FloatArrayType::Pointer m_CellEulerData = FloatArrayType::CreateArray(3*nx*ny*nz, DREAM3D::FieldData::EulerAngles);
+  m_CellEulerData->SetNumberOfComponents(3);
   Int32ArrayType::Pointer m_CellPhaseData = Int32ArrayType::CreateArray(nx*ny*nz, DREAM3D::FieldData::Phases);
   for(int i=0;i<nx*ny*nz;i++)
   {
