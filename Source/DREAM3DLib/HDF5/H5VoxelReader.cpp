@@ -200,7 +200,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
 #if   (CMP_SIZEOF_SSIZE_T==4)
   if (totalpoints * 3 > static_cast<int64_t>(std::numeric_limits<size_t>::max()) )
   {
-    PipelineMessage em (getHumanLabel(), "Trying to read more data than this architecture can handle.", XXXX);
+  PipelineMessage em (getHumanLabel(), "Trying to read more data than this architecture can handle.", -1);
   addErrorMessage(em);
     return -400;
   }
