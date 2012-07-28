@@ -58,6 +58,7 @@ m_MisorientationGradientsArrayName(DREAM3D::CellData::MisorientationGradients),
 m_GrainMisorientationsArrayName(DREAM3D::CellData::GrainMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_WriteGrainIds(true),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
@@ -66,6 +67,7 @@ m_WriteLMGs(false),
 m_WriteGAMs(false),
 m_WriteKAMs(false),
 m_WriteIPFColors(false),
+m_WriteGrainSizes(false),
 m_WriteBinaryFile(false)
 {
   setupFilterParameters();
@@ -159,6 +161,14 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Grain Sizes");
+    option->setPropertyName("WriteGrainSizes");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Binary File");
     option->setPropertyName("WriteBinaryFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -180,6 +190,7 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteGAMs", getWriteGAMs() );
   writer->writeValue("WriteKAMs", getWriteKAMs() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
+  writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
 }
 
@@ -230,6 +241,10 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_WriteIPFColors == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+  }
+  if(m_WriteGrainSizes == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
   }
 }
 
@@ -331,6 +346,13 @@ void VtkRectilinearGridWriter::execute()
   if(m_WriteIPFColors == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<DataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if(m_WriteGrainSizes == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new FieldSizeScalarWriter<DataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }

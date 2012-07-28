@@ -162,22 +162,22 @@
  }
 
 
-#define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_ASCII(ptr, name, m_msgType, var, FORMAT)\
-  fprintf(f, "SCALARS %s float 1\n", name.c_str());\
+#define WRITE_VTK_SCALARS_FROM_FIELD_ASCII(ptr, name, m_msgType, var, grain_indicies, FORMAT)\
+  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
-    fprintf(f, FORMAT, ptr->m_Grains[grain_indicies[i]]->var);\
+    fprintf(f, FORMAT, var[grain_indicies[i]]);\
   } fprintf(f,"\n");
 
-#define WRITE_VTK_GRAIN_WITH_GRAIN_SCALAR_VALUE_BINARY(ptr, name, m_msgType, var)\
+#define WRITE_VTK_SCALARS_FROM_FIELD_BINARY(ptr, name, m_msgType, var, grain_indicies)\
   fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
-    t = ptr->m_Grains[grain_indicies[i]]->var;\
+    t = var[grain_indicies[i]];\
     MXA::Endian::FromSystemToBig::convert<m_msgType>(t); \
     gn[i] = t; \
   }\
