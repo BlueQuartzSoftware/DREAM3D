@@ -148,6 +148,34 @@ class name : public VtkScalarWriter\
     void operator=(const name&);\
 };
 
+#define VtkSCALARWRITER_CLASS_DEF_FIELD(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
+template<typename T>\
+class name : public VtkScalarWriter\
+{\
+  public:\
+    name(T* r) : VtkScalarWriter(), r(r) {}\
+    DREAM3D_TYPE_MACRO_SUPER(name<T>, VtkScalarWriter)\
+    virtual ~name(){}\
+    int writeScalars(FILE* f)  {\
+      int err = 0;\
+      std::string file;\
+      int64_t totalFields = r->getNumFieldTuples();\
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalFields, var);\
+      int64_t totalPoints = r->getTotalPoints();\
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
+      if (m_WriteBinaryFiles == true) {\
+	    WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
+      }    else    {\
+	    WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+      }\
+      return err;\
+  }\
+  private:\
+    T* r;\
+    name(const name&); \
+    void operator=(const name&);\
+};
+
 #define VtkSCALARWRITER_CLASS_DEF_CHAR(name, r, field, arrayName, scalarName, arrayType, m_msgType, format)\
 template<typename T>\
 class name : public VtkScalarWriter\
@@ -182,6 +210,7 @@ VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, Cell, DREAM3D::CellData::Kern
 VtkSCALARWRITER_CLASS_DEF(VoxelGAMScalarWriter, r, Cell, DREAM3D::CellData::GrainMisorientations, DREAM3D::CellData::GrainMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelLMGScalarWriter, r, Cell, DREAM3D::CellData::MisorientationGradients, DREAM3D::CellData::MisorientationGradients, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, Cell, DREAM3D::CellData::SurfaceVoxels, DREAM3D::CellData::SurfaceVoxels, Int8ArrayType, char, "%d ")
+VtkSCALARWRITER_CLASS_DEF_FIELD(FieldSizeScalarWriter, r, Field, DREAM3D::FieldData::EquivalentDiameters, DREAM3D::FieldData::EquivalentDiameters, FloatArrayType, float, "%f ")
 
 
 /**

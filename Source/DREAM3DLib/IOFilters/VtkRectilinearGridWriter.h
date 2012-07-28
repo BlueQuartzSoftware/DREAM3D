@@ -80,6 +80,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainIds)
@@ -90,6 +91,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGAMs)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteKAMs)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColors)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainSizes)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
 
     virtual void preflight();
@@ -121,6 +123,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     float*   m_MisorientationGradients;
     float*   m_GrainMisorientations;
     float*   m_KernelAverageMisorientations;
+    float*   m_EquivalentDiameters;
 
 
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
