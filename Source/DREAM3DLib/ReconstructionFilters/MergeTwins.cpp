@@ -210,7 +210,7 @@ void MergeTwins::execute()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  m->clearFieldData();
+//  m->clearFieldData();
 //  m->clearEnsembleData();
 
   setErrorCondition(0);
@@ -307,16 +307,18 @@ void MergeTwins::merge_twins()
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 > Ebsd::CrystalStructure::Cubic) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
-      //			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-            float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
-            float angdiff60 = fabs(w-60.0f);
-            if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
-            if (twin == 1)
-            {
-              twinnewnumbers[neigh] = i;
-              twinlist.push_back(neigh);
-			  m_Active[neigh] = false;
+			if (phase1 == phase2 && phase1 > Ebsd::CrystalStructure::Cubic) 
+			{ 
+				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+	            float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
+	            float angdiff60 = fabs(w-60.0f);
+	            if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
+	            if (twin == 1)
+	            {
+	              twinnewnumbers[neigh] = i;
+	              twinlist.push_back(neigh);
+				  m_Active[neigh] = false;
+				}
             }
           }
         }
