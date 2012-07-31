@@ -127,13 +127,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void loadFavorites(QString path);
 
-
+    QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
+    void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
   protected slots:
     void actionClearPipeline_triggered();
-    void actionSavePipeline_triggered(QString file);
-    void actionSavePipelineAs_triggered();
-    void actionOpenPipeline_triggered();
     void actionAddFavorite_triggered();
     void actionRemoveFavorite_triggered();
 
@@ -182,7 +180,6 @@ signals:
     QString                     m_OpenDialogLastDirectory;
     QAction*                    m_actionClearPipeline;
     QAction*                    m_actionOpenPipeline;
-    QAction*                    m_actionSavePipelineAs;
     QAction*                    m_actionSavePipeline;
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;

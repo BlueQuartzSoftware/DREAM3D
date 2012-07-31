@@ -127,6 +127,39 @@ void DREAM3D_UI::on_actionExit_triggered()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
+  QString file = QFileDialog::getOpenFileName(m_PipelineBuilderWidget, tr("Select Settings File"),
+    m_PipelineBuilderWidget->getLastDirectory(),
+    tr("Settings File (*.txt)") );
+  if ( true == file.isEmpty() ) { return; }
+  QSettings prefs(file, QSettings::IniFormat, this);
+  m_PipelineBuilderWidget->readSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
+  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "PipelineBuilderSettings.txt";
+  QString filePath = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
+    proposedFile,
+    tr("*.txt") );
+  if ( true == filePath.isEmpty() ) { return; }
+
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.exists() == true)
+  {
+    QFile f(filePath);
+    f.remove();
+  }
+  QSettings prefs(filePath, QSettings::IniFormat, this);
+  m_PipelineBuilderWidget->writeSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::closeEvent(QCloseEvent *event)
@@ -291,6 +324,13 @@ void DREAM3D_UI::setupGui()
           this, SLOT(writeSettings()) );
   connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
           this, SLOT(readSettings() ) );
+
+
+  QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
+  actionOpen_Pipeline_2->setShortcut(actionOpenKeySeq);
+
+  QKeySequence actionSaveKeySeq(Qt::CTRL + Qt::Key_S);
+  actionSave_Pipeline_2->setShortcut(actionSaveKeySeq);
 }
 
 
@@ -411,29 +451,6 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 
   return err;
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionClose_triggered() {
- // std::cout << "DREAM3D_UI::on_actionClose_triggered" << std::endl;
-  qint32 err = -1;
-  err = checkDirtyDocument();
-  if (err >= 0)
-  {
-    // Close the window. Files have been saved if needed
-    if (QApplication::activeWindow() == this)
-    {
-      this->close();
-    }
-    else
-    {
-      QApplication::activeWindow()->close();
-    }
-  }
-}
-
 
 // -----------------------------------------------------------------------------
 //
