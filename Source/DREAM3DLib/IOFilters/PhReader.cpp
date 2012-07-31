@@ -163,16 +163,16 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     setErrorCondition(-387);
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-	  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic, ensembles, 1)
+	  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -309,6 +309,7 @@ int  PhReader::readFile()
   float ea1, ea2, ea3;
   inFile2 >> numgrains;
   FloatArrayType::Pointer m_FieldEulerData = FloatArrayType::CreateArray(3*numgrains, DREAM3D::FieldData::EulerAngles);
+  m_FieldEulerData->SetNumberOfComponents(3);
   Int32ArrayType::Pointer m_FieldPhaseData = Int32ArrayType::CreateArray(numgrains, DREAM3D::FieldData::Phases);
   for(int i=0;i<numgrains;i++)
   {
@@ -328,13 +329,14 @@ int  PhReader::readFile()
   PTypeArrayType::Pointer m_PhaseTypeData = PTypeArrayType::CreateArray(maxphase+1, DREAM3D::EnsembleData::PhaseTypes);
   for(int i=0;i<maxphase+1;i++)
   {
-	  m_XTalStructData->SetValue(i, Ebsd::CrystalStructure::UnknownCrystalStructure);
-	  m_PhaseTypeData->SetValue(i, DREAM3D::PhaseType::UnknownPhaseType);
+	  m_XTalStructData->SetValue(i, Ebsd::CrystalStructure::Cubic);
+	  m_PhaseTypeData->SetValue(i, DREAM3D::PhaseType::PrimaryPhase);
   }
   getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
   getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
 
   FloatArrayType::Pointer m_CellEulerData = FloatArrayType::CreateArray(3*nx*ny*nz, DREAM3D::FieldData::EulerAngles);
+  m_CellEulerData->SetNumberOfComponents(3);
   Int32ArrayType::Pointer m_CellPhaseData = Int32ArrayType::CreateArray(nx*ny*nz, DREAM3D::FieldData::Phases);
   for(int i=0;i<nx*ny*nz;i++)
   {

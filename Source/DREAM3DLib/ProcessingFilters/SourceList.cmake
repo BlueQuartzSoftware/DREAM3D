@@ -13,13 +13,12 @@ ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.h
 )
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 SET (DREAM3DLib_ProcessingFilters_HDRS
     ${ProcessingFilters_FILTERS_HDRS}
-
+${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.h
 )
 SET (DREAM3DLib_ProcessingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.cpp    
