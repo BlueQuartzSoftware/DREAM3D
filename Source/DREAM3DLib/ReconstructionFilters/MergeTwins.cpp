@@ -238,15 +238,6 @@ void MergeTwins::execute()
     return;
   }
 
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[m_FieldPhases[i]]++;
-  }
-
  notifyStatusMessage("Completed");
 }
 
@@ -307,7 +298,7 @@ void MergeTwins::merge_twins()
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 > Ebsd::CrystalStructure::Cubic) 
+			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic) 
 			{ 
 				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 	            float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
