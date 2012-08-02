@@ -54,6 +54,7 @@
 #include <QtGui/QBrush>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
+#include <QtGui/QKeySequence>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -99,47 +100,30 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 {
   this->m_MenuPipeline = menuPipeline;
 
-  m_actionOpenPipeline = new QAction(m_MenuPipeline);
-  m_actionOpenPipeline->setObjectName(QString::fromUtf8("actionOpenPipeline"));
-  m_actionOpenPipeline->setText(QApplication::translate("DREAM3D_UI", "Open Pipeline", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionOpenPipeline);
-  connect(m_actionOpenPipeline, SIGNAL(triggered()),
-    this, SLOT( actionOpenPipeline_triggered() ) );
-
-#if 0
-  m_actionSavePipeline = new QAction(m_MenuPipeline);
-  m_actionSavePipeline->setObjectName(QString::fromUtf8("actionSavePipeline"));
-  m_actionSavePipeline->setText(QApplication::translate("DREAM3D_UI", "Save Pipeline As", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionSavePipeline);
-  connect(m_actionSavePipeline, SIGNAL(triggered()),
-    this, SLOT( actionSavePipeline_triggered(QString text) ) );
-#endif
-
-  m_actionSavePipelineAs = new QAction(m_MenuPipeline);
-  m_actionSavePipelineAs->setObjectName(QString::fromUtf8("actionSavePipeline"));
-  m_actionSavePipelineAs->setText(QApplication::translate("DREAM3D_UI", "Save Pipeline As", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionSavePipelineAs);
-  connect(m_actionSavePipelineAs, SIGNAL(triggered()),
-    this, SLOT( actionSavePipelineAs_triggered() ) );
-
   m_actionAddFavorite = new QAction(m_MenuPipeline);
   m_actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
-  m_actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite Pipeline", 0, QApplication::UnicodeUTF8));
+  m_actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionAddFavorite);
+  QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_F);
+  m_actionAddFavorite->setShortcut(actionAddFavKeySeq);
   connect(m_actionAddFavorite, SIGNAL(triggered()),
     this, SLOT( actionAddFavorite_triggered() ) );
 
   m_actionRemoveFavorite = new QAction(m_MenuPipeline);
   m_actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
-  m_actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite Pipeline", 0, QApplication::UnicodeUTF8));
+  m_actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionRemoveFavorite);
+  QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::Key_Delete);
+  m_actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
   connect(m_actionRemoveFavorite, SIGNAL(triggered()),
     this, SLOT( actionRemoveFavorite_triggered() ) );
 
   m_actionClearPipeline = new QAction(m_MenuPipeline);
   m_actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
-  m_actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0, QApplication::UnicodeUTF8));
+  m_actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionClearPipeline);
+  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_Delete);
+  m_actionClearPipeline->setShortcut(actionClearKeySeq);
   connect(m_actionClearPipeline, SIGNAL(triggered()),
     this, SLOT( actionClearPipeline_triggered() ) );
 }
@@ -674,49 +658,6 @@ void PipelineBuilderWidget::on_showErrors_clicked()
   {
     docErrorTabs->setCurrentIndex(1);
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionOpenPipeline_triggered()
-{
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Settings File"),
-    m_OpenDialogLastDirectory,
-    tr("Settings File (*.txt)") );
-  if ( true == file.isEmpty() ) { return; }
-  QSettings prefs(file, QSettings::IniFormat, this);
-  readSettings(prefs);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionSavePipeline_triggered(QString file) 
-{
-  
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionSavePipelineAs_triggered()
-{
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "PipelineBuilderSettings.txt";
-  QString filePath = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
-                                              proposedFile,
-                                              tr("*.txt") );
-  if ( true == filePath.isEmpty() ) { return; }
-
-  //If the filePath already exists - delete it so that we get a clean write to the file
-  QFileInfo fi(filePath);
-  if (fi.exists() == true)
-  {
-    QFile f(filePath);
-    f.remove();
-  }
-  QSettings prefs(filePath, QSettings::IniFormat, this);
-  writeSettings(prefs);
 }
 
 // -----------------------------------------------------------------------------
