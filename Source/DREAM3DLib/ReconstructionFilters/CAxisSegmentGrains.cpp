@@ -323,25 +323,26 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
 	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
-	  if(phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
-	  {
+	  q1[0] = 1;
+	  q1[1] = m_Quats[referencepoint * 5 + 1];
+	  q1[2] = m_Quats[referencepoint * 5 + 2];
+	  q1[3] = m_Quats[referencepoint * 5 + 3];
+	  q1[4] = m_Quats[referencepoint * 5 + 4];
 
-		  q1[0] = 1;
-		  q1[1] = m_Quats[referencepoint * 5 + 1];
-		  q1[2] = m_Quats[referencepoint * 5 + 2];
-		  q1[3] = m_Quats[referencepoint * 5 + 3];
-		  q1[4] = m_Quats[referencepoint * 5 + 4];
+	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+	  q2[0] = 1;
+	  q2[1] = m_Quats[neighborpoint*5 + 1];
+	  q2[2] = m_Quats[neighborpoint*5 + 2];
+	  q2[3] = m_Quats[neighborpoint*5 + 3];
+	  q2[4] = m_Quats[neighborpoint*5 + 4];
+
+	  if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
+	  {
 		  cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
 		  cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
 		  cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
 		  denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
 
-		  q2[0] = 1;
-		  q2[1] = m_Quats[neighborpoint*5 + 1];
-		  q2[2] = m_Quats[neighborpoint*5 + 2];
-		  q2[3] = m_Quats[neighborpoint*5 + 3];
-		  q2[4] = m_Quats[neighborpoint*5 + 4];
 		  cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
 		  cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
 		  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
@@ -354,6 +355,7 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 			group = true;
 			m_GrainIds[neighborpoint] = gnum;
 		  }
+
 	  }
   }
 
