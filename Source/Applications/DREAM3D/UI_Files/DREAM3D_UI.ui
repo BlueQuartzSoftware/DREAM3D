@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -51,7 +51,8 @@
      </property>
      <addaction name="actionSomething"/>
     </widget>
-    <addaction name="actionClose"/>
+    <addaction name="actionOpen_Pipeline_2"/>
+    <addaction name="actionSave_Pipeline_2"/>
     <addaction name="separator"/>
     <addaction name="menu_RecentFiles"/>
     <addaction name="separator"/>
@@ -140,6 +141,26 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionOpen_Pipeline">
+   <property name="text">
+    <string>Open Pipeline</string>
+   </property>
+  </action>
+  <action name="actionOpen_Pipeline_2">
+   <property name="text">
+    <string>Open Pipeline</string>
+   </property>
+  </action>
+  <action name="actionSave_Pipeline_2">
+   <property name="text">
+    <string>Save Pipeline</string>
    </property>
   </action>
  </widget>
