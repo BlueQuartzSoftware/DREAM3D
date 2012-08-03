@@ -156,7 +156,7 @@ void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
     f.remove();
   }
   QSettings prefs(filePath, QSettings::IniFormat, this);
-  m_PipelineBuilderWidget->writeSettings(prefs);
+  m_PipelineBuilderWidget->savePipeline(prefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -255,6 +255,13 @@ void DREAM3D_UI::writeSettings()
 
   writeWindowSettings(prefs);
 //  prefs.setValue("PluginDisplay", this->m_PluginToolBar->toolButtonStyle());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::savePipeline(QSettings &prefs) {
+
 }
 
 // -----------------------------------------------------------------------------

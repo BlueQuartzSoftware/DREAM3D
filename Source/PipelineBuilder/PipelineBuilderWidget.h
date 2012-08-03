@@ -92,6 +92,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
 
     /**
+     * @brief Writes the pipeline order to a text file
+     */
+    virtual void savePipeline(QSettings &prefs);
+
+    /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
      */
