@@ -92,6 +92,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
 
     /**
+     * @brief Writes the pipeline order to a text file
+     */
+    virtual void savePipeline(QSettings &prefs);
+
+    /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
      */
@@ -127,15 +132,15 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void loadFavorites(QString path);
 
-
+    QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
+    void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
   protected slots:
-    void actionClear_triggered();
-
+    void actionClearPipeline_triggered();
+    void actionAddFavorite_triggered();
+    void actionRemoveFavorite_triggered();
 
     void on_m_GoBtn_clicked();
-    void on_m_SaveSettingsBtn_clicked();
-    void on_m_LoadSettingsBtn_clicked();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
@@ -148,8 +153,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
 
-    void on_addFavoriteBtn_clicked();
-    void on_removeFavoriteBtn_clicked();
 
     void on_helpText_anchorClicked ( const QUrl & link );
     void setDocsToIndexFile();
@@ -180,7 +183,11 @@ signals:
     QThread*                    m_WorkerThread;
     bool                        m_DocErrorTabsIsOpen;
     QString                     m_OpenDialogLastDirectory;
-    QAction*                    m_actionClear;
+    QAction*                    m_actionClearPipeline;
+    QAction*                    m_actionOpenPipeline;
+    QAction*                    m_actionSavePipeline;
+    QAction*                    m_actionAddFavorite;
+    QAction*                    m_actionRemoveFavorite;
 
     QMap<QString,QStringList>   m_presetMap;
     QMap<QString,QString>       m_favoritesMap;
