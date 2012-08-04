@@ -80,8 +80,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   protected slots:
 
   /* Menu Slots */
-    void on_actionClose_triggered();
     void on_actionExit_triggered();
+    void on_actionOpen_Pipeline_2_triggered();
+    void on_actionSave_Pipeline_2_triggered();
 
     void on_action_ShowPluginToolbar_toggled(bool state);
 
@@ -100,6 +101,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief Writes the preferences to the users pref file
      */
     void writeSettings();
+
+    /**
+     * @brief Writes the pipeline order to a text file
+     */
+    void savePipeline(QSettings &prefs);
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
