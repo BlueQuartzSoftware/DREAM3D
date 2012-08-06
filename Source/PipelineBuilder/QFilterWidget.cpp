@@ -870,6 +870,31 @@ void QFilterWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QFilterWidget::setCellDataArrayNames(std::vector<std::string> arrayNames)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setFieldDataArrayNames(std::vector<std::string> arrayNames)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setEnsembleDataArrayNames(std::vector<std::string> arrayNames)
+{
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void  QFilterWidget::mousePressEvent ( QMouseEvent* event )
 {
   if(event->button() != Qt::LeftButton)
