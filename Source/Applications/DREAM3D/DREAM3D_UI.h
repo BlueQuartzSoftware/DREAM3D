@@ -103,6 +103,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeSettings();
 
     /**
+     * @brief Writes the pipeline order to a text file
+     */
+    void savePipeline(QSettings &prefs);
+
+    /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
      * should be connected to the Signal QRecentFileList->fileListChanged
      * @param file The newly added file.

@@ -186,31 +186,33 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   m_PipelineViewWidget->preflightPipeline();
 
 
+  QDir tempPathDir = QDir::temp();
+  QString tempPath = tempPathDir.path();
+
   //Get Favorites from Pref File and Update Tree Widget
-  prefs.beginGroup(Detail::FavoritePipelines);
+    prefs.beginGroup(Detail::FavoritePipelines);
 
-  int favoriteCount = prefs.value("count").toInt(&ok);
-  if (false == ok) {
-    favoriteCount = 0;
-  }
+    int favoriteCount = prefs.value("count").toInt(&ok);
+    if (false == ok) {
+      favoriteCount = 0;
+    }
 
-  for(int r = 0; r < favoriteCount; ++r)
-  {
-    QString favNameKey = QString::number(r) + QString("_Favorite_Name");
-    QString favName = prefs.value(favNameKey).toString();
+    for(int r = 0; r < favoriteCount; ++r)
+    {
+      QString favNameKey = QString::number(r) + QString("_Favorite_Name");
+      QString favName = prefs.value(favNameKey).toString();
 
-    QString favFilePath = QString::number(r) + QString("_Favorite_File");
-    QString favPath = prefs.value(favFilePath).toString();
+      QString favFilePath = QString::number(r) + QString("_Favorite_File");
+      QString favPath = prefs.value(favFilePath).toString();
 
-    m_favoritesMap[favName] = favPath;
+      m_favoritesMap[favName] = favPath;
 
-    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
-    favoriteItem->setText(0, favName);
-    favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
-  }
+      QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
+      favoriteItem->setText(0, favName);
+      favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
+    }
 
-  prefs.endGroup();
-
+    prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -240,6 +242,13 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 
   writeSettings(prefs, m_PipelineViewWidget);
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::savePipeline(QSettings &prefs) {
+  writeSettings(prefs, m_PipelineViewWidget);
 }
 
 // -----------------------------------------------------------------------------

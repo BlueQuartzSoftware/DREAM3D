@@ -112,6 +112,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QFilterWidget* createDeepCopy();
 
+    virtual void setCellDataArrayNames(std::vector<std::string> arrayNames);
+    virtual void setFieldDataArrayNames(std::vector<std::string> arrayNames);
+    virtual void setEnsembleDataArrayNames(std::vector<std::string> arrayNames);
+
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
