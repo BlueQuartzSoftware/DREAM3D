@@ -40,41 +40,14 @@
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngConstants.h"
-#include "EbsdLib/TSL/H5AngImporter.h"
+#include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfConstants.h"
-#include "EbsdLib/HKL/H5CtfImporter.h"
+#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/EbsdMacros.h"
+#include "EbsdLib/EbsdMath.h"
 
 #include "DREAM3DLib/Common/Observable.h"
-
-/**
- * @brief Just a dummy class in order to make the EBSDImoprt work with some
- * of the other source codes.
- */
-class Hex2SqrConverterFunc : public Observable
-{
-  public:
-    DREAM3D_SHARED_POINTERS(Hex2SqrConverterFunc)
-    DREAM3D_STATIC_NEW_MACRO(Hex2SqrConverterFunc)
-
-
-    virtual ~Hex2SqrConverterFunc()
-    {
-
-	}
-
-
-  protected:
-    Hex2SqrConverterFunc()
-    {
-    }
-
-  private:
-    Hex2SqrConverterFunc(const Hex2SqrConverterFunc&); // Copy Constructor Not Implemented
-    void operator=(const Hex2SqrConverterFunc&); // Operator '=' Not Implemented
-
-};
 
 // -----------------------------------------------------------------------------
 //
@@ -150,34 +123,9 @@ void Hex2SqrConverter::execute()
   std::stringstream ss;
   herr_t err = 0;
   hid_t fileId = -1;
-  // This is just a dummy variable to keep the macros happy
-  Hex2SqrConverterFunc::Pointer m = Hex2SqrConverterFunc::New();
 
   // Start the Benchmark clock
   START_CLOCK()
-
-  EbsdImporter::Pointer fileImporter;
-
-  // Write the Manufacturer of the OIM file here
-  // This list will grow to be the number of EBSD file formats we support
-  std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
-  if(ext.compare(Ebsd::Ang::FileExt) == 0)
-  {
-    fileImporter = H5AngImporter::New();
-  }
-  else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
-  {
-    fileImporter = H5CtfImporter::New();
-  }
-  else
-  {
-    err = -1;
-    ss.str("");
-    ss << "The File extension was not detected correctly";
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    setErrorCondition(-1);
-    return;
-  }
 
   std::vector<int> indices;
   // Loop on Each EBSD File
@@ -212,42 +160,191 @@ void Hex2SqrConverter::execute()
   int totalSlicesImported = 0;
   for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
-    std::string ebsdFName = *filepath;
-    progress = static_cast<int>( z - m_ZStartIndex );
+	std::string ebsdFName = *filepath;
+
+	progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
     std::string msg = "Converting File: " + ebsdFName;
     ss.str("");
 
     notifyStatusMessage(msg.c_str());
-    err = fileImporter->importFile(fileId, z, ebsdFName);
-    if (err < 0)
-    {
-      addErrorMessage(getHumanLabel(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition());
-      setErrorCondition(err);
-      return;
-    }
-    totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
 
-    fileImporter->getDims(xDim, yDim);
-    fileImporter->getResolution(xRes, yRes);
+	// Write the Manufacturer of the OIM file here
+	// This list will grow to be the number of EBSD file formats we support
+	std::string ext = MXAFileInfo::extension(ebsdFName);
+	if(ext.compare(Ebsd::Ang::FileExt) == 0)
+	{
+		AngReader reader;
+		reader.setFileName(ebsdFName);
+		int err = reader.readFile();
+		if(err < 0)
+		{
+			return;
+		}
+		else
+		{
+			std::string origHeader = reader.getOriginalHeader();	
+			char buf[kBufferSize];
+			std::stringstream in(origHeader);
+			if (in == NULL)
+			{
+	 			std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
+			}
 
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Could not write dataset for slice to HDF5 file";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(-1);
-    }
-    indices.push_back( static_cast<int>(z) );
-    ++z;
-    if(getCancel() == true)
-    {
-     notifyStatusMessage("Conversion was Canceled");
-      return;
-    }
+			while (!in.eof())
+			{
+				std::string line;
+				::memset(buf, 0, kBufferSize);
+				in.getline(buf, kBufferSize);
+				line = modifyAngHeaderLine(buf, kBufferSize);
+			}
+		}
+	}
+	else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
+	{
+		CtfReader reader;
+		int err = reader.readFile();
+		reader.setFileName(ebsdFName);
+		if(err < 0)
+		{
+			return;
+		}
+		else
+		{
+			std::string origHeader = reader.getOriginalHeader();	
+			char buf[kBufferSize];
+			std::stringstream in(origHeader);
+			if (in == NULL)
+			{
+	 			std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
+			}
+
+			while (!in.eof())
+			{
+				std::string line;
+				::memset(buf, 0, kBufferSize);
+				in.getline(buf, kBufferSize);
+				line = modifyCtfHeaderLine(buf, kBufferSize);
+			}
+		}
+	}
+	else
+	{
+		err = -1;
+		ss.str("");
+		ss << "The File extension was not detected correctly";
+		addErrorMessage(getHumanLabel(), ss.str(), err);
+		setErrorCondition(-1);
+		return;
+	}
+
   }
 
-  m = Hex2SqrConverterFunc::NullPointer();
  notifyStatusMessage("Import Complete");
 }
 
+// -----------------------------------------------------------------------------
+//  Modify the Header line of the ANG file if necessary
+// -----------------------------------------------------------------------------
+std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
+{
+  std::string line = "";
+  if (buf[0] != '#')
+  {
+    return line;
+  }
+  // Start at the first character and walk until you find another non-space character
+  size_t i = 1;
+  while(buf[i] == ' ')
+  {
+    ++i;
+  }
+  size_t wordStart = i;
+  size_t wordEnd = i+1;
+  while(1)
+  {
+    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
+    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
+    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
+    else { break;}
+  }
+  wordEnd = i;
+
+  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+
+  if (word.size() == 0)
+  {
+    return line;
+  }
+
+  if (word.compare(Ebsd::Ang::Grid) == 0)
+  {
+
+  }
+  if (word.compare(Ebsd::Ang::Grid) == 0)
+  {
+
+  }
+  if (word.compare(Ebsd::Ang::Grid) == 0)
+  {
+
+  }
+  if (word.compare(Ebsd::Ang::Grid) == 0)
+  {
+
+  }
+  if (word.compare(Ebsd::Ang::Grid) == 0)
+  {
+
+  }
+  if (word.compare(Ebsd::Ang::Grid) == 0)
+  {
+
+  }
+  else
+  {
+	line = buf;
+  }
+  return line;
+}
+
+// -----------------------------------------------------------------------------
+//  Modify the Header line of the CTF file if necessary
+// -----------------------------------------------------------------------------
+std::string Hex2SqrConverter::modifyCtfHeaderLine(char* buf, size_t length)
+{
+  std::string line = "";
+  if (buf[0] != '#')
+  {
+    return line;
+  }
+  // Start at the first character and walk until you find another non-space character
+  size_t i = 1;
+  while(buf[i] == ' ')
+  {
+    ++i;
+  }
+  size_t wordStart = i;
+  size_t wordEnd = i+1;
+  while(1)
+  {
+    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
+    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
+    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
+    else { break;}
+  }
+  wordEnd = i;
+
+  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+
+  if (word.size() == 0)
+  {
+    return line;
+  }
+
+  if (word.compare(Ebsd::Ctf::XCells) == 0)
+  {
+
+  }
+  return line;
+}

@@ -124,7 +124,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     */
     virtual int readHeaderOnly();
 
-    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+	/** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
     */
     virtual void initPointers(size_t numElements);
@@ -147,14 +147,14 @@ private:
     AngPhase::Pointer   m_CurrentPhase;
 
 
+    int readData(std::ifstream &in, char* buf, size_t bufSize);
+
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
     */
     void parseHeaderLine(char* buf, size_t length);
-
-    int readData(std::ifstream &in, char* buf, size_t bufSize);
-
-    /** @brief Parses the data from a line of data from the TSL .ang file
+	
+	/** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
     void parseDataLine(const std::string &line, size_t nCols, size_t currentCol, size_t nRows, size_t currentRow, size_t counter);
