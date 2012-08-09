@@ -201,8 +201,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     *
     */
     int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
-
-    /**
+	
+	/**
      * @brief
      * @param in The input file stream to read from
      */

@@ -99,6 +99,14 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
+    * @param line The line to possibly modify
+    */
+	std::string modifyAngHeaderLine(char* buf, size_t length);
+    /** @brief Modifies a single line of the header section of the HKL .ctf file if necessary
+    * @param line The line to possibly modify
+    */
+    std::string modifyCtfHeaderLine(char* buf, size_t length);
 
     Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
     void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented
