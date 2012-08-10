@@ -34,7 +34,7 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <a name="wp7"></a>
 <h2 class="pHeading2">Group</h2>
-<p class="pBody">
+<p class="pBody">@PluginName@</p>
 
 
 <a name="wp2"> </a>
