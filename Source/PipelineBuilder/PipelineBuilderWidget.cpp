@@ -799,7 +799,7 @@ void PipelineBuilderWidget::pipelineComplete()
   emit pipelineEnded();
   checkIOFiles();
   m_FilterPipeline->deleteLater();
-  this->statusBar()->showMessage(QString(""));
+  this->statusBar()->showMessage(QString("Pipeline Complete"));
 }
 
 // -----------------------------------------------------------------------------

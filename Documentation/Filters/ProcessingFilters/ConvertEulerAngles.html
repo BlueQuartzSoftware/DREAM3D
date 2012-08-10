@@ -36,13 +36,13 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-To use this Filter correctly, the user needs to know the angle unit used in the data file. Files for 2D data that are .ctf format use degrees. Files for 3D data that are .ctf format use radians. All .ang files use radians. If other file types are used, determine the angle unit before running this filter.<br>
-There are several possible situations that can arise when choosing the angle conversion:<br>
-<i>Data is in degrees: if radians-to-degrees is selected the angles are incorrect.</i><br>
-<b>Data is in degrees: if degrees-to-radians is selected the angles are correct.</b><br>
-<i>Data is in radians: If degrees-to-radians is selected, the angles are incorrect.</i><br>
-<b>Data is in radians: if radians-to-degrees is selected the angles are correct.</b><br>
-<br>
+To use this Filter correctly, the user needs to know the angle unit used in the data file. Files for 2D data that are .ctf format use degrees. Files for 3D data that are .ctf format use radians. All .ang files use radians. If other file types are used, determine the angle unit before running this filter.<br />
+There are several possible situations that can arise when choosing the angle conversion:<br />
+<i>Data is in degrees: if radians-to-degrees is selected the angles are incorrect.</i><br />
+<b>Data is in degrees: if degrees-to-radians is selected the angles are correct.</b><br />
+<i>Data is in radians: If degrees-to-radians is selected, the angles are incorrect.</i><br />
+<b>Data is in radians: if radians-to-degrees is selected the angles are correct.</b><br />
+<br />
 If the wrong unit is input, the Filter has no way to determine whether or not it is correct, because there is no way to know where the data came from and what the angle format may be. 
 If unsure about the unit used, check with the software supplier. <br />
 Additionally, there may be user Filters added that use degrees and not radians. This Filter handles those situations. BUT, again, the user must know what the angle unit is before applying this Filter.

@@ -944,7 +944,11 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp3\">Options</a> ");
   fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp4\">Required Arrays</a> ");
   fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp5\">Created Arrays</a>");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> </p>\n");
+  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> </p>\n\n");
+  fprintf(f, "<a name=\"wp7\"></a>\n");
+  fprintf(f, "<h2 class=\"pHeading2\">Group</h2>\n");
+  fprintf(f, "<p class=\"pBody\">%s</p>\n\n", group.c_str());
+
   fprintf(f, "<a name=\"wp2\"> </a>");
   fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n<p class=\"pBody\">\n");
   fprintf(f, "<!-- Write all your documentation here -->\n\n");
@@ -1092,10 +1096,10 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
 
   fprintf(f, "Copyright 2012 Michael A. Groeber (AFRL), ");
-  fprintf(f, "Michael A. Jackson (BlueQuartz Software)<br>\n");
-  fprintf(f, "Contact Info: dream3d@bluequartz.net<br>\n");
+  fprintf(f, "Michael A. Jackson (BlueQuartz Software)<br />\n");
+  fprintf(f, "Contact Info: dream3d@bluequartz.net<br />\n");
   fprintf(f, "Version: 1.0.0\n");
-  fprintf(f, "License: See the License.txt file that came with DREAM3D.<br>\n");
+  fprintf(f, "License: See the License.txt file that came with DREAM3D.<br />\n");
   fprintf(f, "</p>\n");
 
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->\n");
