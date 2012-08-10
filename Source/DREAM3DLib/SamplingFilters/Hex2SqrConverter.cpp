@@ -208,11 +208,11 @@ void Hex2SqrConverter::execute()
 
 			float HexXStep = reader.getXStep();
 			float HexYStep = reader.getYStep();
-			float HexNumColsOdd = reader.getNumOddCols();
-			float HexNumColsEven = reader.getNumEvenCols();
-			float HexNumRows = reader.getNumRows();
-			m_NumCols = (HexNumColsOdd*HexXStep)/m_XResolution;
-			m_NumRows = (HexNumRows*HexYStep)/m_YResolution;
+			float HexNumColsOdd = static_cast<float>(reader.getNumOddCols());
+			float HexNumColsEven = static_cast<float>(reader.getNumEvenCols());
+			float HexNumRows = static_cast<float>(reader.getNumRows());
+			m_NumCols = static_cast<int>((HexNumColsOdd*HexXStep)/m_XResolution);
+			m_NumRows = static_cast<int>((HexNumRows*HexYStep)/m_YResolution);
 			float xSqr, ySqr, xHex1, yHex1, xHex2, yHex2;
 			int point, point1, point2;
 			int row1, row2, col1, col2;
@@ -239,27 +239,27 @@ void Hex2SqrConverter::execute()
 				{
 					xSqr = float(i)*m_XResolution;
 					ySqr = float(j)*m_YResolution;
-					row1 = ySqr/(HexYStep);
+					row1 = static_cast<int>(ySqr/(HexYStep));
 					yHex1 = row1*HexYStep;
 					row2 = row1 + 1;
 					yHex2 = row2*HexYStep;
 					if(row1%2 == 0)
 					{
-						col1 = xSqr/(HexXStep);
+						col1 = static_cast<int>(xSqr/(HexXStep));
 						xHex1 = col1*HexXStep;
-						point1 = ((row1/2)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col1;
-						col2 = (xSqr-(HexXStep/2.0))/(HexXStep);
-						xHex2 = col2*HexXStep + (HexXStep/2.0);
-						point2 = (((row1/2)+1)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col2;
+						point1 = static_cast<int>(((row1/2)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col1);
+						col2 = static_cast<int>((xSqr-(HexXStep/2.0f))/(HexXStep));
+						xHex2 = static_cast<float>(col2*HexXStep + (HexXStep/2.0f));
+						point2 = static_cast<int>((((row1/2.0f)+1.0f)*HexNumColsEven) + ((row1/2.0f)*HexNumColsOdd) + col2);
 					}
 					if(row1%2 == 1)
 					{
-						col1 = (xSqr-(HexXStep/2.0))/(HexXStep);
-						xHex1 = col1*HexXStep + (HexXStep/2.0);
-						point1 = (((row1/2)+1)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
-						col2 = xSqr/(HexXStep);
+						col1 = static_cast<int>((xSqr-(HexXStep/2.0f))/(HexXStep));
+						xHex1 = col1*HexXStep + (HexXStep/2.0f);
+						point1 = static_cast<int>((((row1/2.0f)+1.0f)*HexNumColsEven) + (((row1/2.0f)+1.0f)*HexNumColsOdd) + col2);
+						col2 = static_cast<int>(xSqr/(HexXStep));
 						xHex2 = col2*HexXStep;
-						point2 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1;
+						point2 = static_cast<int>(((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1);
 					}
 					dist1 = ((xSqr-xHex1)*(xSqr-xHex1)) + ((ySqr-yHex1)*(ySqr-yHex1));
 					dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
