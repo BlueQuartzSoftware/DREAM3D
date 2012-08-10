@@ -39,6 +39,8 @@
 
 #include <string>
 
+#include "MXA/Common/IO/MXAFileWriter64.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
@@ -48,10 +50,10 @@
 
 
 /**
- * @class AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.h AvizoSupport/Code/AvizoSupportFilters/AvizoRectilinearCoordinateWriter.h
- * @brief
- * @author
- * @date
+ * @class AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.h DREAM3DLib/IOFilters/AvizoRectilinearCoordinateWriter.h
+ * @brief Writes out a native Avizo Rectilinear Coordinate file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 9, 2012
  * @version 1.0
  */
 class AvizoRectilinearCoordinateWriter : public AbstractFilter
@@ -118,6 +120,19 @@ class AvizoRectilinearCoordinateWriter : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    /**
+     * @brief Generates the Avizo Header for this file
+     * @return The header as a string
+     */
+    std::string generateHeader();
+
+    /**
+     * @brief Writes the data to the Avizo file
+     * @param writer The MXAFileWriter object
+     * @return Error code
+     */
+    int writeData(MXAFileWriter64 &writer);
 
   private:
     int32_t* m_GrainIds;
