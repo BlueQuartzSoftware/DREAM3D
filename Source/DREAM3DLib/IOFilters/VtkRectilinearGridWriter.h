@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
-	int32_t* m_BC;
+    int32_t* m_BC;
     bool*    m_GoodVoxels;
     float*   m_CellEulerAngles;
     float*   m_MisorientationGradients;

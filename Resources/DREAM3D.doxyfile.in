@@ -81,9 +81,11 @@ INPUT = @DREAM3DProj_SOURCE_DIR@/Source/DREAM3DLib \
 @DREAM3DProj_SOURCE_DIR@/Source/PipelineBuilder \
 @DREAM3DProj_SOURCE_DIR@/Source/Plugins \
 @DREAM3DProj_SOURCE_DIR@/Source/QtSupport \
+@DREAM3DProj_SOURCE_DIR@/Documentation/UserManual \
+@DREAM3DProj_SOURCE_DIR@/Documentation/Developer
 
 INPUT_ENCODING = UTF-8
-FILE_PATTERNS = *.c *.cc *.cxx *.cpp *.h *.hxx *.hpp *.m *.mm *.dox
+FILE_PATTERNS = *.c *.cc *.cxx *.cpp *.h *.hxx *.hpp *.m *.mm *.dox *.html
 RECURSIVE = YES
 EXCLUDE = @DREAM3DProj_SOURCE_DIR@/Source/Applications/DREAM3D \
           @DREAM3DProj_SOURCE_DIR@/Source/tclap \
