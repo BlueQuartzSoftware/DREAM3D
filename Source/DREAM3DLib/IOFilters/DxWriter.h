@@ -44,7 +44,13 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/FileWriter.h"
 
-
+/**
+ * @class DxWriter DxWriter.h DREAM3DLib/IOFilters/DxWriter.h
+ * @brief Writes out a Dx file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 10, 2012
+ * @version 1.0
+ */
 class DREAM3DLib_EXPORT DxWriter : public FileWriter
 {
   public:
@@ -55,8 +61,8 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
 
     virtual ~DxWriter();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
@@ -64,9 +70,9 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     virtual const std::string getHumanLabel() { return "Write Dx File (Grain Ids)"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	virtual void preflight();
+    virtual void preflight();
 
   protected:
     DxWriter();
