@@ -580,6 +580,7 @@ class VtkMiscFileWriter : public AbstractFilter
 
     }
 
+#if 0
     /**
      * @brief Writes a VTK visualization file with vector arrays for the Schmid Factor and grain ID.
      * @param Output file name
@@ -619,7 +620,7 @@ class VtkMiscFileWriter : public AbstractFilter
       fclose(f);
       return 0;
     }
-
+#endif
 
   protected:
     VtkMiscFileWriter() : AbstractFilter() { }
