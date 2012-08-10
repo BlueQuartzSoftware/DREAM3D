@@ -59,7 +59,7 @@ class @ClassName@ : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterOptionsWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 	 /**
     * @brief Reimplemented from @see AbstractFilter class
