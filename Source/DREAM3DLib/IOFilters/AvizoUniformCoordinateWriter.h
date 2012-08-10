@@ -49,10 +49,10 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h AvizoSupport/Code/AvizoSupportFilters/AvizoUniformCoordinateWriter.h
- * @brief
- * @author
- * @date
+ * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h
+ * @brief Writes out a native Avizo Uniform Coordinate file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 9, 2012
  * @version 1.0
  */
 class AvizoUniformCoordinateWriter : public AbstractFilter
@@ -120,7 +120,17 @@ class AvizoUniformCoordinateWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    /**
+     * @brief Generates the Avizo Header for this file
+     * @return The header as a string
+     */
     std::string generateHeader();
+
+    /**
+     * @brief Writes the data to the Avizo file
+     * @param writer The MXAFileWriter object
+     * @return Error code
+     */
     int writeData(MXAFileWriter64 &writer);
 
   private:
