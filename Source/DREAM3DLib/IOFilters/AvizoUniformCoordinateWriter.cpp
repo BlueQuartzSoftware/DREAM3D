@@ -224,7 +224,7 @@ std::string AvizoUniformCoordinateWriter::generateHeader()
   ss << "     CoordType \"uniform\"\n";
   ss << "}\n\n";
 
-  ss << "Lattice { int Data } @1\n\n";
+  ss << "Lattice { int GrainIds } = @1\n\n";
 
   ss << "# Data section follows\n";
 
