@@ -27,6 +27,8 @@
 <file>IOFilters/ReadH5Ebsd.html</file>
 <file>IOFilters/YSChoiAbaqusReader.html</file>
 <file>IOFilters/H5VoxelFileReader.html</file>
+<file>IOFilters/AvizoUniformCoordinateWriter.html</file>
+<file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
 
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
