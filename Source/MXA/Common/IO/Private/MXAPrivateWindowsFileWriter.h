@@ -84,6 +84,30 @@ public:
   }
 
   /**
+   * @brief Writes a string to the file
+   * @param str The string to write
+   * @return True on success
+   */
+  bool writeString(const std::string &str)
+  {
+    DWORD nBytesToWrite = static_cast<DWORD>(str.size());
+    DWORD nBytesWritten = 0;
+    int error = WriteFile(_outStream,  // Which is really an HANDLE hFile on Windows
+                     str.c_str(),
+                     nBytesToWrite,
+                     &nBytesWritten,
+                     NULL) ;
+      if (nBytesToWrite != nBytesWritten)
+      {
+        //throw std::runtime_error ( "Error: Number of bytes written did not match number of bytes asked." );
+        return false;
+      }
+      return true;
+  }
+
+
+
+  /**
    * @brief Writes a single value to a file with no byte swapping performed
    * @param value The value to write to the file
    */

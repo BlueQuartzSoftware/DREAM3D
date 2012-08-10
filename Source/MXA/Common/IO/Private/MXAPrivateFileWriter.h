@@ -59,6 +59,18 @@ public:
   }
 
   /**
+   * @brief Writes a string to the file
+   * @param str The string to write
+   * @return True on success
+   */
+  bool writeString(const std::string &str)
+  {
+    _outStream.write(str.c_str(), str.size());
+    if (_outStream.bad() == true) {return false;}
+    return true;
+  }
+
+  /**
    * @brief Writes a single value to a file with no byte swapping performed
    * @param value The value to write to the file
    */
