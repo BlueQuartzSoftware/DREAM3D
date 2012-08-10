@@ -22,6 +22,8 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.h
 )
 
 
@@ -43,6 +45,8 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.cpp
 )
 
 if (NOT DEFINED ONLY_FILTERS)
