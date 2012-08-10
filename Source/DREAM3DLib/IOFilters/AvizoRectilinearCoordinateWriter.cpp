@@ -36,6 +36,8 @@
 #include "AvizoRectilinearCoordinateWriter.h"
 
 
+#include "MXA/Common/LogTime.h"
+
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
@@ -138,27 +140,173 @@ void AvizoRectilinearCoordinateWriter::execute()
   }
   setErrorCondition(0);
 
-
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembleTuples = m->getNumEnsembleTuples();
 
-
   dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
 
+  MXAFileWriter64 writer(m_OutputFile);
+  if(false == writer.initWriter())
+  {
+    std::stringstream ss;
+    ss << "Error opening file '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
+  }
+
+  std::string header = generateHeader();
+  writer.writeString(header);
+
+  err = writeData(writer);
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string AvizoRectilinearCoordinateWriter::generateHeader()
+{
+  std::stringstream ss;
+  if(m_WriteBinaryFile == true)
+  {
+#ifdef CMP_WORDS_BIGENDIAN
+    ss << "# Avizo BINARY 2.1\n";
+#else
+    ss << "# Avizo BINARY-LITTLE-ENDIAN 2.1\n";
+#endif
+  }
+  else
+  {
+    ss << "# Avizo 3D ASCII 2.0\n";
+  }
+  ss << "\n";
+  ss << "# Dimensions in x-, y-, and z-direction\n";
+  size_t x = 0, y = 0, z = 0;
+  getDataContainer()->getDimensions(x, y, z);
+  ss << "define Lattice " << x << " " << y << " " << z << "\n";
+  ss << "define Coordinates " << (x + y + z) << "\n\n";
+
+  ss << "Parameters {\n";
+  ss << "     DREAM3DParams {\n";
+  ss << "         Author \"DREAM3D\",\n";
+  ss << "         DateTime \"" << tifDateTime() << "\"\n";
+  ss << "     }\n";
+
+  ss << "     Units {\n";
+  ss << "         Coordinates \"microns\"\n";
+  ss << "     }\n";
+  float origin[3];
+  getDataContainer()->getOrigin(origin);
+  float res[3];
+  getDataContainer()->getResolution(res);
+
+  ss << "     CoordType \"rectilinear\"\n";
+  ss << "}\n\n";
+
+  ss << "Lattice { int GrainIds } = @1\n";
+  ss << "Coordinates { float xyz } = @2\n\n";
+
+  ss << "# Data section follows\n";
+
+  return ss.str();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
+{
+  size_t dims[3];
+  getDataContainer()->getDimensions(dims);
+  float origin[3];
+  getDataContainer()->getOrigin(origin);
+  float res[3];
+  getDataContainer()->getResolution(res);
+  char newLine = '\n';
+
+  std::string start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
+  writer.writeString(start);
+  if (true == m_WriteBinaryFile)
+  {
+    writer.writeArray(m_GrainIds, getDataContainer()->getTotalPoints());
+    writer.writeValue<char>( &newLine); // This puts a new line character
+  }
+  else
+  {
+    // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
+    int64_t totalPoints = getDataContainer()->getTotalPoints();
+    int count = 0;
+    std::stringstream ss;
+    for (int64_t i = 0; i < totalPoints; ++i)
+    {
+      ss << m_GrainIds[i];
+      if(count < 20)
+      {
+        ss << " ";
+        count++;
+      }
+      else
+      {
+        ss << "\n";
+        writer.writeString(ss.str());
+        ss.str("");
+        count = 0;
+      }
+    }
+    ss << "\n"; // Make sure there is a new line at the end of the data block
+    // Pick up any remaining data that was not written because we did not have 20 items on a line.
+    writer.writeString(ss.str());
+  }
+
+
+
+  start = "@2 # x coordinates, then y, then z\n";
+  writer.writeString(start);
+  if (true == m_WriteBinaryFile)
+  {
+    for (int d = 0; d < 3; ++d)
+    {
+      std::vector<float> coords(dims[d]);
+      for (size_t i = 0; i < dims[d]; ++i)
+      {
+        coords[i] = origin[d] + (res[d] * i);
+      }
+      writer.writeArray(&(coords.front()), dims[d]);
+      writer.writeValue<char>( &newLine); // This puts a new line character
+    }
+  }
+  else
+  {
+    for (int d = 0; d < 3; ++d)
+    {
+      std::stringstream ss;
+      for (size_t i = 0; i < dims[d]; ++i)
+      {
+        ss << (origin[d] + (res[d] * i)) << " ";
+      }
+      ss << "\n";
+      writer.writeString(ss.str());
+    }
+  }
+
+  return 1;
+}
+
+
