@@ -48,39 +48,6 @@
 
 #include "DREAM3DLib/Common/Observable.h"
 
-/**
- * @brief Just a dummy class in order to make the EBSDImoprt work with some
- * of the other source codes.
- */
-class EbsdToH5EbsdFunc : public Observable
-{
-  public:
-    DREAM3D_SHARED_POINTERS(EbsdToH5EbsdFunc)
-    DREAM3D_STATIC_NEW_MACRO(EbsdToH5EbsdFunc)
-
-
-    virtual ~EbsdToH5EbsdFunc()
-    {
-      if(*m_FileId > 0)
-      {
-     //   std::cout << "EbsdToH5EbsdFunc Closing HDF5 File" << std::endl;
-        H5Utilities::closeFile(*m_FileId);
-      }
-    }
-
-    hid_t* m_FileId;
-
-  protected:
-    EbsdToH5EbsdFunc() :
-        m_FileId(NULL)
-    {
-    }
-
-  private:
-    EbsdToH5EbsdFunc(const EbsdToH5EbsdFunc&); // Copy Constructor Not Implemented
-    void operator=(const EbsdToH5EbsdFunc&); // Operator '=' Not Implemented
-
-};
 
 // -----------------------------------------------------------------------------
 //
@@ -164,9 +131,6 @@ void EbsdToH5Ebsd::execute()
   std::stringstream ss;
   herr_t err = 0;
   hid_t fileId = -1;
-  // This is just a dummy variable to keep the macros happy
-  EbsdToH5EbsdFunc::Pointer m = EbsdToH5EbsdFunc::New();
-  m->m_FileId = &fileId;
 
   // Start the Benchmark clock
   START_CLOCK()
@@ -441,8 +405,6 @@ void EbsdToH5Ebsd::execute()
     err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
   }
   err = H5Utilities::closeFile(fileId);
-  // err = H5Fclose(fileId);
-  m = EbsdToH5EbsdFunc::NullPointer();
- notifyStatusMessage("Import Complete");
+  notifyStatusMessage("Import Complete");
 }
 
