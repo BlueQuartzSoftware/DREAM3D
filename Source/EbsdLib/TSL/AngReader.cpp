@@ -70,6 +70,8 @@ EbsdReader()
 
   setNumFields(10);
 
+  m_ReadHexGrid = false;
+
   // Initialize the map of header key to header value
   m_Headermap[Ebsd::Ang::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::TEMPIXPerUM);
   m_Headermap[Ebsd::Ang::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::XStar);
@@ -289,10 +291,15 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
     else if (nEvexCells > 0) { totalDataRows = yCells * nEvexCells; /* xCells = nEvexCells; */ }
     else { totalDataRows = 0; }
   }
-  else if (grid.find(Ebsd::Ang::HexGrid) == 0)
+  else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == false)
   {
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported.");
     return -400;
+  }
+  else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == true)
+  {
+    if (yCells%2 == 0) { totalDataRows = ((yCells/2) * nOddCols) + ((yCells/2) * nEvexCells);/* xCells = nOddCols;*/ }
+    else if (yCells%2 == 1) { totalDataRows = (((yCells/2)+1) * nOddCols) + ((yCells/2) * nEvexCells); /* xCells = nEvexCells; */ }
   }
   else // Grid was not set
   {
