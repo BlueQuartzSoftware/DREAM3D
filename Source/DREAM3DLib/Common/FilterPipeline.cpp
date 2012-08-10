@@ -394,9 +394,9 @@ void FilterPipeline::execute()
       millis = MXA::getMilliSeconds();
     }
   }
-  ss.str("");
-  ss << "Pipeline Complete";
-  updatePipelineMessage(ss.str());
+
+  PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);
+  sendPipelineMessage(completMessage);
 }
 
 // -----------------------------------------------------------------------------
