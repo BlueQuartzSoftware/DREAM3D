@@ -55,7 +55,7 @@
 Hex2SqrConverter::Hex2SqrConverter() :
     m_ZStartIndex(0), m_ZEndIndex(0), m_XResolution(1.0), m_YResolution(1.0)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ void Hex2SqrConverter::execute()
 		}
 		else
 		{
-			std::string origHeader = reader.getOriginalHeader();	
+			std::string origHeader = reader.getOriginalHeader();
 			char buf[kBufferSize];
 			std::stringstream in(origHeader);
 			if (in == NULL)
@@ -211,7 +211,7 @@ void Hex2SqrConverter::execute()
 		}
 		else
 		{
-			std::string origHeader = reader.getOriginalHeader();	
+			std::string origHeader = reader.getOriginalHeader();
 			char buf[kBufferSize];
 			std::stringstream in(origHeader);
 			if (in == NULL)
