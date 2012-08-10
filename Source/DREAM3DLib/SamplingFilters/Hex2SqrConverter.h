@@ -58,10 +58,11 @@
 
 /**
  * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
- * @brief This class is used to import multiple EBSD files into an HDF5 file.
+ * @brief This class is used to convert Hex grid TSL .ang files into Square grid
+ * .ang files
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Dr. Michael Groeber, US Air Force Research Laboratories
- * @date March 23, 2011
+ * @date July 23, 2012
  * @version 1.2
  *
  */
