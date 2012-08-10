@@ -87,6 +87,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
 
     EBSD_INSTANCE_PROPERTY(std::vector<AngPhase::Pointer>, PhaseVector)
 
+    EBSD_INSTANCE_PROPERTY(bool, ReadHexGrid)
 
     EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
     EBSD_POINTER_PROPERTY(Phi, Phi, float)

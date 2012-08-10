@@ -35,6 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "Hex2SqrConverter.h"
 
+#include <iostream>
+#include <fstream>
+
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
@@ -132,8 +135,6 @@ void Hex2SqrConverter::execute()
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
   int64_t z = m_ZStartIndex;
-  int64_t xDim, yDim;
-  float xRes, yRes;
   /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
    * class is in the appropriate order to match up with the z index (slice index)
@@ -172,13 +173,22 @@ void Hex2SqrConverter::execute()
 	// Write the Manufacturer of the OIM file here
 	// This list will grow to be the number of EBSD file formats we support
 	std::string ext = MXAFileInfo::extension(ebsdFName);
+	std::string base = MXAFileInfo::fileNameWithOutExtension(ebsdFName);
+	std::string path = MXAFileInfo::parentPath(ebsdFName);
 	if(ext.compare(Ebsd::Ang::FileExt) == 0)
 	{
 		AngReader reader;
 		reader.setFileName(ebsdFName);
+		reader.setReadHexGrid(true);
 		int err = reader.readFile();
 		if(err < 0)
 		{
+ 			std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
+			return;
+		}
+		else if(reader.getGrid().find(Ebsd::Ang::SquareGrid) == 0)
+		{
+ 			std::cout << "Ang File is already a square grid: " << ebsdFName << std::endl;
 			return;
 		}
 		else
@@ -189,44 +199,80 @@ void Hex2SqrConverter::execute()
 			if (in == NULL)
 			{
 	 			std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
+				return;
 			}
+	
+			std::string newEbsdFName = path + "/" + base + "_Sqr." + ext;
+			std::ofstream outFile;
+			outFile.open(newEbsdFName.c_str());
 
+			float HexXStep = reader.getXStep();
+			float HexYStep = reader.getYStep();
+			float HexNumColsOdd = reader.getNumOddCols();
+			float HexNumColsEven = reader.getNumEvenCols();
+			float HexNumRows = reader.getNumRows();
+			m_NumCols = (HexNumColsOdd*HexXStep)/m_XResolution;
+			m_NumRows = (HexNumRows*HexYStep)/m_YResolution;
+			float xSqr, ySqr, xHex1, yHex1, xHex2, yHex2;
+			int point, point1, point2;
+			int row1, row2, col1, col2;
+			float dist1, dist2;
+			float* phi1 = reader.getPhi1Pointer();
+			float* PHI = reader.getPhiPointer();
+			float* phi2 = reader.getPhi2Pointer();
+			float* ci = reader.getConfidenceIndexPointer();
+			float* iq = reader.getImageQualityPointer();
+			float* semsig = reader.getSEMSignalPointer();
+			float* fit = reader.getFitPointer();
+			int* phase = reader.getPhasePointer();
 			while (!in.eof())
 			{
 				std::string line;
 				::memset(buf, 0, kBufferSize);
 				in.getline(buf, kBufferSize);
 				line = modifyAngHeaderLine(buf, kBufferSize);
+				outFile << line << std::endl;
+			}
+			for(int j = 0; j < m_NumRows; j++)
+			{
+				for(int i = 0; i < m_NumCols; i++)
+				{
+					xSqr = float(i)*m_XResolution;
+					ySqr = float(j)*m_YResolution;
+					row1 = ySqr/(HexYStep);
+					yHex1 = row1*HexYStep;
+					row2 = row1 + 1;
+					yHex2 = row2*HexYStep;
+					if(row1%2 == 0)
+					{
+						col1 = xSqr/(HexXStep);
+						xHex1 = col1*HexXStep;
+						point1 = ((row1/2)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col1;
+						col2 = (xSqr-(HexXStep/2.0))/(HexXStep);
+						xHex2 = col2*HexXStep + (HexXStep/2.0);
+						point2 = (((row1/2)+1)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col2;
+					}
+					if(row1%2 == 1)
+					{
+						col1 = (xSqr-(HexXStep/2.0))/(HexXStep);
+						xHex1 = col1*HexXStep + (HexXStep/2.0);
+						point1 = (((row1/2)+1)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
+						col2 = xSqr/(HexXStep);
+						xHex2 = col2*HexXStep;
+						point2 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1;
+					}
+					dist1 = ((xSqr-xHex1)*(xSqr-xHex1)) + ((ySqr-yHex1)*(ySqr-yHex1));
+					dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
+					if(dist1 <= dist2) point = point1;
+					else point = point2;
+					outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
+				}
 			}
 		}
 	}
 	else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
 	{
-		CtfReader reader;
-		int err = reader.readFile();
-		reader.setFileName(ebsdFName);
-		if(err < 0)
-		{
-			return;
-		}
-		else
-		{
-			std::string origHeader = reader.getOriginalHeader();	
-			char buf[kBufferSize];
-			std::stringstream in(origHeader);
-			if (in == NULL)
-			{
-	 			std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
-			}
-
-			while (!in.eof())
-			{
-				std::string line;
-				::memset(buf, 0, kBufferSize);
-				in.getline(buf, kBufferSize);
-				line = modifyCtfHeaderLine(buf, kBufferSize);
-			}
-		}
+		std::cout << "Ctf files are not on a hexagonal grid and do not need to be converted." << std::endl;
 	}
 	else
 	{
@@ -251,6 +297,7 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   std::string line = "";
   if (buf[0] != '#')
   {
+    line = buf;
     return line;
   }
   // Start at the first character and walk until you find another non-space character
@@ -274,32 +321,32 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
 
   if (word.size() == 0)
   {
+    line = buf;
     return line;
   }
-
   if (word.compare(Ebsd::Ang::Grid) == 0)
   {
-
+	  line = "# " + word + ": SqrGrid";
   }
-  if (word.compare(Ebsd::Ang::Grid) == 0)
+  else if (word.compare(Ebsd::Ang::XStep) == 0)
   {
-
+	  line = "# " + word + ": " + float_to_string(m_XResolution);
   }
-  if (word.compare(Ebsd::Ang::Grid) == 0)
+  else if (word.compare(Ebsd::Ang::YStep) == 0)
   {
-
+	  line = "# " + word + ": " + float_to_string(m_YResolution);
   }
-  if (word.compare(Ebsd::Ang::Grid) == 0)
+  else if (word.compare(Ebsd::Ang::NColsOdd) == 0)
   {
-
+	  line = "# " + word + ": " + int_to_string(m_NumCols);
   }
-  if (word.compare(Ebsd::Ang::Grid) == 0)
+  else if (word.compare(Ebsd::Ang::NColsEven) == 0)
   {
-
+	  line = "# " + word + ": " + int_to_string(m_NumCols);
   }
-  if (word.compare(Ebsd::Ang::Grid) == 0)
+  else if (word.compare(Ebsd::Ang::NRows) == 0)
   {
-
+	  line = "# " + word + ": " + int_to_string(m_NumRows);
   }
   else
   {
@@ -308,43 +355,16 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   return line;
 }
 
-// -----------------------------------------------------------------------------
-//  Modify the Header line of the CTF file if necessary
-// -----------------------------------------------------------------------------
-std::string Hex2SqrConverter::modifyCtfHeaderLine(char* buf, size_t length)
+std::string Hex2SqrConverter::int_to_string(int value)
 {
-  std::string line = "";
-  if (buf[0] != '#')
-  {
-    return line;
-  }
-  // Start at the first character and walk until you find another non-space character
-  size_t i = 1;
-  while(buf[i] == ' ')
-  {
-    ++i;
-  }
-  size_t wordStart = i;
-  size_t wordEnd = i+1;
-  while(1)
-  {
-    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
-    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
-    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
-    else { break;}
-  }
-  wordEnd = i;
+	std::stringstream oss;
+	oss << value;
+	return oss.str();
+}
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
-
-  if (word.size() == 0)
-  {
-    return line;
-  }
-
-  if (word.compare(Ebsd::Ctf::XCells) == 0)
-  {
-
-  }
-  return line;
+std::string Hex2SqrConverter::float_to_string(float value)
+{
+	std::stringstream oss;
+	oss << value;
+	return oss.str();
 }
