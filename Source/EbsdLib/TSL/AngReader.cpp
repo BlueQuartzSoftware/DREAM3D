@@ -293,7 +293,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == false)
   {
-    setErrorMessage("Ang Files with Hex Grids Are NOT currently supported.");
+    setErrorMessage("Ang Files with Hex Grids Are NOT currently supported - Try converting them to Sqr Grid with the Hex2Sqr Converter filter.");
     return -400;
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == true)

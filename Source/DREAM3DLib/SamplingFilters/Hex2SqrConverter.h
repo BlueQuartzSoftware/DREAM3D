@@ -83,6 +83,8 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, NumRows)
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
+
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
