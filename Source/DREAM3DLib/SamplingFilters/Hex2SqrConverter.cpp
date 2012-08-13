@@ -56,7 +56,7 @@
 //
 // -----------------------------------------------------------------------------
 Hex2SqrConverter::Hex2SqrConverter() :
-    m_ZStartIndex(0), m_ZEndIndex(0), m_XResolution(1.0), m_YResolution(1.0)
+    m_ZStartIndex(0), m_ZEndIndex(0), m_XResolution(1.0), m_HeaderIsComplete(false), m_YResolution(1.0)
 {
   setupFilterParameters();
 }
@@ -206,6 +206,8 @@ void Hex2SqrConverter::execute()
 			std::ofstream outFile;
 			outFile.open(newEbsdFName.c_str());
 
+			m_HeaderIsComplete = false;
+
 			float HexXStep = reader.getXStep();
 			float HexYStep = reader.getYStep();
 			float HexNumColsOdd = reader.getNumOddCols();
@@ -231,7 +233,7 @@ void Hex2SqrConverter::execute()
 				::memset(buf, 0, kBufferSize);
 				in.getline(buf, kBufferSize);
 				line = modifyAngHeaderLine(buf, kBufferSize);
-				outFile << line << std::endl;
+				if(m_HeaderIsComplete == false) outFile << line << std::endl;
 			}
 			for(int j = 0; j < m_NumRows; j++)
 			{
@@ -298,6 +300,7 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   if (buf[0] != '#')
   {
     line = buf;
+	m_HeaderIsComplete = true;
     return line;
   }
   // Start at the first character and walk until you find another non-space character
