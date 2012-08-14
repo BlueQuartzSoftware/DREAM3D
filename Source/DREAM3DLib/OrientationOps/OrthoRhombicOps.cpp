@@ -125,7 +125,6 @@ float OrthoRhombicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
   n1 = n1/denom;
   n2 = n2/denom;
   n3 = n3/denom;
-  wmin = oneeighty_over_pi * wmin;
   return wmin;
 }
 
@@ -152,7 +151,6 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 	_calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
 	RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
-	w = w * oneeighty_over_pi;
 	FZn1 = fabs(n1);
 	FZn2 = fabs(n2);
 	FZn3 = fabs(n3);

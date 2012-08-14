@@ -310,7 +310,7 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    n2 = n2/denom;
    n3 = n3/denom;
    if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-   wmin = (threesixty_over_pi) * wmin;
+   wmin = 2.0f * wmin;
    return wmin;
 
 }
@@ -330,7 +330,7 @@ void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 	OrientationMath::_calcRodNearestOrigin(CubicRodSym, 24, r1, r2, r3);
 	OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
-	FZw = w * oneeighty_over_pi;
+	FZw = w;
 	n1 = fabs(n1);
 	n2 = fabs(n2);
 	n3 = fabs(n3);

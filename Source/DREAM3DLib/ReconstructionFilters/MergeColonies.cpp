@@ -207,8 +207,6 @@ void MergeColonies::execute()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  m->clearFieldData();
-//  m->clearEnsembleData();
 
   setErrorCondition(0);
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
@@ -234,16 +232,6 @@ void MergeColonies::execute()
     return;
   }
 
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[m_FieldPhases[i]]++;
-  }
-
-  // If there is an error set this to something negative and also set a message
  notifyStatusMessage("Completed");
 }
 
@@ -258,7 +246,9 @@ void MergeColonies::merge_colonies()
 
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  float angcur = 180.0f;
+  //Converting the user defined tolerance to radians.
+  m_AxisTolerance = m_AxisTolerance*m_pi/180.0f;
+
   std::vector<int> colonylist;
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
@@ -275,15 +265,12 @@ void MergeColonies::merge_colonies()
     {
 	  m_Active[i] = true;
       colonylist.push_back(i);
-      int csize = int(colonylist.size());
-      for (int j = 0; j < csize; j++)
+      for (int j = 0; j < colonylist.size(); j++)
       {
-        csize = int(colonylist.size());
         int firstgrain = colonylist[j];
         int size = int(neighborlist[firstgrain].size());
         for (int l = 0; l < size; l++)
         {
-          angcur = 180.0f;
           int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && colonynewnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
@@ -301,28 +288,41 @@ void MergeColonies::merge_colonies()
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			float vecttol = 0.03f;
-            if (fabs(r1) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.0919f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.289f) < vecttol && fabs(fabs(r2) - 0.5f) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.57735f) < vecttol && fabs(r2) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.33f) < vecttol && fabs(fabs(r2) - 0.473f) < vecttol && fabs(fabs(r3) - 0.093f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.577f) < vecttol && fabs(fabs(r2) - 0.053f) < vecttol && fabs(fabs(r3) - 0.093f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.293f) < vecttol && fabs(fabs(r2) - 0.508f) < vecttol && fabs(fabs(r3) - 0.188f) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.5866f) < vecttol && fabs(r2) < vecttol && fabs(fabs(r3) - 0.188) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.5769f) < vecttol && fabs(fabs(r2) - 0.8168f) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (fabs(fabs(r1) - 0.9958f) < vecttol && fabs(fabs(r2) - 0.0912f) < vecttol && fabs(r3) < vecttol) colony = 1;
-            if (w < angcur)
-            {
-              angcur = w;
-            }
-            if (colony == 1)
-            {
-              colonynewnumbers[neigh] = i;
-              colonylist.push_back(neigh);
-			  m_Active[neigh] = false;
-            }
+			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
+			{
+				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+				OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+				m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
+				OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+				w = w * (180.0f/m_pi);
+//				float vecttol = 0.01f;
+//	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
+//	            if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
+//				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
+//				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0530f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
+//				if (fabs(fabs(r1) - 0.5870f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.1858f) < vecttol) colony = 1;
+				float angdiff1 = fabs(w-10.53f);
+				float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
+				if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
+				float angdiff2 = fabs(w-90.00f);
+				float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
+				if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
+				float angdiff3 = fabs(w-60.00f);
+				float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
+				if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
+				float angdiff4 = fabs(w-60.83f);
+				float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
+				if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
+				float angdiff5 = fabs(w-63.26f);
+				float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
+				if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
+				if (colony == 1)
+				{
+				  colonynewnumbers[neigh] = i;
+				  colonylist.push_back(neigh);
+				  m_Active[neigh] = false;
+				}
+			}
           }
         }
       }
