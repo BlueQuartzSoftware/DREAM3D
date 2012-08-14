@@ -596,6 +596,23 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
             ENDFOREACH(qtlib)
         endif(DEFINED QT_QMAKE_EXECUTABLE)
     endif()
+	if (MINGW)
+        if (DEFINED QT_QMAKE_EXECUTABLE)
+            set(TYPE "")
+            if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+                set(TYPE "d")
+            endif()
+            FOREACH(qtlib ${QTLIBLIST})
+                GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+                message(STATUS "Generating Copy Rule for Qt DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+                add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+                            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
+                            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+                            COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/")
+
+            ENDFOREACH(qtlib)
+        endif(DEFINED QT_QMAKE_EXECUTABLE)
+    endif()
 endmacro()
 
 # --------------------------------------------------------------------
