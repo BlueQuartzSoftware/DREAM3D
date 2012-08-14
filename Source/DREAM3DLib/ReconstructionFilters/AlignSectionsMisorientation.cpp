@@ -197,6 +197,9 @@ void AlignSectionsMisorientation::execute()
     return;
   }
 
+  //Converting the user defined tolerance to radians.
+  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0f;
+
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message

@@ -210,8 +210,6 @@ void MergeTwins::execute()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-//  m->clearFieldData();
-//  m->clearEnsembleData();
 
   setErrorCondition(0);
 
@@ -256,7 +254,6 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
- // float angcur = 180.0f;
   std::vector<int> twinlist;
   float w;
   float n1, n2, n3;
@@ -280,7 +277,6 @@ void MergeTwins::merge_twins()
         int size = int(neighborlist[firstgrain].size());
         for (int l = 0; l < size; l++)
         {
-       //   angcur = 180.0f;
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && twinnewnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
@@ -301,6 +297,7 @@ void MergeTwins::merge_twins()
 			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic) 
 			{ 
 				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+				w = w * (180.0f/m_pi);
 	            float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
 	            float angdiff60 = fabs(w-60.0f);
 	            if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;

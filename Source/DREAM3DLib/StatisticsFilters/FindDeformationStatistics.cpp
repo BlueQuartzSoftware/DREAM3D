@@ -333,6 +333,7 @@ void FindDeformationStatistics::execute()
           && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
+		w = w *(180.0f/m_pi);
       }
       else
       {
