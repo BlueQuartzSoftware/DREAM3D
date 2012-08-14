@@ -60,13 +60,13 @@ HexagonalOps::~HexagonalOps()
 
 float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
                                       float q1[5], float q2[5],
-                                      float &n1, float &n2, float &n3)
+                                      float &n1min, float &n2min, float &n3min)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
-    float n1min = 0.0f;
-    float n2min = 0.0f;
-    float n3min = 0.0f;
+    float n1 = 0.0f;
+    float n2 = 0.0f;
+    float n3 = 0.0f;
   float qr[5];
   float qc[5];
 // float temp;
@@ -100,10 +100,9 @@ float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
     }
   }
   float denom = sqrt((n1*n1+n2*n2+n3*n3));
-  n1 = n1/denom;
-  n2 = n2/denom;
-  n3 = n3/denom;
-  wmin = oneeighty_over_pi * wmin;
+  n1min = n1min/denom;
+  n2min = n2min/denom;
+  n3min = n3min/denom;
   return wmin;
 }
 
@@ -131,7 +130,6 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 	_calcRodNearestOrigin(HexRodSym, 12, r1, r2, r3);
 	RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
-	w = w * oneeighty_over_pi;
 	float denom = sqrt((n1*n1+n2*n2+n3*n3));
 	n1 = n1/denom;
 	n2 = n2/denom;

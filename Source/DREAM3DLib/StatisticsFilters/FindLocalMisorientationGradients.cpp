@@ -268,6 +268,7 @@ void FindLocalMisorientationGradients::execute()
                   q2[4] = m_Quats[neighbor*5 + 4];
                   phase2 = crystruct[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+				  w = w *(180.0f/m_pi);
                   totalmisorientation = totalmisorientation + w;
                   numVoxel++;
                 }
@@ -289,6 +290,7 @@ void FindLocalMisorientationGradients::execute()
           q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];
           q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+		  w = w *(180.0f/m_pi);
           m_GrainMisorientations[point] = w;
 		  gam[point] = w;
           avgmiso[m_GrainIds[point]][0]++;
