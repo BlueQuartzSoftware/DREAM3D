@@ -201,6 +201,9 @@ void EBSDSegmentGrains::execute()
     return;
   }
 
+  //Convert user defined tolerance to radians.
+  m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
+
   SegmentGrains::execute();
 
   if (true == m_RandomizeGrainIds)

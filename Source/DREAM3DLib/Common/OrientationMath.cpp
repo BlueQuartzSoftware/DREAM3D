@@ -139,7 +139,6 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
   n1 = n1/denom;
   n2 = n2/denom;
   n3 = n3/denom;
-  wmin = oneeighty_over_pi * wmin;
   return wmin;
 }
 
@@ -303,10 +302,8 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], flo
 
 void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
-  float degtorad = m_pi / 180.0f;
   float denom;
 
-  w = w * degtorad;
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
   n1 = n1 / denom;
@@ -321,10 +318,8 @@ void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n
 
 void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
-  float degtorad = static_cast<float>(m_pi) / 180.0f;
   float denom;
 
-  w = w * degtorad;
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
   n1 = n1 / denom;
