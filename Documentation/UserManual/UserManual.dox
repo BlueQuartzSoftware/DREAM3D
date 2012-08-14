@@ -4,8 +4,16 @@
   Parts of DREAM3D were written under US Air Force Contract FA8650-07-D-5800. Many
 others have contributed to the code including the following:
 
+@image html AFRL_Logo.png ""
+@image latex AFRL_Logo.png "" width=2.5in
 @li Mike Groeber
+
+@image html BlueQuartzSoftware_Logo.png ""
+@image latex BlueQuartzSoftware_Logo.png "" width=3.5in
 @li Mike Jackson
+
+@image html CMU_MRSEC_Logo.png ""
+@image latex CMU_MRSEC_Logo.png "" width=2.5in
 @li Tony Rollett
 @li Greg Rohrer
 @li Marc De Graef
@@ -18,6 +26,8 @@ others have contributed to the code including the following:
 @li Joe Fridy
 @li Patrick Callahan
 
+<b>Other Contributors</b>
+@li Jarrell Waggoner
 
 
 @page intro Introduction
@@ -32,7 +42,7 @@ synthetic microstructures. Fourth, the reconstructed volumes and the synthetic
 volumes can be surfaced meshed using a multi-material marching cubes algorithm.
 
 @page ui DREAM3D User Interface
-  Locate the DREAM3D application and open the application in the normal method for
+Locate the DREAM3D application and open the application in the normal method for
 your operating system. After DREAM3D successfully opens the user is presented with the user interface
 presented in figure 3.1. There are 4 main areas of the window which are:
 
@@ -40,7 +50,7 @@ presented in figure 3.1. There are 4 main areas of the window which are:
 @image latex UI_1.png "4 Areas of the DREAM3D User Interface" width=6.5in
 
 @section area1 The Filter Library | Prebuilt Pipelines | Favorite Pipelines
-   <b>Area 1</b>: This area of the user interface is broken into 3 basic groups: Filter Library,
+  <b>Area 1</b>: This area of the user interface is broken into 3 basic groups: Filter Library,
 Prebuilt Pipelines and Favorite pipelines. The <i>Filter Library</i> section contains
 the various groups that the filters are organized into. The user can click a specific
 group and just the filters associated with that group will be displayed in the
@@ -52,13 +62,13 @@ a pipeline that they may want to save for later the user can click the "Add Favo
 button to save that specific pipeline configuration.
 
 @section area2 Filter List
-   <b>Area 2</b>:This section lists the filters that are associated with a specific group that is
+  <b>Area 2</b>:This section lists the filters that are associated with a specific group that is
 selected in the <i>Filter Library</i> area. If the <i>Filter Library</i> is itself
 selected then all filters will be shown in this list
 
 
 @section area3  Pipeline Area
-   <b>Area 3</b>:This area is where the user will construct their pipeline by either double clicking
+  <b>Area 3</b>:This area is where the user will construct their pipeline by either double clicking
 on a filter in the library area or dragging a filter from the Filter List and dropping
 the filter into the pipeline area. Filters in this section can be rearranged
 by simply dragging the filter into a new location.
@@ -76,14 +86,13 @@ appropriate buttons
 
 
 @page buildPipeline Building a Pipeline
-
-    In order the build a pipeline the user can either double click on a particular
-filter or drag the filter from the <i>Filter List</i> into the <i>Pipeline Area</i>.
+In order the build a pipeline the user can either double click on a particular filter 
+or drag the filter from the <i>Filter List</i> into the <i>Pipeline Area</i>.
 
 @image html UI_3.png "Building a Pipeline"
 @image latex UI_3.png "Building a Pipeline" width=6.5in
 
-    After placing a filter into the Pipeline area the user interface will look like
+  After placing a filter into the Pipeline area the user interface will look like
 the next figure. The user should note the red outline of the filter widget which
 indicates that one or more of the input parameters has an error. By looking at the
 error table the user can read the error message from the pipeline and act accordingly.
@@ -106,13 +115,14 @@ a filter into the pipeline before the error'ed filter that generates the missing
 data array.
 
 @page example1 Example Pipelines
-    DREAM3D is capable of a wide variety of reconstruction, data analysis and synthetic
+DREAM3D is capable of a wide variety of reconstruction, data analysis and synthetic
 microstructure which can present issues to the new user with regards to how to get
 started contructing a working pipeline. In the section a few sample pipelines are
 presented which will hopefully allow the new user to get started quickly.
 
+
 @section ex_reconstruction EBSD Reconstruction
-    With the advent of 3D EBSD data collection systems the visualization of the
+With the advent of 3D EBSD data collection systems the visualization of the
 collected data is typically the first order of business. Using the sample data set
 <i>Small IN100</i> which is a Nickel based super alloy we can use DREAM3D to build
 a 3D reconstruction of the 2D slices. The order of operations for this type of work
