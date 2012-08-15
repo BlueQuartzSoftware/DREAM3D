@@ -158,7 +158,7 @@ private:
 	/** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void parseDataLine(const std::string &line, size_t nCols, size_t currentCol, size_t nRows, size_t currentRow, size_t counter);
+    void parseDataLine(const std::string &line, size_t i);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented

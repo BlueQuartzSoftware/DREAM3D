@@ -258,7 +258,10 @@ int AngReader::readFile()
   err = readData(in, buf, kBufferSize);
   if (err < 0) { return err;}
 
-  transformData();
+  if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
+  {
+	  transformData();
+  }
 
   return err;
 }
@@ -319,18 +322,12 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   size_t counter = 0;
   // The buf variable already has the first line of data in it
-  for(int row = 0; row < yCells; ++row)
+  for(int i = 0; i < totalDataRows; ++i)
   {
-    for(int col = 0; col < nEvexCells; ++col)
-    {
-      this->parseDataLine(buf, nEvexCells, col, yCells, row, counter);
-      ++counter;
+      this->parseDataLine(buf, i);
       ::memset(buf, 0, bufSize); // Clear the buffer
       in.getline(buf, kBufferSize);// Read the next line of data
       if (in.eof() == true) break;
-
-    }
-    if (in.eof() == true) break;
   }
 
 
@@ -460,8 +457,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::parseDataLine(const std::string &line,
-                         size_t xCells, size_t col, size_t yCells, size_t row, size_t i)
+void AngReader::parseDataLine(const std::string &line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
