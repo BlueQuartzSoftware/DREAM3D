@@ -210,9 +210,9 @@ void Hex2SqrConverter::execute()
 
 			float HexXStep = reader.getXStep();
 			float HexYStep = reader.getYStep();
-			float HexNumColsOdd = reader.getNumOddCols();
-			float HexNumColsEven = reader.getNumEvenCols();
-			float HexNumRows = reader.getNumRows();
+			int HexNumColsOdd = reader.getNumOddCols();
+			int HexNumColsEven = reader.getNumEvenCols();
+			int HexNumRows = reader.getNumRows();
 			m_NumCols = (HexNumColsOdd*HexXStep)/m_XResolution;
 			m_NumRows = (HexNumRows*HexYStep)/m_YResolution;
 			float xSqr, ySqr, xHex1, yHex1, xHex2, yHex2;
@@ -252,21 +252,25 @@ void Hex2SqrConverter::execute()
 						point1 = ((row1/2)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col1;
 						col2 = (xSqr-(HexXStep/2.0))/(HexXStep);
 						xHex2 = col2*HexXStep + (HexXStep/2.0);
-						point2 = (((row1/2)+1)*HexNumColsEven) + ((row1/2)*HexNumColsOdd) + col2;
+						point2 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
 					}
-					if(row1%2 == 1)
+					else
 					{
 						col1 = (xSqr-(HexXStep/2.0))/(HexXStep);
 						xHex1 = col1*HexXStep + (HexXStep/2.0);
-						point1 = (((row1/2)+1)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
+						point1 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1;
 						col2 = xSqr/(HexXStep);
 						xHex2 = col2*HexXStep;
-						point2 = ((row1/2)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col1;
+						point2 = (((row1/2)+1)*HexNumColsEven) + (((row1/2)+1)*HexNumColsOdd) + col2;
 					}
 					dist1 = ((xSqr-xHex1)*(xSqr-xHex1)) + ((ySqr-yHex1)*(ySqr-yHex1));
 					dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
-					if(dist1 <= dist2) point = point1;
+					if(dist1 <= dist2 || row1 == (HexNumRows-1)) point = point1;
 					else point = point2;
+					if(point > ((HexNumColsOdd*((HexNumRows/2)+1))+(HexNumColsEven*(HexNumRows/2))))
+					{
+						int stop = 0;
+					}
 					outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
 				}
 			}
