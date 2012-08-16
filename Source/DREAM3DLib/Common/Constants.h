@@ -102,6 +102,7 @@ namespace DREAM3D
   namespace CellData
   {
     const std::string GrainIds("GrainIds");
+    const std::string ParentIds("ParentIds");
     const std::string Phases("Phases");
     const std::string BandContrast("BandContrast");
     const std::string EulerAngles("EulerAngles");

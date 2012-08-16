@@ -69,6 +69,8 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
 	//------ Required Field Data	
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -103,6 +105,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
+    int32_t* m_ParentIds;
     float* m_AvgQuats;
     bool* m_Active;
     int32_t* m_FieldPhases;
@@ -111,7 +114,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     unsigned int* m_CrystalStructures;
 	int32_t* m_NumFields;
 
-    std::vector<int> twinnewnumbers;
+    std::vector<int> parentnumbers;
 
     unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;

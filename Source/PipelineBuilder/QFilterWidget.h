@@ -169,6 +169,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      virtual void mousePressEvent( QMouseEvent* event );
      virtual void mouseReleaseEvent( QMouseEvent* event );
      virtual void mouseMoveEvent( QMouseEvent* event );
+	 virtual QString getFileExtension(std::string propName);
 
   private:
      QRect      m_DeleteRect;

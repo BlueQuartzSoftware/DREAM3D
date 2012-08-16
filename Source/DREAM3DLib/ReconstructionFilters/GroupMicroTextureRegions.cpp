@@ -66,6 +66,7 @@ const static float m_pi = static_cast<float>(M_PI);
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -73,6 +74,7 @@ m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
+m_ParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
@@ -136,6 +138,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
@@ -266,12 +269,15 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  newnumbers.resize(numgrains, -1);
+  int parentcount = 0;
+  parentnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (newnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
+	  parentcount++;
+	  parentnumbers[i] = parentcount;
 	  m_Active[i] = true;
       microtexturelist.push_back(i);
       for (int j = 0; j < microtexturelist.size(); j++)
@@ -293,7 +299,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         {
           angcur = 180.0f;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && newnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
 			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
@@ -312,9 +318,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 			  w = 180.0f*acosf(w)/m_pi;
               if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
               {
-                newnumbers[neigh] = i;
+                parentnumbers[neigh] = parentcount;
                 microtexturelist.push_back(neigh);
-			    m_Active[neigh] = false;
 			  }
             }
           }
@@ -327,7 +332,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	if (newnumbers[grainname] != -1) { m_GrainIds[k] = newnumbers[grainname];}
+	m_ParentIds[k] = parentnumbers[grainname];
   }
 }
 

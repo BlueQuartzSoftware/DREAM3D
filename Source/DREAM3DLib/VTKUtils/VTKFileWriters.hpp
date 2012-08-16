@@ -203,6 +203,7 @@ class name : public VtkScalarWriter\
 };
 
 
+ VtkSCALARWRITER_CLASS_DEF(VoxelParentIdScalarWriter, r, Cell, DREAM3D::CellData::ParentIds, DREAM3D::CellData::ParentIds, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, Cell, DREAM3D::CellData::Phases, DREAM3D::CellData::Phases, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelBCScalarWriter, r, Cell, Ebsd::Ctf::BC, Ebsd::Ctf::BC, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Cell, DREAM3D::CellData::GoodVoxels, DREAM3D::CellData::GoodVoxels, BoolArrayType, char, "%d ")

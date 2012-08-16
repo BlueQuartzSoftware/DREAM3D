@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
@@ -84,6 +85,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainIds)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteParentIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBandContrasts)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
@@ -116,6 +118,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
+    int32_t* m_ParentIds;
     int32_t* m_CellPhases;
     int32_t* m_BC;
     bool*    m_GoodVoxels;
