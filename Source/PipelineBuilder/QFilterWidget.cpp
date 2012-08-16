@@ -675,7 +675,7 @@ void QFilterWidget::selectOutputFile()
   propName = propName.remove(0, 4);
 
   QString ext = getFileExtension(propName.toStdString());
-  QString s = ext + QString(" Files (*.") + ext + QString(")");
+  QString s = ext + QString(" Files (*.") + ext + QString(");;All Files(*.*)");
 
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), m_OpenDialogLastDirectory, s);
   if(true == file.isEmpty())
@@ -1011,10 +1011,10 @@ QString QFilterWidget::getFileExtension(std::string propName)
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
-	if(option->getPropertyName().compare(propName) == 0)
-	{
-		return QString::fromStdString(option->getFileExtension());
-	}
+    if(option->getPropertyName().compare(propName) == 0)
+    {
+        return QString::fromStdString(option->getFileExtension());
+    }
   }
   return QString("");
 }
