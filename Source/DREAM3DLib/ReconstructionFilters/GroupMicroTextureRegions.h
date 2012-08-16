@@ -68,6 +68,8 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -100,6 +102,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
+    int32_t* m_ParentIds;
     float* m_AvgQuats;
     bool* m_Active;
     int32_t* m_FieldPhases;
@@ -108,7 +111,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     unsigned int* m_CrystalStructures;
 	int32_t* m_NumFields;
 
-    std::vector<int> newnumbers;
+    std::vector<int> parentnumbers;
 
 
     OrientationMath::Pointer m_CubicOps;

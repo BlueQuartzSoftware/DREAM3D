@@ -66,6 +66,7 @@ const static float m_pi = static_cast<float>(M_PI);
 MergeTwins::MergeTwins() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -74,6 +75,7 @@ m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
 m_GrainIds(NULL),
+m_ParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
@@ -149,6 +151,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
@@ -263,12 +266,15 @@ void MergeTwins::merge_twins()
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  twinnewnumbers.resize(numgrains, -1);
+  int parentcount = 0;
+  parentnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (twinnewnumbers[i] == -1 && m_FieldPhases[i] > 0)
+	if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
+	  parentcount++;
+	  parentnumbers[i] = parentcount;
 	  m_Active[i] = true;
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
@@ -279,7 +285,7 @@ void MergeTwins::merge_twins()
         {
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && twinnewnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
 			q1[0] = 1;
@@ -303,9 +309,8 @@ void MergeTwins::merge_twins()
 	            if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
 	            if (twin == 1)
 	            {
-	              twinnewnumbers[neigh] = i;
+	              parentnumbers[neigh] = parentcount;
 	              twinlist.push_back(neigh);
-				  m_Active[neigh] = false;
 				}
             }
           }
@@ -318,7 +323,7 @@ void MergeTwins::merge_twins()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	if (twinnewnumbers[grainname] != -1) { m_GrainIds[k] = twinnewnumbers[grainname];}
+	m_ParentIds[k] = parentnumbers[grainname];
   }
 }
 

@@ -51,6 +51,7 @@
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
@@ -59,7 +60,8 @@ m_GrainMisorientationsArrayName(DREAM3D::CellData::GrainMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-m_WriteGrainIds(true),
+m_WriteGrainIds(false),
+m_WriteParentIds(false),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
 m_WriteGoodVoxels(false),
@@ -86,12 +88,14 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
+	std::string test = "vtk";
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
+	option->setFileExtension(test);
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -104,6 +108,13 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     parameters.push_back(option);
   }
   {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Parent Ids");
+    option->setPropertyName("WriteParentIds");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Phase Ids");
     option->setPropertyName("WritePhaseIds");
@@ -183,6 +194,7 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
 {
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteGrainIds", getWriteGrainIds() );
+  writer->writeValue("WriteParentIds", getWriteParentIds() );
   writer->writeValue("WritePhaseIds", getWritePhaseIds() );
   writer->writeValue("WriteBandContrasts", getWriteBandContrasts() );
   writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
@@ -213,6 +225,10 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_WriteGrainIds == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  }
+  if(m_WriteParentIds == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WritePhaseIds == true)
   {
@@ -297,6 +313,13 @@ void VtkRectilinearGridWriter::execute()
   if (m_WriteGrainIds == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteParentIds == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelParentIdScalarWriter<DataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }

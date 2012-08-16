@@ -66,6 +66,7 @@ const static float m_pi = static_cast<float>(M_PI);
 MergeColonies::MergeColonies() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -74,6 +75,7 @@ m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
 m_GrainIds(NULL),
+m_ParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
@@ -147,6 +149,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
@@ -257,12 +260,15 @@ void MergeColonies::merge_colonies()
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  colonynewnumbers.resize(numgrains, -1);
+  int parentcount = 0;
+  parentnumbers.resize(numgrains, -1);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (colonynewnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
+	  parentcount++;
+	  parentnumbers[i] = parentcount;
 	  m_Active[i] = true;
       colonylist.push_back(i);
       for (int j = 0; j < colonylist.size(); j++)
@@ -273,7 +279,7 @@ void MergeColonies::merge_colonies()
         {
           int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && colonynewnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
 		    w = 10000.0f;
 			q1[0] = 1;
@@ -318,9 +324,8 @@ void MergeColonies::merge_colonies()
 				if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
 				if (colony == 1)
 				{
-				  colonynewnumbers[neigh] = i;
+				  parentnumbers[neigh] = parentcount;
 				  colonylist.push_back(neigh);
-				  m_Active[neigh] = false;
 				}
 			}
           }
@@ -333,7 +338,7 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	if (colonynewnumbers[grainname] != -1) { m_GrainIds[k] = colonynewnumbers[grainname];}
+	m_ParentIds[k] = parentnumbers[grainname];
   }
 }
 

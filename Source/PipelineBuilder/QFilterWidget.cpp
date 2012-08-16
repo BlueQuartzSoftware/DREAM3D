@@ -670,7 +670,14 @@ void QFilterWidget::selectInputPath()
 void QFilterWidget::selectOutputFile()
 {
   QObject* whoSent = sender();
-  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), m_OpenDialogLastDirectory, tr("ALL Files (*.*)"));
+  // for QButtons we prepended "btn_" to the end of the property name so strip that off
+  QString propName = whoSent->objectName();
+  propName = propName.remove(0, 4);
+
+  QString ext = getFileExtension(propName.toStdString());
+  QString s = ext + QString(" Files (*.") + ext + QString(")");
+
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), m_OpenDialogLastDirectory, s);
   if(true == file.isEmpty())
   {
     return;
@@ -680,9 +687,6 @@ void QFilterWidget::selectOutputFile()
   m_OpenDialogLastDirectory = fi.path();
 
   bool ok = false;
-  // for QButtons we prepended "btn_" to the end of the property name so strip that off
-  QString propName = whoSent->objectName();
-  propName = propName.remove(0, 4);
 
   ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) {}
@@ -1000,6 +1004,17 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
 
 }
-
-
-
+QString QFilterWidget::getFileExtension(std::string propName)
+{
+  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  int optIndex = 0;
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  {
+    FilterParameter* option = (*iter).get();
+	if(option->getPropertyName().compare(propName) == 0)
+	{
+		return QString::fromStdString(option->getFileExtension());
+	}
+  }
+  return QString("");
+}
