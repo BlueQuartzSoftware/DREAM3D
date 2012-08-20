@@ -677,8 +677,8 @@ void QFilterWidget::selectOutputFile()
   QString Ftype = getFileType(propName.toStdString());
   QString ext = getFileExtension(propName.toStdString());
   QString s = Ftype + QString(" Files (*.") + ext + QString(");;All Files(*.*)");
-
-  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), m_OpenDialogLastDirectory, s);
+  QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
   if(true == file.isEmpty())
   {
     return;
