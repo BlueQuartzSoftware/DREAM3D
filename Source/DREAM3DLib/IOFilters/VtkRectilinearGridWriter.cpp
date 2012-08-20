@@ -88,14 +88,14 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
-	std::string test = "vtk";
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension(test);
+	option->setFileExtension("vtk");
+	option->setFileType("VTK Rectilinear Grid");
     option->setValueType("string");
     parameters.push_back(option);
   }
