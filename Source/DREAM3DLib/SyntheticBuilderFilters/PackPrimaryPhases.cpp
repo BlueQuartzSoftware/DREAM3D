@@ -262,13 +262,16 @@ void PackPrimaryPhases::execute()
   sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
-  float totalprimaryvol = 0;
+  double totalprimaryvolTEMP = 0;
+  float badcount = 0;
+  size_t check = 0;
   size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
   for (size_t i = 0; i < totalVox; i++)
   {
-    if(m_GrainIds[i] <= 0) totalprimaryvol++;
+    if(m_GrainIds[i] <= 0) totalprimaryvolTEMP++;
   }
-  totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getXRes()*m->getXRes());
+  float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
+  totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
 
   size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
@@ -913,7 +916,8 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   float bhattdist;
   float dia;
   int nnum;
-  size_t bin = 0;
+  size_t diabin = 0;
+  size_t nnumbin = 0;
   int index = 0;
   std::vector<int> count;
   int counter = 0;
@@ -948,26 +952,26 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         dia = m_EquivalentDiameters[index];
         if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
+		diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
         nnum = m_Neighborhoods[index];
-		bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
-		if(bin >= 40) bin = 39;
-        simneighbordist[iter][dia][bin]++;
-        count[dia]++;
+		nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
+		if(nnumbin >= 40) nnumbin = 39;
+        simneighbordist[iter][diabin][nnumbin]++;
+        count[diabin]++;
 		counter++;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
-      dia = m_EquivalentDiameters[index];
+      dia = m_EquivalentDiameters[gadd];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
-      nnum = m_Neighborhoods[index];
-	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
-	  if(bin >= 40) bin = 39;
-      simneighbordist[iter][dia][bin]++;
-      count[dia]++;
+	  diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
+      nnum = m_Neighborhoods[gadd];
+	  nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
+	  if(nnumbin >= 40) nnumbin = 39;
+      simneighbordist[iter][diabin][nnumbin]++;
+      count[diabin]++;
 	  counter++;
     }
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
@@ -1058,7 +1062,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
         dia = m_EquivalentDiameters[index];
         dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
-        if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+        if(dia > grainsizedist[iter].size() - 1.0f) dia = grainsizedist[iter].size() - 1.0f;
         simgrainsizedist[iter][int(dia)]++;
         count++;
       }
@@ -1068,7 +1072,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
       dia = field->m_EquivalentDiameters;
       dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
-      if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+      if(dia > grainsizedist[iter].size() - 1.0f) dia = grainsizedist[iter].size() - 1.0f;
       simgrainsizedist[iter][int(dia)]++;
       count++;
     }
