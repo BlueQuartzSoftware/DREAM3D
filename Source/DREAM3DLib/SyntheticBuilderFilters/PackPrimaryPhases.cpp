@@ -583,14 +583,14 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-//      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
-      if(fillingerror < oldfillingerror)
+//      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+      if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-//      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
-      else if(fillingerror >= oldfillingerror)
+//      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+      else if(fillingerror > oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
         move_grain(randomgrain, oldxc, oldyc, oldzc);
@@ -621,14 +621,14 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-//      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
-      if(fillingerror < oldfillingerror)
+//      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+      if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-//      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
-      else if(fillingerror >= oldfillingerror)
+//      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+      else if(fillingerror > oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
         move_grain(randomgrain, oldxc, oldyc, oldzc);
@@ -978,17 +978,24 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       count[diabin]++;
 	  counter++;
     }
+	float runningtotal = 0;
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 40; j++)
       {
-//        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
-//        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
-        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(counter) );
-        if(counter == 0) simneighbordist[iter][i][j] = 0.0;
+        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(count[i]) );
+        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
+		runningtotal = runningtotal + simneighbordist[iter][i][j];
       }
     }
-    if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    for (size_t i = 0; i < simneighbordist[iter].size(); i++)
+    {
+      for (size_t j = 0; j < 40; j++)
+      {
+        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / runningtotal );
+      }
+    }    
+	if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       determine_neighbors(gadd, -1);
     }

@@ -110,6 +110,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
       void on_m_CalculateODFBtn_clicked();
       void on_addODFTextureBtn_clicked();
       void on_deleteODFTextureBtn_clicked();
+      void on_loadODFTextureBtn_clicked();
 
       // Slots for the QFutureWatcher to connect to
       void showPoleFigure(int imageIndex);
@@ -131,6 +132,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
       QFutureWatcher<QImage>*   m_PoleFigureFuture;
 
+      QString m_OpenDialogLastDirectory; // Must be last in the list
       SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
       void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented
 
