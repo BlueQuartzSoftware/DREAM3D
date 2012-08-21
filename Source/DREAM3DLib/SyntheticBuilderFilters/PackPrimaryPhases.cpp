@@ -368,7 +368,7 @@ void PackPrimaryPhases::execute()
   std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
   float factor = 1.0;
-  float iter = 0;
+  size_t iter = 0;
   for (size_t j = 0; j < primaryphases.size(); ++j)
   {
 	  curphasevol[j] = 0;
@@ -381,7 +381,7 @@ void PackPrimaryPhases::execute()
 		generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
 		currentsizedisterror = check_sizedisterror(&field);
 		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
+		if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
 		{
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
