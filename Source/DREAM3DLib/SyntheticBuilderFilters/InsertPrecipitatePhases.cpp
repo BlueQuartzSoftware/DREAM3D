@@ -867,11 +867,11 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
-      dia = m_EquivalentDiameters[index];
+      dia = m_EquivalentDiameters[gadd];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
 	  dia = static_cast<float>( (dia - pp->getMinGrainDiameter()) / pp->getBinStepSize() );
-      nnum = m_Neighborhoods[index];
+      nnum = m_Neighborhoods[gadd];
 	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
