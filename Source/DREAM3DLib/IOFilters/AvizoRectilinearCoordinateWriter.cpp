@@ -189,14 +189,14 @@ std::string AvizoRectilinearCoordinateWriter::generateHeader()
   if(m_WriteBinaryFile == true)
   {
 #ifdef CMP_WORDS_BIGENDIAN
-    ss << "# Avizo BINARY 2.1\n";
+    ss << "# AmiraMesh BINARY 2.1\n";
 #else
-    ss << "# Avizo BINARY-LITTLE-ENDIAN 2.1\n";
+    ss << "# AmiraMesh BINARY-LITTLE-ENDIAN 2.1\n";
 #endif
   }
   else
   {
-    ss << "# Avizo 3D ASCII 2.0\n";
+    ss << "# AmiraMesh 3D ASCII 2.0\n";
   }
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
