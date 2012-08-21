@@ -78,6 +78,7 @@ class FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(ValueType)
     DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
 
   protected:
     FilterParameter() : m_ValueType("Not_Set"){}

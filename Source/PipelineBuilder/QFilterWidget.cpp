@@ -674,8 +674,9 @@ void QFilterWidget::selectOutputFile()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
+  QString Ftype = getFileType(propName.toStdString());
   QString ext = getFileExtension(propName.toStdString());
-  QString s = ext + QString(" Files (*.") + ext + QString(");;All Files(*.*)");
+  QString s = Ftype + QString(" Files (*.") + ext + QString(");;All Files(*.*)");
   QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
   if(true == file.isEmpty())
@@ -1014,6 +1015,20 @@ QString QFilterWidget::getFileExtension(std::string propName)
     if(option->getPropertyName().compare(propName) == 0)
     {
         return QString::fromStdString(option->getFileExtension());
+    }
+  }
+  return QString("");
+}
+QString QFilterWidget::getFileType(std::string propName)
+{
+  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  int optIndex = 0;
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  {
+    FilterParameter* option = (*iter).get();
+    if(option->getPropertyName().compare(propName) == 0)
+    {
+        return QString::fromStdString(option->getFileType());
     }
   }
   return QString("");

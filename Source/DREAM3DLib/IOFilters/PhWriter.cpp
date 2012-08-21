@@ -72,6 +72,8 @@ void PhWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
+	option->setFileExtension("ph");
+	option->setFileType("CMU Grain Growth");
     option->setValueType("string");
     parameters.push_back(option);
   }
