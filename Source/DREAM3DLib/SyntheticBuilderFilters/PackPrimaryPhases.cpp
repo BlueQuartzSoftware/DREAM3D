@@ -583,12 +583,14 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+//      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+      if(fillingerror < oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+//      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+      else if(fillingerror >= oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
         move_grain(randomgrain, oldxc, oldyc, oldzc);
@@ -619,12 +621,14 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+//      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+      if(fillingerror < oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+//      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+      else if(fillingerror >= oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
         move_grain(randomgrain, oldxc, oldyc, oldzc);
