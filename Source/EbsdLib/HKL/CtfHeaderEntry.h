@@ -64,6 +64,8 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     virtual ~CtfHeaderEntry() {}
 
     std::string getKey() { return m_key; }
+    std::string getHDFType() { T value; return H5Lite::HDFTypeForPrimitiveAsStr(value); }
+
     void parseValue(char* value, size_t start, size_t length)
     {
       // Simple Naieve filter to remove European style decimals that use a comma
@@ -115,6 +117,8 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     virtual ~CtfStringHeaderEntry() {}
 
     std::string getKey() { return m_key; }
+    std::string getHDFType() { return "H5T_STRING"; }
+
     void parseValue(char* value, size_t start, size_t length)
     {
       m_value = std::string(value);
