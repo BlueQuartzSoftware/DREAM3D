@@ -186,9 +186,6 @@ if (MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
-# Figure out here if we are going to build the command line tools
-option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
-
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories (${PROJECT_BINARY_DIR})
 
@@ -368,8 +365,10 @@ endif()
    
    
 # add the Command line utilities
+# Figure out here if we are going to build the command line tools
+option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 IF ( DREAM3D_BUILD_CLI_TOOLS )
-
+    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------

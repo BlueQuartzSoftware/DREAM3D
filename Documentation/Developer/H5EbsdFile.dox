@@ -31,33 +31,376 @@ reference frame?
 @section h5ebsd1 Introduction
   The EBSD Data from multiple vendors are stored in a data file using the HDF5
 file format library. While the general layout of the HDF5 file is the same between
-vendors there are details that are NOT the same between vendors because each
+vendors there are details that are NOT the same between vendor because each
 vendors chooses to save different types of data. The top level datasets that
 deal with the basic volume information is the same for every file.
 
 @section h5ebsd2 HDF5 File Layout
 
-@code
-/-|
-  | Index  HDF Dataset
-  | AlignEulers   HDF Dataset
-  | Manufacturer  HDF Dataset
-  | Max X Points  HDF Dataset
-  | Max Y Points  HDF Dataset
-  | ReorderArray  HDF Dataset
-  | RotateSlice   HDF Dataset
-  | Stacking Order HDF Dataset
-  | X Resolution  HDF Dataset
-  | Y Resolution  HDF Dataset
-  | Z Resolution  HDF Dataset
-  | ZEndIndex  HDF Dataset
-  | ZStartIndex  HDF Dataset
-  | "EBSD Slice Group" HDF Group
-     |- "Data" HDF Group
-     |- "Header" HDF Group
-         |- "Phases" HDF Group
+<table border="1px" cellspacing="3" cellpadding="2">
+  <tr>
+    <td colspan="4"> <b>H5Ebsd Specification</b> </td>
+  </tr>
+  <tr>
+    <td colspan="4">Root Level Datasets and Groups</td>
+  </tr>
+<tr>
+    <td><b>Name</b></td>
+    <td><b>HDF5 Type</b></td>
+    <td colspan="2"><b>Value</b></td>
+</tr>
+<tr>
+    <td>Index</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2">List of all Slice index values</td>
+</tr>
+<tr>
+    <td>AlignEulers</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>Manufacturer</td>
+    <td>H5T_STRING</td>
+    <td colspan="2">"TSL" or "HKL" or ....</td>
+</tr>
+<tr>
+    <td>Max X Points</td>
+    <td>H5T_NATIVE_INT64</td>
+    <td colspan="2">The maximum number of X points in the sample grid</td>
+</tr>
+<tr>
+    <td>Max Y Points</td>
+    <td>H5T_NATIVE_INT64</td>
+    <td colspan="2">The maximum number of Y points in the sample grid</td>
+</tr>
+<tr>
+    <td>ReorderArray</td>
+    <td>H5T_NATIVE_UINT32</td>
+    <td colspan="2">Reorder data into the correct reference frame</td>
+</tr>
+<tr>
+    <td>RotateSlice</td>
+    <td>H5T_NATIVE_UINT32</td>
+    <td colspan="2">Rotate the data into the correct reference frame</td>
+</tr>
+<tr>
+    <td>Stacking Order</td>
+    <td>H5T_NATIVE_UINT32</td>
+    <td colspan="2">Defines which slice corresponds to the Z=0 in the coordinate system. Optional Attribute
+    of type H5T_STRING, with Name "Name" and Value ("Low To High" | "High To Low")</td>
+</tr>
+<tr>
+    <td>X Resolution</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Resolution between sample points in the X direction</td>
+</tr>
+<tr>
+    <td>Y Resolution</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Resolution between sample points in the Y direction</td>
+</tr>
+<tr>
+    <td>Z Resolution</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Resolution between slices in the Z Direction</td>
+</tr>
+<tr>
+    <td>ZEndIndex</td>
+    <td>H5T_NATIVE_INT64</td>
+    <td colspan="2">Starting Slice index</td>
+</tr>
+<tr>
+    <td>ZStartIndex</td>
+    <td>H5T_NATIVE_INT64</td>
+    <td colspan="2">Ending Slice index (inclusive)</td>
+</tr>
+<tr>
+    <td colspan="4">Slice Data organized by Slice index</td>
+</tr>
+</table>
 
-@endcode
+@n
+@n
+
+<table border="1px" cellspacing="3" cellpadding="2">
+<tr>
+    <td colspan="4"> <b>Slice Group Specification</b> </td>
+</tr>
+<tr>
+  <td colspan="4">Each Slice is grouped into its own H5G_GROUP with the Name of
+  the group simply the index of the slice. Within each slice group are 2 more groups
+  with names <b>Data</b> and <b>Header</b></td>
+</tr>
+<tr>
+    <td><b>Name</b></td>
+    <td><b>HDF5 Type</b></td>
+    <td colspan="2"><b>Value</b></td>
+</tr>
+<tr>
+    <td>Data</td>
+    <td>H5G_GROUP</td>
+    <td colspan="2">Contains all the data columns</td>
+</tr>
+<tr>
+    <td>Header</td>
+    <td>H5G_GROUP</td>
+    <td colspan="2">Contains all the header entries</td>
+</tr>
+</table>
+
+
+<table border="1px" cellspacing="3" cellpadding="2">
+<tr>
+    <td colspan="4"> <b>TSL Data Group Specification</b> </td>
+</tr>
+<tr>
+  <td colspan="4"></td>
+</tr>
+<tr>
+    <td><b>Name</b></td>
+    <td><b>HDF5 Type</b></td>
+    <td colspan="2"><b>Value</b></td>
+</tr>
+<tr>
+    <td>Phi1</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Phi1 data and a 1D Array</td>
+</tr>
+<tr>
+    <td>Phi</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Phi data and a 1D Array</td>
+</tr>
+<tr>
+    <td>Phi2</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Phi2 data and a 1D Array</td>
+</tr>
+<tr>
+    <td>X Position</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the X position data and a 1D Array</td>
+</tr>
+<tr>
+    <td>Y Position</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Y position data and a 1D Array</td>
+</tr>
+<tr>
+    <td>Image Quality</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Image Quality data and a 1D Array</td>
+</tr>
+<tr>
+    <td>Confidence Index</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Confidence Index data and a 1D Array</td>
+</tr>
+<tr>
+    <td>PhaseData</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2">Contains all the PhaseData data and a 1D Array</td>
+</tr>
+<tr>
+    <td>SEM Signal</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the SEM Signal data and a 1D Array</td>
+</tr>
+<tr>
+    <td>Fit</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2">Contains all the Fit of Solution data and a 1D Array</td>
+</tr>
+</table>
+
+
+
+
+<table border="1px" cellspacing="3" cellpadding="2">
+<tr>
+    <td colspan="4"> <b>TSL Header Group Specification</b> </td>
+</tr>
+<tr>
+  <td colspan="4"></td>
+</tr>
+<tr>
+    <td><b>Name</b></td>
+    <td><b>HDF5 Type</b></td>
+    <td colspan="2"><b>Value</b></td>
+</tr>
+<tr>
+    <td>TEM_PIXperUM</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry TEM_PIXperUM</td>
+</tr>
+<tr>
+    <td>x-star</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry x-star</td>
+</tr>
+<tr>
+    <td>y-star</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry y-star</td>
+</tr>
+<tr>
+    <td>z-star</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry z-star</td>
+</tr>
+<tr>
+    <td>WorkingDistance</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry WorkingDistance</td>
+</tr>
+<tr>
+    <td>ElasticConstants</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"> Contains value for the header entry ElasticConstants</td>
+</tr>
+<tr>
+    <td>GRID</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"> Contains value for the header entry GRID</td>
+</tr>
+<tr>
+    <td>XSTEP</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry XSTEP</td>
+</tr>
+<tr>
+    <td>YSTEP</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"> Contains value for the header entry YSTEP</td>
+</tr>
+<tr>
+    <td>NCOLS_ODD</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"> Contains value for the header entry NCOLS_ODD</td>
+</tr>
+<tr>
+    <td>NCOLS_EVEN</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"> Contains value for the header entry NCOLS_EVEN</td>
+</tr>
+<tr>
+    <td>NROWS</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"> Contains value for the header entry NROWS</td>
+</tr>
+<tr>
+    <td>OPERATOR</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"> Contains value for the header entry OPERATOR</td>
+</tr>
+<tr>
+    <td>SAMPLEID</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"> Contains value for the header entry SAMPLEID</td>
+</tr>
+<tr>
+    <td>SCANID</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"> Contains value for the header entry SCANID</td>
+</tr>
+<tr>
+    <td>Phases</td>
+    <td>H5G_GROUP</td>
+    <td colspan="2">Group that contains a subgroup for each phase where the name
+    of each subgroup is simply the index of the phase starting at 1.</td>
+</tr>
+</table>
+
+
+<table border="1px" cellspacing="3" cellpadding="2">
+<tr>
+    <td colspan="4"> <b>TSL Phase Group Specification</b> </td>
+</tr>
+<tr>
+  <td colspan="4"></td>
+</tr>
+<tr>
+    <td><b>Name</b></td>
+    <td><b>HDF5 Type</b></td>
+    <td colspan="2"><b>Value</b></td>
+</tr>
+<tr>
+    <td>Categories</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>Formula</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>Info</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>LatticeConstants</td>
+    <td>H5T_NATIVE_FLOAT</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>LatticeConstants</td>
+    <td>H5T_STRING</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>NumberFamilies</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>Phase</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>Symmetry</td>
+    <td>H5T_NATIVE_INT32</td>
+    <td colspan="2"></td>
+</tr>
+<tr>
+    <td>hklFamilies</td>
+    <td>H5G_GROUP</td>
+    <td colspan="2">Contains all the HKL Family information where the number of datasets
+    contained in this group is the number of HKL Families</td>
+</tr>
+</table>
+
+
+<table border="1px" cellspacing="3" cellpadding="2">
+<tr>
+    <td colspan="4"> <b>TSL HKLFamily Group Specification</b> </td>
+</tr>
+<tr>
+  <td colspan="4"></td>
+</tr>
+<tr>
+    <td><b>Name</b></td>
+    <td><b>HDF5 Type</b></td>
+    <td colspan="2"><b>Value</b></td>
+</tr>
+<tr>
+    <td>{Based on Index of the family}. If there are 4 families then there are 4
+    data sets with names "0", "1", "2" and "3".</td>
+    <td>Custom: See Below</td>
+    <td colspan="2">typedef struct
+{
+    int h;
+    int k;
+    int l;
+    int s1;
+    float diffractionIntensity;
+    int s2;
+} HKLFamily_t;</td>
+</tr>
+</table>
 
 
 @section h5ebsd3 Detailed Description

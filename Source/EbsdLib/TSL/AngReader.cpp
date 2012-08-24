@@ -435,6 +435,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
     EbsdHeaderEntry::Pointer p = m_Headermap[word];
     if (NULL == p.get())
     {
+      /*
       std::cout << "---------------------------" << std::endl;
       std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
       std::string upper(word);
@@ -444,11 +445,21 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 
       std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
       std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
+      */
+#if 0
+      std::cout << "<tr>\n    <td>" << word << "</td>\n    <td>" << "H5T_STRING" << "</td>\n";
+      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << word << "</td>\n</tr>" << std::endl;
+#endif
       return;
     }
     else
     {
       p->parseValue(buf, wordEnd, length);
+#if 0
+      std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";
+      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
+#endif
+
     }
   }
 
