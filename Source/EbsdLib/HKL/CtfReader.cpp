@@ -319,7 +319,7 @@ int CtfReader::readFile()
 
   if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
   {
-	  transformData();
+      transformData();
   }
 
   return err;
@@ -440,6 +440,14 @@ int CtfReader::readData(std::ifstream &in)
   return 0;
 }
 
+#if 0
+#define PRINT_HTML_TABLE_ROW(p)\
+      std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";\
+      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
+#else
+    #define PRINT_HTML_TABLE_ROW(p)
+#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -475,21 +483,27 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       //Mag
       EbsdHeaderEntry::Pointer p0 = m_Headermap[line[1]];
       p0->parseValue(const_cast<char*>(line[2].c_str()), 0, line[2].length());
+        PRINT_HTML_TABLE_ROW(p0)
       //Coverage
       EbsdHeaderEntry::Pointer p1 = m_Headermap[line[3]];
       p1->parseValue(const_cast<char*>(line[4].c_str()), 0, line[4].length());
+      PRINT_HTML_TABLE_ROW(p1)
       //Device
       EbsdHeaderEntry::Pointer p2 = m_Headermap[line[5]];
       p2->parseValue(const_cast<char*>(line[6].c_str()), 0, line[6].length());
+      PRINT_HTML_TABLE_ROW(p2)
       //KV
       EbsdHeaderEntry::Pointer p3 = m_Headermap[line[7]];
       p3->parseValue(const_cast<char*>(line[8].c_str()), 0, line[8].length());
+      PRINT_HTML_TABLE_ROW(p3)
       //TiltAngle
       EbsdHeaderEntry::Pointer p4 = m_Headermap[line[9]];
       p4->parseValue(const_cast<char*>(line[10].c_str()), 0, line[10].length());
+      PRINT_HTML_TABLE_ROW(p4)
       //TiltAxis
       EbsdHeaderEntry::Pointer p5 = m_Headermap[line[11]];
       p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
+      PRINT_HTML_TABLE_ROW(p5)
     }
     else if(line[0].compare("Channel Text File") == 0 || line[0].compare(":Channel Text File") == 0)
     {
@@ -513,6 +527,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       {
         if (line.size() > 1) {
           p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
+          PRINT_HTML_TABLE_ROW(p)
         }
       }
     }
