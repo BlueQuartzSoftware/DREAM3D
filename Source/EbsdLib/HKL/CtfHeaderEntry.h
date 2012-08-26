@@ -64,7 +64,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     virtual ~CtfHeaderEntry() {}
 
     std::string getKey() { return m_key; }
-    std::string getHDFType() { T value; return H5Lite::HDFTypeForPrimitiveAsStr(value); }
+    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
 
     void parseValue(char* value, size_t start, size_t length)
     {

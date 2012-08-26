@@ -1008,7 +1008,7 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 QString QFilterWidget::getFileExtension(std::string propName)
 {
   std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
-  int optIndex = 0;
+//  int optIndex = 0;
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
@@ -1022,7 +1022,7 @@ QString QFilterWidget::getFileExtension(std::string propName)
 QString QFilterWidget::getFileType(std::string propName)
 {
   std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
-  int optIndex = 0;
+  //int optIndex = 0;
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();

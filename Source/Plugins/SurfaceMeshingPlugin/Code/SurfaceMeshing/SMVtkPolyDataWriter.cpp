@@ -657,7 +657,7 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   std::vector<int> tri_ids(triangleCount);
   // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
+  fprintf(vtkFile, "CELL_DATA %ld\n", triangleCount);
   fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   int tData[6];
