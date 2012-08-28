@@ -3,9 +3,10 @@
 
 #include <vector>
 #include <sstream>
-
+#include <iostream>
 
 #include "MXA/MXA.h"
+#include "MXA/Common/LogTime.h"
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Utilities/MXADir.h"
 
@@ -29,6 +30,13 @@ namespace Ctf
 
 int main(int argc, char **argv)
 {
+  if (argc < 3)
+  {
+    std::cout << "This program requires 2 inputs. The input pattern file and the output directory" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  uint64_t millis = MXA::getMilliSeconds();
 
   MXAFileReader64 reader(argv[1]);
 
@@ -40,21 +48,25 @@ int main(int argc, char **argv)
   }
 
   FrameDataHeader_t header;
-
+  size_t totalPatterns = 0;
+  int prevYIndex = -1;
   for (int i = 0; i < 7500; ++i)
   {
     ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Ctf::HeaderByteSize);
 
-    std::cout << "----------------" << std::endl;
-    std::cout << "File Pointer:" << reader.getFilePointer64() << std::endl;
+//    std::cout << "----------------" << std::endl;
+//    std::cout << "File Pointer:" << reader.getFilePointer64() << std::endl;
     reader.readArray(reinterpret_cast<uint8_t*>(&header), Ctf::HeaderByteSize);
-    std::cout << "x_index: " << header.x_index << std::endl;
-    std::cout << "y_index: " << header.y_index << std::endl;
-    std::cout << "var2: " << header.var2 << std::endl;
-    std::cout << "width: " << header.width << std::endl;
-    std::cout << "height: " << header.height << std::endl;
-    std::cout << "var5: " << header.var5 << std::endl;
-    std::cout << "flag:" << (int)(header.flag) << std::endl;
+//    std::cout << "x_index: " << header.x_index << std::endl;
+    if (header.y_index != prevYIndex) {
+      std::cout << "y_index: " << header.y_index << std::endl;
+      prevYIndex = header.y_index;
+    }
+//    std::cout << "var2: " << header.var2 << std::endl;
+//    std::cout << "width: " << header.width << std::endl;
+ //   std::cout << "height: " << header.height << std::endl;
+//    std::cout << "var5: " << header.var5 << std::endl;
+ //   std::cout << "flag:" << (int)(header.flag) << std::endl;
 
 
     size_t count = header.width * header.height;
@@ -62,17 +74,20 @@ int main(int argc, char **argv)
 
     reader.readArray<uint8_t>(&(image.front()), count);
 
-//    uint8_t c = 0;
-//    reader.readValue(c);
+    totalPatterns++;
 
     TiffUtilities tiffUtil;
     std::stringstream ss;
-    MXADir::mkdir("/tmp/PatternExtraction/", true);
-    ss << "/tmp/PatternExtraction/" << header.x_index << "_" << header.y_index << "_pattern.tif";
+    MXADir::mkdir(argv[2], true);
+    ss <<argv[2] << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
     std::stringstream comment;
     comment << "Kikuchi Pattern at x="<< header.x_index << ", y=" << header.y_index;
     tiffUtil.writeGrayScaleImage(ss.str().c_str(), header.height, header.width, comment.str().c_str(), &(image.front()));
   }
+
+  std::cout << "Seconds to Complete " << totalPatterns << " Patterns "
+    << (MXA::getMilliSeconds() - millis) << std::endl;
+
   return EXIT_SUCCESS;
 }
 

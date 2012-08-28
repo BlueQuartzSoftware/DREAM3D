@@ -120,6 +120,11 @@ if (COMPILE_EBSD_TO_TIFF)
           MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
     ENDIF (NOT TIFF_FOUND)
     INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
+	# Copy DLL libraries into the correct build location on MSVC platforms
+	if (HAVE_TIFF_DLL)
+		CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
+		CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
+	endif()
 
 COMPILE_TOOL (
     TARGET EbsdToTiff
@@ -138,7 +143,7 @@ COMPILE_TOOL (
 # Create a Command line tool for the AngReaderTest
 COMPILE_TOOL(
     TARGET BcfDumper
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}
