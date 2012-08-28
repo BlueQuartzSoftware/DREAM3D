@@ -32,9 +32,11 @@
 #include "TiffUtilities.h"
 
 
+#include <stdio.h>
 
 #include <iostream>
 
+#include "MXA/MXA.h"
 
 #define PIXEL8_TO_GREYVALUE(pal, palIndex, out)\
     r = pal[0][palIndex]; g = pal[1][palIndex]; b = pal[2][palIndex];\
