@@ -120,6 +120,11 @@ if (COMPILE_EBSD_TO_TIFF)
           MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
     ENDIF (NOT TIFF_FOUND)
     INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
+	# Copy DLL libraries into the correct build location on MSVC platforms
+	if (HAVE_TIFF_DLL)
+		CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
+		CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
+	endif()
 
 COMPILE_TOOL (
     TARGET EbsdToTiff
