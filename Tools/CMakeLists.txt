@@ -138,7 +138,7 @@ COMPILE_TOOL (
 # Create a Command line tool for the AngReaderTest
 COMPILE_TOOL(
     TARGET BcfDumper
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
     VERSION_MAJOR ${DREAM3D_VER_MAJOR}
     VERSION_MINOR ${DREAM3D_VER_MINOR}

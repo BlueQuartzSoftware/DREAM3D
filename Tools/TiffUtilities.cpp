@@ -32,6 +32,9 @@
 #include "TiffUtilities.h"
 
 
+#include "MXA/Common/LogTime.h"
+#include "MXA/MXAVersion.h"
+
 
 #include <iostream>
 
@@ -278,10 +281,10 @@ int TiffUtilities::writeGrayScaleImage(const char* filename, int rows, int colum
    err = TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 1);
    err = TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, (int)rows); // 1 strip
 
-#if 0
-   dateTime = EIMTOMO_TiffDateTime();
-   err = TIFFSetField(out, TIFFTAG_DATETIME, dateTime);
-#endif
+
+   std::string dateTime = tifDateTime();
+   err = TIFFSetField(out, TIFFTAG_DATETIME, dateTime.c_str());
+
 
    // String based tags
    if (NULL != filename)
@@ -293,7 +296,7 @@ int TiffUtilities::writeGrayScaleImage(const char* filename, int rows, int colum
      err = TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, imageDescription);
    }
 
-   err = TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
+   err = TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_BOTLEFT);
    err = TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
 
 
@@ -306,10 +309,10 @@ int TiffUtilities::writeGrayScaleImage(const char* filename, int rows, int colum
 
    // Insert Resolution Units here if possible
 
-#if 0
-   memset(software, 0, 1024);
-   snprintf(software, 1024, "%s using libTif", TomoEngine_PACKAGE_COMPLETE );
-#endif
+
+   ::memset(software, 0, 1024);
+   snprintf(software, 1024, "%s using libTif", MXA::Version::Complete().c_str() );
+
 
    err = TIFFSetField(out, TIFFTAG_SOFTWARE, software);
 

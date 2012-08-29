@@ -769,9 +769,9 @@ void StatsGeneratorUI::openFile(QString h5file)
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles*1, NULL);
 
-  StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+//  StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+ // StatsDataArray& statsDataArray = *m_StatsDataArray;
 
 
   // We should iterate on all the phases here to start setting data and creating
@@ -780,35 +780,35 @@ void StatsGeneratorUI::openFile(QString h5file)
   {
     if(phaseTypes[phase] == DREAM3D::PhaseType::BoundaryPhase)
     {
-      BoundaryStatsData* bsd = BoundaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+   //   BoundaryStatsData* bsd = BoundaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
       BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(m, static_cast<int>(phase));
     }
     else if(phaseTypes[phase] == DREAM3D::PhaseType::MatrixPhase)
     {
-      MatrixStatsData* msd = MatrixStatsData::SafePointerDownCast(statsDataArray[phase].get());
+   //   MatrixStatsData* msd = MatrixStatsData::SafePointerDownCast(statsDataArray[phase].get());
       MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(m, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
     {
-      PrecipitateStatsData* psd = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+  //    PrecipitateStatsData* psd = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
       PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(m, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrimaryPhase)
     {
-      PrimaryStatsData* prisd = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+   //   PrimaryStatsData* prisd = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
       PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(m, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::TransformationPhase)
     {
-      TransformationStatsData* tsd = TransformationStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    //  TransformationStatsData* tsd = TransformationStatsData::SafePointerDownCast(statsDataArray[phase].get());
       TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(m, static_cast<int>(phase));
