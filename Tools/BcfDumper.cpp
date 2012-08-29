@@ -33,9 +33,10 @@
 
 #include <vector>
 #include <sstream>
-
+#include <iostream>
 
 #include "MXA/MXA.h"
+#include "MXA/Common/LogTime.h"
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Common/MXAMath.h"
 #include "MXA/Utilities/MXADir.h"
@@ -91,6 +92,7 @@ namespace Bcf
 // -----------------------------------------------------------------------------
 int parseMapSize(const std::string inputDir, MapDescription_t* mapDesc )
 {
+
     std::string frameDescPath = inputDir;
     frameDescPath += MXADir::Separator + Bcf::FrameDescriptionFileName;
 
@@ -124,9 +126,7 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
     // Make sure the output path is available.
     MXADir::mkdir(outputDir, true);
 
-
     MXAFileReader64 reader(frameDataPath);
-
     bool isOpen = reader.initReader();
     if(isOpen == false)
     {
@@ -139,6 +139,7 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
     size_t ebspPixelCount = 0;
     TiffUtilities tiffUtil;
     std::stringstream ss;
+
     std::stringstream comment;
     for (int i = 0; i < mapDesc->totalPoints; ++i)
     {
@@ -322,5 +323,6 @@ int main(int argc, char **argv)
 
 
     return EXIT_SUCCESS;
+
 }
 

@@ -31,12 +31,12 @@
 
 #include "TiffUtilities.h"
 
+#include <stdio.h>
+
+#include <iostream>
 
 #include "MXA/Common/LogTime.h"
 #include "MXA/MXAVersion.h"
-
-
-#include <iostream>
 
 
 #define PIXEL8_TO_GREYVALUE(pal, palIndex, out)\
