@@ -28,11 +28,11 @@ function(COMPILE_TOOL)
     set(oneValueArgs TARGET DEBUG_EXTENSION BINARY_DIR COMPONENT INSTALL_DEST DEFINITION)
     set(multiValueArgs SOURCES LINK_LIBRARIES)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-    
+
     if ( ${D3DTOOL_DEFINITION} )
     add_definitions(-D${DEFINITION})
     endif()
-    
+
     BuildToolBundle(
         TARGET ${D3DTOOL_TARGET}
         SOURCES ${D3DTOOL_SOURCES}
@@ -45,11 +45,41 @@ function(COMPILE_TOOL)
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
-    ) 
+    )
 
 endfunction()
 #
 #-------------------------------------------------------------------------------
+
+# Create a Command line tool for the AngReaderTest
+COMPILE_TOOL(
+    TARGET AngReaderDump
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/AngReaderDump.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES EbsdLib
+)
+
+# Create a Command line tool for the CtfReaderTest
+COMPILE_TOOL(
+    TARGET CtfReaderDump
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/CtfReaderDump.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES EbsdLib
+)
+
+
 
 # Create a Command line tool for the H5VoxelToVtk
 COMPILE_TOOL(
@@ -61,7 +91,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
+    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES DREAM3DLib
 )
 
@@ -76,7 +106,7 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
+    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES DREAM3DLib
 )
 
@@ -90,8 +120,13 @@ if (COMPILE_EBSD_TO_TIFF)
           MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
     ENDIF (NOT TIFF_FOUND)
     INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
+	# Copy DLL libraries into the correct build location on MSVC platforms
+	if (HAVE_TIFF_DLL)
+		CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
+		CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
+	endif()
 
-COMPILE_TOOL (    
+COMPILE_TOOL (
     TARGET EbsdToTiff
     SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
     DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
@@ -100,8 +135,25 @@ COMPILE_TOOL (
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}" 
+    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
 )
+
+
+# Create a Command line tool for the AngReaderTest
+COMPILE_TOOL(
+    TARGET BcfDumper
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES MXA ${TIFF_LIBRARY}
+)
+
+
 
 endif()
