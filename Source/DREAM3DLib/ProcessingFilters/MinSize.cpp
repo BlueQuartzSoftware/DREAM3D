@@ -104,7 +104,7 @@ void MinSize::setupFilterParameters()
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
-  writer->writeValue("MinAllowedGrainSize", getPhaseNumber() );
+  writer->writeValue("PhaseNumber", getPhaseNumber() );
   
 }
 // -----------------------------------------------------------------------------
