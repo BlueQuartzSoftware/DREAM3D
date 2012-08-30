@@ -36,7 +36,43 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This Filter reads a custom data file used by Carnegie Mellon Univ. <!-- Do NOT write documentation below this line -->
+This Filter reads a custom data file used by Carnegie-Mellon Univ.
+<br />
+The file format is a simple ASCII Text file with the following contents
+<h4>Header</h4>
+Line 1:
+<pre>
+  {5 Spaces}{x dimension}{5 Spaces}{y dimension}{5 Spaces}{z dimension}
+</pre>
+Line 2:
+<pre>
+  'DREAM3'              52.00  1.000  1.0       {Number of Grains}
+</pre>
+Line 3: (Without the quotes)
+<pre>
+  " 0.000 0.000 0.000          0        "
+</pre>
+<h4>Data</h4>
+{Grain Id on a single line}
+
+<h4>Example File (Partial)</h4>
+<pre>
+     11     11     11
+'DREAM3'              52.00  1.000  1.0       6
+ 0.000 0.000 0.000          0        
+830
+830
+0
+977
+977
+830
+830
+.....
+</pre>
+
+
+
+ <!-- Do NOT write documentation below this line -->
 </p>
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
