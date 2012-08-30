@@ -60,6 +60,7 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinAllowedGrainSize(1),
+m_PhaseNumber(1),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL),
@@ -89,13 +90,22 @@ void MinSize::setupFilterParameters()
     option->setValueType("int");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Phase Number to Run Min Size Filter on");
+    option->setPropertyName("PhaseNumber");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
+  writer->writeValue("MinAllowedGrainSize", getPhaseNumber() );
+  
 }
 // -----------------------------------------------------------------------------
 //
@@ -340,14 +350,20 @@ void MinSize::remove_smallgrains()
 	  std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	  notifyStatusMessage(ss.str());
+
 	  if(voxcounts[i] >= static_cast<size_t>(m_MinAllowedGrainSize) )
 	  {
 		m_Active[i] = true;
 	  }
-	  else if(voxcounts[i] < static_cast<size_t>(m_MinAllowedGrainSize) )
+	  else if(voxcounts[i] < static_cast<size_t>(m_MinAllowedGrainSize) && m_FieldPhases[i] == m_PhaseNumber)
 	  {
 		m_Active[i] = false;
 	  }
+    else 
+    {
+    m_Active[i] = true;
+    }
+    
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
