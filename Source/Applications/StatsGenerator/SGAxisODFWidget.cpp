@@ -674,7 +674,7 @@ void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
+  QString proposedFile = m_OpenDialogLastDirectory;
   QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
   if(true == file.isEmpty())
   {

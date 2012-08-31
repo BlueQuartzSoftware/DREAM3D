@@ -751,7 +751,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
+  QString proposedFile = m_OpenDialogLastDirectory;
   QString file = QFileDialog::getOpenFileName(this, tr("Open ODF File"), proposedFile, tr("Text Document (*.txt)"));
   if(true == file.isEmpty())
   {

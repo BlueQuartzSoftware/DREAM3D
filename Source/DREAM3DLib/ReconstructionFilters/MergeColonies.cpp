@@ -258,6 +258,13 @@ void MergeColonies::merge_colonies()
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   float q1[5];
   float q2[5];
+  float q3[5];
+  float q4[5];
+  float q5[5];
+  float q6[5];
+  float q7[5];
+  float q8[5];
+  float q9[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
@@ -287,16 +294,60 @@ void MergeColonies::merge_colonies()
             q1[2] = m_AvgQuats[5*firstgrain+2];
             q1[3] = m_AvgQuats[5*firstgrain+3];
             q1[4] = m_AvgQuats[5*firstgrain+4];
+			q1[1] = -0.23163;
+			q1[2] = -0.11548;
+			q1[3] = -0.00843;
+			q1[4] = -0.96589;
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
 			q2[0] = 1;
             q2[1] = m_AvgQuats[5*neigh+1];
             q2[2] = m_AvgQuats[5*neigh+2];
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
+			q2[1] = 0.24381;
+			q2[2] = 0.16137;
+			q2[3] = 0.00835;
+			q2[4] = -0.9563;
+			q3[1] = 0.46873;
+			q3[2] = -0.3662;
+			q3[3] = 0.15338;
+			q3[4] = -0.7891;
+			q4[1] = -0.03748;
+			q4[2] = -0.53599;
+			q4[3] = 0.17535;
+			q4[4] = -0.82496;
+			q5[1] = -0.1725;
+			q5[2] = 0.46124;
+			q5[3] = 0.05313;
+			q5[4] = -0.8687;
+			q6[1] = -0.1295;
+			q6[2] = -0.0510;
+			q6[3] = 0.12925;
+			q6[4] = -0.9818;
+			q7[1] = 0.42918;
+			q7[2] = -0.33531;
+			q7[3] = -0.18866;
+			q7[4] = -0.81718;
+			q8[1] = 0.571394;
+			q8[2] = 0.04999;
+			q8[3] = 0.09983;
+			q8[4] = 0.813046;
+			q9[1] = -0.0215;
+			q9[2] = -0.0379;
+			q9[3] = -0.0957;
+			q9[4] = -0.9945;
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
 			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
 			{
 				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q3, q2, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q3, q1, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q4, q5, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q6, q5, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q6, q4, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q7, q8, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q9, q8, n1, n2, n3);
+				w = m_OrientationOps[phase1]->getMisoQuat( q9, q7, n1, n2, n3);
 				OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 				m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
 				OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
@@ -328,7 +379,11 @@ void MergeColonies::merge_colonies()
 				  colonylist.push_back(neigh);
 				}
 			}
-          }
+			if ((phase1 == Ebsd::CrystalStructure::Hexagonal && phase2 == Ebsd::CrystalStructure::Cubic) || (phase1 == Ebsd::CrystalStructure::Cubic && phase2 == Ebsd::CrystalStructure::Hexagonal))
+			{
+				
+			}
+		  }
         }
       }
     }
