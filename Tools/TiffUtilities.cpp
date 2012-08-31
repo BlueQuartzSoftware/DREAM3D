@@ -36,6 +36,7 @@
 #include <iostream>
 
 #include "MXA/Common/LogTime.h"
+#include "MXA/Common/Win32Defines.h"
 #include "MXA/MXAVersion.h"
 
 
