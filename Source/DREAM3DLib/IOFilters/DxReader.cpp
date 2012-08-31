@@ -43,11 +43,11 @@
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
 FileReader(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL),
 m_XRes(1.0f),
 m_YRes(1.0f),
-m_ZRes(1.0f)
+m_ZRes(1.0f),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_GrainIds(NULL)
 {
   setupFilterParameters();
 }

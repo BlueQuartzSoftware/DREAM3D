@@ -41,6 +41,8 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
+#include "H5Support/H5Lite.h"
+
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
  */
@@ -73,6 +75,8 @@ class EbsdLib_EXPORT EbsdHeaderEntry
      * @brief Returns the key of the header entry
      */
     virtual std::string getKey() = 0;
+
+    virtual std::string getHDFType() = 0;
 
     /**
      * @brief Parses the value for a given header key

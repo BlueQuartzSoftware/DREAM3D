@@ -30,6 +30,7 @@ endif()
 
 SET (MXA_Common_SOURCES
     ${MXA_SOURCE_DIR}/Common/MXAMemory.cpp
+    ${MXA_SOURCE_DIR}/Common/MXAMath.cpp
 )
 
 SET (MXA_Common_HEADERS
@@ -41,6 +42,7 @@ SET (MXA_Common_HEADERS
     ${MXA_SOURCE_DIR}/Common/MXATypeDefs.h
     ${MXA_SOURCE_DIR}/Common/RTTIMacros.h
     ${MXA_SOURCE_DIR}/Common/Win32Defines.h
+    ${MXA_SOURCE_DIR}/Common/MXAMath.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "MXA/Common" "${MXA_Common_HEADERS}" "${MXA_Common_SOURCES}" "0")
 
