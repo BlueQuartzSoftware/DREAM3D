@@ -121,10 +121,12 @@ float OrthoRhombicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
       n3min = n3;
     }
   }
-  float denom = sqrt((n1*n1+n2*n2+n3*n3));
-  n1 = n1/denom;
-  n2 = n2/denom;
-  n3 = n3/denom;
+  float denom = sqrt((n1min*n1min+n2min*n2min+n3min*n3min));
+  n1 = n1min/denom;
+  n2 = n2min/denom;
+  n3 = n3min/denom;
+  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   return wmin;
 }
 

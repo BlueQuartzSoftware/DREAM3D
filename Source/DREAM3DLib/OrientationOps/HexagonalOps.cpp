@@ -60,13 +60,13 @@ HexagonalOps::~HexagonalOps()
 
 float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
                                       float q1[5], float q2[5],
-                                      float &n1min, float &n2min, float &n3min)
+                                      float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
-    float n1 = 0.0f;
-    float n2 = 0.0f;
-    float n3 = 0.0f;
+    float n1min = 0.0f;
+    float n2min = 0.0f;
+    float n3min = 0.0f;
   float qr[5];
   float qc[5];
 // float temp;
@@ -99,10 +99,12 @@ float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
       n3min = n3;
     }
   }
-  float denom = sqrt((n1*n1+n2*n2+n3*n3));
-  n1min = n1min/denom;
-  n2min = n2min/denom;
-  n3min = n3min/denom;
+  float denom = sqrt((n1min*n1min+n2min*n2min+n3min*n3min));
+  n1 = n1min/denom;
+  n2 = n2min/denom;
+  n3 = n3min/denom;
+  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   return wmin;
 }
 

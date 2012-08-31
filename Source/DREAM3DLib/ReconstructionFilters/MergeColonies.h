@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Merge Colonies"; }
+    virtual const std::string getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
