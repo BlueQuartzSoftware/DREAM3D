@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -63,6 +63,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     virtual ~AngHeaderEntry() {}
 
     std::string getKey() { return m_key; }
+    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
     void parseValue(char* value, size_t start, size_t length)
     {
       if (value[start] == ':') { ++start; } // move past the ":" character
@@ -110,6 +111,8 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     virtual ~AngStringHeaderEntry() {}
 
     std::string getKey() { return m_key; }
+    std::string getHDFType() { return "H5T_STRING"; }
+
     void parseValue(char* value, size_t start, size_t length)
     {
       if (value[start] == ':') { ++start; } // move past the ":" character
