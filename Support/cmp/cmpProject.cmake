@@ -7,6 +7,7 @@ set(CMP_CORE_TESTS_SOURCE_DIR ${CMP_SOURCE_DIR}/CoreTests CACHE INTERNAL "")
 set(CMP_INSTALLATION_SUPPORT_SOURCE_DIR ${CMP_SOURCE_DIR}/InstallationSupport CACHE INTERNAL "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 set(CMP_OSX_TOOLS_SOURCE_DIR ${CMP_SOURCE_DIR}/OSX_Tools CACHE INTERNAL "")
+set(CMP_LINUX_TOOLS_SOURCE_DIR ${CMP_SOURCE_DIR}/Linux_Tools CACHE INTERNAL "")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
