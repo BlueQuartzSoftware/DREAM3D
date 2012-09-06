@@ -277,12 +277,16 @@ void FindNeighborhoods::find_neighborhoods()
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
+	  if(m->getXPoints() == 1) x = 0;
+	  if(m->getYPoints() == 1) y = 0;
 	  if(m->getZPoints() == 1) z = 0;
       for (size_t j = i; j < numgrains; j++)
       {
 	    xn = m_Centroids[3*j];
 	    yn = m_Centroids[3*j+1];
 	    zn = m_Centroids[3*j+2];
+	    if(m->getXPoints() == 1) xn = 0;
+	    if(m->getYPoints() == 1) yn = 0;
 	    if(m->getZPoints() == 1) zn = 0;
         dx = fabs(x - xn);
         dy = fabs(y - yn);

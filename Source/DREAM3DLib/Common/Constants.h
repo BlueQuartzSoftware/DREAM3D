@@ -111,8 +111,7 @@ namespace DREAM3D
     const std::string GoodVoxels("GoodVoxels");
     const std::string NearestNeighbors("NearestNeighbors");
     const std::string NearestNeighborDistances("NearestNeighborDistances");
-    const std::string GrainMisorientations("GrainMisorientations");
-    const std::string MisorientationGradients("MisorientationGradients");
+    const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQuality("ImageQuality");
     const std::string IPFColor("IPFColor");
