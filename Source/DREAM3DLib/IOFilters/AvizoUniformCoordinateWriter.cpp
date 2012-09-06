@@ -41,16 +41,11 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_WriteGrainIds(true),
-m_WriteBinaryFile(false),
-m_GrainIds(NULL)
+    AbstractFilter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_WriteGrainIds(true), m_WriteBinaryFile(false), m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -73,8 +68,8 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("am");
-	option->setFileType("Amira Mesh");
+    option->setFileExtension("am");
+    option->setFileType("Amira Mesh");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -88,11 +83,12 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
   }
   setFilterParameters(parameters);
 }
+
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+  writer->writeValue("OutputFile", getOutputFile());
+  writer->writeValue("WriteBinaryFile", getWriteBinaryFile());
 }
 
 // -----------------------------------------------------------------------------
@@ -116,14 +112,13 @@ void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck(true, 1, 1, 1);
 }
 
@@ -162,7 +157,7 @@ void AvizoUniformCoordinateWriter::execute()
   dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
 
   MXAFileWriter64 writer(m_OutputFile);
-  if (false == writer.initWriter() )
+  if(false == writer.initWriter())
   {
     std::stringstream ss;
     ss << "Error opening file '" << parentPath << "'";
@@ -240,7 +235,7 @@ int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64 &writer)
 {
   std::string start("@1\n");
   writer.writeString(start);
-  if (true == m_WriteBinaryFile)
+  if(true == m_WriteBinaryFile)
   {
     writer.writeArray(m_GrainIds, getDataContainer()->getTotalPoints());
   }
@@ -271,5 +266,4 @@ int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64 &writer)
   }
   return 1;
 }
-
 
