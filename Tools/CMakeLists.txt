@@ -113,47 +113,47 @@ COMPILE_TOOL(
 
 option (COMPILE_EBSD_TO_TIFF "Compile the EbsdToTiff program" OFF)
 if (COMPILE_EBSD_TO_TIFF)
- # Prepend our own "FindTiff" code in front of what CMake itself provides
-    set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
-    FIND_PACKAGE(Tiff)
-    IF (NOT TIFF_FOUND)
-          MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
-    ENDIF (NOT TIFF_FOUND)
-    INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
-	# Copy DLL libraries into the correct build location on MSVC platforms
-	if (HAVE_TIFF_DLL)
-		CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
-		CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
-	endif()
-
-COMPILE_TOOL (
-    TARGET EbsdToTiff
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
-)
-
-
-# Create a Command line tool for the AngReaderTest
-COMPILE_TOOL(
-    TARGET BcfDumper
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES MXA ${TIFF_LIBRARY}
-)
-
+     # Prepend our own "FindTiff" code in front of what CMake itself provides
+        set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
+        FIND_PACKAGE(Tiff)
+        IF (NOT TIFF_FOUND)
+              MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
+        ENDIF (NOT TIFF_FOUND)
+        INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
+    	# Copy DLL libraries into the correct build location on MSVC platforms
+    	if (HAVE_TIFF_DLL)
+    		CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
+    		CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
+    	endif()
+    
+    COMPILE_TOOL (
+        TARGET EbsdToTiff
+        SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
+        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+        VERSION_MINOR ${DREAM3D_VER_MINOR}
+        VERSION_PATCH ${DREAM3D_VER_PATCH}
+        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+        COMPONENT     Applications
+        INSTALL_DEST  "${install_dir}"
+        LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
+    )
+    
+    
+    # Create a Command line tool for the AngReaderTest
+    COMPILE_TOOL(
+        TARGET BcfDumper
+        SOURCES ${DREAM3DTools_SOURCE_DIR}/BcfDumper.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.cpp ${DREAM3DTools_SOURCE_DIR}/TiffUtilities.h
+        DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+        VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+        VERSION_MINOR ${DREAM3D_VER_MINOR}
+        VERSION_PATCH ${DREAM3D_VER_PATCH}
+        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+        COMPONENT     Applications
+        INSTALL_DEST  "${install_dir}"
+        LINK_LIBRARIES MXA ${TIFF_LIBRARY}
+    )
+    
 
 
 endif()
