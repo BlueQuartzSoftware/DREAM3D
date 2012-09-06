@@ -327,6 +327,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
       this->parseDataLine(buf, i);
       ::memset(buf, 0, bufSize); // Clear the buffer
       in.getline(buf, kBufferSize);// Read the next line of data
+      ++counter;
       if (in.eof() == true) break;
   }
 
