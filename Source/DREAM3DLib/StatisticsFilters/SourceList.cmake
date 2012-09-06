@@ -20,7 +20,8 @@ SET (StatisticsFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.h
+    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindGrainReferenceMisorientations.h
+    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindKernelAvgMisorientations.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSlicetoSliceRotations.h
 )
 
@@ -28,6 +29,7 @@ SET (StatisticsFilters_FILTERS_HDRS
 SET (DREAM3DLib_StatisticsFilters_HDRS 
     ${StatisticsFilters_FILTERS_HDRS}
 )
+
 SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.cpp
@@ -40,7 +42,8 @@ SET (DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindLocalMisorientationGradients.cpp
+    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindGrainReferenceMisorientations.cpp
+    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindKernelAvgMisorientations.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSlicetoSliceRotations.cpp
 )
 if (NOT DEFINED ONLY_FILTERS)

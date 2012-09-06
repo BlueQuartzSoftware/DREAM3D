@@ -34,23 +34,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDDEFORMATIONSTATISTICS_H_
-#define FINDDEFORMATIONSTATISTICS_H_
+#ifndef FindSlicetoSliceRotations_H_
+#define FindSlicetoSliceRotations_H_
 
-#include <assert.h>
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
-
-#include <cstddef>
 #include <vector>
 #include <string>
 #include <iostream>
 #include <cmath>
 #include <fstream>
-#include <list>
-#include <algorithm>
-#include <numeric>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -64,53 +55,43 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class FindDeformationStatistics FindDeformationStatistics.h DREAM3DLib/GenericFilters/FindDeformationStatistics.h
+ * @class FindSlicetoSliceRotations FindSlicetoSliceRotations.h DREAM3DLib/GenericFilters/FindSlicetoSliceRotations.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
+class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindDeformationStatistics)
-    DREAM3D_STATIC_NEW_MACRO(FindDeformationStatistics)
-    DREAM3D_TYPE_MACRO_SUPER(FindDeformationStatistics, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindSlicetoSliceRotations)
+    DREAM3D_STATIC_NEW_MACRO(FindSlicetoSliceRotations)
+    DREAM3D_TYPE_MACRO_SUPER(FindSlicetoSliceRotations, AbstractFilter)
 
-    virtual ~FindDeformationStatistics();
+    virtual ~FindSlicetoSliceRotations();
 
 	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SlicetoSliceRotationsFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Deformation Statistics"; }
+    virtual const std::string getHumanLabel() { return "Find Slice to Slice Crystallographic Misalignments"; }
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-
-	/**
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
     virtual void preflight();
 
   protected:
-    FindDeformationStatistics();
+
+    FindSlicetoSliceRotations();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
@@ -118,22 +99,14 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
-    int32_t* m_FieldPhases;
-    int32_t* m_NearestNeighbors;
-    int32_t* m_SlipSystems;
-    float* m_GrainReferenceMisorientations;
-    float* m_KernelAverageMisorientations;
-    float* m_AvgQuats;
-    float* m_GrainAvgMisorientations;
-    int32_t* m_Poles;
-    float* m_Schmids;
-    float* m_NearestNeighborDistances;
+    int32_t* m_CellPhases;
+    bool* m_GoodVoxels;
+    float* m_Quats;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindDeformationStatistics(const FindDeformationStatistics&); // Copy Constructor Not Implemented
-    void operator=(const FindDeformationStatistics&); // Operator '=' Not Implemented
+    FindSlicetoSliceRotations(const FindSlicetoSliceRotations&); // Copy Constructor Not Implemented
+    void operator=(const FindSlicetoSliceRotations&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDDEFORMATIONSTATISTICS_H_ */
+#endif /* FindSlicetoSliceRotations_H_ */

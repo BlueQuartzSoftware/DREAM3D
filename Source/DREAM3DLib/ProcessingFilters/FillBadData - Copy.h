@@ -34,90 +34,77 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDLOCALMISORIENTATIONGRADIENTS_H_
-#define FINDLOCALMISORIENTATIONGRADIENTS_H_
+#ifndef FillBadData_H_
+#define FillBadData_H_
 
 #include <vector>
 #include <string>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
+
 
 /**
- * @class FindLocalMisorientationGradients FindLocalMisorientationGradients.h DREAM3DLib/GenericFilters/FindLocalMisorientationGradients.h
+ * @class FillBadData FillBadData.h DREAM3DLib/ReconstructionFilters/FillBadData.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
+class DREAM3DLib_EXPORT FillBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindLocalMisorientationGradients)
-    DREAM3D_STATIC_NEW_MACRO(FindLocalMisorientationGradients)
-    DREAM3D_TYPE_MACRO_SUPER(FindLocalMisorientationGradients, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FillBadData)
+    DREAM3D_STATIC_NEW_MACRO(FillBadData)
+    DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter)
 
-    virtual ~FindLocalMisorientationGradients();
+    virtual ~FillBadData();
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationGradientsArrayName)
 	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Local Misorientation Gradients"; }
+	DREAM3D_INSTANCE_PROPERTY(int, MinAllowedDefectSize)
 
-    DREAM3D_INSTANCE_PROPERTY(int, KernelSize)
-
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getHumanLabel() { return "Fill Bad Data"; }
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+
     virtual void execute();
     virtual void preflight();
 
   protected:
+    FillBadData();
 
-    FindLocalMisorientationGradients();
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
+    bool* m_AlreadyChecked;
+    int32_t* m_Neighbors;
 
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
-    float* m_GrainMisorientations;
-    float* m_MisorientationGradients;
-    float* m_KernelAverageMisorientations;
-    float* m_AvgQuats;
-    float* m_GrainAvgMisorientations;
-    float* m_Quats;
+    int32_t* m_FieldPhases;
+
+    std::vector<std::vector<int> > voxellists;
+    std::vector<int> nuclei;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindLocalMisorientationGradients(const FindLocalMisorientationGradients&); // Copy Constructor Not Implemented
-    void operator=(const FindLocalMisorientationGradients&); // Operator '=' Not Implemented
+
+    FillBadData(const FillBadData&); // Copy Constructor Not Implemented
+    void operator=(const FillBadData&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDLOCALMISORIENTATIONGRADIENTS_H_ */
+#endif /* FillBadData_H_ */
