@@ -141,7 +141,7 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   if(m_ReferenceOrientation == 0)
   {
 	  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
-	  if(getErrorCondition() == -303)
+	  if(err == -303)
 	  {
 		setErrorCondition(0);
 		FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
@@ -150,12 +150,12 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 		if(preflight == true) find_avgorients->preflight();
 		if(preflight == false) find_avgorients->execute();
 	  }
-	  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+	  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 5)
   }
   else if(m_ReferenceOrientation == 1)
   {
 	  TEST_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, err, -301, float, FloatArrayType, voxels, 3)
-	  if(getErrorCondition() == -303)
+	  if(err == -301)
 	  {
 		setErrorCondition(0);
 		FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
@@ -195,7 +195,7 @@ void FindGrainReferenceMisorientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalFields = m->getTotalPoints();
+  int64_t totalFields = m->getNumFieldTuples();
 
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -237,15 +237,18 @@ void FindGrainReferenceMisorientations::execute()
   float dist;
   std::vector<size_t> m_Centers(totalFields,0);
   std::vector<float> m_CenterDists(totalFields,0);
-  for (size_t i = 0; i < totalPoints; i++)
+  if(m_ReferenceOrientation == 1)
   {
-	gnum = m_GrainIds[i];
-	dist = m_NearestNeighborDistances[i];
-	if(dist > m_CenterDists[gnum])
-	{
-		m_CenterDists[gnum] = dist;
-		m_Centers[gnum] = i;
-	}
+	  for (size_t i = 0; i < totalPoints; i++)
+	  {
+		gnum = m_GrainIds[i];
+		dist = m_NearestNeighborDistances[i];
+		if(dist > m_CenterDists[gnum])
+		{
+			m_CenterDists[gnum] = dist;
+			m_Centers[gnum] = i;
+		}
+	  }
   }
 
   DimType xPoints = static_cast<DimType>(udims[0]);
