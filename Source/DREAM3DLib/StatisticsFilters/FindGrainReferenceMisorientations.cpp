@@ -40,6 +40,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+#include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -51,6 +53,7 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
+m_NearestNeighborDistancesArrayName(DREAM3D::CellData::NearestNeighborDistances),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
@@ -58,6 +61,7 @@ m_ReferenceOrientation(0),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_GrainReferenceMisorientations(NULL),
+m_NearestNeighborDistances(NULL),
 m_AvgQuats(NULL),
 m_GrainAvgMisorientations(NULL),
 m_Quats(NULL)
@@ -94,8 +98,8 @@ void FindGrainReferenceMisorientations::setupFilterParameters()
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
     std::vector<std::string> choices;
-    choices.push_back("Grain Average Orientation");
-    choices.push_back("Grain Centroid Orientation");
+    choices.push_back("Grain's Average Orientation");
+    choices.push_back("Orientation at Grain's Centroid");
     option->setChoices(choices);
     parameters.push_back(option);
   }
@@ -134,7 +138,35 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  if(m_ReferenceOrientation == 0)
+  {
+	  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
+	  if(getErrorCondition() == -303)
+	  {
+		setErrorCondition(0);
+		FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+		find_avgorients->setObservers(this->getObservers());
+		find_avgorients->setDataContainer(getDataContainer());
+		if(preflight == true) find_avgorients->preflight();
+		if(preflight == false) find_avgorients->execute();
+	  }
+	  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  }
+  else if(m_ReferenceOrientation == 1)
+  {
+	  TEST_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, err, -301, float, FloatArrayType, voxels, 3)
+	  if(getErrorCondition() == -303)
+	  {
+		setErrorCondition(0);
+		FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
+		find_euclideandistmap->setObservers(this->getObservers());
+		find_euclideandistmap->setDataContainer(getDataContainer());
+		if(preflight == true) find_euclideandistmap->preflight();
+		if(preflight == false) find_euclideandistmap->execute();
+	  }
+	  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -301, float, FloatArrayType, voxels, 3)
+  }
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
 }
 
@@ -163,8 +195,9 @@ void FindGrainReferenceMisorientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
+  int64_t totalFields = m->getTotalPoints();
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -199,14 +232,26 @@ void FindGrainReferenceMisorientations::execute()
 #else
   typedef int64_t DimType;
 #endif
+
+  size_t gnum;
+  float dist;
+  std::vector<size_t> m_Centers(totalFields,0);
+  std::vector<float> m_CenterDists(totalFields,0);
+  for (size_t i = 0; i < totalPoints; i++)
+  {
+	gnum = m_GrainIds[i];
+	dist = m_NearestNeighborDistances[i];
+	if(dist > m_CenterDists[gnum])
+	{
+		m_CenterDists[gnum] = dist;
+		m_Centers[gnum] = i;
+	}
+  }
+
   DimType xPoints = static_cast<DimType>(udims[0]);
   DimType yPoints = static_cast<DimType>(udims[1]);
   DimType zPoints = static_cast<DimType>(udims[2]);
   DimType point;
-  size_t neighbor = 0;
-//  int m_KernelSize = 1;
-  DimType jStride;
-  DimType kStride;
   for (DimType col = 0; col < xPoints; col++)
   {
     for (DimType row = 0; row < yPoints; row++)
@@ -221,11 +266,23 @@ void FindGrainReferenceMisorientations::execute()
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
           phase1 = crystruct[m_CellPhases[point]];
-          q2[0] = m_AvgQuats[5*m_GrainIds[point]];
-          q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
-          q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
-          q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];
-          q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
+		  if(m_ReferenceOrientation == 0)
+		  {
+	          q2[0] = m_AvgQuats[5*m_GrainIds[point]];
+	          q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
+	          q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
+	          q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];
+	          q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
+		  }
+		  else if(m_ReferenceOrientation == 1)
+		  {
+			  gnum = m_GrainIds[point];
+	          q2[1] = m_Quats[m_Centers[gnum]*5 + 1];
+	          q2[2] = m_Quats[m_Centers[gnum]*5 + 2];
+	          q2[3] = m_Quats[m_Centers[gnum]*5 + 3];
+	          q2[4] = m_Quats[m_Centers[gnum]*5 + 4];
+	          phase2 = crystruct[m_CellPhases[m_Centers[gnum]]];
+		  }
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  w = w *(180.0f/m_pi);
           m_GrainReferenceMisorientations[point] = w;

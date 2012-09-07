@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceMisorientations : public AbstractFilte
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborDistancesArrayName)
 	//------ Created Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
 	//------ Required Field Data
@@ -105,6 +106,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceMisorientations : public AbstractFilte
 
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
+    float* m_NearestNeighborDistances;
     float* m_GrainReferenceMisorientations;
     float* m_AvgQuats;
     float* m_GrainAvgMisorientations;

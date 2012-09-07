@@ -63,7 +63,8 @@
 <file>StatisticsFilters/FindSchmids.html</file>
 <file>StatisticsFilters/FindShapes.html</file>
 <file>StatisticsFilters/FindSizes.html</file>
-<file>StatisticsFilters/FindLocalMisorientationGradients.html</file>
+<file>StatisticsFilters/FindKernelAvgMisorientations.html</file>
+<file>StatisticsFilters/FindGrainReferenceMisorientations.html</file>
 
 <file>Synthetic_BuilderFilters/AdjustVolume.html</file>
 <file>Synthetic_BuilderFilters/PackPrimaryPhases.html</file>

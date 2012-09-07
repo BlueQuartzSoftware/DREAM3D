@@ -44,6 +44,8 @@
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -152,7 +154,18 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
+  if(getErrorCondition() == -303)
+  {
+	setErrorCondition(0);
+	FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+	find_avgorients->setObservers(this->getObservers());
+	find_avgorients->setDataContainer(getDataContainer());
+	if(preflight == true) find_avgorients->preflight();
+	if(preflight == false) find_avgorients->execute();
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
   if(err == -303)
   {
