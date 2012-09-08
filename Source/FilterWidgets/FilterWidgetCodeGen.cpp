@@ -93,6 +93,134 @@ void copyFile(const std::string &src, const std::string &dest)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void writeArrayNameHeaderCode(FILE* f, std::set<std::string> &list, const std::string &filterName, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    fprintf(f, "  //------ %s ----------------\n", title.c_str());
+    const char* cType = "QString";
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        // fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+        const char* array = (*iter).c_str();
+        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+
+        fprintf(f, "  // Get/Set the Array name for %s\n", array);
+        fprintf(f, "  private:\n");
+        fprintf(f, "    QString m_%s;\n", arrayname);
+        fprintf(f, "  public:\n");
+        fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType, arrayname, arrayname, arrayname);
+        fprintf(f, "    %s  get%s();\n", cType, arrayname);
+        fprintf(f, "  public slots:\n");
+        fprintf(f, "    void set%s(const %s &v);\n", arrayname, cType);
+        fprintf(f, "  // Get/Set the Array name for %s Complete ------------\n\n", array);
+    }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameSourceCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+  //  fprintf(f, "//------ %s ----------------\n", title.c_str());
+    const char* cType = "QString";
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        // fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
+        const char* array = (*iter).c_str();
+        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+
+        fprintf(f, "// -----------------------------------------------------------------------------\n");
+        fprintf(f, "// Get/Set the Array name for %s '%s'\n", title.c_str(), array);
+        fprintf(f, "void Q%sWidget::set%s(const %s &v)\n{\n  m_%s = v;\n}\n", filter.c_str(),arrayname, cType, arrayname);
+        fprintf(f, "%s  Q%sWidget::get%s()\n{\n  return m_%s; \n}\n\n", cType, filter.c_str(), arrayname, arrayname);
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameConstructorCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+        fprintf(f, "     set%s( QString::fromStdString(filter->get%s() ) );\n", arrayname, arrayname);
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameGetFilterCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+        fprintf(f, "  filter->set%s( get%s().toStdString() );\n", arrayname, arrayname);
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+        fprintf(f, "  w->set%s( get%s() );\n", arrayname, arrayname );
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
+template<typename T>\
+void methodName(typename T::Pointer t, FILE* f){\
+    DataContainer::Pointer m = DataContainer::New();\
+    t->setDataContainer(m.get());\
+    t->preflight();\
+    {\
+      std::set<std::string> list = t->getRequiredCellData();\
+      writerName(f, list, t->getNameOfClass(), "Required Cell Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getCreatedCellData();\
+      writerName(f, list, t->getNameOfClass(), "Created Cell Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getRequiredFieldData();\
+      writerName(f, list, t->getNameOfClass(), "Required Field Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getCreatedFieldData();\
+      writerName(f, list, t->getNameOfClass(), "Created Field Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getRequiredEnsembleData();\
+      writerName(f, list, t->getNameOfClass(), "Required Ensemble Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getCreatedEnsembleData();\
+      writerName(f, list, t->getNameOfClass(), "Created Ensemble Data");\
+    }\
+}
+
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToHeader, writeArrayNameHeaderCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToSource, writeArrayNameSourceCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameConstructorCode, writeArrayNameConstructorCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameGetFilterCode, writeArrayNameGetFilterCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameDeepCopyCode, writeArrayNameDeepCopyCode)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 void createHeaderFile( const std::string &group, const std::string &filter)
 {
@@ -187,14 +315,18 @@ void createHeaderFile( const std::string &group, const std::string &filter)
       fprintf(f, " public slots:\n");
       fprintf(f, "    void set%s(const %s &v);\n", prop.c_str(), cType.c_str());
       fprintf(f, " public:\n");
-      fprintf(f, "    %s  get%s();\n", cType.c_str(), prop.c_str());
+      fprintf(f, "    %s  get%s();\n\n", cType.c_str(), prop.c_str());
     }
     else
     {
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n", typ.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
     }
   }
+
+  // This template function will generate all the necessary code to set the name of each
+  // required and created array.
+  appendArrayNameCodeToHeader<T>(t, f);
 
   fprintf(f, "  private:\n");
  // fprintf(f, "    %s::Pointer m_Filter;\n\n", filter.c_str());
@@ -244,6 +376,9 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 void createHTMLFragment( const std::string &group, const std::string &filter)
 {
@@ -271,7 +406,9 @@ void createHTMLFragment( const std::string &group, const std::string &filter)
 }
 
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 void createOptionsWriterCode( const std::string &group, const std::string &filter)
 {
@@ -527,6 +664,10 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
   }
 
+  // Generate code to get all the array names and set the local variables that hold those names
+  appendArrayNameConstructorCode<T>(t, f);
+
+  // Finish Writing the remainder of the constructor code
   fprintf(f, "     setupGui();\n");
   fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
   fprintf(f, "}\n\n");
@@ -551,6 +692,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "  filter->set%s( get%s() );\n", prop.c_str(), prop.c_str());
     }
   }
+  // Generate all the source code to set the various array names into the filter
+  appendArrayNameGetFilterCode<T>(t, f);
+
   fprintf(f, "  return filter;\n");
   fprintf(f, "}\n");
 
@@ -571,6 +715,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "  w->set%s( get%s() );\n", prop.c_str(), prop.c_str());
     }
   }
+  // Generate the code that will push the names of the arrays to the deep copy
+  appendArrayNameDeepCopyCode<T>(t, f);
+
   fprintf(f, "  return w;\n");
   fprintf(f, "}\n");
 
@@ -689,6 +836,12 @@ void createSourceFile( const std::string &group, const std::string &filter)
     fprintf(f, "  }\n");
   }
   fprintf(f, "\n}\n\n\n");
+
+  // This template function will generate all the necessary code to set the name of each
+  // required and created array.
+  appendArrayNameCodeToSource<T>(t, f);
+
+
 
   fclose(f);
 
