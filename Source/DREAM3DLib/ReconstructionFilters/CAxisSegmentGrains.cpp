@@ -115,6 +115,7 @@ void CAxisSegmentGrains::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+	option->setUnits("Degrees");
     parameters.push_back(option);
   }
 #if 0

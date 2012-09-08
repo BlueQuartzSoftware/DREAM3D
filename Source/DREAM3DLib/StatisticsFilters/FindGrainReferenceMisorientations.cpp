@@ -125,7 +125,7 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
   int err = 0;
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
-  if(getErrorCondition() == -303)
+  if(err == -303)
   {
 	setErrorCondition(0);
 	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();

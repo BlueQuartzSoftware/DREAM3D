@@ -77,6 +77,7 @@ void ChangeResolution::setupFilterParameters()
     option->setPropertyName("XRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
+	option->setUnits("Microns");
     parameters.push_back(option);
   }
   {
@@ -85,6 +86,7 @@ void ChangeResolution::setupFilterParameters()
     option->setPropertyName("YRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
+	option->setUnits("Microns");
     parameters.push_back(option);
   }
   {
@@ -93,6 +95,7 @@ void ChangeResolution::setupFilterParameters()
     option->setPropertyName("ZRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
+	option->setUnits("Microns");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);

@@ -98,6 +98,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     MergeColonies();
 
     void merge_colonies();
+	int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
     void characterize_colonies();
 
   private:
