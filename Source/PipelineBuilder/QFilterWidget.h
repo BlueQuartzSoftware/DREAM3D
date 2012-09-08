@@ -112,9 +112,11 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QFilterWidget* createDeepCopy();
 
+#if 0
     virtual void setCellDataArrayNames(std::vector<std::string> arrayNames);
     virtual void setFieldDataArrayNames(std::vector<std::string> arrayNames);
     virtual void setEnsembleDataArrayNames(std::vector<std::string> arrayNames);
+#endif
 
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -169,8 +171,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      virtual void mousePressEvent( QMouseEvent* event );
      virtual void mouseReleaseEvent( QMouseEvent* event );
      virtual void mouseMoveEvent( QMouseEvent* event );
-	 virtual QString getFileExtension(std::string propName);
-	 virtual QString getFileType(std::string propName);
+     virtual QString getFileExtension(std::string propName);
+     virtual QString getFileType(std::string propName);
 
   private:
      QRect      m_DeleteRect;
