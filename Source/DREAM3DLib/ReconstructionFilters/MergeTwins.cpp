@@ -117,6 +117,7 @@ void MergeTwins::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+	option->setUnits("Degrees");
     parameters.push_back(option);
   }
   {
@@ -126,6 +127,7 @@ void MergeTwins::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+	option->setUnits("Degrees");
     parameters.push_back(option);
   }
 
@@ -157,7 +159,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   // Field Data
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
-  if(getErrorCondition() == -303)
+  if(err == -303)
   {
 	setErrorCondition(0);
 	FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();

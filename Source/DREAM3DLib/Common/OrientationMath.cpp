@@ -498,6 +498,18 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
   MULT_QUAT(inQuat, multQuat, outQuat);
 }
 
+float OrientationMath::matrixMisorientation(float g1[3][3], float g2[3][3])
+{
+	float deltaG[3][3];
+	deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
+	deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
+	deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
+	float value = ((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0)/2.0;
+	if(value > 1.0) value = 1.0;
+	if(value < -1.0) value = -1.0;
+	return acosf(value);
+}
+
 void OrientationMath::changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3)
 {
   float g[3][3];

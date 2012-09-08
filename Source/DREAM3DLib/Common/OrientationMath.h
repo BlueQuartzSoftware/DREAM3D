@@ -97,6 +97,7 @@ class DREAM3DLib_EXPORT OrientationMath
 	static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
     static void eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
     static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
+    static float matrixMisorientation(float g1[3][3], float g2[3][3]);
 
   protected:
     OrientationMath();

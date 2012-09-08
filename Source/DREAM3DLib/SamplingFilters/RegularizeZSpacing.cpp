@@ -89,7 +89,8 @@ void RegularizeZSpacing::setupFilterParameters()
     option->setPropertyName("ZRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    parameters.push_back(option);
+	option->setUnits("Microns");
+	parameters.push_back(option);
   }
 
   setFilterParameters(parameters);

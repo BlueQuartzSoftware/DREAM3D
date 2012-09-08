@@ -277,11 +277,19 @@ void QFilterWidget::setupGui()
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
 
+	QString labelName = QString::fromStdString(option->getHumanLabel());
+	if(option->getUnits().empty() == false)
+	{
+		labelName.append(" (").append(QString::fromStdString(option->getUnits())).append(")");
+	}
+	QLabel* label = new QLabel(labelName,this);
+
     if (wType == FilterParameter::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString &)));
       QVariant v = property(option->getPropertyName().c_str());
@@ -293,7 +301,7 @@ void QFilterWidget::setupGui()
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QIntValidator* ival = new QIntValidator(this);
       le->setValidator(ival);
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditIntValue()));
       QVariant v = property(option->getPropertyName().c_str());
@@ -305,7 +313,7 @@ void QFilterWidget::setupGui()
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QDoubleValidator* ival = new QDoubleValidator(this);
       le->setValidator(ival);
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditDoubleValue()));
       QVariant v = property(option->getPropertyName().c_str());
@@ -316,7 +324,6 @@ void QFilterWidget::setupGui()
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
 
-      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
@@ -351,7 +358,6 @@ void QFilterWidget::setupGui()
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
 
-      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
@@ -386,7 +392,6 @@ void QFilterWidget::setupGui()
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
 
-      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QLineEdit* fp = new QLineEdit(this);
@@ -416,7 +421,6 @@ void QFilterWidget::setupGui()
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
 
-      QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QLineEdit* fp = new QLineEdit(this);
@@ -443,7 +447,7 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterParameter::BooleanWidget)
     {
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QCheckBox* le = new QCheckBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
@@ -453,7 +457,7 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterParameter::IntConstrainedWidget)
     {
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QSpinBox* le = new QSpinBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       ConstrainedFilterParameter<int>* filtOpt = dynamic_cast<ConstrainedFilterParameter<int>* >(option);
@@ -469,7 +473,7 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterParameter::DoubleConstrainedWidget)
     {
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QDoubleSpinBox* le = new QDoubleSpinBox(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       ConstrainedFilterParameter<float>* filtOpt = dynamic_cast<ConstrainedFilterParameter<float>* >(option);
@@ -487,7 +491,7 @@ void QFilterWidget::setupGui()
     {
       ChoiceFilterParameter* choiceFilterParameter = ChoiceFilterParameter::SafeObjectDownCast<FilterParameter*, ChoiceFilterParameter*>(option);
       if (NULL == choiceFilterParameter) { return; }
-      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, new QLabel(QString::fromStdString(option->getHumanLabel()), this));
+      frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QComboBox* cb = new QComboBox(this);
       cb->setObjectName(QString::fromStdString(option->getPropertyName()));
       std::vector<std::string> choices = choiceFilterParameter->getChoices();

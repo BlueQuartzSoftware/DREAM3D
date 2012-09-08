@@ -208,9 +208,9 @@ class EbsdColoring
       q1[2][2] = cos_phi;
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
-      cd[0] = q1[0][0] * refDir0 + q1[0][1] * refDir1 + q1[0][2] * refDir2;
-      cd[1] = q1[1][0] * refDir0 + q1[1][1] * refDir1 + q1[1][2] * refDir2;
-      cd[2] = q1[2][0] * refDir0 + q1[2][1] * refDir1 + q1[2][2] * refDir2;
+      cd[0] = q1[0][0] * refDir0 + q1[1][0] * refDir1 + q1[2][0] * refDir2;
+      cd[1] = q1[0][1] * refDir0 + q1[1][1] * refDir1 + q1[2][1] * refDir2;
+      cd[2] = q1[0][2] * refDir0 + q1[1][2] * refDir1 + q1[2][2] * refDir2;
 
       //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
       cd[0] = fabs(cd[0]);
