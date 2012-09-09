@@ -89,7 +89,7 @@ void FindKernelAvgMisorientations::setupFilterParameters()
     option->setPropertyName("KernelSize");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Pixels");
+    option->setUnits("Pixels");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -116,12 +116,12 @@ void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-	find_cellquats->setObservers(this->getObservers());
-	find_cellquats->setDataContainer(getDataContainer());
-	if(preflight == true) find_cellquats->preflight();
-	if(preflight == false) find_cellquats->execute();
+    setErrorCondition(0);
+    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
+    find_cellquats->setObservers(this->getObservers());
+    find_cellquats->setDataContainer(getDataContainer());
+    if(preflight == true) find_cellquats->preflight();
+    if(preflight == false) find_cellquats->execute();
   }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
@@ -152,7 +152,7 @@ void FindKernelAvgMisorientations::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -163,7 +163,7 @@ void FindKernelAvgMisorientations::execute()
   float q1[5];
   float q2[5];
   int numVoxel; // number of voxels in the grain...
-  int numchecks; // number of voxels in the grain...
+ // int numchecks; // number of voxels in the grain...
   int good = 0;
 
   typedef DataArray<unsigned int> XTalType;
@@ -231,7 +231,7 @@ void FindKernelAvgMisorientations::execute()
                   q2[4] = m_Quats[neighbor*5 + 4];
                   phase2 = crystruct[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-				  w = w *(180.0f/m_pi);
+                  w = w *(180.0f/m_pi);
                   totalmisorientation = totalmisorientation + w;
                   numVoxel++;
                 }
@@ -239,7 +239,7 @@ void FindKernelAvgMisorientations::execute()
             }
           }
           m_KernelAverageMisorientations[point] = totalmisorientation / (float)numVoxel;
-		  if(numVoxel == 0)
+          if(numVoxel == 0)
           {
             m_KernelAverageMisorientations[point] = 0;
           }

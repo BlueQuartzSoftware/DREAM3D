@@ -112,12 +112,12 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
   if(getErrorCondition() == -303)
   {
-	setErrorCondition(0);
-	FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-	find_cellquats->setObservers(this->getObservers());
-	find_cellquats->setDataContainer(getDataContainer());
-	if(preflight == true) find_cellquats->preflight();
-	if(preflight == false) find_cellquats->execute();
+    setErrorCondition(0);
+    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
+    find_cellquats->setObservers(this->getObservers());
+    find_cellquats->setDataContainer(getDataContainer());
+    if(preflight == true) find_cellquats->preflight();
+    if(preflight == false) find_cellquats->execute();
   }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 }
@@ -146,7 +146,7 @@ void FindSlicetoSliceRotations::execute()
     return;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -156,8 +156,8 @@ void FindSlicetoSliceRotations::execute()
 
   float q1[5];
   float q2[5];
-  int numVoxel; // number of voxels in the grain...
-  int numchecks; // number of voxels in the grain...
+//  int numVoxel; // number of voxels in the grain...
+//  int numchecks; // number of voxels in the grain...
   int good = 0;
 
 
@@ -168,8 +168,8 @@ void FindSlicetoSliceRotations::execute()
  // size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   float w, n1, n2, n3;
-  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+//  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+//  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -203,46 +203,46 @@ void FindSlicetoSliceRotations::execute()
 
   for (DimType plane = 0; plane < zPoints; plane++)
   {
-	inPlaneAngle = 0;
-	outPlaneAngle = 0;
-	inPlaneAxisX = 0;
-	outPlaneAxisX = 0;
-	inPlaneAxisY = 0;
-	outPlaneAxisY = 0;
-	inPlaneAxisZ = 0;
-	outPlaneAxisZ = 0;
-	inPlaneCount = 0;
-	outPlaneCount = 0;
-	for (DimType row = 0; row < yPoints; row++)
+    inPlaneAngle = 0;
+    outPlaneAngle = 0;
+    inPlaneAxisX = 0;
+    outPlaneAxisX = 0;
+    inPlaneAxisY = 0;
+    outPlaneAxisY = 0;
+    inPlaneAxisZ = 0;
+    outPlaneAxisZ = 0;
+    inPlaneCount = 0;
+    outPlaneCount = 0;
+    for (DimType row = 0; row < yPoints; row++)
     {
-	  for (DimType col = 0; col < xPoints; col++)
+      for (DimType col = 0; col < xPoints; col++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         q1[1] = m_Quats[point*5 + 1];
         q1[2] = m_Quats[point*5 + 2];
         q1[3] = m_Quats[point*5 + 3];
         q1[4] = m_Quats[point*5 + 4];
-		if (plane < zPoints-1)
-		{
-			outNeighbor = point + neighpoints[5];
-			if (m_CellPhases[point] == m_CellPhases[outNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[outNeighbor] == true)
-			{
+        if (plane < zPoints-1)
+        {
+            outNeighbor = point + neighpoints[5];
+            if (m_CellPhases[point] == m_CellPhases[outNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[outNeighbor] == true)
+            {
                 q2[1] = m_Quats[outNeighbor*5 + 1];
                 q2[2] = m_Quats[outNeighbor*5 + 2];
                 q2[3] = m_Quats[outNeighbor*5 + 3];
                 q2[4] = m_Quats[outNeighbor*5 + 4];
-				w = m_OrientationOps[crystruct[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
-				if(w < 5.0f*m_pi/180.0f)
-				{
-					OrientationMath::changeAxisReferenceFrame(q1, n1, n2, n3);
-					outPlaneAngle = outPlaneAngle + w;
-					outPlaneAxisX = outPlaneAxisX + n1;
-					outPlaneAxisY = outPlaneAxisY + n2;
-					outPlaneAxisZ = outPlaneAxisZ + n3;
-					outPlaneCount++;
-				}
-			}
-		}
+                w = m_OrientationOps[crystruct[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
+                if(w < 5.0f*m_pi/180.0f)
+                {
+                    OrientationMath::changeAxisReferenceFrame(q1, n1, n2, n3);
+                    outPlaneAngle = outPlaneAngle + w;
+                    outPlaneAxisX = outPlaneAxisX + n1;
+                    outPlaneAxisY = outPlaneAxisY + n2;
+                    outPlaneAxisZ = outPlaneAxisZ + n3;
+                    outPlaneCount++;
+                }
+            }
+        }
         for(size_t i = 1; i < 5; i++)
         {
           good = true;
@@ -257,35 +257,35 @@ void FindSlicetoSliceRotations::execute()
              q2[2] = m_Quats[inNeighbor*5 + 2];
              q2[3] = m_Quats[inNeighbor*5 + 3];
              q2[4] = m_Quats[inNeighbor*5 + 4];
-			 w = m_OrientationOps[crystruct[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
-			 if(w < 5.0f*m_pi/180.0f)
-			 { 
-				OrientationMath::changeAxisReferenceFrame(q1, n1, n2, n3);
-				inPlaneAngle = inPlaneAngle + w;
-				inPlaneAxisX = inPlaneAxisX + n1;
-				inPlaneAxisY = inPlaneAxisY + n2;
-				inPlaneAxisZ = inPlaneAxisZ + n3;
-				inPlaneCount++;
-			 }
+             w = m_OrientationOps[crystruct[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
+             if(w < 5.0f*m_pi/180.0f)
+             {
+                OrientationMath::changeAxisReferenceFrame(q1, n1, n2, n3);
+                inPlaneAngle = inPlaneAngle + w;
+                inPlaneAxisX = inPlaneAxisX + n1;
+                inPlaneAxisY = inPlaneAxisY + n2;
+                inPlaneAxisZ = inPlaneAxisZ + n3;
+                inPlaneCount++;
+             }
           }
-		}
-	  }
-	}
-	if(inPlaneCount > 0)
-	{
-		inPlaneAngle = inPlaneAngle/inPlaneCount;
-		inPlaneAxisX = inPlaneAxisX/inPlaneCount;
-		inPlaneAxisY = inPlaneAxisY/inPlaneCount;
-		inPlaneAxisZ = inPlaneAxisZ/inPlaneCount;
-	}
-	if(outPlaneCount > 0)
-	{
-		outPlaneAngle = outPlaneAngle/outPlaneCount;
-		outPlaneAxisX = outPlaneAxisX/outPlaneCount;
-		outPlaneAxisY = outPlaneAxisY/outPlaneCount;
-		outPlaneAxisZ = outPlaneAxisZ/outPlaneCount;
-	}
-	outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << std::endl;
+        }
+      }
+    }
+    if(inPlaneCount > 0)
+    {
+        inPlaneAngle = inPlaneAngle/inPlaneCount;
+        inPlaneAxisX = inPlaneAxisX/inPlaneCount;
+        inPlaneAxisY = inPlaneAxisY/inPlaneCount;
+        inPlaneAxisZ = inPlaneAxisZ/inPlaneCount;
+    }
+    if(outPlaneCount > 0)
+    {
+        outPlaneAngle = outPlaneAngle/outPlaneCount;
+        outPlaneAxisX = outPlaneAxisX/outPlaneCount;
+        outPlaneAxisY = outPlaneAxisY/outPlaneCount;
+        outPlaneAxisZ = outPlaneAxisZ/outPlaneCount;
+    }
+    outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << std::endl;
   }
 
 
