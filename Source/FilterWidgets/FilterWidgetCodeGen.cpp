@@ -49,11 +49,27 @@
 #include "DREAM3DLib/Common/FilterParameter.h"
 
 
+// Enable this to generate a text file that has each filter and all of its
+// parameters, required array and created array listed.
 #define GENERATE_FILTER_TEXT_LIST 0
+
+// Enable this to generate a fragment of HTML code that was used to update
+// the documentation files
 #define GENERATE_HTML_FRAGMENT 0
+
+// Enable this to generate an HTML template file for each and every
+// filter. If you are NOT careful you can over write any existing documentation
+// file. You have been warned.
 #define GENERATE_HTML_FILE 0
 #define OVERWRITE_SOURCE_DOCS 0
+
+// Just some experimental code that generates a bunch of update code to
+// insert into each and every filter. Completely deprecated now.
 #define GENERATE_OPTIONS_WRITER_CODE 0
+
+// Enabling this will create a pair of files that can be used to update
+// the "PreflightTest.cpp" unit test
+#define GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT 0
 
 typedef std::map<std::string, std::set<std::string> >  FilterMapType;
 typedef std::set<std::string>  StringSetType;
@@ -1029,6 +1045,29 @@ void createListFile( const std::string &group, const std::string &filter)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
+void createPreflightTestCode( const std::string &group, const std::string &filter)
+{
+    std::string s = FILTER_WIDGETS_TEMP_DIR();
+    s.append("Preflight_Test_Code_Fragment_1.h");
+    FILE* f = fopen(s.c_str(), "ab+"); // Clear out this file
+    fprintf(f, "MAKE_FILTER_TEST(  %s, FAIL_IS_PASS)\n", filter.c_str());
+    fclose(f);
+
+
+    s = FILTER_WIDGETS_TEMP_DIR();
+    s.append("Preflight_Test_Code_Fragment_2.h");
+    f = fopen(s.c_str(), "ab+"); // Clear out this file
+    fprintf(f, "DREAM3D_REGISTER_TEST( %s_PreFlightTest() )\n", filter.c_str());
+    fclose(f);
+
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
 void createHTMLFile( const std::string &group, const std::string &filter)
 {
 #if (GENERATE_FILTER_TEXT_LIST == 1)
@@ -1037,6 +1076,10 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
 #if (GENERATE_HTML_FRAGMENT == 1)
   createHTMLFragment<T>(group, filter);
+#endif
+
+#if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
+  createPreflightTestCode<T>(group, filter);
 #endif
 
 #if (GENERATE_HTML_FILE == 0)
@@ -1285,6 +1328,18 @@ int main(int argc, char **argv)
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Mike_list.txt");
   FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
+  fclose(f);
+#endif
+
+#if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
+  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  s.append("Preflight_Test_Code_Fragment_1.h");
+  FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
+  fclose(f);
+
+  s = FILTER_WIDGETS_TEMP_DIR();
+  s.append("Preflight_Test_Code_Fragment_2.h");
+  f = fopen(s.c_str(), "wb"); // Clear out this file
   fclose(f);
 #endif
 
