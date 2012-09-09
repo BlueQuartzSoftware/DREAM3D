@@ -217,6 +217,7 @@ include_directories(${StatsGenerator_SOURCE_DIR}/.. )
 include_directories(${StatsGenerator_BINARY_DIR} )
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
+
 IF(APPLE)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/icns/${PROJECT_NAME}.icns)
 ENDIF (APPLE)
@@ -224,6 +225,11 @@ ENDIF (APPLE)
 IF(Q_WS_WIN)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/${PROJECT_NAME}.ico)
 ENDIF(Q_WS_WIN)
+
+set(DEST_DIR ".")
+if (UNIX AND NOT APPLE)
+    set(DEST_DIR "bin")
+endif()
 
 BuildQtAppBundle(
     TARGET ${PROJECT_NAME}
@@ -239,7 +245,7 @@ BuildQtAppBundle(
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}
     COMPONENT     Applications
-    INSTALL_DEST  "."
+    INSTALL_DEST  ${DEST_DIR}
 ) 
 
 set(${PROJECT_NAME}_HELP_FILES

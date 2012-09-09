@@ -125,6 +125,11 @@ IF(Q_WS_WIN)
     set(APPLICATION_ICON ${PROJECT_RESOURCES_DIR}/icons/ico/DREAM3D.ico)
 ENDIF(Q_WS_WIN)
 
+set(DEST_DIR ".")
+if (UNIX AND NOT APPLE)
+    set(DEST_DIR "bin")
+endif()
+
 file(READ ${CMP_PLUGIN_LIST_FILE} DREAM3D_PLUGINS)
 
 BuildQtAppBundle(
@@ -142,5 +147,5 @@ BuildQtAppBundle(
     OTHER_PLUGINS ${DREAM3D_PLUGINS}
     PLUGIN_LIST_FILE ${CMP_PLUGIN_LIST_FILE}
     COMPONENT     Applications
-    INSTALL_DEST  "."
+    INSTALL_DEST  ${DEST_DIR}
 )   
