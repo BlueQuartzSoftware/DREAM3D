@@ -135,10 +135,12 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
       n3min = n3;
     }
   }
-  float denom = sqrt((n1*n1+n2*n2+n3*n3));
-  n1 = n1/denom;
-  n2 = n2/denom;
-  n3 = n3/denom;
+  float denom = sqrt((n1min*n1min+n2min*n2min+n3min*n3min));
+  n1 = n1min/denom;
+  n2 = n2min/denom;
+  n3 = n3min/denom;
+  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
   return wmin;
 }
 
@@ -494,6 +496,41 @@ void OrientationMath::RodtoEuler(float r1, float r2, float r3, float &ea1, float
 void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float* outQuat)
 {
   MULT_QUAT(inQuat, multQuat, outQuat);
+}
+
+float OrientationMath::matrixMisorientation(float g1[3][3], float g2[3][3])
+{
+	float deltaG[3][3];
+	deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
+	deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
+	deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
+	float value = ((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0)/2.0;
+	if(value > 1.0) value = 1.0;
+	if(value < -1.0) value = -1.0;
+	return acosf(value);
+}
+
+void OrientationMath::changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3)
+{
+  float g[3][3];
+  float n1new, n2new, n3new, denom;
+  g[0][0] = 1-(2*q[2]*q[2])-(2*q[3]*q[3]);
+  g[0][1] = (2*q[1]*q[2])-(2*q[3]*q[4]);
+  g[0][2] = (2*q[1]*q[3])+(2*q[2]*q[4]);
+  g[1][0] = (2*q[1]*q[2])+(2*q[3]*q[4]);
+  g[1][1] = 1-(2*q[1]*q[1])-(2*q[3]*q[3]);
+  g[1][2] = (2*q[2]*q[3])-(2*q[1]*q[4]);
+  g[2][0] = (2*q[1]*q[3])-(2*q[2]*q[4]);
+  g[2][1] = (2*q[2]*q[3])+(2*q[1]*q[4]);
+  g[2][2] = 1-(2*q[1]*q[1])-(2*q[2]*q[2]);
+  // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
+  n1new = n1*g[0][0]+n2*g[1][0]+n3*g[2][0];
+  n2new = n1*g[0][1]+n2*g[1][1]+n3*g[2][1];
+  n3new = n1*g[0][2]+n2*g[1][2]+n3*g[2][2];
+  denom = sqrtf((n1new*n1new+n2new*n2new+n3new*n3new));
+  n1 = n1new/denom;
+  n2 = n2new/denom;
+  n3 = n3new/denom;
 }
 
 void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], float &ssap)

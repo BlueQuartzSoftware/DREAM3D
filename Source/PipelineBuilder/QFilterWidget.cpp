@@ -283,6 +283,7 @@ void QFilterWidget::setupGui()
         labelName.append(" (").append(QString::fromStdString(option->getUnits())).append(")");
     }
     QLabel* label = new QLabel(labelName, this);
+
     if (wType == FilterParameter::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
@@ -322,10 +323,7 @@ void QFilterWidget::setupGui()
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
-
-      //QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
-
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
@@ -357,10 +355,7 @@ void QFilterWidget::setupGui()
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
-
-      //QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
-
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
@@ -392,8 +387,6 @@ void QFilterWidget::setupGui()
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
-
-      //QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QLineEdit* fp = new QLineEdit(this);
@@ -404,11 +397,9 @@ void QFilterWidget::setupGui()
       theSlot.append("set");
       theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
-
       QPushButton* btn = new QPushButton("Save As...");
       btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName()));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
@@ -422,10 +413,7 @@ void QFilterWidget::setupGui()
     {
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
-
-      //QLabel* label = new QLabel(QString::fromStdString(option->getHumanLabel()));
       gridLayout->addWidget(label, 0, 0, 1, 1);
-
       QLineEdit* fp = new QLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);

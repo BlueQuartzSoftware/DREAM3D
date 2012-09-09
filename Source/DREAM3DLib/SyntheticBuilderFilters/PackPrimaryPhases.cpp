@@ -262,13 +262,16 @@ void PackPrimaryPhases::execute()
   sizez = dims[2] * m->getZRes();
   totalvol = sizex*sizey*sizez;
 
-  float totalprimaryvol = 0;
+  double totalprimaryvolTEMP = 0;
+  float badcount = 0;
+  size_t check = 0;
   size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
   for (size_t i = 0; i < totalVox; i++)
   {
-    if(m_GrainIds[i] <= 0) totalprimaryvol++;
+    if(m_GrainIds[i] <= 0) totalprimaryvolTEMP++;
   }
-  totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getXRes()*m->getXRes());
+  float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
+  totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
 
   size_t numensembles = m->getNumEnsembleTuples();
   std::stringstream ss;
@@ -365,7 +368,7 @@ void PackPrimaryPhases::execute()
   std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
   float factor = 1.0;
-  float iter = 0;
+  size_t iter = 0;
   for (size_t j = 0; j < primaryphases.size(); ++j)
   {
 	  curphasevol[j] = 0;
@@ -378,7 +381,7 @@ void PackPrimaryPhases::execute()
 		generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
 		currentsizedisterror = check_sizedisterror(&field);
 		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
+		if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
 		{
 	      std::stringstream ss;
 	      ss << "Packing Grains - Generating Grain #" << gid;
@@ -580,12 +583,14 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+//      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+      if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+//      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+      else if(fillingerror > oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
         move_grain(randomgrain, oldxc, oldyc, oldzc);
@@ -616,12 +621,14 @@ void PackPrimaryPhases::execute()
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
 //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      if(fillingerror < oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+//      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+      if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-      else if(fillingerror >= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
+//      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
+      else if(fillingerror > oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
         move_grain(randomgrain, oldxc, oldyc, oldzc);
@@ -913,7 +920,8 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   float bhattdist;
   float dia;
   int nnum;
-  size_t bin = 0;
+  size_t diabin = 0;
+  size_t nnumbin = 0;
   int index = 0;
   std::vector<int> count;
   int counter = 0;
@@ -948,39 +956,46 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         dia = m_EquivalentDiameters[index];
         if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
+		diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
         nnum = m_Neighborhoods[index];
-		bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
-		if(bin >= 40) bin = 39;
-        simneighbordist[iter][dia][bin]++;
-        count[dia]++;
+		nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
+		if(nnumbin >= 40) nnumbin = 39;
+        simneighbordist[iter][diabin][nnumbin]++;
+        count[diabin]++;
 		counter++;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
-      dia = m_EquivalentDiameters[index];
+      dia = m_EquivalentDiameters[gadd];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  dia = static_cast<float>( int((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
-      nnum = m_Neighborhoods[index];
-	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
-	  if(bin >= 40) bin = 39;
-      simneighbordist[iter][dia][bin]++;
-      count[dia]++;
+	  diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
+      nnum = m_Neighborhoods[gadd];
+	  nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
+	  if(nnumbin >= 40) nnumbin = 39;
+      simneighbordist[iter][diabin][nnumbin]++;
+      count[diabin]++;
 	  counter++;
+    }
+	float runningtotal = 0;
+    for (size_t i = 0; i < simneighbordist[iter].size(); i++)
+    {
+      for (size_t j = 0; j < 40; j++)
+      {
+        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(count[i]) );
+        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
+		runningtotal = runningtotal + simneighbordist[iter][i][j];
+      }
     }
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 40; j++)
       {
-//        simneighbordist[iter][i][j] = simneighbordist[iter][i][j] / double(count[i]);
-//        if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
-        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(counter) );
-        if(counter == 0) simneighbordist[iter][i][j] = 0.0;
+        simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / runningtotal );
       }
-    }
-    if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    }    
+	if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       determine_neighbors(gadd, -1);
     }
@@ -1058,7 +1073,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
         dia = m_EquivalentDiameters[index];
         dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
         if(dia < 0) dia = 0;
-        if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+        if(dia > grainsizedist[iter].size() - 1.0f) dia = grainsizedist[iter].size() - 1.0f;
         simgrainsizedist[iter][int(dia)]++;
         count++;
       }
@@ -1068,7 +1083,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
       dia = field->m_EquivalentDiameters;
       dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
       if(dia < 0) dia = 0;
-      if(dia > grainsizedist[iter].size() - 1) dia = grainsizedist[iter].size() - 1;
+      if(dia > grainsizedist[iter].size() - 1.0f) dia = grainsizedist[iter].size() - 1.0f;
       simgrainsizedist[iter][int(dia)]++;
       count++;
     }

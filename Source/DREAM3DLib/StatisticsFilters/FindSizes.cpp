@@ -187,8 +187,8 @@ void FindSizes::execute()
   }
 
 
-  if(m->getZPoints() > 1) find_sizes();
-  if(m->getZPoints() == 1) find_sizes2D();
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_sizes();
+  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) find_sizes2D();
  notifyStatusMessage("FindSizes Completed");
 }
 
@@ -338,10 +338,14 @@ void FindSizes::find_sizes2D()
     int gnum = m_GrainIds[j];
     graincounts[gnum]++;
   }
+  float res_scalar = 0;
+  if(m->getXPoints() == 1) res_scalar = m->getYRes() * m->getZRes();
+  if(m->getYPoints() == 1) res_scalar = m->getXRes() * m->getZRes();
+  if(m->getZPoints() == 1) res_scalar = m->getXRes() * m->getYRes();
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
-    m_Volumes[i] = (graincounts[i] * m->getXRes() * m->getYRes());
+    m_Volumes[i] = (graincounts[i] * res_scalar);
     radsquared = m_Volumes[i] / m_pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;

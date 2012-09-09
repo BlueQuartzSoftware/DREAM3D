@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MERGECOLONIES_H_
-#define MERGECOLONIES_H_
+#ifndef FindKernelAvgMisorientations_H_
+#define FindKernelAvgMisorientations_H_
 
 #include <vector>
 #include <string>
@@ -45,45 +45,39 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
+ * @class FindKernelAvgMisorientations FindKernelAvgMisorientations.h DREAM3DLib/GenericFilters/FindKernelAvgMisorientations.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
+class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MergeColonies)
-    DREAM3D_STATIC_NEW_MACRO(MergeColonies)
-    DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindKernelAvgMisorientations)
+    DREAM3D_STATIC_NEW_MACRO(FindKernelAvgMisorientations)
+    DREAM3D_TYPE_MACRO_SUPER(FindKernelAvgMisorientations, AbstractFilter)
 
-    virtual ~MergeColonies();
+    virtual ~FindKernelAvgMisorientations();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Kernel Average Misorientations"; }
 
-    DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
-    DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(int, KernelSize)
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -95,36 +89,24 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     virtual void preflight();
 
   protected:
-    MergeColonies();
 
-    void merge_colonies();
-	int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
-    void characterize_colonies();
+    FindKernelAvgMisorientations();
 
   private:
-    int32_t* m_GrainIds;
-    int32_t* m_ParentIds;
-    float* m_AvgQuats;
-    bool* m_Active;
-    int32_t* m_FieldPhases;
-    NeighborList<int>* m_NeighborList;
-
-    unsigned int* m_CrystalStructures;
-	int32_t* m_NumFields;
-
-    std::vector<int> parentnumbers;
-
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationMath*> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+
+    int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
+    float* m_KernelAverageMisorientations;
+    float* m_Quats;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
-    MergeColonies(const MergeColonies&); // Copy Constructor Not Implemented
-    void operator=(const MergeColonies&); // Operator '=' Not Implemented
+    FindKernelAvgMisorientations(const FindKernelAvgMisorientations&); // Copy Constructor Not Implemented
+    void operator=(const FindKernelAvgMisorientations&); // Operator '=' Not Implemented
 };
 
-#endif /* MERGECOLONIES_H_ */
+#endif /* FindKernelAvgMisorientations_H_ */

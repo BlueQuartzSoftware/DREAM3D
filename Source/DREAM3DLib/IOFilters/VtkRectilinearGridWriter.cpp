@@ -55,8 +55,7 @@ m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
-m_MisorientationGradientsArrayName(DREAM3D::CellData::MisorientationGradients),
-m_GrainMisorientationsArrayName(DREAM3D::CellData::GrainMisorientations),
+m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
@@ -65,7 +64,6 @@ m_WriteParentIds(false),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
 m_WriteGoodVoxels(false),
-m_WriteLMGs(false),
 m_WriteGAMs(false),
 m_WriteKAMs(false),
 m_WriteIPFColors(false),
@@ -148,14 +146,6 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write LMG Values");
-    option->setPropertyName("WriteLMGs");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Good Voxels");
     option->setPropertyName("WriteGoodVoxels");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -198,7 +188,6 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WritePhaseIds", getWritePhaseIds() );
   writer->writeValue("WriteBandContrasts", getWriteBandContrasts() );
   writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
-  writer->writeValue("WriteLMGs", getWriteLMGs() );
   writer->writeValue("WriteGAMs", getWriteGAMs() );
   writer->writeValue("WriteKAMs", getWriteKAMs() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
@@ -242,13 +231,9 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
-  if(m_WriteLMGs == true)
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -303, float, FloatArrayType, voxels, 1)
-  }
   if(m_WriteGAMs == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteBandContrasts == true)
   {
@@ -355,13 +340,6 @@ void VtkRectilinearGridWriter::execute()
   if (m_WriteGAMs == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGAMScalarWriter<DataContainer>(m));
-    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
-    scalarsToWrite.push_back(w0);
-  }
-
-  if (m_WriteLMGs == true)
-  {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelLMGScalarWriter<DataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }

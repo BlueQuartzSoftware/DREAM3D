@@ -372,7 +372,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   curphasevol.resize(precipitatephases.size());
   float change = 0.0f;
   float factor = 1.0;
-  float iter = 0;
+  size_t iter = 0;
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
     curphasevol[j] = 0;
@@ -385,7 +385,7 @@ void  InsertPrecipitatePhases::place_precipitates()
       generate_precipitate(phase, static_cast<int>(Seed), &precip, m_ShapeTypes[phase], m_OrthoOps);
       currentsizedisterror = check_sizedisterror(&precip);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
+      if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
         std::stringstream ss;
         ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
@@ -867,11 +867,11 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
-      dia = m_EquivalentDiameters[index];
+      dia = m_EquivalentDiameters[gadd];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
 	  dia = static_cast<float>( (dia - pp->getMinGrainDiameter()) / pp->getBinStepSize() );
-      nnum = m_Neighborhoods[index];
+      nnum = m_Neighborhoods[gadd];
 	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
