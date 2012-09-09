@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>685</width>
-    <height>564</height>
+    <width>710</width>
+    <height>638</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -80,8 +80,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>661</width>
-            <height>241</height>
+            <width>686</width>
+            <height>346</height>
            </rect>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout">
@@ -130,7 +130,7 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0,0,0">
          <property name="sizeConstraint">
           <enum>QLayout::SetMinAndMaxSize</enum>
          </property>
@@ -207,6 +207,19 @@
            </property>
            <property name="flat">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="loadODFTextureBtn">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Load List From File</string>
            </property>
           </widget>
          </item>

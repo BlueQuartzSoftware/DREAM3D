@@ -34,11 +34,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDLOCALMISORIENTATIONGRADIENTS_H_
-#define FINDLOCALMISORIENTATIONGRADIENTS_H_
+#ifndef FindSlicetoSliceRotations_H_
+#define FindSlicetoSliceRotations_H_
 
 #include <vector>
 #include <string>
+#include <iostream>
+#include <cmath>
+#include <fstream>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -52,39 +55,30 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 
 /**
- * @class FindLocalMisorientationGradients FindLocalMisorientationGradients.h DREAM3DLib/GenericFilters/FindLocalMisorientationGradients.h
+ * @class FindSlicetoSliceRotations FindSlicetoSliceRotations.h DREAM3DLib/GenericFilters/FindSlicetoSliceRotations.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
+class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindLocalMisorientationGradients)
-    DREAM3D_STATIC_NEW_MACRO(FindLocalMisorientationGradients)
-    DREAM3D_TYPE_MACRO_SUPER(FindLocalMisorientationGradients, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindSlicetoSliceRotations)
+    DREAM3D_STATIC_NEW_MACRO(FindSlicetoSliceRotations)
+    DREAM3D_TYPE_MACRO_SUPER(FindSlicetoSliceRotations, AbstractFilter)
 
-    virtual ~FindLocalMisorientationGradients();
+    virtual ~FindSlicetoSliceRotations();
 
 	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationGradientsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SlicetoSliceRotationsFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Local Misorientation Gradients"; }
-
-    DREAM3D_INSTANCE_PROPERTY(int, KernelSize)
-
+    virtual const std::string getHumanLabel() { return "Find Slice to Slice Crystallographic Misalignments"; }
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -97,7 +91,7 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
 
   protected:
 
-    FindLocalMisorientationGradients();
+    FindSlicetoSliceRotations();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
@@ -105,19 +99,14 @@ class DREAM3DLib_EXPORT FindLocalMisorientationGradients : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
     int32_t* m_CellPhases;
-    float* m_GrainMisorientations;
-    float* m_MisorientationGradients;
-    float* m_KernelAverageMisorientations;
-    float* m_AvgQuats;
-    float* m_GrainAvgMisorientations;
+    bool* m_GoodVoxels;
     float* m_Quats;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindLocalMisorientationGradients(const FindLocalMisorientationGradients&); // Copy Constructor Not Implemented
-    void operator=(const FindLocalMisorientationGradients&); // Operator '=' Not Implemented
+    FindSlicetoSliceRotations(const FindSlicetoSliceRotations&); // Copy Constructor Not Implemented
+    void operator=(const FindSlicetoSliceRotations&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDLOCALMISORIENTATIONGRADIENTS_H_ */
+#endif /* FindSlicetoSliceRotations_H_ */

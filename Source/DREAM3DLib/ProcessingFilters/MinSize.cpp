@@ -87,6 +87,7 @@ void MinSize::setupFilterParameters()
     option->setPropertyName("MinAllowedGrainSize");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
+	option->setUnits("Pixels");
     parameters.push_back(option);
   }
 
