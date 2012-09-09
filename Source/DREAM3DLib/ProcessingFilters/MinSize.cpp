@@ -87,7 +87,7 @@ void MinSize::setupFilterParameters()
     option->setPropertyName("MinAllowedGrainSize");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Pixels");
+    option->setUnits("Pixels");
     parameters.push_back(option);
   }
 
@@ -237,67 +237,67 @@ void MinSize::assign_badpoints()
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-		kstride = static_cast<int>( dims[0]*dims[1]*k );
-	    for (int j = 0; j < dims[1]; j++)
-	    {
-			jstride = static_cast<int>( dims[0]*j );
-		    for (int i = 0; i < dims[0]; i++)
-		    {
-			  count = kstride+jstride+i;
-			  std::stringstream ss;
-		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-			  grainname = m_GrainIds[count];
-			  if (grainname < 0)
-			  {
-			    counter++;
-				current = 0;
-				most = 0;
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = static_cast<int>( count + neighpoints[l] );
-				  if (l == 0 && k == 0) good = 0;
-				  if (l == 5 && k == (dims[2] - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (dims[1] - 1)) good = 0;
-				  if (l == 2 && i == 0) good = 0;
-				  if (l == 3 && i == (dims[0] - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if (grain >= 0)
-					{
-					  n[grain]++;
-					  current = n[grain];
-					  if (current > most)
-					  {
-						most = current;
-					    m_Neighbors[count] = neighpoint;
-					  }
-					}
-				  }
-				}
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = static_cast<int>( count + neighpoints[l] );
-				  if (l == 0 && k == 0) good = 0;
-				  if (l == 5 && k == (dims[2] - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (dims[1] - 1)) good = 0;
-				  if (l == 2 && i == 0) good = 0;
-				  if (l == 3 && i == (dims[0] - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if(grain >= 0) n[grain] = 0;
-				  }
-				}
-			}
-		  }
-		}
-	}
+        kstride = static_cast<int>( dims[0]*dims[1]*k );
+        for (int j = 0; j < dims[1]; j++)
+        {
+            jstride = static_cast<int>( dims[0]*j );
+            for (int i = 0; i < dims[0]; i++)
+            {
+              count = kstride+jstride+i;
+              std::stringstream ss;
+        //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+        //	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+              grainname = m_GrainIds[count];
+              if (grainname < 0)
+              {
+                counter++;
+                current = 0;
+                most = 0;
+                for (int l = 0; l < 6; l++)
+                {
+                  good = 1;
+                  neighpoint = static_cast<int>( count + neighpoints[l] );
+                  if (l == 0 && k == 0) good = 0;
+                  if (l == 5 && k == (dims[2] - 1)) good = 0;
+                  if (l == 1 && j == 0) good = 0;
+                  if (l == 4 && j == (dims[1] - 1)) good = 0;
+                  if (l == 2 && i == 0) good = 0;
+                  if (l == 3 && i == (dims[0] - 1)) good = 0;
+                  if (good == 1)
+                  {
+                    grain = m_GrainIds[neighpoint];
+                    if (grain >= 0)
+                    {
+                      n[grain]++;
+                      current = n[grain];
+                      if (current > most)
+                      {
+                        most = current;
+                        m_Neighbors[count] = neighpoint;
+                      }
+                    }
+                  }
+                }
+                for (int l = 0; l < 6; l++)
+                {
+                  good = 1;
+                  neighpoint = static_cast<int>( count + neighpoints[l] );
+                  if (l == 0 && k == 0) good = 0;
+                  if (l == 5 && k == (dims[2] - 1)) good = 0;
+                  if (l == 1 && j == 0) good = 0;
+                  if (l == 4 && j == (dims[1] - 1)) good = 0;
+                  if (l == 2 && i == 0) good = 0;
+                  if (l == 3 && i == (dims[0] - 1)) good = 0;
+                  if (good == 1)
+                  {
+                    grain = m_GrainIds[neighpoint];
+                    if(grain >= 0) n[grain] = 0;
+                  }
+                }
+            }
+          }
+        }
+    }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
@@ -338,17 +338,17 @@ void MinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-	  std::stringstream ss;
+      std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	  notifyStatusMessage(ss.str());
-	  if(voxcounts[i] >= static_cast<size_t>(m_MinAllowedGrainSize) )
-	  {
-		m_Active[i] = true;
-	  }
-	  else if(voxcounts[i] < static_cast<size_t>(m_MinAllowedGrainSize) )
-	  {
-		m_Active[i] = false;
-	  }
+      if(voxcounts[i] >= m_MinAllowedGrainSize )
+      {
+        m_Active[i] = true;
+      }
+      else if(voxcounts[i] < m_MinAllowedGrainSize )
+      {
+        m_Active[i] = false;
+      }
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {

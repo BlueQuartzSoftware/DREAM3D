@@ -115,7 +115,7 @@ void MergeColonies::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   {
@@ -125,7 +125,7 @@ void MergeColonies::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
 
@@ -159,12 +159,12 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
   if(err == -303)
   {
-	setErrorCondition(0);
-	FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
-	find_avgorients->setObservers(this->getObservers());
-	find_avgorients->setDataContainer(getDataContainer());
-	if(preflight == true) find_avgorients->preflight();
-	if(preflight == false) find_avgorients->execute();
+    setErrorCondition(0);
+    FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+    find_avgorients->setObservers(this->getObservers());
+    find_avgorients->setDataContainer(getDataContainer());
+    if(preflight == true) find_avgorients->preflight();
+    if(preflight == false) find_avgorients->execute();
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
 
@@ -282,11 +282,11 @@ void MergeColonies::merge_colonies()
   {
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
-	  parentcount++;
-	  parentnumbers[i] = parentcount;
-	  m_Active[i] = true;
+      parentcount++;
+      parentnumbers[i] = parentcount;
+      m_Active[i] = true;
       colonylist.push_back(i);
-      for (int j = 0; j < colonylist.size(); j++)
+      for (std::vector<int>::size_type j = 0; j < colonylist.size(); j++)
       {
         int firstgrain = colonylist[j];
         int size = int(neighborlist[firstgrain].size());
@@ -296,72 +296,72 @@ void MergeColonies::merge_colonies()
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
-		    w = 10000.0f;
-			q1[0] = 1;
+            w = 10000.0f;
+            q1[0] = 1;
             q1[1] = m_AvgQuats[5*firstgrain+1];
             q1[2] = m_AvgQuats[5*firstgrain+2];
             q1[3] = m_AvgQuats[5*firstgrain+3];
             q1[4] = m_AvgQuats[5*firstgrain+4];
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-			q2[0] = 1;
+            q2[0] = 1;
             q2[1] = m_AvgQuats[5*neigh+1];
             q2[2] = m_AvgQuats[5*neigh+2];
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
-			{
-				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-				OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-				m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-				OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-				w = w * (180.0f/m_pi);
+            if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
+            {
+                w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+                m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
+                OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+                w = w * (180.0f/m_pi);
 //				float vecttol = 0.01f;
 //	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
 //	            if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
 //				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
 //				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0530f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
 //				if (fabs(fabs(r1) - 0.5870f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.1858f) < vecttol) colony = 1;
-				float angdiff1 = fabs(w-10.53f);
-				float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
-				if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
-				float angdiff2 = fabs(w-90.00f);
-				float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
-				if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
-				float angdiff3 = fabs(w-60.00f);
-				float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
-				if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
-				float angdiff4 = fabs(w-60.83f);
-				float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
-				if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
-				float angdiff5 = fabs(w-63.26f);
-				float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
-				if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
-				if (colony == 1)
-				{
-				  parentnumbers[neigh] = parentcount;
-				  colonylist.push_back(neigh);
-				}
-			}
-			else if ((phase1 == Ebsd::CrystalStructure::Hexagonal && phase2 == Ebsd::CrystalStructure::Cubic))
-			{
-				colony = check_for_burgers(q2, q1);
-				if (colony == 1)
-				{
-				  parentnumbers[neigh] = parentcount;
-				  colonylist.push_back(neigh);
-				}
-			}
-			else if ((phase1 == Ebsd::CrystalStructure::Cubic && phase2 == Ebsd::CrystalStructure::Hexagonal))
-			{
-				colony = check_for_burgers(q1, q2);
-				if (colony == 1)
-				{
-				  parentnumbers[neigh] = parentcount;
-				  colonylist.push_back(neigh);
-				}
-			}
-		  }
+                float angdiff1 = fabs(w-10.53f);
+                float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
+                if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
+                float angdiff2 = fabs(w-90.00f);
+                float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
+                if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
+                float angdiff3 = fabs(w-60.00f);
+                float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
+                if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
+                float angdiff4 = fabs(w-60.83f);
+                float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
+                if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
+                float angdiff5 = fabs(w-63.26f);
+                float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
+                if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
+                if (colony == 1)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  colonylist.push_back(neigh);
+                }
+            }
+            else if ((phase1 == Ebsd::CrystalStructure::Hexagonal && phase2 == Ebsd::CrystalStructure::Cubic))
+            {
+                colony = check_for_burgers(q2, q1);
+                if (colony == 1)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  colonylist.push_back(neigh);
+                }
+            }
+            else if ((phase1 == Ebsd::CrystalStructure::Cubic && phase2 == Ebsd::CrystalStructure::Hexagonal))
+            {
+                colony = check_for_burgers(q1, q2);
+                if (colony == 1)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  colonylist.push_back(neigh);
+                }
+            }
+          }
         }
       }
     }
@@ -371,7 +371,7 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	m_ParentIds[k] = parentnumbers[grainname];
+    m_ParentIds[k] = parentnumbers[grainname];
   }
 }
 

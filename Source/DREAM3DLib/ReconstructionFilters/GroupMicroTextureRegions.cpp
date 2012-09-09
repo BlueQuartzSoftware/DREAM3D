@@ -112,7 +112,7 @@ void GroupMicroTextureRegions::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
 
@@ -237,11 +237,11 @@ void GroupMicroTextureRegions::execute()
 
   for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
   {
-	m_NumFields[i] = 0;
+    m_NumFields[i] = 0;
   }
   for(size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
-	m_NumFields[m_FieldPhases[i]]++;
+    m_NumFields[m_FieldPhases[i]]++;
   }
 
   // If there is an error set this to something negative and also set a message
@@ -277,25 +277,25 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   {
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
-	  parentcount++;
-	  parentnumbers[i] = parentcount;
-	  m_Active[i] = true;
+      parentcount++;
+      parentnumbers[i] = parentcount;
+      m_Active[i] = true;
       microtexturelist.push_back(i);
-      for (int j = 0; j < microtexturelist.size(); j++)
+      for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
-		q1[0] = 1;
+        q1[0] = 1;
         q1[1] = m_AvgQuats[5*firstgrain+1];
         q1[2] = m_AvgQuats[5*firstgrain+2];
         q1[3] = m_AvgQuats[5*firstgrain+3];
         q1[4] = m_AvgQuats[5*firstgrain+4];
-		OrientationMath::QuattoEuler(q1, ea11, ea12, ea13);
+        OrientationMath::QuattoEuler(q1, ea11, ea12, ea13);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-	    cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
-	    cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
-	    cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
-		denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
+        cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
+        cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
+        cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
+        denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
         for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
@@ -303,25 +303,25 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
-			{
-			  q2[0] = 1;
+            if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
+            {
+              q2[0] = 1;
               q2[1] = m_AvgQuats[5*neigh+1];
               q2[2] = m_AvgQuats[5*neigh+2];
               q2[3] = m_AvgQuats[5*neigh+3];
               q2[4] = m_AvgQuats[5*neigh+4];
-			  OrientationMath::QuattoEuler(q2, ea21, ea22, ea23);
-			  cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
-			  cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
-			  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
-			  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
-			  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
-			  w = 180.0f*acosf(w)/m_pi;
+              OrientationMath::QuattoEuler(q2, ea21, ea22, ea23);
+              cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
+              cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
+              cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
+              denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
+              w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
+              w = 180.0f*acosf(w)/m_pi;
               if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
               {
                 parentnumbers[neigh] = parentcount;
                 microtexturelist.push_back(neigh);
-			  }
+              }
             }
           }
         }
@@ -333,7 +333,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	m_ParentIds[k] = parentnumbers[grainname];
+    m_ParentIds[k] = parentnumbers[grainname];
   }
 }
 

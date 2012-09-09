@@ -263,8 +263,8 @@ void PackPrimaryPhases::execute()
   totalvol = sizex*sizey*sizez;
 
   double totalprimaryvolTEMP = 0;
-  float badcount = 0;
-  size_t check = 0;
+//  float badcount = 0;
+//  size_t check = 0;
   size_t totalVox = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
   for (size_t i = 0; i < totalVox; i++)
   {
@@ -360,9 +360,9 @@ void PackPrimaryPhases::execute()
   int gid = static_cast<int>(m->getNumFieldTuples());
   if(gid == 0)
   {
-	  m->resizeFieldDataArrays(1);
-	  dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
-	  gid = 1;
+      m->resizeFieldDataArrays(1);
+      dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+      gid = 1;
   }
   firstPrimaryField = gid;
   std::vector<float> curphasevol;
@@ -371,33 +371,33 @@ void PackPrimaryPhases::execute()
   size_t iter = 0;
   for (size_t j = 0; j < primaryphases.size(); ++j)
   {
-	  curphasevol[j] = 0;
-	  float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
-	  while (curphasevol[j] < (factor * curphasetotalvol))
-	  {
-	    iter++;
-	    Seed++;
-	    phase = primaryphases[j];
-		generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
-		currentsizedisterror = check_sizedisterror(&field);
-		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
-		{
-	      std::stringstream ss;
-	      ss << "Packing Grains - Generating Grain #" << gid;
-	      notifyStatusMessage(ss.str());
+      curphasevol[j] = 0;
+      float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
+      while (curphasevol[j] < (factor * curphasetotalvol))
+      {
+        iter++;
+        Seed++;
+        phase = primaryphases[j];
+        generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
+        currentsizedisterror = check_sizedisterror(&field);
+        change = (currentsizedisterror) - (oldsizedisterror);
+        if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
+        {
+          std::stringstream ss;
+          ss << "Packing Grains - Generating Grain #" << gid;
+          notifyStatusMessage(ss.str());
 
-	      m->resizeFieldDataArrays(gid + 1);
-	      dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
-	      m_Active[gid] = true;
-	      transfer_attributes(gid, &field);
-	      oldsizedisterror = currentsizedisterror;
-	      curphasevol[j] = curphasevol[j] + m_Volumes[gid];
-	      //FIXME: Initialize the Grain with some sort of default data
-	      iter = 0;
-		  gid++;
-		}
-	  }
+          m->resizeFieldDataArrays(gid + 1);
+          dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+          m_Active[gid] = true;
+          transfer_attributes(gid, &field);
+          oldsizedisterror = currentsizedisterror;
+          curphasevol[j] = curphasevol[j] + m_Volumes[gid];
+          //FIXME: Initialize the Grain with some sort of default data
+          iter = 0;
+          gid++;
+        }
+      }
   }
 
   if(m_PeriodicBoundaries == false)
@@ -408,35 +408,35 @@ void PackPrimaryPhases::execute()
     ygrains = int(xgrains*(sizey/sizex)+1);
     zgrains = int(xgrains*(sizez/sizex)+1);
     factor = 0.25f * (1.0f - (float((xgrains-2)*(ygrains-2)*(zgrains-2))/float(xgrains*ygrains*zgrains)));
-	for (size_t j = 0; j < primaryphases.size(); ++j)
-	{
-	  float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
-	  while (curphasevol[j] < ((1+factor) * curphasetotalvol))
-	  {
-		iter++;
-		Seed++;
-		phase = primaryphases[j];
-		generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
-		currentsizedisterror = check_sizedisterror(&field);
-		change = (currentsizedisterror) - (oldsizedisterror);
-		if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
-		{
-		  std::stringstream ss;
-		  ss << "Packing Grains - Generating Grain #" << gid;
-		  notifyStatusMessage(ss.str());
+    for (size_t j = 0; j < primaryphases.size(); ++j)
+    {
+      float curphasetotalvol = totalprimaryvol*primaryphasefractions[j];
+      while (curphasevol[j] < ((1+factor) * curphasetotalvol))
+      {
+        iter++;
+        Seed++;
+        phase = primaryphases[j];
+        generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
+        currentsizedisterror = check_sizedisterror(&field);
+        change = (currentsizedisterror) - (oldsizedisterror);
+        if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
+        {
+          std::stringstream ss;
+          ss << "Packing Grains - Generating Grain #" << gid;
+          notifyStatusMessage(ss.str());
 
-		  m->resizeFieldDataArrays(gid + 1);
-		  dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
-		  m_Active[gid] = true;
-		  transfer_attributes(gid, &field);
-		  oldsizedisterror = currentsizedisterror;
-		  curphasevol[j] = curphasevol[j] + m_Volumes[gid];
-		  //FIXME: Initialize the Grain with some sort of default data
-		  iter = 0;
-		  gid++;
-		}
-	  }
-	}
+          m->resizeFieldDataArrays(gid + 1);
+          dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+          m_Active[gid] = true;
+          transfer_attributes(gid, &field);
+          oldsizedisterror = currentsizedisterror;
+          curphasevol[j] = curphasevol[j] + m_Volumes[gid];
+          //FIXME: Initialize the Grain with some sort of default data
+          iter = 0;
+          gid++;
+        }
+      }
+    }
   }
 
   notifyStatusMessage("Packing Grains - Grain Generation Complete");
@@ -448,42 +448,42 @@ void PackPrimaryPhases::execute()
   for (size_t i = 0; i < primaryphases.size(); i++)
   {
     phase = primaryphases[i];
-	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-	neighbordist[i].resize(pp->getBinNumbers()->GetSize());
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    neighbordist[i].resize(pp->getBinNumbers()->GetSize());
     simneighbordist[i].resize(pp->getBinNumbers()->GetSize());
-	VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
-	float normalizer = 0;
+    VectorOfFloatArray Neighdist = pp->getGrainSize_Neighbors();
+    float normalizer = 0;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-		neighbordist[i][j].resize(40);
-		float input = 0;
-		float previoustotal = 0;
-		float avg = Neighdist[0]->GetValue(j);
-		float stdev = Neighdist[1]->GetValue(j);
-		neighbordiststep[i] = 2;
-		float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
-		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
-		{
-		  input = (float(k + 1) * neighbordiststep[i]);
-		  float logInput = logf(input);
-		  if(logInput <= avg)
-		  {
-			neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst )) - previoustotal;
-		  }
-		  if(logInput > avg)
-		  {
-			neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
-		  }
-		  previoustotal = previoustotal + neighbordist[i][j][k];
-		}
-		normalizer = normalizer + previoustotal;
+        neighbordist[i][j].resize(40);
+        float input = 0;
+        float previoustotal = 0;
+        float avg = Neighdist[0]->GetValue(j);
+        float stdev = Neighdist[1]->GetValue(j);
+        neighbordiststep[i] = 2;
+        float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+        for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+        {
+          input = (float(k + 1) * neighbordiststep[i]);
+          float logInput = logf(input);
+          if(logInput <= avg)
+          {
+            neighbordist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst )) - previoustotal;
+          }
+          if(logInput > avg)
+          {
+            neighbordist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
+          }
+          previoustotal = previoustotal + neighbordist[i][j][k];
+        }
+        normalizer = normalizer + previoustotal;
     }
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
-		for (size_t k = 0; k < neighbordist[i][j].size(); k++)
-		{
-			neighbordist[i][j][k] = neighbordist[i][j][k]/normalizer;
-		}
+        for (size_t k = 0; k < neighbordist[i][j].size(); k++)
+        {
+            neighbordist[i][j][k] = neighbordist[i][j][k]/normalizer;
+        }
     }
   }
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
@@ -536,7 +536,7 @@ void PackPrimaryPhases::execute()
   // determine neighborhoods and initial neighbor distribution errors
   for (size_t i = firstPrimaryField; i < numgrains; i++)
   {
-	determine_neighbors(i, 1);
+    determine_neighbors(i, 1);
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
@@ -779,23 +779,23 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   VectorOfFloatArray covera = pp->getGrainSize_COverA();
   while (r2 < r3)
   {
-	  r2 = 0, r3 = 0;
-	  a2 = bovera[0]->GetValue(diameter);
-	  b2 = bovera[1]->GetValue(diameter);
-	  if(a2 == 0)
-	  {
-		  a2 = bovera[0]->GetValue(diameter-1);
-		  b2 = bovera[1]->GetValue(diameter-1);
-	  }
-	  r2 = static_cast<float>(rg.genrand_beta(a2, b2));
-	  a3 = covera[0]->GetValue(diameter);
-	  b3 = covera[1]->GetValue(diameter);
-	  if(a3 == 0)
-	  {
-		  a3 = covera[0]->GetValue(diameter-1);
-		  b3 = covera[1]->GetValue(diameter-1);
-	  }
-	  r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
+      r2 = 0, r3 = 0;
+      a2 = bovera[0]->GetValue(diameter);
+      b2 = bovera[1]->GetValue(diameter);
+      if(a2 == 0)
+      {
+          a2 = bovera[0]->GetValue(diameter-1);
+          b2 = bovera[1]->GetValue(diameter-1);
+      }
+      r2 = static_cast<float>(rg.genrand_beta(a2, b2));
+      a3 = covera[0]->GetValue(diameter);
+      b3 = covera[1]->GetValue(diameter);
+      if(a3 == 0)
+      {
+          a3 = covera[0]->GetValue(diameter-1);
+          b3 = covera[1]->GetValue(diameter-1);
+      }
+      r3 = static_cast<float>( rg.genrand_beta(a3, b3) );
   }
   float random = static_cast<float>( rg.genrand_res53() );
   float totaldensity = 0;
@@ -929,15 +929,15 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
     phase = primaryphases[iter];
-	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count.resize(simneighbordist[iter].size(), 0);
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
-	  simneighbordist[iter][i].resize(40);
-	  for (size_t j = 0; j < 40; j++)
-	  {
-	      simneighbordist[iter][i][j] = 0;
-	  }
+      simneighbordist[iter][i].resize(40);
+      for (size_t j = 0; j < 40; j++)
+      {
+          simneighbordist[iter][i][j] = 0;
+      }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
@@ -956,13 +956,13 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
         dia = m_EquivalentDiameters[index];
         if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
         if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-		diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
+        diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
         nnum = m_Neighborhoods[index];
-		nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
-		if(nnumbin >= 40) nnumbin = 39;
+        nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
+        if(nnumbin >= 40) nnumbin = 39;
         simneighbordist[iter][diabin][nnumbin]++;
         count[diabin]++;
-		counter++;
+        counter++;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
@@ -970,22 +970,22 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       dia = m_EquivalentDiameters[gadd];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
-	  diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
+      diabin = static_cast<size_t>(((dia - pp->getMinGrainDiameter()) / pp->getBinStepSize()) );
       nnum = m_Neighborhoods[gadd];
-	  nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
-	  if(nnumbin >= 40) nnumbin = 39;
+      nnumbin = static_cast<size_t>( nnum/neighbordiststep[iter] );
+      if(nnumbin >= 40) nnumbin = 39;
       simneighbordist[iter][diabin][nnumbin]++;
       count[diabin]++;
-	  counter++;
+      counter++;
     }
-	float runningtotal = 0;
+    float runningtotal = 0;
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
     {
       for (size_t j = 0; j < 40; j++)
       {
         simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / double(count[i]) );
         if(count[i] == 0) simneighbordist[iter][i][j] = 0.0;
-		runningtotal = runningtotal + simneighbordist[iter][i][j];
+        runningtotal = runningtotal + simneighbordist[iter][i][j];
       }
     }
     for (size_t i = 0; i < simneighbordist[iter].size(); i++)
@@ -994,8 +994,8 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
       {
         simneighbordist[iter][i][j] = static_cast<float>( simneighbordist[iter][i][j] / runningtotal );
       }
-    }    
-	if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    }
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
       determine_neighbors(gadd, -1);
     }
@@ -1059,7 +1059,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
   for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
     phase = primaryphases[iter];
-	PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count = 0;
     for (size_t i = 0; i < grainsizedist[iter].size(); i++)
     {
@@ -1161,7 +1161,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
         if(plane < 0) plane = plane + packingzpoints;
         if(plane > packingzpoints - 1) plane = plane - packingzpoints;
         int& currentGrainOwner = grainowners[col][row][plane];
-		fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
+        fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
         currentGrainOwner = currentGrainOwner - 1;
       }
       else
@@ -1258,22 +1258,22 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
         y = float(row) * packingresy;
         z = float(plane) * packingresz;
         inside = -1;
-		x = x - xc;
-		y = y - yc;
-		z = z - zc;
-		xp = (x*ga[0][0])+(y*ga[0][1])+(z*ga[0][2]);
-		yp = (x*ga[1][0])+(y*ga[1][1])+(z*ga[1][2]);
-		zp = (x*ga[2][0])+(y*ga[2][1])+(z*ga[2][2]);
-		float axis1comp = xp / radcur1;
-		float axis2comp = yp / radcur2;
-		float axis3comp = zp / radcur3;
-		inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-		if(inside >= 0)
-		{
-			columnlist[gnum].push_back(column);
-			rowlist[gnum].push_back(row);
-			planelist[gnum].push_back(plane);
-		}
+        x = x - xc;
+        y = y - yc;
+        z = z - zc;
+        xp = (x*ga[0][0])+(y*ga[0][1])+(z*ga[0][2]);
+        yp = (x*ga[1][0])+(y*ga[1][1])+(z*ga[1][2]);
+        zp = (x*ga[2][0])+(y*ga[2][1])+(z*ga[2][2]);
+        float axis1comp = xp / radcur1;
+        float axis2comp = yp / radcur2;
+        float axis3comp = zp / radcur3;
+        inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+        if(inside >= 0)
+        {
+            columnlist[gnum].push_back(column);
+            rowlist[gnum].push_back(row);
+            planelist[gnum].push_back(plane);
+        }
       }
     }
   }
@@ -1326,9 +1326,9 @@ void PackPrimaryPhases::assign_voxels()
     float bovera = m_AxisLengths[3*i+1];
     float covera = m_AxisLengths[3*i+2];
     float omega3 = m_Omega3s[i];
-	xc = m_Centroids[3*i];
-	yc = m_Centroids[3*i+1];
-	zc = m_Centroids[3*i+2];
+    xc = m_Centroids[3*i];
+    yc = m_Centroids[3*i+1];
+    zc = m_Centroids[3*i+2];
     float radcur1 = 0.0f;
     //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
     unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
@@ -1349,9 +1349,9 @@ void PackPrimaryPhases::assign_voxels()
 
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
-	float phi1 = m_AxisEulerAngles[3*i];
-	float PHI = m_AxisEulerAngles[3*i+1];
-	float phi2 = m_AxisEulerAngles[3*i+2];
+    float phi1 = m_AxisEulerAngles[3*i];
+    float PHI = m_AxisEulerAngles[3*i+1];
+    float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
     ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
     ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
@@ -1497,135 +1497,135 @@ void PackPrimaryPhases::assign_gaps()
 
   while (unassignedcount != 0)
   {
- 	  unassignedcount = 0;
-	  timestep = timestep + 50;
-	  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
-	  {
-		float volcur = m_Volumes[i];
-		float bovera = m_AxisLengths[3*i+1];
-		float covera = m_AxisLengths[3*i+2];
-		float omega3 = m_Omega3s[i];
-		xc = m_Centroids[3*i];
-		yc = m_Centroids[3*i+1];
-		zc = m_Centroids[3*i+2];
-		float radcur1 = 0.0f;
-		//Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-		unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
+      unassignedcount = 0;
+      timestep = timestep + 50;
+      for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
+      {
+        float volcur = m_Volumes[i];
+        float bovera = m_AxisLengths[3*i+1];
+        float covera = m_AxisLengths[3*i+2];
+        float omega3 = m_Omega3s[i];
+        xc = m_Centroids[3*i];
+        yc = m_Centroids[3*i+1];
+        zc = m_Centroids[3*i+2];
+        float radcur1 = 0.0f;
+        //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
+        unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
-		// init any values for each of the Shape Ops
-		for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
-		{
-		  (*ops).second->init();
-		}
-		// Create our Argument Map
-		std::map<ShapeOps::ArgName, float> shapeArgMap;
-		shapeArgMap[ShapeOps::Omega3] = omega3;
-		shapeArgMap[ShapeOps::VolCur] = volcur;
-		shapeArgMap[ShapeOps::B_OverA] = bovera;
-		shapeArgMap[ShapeOps::C_OverA] = covera;
+        // init any values for each of the Shape Ops
+        for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+        {
+          (*ops).second->init();
+        }
+        // Create our Argument Map
+        std::map<ShapeOps::ArgName, float> shapeArgMap;
+        shapeArgMap[ShapeOps::Omega3] = omega3;
+        shapeArgMap[ShapeOps::VolCur] = volcur;
+        shapeArgMap[ShapeOps::B_OverA] = bovera;
+        shapeArgMap[ShapeOps::C_OverA] = covera;
 
-		radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
+        radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
-		float radcur2 = (radcur1 * bovera);
-		float radcur3 = (radcur1 * covera);
-		radcur1 = static_cast<float>( (float(timestep)/100.0)*radcur1 );
-		radcur2 = static_cast<float>( (float(timestep)/100.0)*radcur2 );
-		radcur3 = static_cast<float>( (float(timestep)/100.0)*radcur3 );
-		float phi1 = m_AxisEulerAngles[3*i];
-		float PHI = m_AxisEulerAngles[3*i+1];
-		float phi2 = m_AxisEulerAngles[3*i+2];
-		float ga[3][3];
-		ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-		ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-		ga[0][2] = sinf(phi2) * sinf(PHI);
-		ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-		ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-		ga[1][2] = cosf(phi2) * sinf(PHI);
-		ga[2][0] = sinf(phi1) * sinf(PHI);
-		ga[2][1] = -cosf(phi1) * sinf(PHI);
-		ga[2][2] = cosf(PHI);
-		column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
-		row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
-		plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
-		xmin = int(column - ((radcur1 / xRes) + 1));
-		xmax = int(column + ((radcur1 / xRes) + 1));
-		ymin = int(row - ((radcur1 / yRes) + 1));
-		ymax = int(row + ((radcur1 / yRes) + 1));
-		zmin = int(plane - ((radcur1 / zRes) + 1));
-		zmax = int(plane + ((radcur1 / zRes) + 1));
-		if (m_PeriodicBoundaries == true)
-		{
-		  if (xmin < -dims[0]) xmin = -dims[0];
-		  if (xmax > 2 * dims[0] - 1) xmax = (2 *dims[0] - 1);
-		  if (ymin < -dims[1]) ymin = -dims[1];
-		  if (ymax > 2 * dims[1] - 1) ymax = (2 * dims[1] - 1);
-		  if (zmin < -dims[2]) zmin = -dims[2];
-		  if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
-		}
-		if (m_PeriodicBoundaries == false)
-		{
-		  if (xmin < 0) xmin = 0;
-		  if (xmax > dims[0] - 1) xmax = dims[0] - 1;
-		  if (ymin < 0) ymin = 0;
-		  if (ymax > dims[1] - 1) ymax = dims[1] - 1;
-		  if (zmin < 0) zmin = 0;
-		  if (zmax > dims[2] - 1) zmax = dims[2] - 1;
-		}
-		for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
-		{
-		  for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
-		  {
-			for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
-			{
-			  column = iter1;
-			  row = iter2;
-			  plane = iter3;
-			  if (iter1 < 0) column = iter1 + dims[0];
-			  if (iter1 > dims[0] - 1) column = iter1 - dims[0];
-			  if (iter2 < 0) row = iter2 + dims[1];
-			  if (iter2 > dims[1] - 1) row = iter2 - dims[1];
-			  if (iter3 < 0) plane = iter3 + dims[2];
-			  if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-			  index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
-			  if(m_GrainIds[index] <= 0)
-			  {
-				  inside = -1;
-				  x = float(column) * xRes;
-				  y = float(row) * yRes;
-				  z = float(plane) * zRes;
-				  if (iter1 < 0) x = x - sizex;
-				  if (iter1 > dims[0] - 1) x = x + sizex;
-				  if (iter2 < 0) y = y - sizey;
-				  if (iter2 > dims[1] - 1) y = y + sizey;
-				  if (iter3 < 0) z = z - sizez;
-				  if (iter3 > dims[2] - 1) z = z + sizez;
-				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
-				  dist = sqrtf(dist);
-				  if (dist < radcur1)
-				  {
-					x = x - xc;
-					y = y - yc;
-					z = z - zc;
-					xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
-				    yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
-			        zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
-					float axis1comp = xp / radcur1;
-					float axis2comp = yp / radcur2;
-					float axis3comp = zp / radcur3;
-					inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-					if (inside >= 0 && inside > ellipfuncs[index])
-					{
-						newowners[index] = i;
-						ellipfuncs[index] = inside;
-					}
-				  }
-			  }
-			}
-		  }
-		}
-	  }
-	  for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
-	  {
+        float radcur2 = (radcur1 * bovera);
+        float radcur3 = (radcur1 * covera);
+        radcur1 = static_cast<float>( (float(timestep)/100.0)*radcur1 );
+        radcur2 = static_cast<float>( (float(timestep)/100.0)*radcur2 );
+        radcur3 = static_cast<float>( (float(timestep)/100.0)*radcur3 );
+        float phi1 = m_AxisEulerAngles[3*i];
+        float PHI = m_AxisEulerAngles[3*i+1];
+        float phi2 = m_AxisEulerAngles[3*i+2];
+        float ga[3][3];
+        ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
+        ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
+        ga[0][2] = sinf(phi2) * sinf(PHI);
+        ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
+        ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
+        ga[1][2] = cosf(phi2) * sinf(PHI);
+        ga[2][0] = sinf(phi1) * sinf(PHI);
+        ga[2][1] = -cosf(phi1) * sinf(PHI);
+        ga[2][2] = cosf(PHI);
+        column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
+        row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
+        plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
+        xmin = int(column - ((radcur1 / xRes) + 1));
+        xmax = int(column + ((radcur1 / xRes) + 1));
+        ymin = int(row - ((radcur1 / yRes) + 1));
+        ymax = int(row + ((radcur1 / yRes) + 1));
+        zmin = int(plane - ((radcur1 / zRes) + 1));
+        zmax = int(plane + ((radcur1 / zRes) + 1));
+        if (m_PeriodicBoundaries == true)
+        {
+          if (xmin < -dims[0]) xmin = -dims[0];
+          if (xmax > 2 * dims[0] - 1) xmax = (2 *dims[0] - 1);
+          if (ymin < -dims[1]) ymin = -dims[1];
+          if (ymax > 2 * dims[1] - 1) ymax = (2 * dims[1] - 1);
+          if (zmin < -dims[2]) zmin = -dims[2];
+          if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
+        }
+        if (m_PeriodicBoundaries == false)
+        {
+          if (xmin < 0) xmin = 0;
+          if (xmax > dims[0] - 1) xmax = dims[0] - 1;
+          if (ymin < 0) ymin = 0;
+          if (ymax > dims[1] - 1) ymax = dims[1] - 1;
+          if (zmin < 0) zmin = 0;
+          if (zmax > dims[2] - 1) zmax = dims[2] - 1;
+        }
+        for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
+        {
+          for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
+          {
+            for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
+            {
+              column = iter1;
+              row = iter2;
+              plane = iter3;
+              if (iter1 < 0) column = iter1 + dims[0];
+              if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+              if (iter2 < 0) row = iter2 + dims[1];
+              if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+              if (iter3 < 0) plane = iter3 + dims[2];
+              if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+              index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
+              if(m_GrainIds[index] <= 0)
+              {
+                  inside = -1;
+                  x = float(column) * xRes;
+                  y = float(row) * yRes;
+                  z = float(plane) * zRes;
+                  if (iter1 < 0) x = x - sizex;
+                  if (iter1 > dims[0] - 1) x = x + sizex;
+                  if (iter2 < 0) y = y - sizey;
+                  if (iter2 > dims[1] - 1) y = y + sizey;
+                  if (iter3 < 0) z = z - sizez;
+                  if (iter3 > dims[2] - 1) z = z + sizez;
+                  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+                  dist = sqrtf(dist);
+                  if (dist < radcur1)
+                  {
+                    x = x - xc;
+                    y = y - yc;
+                    z = z - zc;
+                    xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
+                    yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
+                    zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
+                    float axis1comp = xp / radcur1;
+                    float axis2comp = yp / radcur2;
+                    float axis3comp = zp / radcur3;
+                    inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+                    if (inside >= 0 && inside > ellipfuncs[index])
+                    {
+                        newowners[index] = i;
+                        ellipfuncs[index] = inside;
+                    }
+                  }
+              }
+            }
+          }
+        }
+      }
+      for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
+      {
       if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
       if(m_GrainIds[i] <= 0) unassignedcount++;
       newowners[i] = -1;
@@ -1634,7 +1634,7 @@ void PackPrimaryPhases::assign_gaps()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(m_GrainIds[i] > 0) m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]];
+      if(m_GrainIds[i] > 0) m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]];
   }
 }
 
@@ -1690,7 +1690,7 @@ void PackPrimaryPhases::cleanup_grains()
   for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
     gsizes[i] = 0;
-	m_Active[i] = true;
+    m_Active[i] = true;
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
@@ -1699,8 +1699,8 @@ void PackPrimaryPhases::cleanup_grains()
     touchessurface = 0;
     if(checked[i] == false && m_GrainIds[i] > firstPrimaryField)
     {
-	  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-	  minsize = static_cast<float>( pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f );
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
+      minsize = static_cast<float>( pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * pp->getMinGrainDiameter() * M_PI / 6.0f );
       minsize = static_cast<float>( int(minsize / (resConst)) );
       currentvlist.push_back(i);
       count = 0;
@@ -1787,7 +1787,7 @@ void PackPrimaryPhases::cleanup_grains()
   assign_gaps();
   for (int i = 0; i < totpoints; i++)
   {
-	if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
+    if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
   for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
@@ -1795,6 +1795,6 @@ void PackPrimaryPhases::cleanup_grains()
   }
   for (int i = 0; i < totpoints; i++)
   {
-	  if(m_GrainIds[i] > 0) { m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]]; }
+      if(m_GrainIds[i] > 0) { m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]]; }
   }
 }
