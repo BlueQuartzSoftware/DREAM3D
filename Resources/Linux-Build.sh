@@ -18,21 +18,21 @@
 
 # If you want to force another directory then change where "SDK_INSTALL" points to.
 
-SDK_SOURCE=/tmp/Workspace
-SDK_INSTALL=/tmp/DREAM3D_SDK
+SDK_SOURCE=/home/mjackson/Workspace
+SDK_INSTALL=/home/mjackson/DREAM3D_SDK
 
 # If you are on a Multicore system and want to build faster set the variable to the number
 # of cores/CPUs available to you.
-PARALLEL_BUILD=4
+PARALLEL_BUILD=2
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 # Adjust these to "0" if you want to skip those compilations. The default is to build
 # everything.
 BUILD_CMAKE="0"
-BUILD_MXABOOST="1"
+BUILD_MXABOOST="0"
+BUILD_HDF5="0"
 BUILD_QWT="1"
-BUILD_HDF5="1"
 
 make_command=gmake
 if [[ "$HOST_SYSTEM" = "Darwin" ]];
@@ -47,12 +47,6 @@ if [[ $GIT == "" ]];
   exit 1
 fi
 
-QMAKE=`type -P qmake`
-if [[ $QMAKE == "" ]];
-  then
-  echo "An installation of Qt is required. Please install a version of Qt of at least 4.6 or greater."
-  exit 1
-fi
 
 WGET=`type -P wget`
 CURL=`type -P curl`
@@ -82,7 +76,7 @@ fi
 if [[ "$CURL" != "" ]];
 then
   DOWNLOAD_PROG=$CURL
-  DOWNLOAD_ARGS="-o cmake-2.8.6.tar.gz"
+  DOWNLOAD_ARGS="-o cmake-2.8.7.tar.gz"
 fi
 
 if [[ "$BUILD_CMAKE" == "1" ]];
@@ -156,6 +150,16 @@ make -j$makeJobs
 make install
 export HDF5_INSTALL=$SDK_INSTALL/hdf5-188
 fi
+
+
+QMAKE=`type -P qmake`
+if [[ $QMAKE == "" ]];
+  then
+  echo "An installation of Qt is required. Please install a version of Qt of at least 4.6 or greater."
+  exit 1
+fi
+
+
 
 if [ "$BUILD_QWT" = "1" ];
 then

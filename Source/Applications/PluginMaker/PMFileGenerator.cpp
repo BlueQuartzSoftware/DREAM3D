@@ -185,3 +185,4 @@ QString PMFileGenerator::generateFileContents() {
   }
   return text;
 }
+

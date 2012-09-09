@@ -68,7 +68,7 @@ typedef struct
 {
     int16_t xIndex;
     int16_t yIndex;
-    float   unknown1;
+    float   bc;
     uint16_t unknown2;
     float   euler1;
     float   euler2;
@@ -243,7 +243,11 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
     }
     fprintf(f, "X\tY\tEuler1f\tEuler2\tEuler3\tMAD\tBands\n");
     uint8_t* header = NULL;
-    float maxMad = 0;
+    float maxBC = 0.0f;
+    float minBC = 1.0f;
+    float* bc = NULL;
+
+
     for (int i = 0; i < mapDesc->totalPoints; ++i)
     {
         //hdrPtr = reinterpret_cast<IndexResult_t*>(ptr + (i*Bcf::IndexResultByteSize));
@@ -258,21 +262,24 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
 
         x_index = reinterpret_cast<uint16_t*>(header);
         y_index = reinterpret_cast<uint16_t*>(header + 2);
+        bc = reinterpret_cast<float*>(header + 4);
         e1 = reinterpret_cast<float*>(header + 10);
         e2 = reinterpret_cast<float*>(header + 14);
         e3 = reinterpret_cast<float*>(header + 18);
         bands = reinterpret_cast<uint16_t*>(header + 24);
         mad = reinterpret_cast<float*>(header + 26);
 
-       // if (*mad > maxMad) { maxMad = *mad; }
+        if (*bc > maxBC) { maxBC = *bc; }
+        if (*bc < minBC) { minBC = *bc; }
 
         *e1 = *e1*radToDeg;
         *e2 = *e2*radToDeg;
         *e3 = *e3*radToDeg;
         fprintf(f, "%d\t%d\t%0.8f\t%0.8f\t%0.8f\t%0.8f\t%d\n", *x_index , *y_index, *e1, *e2, *e3, *mad, *bands);
     }
-
     fclose(f);
+
+    std::cout << "Max BC: " << maxBC << "   MinBC: " << minBC << std::endl;
 
     return err;
 }
