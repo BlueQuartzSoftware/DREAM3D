@@ -116,19 +116,17 @@ void writeArrayNameHeaderCode(FILE* f, std::set<std::string> &list, const std::s
     const char* cType = "QString";
     for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
     {
-        // fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-        const char* array = (*iter).c_str();
-        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+        std::string arrayname = std::string((*iter) + "ArrayName");
 
-        fprintf(f, "  // Get/Set the Array name for %s\n", array);
+        fprintf(f, "  // Get/Set the Array name for %s\n", (*iter).c_str());
         fprintf(f, "  private:\n");
-        fprintf(f, "    QString m_%s;\n", arrayname);
+        fprintf(f, "    QString m_%sArrayName;\n", (*iter).c_str());
         fprintf(f, "  public:\n");
-        fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType, arrayname, arrayname, arrayname);
-        fprintf(f, "    %s  get%s();\n", cType, arrayname);
+        fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType, arrayname.c_str(), arrayname.c_str(), arrayname.c_str());
+        fprintf(f, "    %s  get%s();\n", cType, arrayname.c_str());
         fprintf(f, "  public slots:\n");
-        fprintf(f, "    void set%s(const %s &v);\n", arrayname, cType);
-        fprintf(f, "  // Get/Set the Array name for %s Complete ------------\n\n", array);
+        fprintf(f, "    void set%s(const %s &v);\n", arrayname.c_str(), cType);
+        fprintf(f, "  // Get/Set the Array name for %s Complete ------------\n\n", (*iter).c_str());
     }
 }
 
@@ -143,14 +141,12 @@ void writeArrayNameSourceCode(FILE* f, std::set<std::string> &list, const std::s
     const char* cType = "QString";
     for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
     {
-        // fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-        const char* array = (*iter).c_str();
-        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
+        std::string arrayname = std::string((*iter) + "ArrayName");
 
         fprintf(f, "// -----------------------------------------------------------------------------\n");
-        fprintf(f, "// Get/Set the Array name for %s '%s'\n", title.c_str(), array);
-        fprintf(f, "void Q%sWidget::set%s(const %s &v)\n{\n  m_%s = v;\n}\n", filter.c_str(),arrayname, cType, arrayname);
-        fprintf(f, "%s  Q%sWidget::get%s()\n{\n  return m_%s; \n}\n\n", cType, filter.c_str(), arrayname, arrayname);
+        fprintf(f, "// Get/Set the Array name for %s '%s'\n", title.c_str(), (*iter).c_str());
+        fprintf(f, "void Q%sWidget::set%s(const %s &v)\n{\n  m_%s = v;\n}\n", filter.c_str(), arrayname.c_str(), cType, arrayname.c_str());
+        fprintf(f, "%s  Q%sWidget::get%s()\n{\n  return m_%s; \n}\n\n", cType, filter.c_str(), arrayname.c_str(), arrayname.c_str());
     }
 }
 
@@ -162,8 +158,8 @@ void writeArrayNameConstructorCode(FILE* f, std::set<std::string> &list, const s
     if(list.size() == 0) { return; }
     for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
     {
-        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
-        fprintf(f, "     set%s( QString::fromStdString(filter->get%s() ) );\n", arrayname, arrayname);
+        std::string arrayname = std::string((*iter) + "ArrayName");
+        fprintf(f, "     set%s( QString::fromStdString(filter->get%s() ) );\n", arrayname.c_str(), arrayname.c_str());
     }
 }
 
@@ -175,8 +171,8 @@ void writeArrayNameGetFilterCode(FILE* f, std::set<std::string> &list, const std
     if(list.size() == 0) { return; }
     for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
     {
-        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
-        fprintf(f, "  filter->set%s( get%s().toStdString() );\n", arrayname, arrayname);
+        std::string arrayname = std::string((*iter) + "ArrayName");
+        fprintf(f, "  filter->set%s( get%s().toStdString() );\n", arrayname.c_str(), arrayname.c_str());
     }
 }
 
@@ -188,8 +184,8 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
     if(list.size() == 0) { return; }
     for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
     {
-        const char* arrayname = std::string((*iter) + "ArrayName").c_str();
-        fprintf(f, "  w->set%s( get%s() );\n", arrayname, arrayname );
+        std::string arrayname = std::string((*iter) + "ArrayName");
+        fprintf(f, "  w->set%s( get%s() );\n", arrayname.c_str(), arrayname.c_str() );
     }
 }
 
