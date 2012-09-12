@@ -331,6 +331,7 @@ void ReadH5Ebsd::execute()
     dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
     m->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();
+    m_RefFrameZDir = volumeInfoReader->getStackingOrder();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
