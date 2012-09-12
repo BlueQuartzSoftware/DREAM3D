@@ -102,7 +102,7 @@ D3DCompileFilters(ProcessingFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(SamplingFilters   ${AllFiltersHeaderFile})
 D3DCompileFilters(StatisticsFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(SyntheticBuilderFilters ${AllFiltersHeaderFile})
-
+D3DCompileFilters(CustomFilters ${AllFiltersHeaderFile})
 
 file(APPEND ${AllFiltersHeaderFile} "\n#endif\n")
 
