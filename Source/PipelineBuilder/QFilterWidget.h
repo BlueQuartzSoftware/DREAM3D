@@ -112,6 +112,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QFilterWidget* createDeepCopy();
 
+    virtual QString  getFilterGroup();
+
 #if 0
     virtual void setCellDataArrayNames(std::vector<std::string> arrayNames);
     virtual void setFieldDataArrayNames(std::vector<std::string> arrayNames);

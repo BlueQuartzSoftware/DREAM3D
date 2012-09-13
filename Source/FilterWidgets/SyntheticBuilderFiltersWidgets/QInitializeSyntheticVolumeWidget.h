@@ -75,6 +75,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
 
     void setShapeTypes(DataArray<unsigned int>::Pointer array);
 
+    virtual QString getFilterGroup();
 
   protected slots:
     // Auto Hookup Slots

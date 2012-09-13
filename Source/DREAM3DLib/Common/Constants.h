@@ -91,12 +91,13 @@ namespace DREAM3D
   {
     const std::string GenericFilters("Generic");
     const std::string IOFilters("IO");
+    const std::string ProcessingFilters("Processing");
     const std::string ReconstructionFilters("Reconstruction");
     const std::string SamplingFilters("Sampling");
-    const std::string ProcessingFilters("Processing");
     const std::string StatisticsFilters("Statistics");
-    const std::string SyntheticBuilderFilters("Synthetic_Builder");
     const std::string SurfaceMeshingFilters("Surface_Meshing");
+    const std::string SyntheticBuilderFilters("Synthetic_Builder");
+
   }
 
   namespace CellData
