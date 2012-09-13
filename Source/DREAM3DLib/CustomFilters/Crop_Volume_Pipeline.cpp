@@ -308,14 +308,8 @@ void Crop_Volume_Pipeline::execute()
 for (DimType i = 1; i < 2; i++)
 {
       // Create our Pipeline object
-     typedef std::vector<AbstractFilter::Pointer> FilterContainerType ;
-     FilterContainerType pipeline;
-     // typedef DataArray<unsigned int> XTalStructArrayType;
-      //XTalStructArrayType::Pointer xtal = XTalStructArrayType::CreateArray(2, DREAM3D::EnsembleData::CrystalStructures);
-      //xtal->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      //xtal->SetValue(1, Ebsd::CrystalStructure::Cubic);
-
-
+    FilterPipeline::Pointer pipeline = FilterPipeline::New();
+     
 
      // updateProgressAndMessage(("Loading Slices"), 10);
       ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
@@ -328,25 +322,22 @@ for (DimType i = 1; i < 2; i++)
       read_h5ebsd->setQualityMetricFilters(getQualityMetricFilters());
       read_h5ebsd->setDataContainer(m);
       read_h5ebsd->execute();
-      pipeline.push_back(read_h5ebsd);
+      pipeline->pushBack(read_h5ebsd);
       
- 
 
 
       ConvertEulerAngles::Pointer convert_euler = ConvertEulerAngles::New();
       convert_euler->setConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians);
       convert_euler->setDataContainer(m);
-      convert_euler->setPreviousFilter(read_h5ebsd);
       convert_euler->execute(); 
-      pipeline.push_back(convert_euler); 
+      pipeline->pushBack(convert_euler); 
       
 
       AlignSectionsMisorientation::Pointer align_sections = AlignSectionsMisorientation::New();
       align_sections->setMisorientationTolerance(m_AlignMisorientationTolerance); 
       align_sections->setDataContainer(m);
-      align_sections->setPreviousFilter(convert_euler);
       align_sections->execute();     
-      pipeline.push_back(align_sections);
+      pipeline->pushBack(align_sections);
 
       CropVolume::Pointer crop_volume = CropVolume::New(); 
       crop_volume->setXMin(m_Xmin[i]);
@@ -357,9 +348,8 @@ for (DimType i = 1; i < 2; i++)
       crop_volume->setZMax(m_Zmax[i]); 
       crop_volume->setRenumberGrains(false); 
       crop_volume->setDataContainer(m);
-      crop_volume->setPreviousFilter(align_sections);
       crop_volume->execute();
-      pipeline.push_back(crop_volume);
+      pipeline->pushBack(crop_volume);
 
 
       bool m_WriteVtkFile(true);
@@ -384,73 +374,64 @@ for (DimType i = 1; i < 2; i++)
         vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
         vtkWriter->setWriteBinaryFile(m_WriteGrainSizes);
         vtkWriter->setDataContainer(m); 
-        vtkWriter->setPreviousFilter(crop_volume);
         vtkWriter->execute(); 
-        pipeline.push_back(vtkWriter);
+        pipeline->pushBack(vtkWriter);
       }
 
       RegularizeZSpacing::Pointer regularize_z = RegularizeZSpacing::New(); 
       regularize_z->setInputFile(getZ_spacingfile()); 
       regularize_z->setZRes(m_Zres); 
       regularize_z->setDataContainer(m);
-      regularize_z->setPreviousFilter(vtkWriter);
       regularize_z->execute();
-      pipeline.push_back(regularize_z);
+      pipeline->pushBack(regularize_z);
 
       EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
       ebsdsegment_grains->setMisorientationTolerance(m_MisorientationTolerance);
       ebsdsegment_grains->setDataContainer(m);
-      ebsdsegment_grains->setPreviousFilter(regularize_z);
       ebsdsegment_grains->execute();
-      pipeline.push_back(ebsdsegment_grains);
+      pipeline->pushBack(ebsdsegment_grains);
 
       OpenCloseBadData::Pointer erode_dilate = OpenCloseBadData::New(); 
       erode_dilate->setDirection(0); // 0 is erode? 
       erode_dilate->setNumIterations(m_NumIterations_Erode); 
       erode_dilate->setDataContainer(m);
-      erode_dilate->setPreviousFilter(ebsdsegment_grains);
       erode_dilate->execute();
-      pipeline.push_back(erode_dilate);
+      pipeline->pushBack(erode_dilate);
 
 
       MinSize::Pointer min_size = MinSize::New();
       min_size->setMinAllowedGrainSize(m_MinAllowedGrainSize);
       min_size->setPhaseNumber(m_PhaseNumberMinSize);
       min_size->setDataContainer(m);
-      min_size->setPreviousFilter(erode_dilate);
       min_size->execute();
-      pipeline.push_back(min_size);
+      pipeline->pushBack(min_size);
 
       MinNeighbors::Pointer min_neighbors = MinNeighbors::New();
       min_neighbors->setMinNumNeighbors(m_MinNumNeighbors);
       min_neighbors->setDataContainer(m);
-      min_neighbors->setPreviousFilter(min_size);
       min_neighbors->execute();
-      pipeline.push_back(min_neighbors);
+      pipeline->pushBack(min_neighbors);
 
       FindSizes::Pointer find_sizes = FindSizes::New(); 
       find_sizes->setDistributionType(DREAM3D::DistributionType::Beta);
       find_sizes->setDataContainer(m);
-      find_sizes->setPreviousFilter(min_neighbors);
       find_sizes->execute();
-      pipeline.push_back(find_sizes);
+      pipeline->pushBack(find_sizes);
 
 
       FindShapes::Pointer find_shapes = FindShapes::New(); 
       find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
       find_shapes->setDataContainer(m);
-      find_shapes->setPreviousFilter(find_sizes);
-      find_shapes->execute();
-      pipeline.push_back(find_shapes);
+      //find_shapes->execute();
+      pipeline->pushBack(find_shapes);
 
 
 
       FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New(); 
       field_data_write_csv->setFieldDataFile(getFieldDataFile()); 
       field_data_write_csv->setDataContainer(m); 
-      field_data_write_csv->setPreviousFilter(find_shapes);
       field_data_write_csv->execute(); 
-      pipeline.push_back(field_data_write_csv);
+      pipeline->pushBack(field_data_write_csv);
 
 
 
@@ -476,56 +457,23 @@ for (DimType i = 1; i < 2; i++)
         vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
         vtkWriter->setWriteBinaryFile(m_WriteGrainSizes);
         vtkWriter->setDataContainer(m); 
-        vtkWriter->setPreviousFilter(field_data_write_csv);
         vtkWriter->execute(); 
-        pipeline.push_back(vtkWriter);
+        pipeline->pushBack(vtkWriter);
       }
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
       std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/test.dream3d";
       writer->setOutputFile(dream_3d_file);
       writer->setDataContainer(m); 
-      writer->setPreviousFilter(vtkWriter);
-  //FilterContainerType::iterator prev;
-  //FilterContainerType::iterator next;
-
-  //for (FilterContainerType::iterator iter = pipeline.begin(); iter != pipeline.end(); ++iter)
-  //{
-  //  // currFilt = *iter;
-  //  if(iter != pipeline.begin())
-  //  {
-  //    prev = iter;
-  //    prev--;
-  //    // prevFilt = *prev;
-  //    (*iter)->setPreviousFilter(*prev);
-  //  }
-
-  //  if(iter != pipeline.end())
-  //  {
-  //    next = iter;
-  //    next++;
-  //    //  nextFilt = *next;
-  //    if(next != pipeline.end()) { (*iter)->setNextFilter(*next); }
-  //  }
-  //}
-  //int index = 0;
-  //for (FilterContainerType::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
-  //{
-  //  (*filter)->setPipelineIndex(index++);
-  //}
-
-
-
-
-
+      pipeline->pushBack(writer);
       writer->execute();    
-      pipeline.push_back(writer);
+      
     
 
 
       std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
      // pipeline->run();
-      pipeline.clear();
+      pipeline->clear();
 }
 }
 
