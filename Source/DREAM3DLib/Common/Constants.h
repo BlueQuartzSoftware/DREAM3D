@@ -310,6 +310,22 @@ namespace DREAM3D
     const unsigned int RadiansToDegrees = 1; //!<
   }
 
+  namespace EulerFrameRotationAxis
+  {
+    const unsigned int RD = 0; //!<
+    const unsigned int TD = 1; //!<
+    const unsigned int ND = 2; //!<
+    const unsigned int None = 3; //!<
+  }
+
+  namespace EulerFrameRotationAngle
+  {
+    const unsigned int Ninety = 0; //!<
+    const unsigned int oneEighty = 1; //!<
+    const unsigned int twoSeventy = 2; //!<
+    const unsigned int Zero = 3; //!<
+  }
+
   namespace Overlap
   {
     const unsigned int Rigid = 0; //!<
