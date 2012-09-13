@@ -308,8 +308,7 @@ void Crop_Volume_Pipeline::execute()
 for (DimType i = 1; i < 2; i++)
 {
       // Create our Pipeline object
-     typedef std::vector<AbstractFilter::Pointer> FilterContainerType ;
-     FilterContainerType pipeline;
+     FilterPipeline::Pointer pipeline = FilterPipeline::New();
      // typedef DataArray<unsigned int> XTalStructArrayType;
       //XTalStructArrayType::Pointer xtal = XTalStructArrayType::CreateArray(2, DREAM3D::EnsembleData::CrystalStructures);
       //xtal->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
@@ -328,7 +327,7 @@ for (DimType i = 1; i < 2; i++)
       read_h5ebsd->setQualityMetricFilters(getQualityMetricFilters());
       read_h5ebsd->setDataContainer(m);
       read_h5ebsd->execute();
-      pipeline.push_back(read_h5ebsd);
+      pipeline->pushBack(read_h5ebsd);
       
  
 
@@ -338,7 +337,7 @@ for (DimType i = 1; i < 2; i++)
       convert_euler->setDataContainer(m);
       convert_euler->setPreviousFilter(read_h5ebsd);
       convert_euler->execute(); 
-      pipeline.push_back(convert_euler); 
+      pipeline->pushBack(convert_euler);
       
 
       AlignSectionsMisorientation::Pointer align_sections = AlignSectionsMisorientation::New();
@@ -346,7 +345,7 @@ for (DimType i = 1; i < 2; i++)
       align_sections->setDataContainer(m);
       align_sections->setPreviousFilter(convert_euler);
       align_sections->execute();     
-      pipeline.push_back(align_sections);
+      pipeline->pushBack(align_sections);
 
       CropVolume::Pointer crop_volume = CropVolume::New(); 
       crop_volume->setXMin(m_Xmin[i]);
@@ -359,7 +358,7 @@ for (DimType i = 1; i < 2; i++)
       crop_volume->setDataContainer(m);
       crop_volume->setPreviousFilter(align_sections);
       crop_volume->execute();
-      pipeline.push_back(crop_volume);
+      pipeline->pushBack(crop_volume);
 
 
       bool m_WriteVtkFile(true);
@@ -386,7 +385,7 @@ for (DimType i = 1; i < 2; i++)
         vtkWriter->setDataContainer(m); 
         vtkWriter->setPreviousFilter(crop_volume);
         vtkWriter->execute(); 
-        pipeline.push_back(vtkWriter);
+        pipeline->pushBack(vtkWriter);
       }
 
       RegularizeZSpacing::Pointer regularize_z = RegularizeZSpacing::New(); 
@@ -395,14 +394,14 @@ for (DimType i = 1; i < 2; i++)
       regularize_z->setDataContainer(m);
       regularize_z->setPreviousFilter(vtkWriter);
       regularize_z->execute();
-      pipeline.push_back(regularize_z);
+      pipeline->pushBack(regularize_z);
 
       EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
       ebsdsegment_grains->setMisorientationTolerance(m_MisorientationTolerance);
       ebsdsegment_grains->setDataContainer(m);
       ebsdsegment_grains->setPreviousFilter(regularize_z);
       ebsdsegment_grains->execute();
-      pipeline.push_back(ebsdsegment_grains);
+      pipeline->pushBack(ebsdsegment_grains);
 
       OpenCloseBadData::Pointer erode_dilate = OpenCloseBadData::New(); 
       erode_dilate->setDirection(0); // 0 is erode? 
@@ -410,7 +409,7 @@ for (DimType i = 1; i < 2; i++)
       erode_dilate->setDataContainer(m);
       erode_dilate->setPreviousFilter(ebsdsegment_grains);
       erode_dilate->execute();
-      pipeline.push_back(erode_dilate);
+      pipeline->pushBack(erode_dilate);
 
 
       MinSize::Pointer min_size = MinSize::New();
@@ -419,21 +418,21 @@ for (DimType i = 1; i < 2; i++)
       min_size->setDataContainer(m);
       min_size->setPreviousFilter(erode_dilate);
       min_size->execute();
-      pipeline.push_back(min_size);
+      pipeline->pushBack(min_size);
 
       MinNeighbors::Pointer min_neighbors = MinNeighbors::New();
       min_neighbors->setMinNumNeighbors(m_MinNumNeighbors);
       min_neighbors->setDataContainer(m);
       min_neighbors->setPreviousFilter(min_size);
       min_neighbors->execute();
-      pipeline.push_back(min_neighbors);
+      pipeline->pushBack(min_neighbors);
 
       FindSizes::Pointer find_sizes = FindSizes::New(); 
       find_sizes->setDistributionType(DREAM3D::DistributionType::Beta);
       find_sizes->setDataContainer(m);
       find_sizes->setPreviousFilter(min_neighbors);
       find_sizes->execute();
-      pipeline.push_back(find_sizes);
+      pipeline->pushBack(find_sizes);
 
 
       FindShapes::Pointer find_shapes = FindShapes::New(); 
@@ -441,7 +440,7 @@ for (DimType i = 1; i < 2; i++)
       find_shapes->setDataContainer(m);
       find_shapes->setPreviousFilter(find_sizes);
       find_shapes->execute();
-      pipeline.push_back(find_shapes);
+      pipeline->pushBack(find_shapes);
 
 
 
@@ -450,7 +449,7 @@ for (DimType i = 1; i < 2; i++)
       field_data_write_csv->setDataContainer(m); 
       field_data_write_csv->setPreviousFilter(find_shapes);
       field_data_write_csv->execute(); 
-      pipeline.push_back(field_data_write_csv);
+      pipeline->pushBack(field_data_write_csv);
 
 
 
@@ -478,7 +477,7 @@ for (DimType i = 1; i < 2; i++)
         vtkWriter->setDataContainer(m); 
         vtkWriter->setPreviousFilter(field_data_write_csv);
         vtkWriter->execute(); 
-        pipeline.push_back(vtkWriter);
+        pipeline->pushBack(vtkWriter);
       }
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
@@ -519,13 +518,13 @@ for (DimType i = 1; i < 2; i++)
 
 
       writer->execute();    
-      pipeline.push_back(writer);
+      pipeline->pushBack(writer);
     
 
 
       std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
      // pipeline->run();
-      pipeline.clear();
+      pipeline->clear();
 }
 }
 
