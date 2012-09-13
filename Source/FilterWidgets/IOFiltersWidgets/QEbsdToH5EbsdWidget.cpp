@@ -68,7 +68,7 @@ QFilterWidget(parent),
 m_RotateSlice(true),
 m_ReorderArray(true)
 {
-  
+
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
     setOpenDialogLastDirectory( QDir::homePath() );
@@ -86,6 +86,14 @@ m_ReorderArray(true)
 QEbsdToH5EbsdWidget::~QEbsdToH5EbsdWidget()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString QEbsdToH5EbsdWidget::getFilterGroup()
+{
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -363,8 +371,8 @@ void QEbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
 {
-	if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
-	if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
+    if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
+    if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
   return Ebsd::UnknownRefFrameZDirection;
 }
 

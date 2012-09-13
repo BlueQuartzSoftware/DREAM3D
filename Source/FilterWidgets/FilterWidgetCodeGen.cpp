@@ -296,6 +296,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "    void writeOptions(QSettings &prefs);\n");
   fprintf(f, "    void readOptions(QSettings &prefs);\n\n");
   fprintf(f, "    QFilterWidget* createDeepCopy();\n\n");
+  fprintf(f, "    QString getFilterGroup();\n\n");
 
 
  // Loop on all the filter options
@@ -341,7 +342,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   appendArrayNameCodeToHeader<T>(t, f);
 
   fprintf(f, "  private:\n");
- // fprintf(f, "    %s::Pointer m_Filter;\n\n", filter.c_str());
+  fprintf(f, "    QString m_FilterGroup;\n\n");
   fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filter.c_str(), filter.c_str());
   fprintf(f, "    void operator=(const Q%sWidget&);\n", filter.c_str());
   fprintf(f, "};\n");
@@ -680,12 +681,16 @@ void createSourceFile( const std::string &group, const std::string &filter)
   appendArrayNameConstructorCode<T>(t, f);
 
   // Finish Writing the remainder of the constructor code
+  fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
   fprintf(f, "     setupGui();\n");
   fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
   fprintf(f, "}\n\n");
 
   fprintf(f, "// -----------------------------------------------------------------------------\n");
   fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.c_str(), filter.c_str());
+
+  fprintf(f, "// -----------------------------------------------------------------------------\n");
+  fprintf(f, "QString Q%sWidget::getFilterGroup() {\n  return m_FilterGroup;\n}\n\n", filter.c_str() );
 
   fprintf(f, "// -----------------------------------------------------------------------------\n");
   fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter() \n{\n", filter.c_str());
