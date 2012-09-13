@@ -156,8 +156,12 @@ void Crop_Volume_Pipeline::preflight()
 
 
 
-
-
+std::string convertIntToString(int number)
+{
+   stringstream ss;//create a stringstream
+   ss << number;//add number to the stream
+   return ss.str();//return a string with the contents of the stream
+}
 
 
 std::string getH5EbsdFile()
@@ -233,7 +237,7 @@ unsigned int getNumLinesinFile(std::string filename)
 
 
 int getZStartIndex() { return 11; }
-int getZEndIndex() { return 21; }
+int getZEndIndex() { return 173; }
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
@@ -305,11 +309,15 @@ void Crop_Volume_Pipeline::execute()
   int m_Ymax = 355; 
   int m_Zmax = 163;*/ 
 
-for (DimType i = 1; i < 2; i++)
+for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 {
+      
+      
       // Create our Pipeline object
-    FilterPipeline::Pointer pipeline = FilterPipeline::New();
+      FilterPipeline::Pointer pipeline = FilterPipeline::New();
      
+       
+      
 
      // updateProgressAndMessage(("Loading Slices"), 10);
       ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
@@ -350,33 +358,6 @@ for (DimType i = 1; i < 2; i++)
       crop_volume->setDataContainer(m);
       crop_volume->execute();
       pipeline->pushBack(crop_volume);
-
-
-      bool m_WriteVtkFile(true);
-      bool m_WriteGrainID(false);
-      bool m_WriteBinaryVTKFiles(true);
-      bool m_WritePhaseId(false);
-      bool m_WriteIPFColor(true);
-      bool m_WriteGoodVoxels(true);
-      bool m_WriteGrainSizes(false);
-      bool m_WriteBandContrasts(true); 
-
-      VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
-      if(m_WriteVtkFile)
-      {
-        std::string vtk_file = "D:/IN100_run1/DREAM3D_files/test.vtk";
-        vtkWriter->setOutputFile(vtk_file);
-        vtkWriter->setWriteGrainIds(m_WriteGrainID);
-        vtkWriter->setWritePhaseIds(m_WritePhaseId);
-        vtkWriter->setWriteBandContrasts(m_WriteBandContrasts);
-        vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
-        vtkWriter->setWriteIPFColors(m_WriteIPFColor);
-        vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
-        vtkWriter->setWriteBinaryFile(m_WriteGrainSizes);
-        vtkWriter->setDataContainer(m); 
-        vtkWriter->execute(); 
-        pipeline->pushBack(vtkWriter);
-      }
 
       RegularizeZSpacing::Pointer regularize_z = RegularizeZSpacing::New(); 
       regularize_z->setInputFile(getZ_spacingfile()); 
@@ -428,26 +409,28 @@ for (DimType i = 1; i < 2; i++)
 
 
       FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New(); 
-      field_data_write_csv->setFieldDataFile(getFieldDataFile()); 
+      std::string field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
+      field_data_write_csv->setFieldDataFile(field_csv); 
       field_data_write_csv->setDataContainer(m); 
       field_data_write_csv->execute(); 
       pipeline->pushBack(field_data_write_csv);
 
 
 
-      m_WriteVtkFile = true ; 
-      m_WriteBinaryVTKFiles= true ; 
-      m_WriteGrainID= true;
-      m_WritePhaseId= true ; 
-      m_WriteIPFColor= true ; 
-      m_WriteGoodVoxels= true ; 
-      m_WriteGrainSizes = true ; 
-      m_WriteBandContrasts = true ; 
+      bool m_WriteVtkFile = true ; 
+      bool m_WriteBinaryVTKFiles= true ; 
+      bool m_WriteGrainID= true;
+      bool m_WritePhaseId= true ; 
+      bool m_WriteIPFColor= true ; 
+      bool m_WriteGoodVoxels= true ; 
+      bool m_WriteGrainSizes = true ; 
+      bool m_WriteBandContrasts = true ; 
 
-      vtkWriter = VtkRectilinearGridWriter::New();
+      VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+     
       if(m_WriteVtkFile)
       {
-        std::string vtk_file = "D:/IN100_run1/DREAM3D_files/test_final.vtk";
+        std::string vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
         vtkWriter->setOutputFile(vtk_file);
         vtkWriter->setWriteGrainIds(m_WriteGrainID);
         vtkWriter->setWritePhaseIds(m_WritePhaseId);
@@ -462,18 +445,26 @@ for (DimType i = 1; i < 2; i++)
       }
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
-      std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/test.dream3d";
+      std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
       writer->setOutputFile(dream_3d_file);
       writer->setDataContainer(m); 
       pipeline->pushBack(writer);
       writer->execute();    
-      
-    
+  
 
 
-      std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
-     // pipeline->run();
+    //  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+    // // pipeline->run();
       pipeline->clear();
+
+
+      //delete [] m; 
+      m->clearCellData();
+      m->clearEnsembleData();
+      m->clearFieldData();
+      
+
+      
 }
 }
 
