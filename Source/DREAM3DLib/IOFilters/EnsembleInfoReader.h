@@ -35,8 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _PHReader_h_
-#define _PHReader_h_
+#ifndef _EnsembleInfoReader_h_
+#define _EnsembleInfoReader_h_
 
 #include <string>
 #include <vector>
@@ -47,30 +47,29 @@
 #include "DREAM3DLib/Common/FileReader.h"
 
 /**
- * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
+ * @class EnsembleInfoReader EnsembleInfoReader.h DREAM3DLib/IO/EnsembleInfoReader.h
  * @brief
  * @author mjackson
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DREAM3DLib_EXPORT PhReader : public FileReader
+class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(PhReader)
-    DREAM3D_STATIC_NEW_MACRO(PhReader)
-    DREAM3D_TYPE_MACRO_SUPER(PhReader, FileReader)
+    DREAM3D_SHARED_POINTERS(EnsembleInfoReader)
+    DREAM3D_STATIC_NEW_MACRO(EnsembleInfoReader)
+    DREAM3D_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
 
-    virtual ~PhReader();
+    virtual ~EnsembleInfoReader();
 
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputInfoFile)
 
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Read Ph File (Grain Ids)"; }
+    virtual const std::string getHumanLabel() { return "Read Ensemble Info File"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -78,21 +77,21 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual void preflight();
 
   protected:
-    PhReader();
+    EnsembleInfoReader();
 
-    virtual int readHeader();
     virtual int readFile();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_GrainIds;
+    unsigned int* m_CrystalStructures;
+    unsigned int* m_PhaseTypes;
 
-    PhReader(const PhReader&); //Not Implemented
-    void operator=(const PhReader&); //Not Implemented
+    EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
+    void operator=(const EnsembleInfoReader&); //Not Implemented
 
 };
 
-#endif //_PHReader_h_
+#endif //_EnsembleInfoReader_h_
 
 
