@@ -342,13 +342,13 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 
 	  if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
 	  {
-		  cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
-		  cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
+		  cx1 = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]) * 1;
+		  cy1 = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]) * 1;
 		  cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
 		  denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
 
-		  cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
-		  cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
+		  cx2 = (2 * q2[1] * q2[3] - 2 * q2[2] * q2[4]) * 1;
+		  cy2 = (2 * q2[2] * q2[3] + 2 * q2[1] * q2[4]) * 1;
 		  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
 		  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
 
