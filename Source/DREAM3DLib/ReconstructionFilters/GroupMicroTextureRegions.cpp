@@ -292,8 +292,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         q1[4] = m_AvgQuats[5*firstgrain+4];
         OrientationMath::QuattoEuler(q1, ea11, ea12, ea13);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-        cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
-        cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
+        cx1 = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]) * 1;
+        cy1 = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]) * 1;
         cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
         denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
         for (int l = 0; l < size; l++)
@@ -311,8 +311,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
               q2[3] = m_AvgQuats[5*neigh+3];
               q2[4] = m_AvgQuats[5*neigh+4];
               OrientationMath::QuattoEuler(q2, ea21, ea22, ea23);
-              cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
-              cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
+              cx2 = (2 * q2[1] * q2[3] - 2 * q2[2] * q2[4]) * 1;
+              cy2 = (2 * q2[2] * q2[3] + 2 * q2[1] * q2[4]) * 1;
               cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
               denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
               w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);

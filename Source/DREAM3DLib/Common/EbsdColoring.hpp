@@ -45,6 +45,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
 #define M_PI_OVER_4   0.785398163397448
+#define m_pi   3.1415926535897
 namespace Detail
 {
   static const float DegToRads = static_cast<float>(M_PI/180.0f);
@@ -208,9 +209,9 @@ class EbsdColoring
       q1[2][2] = cos_phi;
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
-      cd[0] = q1[0][0] * refDir0 + q1[1][0] * refDir1 + q1[2][0] * refDir2;
-      cd[1] = q1[0][1] * refDir0 + q1[1][1] * refDir1 + q1[2][1] * refDir2;
-      cd[2] = q1[0][2] * refDir0 + q1[1][2] * refDir1 + q1[2][2] * refDir2;
+      cd[0] = q1[0][0] * refDir0 + q1[0][1] * refDir1 + q1[0][2] * refDir2;
+      cd[1] = q1[1][0] * refDir0 + q1[1][1] * refDir1 + q1[1][2] * refDir2;
+      cd[2] = q1[2][0] * refDir0 + q1[2][1] * refDir1 + q1[2][2] * refDir2;
 
       //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
       cd[0] = fabs(cd[0]);
@@ -309,25 +310,26 @@ class EbsdColoring
       float _rgb[3] = { 0.0, 0.0, 0.0 };
 
       OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
-      for (int j = 0; j < 12; j++)
+
+	  for (int j = 0; j < 12; j++)
       {
 //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
 //        OrientationMath::multiplyQuaternions(q1, q2, qc);
         MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
 
         g[0][0] = (1 - (2 * qc[2] * qc[2]) - (2 * qc[3] * qc[3]));
-        g[1][0] = ((2 * qc[1] * qc[2]) + (2 * qc[3] * qc[4]));
-        g[2][0] = ((2 * qc[1] * qc[3]) - (2 * qc[2] * qc[4]));
-        g[0][1] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
+        g[0][1] = ((2 * qc[1] * qc[2]) + (2 * qc[3] * qc[4]));
+        g[0][2] = ((2 * qc[1] * qc[3]) - (2 * qc[2] * qc[4]));
+        g[1][0] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
         g[1][1] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[3] * qc[3]));
-        g[2][1] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
-        g[0][2] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
-        g[1][2] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4]));
+        g[1][2] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
+        g[2][0] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
+        g[2][1] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4]));
         g[2][2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2]));
 
-        p[0] = g[0][0] * refDir0 + g[1][0] * refDir1 + g[2][0] * refDir2;
-        p[1] = g[0][1] * refDir0 + g[1][1] * refDir1 + g[2][1] * refDir2;
-        p[2] = g[0][2] * refDir0 + g[1][2] * refDir1 + g[2][2] * refDir2;
+        p[0] = g[0][0] * refDir0 + g[0][1] * refDir1 + g[0][2] * refDir2;
+        p[1] = g[1][0] * refDir0 + g[1][1] * refDir1 + g[1][2] * refDir2;
+        p[2] = g[2][0] * refDir0 + g[2][1] * refDir1 + g[2][2] * refDir2;
         float denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
         denom = powf(denom, 0.5);
         p[0] = p[0] / denom;

@@ -29,6 +29,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
@@ -62,6 +63,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp

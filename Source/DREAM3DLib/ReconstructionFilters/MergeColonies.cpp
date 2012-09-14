@@ -387,7 +387,8 @@ void MergeColonies::characterize_colonies()
 
 int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
 {
-  float w = 0;
+  float w = 0.0;
+  float wmin = 360.0;
 
 /*
   betaQuat[1] = -0.2815;
@@ -410,6 +411,8 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   OrientationMath::eulertoQuat(alphaQuat, ea1, ea2, ea3);*/
 
   float gBeta[3][3];
+  //Note matrix is setup to be g^-1 so the sample direction is the output of
+  //being multiplied by the crystal directions below
   gBeta[0][0] = 1-(2*betaQuat[2]*betaQuat[2])-(2*betaQuat[3]*betaQuat[3]);
   gBeta[0][1] = (2*betaQuat[1]*betaQuat[2])-(2*betaQuat[3]*betaQuat[4]);
   gBeta[0][2] = (2*betaQuat[1]*betaQuat[3])+(2*betaQuat[2]*betaQuat[4]);
@@ -421,6 +424,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   gBeta[2][2] = 1-(2*betaQuat[1]*betaQuat[1])-(2*betaQuat[2]*betaQuat[2]);
 
   float gAlpha[3][3];
+  //Note the matrix is setup to be g^-1 to be compared to the matricies made below
   gAlpha[0][0] = 1-(2*alphaQuat[2]*alphaQuat[2])-(2*alphaQuat[3]*alphaQuat[3]);
   gAlpha[0][1] = (2*alphaQuat[1]*alphaQuat[2])-(2*alphaQuat[3]*alphaQuat[4]);
   gAlpha[0][2] = (2*alphaQuat[1]*alphaQuat[3])+(2*alphaQuat[2]*alphaQuat[4]);
@@ -446,8 +450,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_1*gBeta[2][0] - unit112_1*gBeta[2][1] - unit112_2*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] + unit110*gBeta[2][1] + 0*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (-unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (unit112_1*gBeta[0][0] - unit112_1*gBeta[0][1] + unit112_2*gBeta[0][2]);
@@ -459,8 +462,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_1*gBeta[2][0] - unit112_1*gBeta[2][1] + unit112_2*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] + unit110*gBeta[2][1] + 0*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (-unit112_1*gBeta[0][0] - unit112_1*gBeta[0][1] + unit112_2*gBeta[0][2]);
@@ -472,8 +474,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (-unit112_1*gBeta[2][0] - unit112_1*gBeta[2][1] + unit112_2*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] - unit110*gBeta[2][1] + 0*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] - unit111*gBeta[0][2]);
   mat[0][1] = (unit112_1*gBeta[0][0] + unit112_1*gBeta[0][1] + unit112_2*gBeta[0][2]);
@@ -485,8 +486,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_1*gBeta[2][0] + unit112_1*gBeta[2][1] + unit112_2*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] - unit110*gBeta[2][1] + 0*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (unit112_1*gBeta[0][0] - unit112_2*gBeta[0][1] + unit112_1*gBeta[0][2]);
@@ -498,8 +498,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_1*gBeta[2][0] - unit112_2*gBeta[2][1] + unit112_1*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] - unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] - unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (-unit112_1*gBeta[0][0] - unit112_2*gBeta[0][1] - unit112_1*gBeta[0][2]);
@@ -511,8 +510,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (-unit112_1*gBeta[2][0] - unit112_2*gBeta[2][1] - unit112_1*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] - unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] - unit111*gBeta[0][2]);
   mat[0][1] = (-unit112_1*gBeta[0][0] + unit112_2*gBeta[0][1] + unit112_1*gBeta[0][2]);
@@ -524,8 +522,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (-unit112_1*gBeta[2][0] + unit112_2*gBeta[2][1] + unit112_1*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] + unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (-unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (-unit112_1*gBeta[0][0] - unit112_2*gBeta[0][1] + unit112_1*gBeta[0][2]);
@@ -537,8 +534,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (-unit112_1*gBeta[2][0] - unit112_2*gBeta[2][1] + unit112_1*gBeta[2][2]);
   mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] + unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] - unit111*gBeta[0][2]);
   mat[0][1] = (-unit112_2*gBeta[0][0] + unit112_1*gBeta[0][1] - unit112_1*gBeta[0][2]);
@@ -550,8 +546,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (-unit112_2*gBeta[2][0] + unit112_1*gBeta[2][1] - unit112_1*gBeta[2][2]);
   mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] + unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] - unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (unit112_2*gBeta[0][0] + unit112_1*gBeta[0][1] - unit112_1*gBeta[0][2]);
@@ -563,8 +558,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_2*gBeta[2][0] + unit112_1*gBeta[2][1] - unit112_1*gBeta[2][2]);
   mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] + unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (unit112_2*gBeta[0][0] - unit112_1*gBeta[0][1] - unit112_1*gBeta[0][2]);
@@ -576,8 +570,7 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_2*gBeta[2][0] - unit112_1*gBeta[2][1] - unit112_1*gBeta[2][2]);
   mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] - unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
+  if(w < wmin) wmin = w;
 
   mat[0][0] = (-unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
   mat[0][1] = (unit112_2*gBeta[0][0] + unit112_1*gBeta[0][1] + unit112_1*gBeta[0][2]);
@@ -589,8 +582,8 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   mat[2][1] = (unit112_2*gBeta[2][0] + unit112_1*gBeta[2][1] + unit112_1*gBeta[2][2]);
   mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] - unit110*gBeta[2][2]);
   w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if((180.0*w/m_pi) < m_AngleTolerance) return 1;
-  if((180.0-(180.0*w/m_pi)) < m_AngleTolerance) return 1;
-
-  return 0;
+  if(w < wmin) wmin = w;
+  if((180.0*wmin/m_pi) < m_AngleTolerance) return 1;
+  else if((180.0-(180.0*wmin/m_pi)) < m_AngleTolerance) return 1;
+  else return 0;
 }
