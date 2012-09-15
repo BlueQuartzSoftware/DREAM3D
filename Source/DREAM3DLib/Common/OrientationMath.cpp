@@ -33,6 +33,7 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
 #include "MXA/Common/LogTime.h"
@@ -398,6 +399,19 @@ void OrientationMath::QuattoAxisAngle(float *q, float &w, float &n1, float &n2, 
   if(q[4] == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
 }
 
+void OrientationMath::QuattoMat(float *q, float g[3][3])
+{
+   g[0][0] = (1 - (2 * q[2] * q[2]) - (2 * q[3] * q[3]));
+   g[0][1] = ((2 * q[1] * q[2]) + (2 * q[3] * q[4]));
+   g[0][2] = ((2 * q[1] * q[3]) - (2 * q[2] * q[4]));
+   g[1][0] = ((2 * q[1] * q[2]) - (2 * q[3] * q[4]));
+   g[1][1] = (1 - (2 * q[1] * q[1]) - (2 * q[3] * q[3]));
+   g[1][2] = ((2 * q[2] * q[3]) + (2 * q[1] * q[4]));
+   g[2][0] = ((2 * q[1] * q[3]) + (2 * q[2] * q[4]));
+   g[2][1] = ((2 * q[2] * q[3]) - (2 * q[1] * q[4]));
+   g[2][2] = (1 - (2 * q[1] * q[1]) - (2 * q[2] * q[2]));
+}
+
 void OrientationMath::RodtoQuat(float *q, float r1, float r2, float r3)
 {
   float rmag, w;
@@ -470,6 +484,28 @@ void OrientationMath::normalizeQuat(float* qr)
   qr[4] = static_cast<float>( qr[4]/norm );
 }
 
+void OrientationMath::eulertoMat(float ea1, float ea2, float ea3, float g[3][3])
+{
+      // Calcuate all the values once
+      float cos_phi1 = cosf(ea1);
+      float sin_phi1 = sinf(ea1);
+      float cos_phi = cosf(ea2);
+      float sin_phi = sinf(ea2);
+      float cos_phi2 = cosf(ea3);
+      float sin_phi2 = sinf(ea3);
+
+      // 1) find rotation matrix from Euler angles
+      g[0][0] = cos_phi1 * cos_phi2 - sin_phi1 * sin_phi2 * cos_phi;
+      g[0][1] = sin_phi1 * cos_phi2 + cos_phi1 * sin_phi2 * cos_phi;
+      g[0][2] = sin_phi2 * sin_phi;
+      g[1][0] = -cos_phi1 * sin_phi2 - sin_phi1 * cos_phi2 * cos_phi;
+      g[1][1] = -sin_phi1 * sin_phi2 + cos_phi1 * cos_phi2 * cos_phi;
+      g[1][2] = cos_phi2 * sin_phi;
+      g[2][0] = sin_phi1 * sin_phi;
+      g[2][1] = -cos_phi1 * sin_phi;
+      g[2][2] = cos_phi;
+}
+
 void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
 	float sum, diff, csum, cdiff, sdiff, t2;
@@ -501,6 +537,7 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
 float OrientationMath::matrixMisorientation(float g1[3][3], float g2[3][3])
 {
 	float deltaG[3][3];
+	//only need to calculate diagonal terms to allow for trace calculation
 	deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
 	deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
 	deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
@@ -513,24 +550,19 @@ float OrientationMath::matrixMisorientation(float g1[3][3], float g2[3][3])
 void OrientationMath::changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3)
 {
   float g[3][3];
-  float n1new, n2new, n3new, denom;
-  g[0][0] = 1-(2*q[2]*q[2])-(2*q[3]*q[3]);
-  g[0][1] = (2*q[1]*q[2])-(2*q[3]*q[4]);
-  g[0][2] = (2*q[1]*q[3])+(2*q[2]*q[4]);
-  g[1][0] = (2*q[1]*q[2])+(2*q[3]*q[4]);
-  g[1][1] = 1-(2*q[1]*q[1])-(2*q[3]*q[3]);
-  g[1][2] = (2*q[2]*q[3])-(2*q[1]*q[4]);
-  g[2][0] = (2*q[1]*q[3])-(2*q[2]*q[4]);
-  g[2][1] = (2*q[2]*q[3])+(2*q[1]*q[4]);
-  g[2][2] = 1-(2*q[1]*q[1])-(2*q[2]*q[2]);
-  // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
-  n1new = n1*g[0][0]+n2*g[1][0]+n3*g[2][0];
-  n2new = n1*g[0][1]+n2*g[1][1]+n3*g[2][1];
-  n3new = n1*g[0][2]+n2*g[1][2]+n3*g[2][2];
-  denom = sqrtf((n1new*n1new+n2new*n2new+n3new*n3new));
-  n1 = n1new/denom;
-  n2 = n2new/denom;
-  n3 = n3new/denom;
+  float n[3];
+  float nNew[3];
+
+  n[0] = n1;
+  n[1] = n2;
+  n[2] = n3;
+
+  QuattoMat(q, g);
+  MatrixMath::multiply3x3with3x1(g, n, nNew);
+  MatrixMath::normalize3x1(nNew);
+  n1 = nNew[0];
+  n2 = nNew[1];
+  n3 = nNew[2];
 }
 
 void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], float &ssap)
@@ -542,24 +574,8 @@ void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], flo
   float h2, k2, l2, u2, v2, w2;
   float denomhkl1, denomhkl2, denomuvw1, denomuvw2;
   float planemisalignment, directionmisalignment;
-  g1[0][0] = 1-(2*q1[2]*q1[2])-(2*q1[3]*q1[3]);
-  g1[0][1] = (2*q1[1]*q1[2])-(2*q1[3]*q1[4]);
-  g1[0][2] = (2*q1[1]*q1[3])+(2*q1[2]*q1[4]);
-  g1[1][0] = (2*q1[1]*q1[2])+(2*q1[3]*q1[4]);
-  g1[1][1] = 1-(2*q1[1]*q1[1])-(2*q1[3]*q1[3]);
-  g1[1][2] = (2*q1[2]*q1[3])-(2*q1[1]*q1[4]);
-  g1[2][0] = (2*q1[1]*q1[3])-(2*q1[2]*q1[4]);
-  g1[2][1] = (2*q1[2]*q1[3])+(2*q1[1]*q1[4]);
-  g1[2][2] = 1-(2*q1[1]*q1[1])-(2*q1[2]*q1[2]);
-  g2[0][0] = 1-(2*q2[2]*q2[2])-(2*q2[3]*q2[3]);
-  g2[0][1] = (2*q2[1]*q2[2])-(2*q2[3]*q2[4]);
-  g2[0][2] = (2*q2[1]*q2[3])+(2*q2[2]*q2[4]);
-  g2[1][0] = (2*q2[1]*q2[2])+(2*q2[3]*q2[4]);
-  g2[1][1] = 1-(2*q2[1]*q2[1])-(2*q2[3]*q2[3]);
-  g2[1][2] = (2*q2[2]*q2[3])-(2*q2[1]*q2[4]);
-  g2[2][0] = (2*q2[1]*q2[3])-(2*q2[2]*q2[4]);
-  g2[2][1] = (2*q2[2]*q2[3])+(2*q2[1]*q2[4]);
-  g2[2][2] = 1-(2*q2[1]*q2[1])-(2*q2[2]*q2[2]);
+  QuattoMat(q1, g1);
+  QuattoMat(q2, g2);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
   h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
   k1 = CubicSlipSystems[ss1][0]*g1[0][1]+CubicSlipSystems[ss1][1]*g1[1][1]+CubicSlipSystems[ss1][2]*g1[2][1];

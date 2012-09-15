@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -262,10 +263,13 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float angcur = 180.0f;
   std::vector<int> microtexturelist;
   float w;
-  float cx1, cy1, cz1, denom1;
-  float cx2, cy2, cz2, denom2;
-  float ea11, ea12, ea13;
-  float ea21, ea22, ea23;
+  float g1[3][3];
+  float g2[3][3];
+  float g1t[3][3];
+  float g2t[3][3];
+  float c1[3];
+  float c2[3];
+  float caxis[3] = {0,0,1};
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
@@ -290,13 +294,18 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         q1[2] = m_AvgQuats[5*firstgrain+2];
         q1[3] = m_AvgQuats[5*firstgrain+3];
         q1[4] = m_AvgQuats[5*firstgrain+4];
-        OrientationMath::QuattoEuler(q1, ea11, ea12, ea13);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-        cx1 = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]) * 1;
-        cy1 = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]) * 1;
-        cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
-        denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
-        for (int l = 0; l < size; l++)
+	    OrientationMath::QuattoMat(q1, g1);
+		//transpose the g matrix so when caxis is multiplied by it
+		//it will give the sample direction that the caxis is along
+		MatrixMath::transpose3x3(g1, g1t);
+		MatrixMath::multiply3x3with3x1(g1, caxis, c1);
+		//normalize so that the dot product can be taken below without
+		//dividing by the magnitudes (they would be 1)
+		MatrixMath::normalize3x1(c1);
+
+		
+		for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           size_t neigh = neighborlist[firstgrain][l];
@@ -310,12 +319,16 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
               q2[2] = m_AvgQuats[5*neigh+2];
               q2[3] = m_AvgQuats[5*neigh+3];
               q2[4] = m_AvgQuats[5*neigh+4];
-              OrientationMath::QuattoEuler(q2, ea21, ea22, ea23);
-              cx2 = (2 * q2[1] * q2[3] - 2 * q2[2] * q2[4]) * 1;
-              cy2 = (2 * q2[2] * q2[3] + 2 * q2[1] * q2[4]) * 1;
-              cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
-              denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
-              w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
+			  OrientationMath::QuattoMat(q2, g2);
+			  //transpose the g matrix so when caxis is multiplied by it
+			  //it will give the sample direction that the caxis is along
+			  MatrixMath::transpose3x3(g2, g2t);
+			  MatrixMath::multiply3x3with3x1(g2, caxis, c2);
+			  //normalize so that the dot product can be taken below without
+			  //dividing by the magnitudes (they would be 1)
+			  MatrixMath::normalize3x1(c2);
+
+			  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
               w = 180.0f*acosf(w)/m_pi;
               if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
               {
