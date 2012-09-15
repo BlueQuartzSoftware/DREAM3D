@@ -83,38 +83,77 @@ MatrixMath::~MatrixMath()
 }
 
 
-float MatrixMath::multiply3x3with3x3(float g1[3][3], float g2[3][3])
+void MatrixMath::multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3])
 {
-	float deltaG[3][3];
-	deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
-	deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
-	deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
-	float value = ((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0)/2.0;
-	if(value > 1.0) value = 1.0;
-	if(value < -1.0) value = -1.0;
-	return acosf(value);
+	outMat[0][0] = g1[0][0]*g2[0][0] + g1[0][1]*g2[1][0] + g1[0][2]*g2[2][0];
+	outMat[0][1] = g1[0][0]*g2[0][1] + g1[0][1]*g2[1][1] + g1[0][2]*g2[2][1];
+	outMat[0][2] = g1[0][0]*g2[0][2] + g1[0][1]*g2[1][2] + g1[0][2]*g2[2][2];
+	outMat[1][0] = g1[1][0]*g2[0][0] + g1[1][1]*g2[1][0] + g1[1][2]*g2[2][0];
+	outMat[1][1] = g1[1][0]*g2[0][1] + g1[1][1]*g2[1][1] + g1[1][2]*g2[2][1];
+	outMat[1][2] = g1[1][0]*g2[0][2] + g1[1][1]*g2[1][2] + g1[1][2]*g2[2][2];
+	outMat[2][0] = g1[2][0]*g2[0][0] + g1[2][1]*g2[1][0] + g1[2][2]*g2[2][0];
+	outMat[2][1] = g1[2][0]*g2[0][1] + g1[2][1]*g2[1][1] + g1[2][2]*g2[2][1];
+	outMat[2][2] = g1[2][0]*g2[0][2] + g1[2][1]*g2[1][2] + g1[2][2]*g2[2][2];
 }
 
-float MatrixMath::multiply3x3with3x1(float g1[3][3], float g2[3])
+void MatrixMath::multiply3x3with3x1(float g1[3][3], float g2[3], float outMat[3])
 {
-	float deltaG[3][3];
-	deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
-	deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
-	deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
-	float value = ((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0)/2.0;
-	if(value > 1.0) value = 1.0;
-	if(value < -1.0) value = -1.0;
-	return acosf(value);
+	outMat[0] = g1[0][0]*g2[0] + g1[0][1]*g2[1] + g1[0][2]*g2[2];
+	outMat[1] = g1[1][0]*g2[0] + g1[1][1]*g2[1] + g1[1][2]*g2[2];
+	outMat[2] = g1[2][0]*g2[0] + g1[2][1]*g2[1] + g1[2][2]*g2[2];
 }
 
-float MatrixMath::transpose3x3(float g[3][3])
+void MatrixMath::transpose3x3(float g[3][3], float outMat[3][3])
 {
-	float transG[3][3];
-	deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
-	deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
-	deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
-	float value = ((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0)/2.0;
-	if(value > 1.0) value = 1.0;
-	if(value < -1.0) value = -1.0;
-	return acosf(value);
+	outMat[0][0] = g[0][0];
+	outMat[0][1] = g[1][0];
+	outMat[0][2] = g[2][0];
+	outMat[1][0] = g[0][1];
+	outMat[1][1] = g[1][1];
+	outMat[1][2] = g[2][1];
+	outMat[2][0] = g[0][2];
+	outMat[2][1] = g[1][2];
+	outMat[2][2] = g[2][2];
+}
+
+void MatrixMath::normalize3x3(float g[3][3])
+{
+	float denom;
+	denom = g[0][0]*g[0][0]+g[1][0]*g[1][0]+g[2][0]*g[2][0];
+	denom = sqrt(denom);
+	g[0][0] = g[0][0]/denom;
+	if(g[0][0] > 1) g[0][0] = 1;
+	g[1][0] = g[1][0]/denom;
+	if(g[1][0] > 1) g[1][0] = 1;
+	g[2][0] = g[2][0]/denom;
+	if(g[2][0] > 1) g[2][0] = 1;
+	denom = g[0][1]*g[0][1]+g[1][1]*g[1][1]+g[2][1]*g[2][1];
+	denom = sqrt(denom);
+	g[0][1] = g[0][1]/denom;
+	if(g[0][1] > 1) g[0][1] = 1;
+	g[1][1] = g[1][1]/denom;
+	if(g[1][1] > 1) g[1][1] = 1;
+	g[2][1] = g[2][1]/denom;
+	if(g[2][1] > 1) g[2][1] = 1;
+	denom = g[0][2]*g[0][2]+g[1][2]*g[1][2]+g[2][2]*g[2][2];
+	denom = sqrt(denom);
+	g[0][2] = g[0][2]/denom;
+	if(g[0][2] > 1) g[0][2] = 1;
+	g[1][2] = g[1][2]/denom;
+	if(g[1][2] > 1) g[1][2] = 1;
+	g[2][2] = g[2][2]/denom;
+	if(g[2][2] > 1) g[2][2] = 1;
+}
+
+void MatrixMath::normalize3x1(float g[3])
+{
+	float denom;
+	denom = g[0]*g[0]+g[1]*g[1]+g[2]*g[2];
+	denom = sqrt(denom);
+	g[0] = g[0]/denom;
+	if(g[0] > 1) g[0] = 1;
+	g[1] = g[1]/denom;
+	if(g[1] > 1) g[1] = 1;
+	g[2] = g[2]/denom;
+	if(g[2] > 1) g[2] = 1;
 }

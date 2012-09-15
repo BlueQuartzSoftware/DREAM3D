@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -319,10 +320,15 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   float w = 10000.0;
   float q1[5];
   float q2[5];
+  float g1[3][3];
+  float g2[3][3];
+  float g1t[3][3];
+  float g2t[3][3];
  // float n1, n2, n3;
   unsigned int phase1, phase2;
-  float cx1, cx2, cy1, cy2, cz1, cz2;
-  float denom1, denom2;
+  float caxis[3] = {0,0,1};
+  float c1[3];
+  float c2[3];
 
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
@@ -342,17 +348,23 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 
 	  if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
 	  {
-		  cx1 = (2 * q1[1] * q1[3] - 2 * q1[2] * q1[4]) * 1;
-		  cy1 = (2 * q1[2] * q1[3] + 2 * q1[1] * q1[4]) * 1;
-		  cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
-		  denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
+		  OrientationMath::QuattoMat(q1, g1);
+		  OrientationMath::QuattoMat(q2, g2);
 
-		  cx2 = (2 * q2[1] * q2[3] - 2 * q2[2] * q2[4]) * 1;
-		  cy2 = (2 * q2[2] * q2[3] + 2 * q2[1] * q2[4]) * 1;
-		  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
-		  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
+		  //transpose the g matricies so when caxis is multiplied by it
+		  //it will give the sample direction that the caxis is along
+		  MatrixMath::transpose3x3(g1, g1t);
+		  MatrixMath::transpose3x3(g2, g2t);
 
-		  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
+		  MatrixMath::multiply3x3with3x1(g1, caxis, c1);
+		  MatrixMath::multiply3x3with3x1(g2, caxis, c2);
+
+		  //normalize so that the dot product can be taken below without
+		  //dividing by the magnitudes (they would be 1)
+		  MatrixMath::normalize3x1(c1);
+		  MatrixMath::normalize3x1(c2);
+
+		  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
 		  w = static_cast<float>( 180.0*acosf(w)/m_pi );
 		  if (w <= m_MisorientationTolerance || (180.0-w) <= m_MisorientationTolerance)
 		  {
