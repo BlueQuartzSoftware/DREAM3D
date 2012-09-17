@@ -212,6 +212,9 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
+  //Convert user defined tolerance to radians.
+  m_CAxisTolerance = m_CAxisTolerance * m_pi/180.0f;
+
  notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
@@ -299,7 +302,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 		//transpose the g matrix so when caxis is multiplied by it
 		//it will give the sample direction that the caxis is along
 		MatrixMath::transpose3x3(g1, g1t);
-		MatrixMath::multiply3x3with3x1(g1, caxis, c1);
+		MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
 		//normalize so that the dot product can be taken below without
 		//dividing by the magnitudes (they would be 1)
 		MatrixMath::normalize3x1(c1);
@@ -323,14 +326,14 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 			  //transpose the g matrix so when caxis is multiplied by it
 			  //it will give the sample direction that the caxis is along
 			  MatrixMath::transpose3x3(g2, g2t);
-			  MatrixMath::multiply3x3with3x1(g2, caxis, c2);
+			  MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
 			  //normalize so that the dot product can be taken below without
 			  //dividing by the magnitudes (they would be 1)
 			  MatrixMath::normalize3x1(c2);
 
 			  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
-              w = 180.0f*acosf(w)/m_pi;
-              if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
+              w = acosf(w);
+              if (w <= m_CAxisTolerance || (m_pi-w) <= m_CAxisTolerance)
               {
                 parentnumbers[neigh] = parentcount;
                 microtexturelist.push_back(neigh);
