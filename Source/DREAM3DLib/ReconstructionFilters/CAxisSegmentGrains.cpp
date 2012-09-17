@@ -356,8 +356,8 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 		  MatrixMath::transpose3x3(g1, g1t);
 		  MatrixMath::transpose3x3(g2, g2t);
 
-		  MatrixMath::multiply3x3with3x1(g1, caxis, c1);
-		  MatrixMath::multiply3x3with3x1(g2, caxis, c2);
+		  MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+		  MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
 
 		  //normalize so that the dot product can be taken below without
 		  //dividing by the magnitudes (they would be 1)
@@ -365,8 +365,8 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 		  MatrixMath::normalize3x1(c2);
 
 		  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
-		  w = static_cast<float>( 180.0*acosf(w)/m_pi );
-		  if (w <= m_MisorientationTolerance || (180.0-w) <= m_MisorientationTolerance)
+		  w = acosf(w);
+		  if (w <= m_MisorientationTolerance || (m_pi-w) <= m_MisorientationTolerance)
 		  {
 			group = true;
 			m_GrainIds[neighborpoint] = gnum;
