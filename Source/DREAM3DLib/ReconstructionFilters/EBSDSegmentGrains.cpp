@@ -211,11 +211,6 @@ void EBSDSegmentGrains::execute()
   {
     totalPoints = m->getTotalPoints();
     size_t totalFields = m->getNumFieldTuples();
-    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
-    if (getErrorCondition() < 0)
-    {
-      return;
-    }
 
     // Generate all the numbers up front
     const int rangeMin = 1;
@@ -259,10 +254,6 @@ void EBSDSegmentGrains::execute()
     {
        m_GrainIds[i] = gid[ m_GrainIds[i] ];
     }
-	for(size_t i = 0; i < totalFields; i++)
-	{
-		m_Active[i] = true;
-	}
   }
 
   // If there is an error set this to something negative and also set a message

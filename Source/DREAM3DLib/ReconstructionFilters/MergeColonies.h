@@ -84,6 +84,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -113,6 +114,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 	int32_t* m_NumFields;
 
     std::vector<int> parentnumbers;
+	int numParents;
 
 
     OrientationMath::Pointer m_CubicOps;
