@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -390,50 +391,20 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   float w = 0.0;
   float wmin = 360.0;
 
-/*
-  betaQuat[1] = -0.2815;
-  betaQuat[2] = 0.1465;
-  betaQuat[3] = 0.1238;
-  betaQuat[4] = -0.9402;
-
-  alphaQuat[1] = 0.0375;
-  alphaQuat[2] = 0.5360;
-  alphaQuat[3] = -0.1754;
-  alphaQuat[4] = -0.8250;
-
-  float ea1 = 0.0*m_pi/180.0;
-  float ea2 = 0.0*m_pi/180.0;
-  float ea3 = 0.0*m_pi/180.0;
-  OrientationMath::eulertoQuat(betaQuat, ea1, ea2, ea3);
-  ea1 = 0.0*m_pi/180.0;
-  ea2 = 45.0*m_pi/180.0;
-  ea3 = 54.73*m_pi/180.0;
-  OrientationMath::eulertoQuat(alphaQuat, ea1, ea2, ea3);*/
-
   float gBeta[3][3];
-  //Note matrix is setup to be g^-1 so the sample direction is the output of
-  //being multiplied by the crystal directions below
-  gBeta[0][0] = 1-(2*betaQuat[2]*betaQuat[2])-(2*betaQuat[3]*betaQuat[3]);
-  gBeta[0][1] = (2*betaQuat[1]*betaQuat[2])-(2*betaQuat[3]*betaQuat[4]);
-  gBeta[0][2] = (2*betaQuat[1]*betaQuat[3])+(2*betaQuat[2]*betaQuat[4]);
-  gBeta[1][0] = (2*betaQuat[1]*betaQuat[2])+(2*betaQuat[3]*betaQuat[4]);
-  gBeta[1][1] = 1-(2*betaQuat[1]*betaQuat[1])-(2*betaQuat[3]*betaQuat[3]);
-  gBeta[1][2] = (2*betaQuat[2]*betaQuat[3])-(2*betaQuat[1]*betaQuat[4]);
-  gBeta[2][0] = (2*betaQuat[1]*betaQuat[3])-(2*betaQuat[2]*betaQuat[4]);
-  gBeta[2][1] = (2*betaQuat[2]*betaQuat[3])+(2*betaQuat[1]*betaQuat[4]);
-  gBeta[2][2] = 1-(2*betaQuat[1]*betaQuat[1])-(2*betaQuat[2]*betaQuat[2]);
+  float gBetaT[3][3];
+  OrientationMath::QuattoMat(betaQuat, gBeta);
+  //transpose gBeta so the sample direction is the output when
+  //gBeta is multiplied by the crystal directions below
+  MatrixMath::transpose3x3(gBeta, gBetaT);
+
 
   float gAlpha[3][3];
-  //Note the matrix is setup to be g^-1 to be compared to the matricies made below
-  gAlpha[0][0] = 1-(2*alphaQuat[2]*alphaQuat[2])-(2*alphaQuat[3]*alphaQuat[3]);
-  gAlpha[0][1] = (2*alphaQuat[1]*alphaQuat[2])-(2*alphaQuat[3]*alphaQuat[4]);
-  gAlpha[0][2] = (2*alphaQuat[1]*alphaQuat[3])+(2*alphaQuat[2]*alphaQuat[4]);
-  gAlpha[1][0] = (2*alphaQuat[1]*alphaQuat[2])+(2*alphaQuat[3]*alphaQuat[4]);
-  gAlpha[1][1] = 1-(2*alphaQuat[1]*alphaQuat[1])-(2*alphaQuat[3]*alphaQuat[3]);
-  gAlpha[1][2] = (2*alphaQuat[2]*alphaQuat[3])-(2*alphaQuat[1]*alphaQuat[4]);
-  gAlpha[2][0] = (2*alphaQuat[1]*alphaQuat[3])-(2*alphaQuat[2]*alphaQuat[4]);
-  gAlpha[2][1] = (2*alphaQuat[2]*alphaQuat[3])+(2*alphaQuat[1]*alphaQuat[4]);
-  gAlpha[2][2] = 1-(2*alphaQuat[1]*alphaQuat[1])-(2*alphaQuat[2]*alphaQuat[2]);
+  float gAlphaT[3][3];
+  OrientationMath::QuattoMat(alphaQuat, gAlpha);
+  //transpose gBeta so the sample direction is the output when
+  //gBeta is multiplied by the crystal directions below
+  MatrixMath::transpose3x3(gAlpha, gAlphaT);
 
   float unit110 = 1.0/sqrtf(2.0);
   float unit111 = 1.0/sqrtf(3.0);
