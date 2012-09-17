@@ -36,6 +36,10 @@
 
 #include "MergeColonies.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
@@ -58,6 +62,59 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 
+  static const float unit110 = 1.0/sqrtf(2.0);
+  static const float unit111 = 1.0/sqrtf(3.0);
+  static const float unit112_1 = 1.0/sqrtf(6.0);
+  static const float unit112_2 = 2.0/sqrtf(6.0);
+
+  float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
+										{-unit111, -unit112_1, unit110},
+										{unit111, -unit112_2, 0}},
+
+										{{-unit111, unit112_1, unit110},
+										{unit111, -unit112_1, unit110},
+										{unit111, unit112_2, 0}},
+
+										{{unit111, -unit112_1, unit110},
+										{unit111, -unit112_1, -unit110},
+										{unit111, unit112_2, 0}},
+
+										{{unit111, unit112_1, unit110},
+										{unit111, unit112_1, -unit110},
+										{-unit111, unit112_2, 0}},
+
+										{{unit111, unit112_1, unit110},
+										{unit111, -unit112_2, 0},
+										{unit111, unit112_1, -unit110}},
+
+										{{unit111, -unit112_1, unit110},
+										{-unit111, -unit112_2, 0},
+										{unit111, -unit112_1, -unit110}},
+
+										{{unit111, -unit112_1, unit110},
+										{unit111, unit112_2, 0},
+										{-unit111, unit112_1, unit110}},
+
+										{{-unit111, -unit112_1, unit110},
+										{unit111, -unit112_2, 0},
+										{unit111, unit112_1, unit110}},
+
+										{{unit111, -unit112_2,0},
+										{unit111, unit112_1, unit110},
+										{-unit111, -unit112_1, unit110}},
+
+										{{unit111, unit112_2, 0},
+										{-unit111, unit112_1, unit110},
+										{unit111, -unit112_1, unit110}},
+
+										{{unit111, unit112_2, 0},
+										{unit111, -unit112_1, unit110},
+										{unit111, -unit112_1, -unit110}},
+
+										{{-unit111, unit112_2, 0},
+										{unit111, unit112_1, unit110},
+										{unit111, unit112_1, -unit110}}};
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -75,6 +132,7 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+m_RandomizeParentIds(true),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
 m_GrainIds(NULL),
@@ -154,7 +212,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   // Field Data
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
@@ -240,15 +298,52 @@ void MergeColonies::execute()
  notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
- notifyStatusMessage("Renumbering Grains");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
+  if (true == m_RandomizeParentIds)
   {
-    return;
+    int64_t totalPoints = m->getTotalPoints();
+
+    // Generate all the numbers up front
+    const int rangeMin = 1;
+    const int rangeMax = numParents - 1;
+    typedef boost::uniform_int<int> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&,
+                                     NumberDistribution> Generator;
+
+    NumberDistribution distribution(rangeMin, rangeMax);
+    RandomNumberGenerator generator;
+    Generator numberGenerator(generator, distribution);
+    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
+    int32_t* pid = rndNumbers->GetPointer(0);
+    pid[0] = 0;
+    std::set<int32_t> parentIdSet;
+    parentIdSet.insert(0);
+    for(size_t i = 1; i < numParents; ++i)
+    {
+      pid[i] = i; //numberGenerator();
+      parentIdSet.insert(pid[i]);
+    }
+
+    size_t r;
+    size_t temp;
+    //--- Shuffle elements by randomly exchanging each with one other.
+    for (size_t i=1; i< numParents; i++) {
+        r = numberGenerator(); // Random remaining position.
+        if (r >= numParents) {
+          continue;
+        }
+        temp = pid[i];
+        pid[i] = pid[r];
+        pid[r] = temp;
+    }
+
+    // Now adjust all the Grain Id values for each Voxel
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+       m_ParentIds[i] = pid[ m_ParentIds[i] ];
+    }
   }
 
  notifyStatusMessage("Completed");
@@ -372,8 +467,10 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    m_ParentIds[k] = parentnumbers[grainname];
+	if(grainname > 0) m_ParentIds[k] = parentnumbers[grainname];
+	else m_ParentIds[k] = 0;
   }
+  numParents = parentcount+1;
 }
 
 void MergeColonies::characterize_colonies()
@@ -388,8 +485,19 @@ void MergeColonies::characterize_colonies()
 
 int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
 {
+
+/*  float ea1 = 0.0*m_pi/180.0f;
+  float ea2 = 0.0*m_pi/180.0f;
+  float ea3 = 0.0*m_pi/180.0f;
+  OrientationMath::eulertoQuat(betaQuat, ea1, ea2, ea3);
+
+  ea1 = 0.0*m_pi/180.0f;
+  ea2 = 45.0*m_pi/180.0f;
+  ea3 = 54.73*m_pi/180.0f;
+  OrientationMath::eulertoQuat(alphaQuat, ea1, ea2, ea3);*/
+
   float w = 0.0;
-  float wmin = 360.0;
+  float radToDeg = 180.0f/m_pi;
 
   float gBeta[3][3];
   float gBetaT[3][3];
@@ -398,163 +506,21 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   //gBeta is multiplied by the crystal directions below
   MatrixMath::transpose3x3(gBeta, gBetaT);
 
-
   float gAlpha[3][3];
   float gAlphaT[3][3];
   OrientationMath::QuattoMat(alphaQuat, gAlpha);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
   MatrixMath::transpose3x3(gAlpha, gAlphaT);
-
-  float unit110 = 1.0/sqrtf(2.0);
-  float unit111 = 1.0/sqrtf(3.0);
-  float unit112_1 = 1.0/sqrtf(6.0);
-  float unit112_2 = 2.0/sqrtf(6.0);
+  
   float mat[3][3];
-  mat[0][0] = (unit111*gBeta[0][0] - unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_1*gBeta[0][0] - unit112_1*gBeta[0][1] - unit112_2*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] + unit110*gBeta[0][1] + 0*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] - unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_1*gBeta[1][0] - unit112_1*gBeta[1][1] - unit112_2*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] + unit110*gBeta[1][1] + 0*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] - unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_1*gBeta[2][0] - unit112_1*gBeta[2][1] - unit112_2*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] + unit110*gBeta[2][1] + 0*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
+  for(int i=0;i<12;i++)
+  {
+	  MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
+	  w = OrientationMath::matrixMisorientation(mat, gAlphaT);
+	  if((w*radToDeg) < m_AngleTolerance) return 1;
+	  else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
+  }
 
-  mat[0][0] = (-unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_1*gBeta[0][0] - unit112_1*gBeta[0][1] + unit112_2*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] + unit110*gBeta[0][1] + 0*gBeta[0][2]);
-  mat[1][0] = (-unit111*gBeta[1][0] + unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_1*gBeta[1][0] - unit112_1*gBeta[1][1] + unit112_2*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] + unit110*gBeta[1][1] + 0*gBeta[1][2]);
-  mat[2][0] = (-unit111*gBeta[2][0] + unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_1*gBeta[2][0] - unit112_1*gBeta[2][1] + unit112_2*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] + unit110*gBeta[2][1] + 0*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (-unit112_1*gBeta[0][0] - unit112_1*gBeta[0][1] + unit112_2*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] - unit110*gBeta[0][1] + 0*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] + unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (-unit112_1*gBeta[1][0] - unit112_1*gBeta[1][1] + unit112_2*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] - unit110*gBeta[1][1] + 0*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] + unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (-unit112_1*gBeta[2][0] - unit112_1*gBeta[2][1] + unit112_2*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] - unit110*gBeta[2][1] + 0*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] - unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_1*gBeta[0][0] + unit112_1*gBeta[0][1] + unit112_2*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] - unit110*gBeta[0][1] + 0*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] + unit111*gBeta[1][1] - unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_1*gBeta[1][0] + unit112_1*gBeta[1][1] + unit112_2*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] - unit110*gBeta[1][1] + 0*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] + unit111*gBeta[2][1] - unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_1*gBeta[2][0] + unit112_1*gBeta[2][1] + unit112_2*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] - unit110*gBeta[2][1] + 0*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_1*gBeta[0][0] - unit112_2*gBeta[0][1] + unit112_1*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] + 0*gBeta[0][1] - unit110*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] + unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_1*gBeta[1][0] - unit112_2*gBeta[1][1] + unit112_1*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] + 0*gBeta[1][1] - unit110*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] + unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_1*gBeta[2][0] - unit112_2*gBeta[2][1] + unit112_1*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] - unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] - unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (-unit112_1*gBeta[0][0] - unit112_2*gBeta[0][1] - unit112_1*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] + 0*gBeta[0][1] - unit110*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] - unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (-unit112_1*gBeta[1][0] - unit112_2*gBeta[1][1] - unit112_1*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] + 0*gBeta[1][1] - unit110*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] - unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (-unit112_1*gBeta[2][0] - unit112_2*gBeta[2][1] - unit112_1*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] - unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] - unit111*gBeta[0][2]);
-  mat[0][1] = (-unit112_1*gBeta[0][0] + unit112_2*gBeta[0][1] + unit112_1*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] + 0*gBeta[0][1] + unit110*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] + unit111*gBeta[1][1] - unit111*gBeta[1][2]);
-  mat[1][1] = (-unit112_1*gBeta[1][0] + unit112_2*gBeta[1][1] + unit112_1*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] + 0*gBeta[1][1] + unit110*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] + unit111*gBeta[2][1] - unit111*gBeta[2][2]);
-  mat[2][1] = (-unit112_1*gBeta[2][0] + unit112_2*gBeta[2][1] + unit112_1*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] + unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (-unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (-unit112_1*gBeta[0][0] - unit112_2*gBeta[0][1] + unit112_1*gBeta[0][2]);
-  mat[0][2] = (unit110*gBeta[0][0] + 0*gBeta[0][1] + unit110*gBeta[0][2]);
-  mat[1][0] = (-unit111*gBeta[1][0] + unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (-unit112_1*gBeta[1][0] - unit112_2*gBeta[1][1] + unit112_1*gBeta[1][2]);
-  mat[1][2] = (unit110*gBeta[1][0] + 0*gBeta[1][1] + unit110*gBeta[1][2]);
-  mat[2][0] = (-unit111*gBeta[2][0] + unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (-unit112_1*gBeta[2][0] - unit112_2*gBeta[2][1] + unit112_1*gBeta[2][2]);
-  mat[2][2] = (unit110*gBeta[2][0] + 0*gBeta[2][1] + unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] - unit111*gBeta[0][2]);
-  mat[0][1] = (-unit112_2*gBeta[0][0] + unit112_1*gBeta[0][1] - unit112_1*gBeta[0][2]);
-  mat[0][2] = (0*gBeta[0][0] + unit110*gBeta[0][1] + unit110*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] + unit111*gBeta[1][1] - unit111*gBeta[1][2]);
-  mat[1][1] = (-unit112_2*gBeta[1][0] + unit112_1*gBeta[1][1] - unit112_1*gBeta[1][2]);
-  mat[1][2] = (0*gBeta[1][0] + unit110*gBeta[1][1] + unit110*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] + unit111*gBeta[2][1] - unit111*gBeta[2][2]);
-  mat[2][1] = (-unit112_2*gBeta[2][0] + unit112_1*gBeta[2][1] - unit112_1*gBeta[2][2]);
-  mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] + unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] - unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_2*gBeta[0][0] + unit112_1*gBeta[0][1] - unit112_1*gBeta[0][2]);
-  mat[0][2] = (0*gBeta[0][0] + unit110*gBeta[0][1] + unit110*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] - unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_2*gBeta[1][0] + unit112_1*gBeta[1][1] - unit112_1*gBeta[1][2]);
-  mat[1][2] = (0*gBeta[1][0] + unit110*gBeta[1][1] + unit110*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] - unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_2*gBeta[2][0] + unit112_1*gBeta[2][1] - unit112_1*gBeta[2][2]);
-  mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] + unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_2*gBeta[0][0] - unit112_1*gBeta[0][1] - unit112_1*gBeta[0][2]);
-  mat[0][2] = (0*gBeta[0][0] + unit110*gBeta[0][1] - unit110*gBeta[0][2]);
-  mat[1][0] = (unit111*gBeta[1][0] + unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_2*gBeta[1][0] - unit112_1*gBeta[1][1] - unit112_1*gBeta[1][2]);
-  mat[1][2] = (0*gBeta[1][0] + unit110*gBeta[1][1] - unit110*gBeta[1][2]);
-  mat[2][0] = (unit111*gBeta[2][0] + unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_2*gBeta[2][0] - unit112_1*gBeta[2][1] - unit112_1*gBeta[2][2]);
-  mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] - unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-
-  mat[0][0] = (-unit111*gBeta[0][0] + unit111*gBeta[0][1] + unit111*gBeta[0][2]);
-  mat[0][1] = (unit112_2*gBeta[0][0] + unit112_1*gBeta[0][1] + unit112_1*gBeta[0][2]);
-  mat[0][2] = (0*gBeta[0][0] + unit110*gBeta[0][1] - unit110*gBeta[0][2]);
-  mat[1][0] = (-unit111*gBeta[1][0] + unit111*gBeta[1][1] + unit111*gBeta[1][2]);
-  mat[1][1] = (unit112_2*gBeta[1][0] + unit112_1*gBeta[1][1] + unit112_1*gBeta[1][2]);
-  mat[1][2] = (0*gBeta[1][0] + unit110*gBeta[1][1] - unit110*gBeta[1][2]);
-  mat[2][0] = (-unit111*gBeta[2][0] + unit111*gBeta[2][1] + unit111*gBeta[2][2]);
-  mat[2][1] = (unit112_2*gBeta[2][0] + unit112_1*gBeta[2][1] + unit112_1*gBeta[2][2]);
-  mat[2][2] = (0*gBeta[2][0] + unit110*gBeta[2][1] - unit110*gBeta[2][2]);
-  w = OrientationMath::matrixMisorientation(mat, gAlpha);
-  if(w < wmin) wmin = w;
-  if((180.0*wmin/m_pi) < m_AngleTolerance) return 1;
-  else if((180.0-(180.0*wmin/m_pi)) < m_AngleTolerance) return 1;
-  else return 0;
+  return 0;
 }

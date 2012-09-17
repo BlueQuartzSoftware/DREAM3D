@@ -36,6 +36,10 @@
 
 #include "MergeTwins.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
@@ -74,6 +78,7 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+m_RandomizeParentIds(true),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
 m_GrainIds(NULL),
@@ -243,15 +248,52 @@ void MergeTwins::execute()
  notifyStatusMessage("Characterizing Twins");
   characterize_twins();
 
- notifyStatusMessage("Renumbering Grains");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
+  if (true == m_RandomizeParentIds)
   {
-    return;
+    int64_t totalPoints = m->getTotalPoints();
+
+    // Generate all the numbers up front
+    const int rangeMin = 1;
+    const int rangeMax = numParents - 1;
+    typedef boost::uniform_int<int> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&,
+                                     NumberDistribution> Generator;
+
+    NumberDistribution distribution(rangeMin, rangeMax);
+    RandomNumberGenerator generator;
+    Generator numberGenerator(generator, distribution);
+    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
+    int32_t* pid = rndNumbers->GetPointer(0);
+    pid[0] = 0;
+    std::set<int32_t> parentIdSet;
+    parentIdSet.insert(0);
+    for(size_t i = 1; i < numParents; ++i)
+    {
+      pid[i] = i; //numberGenerator();
+      parentIdSet.insert(pid[i]);
+    }
+
+    size_t r;
+    size_t temp;
+    //--- Shuffle elements by randomly exchanging each with one other.
+    for (size_t i=1; i< numParents; i++) {
+        r = numberGenerator(); // Random remaining position.
+        if (r >= numParents) {
+          continue;
+        }
+        temp = pid[i];
+        pid[i] = pid[r];
+        pid[r] = temp;
+    }
+
+    // Now adjust all the Grain Id values for each Voxel
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+       m_ParentIds[i] = pid[ m_ParentIds[i] ];
+    }
   }
 
  notifyStatusMessage("Completed");
@@ -340,6 +382,7 @@ void MergeTwins::merge_twins()
     int grainname = m_GrainIds[k];
 	m_ParentIds[k] = parentnumbers[grainname];
   }
+  numParents = parentcount+1;
 }
 
 void MergeTwins::characterize_twins()

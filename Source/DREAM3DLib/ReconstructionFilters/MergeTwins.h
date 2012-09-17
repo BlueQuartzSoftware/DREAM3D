@@ -83,6 +83,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Merge Twins"; }
@@ -115,6 +116,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 	int32_t* m_NumFields;
 
     std::vector<int> parentnumbers;
+	int numParents;
 
     unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;
