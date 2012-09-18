@@ -506,6 +506,19 @@ void OrientationMath::eulertoMat(float ea1, float ea2, float ea3, float g[3][3])
       g[2][2] = cos_phi;
 }
 
+void OrientationMath::mattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3)
+{
+	ea2 = acos(g[2][2]);
+	float cosine3 = (g[1][2]/sin(ea2));
+	float sine3 = (g[0][2]/sin(ea2));
+	float cosine1 = (-g[2][1]/sin(ea2));
+	float sine1 = (g[2][0]/sin(ea2));
+	ea3 = acos(cosine3);
+	ea1 = acos(cosine1);
+	if(sine3 < 0) ea3 = (2*m_pi)-ea3;
+	if(sine1 < 0) ea1 = (2*m_pi)-ea1;
+}
+
 void OrientationMath::eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
 	float sum, diff, csum, cdiff, sdiff, t2;
