@@ -54,23 +54,16 @@ const static float m_pi = static_cast<float>(M_PI);
 FindNeighborhoods::FindNeighborhoods() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_GrainIds(NULL),
-m_BiasedFields(NULL),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL),
-m_PhaseTypes(NULL)
+m_Neighborhoods(NULL)
 {
-  m_DistributionAnalysis.push_back(BetaOps::New());
-  m_DistributionAnalysis.push_back(LogNormalOps::New());
-  m_DistributionAnalysis.push_back(PowerLawOps::New());
   setupFilterParameters();
 }
 
@@ -85,26 +78,12 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
-  {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Distribution Type");
-    option->setPropertyName("DistributionType");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Beta");
-    choices.push_back("LogNormal");
-    choices.push_back("Power");
-    option->setChoices(choices);
-    parameters.push_back(option);
-  }
-  setFilterParameters(parameters);
+
 }
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("DistributionType", getDistributionType() );
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -129,20 +108,6 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
-
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, err, -303, bool, BoolArrayType, fields, 1)
-  if(err == -303)
-  {
-    setErrorCondition(0);
-    FindBoundingBoxGrains::Pointer find_biasedfields = FindBoundingBoxGrains::New();
-    find_biasedfields->setObservers(this->getObservers());
-    find_biasedfields->setDataContainer(getDataContainer());
-    if(preflight == true) find_biasedfields->preflight();
-    if(preflight == false) find_biasedfields->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -303, bool, BoolArrayType, fields, 1)
-
-
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -304, int32_t, Int32ArrayType, fields, 1)
   if(err == -304)
   {
@@ -154,7 +119,6 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     if(preflight == false) find_grainphases->execute();
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
-
 
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, err, -305, float, FloatArrayType, fields, 3)
   if(err == -305)
@@ -168,20 +132,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
-
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  if(m_StatsDataArray == NULL)
-  {
-    StatsDataArray::Pointer p = StatsDataArray::New();
-    m_StatsDataArray = p.get();
-    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
-  }
 }
 
 
@@ -223,50 +174,11 @@ void FindNeighborhoods::find_neighborhoods()
 {
   DataContainer* m = getDataContainer();
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
   float x, y, z;
   float xn, yn, zn;
   float dx, dy, dz;
   size_t bin;
-  std::vector<VectorOfFloatArray> neighborhoods;
-  std::vector<std::vector<std::vector<float > > > values;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
   size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
-
-  neighborhoods.resize(numensembles);
-  values.resize(numensembles);
-  mindiams.resize(numensembles);
-  binsteps.resize(numensembles);
-  for(size_t i = 1; i < numensembles; i++)
-  {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  values[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(getDistributionType(), pp->getBinNumbers()->GetSize());
-		  values[i].resize(pp->getBinNumbers()->GetSize());
-		  mindiams[i] = pp->getMinGrainDiameter();
-		  binsteps[i] = pp->getBinStepSize();
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  neighborhoods[i] = tp->CreateCorrelatedDistributionArrays(getDistributionType(), tp->getBinNumbers()->GetSize());
-		  values[i].resize(tp->getBinNumbers()->GetSize());
-		  mindiams[i] = tp->getMinGrainDiameter();
-		  binsteps[i] = tp->getBinStepSize();
-	  }
-  }
 
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -300,31 +212,5 @@ void FindNeighborhoods::find_neighborhoods()
             m_Neighborhoods[j]++;
         }
       }
-	  if(m_BiasedFields[i] == false)
-	  {
-		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-		values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
-	  }
-  }
-  for (size_t i = 1; i < numensembles; i++)
-  {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-		  pp->setGrainSize_Neighbors(neighborhoods[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-		  pp->setGrainSize_Neighbors(neighborhoods[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  m_DistributionAnalysis[getDistributionType()]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
-		  tp->setGrainSize_Neighbors(neighborhoods[i]);
-	  }
   }
 }
