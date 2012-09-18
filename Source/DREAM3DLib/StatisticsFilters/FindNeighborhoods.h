@@ -69,16 +69,12 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
@@ -103,16 +99,10 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 private:
     int32_t* m_GrainIds;
 
-    bool* m_BiasedFields;
     int32_t* m_FieldPhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
-    uint32_t* m_PhaseTypes;
-
-	StatsDataArray* m_StatsDataArray;
-
-	std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
 
 	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
