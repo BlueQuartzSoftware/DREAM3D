@@ -45,12 +45,21 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
+const static float m_pi = static_cast<float>(M_PI);
+
+
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
+	float phi1mod;
+	float PHImod;
+	float phi2mod;
   public:
-    RotateEulerRefFrameImpl(float* data, float rotMat[3][3], float angle) :
-      m_CellEulerAngles(data)
+    RotateEulerRefFrameImpl(float* data, float rotPhi1, float rotPHI, float rotPhi2) :
+      m_CellEulerAngles(data),
+	  phi1mod(rotPhi1),
+	  PHImod(rotPHI),
+	  phi2mod(rotPhi2)
     {}
     virtual ~RotateEulerRefFrameImpl(){}
 
@@ -58,7 +67,9 @@ class RotateEulerRefFrameImpl
     {
       for (size_t i = start; i < end; i++)
       {
-        m_CellEulerAngles[i] = m_CellEulerAngles[i];
+        m_CellEulerAngles[3*i+0] = m_CellEulerAngles[3*i+0] + phi1mod;
+        m_CellEulerAngles[3*i+1] = m_CellEulerAngles[3*i+1] + PHImod;
+        m_CellEulerAngles[3*i+2] = m_CellEulerAngles[3*i+2] + phi2mod;
       }
     }
 
@@ -181,27 +192,33 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-  float rotMat[3][3];
-  float angle;
+  float rotAngle = 0;
+  float degToRad = m_pi/180.0;
+  float angles[3];
+
+  if (m_RotationAngle == DREAM3D::EulerFrameRotationAngle::Ninety) rotAngle = 90.0;
+  else if (m_RotationAngle == DREAM3D::EulerFrameRotationAngle::oneEighty) rotAngle = 180.0;
+  else if (m_RotationAngle == DREAM3D::EulerFrameRotationAngle::twoSeventy) rotAngle = 270.0;
 
   if (m_RotationAxis == DREAM3D::EulerFrameRotationAxis::RD)
   {
-
+	angles[0] = 0.0;
+	angles[1] = rotAngle*degToRad;
+	angles[2] = 0.0;
   }
   else if (m_RotationAxis == DREAM3D::EulerFrameRotationAxis::TD)
   {
-
+	if(rotAngle == 90) angles[0] = 270.0*degToRad, angles[1] = 90.0*degToRad, angles[2] = 90.0*degToRad;
+	else if(rotAngle == 90) angles[0] = 180.0*degToRad, angles[1] = 180.0*degToRad, angles[2] = 0.0*degToRad;
+	else if(rotAngle == 270) angles[0] = 90.0*degToRad, angles[1] = 90.0*degToRad, angles[2] = 270.0*degToRad;
   }
   else if (m_RotationAxis == DREAM3D::EulerFrameRotationAxis::ND)
   {
-
+	angles[0] = 0.0;
+	angles[1] = 0.0;
+	angles[2] = rotAngle;
   }
 
-  if (m_RotationAngle == DREAM3D::EulerFrameRotationAngle::Ninety) angle = 90.0;
-  else if (m_RotationAngle == DREAM3D::EulerFrameRotationAngle::oneEighty) angle = 180.0;
-  else if (m_RotationAngle == DREAM3D::EulerFrameRotationAngle::twoSeventy) angle = 270.0;
-
-  totalPoints = totalPoints * 3;
 //  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
 //#if 0
@@ -209,7 +226,7 @@ void RotateEulerRefFrame::execute()
                     RotateEulerRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
 
 #else
-  RotateEulerRefFrameImpl serial(m_CellEulerAngles, rotMat, angle);
+  RotateEulerRefFrameImpl serial(m_CellEulerAngles, angles[0], angles[1], angles[2]);
   serial.convert(0, totalPoints);
 #endif
 
