@@ -38,10 +38,6 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
-#include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
-#include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
-#include "DREAM3DLib/GenericFilters/FindBoundingBoxGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 const static float m_pi = static_cast<float>(M_PI);

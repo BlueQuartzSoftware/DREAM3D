@@ -47,7 +47,6 @@
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
 
 
@@ -77,7 +76,6 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_RandomizeParentIds(true),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
@@ -87,8 +85,7 @@ m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
 m_NeighborList(NULL),
-m_CrystalStructures(NULL),
-m_NumFields(NULL)
+m_CrystalStructures(NULL)
 {
 
   m_HexOps = HexagonalOps::New();
@@ -210,7 +207,6 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

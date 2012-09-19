@@ -44,7 +44,6 @@
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -72,7 +71,6 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
 m_ParentIds(NULL),
@@ -80,8 +78,7 @@ m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
 m_NeighborList(NULL),
-m_CrystalStructures(NULL),
-m_NumFields(NULL)
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -180,8 +177,6 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -220,33 +215,6 @@ void GroupMicroTextureRegions::execute()
 
  notifyStatusMessage("Characterizing MicroTexture Regions");
   characterize_micro_texture_regions();
-
- notifyStatusMessage("Renumbering Fields");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
-  {
-    return;
-  }
-
-  setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-    m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < m->getNumFieldTuples(); i++)
-  {
-    m_NumFields[m_FieldPhases[i]]++;
-  }
 
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("GroupMicroTextureRegions Completed");
