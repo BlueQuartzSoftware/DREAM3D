@@ -158,12 +158,14 @@ void ChangeResolution::execute()
   int m_XP = int(sizex / m_XRes);
   int m_YP = int(sizey / m_YRes);
   int m_ZP = int(sizez / m_ZRes);
+  int64_t totalPoints = m_XP*m_YP*m_ZP;
 
   float x, y, z;
   int col, row, plane;
   int index;
   int index_old;
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  std::vector<size_t> newindicies;
+  newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
     std::stringstream ss;
@@ -181,24 +183,37 @@ void ChangeResolution::execute()
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-        for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-        {
-          std::string name = *iter;
-          IDataArray::Pointer p = m->getCellData(*iter);
-          p->CopyTuple(index_old, index);
-        }
+		newindicies[index] = index_old;
       }
     }
   }
-  int64_t totalPoints = m->getTotalPoints();
-  m->setResolution(m_XRes, m_YRes, m_ZRes);
-  m->setDimensions(m_XP, m_YP, m_ZP);
-  totalPoints = m_XP*m_YP*m_ZP;
-  for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     std::string name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
-    err = p->Resize(totalPoints);
+    // Make a copy of the 'p' array that has the same name. When placed into
+    // the data container this will over write the current array with
+    // the same name. At least in theory
+    IDataArray::Pointer data = p->createNewArray(p->GetNumberOfTuples(), p->GetNumberOfComponents(), p->GetName());
+    data->Resize(totalPoints);
+    void* source = NULL;
+    void* destination = NULL;
+    size_t newIndicies_I = 0;
+    int nComp = data->GetNumberOfComponents();
+    for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+    {
+      newIndicies_I = newindicies[i];
+
+      source = p->GetVoidPointer((nComp * newIndicies_I));
+      destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
+      ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
+    }
+    m->addCellData(*iter, data);
   }
+  m->setResolution(m_XRes, m_YRes, m_ZRes);
+  m->setDimensions(m_XP, m_YP, m_ZP);
+
   notifyStatusMessage("Complete");
 }

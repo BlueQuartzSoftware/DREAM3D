@@ -78,8 +78,6 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
@@ -113,7 +111,6 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;
-	int32_t* m_NumFields;
 
     std::vector<int> parentnumbers;
 	int numParents;
