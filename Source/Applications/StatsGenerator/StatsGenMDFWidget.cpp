@@ -44,6 +44,17 @@
 
 //-- Qt Includes
 #include <QtGui/QAbstractItemDelegate>
+#include <QtCore/QtConcurrentMap>
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtCore/QSettings>
+#include <QtCore/QVector>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QMessageBox>
+#include <QtGui/QFileDialog>
+
 
 #include <qwt.h>
 #include <qwt_plot.h>
@@ -266,6 +277,47 @@ void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
   if (m_MDFTableModel->rowCount() > 0)
   {
     m_MDFTableView->resizeColumnsToContents();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::on_loadMDFBtn_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory;
+  QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  else
+  {
+    size_t numMisorients = 0;
+	std::string filename = file.toStdString();
+	std::ifstream inFile;
+	inFile.open(filename.c_str());
+
+	inFile >> numMisorients;
+
+	float angle, weight;
+	std::string axis, n1, n2, n3;
+	for(size_t i = 0; i < numMisorients; i++)
+	{
+		inFile >> angle >> n1 >> n2 >> n3 >> weight;
+
+		axis = std::string("<" + n1 + "," + n2 + "," + n3 + ">");
+
+		if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) return;
+		int row = m_MDFTableModel->rowCount() - 1;
+		m_MDFTableModel->setRowData(row, angle, axis, weight);
+
+		m_MDFTableView->resizeColumnsToContents();
+		m_MDFTableView->scrollToBottom();
+		m_MDFTableView->setFocus();
+		QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
+		m_MDFTableView->setCurrentIndex(index);
+	}
   }
 }
 

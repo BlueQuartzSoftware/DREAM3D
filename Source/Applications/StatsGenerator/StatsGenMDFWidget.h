@@ -90,12 +90,14 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     void on_addMDFRowBtn_clicked();
     void on_deleteMDFRowBtn_clicked();
     void on_m_MDFUpdateBtn_clicked();
+    void on_loadMDFBtn_clicked();
 
 
   private:
     SGMDFTableModel* m_MDFTableModel;
     QwtPlotCurve*    m_PlotCurve;
 
+    QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGenMDFWidget(const StatsGenMDFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenMDFWidget&); // Operator '=' Not Implemented
 
