@@ -98,6 +98,8 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
 
     virtual void checkIOFiles();
 
+    virtual QString getFilterGroup();
+
     /**
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
