@@ -12,6 +12,7 @@ SET (ReconstructionFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.h
+    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeatureCentroid.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsList.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CAxisSegmentGrains.h
@@ -30,6 +31,7 @@ SET (DREAM3DLib_ReconstructionFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeatureCentroid.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsList.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SegmentGrains.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.cpp     
