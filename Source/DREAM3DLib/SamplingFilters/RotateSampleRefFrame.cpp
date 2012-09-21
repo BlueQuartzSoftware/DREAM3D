@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RotateEulerRefFrame.h"
+#include "RotateSampleRefFrame.h"
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -50,105 +50,221 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 
-class RotateEulerRefFrameImpl
+class RotateSampleRefFrameImpl
 {
-    float* m_CellEulerAngles;
+	DataContainer* m;
 	uint32_t angle;
 	uint32_t axis;
   public:
-    RotateEulerRefFrameImpl(float* data, uint32_t rotAngle, uint32_t rotAxis) :
-      m_CellEulerAngles(data),
+    RotateSampleRefFrameImpl(DataContainer* dc, uint32_t rotAngle, uint32_t rotAxis) :
+	  m(dc),
 	  angle(rotAngle),
 	  axis(rotAxis)
     {}
-    virtual ~RotateEulerRefFrameImpl(){}
+    virtual ~RotateSampleRefFrameImpl(){}
 
-    void convert(size_t start, size_t end) const
+    void convert() const
     {
-	  float rotMat[3][3];
-	  float degToRad = m_pi/180.0;
+	  size_t xp, yp, zp;
+	  float xRes, yRes, zRes;
+	  size_t xpNew, ypNew, zpNew;
+	  float xResNew, yResNew, zResNew;
+	  int xStart, yStart, zStart;
+	  int xStride, yStride, zStride;
 
+	  xp = m->getXPoints();
+	  xRes = m->getXRes();
+	  yp = m->getYPoints();
+	  yRes = m->getYRes();
+	  zp = m->getZPoints();
+	  zRes = m->getZRes();
 
-	  if (axis == DREAM3D::EulerFrameRotationAxis::RD)
+	  xpNew = xp;
+	  xResNew = xRes;
+	  ypNew = yp;
+	  yResNew = yRes;
+	  zpNew = zp;
+	  zResNew = zRes;
+
+	  xStart = 0;
+	  yStart = 0;
+	  zStart = 0;
+
+	  xStride = 1;
+	  yStride = xp;
+	  zStride = (xp*yp);
+
+	  if (axis == DREAM3D::SampleFrameRotationAxis::X)
 	  {
 		  if (angle == DREAM3D::RefFrameRotationAngle::Ninety)
 		  {
-			rotMat[0][0] = 1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = 0, rotMat[1][2] = 1;
-			rotMat[2][0] = 0, rotMat[2][1] = -1, rotMat[2][2] = 0;
+			ypNew = zp;
+			yResNew = zRes;
+			zpNew = yp;
+			zResNew = yRes;
+
+			zStart = (yp-1)*xp;
+
+			yStride = (xp*yp);
+			zStride = -xp;
 		  }
 		  else if (angle == DREAM3D::RefFrameRotationAngle::oneEighty)
 		  {
-			rotMat[0][0] = 1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = -1, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = -1;
+			yStart = (yp-1)*xp;
+			zStart = (zp-1)*xp*yp;
+
+			yStride = -xp;
+			zStride = -(xp*yp);
 		  }
 		  else if (angle == DREAM3D::RefFrameRotationAngle::twoSeventy)
 		  {
-			rotMat[0][0] = 1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = 0, rotMat[1][2] = -1;
-			rotMat[2][0] = 0, rotMat[2][1] = 1, rotMat[2][2] = 0;
+			ypNew = zp;
+			yResNew = zRes;
+			zpNew = yp;
+			zResNew = yRes;
+
+			yStart = (zp-1)*xp*yp;
+
+			yStride = -(xp*yp);
+			zStride = xp;
+		  }
+		  else if (angle == DREAM3D::RefFrameRotationAngle::Mirror)
+		  {
+			xStart = (xp-1);
+
+			xStride = -1;
 		  }
 	  }
-	  else if (axis == DREAM3D::EulerFrameRotationAxis::TD)
+	  else if (axis == DREAM3D::SampleFrameRotationAxis::Y)
 	  {
 		  if (angle == DREAM3D::RefFrameRotationAngle::Ninety)
 		  {
-			rotMat[0][0] = 0, rotMat[0][1] = 0, rotMat[0][2] = -1;
-			rotMat[1][0] = 0, rotMat[1][1] = 1, rotMat[1][2] = 0;
-			rotMat[2][0] = 1, rotMat[2][1] = 0, rotMat[2][2] = 0;
+			xpNew = zp;
+			xResNew = zRes;
+			zpNew = xp;
+			zResNew = xRes;
+
+			xStart = (zp-1)*xp*yp;
+
+			xStride = -(xp*yp);
+			zStride = 1;
 		  }
 		  else if (angle == DREAM3D::RefFrameRotationAngle::oneEighty)
 		  {
-			rotMat[0][0] = -1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = 1, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = -1;
+			xStart = (xp-1);
+			zStart = (zp-1)*xp*yp;
+
+			xStride = -1;
+			zStride = -(xp*yp);
 		  }
 		  else if (angle == DREAM3D::RefFrameRotationAngle::twoSeventy)
 		  {
-			rotMat[0][0] = 0, rotMat[0][1] = 0, rotMat[0][2] = 1;
-			rotMat[1][0] = 0, rotMat[1][1] = 1, rotMat[1][2] = 0;
-			rotMat[2][0] = -1, rotMat[2][1] = 0, rotMat[2][2] = 0;
+			xpNew = zp;
+			xResNew = zRes;
+			zpNew = xp;
+			zResNew = xRes;
+
+			zStart = (xp-1);
+
+			xStride = (xp*yp);
+			zStride = -1;
+		  }
+		  else if (angle == DREAM3D::RefFrameRotationAngle::Mirror)
+		  {
+			yStart = (yp-1)*xp;
+
+			yStride = -xp;
 		  }
 	  }
-	  else if (axis == DREAM3D::EulerFrameRotationAxis::ND)
+	  else if (axis == DREAM3D::SampleFrameRotationAxis::Z)
 	  {
 		  if (angle == DREAM3D::RefFrameRotationAngle::Ninety)
 		  {
-			rotMat[0][0] = 0, rotMat[0][1] = 1, rotMat[0][2] = 0;
-			rotMat[1][0] = -1, rotMat[1][1] = 0, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = 1;
+			xpNew = yp;
+			xResNew = yRes;
+			ypNew = xp;
+			yResNew = xRes;
+
+			yStart = (xp-1);
+
+			xStride = xp;
+			yStride = -1;
 		  }
 		  else if (angle == DREAM3D::RefFrameRotationAngle::oneEighty)
 		  {
-			rotMat[0][0] = -1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = -1, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = 1;
+			xStart = (xp-1);
+			yStart = (yp-1)*xp;
+
+			xStride = -1;
+			yStride = -xp;
 		  }
 		  else if (angle == DREAM3D::RefFrameRotationAngle::twoSeventy)
 		  {
-			rotMat[0][0] = 0, rotMat[0][1] = -1, rotMat[0][2] = 0;
-			rotMat[1][0] = 1, rotMat[1][1] = 0, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = 1;
+			xpNew = yp;
+			xResNew = yRes;
+			ypNew = xp;
+			yResNew = xRes;
+
+			xStart = (yp-1)*xp;
+
+			xStride = -xp;
+			yStride = 1;
+		  }
+		  else if (angle == DREAM3D::RefFrameRotationAngle::Mirror)
+		  {
+			zStart = (zp-1)*xp*yp;
+
+			zStride = -(xp*yp);
 		  }
 	  }
-	  float ea1=0, ea2=0, ea3=0;
-	  float ea1new=0, ea2new=0, ea3new=0;
-	  float g[3][3];
-	  float gNew[3][3];
-	  for (size_t i = start; i < end; i++)
+	  int64_t totalPoints = m->getTotalPoints();
+	  std::vector<size_t> newindicies;
+	  newindicies.resize(totalPoints);
+	  int64_t index_old = 0;
+	  int64_t index = 0;
+	  int x, y, z;
+	  for (size_t k = 0; k < zpNew; k++)
       {
-	    ea1 = m_CellEulerAngles[3*i+0];
-	    ea2 = m_CellEulerAngles[3*i+1];
-	    ea3 = m_CellEulerAngles[3*i+2];
-		OrientationMath::eulertoMat(ea1, ea2, ea3, g);
-		MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
-		OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
-        m_CellEulerAngles[3*i+0] = ea1new;
-        m_CellEulerAngles[3*i+1] = ea2new;
-        m_CellEulerAngles[3*i+2] = ea3new;
-      }
-    }
+		  for (size_t j = 0; j < ypNew; j++)
+	      {
+			  for (size_t i = 0; i < xpNew; i++)
+			  {
+				index = (k*xpNew*ypNew)+(j*xpNew)+i;
+				x = abs(int(xStart-i));
+				y = abs(int(yStart-j));
+				z = abs(int(zStart-k));
+				index_old = (xStart + (i*xStride)) + (yStart + (j*yStride)) + (zStart + (k*zStride));
+				newindicies[index] = index_old;
+			  }
+		  }
+	  }
+	  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+	  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+	  {
+		std::string name = *iter;
+		IDataArray::Pointer p = m->getCellData(*iter);
+		// Make a copy of the 'p' array that has the same name. When placed into
+		// the data container this will over write the current array with
+		// the same name. At least in theory
+		IDataArray::Pointer data = p->createNewArray(p->GetNumberOfTuples(), p->GetNumberOfComponents(), p->GetName());
+		data->Resize(totalPoints);
+		void* source = NULL;
+		void* destination = NULL;
+		size_t newIndicies_I = 0;
+		int nComp = data->GetNumberOfComponents();
+		for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
+		{
+		  newIndicies_I = newindicies[i];
+
+		  source = p->GetVoidPointer((nComp * newIndicies_I));
+		  destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
+		  ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
+		}
+		m->addCellData(*iter, data);
+	  }
+	  m->setResolution(xResNew, yResNew, zResNew);
+	  m->setDimensions(xpNew, ypNew, zpNew);
+	}
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t> &r) const
@@ -165,12 +281,10 @@ class RotateEulerRefFrameImpl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateEulerRefFrame::RotateEulerRefFrame() :
+RotateSampleRefFrame::RotateSampleRefFrame() :
 AbstractFilter(),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero),
-m_RotationAxis(DREAM3D::EulerFrameRotationAxis::None),
-m_CellEulerAngles(NULL)
+m_RotationAxis(DREAM3D::SampleFrameRotationAxis::None)
 {
   setupFilterParameters();
 }
@@ -178,7 +292,7 @@ m_CellEulerAngles(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RotateEulerRefFrame::~RotateEulerRefFrame()
+RotateSampleRefFrame::~RotateSampleRefFrame()
 {
 }
 
@@ -186,7 +300,7 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::setupFilterParameters()
+void RotateSampleRefFrame::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -196,9 +310,9 @@ void RotateEulerRefFrame::setupFilterParameters()
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
     std::vector<std::string> choices;
-    choices.push_back("RD");
-    choices.push_back("TD");
-    choices.push_back("ND");
+    choices.push_back("X");
+    choices.push_back("Y");
+    choices.push_back("Z");
     option->setChoices(choices);
     parameters.push_back(option);
   }
@@ -212,6 +326,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     choices.push_back("90 Degrees");
     choices.push_back("180 Degrees");
     choices.push_back("270 Degrees");
+    choices.push_back("Mirror (Invert)");
     option->setChoices(choices);
     parameters.push_back(option);
   }
@@ -221,7 +336,7 @@ void RotateEulerRefFrame::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("RotationAxis", getRotationAxis() );
   writer->writeValue("RotationAngle", getRotationAngle() );
@@ -230,19 +345,16 @@ void RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::preflight()
+void RotateSampleRefFrame::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -250,7 +362,7 @@ void RotateEulerRefFrame::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::execute()
+void RotateSampleRefFrame::execute()
 {
   DataContainer* m = getDataContainer();
   if(NULL == m)
@@ -269,15 +381,15 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-//  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
+//  std::cout << "RotateSampleRefFrame: " << m_ConversionFactor << std::endl;
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
 //#if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    RotateEulerRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
+                    RotateSampleRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
 
 #else
-  RotateEulerRefFrameImpl serial(m_CellEulerAngles, m_RotationAngle, m_RotationAxis);
-  serial.convert(0, totalPoints);
+  RotateSampleRefFrameImpl serial(m, m_RotationAngle, m_RotationAxis);
+  serial.convert();
 #endif
 
  notifyStatusMessage("Complete");

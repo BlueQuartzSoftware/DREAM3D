@@ -203,9 +203,9 @@ void AlignSections::execute()
       for (DimType n = 0; n < dims[0]; n++)
       {
         if(yshifts[i] >= 0) yspot = static_cast<int>(l);
+        else if(yshifts[i] < 0) yspot = static_cast<int>( dims[1] - 1 - l );
         if(xshifts[i] >= 0) xspot = static_cast<int>(n);
-        if(yshifts[i] < 0) yspot = static_cast<int>( dims[1] - 1 - l );
-        if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
+		else if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
         if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
