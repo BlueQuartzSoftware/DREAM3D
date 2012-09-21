@@ -65,7 +65,7 @@
 QHex2SqrConverterWidget::QHex2SqrConverterWidget(QWidget *parent) :
 QFilterWidget(parent)
 {
-  
+
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
     setOpenDialogLastDirectory( QDir::homePath() );
@@ -83,6 +83,14 @@ QFilterWidget(parent)
 QHex2SqrConverterWidget::~QHex2SqrConverterWidget()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString QHex2SqrConverterWidget::getFilterGroup()
+{
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------

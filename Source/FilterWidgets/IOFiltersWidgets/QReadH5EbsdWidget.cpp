@@ -85,6 +85,15 @@ QReadH5EbsdWidget::~QReadH5EbsdWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString QReadH5EbsdWidget::getFilterGroup()
+{
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 {
   int count = phaseTypeList->count();
@@ -476,6 +485,8 @@ bool QReadH5EbsdWidget::checkPhaseTypes()
 // -----------------------------------------------------------------------------
 void QReadH5EbsdWidget::setupQualityMetricFilters(ReadH5Ebsd::Pointer filter)
 {
+  if (m_QualityMetricTableModel == NULL) { return; }
+
   int filterCount = m_QualityMetricTableModel->rowCount();
   std::vector<QualityMetricFilter::Pointer> filters;
   QVector<QString> fieldNames;

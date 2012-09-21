@@ -39,6 +39,7 @@
 
 
 #include <QtCore/QTimer>
+#include <QtCore/QResource>
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
@@ -93,6 +94,14 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 QFilterWidget::~QFilterWidget()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString QFilterWidget::getFilterGroup()
+{
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -206,8 +215,26 @@ void QFilterWidget::updateWidgetStyle()
 
   style.append("QGroupBox{\n");
 
-  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC);");
-  style.append("background-image: url(:/filterWidgetBorder.png);");
+  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC);\n");
+
+#if 0
+  QString headerFile(":/QFilterWidgetHeaders/");
+
+  headerFile.append(getFilterGroup());
+  headerFile.append("_Header.png");
+  QResource headerResource(headerFile);
+  if (true == headerResource.isValid())
+  {
+      style.append("background-image: url(");
+      style.append( headerFile );
+      style.append(");\n");
+  }
+  else
+#endif
+  {
+      style.append("background-image: url(:/filterWidgetBorder.png);");
+  }
+
   style.append("background-position: top ;\n background-repeat: repeat-x;");
 
   style.append(getBorderColorStyle());
