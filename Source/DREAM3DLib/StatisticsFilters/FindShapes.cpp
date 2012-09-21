@@ -301,8 +301,8 @@ void FindShapes::find_moments2D()
   float Res1 = 0;
   float Res2 = 0;
   if(m->getXPoints() == 1) Res1 = m->getYRes(), Res2 = m->getZRes();
-  if(m->getYPoints() == 1) Res1 = m->getXRes(), Res2 = m->getZRes();
-  if(m->getZPoints() == 1) Res1 = m->getXRes(), Res2 = m->getYRes();
+  else if(m->getYPoints() == 1) Res1 = m->getXRes(), Res2 = m->getZRes();
+  else if(m->getZPoints() == 1) Res1 = m->getXRes(), Res2 = m->getYRes();
 
   for (size_t i = 0; i < numgrains; i++)
   {

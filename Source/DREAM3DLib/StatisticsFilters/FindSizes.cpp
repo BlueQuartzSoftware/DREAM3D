@@ -186,8 +186,8 @@ void FindSizes::find_sizes2D()
   }
   float res_scalar = 0;
   if(m->getXPoints() == 1) res_scalar = m->getYRes() * m->getZRes();
-  if(m->getYPoints() == 1) res_scalar = m->getXRes() * m->getZRes();
-  if(m->getZPoints() == 1) res_scalar = m->getXRes() * m->getYRes();
+  else if(m->getYPoints() == 1) res_scalar = m->getXRes() * m->getZRes();
+  else if(m->getZPoints() == 1) res_scalar = m->getXRes() * m->getYRes();
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
