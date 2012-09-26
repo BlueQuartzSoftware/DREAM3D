@@ -40,6 +40,7 @@
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Common/MXAMath.h"
 #include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "TiffUtilities.h"
 
@@ -234,6 +235,16 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
 #else
     float radToDeg = 1.0f;
 #endif
+    
+    std::string parentPath = MXAFileInfo::parentPath(outputFile);
+    if(!MXADir::mkdir(parentPath, true))
+    {
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      std::cout << ss.str() << std::endl;
+      return -1;
+    }
+
 
     FILE* f = fopen(outputFile.c_str(), "w");
     if (NULL == f)
