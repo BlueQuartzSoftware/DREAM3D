@@ -60,8 +60,8 @@
 // Enable this to generate an HTML template file for each and every
 // filter. If you are NOT careful you can over write any existing documentation
 // file. You have been warned.
-#define GENERATE_HTML_FILE 0
-#define OVERWRITE_SOURCE_DOCS 0
+#define GENERATE_HTML_FILE 1
+#define OVERWRITE_HTML_DOCS 1
 
 // Just some experimental code that generates a bunch of update code to
 // insert into each and every filter. Completely deprecated now.
@@ -78,6 +78,7 @@ typedef std::set<std::string>  StringSetType;
 std::string FILTER_WIDGETS_BINARY_DIR();
 std::string FILTER_WIDGETS_SOURCE_DIR();
 std::string FILTER_WIDGETS_TEMP_DIR();
+std::string FILTER_WIDGETS_DOCS_DIR();
 std::string DREAM3D_SOURCE_DIR();
 std::string FILTER_INCLUDE_PREFIX();
 
@@ -1090,18 +1091,22 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   std::stringstream ss;
-  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "/" << filter << ".html";
+  ss << FILTER_WIDGETS_DOCS_DIR() << "/" << t->getGroupName() << "Filters/" << filter << ".html";
 
   std::string completePath = MXADir::toNativeSeparators(ss.str());
   if(MXADir::exists(completePath) == true)
   {
-    std::cout << filter << ": HTML already exists NOT generating a generic file." << std::endl;
+    // std::cout << "EXISTS HTML File:" << ss.str() << std::endl;
     return;
+  }
+  else
+  {
+    std::cout << "MISSING HTML File: " << ss.str() << std::endl;
   }
 
   ss.str("");
-#if (OVERWRITE_SOURCE_DOCS == 1)
-  ss << DREAM3D_SOURCE_DIR() << "/Documentation/Filters/" << group;
+#if (OVERWRITE_HTML_DOCS == 1)
+  ss << FILTER_WIDGETS_DOCS_DIR() << "/" << t->getGroupName() << "Filters/";
 #else
   ss << FILTER_WIDGETS_BINARY_DIR() << "/Documentation/Filters/" << group;
 #endif
@@ -1111,19 +1116,18 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   completePath = MXADir::toNativeSeparators(ss.str());
 
   ss.str("");
-
- // std::cout << "Creating HTML File: " << completePath << std::endl;
-  std::cout << "Creating HTML File: "
-#if (OVERWRITE_SOURCE_DOCS == 1)
-      << DREAM3D_SOURCE_DIR()
+  std::cout << "CREATING HTML File: ";
+#if (OVERWRITE_HTML_DOCS == 1)
+      ss << FILTER_WIDGETS_DOCS_DIR() << "/" << t->getGroupName() << "Filters/" << filter << ".html";
 #else
       << FILTER_WIDGETS_BINARY_DIR()
+      << "/Documentation/Filters/" << t->getGroupName() << "/" << filter << ".html" << std::endl;
 #endif
-      << "/Documentation/Filters/" << group << "/" << filter << ".html" << std::endl;
+  const char* groupName = t->getGroupName().c_str();
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
-  fprintf(f, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+  fprintf(f, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
   fprintf(f, "<html>\n");
   fprintf(f, "<head>\n");
   fprintf(f, "<meta name=\"qrichtext\" content=\"1\" />\n");
@@ -1132,19 +1136,30 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "h2.pHeading2 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: large; font-weight: bold; text-align: left }\n");
   fprintf(f, "p.pBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }\n");
   fprintf(f, "p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }\n");
+  fprintf(f, "#footer\n{\n\
+   font-family: Arial, Verdana, Helvetica, sans-serif;\n\
+   font-color:Blue;\n\
+   font-size:small;\n\
+   background-color:#CCCCCC;\n\
+   padding:0pt;\n\
+   position:fixed;\n\
+   bottom:1%%;\n\
+   left:1%%;\n\
+   width:98%%;\n}\n");
   fprintf(f, "</style>\n");
   fprintf(f, "<title>%s</title>\n", t->getHumanLabel().c_str());
   fprintf(f, "</head>\n");
   fprintf(f, "<body>\n");
-  fprintf(f, "<h1 class=\"pHeading1\">%s Filter</h1>\n<p class=\"pCellBody\">\n", t->getHumanLabel().c_str());
-  fprintf(f, "<a href=\"MFESurfaceSmoothingFilter.html#wp2\">Description</a> ");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp3\">Options</a> ");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp4\">Required Arrays</a> ");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp5\">Created Arrays</a>");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> </p>\n\n");
+  fprintf(f, "<h1 class=\"pHeading1\">%s Filter</h1>\n", t->getHumanLabel().c_str());
+  fprintf(f, "<p class=\"pCellBody\">\n");
+  fprintf(f, "<a href=\"../%sFilters/%s.html#wp2\">Description</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp3\">Options</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp4\">Required Arrays</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp5\">Created Arrays</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp1\">Authors</a> </p>\n\n", groupName, filter.c_str());
   fprintf(f, "<a name=\"wp7\"></a>\n");
   fprintf(f, "<h2 class=\"pHeading2\">Group</h2>\n");
-  fprintf(f, "<p class=\"pBody\">%s</p>\n\n", group.c_str());
+  fprintf(f, "<p class=\"pBody\">%s</p>\n\n", groupName);
 
   fprintf(f, "<a name=\"wp2\"> </a>");
   fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n<p class=\"pBody\">\n");
@@ -1292,15 +1307,16 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
   fprintf(f, "<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
 
-  fprintf(f, "Copyright 2012 Michael A. Groeber (AFRL), ");
-  fprintf(f, "Michael A. Jackson (BlueQuartz Software)<br />\n");
-  fprintf(f, "Contact Info: dream3d@bluequartz.net<br />\n");
-  fprintf(f, "Version: 1.0.0\n");
+  fprintf(f, "Copyright [INSERT YOUR NAME HERE]<br />\n");
+
+  fprintf(f, "Contact Info:[INSERT EMAIL ADDRESS HERE]<br />\n");
+  fprintf(f, "Version: 1.0.0<br />\n");
   fprintf(f, "License: See the License.txt file that came with DREAM3D.<br />\n");
   fprintf(f, "</p>\n");
-
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->\n");
-
+  fprintf(f, "<div>\
+  <table width=\"98%%\" border=\"0\" bgcolor=\"#CCCCCC\"><tr><td><a href=\"../index.html\">Index</a></td></tr></table>\
+  </div>\n");
   fprintf(f, "</body>\n");
   fprintf(f, "</html>\n");
 
