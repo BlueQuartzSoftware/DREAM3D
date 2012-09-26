@@ -198,7 +198,7 @@ void QFilterWidget::changeStyle()
   }
   else
   {
-    style.append("border: 1px solid gray;");
+    style.append("border: 1px solid #515151;");
     style.append("margin: 1px;");
     m_CurrentBorderColorFactor = 0;
   }
@@ -215,7 +215,7 @@ void QFilterWidget::updateWidgetStyle()
 
   style.append("QGroupBox{\n");
 
-  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #DCDCDC);\n");
+  style.append("background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #FFFFFF, stop: 1 #CCCCCC);\n");
 
 #if 0
   QString headerFile(":/QFilterWidgetHeaders/");
