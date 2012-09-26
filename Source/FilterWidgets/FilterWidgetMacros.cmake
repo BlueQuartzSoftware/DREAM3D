@@ -110,6 +110,7 @@ function(GenerateFilterWidgets)
     set(FILTER_WIDGETS_TEMP_DIR ${WIG_BINARY_DIR}/Temp)
     set(FILTER_WIDGETS_BINARY_DIR ${WIG_BINARY_DIR})
     set(FILTER_WIDGETS_SOURCE_DIR ${WIG_SOURCE_DIR})
+    set(FILTER_WIDGETS_DOCS_DIR ${WIG_SOURCE_DIR}/Documentation)
     set(FILTER_INCLUDE_PREFIX "")
     file(MAKE_DIRECTORY ${WIG_BINARY_DIR}/Temp)
     configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
