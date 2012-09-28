@@ -377,7 +377,7 @@ void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -422,7 +422,7 @@ void LeeMarchingCubes::preflight()
 void LeeMarchingCubes::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -171,7 +171,7 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -217,7 +217,7 @@ void PackPrimaryPhases::preflight()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   bool writeErrorFile = true;
   std::ofstream outFile;
@@ -661,7 +661,7 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage("Packing Grains - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
+  renumber_grains->setVoxelDataContainer(m);
   renumber_grains->execute();
   err = renumber_grains->getErrorCondition();
   if (err < 0)
@@ -724,7 +724,7 @@ int PackPrimaryPhases::writeVtkFile()
 
 void PackPrimaryPhases::initialize_packinggrid()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   packingresx = m->getXRes() * 2.0f;
   packingresy = m->getYRes() * 2.0f;
@@ -749,7 +749,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  //DataContainer* m = getDataContainer();
+  //DataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -878,7 +878,7 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
 
 void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
@@ -913,7 +913,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1047,7 +1047,7 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
 
 float PackPrimaryPhases::check_sizedisterror(Field* field)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1183,7 +1183,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
 void PackPrimaryPhases::insert_grain(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
- //   DataContainer* m = getDataContainer();
+ //   DataContainer* m = getVoxelDataContainer();
 //  float dist;
   float inside = -1;
   int column, row, plane;
@@ -1274,7 +1274,7 @@ void PackPrimaryPhases::assign_voxels()
 {
  notifyStatusMessage("Assigning Voxels");
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int index;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1435,7 +1435,7 @@ void PackPrimaryPhases::assign_gaps()
 {
  notifyStatusMessage("Assigning Gaps");
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
@@ -1616,7 +1616,7 @@ void PackPrimaryPhases::cleanup_grains()
 {
   notifyStatusMessage("Cleaning Up Grains");
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 

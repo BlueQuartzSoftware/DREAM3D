@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
  * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h

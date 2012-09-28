@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
  * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h

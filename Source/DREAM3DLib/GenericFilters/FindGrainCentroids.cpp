@@ -74,7 +74,7 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -98,7 +98,7 @@ void FindGrainCentroids::preflight()
 void FindGrainCentroids::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -123,7 +123,7 @@ void FindGrainCentroids::execute()
 }
 void FindGrainCentroids::find_centroids()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   float x, y, z;
   int col, row, plane;
@@ -172,7 +172,7 @@ void FindGrainCentroids::find_centroids()
 }
 void FindGrainCentroids::find_centroids2D()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   float x, y;

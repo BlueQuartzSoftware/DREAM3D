@@ -51,7 +51,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
@@ -449,7 +449,7 @@ void TestWriteData()
   StatsDataArray::Pointer statsArray = createStatsDataArray();
 
   // Create a data container and set the StatsArray
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsArray);
 
   DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(3, DREAM3D::EnsembleData::CrystalStructures);
@@ -473,7 +473,7 @@ void TestWriteData()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   // H5StatsDataWriter::Pointer writer = H5StatsDataWriter::New();
-  writer->setDataContainer(m.get());
+  writer->setVoxelDataContainer(m.get());
   writer->setOutputFile(UnitTest::StatsDataTest::TestFile);
   writer->execute();
   DREAM3D_REQUIRE( writer->getErrorCondition() >= 0)
@@ -531,11 +531,11 @@ void TestWriteData()
 // -----------------------------------------------------------------------------
 void TestReadData()
 {
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(UnitTest::StatsDataTest::TestFile);
-  reader->setDataContainer(m.get());
+  reader->setVoxelDataContainer(m.get());
   reader->execute();
   int err = reader->getErrorCondition();
   if (err < 0)
@@ -549,7 +549,7 @@ void TestReadData()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::StatsDataTest::TestFile2);
-  writer->setDataContainer(m.get());
+  writer->setVoxelDataContainer(m.get());
   writer->execute();
   err = writer->getErrorCondition();
   if (err < 0)

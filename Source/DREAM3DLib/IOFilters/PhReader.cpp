@@ -125,7 +125,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -160,7 +160,7 @@ int PhReader::readHeader()
 int  PhReader::readFile()
 {
 
-  if (NULL == getDataContainer())
+  if (NULL == getVoxelDataContainer())
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
@@ -248,10 +248,10 @@ int  PhReader::readFile()
   }
 
   // Read the data and stick it in the data Container
-  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
-  getDataContainer()->setDimensions(nx, ny, nz);
-  getDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
-  getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
+  getVoxelDataContainer()->setDimensions(nx, ny, nz);
+  getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
+  getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 
   tokens.clear();
   inFile.close();
