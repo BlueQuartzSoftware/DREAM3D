@@ -131,10 +131,6 @@ void Hex2SqrConverter::execute()
 {
   std::stringstream ss;
   herr_t err = 0;
-  //hid_t fileId = -1;
-
-  // Start the Benchmark clock
-  START_CLOCK()
 
   std::vector<int> indices;
   // Loop on Each EBSD File

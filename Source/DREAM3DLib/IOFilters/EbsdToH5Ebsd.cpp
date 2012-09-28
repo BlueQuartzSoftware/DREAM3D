@@ -132,9 +132,6 @@ void EbsdToH5Ebsd::execute()
   herr_t err = 0;
   hid_t fileId = -1;
 
-  // Start the Benchmark clock
-  START_CLOCK()
-
   if(m_OutputFile.empty() == true)
   {
     std::string s("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '");
