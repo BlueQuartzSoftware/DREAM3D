@@ -104,7 +104,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getOutputFile().empty() == true)
   {
@@ -140,7 +140,7 @@ int DxWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int DxWriter::writeFile()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;

@@ -244,7 +244,7 @@ void FilterPipeline::updatePrevNextFilters()
 int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
@@ -254,7 +254,7 @@ int FilterPipeline::preflightPipeline()
   // Start looping through the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
-    (*filter)->setDataContainer(m.get());
+    (*filter)->setVoxelDataContainer(m.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
     (*filter)->setDataContainer(NULL);
@@ -301,7 +301,7 @@ void FilterPipeline::execute()
 //    m_DataContainer = DataContainer::New();
 //  }
 
-  DataContainer::Pointer dataContainer = DataContainer::New();
+  VoxelDataContainer::Pointer dataContainer = VoxelDataContainer::New();
   dataContainer->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
@@ -327,11 +327,11 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainer(dataContainer.get());
+    (*iter)->setVoxelDataContainer(m_DataContainer.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainer(NULL);
+    (*iter)->setVoxelDataContainer(NULL);
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {
@@ -343,7 +343,7 @@ void FilterPipeline::execute()
       pipelineFinished();
       return;
     }
-    CHECK_FOR_CANCELED(DataContainer, "Pipeline was canceled", write_fielddata)
+    CHECK_FOR_CANCELED(VoxelDataContainer, "Pipeline was canceled", write_fielddata)
 
     if(DREAM3D_BENCHMARKS)
     {

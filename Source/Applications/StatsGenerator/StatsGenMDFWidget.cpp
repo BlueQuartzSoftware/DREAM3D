@@ -324,7 +324,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenMDFWidget::extractStatsData(VoxelDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
   VectorOfFloatArray arrays;
   if(phaseType == DREAM3D::PhaseType::PrimaryPhase)

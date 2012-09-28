@@ -716,7 +716,7 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::gatherStatsData(DataContainer::Pointer m)
+int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 {
   if (m_PhaseIndex < 1)
   {
@@ -839,7 +839,7 @@ int PrimaryPhaseWidget::gatherStatsData(DataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::extractStatsData(DataContainer::Pointer m, int index)
+void PrimaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;

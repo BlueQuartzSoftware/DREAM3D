@@ -89,7 +89,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-//  DataContainer* m = getDataContainer();
+//  DataContainer* m = getVoxelDataContainer();
 
 //  for (std::vector<std::string>::iterator iter = m_EbsdFileList.begin(); iter != m_EbsdFileList.end(); ++iter )
 //  {

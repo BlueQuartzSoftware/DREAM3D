@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
 
@@ -129,7 +129,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const std::string &file, DataContainer* r, std::vector<VtkScalarWriter*> &scalars);
+    int write(const std::string &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed

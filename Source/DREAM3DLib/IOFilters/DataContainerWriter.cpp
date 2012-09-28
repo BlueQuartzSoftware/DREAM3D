@@ -130,7 +130,7 @@ void DataContainerWriter::execute()
 {
 
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -351,7 +351,7 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
@@ -402,7 +402,7 @@ int DataContainerWriter::writeFieldData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Field Data
   err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
@@ -455,7 +455,7 @@ int DataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Ensemble data
   err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);

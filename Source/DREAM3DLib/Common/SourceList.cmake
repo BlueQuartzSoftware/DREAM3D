@@ -12,11 +12,10 @@
 SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
-  #${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h
@@ -54,8 +53,7 @@ SET (DREAM3DLib_Common_HDRS
 SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
- # ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp

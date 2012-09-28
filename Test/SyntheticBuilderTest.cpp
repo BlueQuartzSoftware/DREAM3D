@@ -142,8 +142,8 @@ void TestSyntheticBuilder()
 
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  DataContainer::Pointer m = DataContainer::New();
-  pipeline->setDataContainer(m);
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  pipeline->setVoxelDataContainer(m);
 
     ShapeTypeArrayType::Pointer m_ShapeTypes = ShapeTypeArrayType::CreateArray(4, DREAM3D::EnsembleData::ShapeTypes);
     m_ShapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
@@ -212,9 +212,9 @@ void TestSyntheticBuilder()
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
 
-  m = DataContainer::New();
+  m = VoxelDataContainer::New();
 
-  pipeline->setDataContainer(m);
+  pipeline->setVoxelDataContainer(m);
   pipeline->run();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
