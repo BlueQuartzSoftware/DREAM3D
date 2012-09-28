@@ -40,7 +40,6 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
