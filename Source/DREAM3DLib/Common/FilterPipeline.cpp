@@ -295,12 +295,13 @@ void FilterPipeline::execute()
   }
 
   // Create the DataContainer object
-  if(NULL == m_DataContainer.get())
-  {
-    m_DataContainer = DataContainer::New();
-  }
+//  if(NULL == m_DataContainer.get())
+//  {
+//    m_DataContainer = DataContainer::New();
+//  }
 
-  m_DataContainer->addObserver(static_cast<Observer*>(this));
+  DataContainer::Pointer dataContainer = DataContainer::New();
+  dataContainer->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
   float progress = 0.0f;
@@ -325,7 +326,7 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainer(m_DataContainer.get());
+    //(*iter)->setDataContainer(m_DataContainer.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
