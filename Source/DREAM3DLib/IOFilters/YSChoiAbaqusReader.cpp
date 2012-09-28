@@ -111,7 +111,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -137,7 +137,7 @@ void YSChoiAbaqusReader::preflight()
 }
 void YSChoiAbaqusReader::execute()
 {
-    DataContainer* m = getDataContainer();
+    VoxelDataContainer* m = getVoxelDataContainer();
 
 	int xpoints, ypoints, zpoints, totalpoints;
 	int numgrains = 0;

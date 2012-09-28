@@ -202,7 +202,7 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if(m_OutputFile.empty() == true)
   {
@@ -262,7 +262,7 @@ void VtkRectilinearGridWriter::preflight()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -297,63 +297,63 @@ void VtkRectilinearGridWriter::execute()
 
   if (m_WriteGrainIds == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if (m_WriteParentIds == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelParentIdScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelParentIdScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if(m_WritePhaseIds == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelPhaseIdScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if(m_WriteBandContrasts == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelBCScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelBCScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if (m_WriteGoodVoxels == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if (m_WriteKAMs == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelKAMScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelKAMScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if (m_WriteGAMs == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGAMScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGAMScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if(m_WriteIPFColors == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
   if(m_WriteGrainSizes == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new FieldSizeScalarWriter<DataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new FieldSizeScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
@@ -381,7 +381,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const std::string &file, DataContainer* r, std::vector<VtkScalarWriter*> &scalars)
+int VtkRectilinearGridWriter::write(const std::string &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
 {
   int err = 0;
   FILE* f = NULL;

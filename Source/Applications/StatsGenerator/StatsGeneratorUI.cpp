@@ -48,7 +48,7 @@
 #include <QtGui/QFileDialog>
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
@@ -594,7 +594,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   int nPhases = phaseTabs->count();
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
@@ -645,7 +645,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setDataContainer(m.get());
+  writer->setVoxelDataContainer(m.get());
   writer->setOutputFile(m_FilePath.toStdString());
   writer->execute();
   // Force the clean up of the writer by assigning a NULL pointer which will
@@ -745,11 +745,11 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Instantiate a Reader object
   //FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  DataContainer::Pointer m = DataContainer::New();
-  //pipeline->setDataContainer(m);
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  //pipeline->setVoxelDataContainer(m);
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(m_FilePath.toStdString());
-  reader->setDataContainer(m.get());
+  reader->setVoxelDataContainer(m.get());
   reader->setReadCellData(false);
   reader->setReadFieldData(false);
   reader->setReadEnsembleData(true);

@@ -131,7 +131,7 @@ void ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer* m)
+int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m)
 {
   int err = 0;
   /* Sanity check what we are trying to load to make sure it can fit in our address space.
@@ -172,7 +172,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (m_H5EbsdFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
@@ -273,7 +273,7 @@ void ReadH5Ebsd::preflight()
 void ReadH5Ebsd::execute()
 {
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
@@ -536,7 +536,7 @@ void ReadH5Ebsd::execute()
     filter->setObservers(getObservers());
     filter->setMessagePrefix(getMessagePrefix());
     filter->setEbsdVolumeReader(ebsdReader);
-    filter->setDataContainer(m);
+    filter->setVoxelDataContainer(m);
     filter->execute();
     err = filter->getErrorCondition();
     if(err < 0)

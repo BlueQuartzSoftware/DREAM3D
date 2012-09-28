@@ -281,7 +281,7 @@ void PipelineViewWidget::preflightPipeline()
 
 
   // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   std::stringstream ss;
 
 
@@ -295,7 +295,7 @@ void PipelineViewWidget::preflightPipeline()
       fw->setHasPreflightErrors(false);
       AbstractFilter::Pointer filter = fw->getFilter();
 
-      filter->setDataContainer(m.get());
+      filter->setVoxelDataContainer(m.get());
       filter->preflight();
       int err = filter->getErrorCondition();
       std::vector<PipelineMessage> msgs = filter->getPipelineMessages();

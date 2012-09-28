@@ -52,7 +52,7 @@
 #include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 

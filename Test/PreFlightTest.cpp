@@ -126,7 +126,7 @@ void SyntheticBuilder_PreFlight()
 
   int err = 0;
   // Instantiate our DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   // Create a Vector to hold all the filters. Later on we will execute all the filters
   std::vector<AbstractFilter::Pointer> pipeline;
 
@@ -168,7 +168,7 @@ void SyntheticBuilder_PreFlight()
 
   for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
   {
-    (*filter)->setDataContainer(m.get());
+    (*filter)->setVoxelDataContainer(m.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
     err = (*filter)->getErrorCondition();
@@ -194,7 +194,7 @@ void SyntheticBuilder_PreFlight()
 #define MAKE_FILTER_TEST(name, condition)\
 void name##_PreFlightTest() {\
   int err = 0;\
-  DataContainer::Pointer m = DataContainer::New();\
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
   std::vector<AbstractFilter::Pointer> pipeline;\
   name::Pointer filter = name::New();\
   pipeline.push_back(filter);\
@@ -203,7 +203,7 @@ void name##_PreFlightTest() {\
   ss << "------------------------------------------------" << std::endl;\
   ss << "Starting Preflight test for " << #name << std::endl;\
   for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\
-    (*filter)->setDataContainer(m.get());\
+    (*filter)->setVoxelDataContainer(m.get());\
     setCurrentFilter(*filter);\
     (*filter)->preflight();\
     err = (*filter)->getErrorCondition();\

@@ -133,11 +133,11 @@ int main(int argc, char **argv)
 
   int err = 0;
 
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 
   DataContainerReader::Pointer h5Reader = DataContainerReader::New();
   h5Reader->setInputFile(iFile);
-  h5Reader->setDataContainer(m.get());
+  h5Reader->setVoxelDataContainer(m.get());
   size_t dcDims[3];
   float spacing[3];
   float origin[3];
@@ -196,7 +196,7 @@ int main(int argc, char **argv)
 
   WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
 
-  VoxelIPFColorScalarWriter<DataContainer> ipfWriter(m.get());
+  VoxelIPFColorScalarWriter<VoxelDataContainer> ipfWriter(m.get());
   ipfWriter.m_WriteBinaryFiles = false;
   ipfWriter.writeScalars(f);
 

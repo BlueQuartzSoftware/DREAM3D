@@ -100,7 +100,7 @@ int FileReader::readFile()
 // -----------------------------------------------------------------------------
 void FileReader::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
