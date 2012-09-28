@@ -104,7 +104,7 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType,  voxels, 1)
@@ -115,7 +115,7 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
   }
@@ -138,7 +138,7 @@ void FindSlicetoSliceRotations::execute()
 {
   setErrorCondition(0);
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

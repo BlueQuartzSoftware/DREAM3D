@@ -146,7 +146,7 @@ void AlignSections::preflight()
 void AlignSections::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);

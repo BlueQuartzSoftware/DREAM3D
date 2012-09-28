@@ -92,7 +92,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -118,7 +118,7 @@ void H5VoxelFileReader::preflight()
 }
 void H5VoxelFileReader::execute()
 {
-  if(NULL == getDataContainer())
+  if(NULL == getVoxelDataContainer())
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
@@ -139,9 +139,9 @@ void H5VoxelFileReader::execute()
   addErrorMessage(em);
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
-  getDataContainer()->setDimensions(dcDims);
-  getDataContainer()->setResolution(spacing);
-  getDataContainer()->setOrigin(origin);
+  getVoxelDataContainer()->setDimensions(dcDims);
+  getVoxelDataContainer()->setResolution(spacing);
+  getVoxelDataContainer()->setOrigin(origin);
 
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
@@ -178,9 +178,9 @@ void H5VoxelFileReader::execute()
     grainIds = DataArray<int>::NullPointer();
   }
 
-  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
-  getDataContainer()->addCellData(DREAM3D::CellData::Phases, phases);
-  getDataContainer()->addCellData(DREAM3D::CellData::EulerAngles, eulers);
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::Phases, phases);
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::EulerAngles, eulers);
 
   size_t gnum = 0;
   size_t maxId = 0;
@@ -189,7 +189,7 @@ void H5VoxelFileReader::execute()
 	  gnum = size_t(grainIds->GetValue(i));
 	  if(gnum > maxId) maxId = gnum;
   }
-  getDataContainer()->resizeFieldDataArrays(maxId+1);
+  getVoxelDataContainer()->resizeFieldDataArrays(maxId+1);
 
   std::vector<unsigned int> crystruct;
   std::vector<unsigned int> phaseType;
@@ -217,6 +217,6 @@ void H5VoxelFileReader::execute()
 	  crystructs->SetValue(i,crystruct[i]);
 	  phaseTypes->SetValue(i,phaseType[i]);
   }
-  getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
-  getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
+  getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 }

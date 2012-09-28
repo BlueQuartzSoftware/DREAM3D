@@ -34,7 +34,7 @@
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
-m_DataContainer(NULL),
+m_VoxelDataContainer(NULL),
 m_ErrorCondition(0),
 m_Cancel(false)
 {

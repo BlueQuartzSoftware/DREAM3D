@@ -88,7 +88,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -301, int32_t, Int32ArrayType, fields, 1)
@@ -97,7 +97,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -111,7 +111,7 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
     find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setDataContainer(getDataContainer());
+    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_surfacefields->preflight();
     if(preflight == false) find_surfacefields->execute();
   }
@@ -147,7 +147,7 @@ void FindODF::preflight()
 // -----------------------------------------------------------------------------
 void FindODF::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -98,7 +98,7 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -121,7 +121,7 @@ void AdjustVolume::execute()
 {
   setErrorCondition(0);
   DREAM3D_RANDOMNG_NEW()
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -188,7 +188,7 @@ void AdjustVolume::execute()
     gsizes[m_GrainIds[i]]++;
   }
   PackPrimaryPhases::Pointer packGrains = PackPrimaryPhases::New();
-  packGrains->setDataContainer(getDataContainer());
+  packGrains->setVoxelDataContainer(getVoxelDataContainer());
   packGrains->setObservers(this->getObservers());
 //  Field field;
 //  oldsizedisterror = packGrains->check_sizedisterror(&field);

@@ -329,7 +329,7 @@ void TestDataContainerReader()
 
 
   std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   pipeline->run();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
@@ -344,12 +344,12 @@ void OtherTest()
   int err = 0;
 
   // Create a Vector to hold all the filters. Later on we will execute all the filter
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile("C:\\Users\\mjackson\\Desktop\\FindNeighborTest_Rewrite.h5");
   reader->setInputFile(UnitTest::FindNeighborTest::OutputFile);
-  reader->setDataContainer(m.get());
+  reader->setVoxelDataContainer(m.get());
   reader->setReadCellData(true);
   reader->setReadFieldData(true);
   reader->setReadEnsembleData(true);
@@ -363,7 +363,7 @@ void OtherTest()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FindNeighborTest::OutputFile2);
-  writer->setDataContainer(m.get());
+  writer->setVoxelDataContainer(m.get());
   writer->execute();
   err = writer->getErrorCondition();
 

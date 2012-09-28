@@ -99,7 +99,7 @@ StatsGenODFWidget::~StatsGenODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::extractStatsData(DataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
+void StatsGenODFWidget::extractStatsData(VoxelDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
   VectorOfFloatArray arrays;
   if(phaseType == DREAM3D::PhaseType::PrimaryPhase)

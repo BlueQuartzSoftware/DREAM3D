@@ -102,7 +102,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -112,7 +112,7 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     setErrorCondition(0);
     FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
     find_graincentroids->setObservers(this->getObservers());
-    find_graincentroids->setDataContainer(getDataContainer());
+    find_graincentroids->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_graincentroids->preflight();
     if(preflight == false) find_graincentroids->execute();
   }
@@ -138,7 +138,7 @@ void FindShapes::preflight()
 // -----------------------------------------------------------------------------
 void FindShapes::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -170,7 +170,7 @@ void FindShapes::execute()
 // -----------------------------------------------------------------------------
 void FindShapes::find_moments()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   float u200 = 0;
@@ -287,7 +287,7 @@ void FindShapes::find_moments()
 }
 void FindShapes::find_moments2D()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   float u200 = 0;
   float u020 = 0;
@@ -347,7 +347,7 @@ void FindShapes::find_moments2D()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axes()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
@@ -430,7 +430,7 @@ void FindShapes::find_axes()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axes2D()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   float Ixx, Iyy, Ixy;
 
@@ -460,26 +460,26 @@ void FindShapes::find_axes2D()
 }
 float FindShapes::find_xcoord(size_t index)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float x = m->getXRes() * float(index % m->getXPoints());
   return x;
 }
 float FindShapes::find_ycoord(size_t index)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float y = m->getYRes() * float((index / m->getXPoints()) % m->getYPoints());
   return y;
 }
 float FindShapes::find_zcoord(size_t index)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float z = m->getZRes() * float(index / (m->getXPoints() * m->getYPoints()));
   return z;
 }
 
 void FindShapes::find_axiseulers()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -612,7 +612,7 @@ void FindShapes::find_axiseulers()
 
 void FindShapes::find_axiseulers2D()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   size_t numgrains = m->getNumFieldTuples();
 
   for (size_t i = 1; i < numgrains; i++)

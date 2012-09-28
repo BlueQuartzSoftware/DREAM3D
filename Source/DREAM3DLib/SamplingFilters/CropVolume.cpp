@@ -160,7 +160,7 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (m_RenumberGrains == true)
   {
@@ -185,7 +185,7 @@ void CropVolume::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -285,7 +285,7 @@ void CropVolume::execute()
     }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
-    renum->setDataContainer(m);
+    renum->setVoxelDataContainer(m);
     renum->setObservers(getObservers());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
