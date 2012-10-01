@@ -71,20 +71,13 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 	  //------ Required Cell Data
 	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	  //------ Required Field Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 	  //------ Created Field Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
-	  //------ Required Ensemble Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, DistributionType)
 
     DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float) // N x 6 Array
     DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float) // N x 3 Array
@@ -118,22 +111,13 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
-    unsigned int* m_PhaseTypes;
     int32_t* m_GrainIds;
-
-    bool* m_BiasedFields;
-    int32_t* m_FieldPhases;
     float* m_AxisEulerAngles;
     float* m_Centroids;
     float* m_AxisLengths;
     float* m_Omega3s;
-    float* m_EquivalentDiameters;
     float* m_Volumes;
     float* m_AspectRatios;
-
-    StatsDataArray* m_StatsDataArray;
-
-    std::vector<DistributionAnalysisOps::Pointer>    m_DistributionAnalysis;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

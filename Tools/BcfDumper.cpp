@@ -40,6 +40,7 @@
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Common/MXAMath.h"
 #include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "TiffUtilities.h"
 
@@ -68,7 +69,7 @@ typedef struct
 {
     int16_t xIndex;
     int16_t yIndex;
-    float   unknown1;
+    float   bc;
     uint16_t unknown2;
     float   euler1;
     float   euler2;
@@ -145,27 +146,18 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
     {
         ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
 
-        //        std::cout << "----------------" << std::endl;
-        //        std::cout << "File Pointer:" << reader.getFilePointer64() << std::endl;
+        // Read 25 byte header
         reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
-        //        std::cout << "x_index: " << header.x_index << std::endl;
-        //        std::cout << "y_index: " << header.y_index << std::endl;
-        //        std::cout << "var2: " << header.var2 << std::endl;
-        //        std::cout << "width: " << header.width << std::endl;
-        //        std::cout << "height: " << header.height << std::endl;
-        //        std::cout << "var5: " << header.var5 << std::endl;
-        //        std::cout << "flag:" << (int)(header.flag) << std::endl;
-
 
         ebspPixelCount = header.width * header.height;
         if (ebspPixelCount != outImage.size())
         {
             outImage.resize(ebspPixelCount);
         }
-        // Read the data into the array
+        // Read the pattern data into the array
         reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
 
-
+        // Write the Tiff File for this X,Y pattern
         ss.str("");
         ss << outputDir << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
         comment.str("");
@@ -234,6 +226,16 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
 #else
     float radToDeg = 1.0f;
 #endif
+    
+    std::string parentPath = MXAFileInfo::parentPath(outputFile);
+    if(!MXADir::mkdir(parentPath, true))
+    {
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      std::cout << ss.str() << std::endl;
+      return -1;
+    }
+
 
     FILE* f = fopen(outputFile.c_str(), "w");
     if (NULL == f)
@@ -243,7 +245,11 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
     }
     fprintf(f, "X\tY\tEuler1f\tEuler2\tEuler3\tMAD\tBands\n");
     uint8_t* header = NULL;
-    float maxMad = 0;
+    float maxBC = 0.0f;
+    float minBC = 1.0f;
+    float* bc = NULL;
+
+
     for (int i = 0; i < mapDesc->totalPoints; ++i)
     {
         //hdrPtr = reinterpret_cast<IndexResult_t*>(ptr + (i*Bcf::IndexResultByteSize));
@@ -258,21 +264,24 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
 
         x_index = reinterpret_cast<uint16_t*>(header);
         y_index = reinterpret_cast<uint16_t*>(header + 2);
+        bc = reinterpret_cast<float*>(header + 4);
         e1 = reinterpret_cast<float*>(header + 10);
         e2 = reinterpret_cast<float*>(header + 14);
         e3 = reinterpret_cast<float*>(header + 18);
         bands = reinterpret_cast<uint16_t*>(header + 24);
         mad = reinterpret_cast<float*>(header + 26);
 
-       // if (*mad > maxMad) { maxMad = *mad; }
+        if (*bc > maxBC) { maxBC = *bc; }
+        if (*bc < minBC) { minBC = *bc; }
 
         *e1 = *e1*radToDeg;
         *e2 = *e2*radToDeg;
         *e3 = *e3*radToDeg;
         fprintf(f, "%d\t%d\t%0.8f\t%0.8f\t%0.8f\t%0.8f\t%d\n", *x_index , *y_index, *e1, *e2, *e3, *mad, *bands);
     }
-
     fclose(f);
+
+    std::cout << "Max BC: " << maxBC << "   MinBC: " << minBC << std::endl;
 
     return err;
 }

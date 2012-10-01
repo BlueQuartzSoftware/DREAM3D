@@ -67,33 +67,32 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     virtual ~MergeTwins();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
-	//------ Required Field Data	
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	virtual void execute();
+  virtual void execute();
     virtual void preflight();
 
 
@@ -112,9 +111,9 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;
-	int32_t* m_NumFields;
 
     std::vector<int> parentnumbers;
+  int numParents;
 
     unsigned long long int Seed;
     OrientationMath::Pointer m_CubicOps;

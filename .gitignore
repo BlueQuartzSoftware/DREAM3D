@@ -8,3 +8,5 @@ Source/Plugins/MFESurfaceSmoothing
 Source/Plugins/CMUSurfaceMeshing
 /clang/
 /xcode/
+/x64/
+/i386/

@@ -67,3 +67,4 @@ bool FilterBundler::containsTreeWidgetItem(QTreeWidgetItem* item) {
   else
     return false;
 }
+

@@ -84,6 +84,14 @@ QInitializeSyntheticVolumeWidget::~QInitializeSyntheticVolumeWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString QInitializeSyntheticVolumeWidget::getFilterGroup()
+{
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
 {
   // Update the filter with the latest values from the GUI

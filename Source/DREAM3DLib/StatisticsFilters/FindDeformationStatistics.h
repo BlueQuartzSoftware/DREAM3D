@@ -81,9 +81,8 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainMisorientationsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
-	DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationGradientsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborDistancesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
 	//------ Required Field Data
@@ -123,8 +122,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     int32_t* m_FieldPhases;
     int32_t* m_NearestNeighbors;
     int32_t* m_SlipSystems;
-    float* m_GrainMisorientations;
-    float* m_MisorientationGradients;
+    float* m_GrainReferenceMisorientations;
     float* m_KernelAverageMisorientations;
     float* m_AvgQuats;
     float* m_GrainAvgMisorientations;

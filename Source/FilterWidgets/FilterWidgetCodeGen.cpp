@@ -49,11 +49,27 @@
 #include "DREAM3DLib/Common/FilterParameter.h"
 
 
+// Enable this to generate a text file that has each filter and all of its
+// parameters, required array and created array listed.
 #define GENERATE_FILTER_TEXT_LIST 0
+
+// Enable this to generate a fragment of HTML code that was used to update
+// the documentation files
 #define GENERATE_HTML_FRAGMENT 0
-#define GENERATE_HTML_FILE 0
-#define OVERWRITE_SOURCE_DOCS 0
+
+// Enable this to generate an HTML template file for each and every
+// filter. If you are NOT careful you can over write any existing documentation
+// file. You have been warned.
+#define GENERATE_HTML_FILE 1
+#define OVERWRITE_HTML_DOCS 1
+
+// Just some experimental code that generates a bunch of update code to
+// insert into each and every filter. Completely deprecated now.
 #define GENERATE_OPTIONS_WRITER_CODE 0
+
+// Enabling this will create a pair of files that can be used to update
+// the "PreflightTest.cpp" unit test
+#define GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT 0
 
 typedef std::map<std::string, std::set<std::string> >  FilterMapType;
 typedef std::set<std::string>  StringSetType;
@@ -62,6 +78,7 @@ typedef std::set<std::string>  StringSetType;
 std::string FILTER_WIDGETS_BINARY_DIR();
 std::string FILTER_WIDGETS_SOURCE_DIR();
 std::string FILTER_WIDGETS_TEMP_DIR();
+std::string FILTER_WIDGETS_DOCS_DIR();
 std::string DREAM3D_SOURCE_DIR();
 std::string FILTER_INCLUDE_PREFIX();
 
@@ -89,6 +106,130 @@ void copyFile(const std::string &src, const std::string &dest)
 
   free(contents);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameHeaderCode(FILE* f, std::set<std::string> &list, const std::string &filterName, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    fprintf(f, "  //------ %s ----------------\n", title.c_str());
+    const char* cType = "QString";
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        std::string arrayname = std::string((*iter) + "ArrayName");
+
+        fprintf(f, "  // Get/Set the Array name for %s\n", (*iter).c_str());
+        fprintf(f, "  private:\n");
+        fprintf(f, "    QString m_%sArrayName;\n", (*iter).c_str());
+        fprintf(f, "  public:\n");
+        fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType, arrayname.c_str(), arrayname.c_str(), arrayname.c_str());
+        fprintf(f, "    %s  get%s();\n", cType, arrayname.c_str());
+        fprintf(f, "  public slots:\n");
+        fprintf(f, "    void set%s(const %s &v);\n", arrayname.c_str(), cType);
+        fprintf(f, "  // Get/Set the Array name for %s Complete ------------\n\n", (*iter).c_str());
+    }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameSourceCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+  //  fprintf(f, "//------ %s ----------------\n", title.c_str());
+    const char* cType = "QString";
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        std::string arrayname = std::string((*iter) + "ArrayName");
+
+        fprintf(f, "// -----------------------------------------------------------------------------\n");
+        fprintf(f, "// Get/Set the Array name for %s '%s'\n", title.c_str(), (*iter).c_str());
+        fprintf(f, "void Q%sWidget::set%s(const %s &v)\n{\n  m_%s = v;\n}\n", filter.c_str(), arrayname.c_str(), cType, arrayname.c_str());
+        fprintf(f, "%s  Q%sWidget::get%s()\n{\n  return m_%s; \n}\n\n", cType, filter.c_str(), arrayname.c_str(), arrayname.c_str());
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameConstructorCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        std::string arrayname = std::string((*iter) + "ArrayName");
+        fprintf(f, "     set%s( QString::fromStdString(filter->get%s() ) );\n", arrayname.c_str(), arrayname.c_str());
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameGetFilterCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        std::string arrayname = std::string((*iter) + "ArrayName");
+        fprintf(f, "  filter->set%s( get%s().toStdString() );\n", arrayname.c_str(), arrayname.c_str());
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std::string &filter, const std::string &title)
+{
+    if(list.size() == 0) { return; }
+    for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
+    {
+        std::string arrayname = std::string((*iter) + "ArrayName");
+        fprintf(f, "  w->set%s( get%s() );\n", arrayname.c_str(), arrayname.c_str() );
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
+template<typename T>\
+void methodName(typename T::Pointer t, FILE* f){\
+    DataContainer::Pointer m = DataContainer::New();\
+    t->setDataContainer(m.get());\
+    t->preflight();\
+    {\
+      std::set<std::string> list = t->getRequiredCellData();\
+      writerName(f, list, t->getNameOfClass(), "Required Cell Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getCreatedCellData();\
+      writerName(f, list, t->getNameOfClass(), "Created Cell Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getRequiredFieldData();\
+      writerName(f, list, t->getNameOfClass(), "Required Field Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getCreatedFieldData();\
+      writerName(f, list, t->getNameOfClass(), "Created Field Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getRequiredEnsembleData();\
+      writerName(f, list, t->getNameOfClass(), "Required Ensemble Data");\
+    }\
+    {\
+      std::set<std::string> list = t->getCreatedEnsembleData();\
+      writerName(f, list, t->getNameOfClass(), "Created Ensemble Data");\
+    }\
+}
+
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToHeader, writeArrayNameHeaderCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToSource, writeArrayNameSourceCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameConstructorCode, writeArrayNameConstructorCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameGetFilterCode, writeArrayNameGetFilterCode)
+ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameDeepCopyCode, writeArrayNameDeepCopyCode)
 
 // -----------------------------------------------------------------------------
 //
@@ -156,6 +297,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "    void writeOptions(QSettings &prefs);\n");
   fprintf(f, "    void readOptions(QSettings &prefs);\n\n");
   fprintf(f, "    QFilterWidget* createDeepCopy();\n\n");
+  fprintf(f, "    QString getFilterGroup();\n\n");
 
 
  // Loop on all the filter options
@@ -187,17 +329,21 @@ void createHeaderFile( const std::string &group, const std::string &filter)
       fprintf(f, " public slots:\n");
       fprintf(f, "    void set%s(const %s &v);\n", prop.c_str(), cType.c_str());
       fprintf(f, " public:\n");
-      fprintf(f, "    %s  get%s();\n", cType.c_str(), prop.c_str());
+      fprintf(f, "    %s  get%s();\n\n", cType.c_str(), prop.c_str());
     }
     else
     {
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n", typ.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
     }
   }
 
+  // This template function will generate all the necessary code to set the name of each
+  // required and created array.
+  appendArrayNameCodeToHeader<T>(t, f);
+
   fprintf(f, "  private:\n");
- // fprintf(f, "    %s::Pointer m_Filter;\n\n", filter.c_str());
+  fprintf(f, "    QString m_FilterGroup;\n\n");
   fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filter.c_str(), filter.c_str());
   fprintf(f, "    void operator=(const Q%sWidget&);\n", filter.c_str());
   fprintf(f, "};\n");
@@ -244,6 +390,9 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 void createHTMLFragment( const std::string &group, const std::string &filter)
 {
@@ -271,7 +420,9 @@ void createHTMLFragment( const std::string &group, const std::string &filter)
 }
 
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 template<typename T>
 void createOptionsWriterCode( const std::string &group, const std::string &filter)
 {
@@ -527,12 +678,20 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
   }
 
+  // Generate code to get all the array names and set the local variables that hold those names
+  appendArrayNameConstructorCode<T>(t, f);
+
+  // Finish Writing the remainder of the constructor code
+  fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
   fprintf(f, "     setupGui();\n");
   fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
   fprintf(f, "}\n\n");
 
   fprintf(f, "// -----------------------------------------------------------------------------\n");
   fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.c_str(), filter.c_str());
+
+  fprintf(f, "// -----------------------------------------------------------------------------\n");
+  fprintf(f, "QString Q%sWidget::getFilterGroup() {\n  return m_FilterGroup;\n}\n\n", filter.c_str() );
 
   fprintf(f, "// -----------------------------------------------------------------------------\n");
   fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter() \n{\n", filter.c_str());
@@ -551,6 +710,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "  filter->set%s( get%s() );\n", prop.c_str(), prop.c_str());
     }
   }
+  // Generate all the source code to set the various array names into the filter
+  appendArrayNameGetFilterCode<T>(t, f);
+
   fprintf(f, "  return filter;\n");
   fprintf(f, "}\n");
 
@@ -571,6 +733,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "  w->set%s( get%s() );\n", prop.c_str(), prop.c_str());
     }
   }
+  // Generate the code that will push the names of the arrays to the deep copy
+  appendArrayNameDeepCopyCode<T>(t, f);
+
   fprintf(f, "  return w;\n");
   fprintf(f, "}\n");
 
@@ -689,6 +854,12 @@ void createSourceFile( const std::string &group, const std::string &filter)
     fprintf(f, "  }\n");
   }
   fprintf(f, "\n}\n\n\n");
+
+  // This template function will generate all the necessary code to set the name of each
+  // required and created array.
+  appendArrayNameCodeToSource<T>(t, f);
+
+
 
   fclose(f);
 
@@ -876,6 +1047,29 @@ void createListFile( const std::string &group, const std::string &filter)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
+void createPreflightTestCode( const std::string &group, const std::string &filter)
+{
+    std::string s = FILTER_WIDGETS_TEMP_DIR();
+    s.append("Preflight_Test_Code_Fragment_1.h");
+    FILE* f = fopen(s.c_str(), "ab+"); // Clear out this file
+    fprintf(f, "MAKE_FILTER_TEST(  %s, FAIL_IS_PASS)\n", filter.c_str());
+    fclose(f);
+
+
+    s = FILTER_WIDGETS_TEMP_DIR();
+    s.append("Preflight_Test_Code_Fragment_2.h");
+    f = fopen(s.c_str(), "ab+"); // Clear out this file
+    fprintf(f, "DREAM3D_REGISTER_TEST( %s_PreFlightTest() )\n", filter.c_str());
+    fclose(f);
+
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
 void createHTMLFile( const std::string &group, const std::string &filter)
 {
 #if (GENERATE_FILTER_TEXT_LIST == 1)
@@ -886,6 +1080,10 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   createHTMLFragment<T>(group, filter);
 #endif
 
+#if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
+  createPreflightTestCode<T>(group, filter);
+#endif
+
 #if (GENERATE_HTML_FILE == 0)
   return;
 #endif
@@ -893,18 +1091,22 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   std::stringstream ss;
-  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "/" << filter << ".html";
+  ss << FILTER_WIDGETS_DOCS_DIR() << "/" << t->getGroupName() << "Filters/" << filter << ".html";
 
   std::string completePath = MXADir::toNativeSeparators(ss.str());
   if(MXADir::exists(completePath) == true)
   {
-    std::cout << filter << ": HTML already exists NOT generating a generic file." << std::endl;
+    // std::cout << "EXISTS HTML File:" << ss.str() << std::endl;
     return;
+  }
+  else
+  {
+    std::cout << "MISSING HTML File: " << ss.str() << std::endl;
   }
 
   ss.str("");
-#if (OVERWRITE_SOURCE_DOCS == 1)
-  ss << DREAM3D_SOURCE_DIR() << "/Documentation/Filters/" << group;
+#if (OVERWRITE_HTML_DOCS == 1)
+  ss << FILTER_WIDGETS_DOCS_DIR() << "/" << t->getGroupName() << "Filters/";
 #else
   ss << FILTER_WIDGETS_BINARY_DIR() << "/Documentation/Filters/" << group;
 #endif
@@ -914,19 +1116,18 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   completePath = MXADir::toNativeSeparators(ss.str());
 
   ss.str("");
-
- // std::cout << "Creating HTML File: " << completePath << std::endl;
-  std::cout << "Creating HTML File: "
-#if (OVERWRITE_SOURCE_DOCS == 1)
-      << DREAM3D_SOURCE_DIR()
+  std::cout << "CREATING HTML File: ";
+#if (OVERWRITE_HTML_DOCS == 1)
+      ss << FILTER_WIDGETS_DOCS_DIR() << "/" << t->getGroupName() << "Filters/" << filter << ".html";
 #else
       << FILTER_WIDGETS_BINARY_DIR()
+      << "/Documentation/Filters/" << t->getGroupName() << "/" << filter << ".html" << std::endl;
 #endif
-      << "/Documentation/Filters/" << group << "/" << filter << ".html" << std::endl;
+  const char* groupName = t->getGroupName().c_str();
 
   FILE* f = fopen(completePath.c_str(), "wb");
 
-  fprintf(f, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+  fprintf(f, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
   fprintf(f, "<html>\n");
   fprintf(f, "<head>\n");
   fprintf(f, "<meta name=\"qrichtext\" content=\"1\" />\n");
@@ -935,19 +1136,30 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "h2.pHeading2 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: large; font-weight: bold; text-align: left }\n");
   fprintf(f, "p.pBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }\n");
   fprintf(f, "p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }\n");
+  fprintf(f, "#footer\n{\n\
+   font-family: Arial, Verdana, Helvetica, sans-serif;\n\
+   font-color:Blue;\n\
+   font-size:small;\n\
+   background-color:#CCCCCC;\n\
+   padding:0pt;\n\
+   position:fixed;\n\
+   bottom:1%%;\n\
+   left:1%%;\n\
+   width:98%%;\n}\n");
   fprintf(f, "</style>\n");
   fprintf(f, "<title>%s</title>\n", t->getHumanLabel().c_str());
   fprintf(f, "</head>\n");
   fprintf(f, "<body>\n");
-  fprintf(f, "<h1 class=\"pHeading1\">%s Filter</h1>\n<p class=\"pCellBody\">\n", t->getHumanLabel().c_str());
-  fprintf(f, "<a href=\"MFESurfaceSmoothingFilter.html#wp2\">Description</a> ");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp3\">Options</a> ");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp4\">Required Arrays</a> ");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp5\">Created Arrays</a>");
-  fprintf(f, "| <a href=\"MFESurfaceSmoothingFilter.html#wp1\">Authors</a> </p>\n\n");
+  fprintf(f, "<h1 class=\"pHeading1\">%s Filter</h1>\n", t->getHumanLabel().c_str());
+  fprintf(f, "<p class=\"pCellBody\">\n");
+  fprintf(f, "<a href=\"../%sFilters/%s.html#wp2\">Description</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp3\">Options</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp4\">Required Arrays</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp5\">Created Arrays</a>\n", groupName, filter.c_str());
+  fprintf(f, "| <a href=\"../%sFilters/%s.html#wp1\">Authors</a> </p>\n\n", groupName, filter.c_str());
   fprintf(f, "<a name=\"wp7\"></a>\n");
   fprintf(f, "<h2 class=\"pHeading2\">Group</h2>\n");
-  fprintf(f, "<p class=\"pBody\">%s</p>\n\n", group.c_str());
+  fprintf(f, "<p class=\"pBody\">%s</p>\n\n", groupName);
 
   fprintf(f, "<a name=\"wp2\"> </a>");
   fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n<p class=\"pBody\">\n");
@@ -1095,15 +1307,16 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
   fprintf(f, "<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
 
-  fprintf(f, "Copyright 2012 Michael A. Groeber (AFRL), ");
-  fprintf(f, "Michael A. Jackson (BlueQuartz Software)<br />\n");
-  fprintf(f, "Contact Info: dream3d@bluequartz.net<br />\n");
-  fprintf(f, "Version: 1.0.0\n");
+  fprintf(f, "Copyright [INSERT YOUR NAME HERE]<br />\n");
+
+  fprintf(f, "Contact Info:[INSERT EMAIL ADDRESS HERE]<br />\n");
+  fprintf(f, "Version: 1.0.0<br />\n");
   fprintf(f, "License: See the License.txt file that came with DREAM3D.<br />\n");
   fprintf(f, "</p>\n");
-
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->\n");
-
+  fprintf(f, "<div>\
+  <table width=\"98%%\" border=\"0\" bgcolor=\"#CCCCCC\"><tr><td><a href=\"../index.html\">Index</a></td></tr></table>\
+  </div>\n");
   fprintf(f, "</body>\n");
   fprintf(f, "</html>\n");
 
@@ -1132,6 +1345,18 @@ int main(int argc, char **argv)
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Mike_list.txt");
   FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
+  fclose(f);
+#endif
+
+#if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
+  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  s.append("Preflight_Test_Code_Fragment_1.h");
+  FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
+  fclose(f);
+
+  s = FILTER_WIDGETS_TEMP_DIR();
+  s.append("Preflight_Test_Code_Fragment_2.h");
+  f = fopen(s.c_str(), "wb"); // Clear out this file
   fclose(f);
 #endif
 

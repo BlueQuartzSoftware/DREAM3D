@@ -81,8 +81,8 @@ void DataContainerWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("dream3d");
-	option->setFileType("DREAM.3D Data");
+    option->setFileExtension("dream3d");
+    option->setFileType("DREAM.3D Data");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -238,7 +238,7 @@ void DataContainerWriter::execute()
   AbstractFilter::Pointer preFilter = getPreviousFilter();
   while (preFilter.get() != NULL)
   {
-	  optionsWriter->openOptionsGroup(preFilter.get());
+    optionsWriter->openOptionsGroup(preFilter.get());
     preFilter->writeFilterParameters(optionsWriter.get());
     optionsWriter->closeOptionsGroup();
     preFilter = preFilter->getPreviousFilter();

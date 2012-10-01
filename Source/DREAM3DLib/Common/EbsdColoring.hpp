@@ -42,9 +42,11 @@
 //#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
 #define M_PI_OVER_4   0.785398163397448
+#define m_pi   3.1415926535897
 namespace Detail
 {
   static const float DegToRads = static_cast<float>(M_PI/180.0f);
@@ -184,33 +186,19 @@ class EbsdColoring
         phi = phi * Detail::DegToRads;
         phi2 = phi2 * Detail::DegToRads;
       }
-      T q1[3][3]; // Rotation Matrix?
-      T cd[3];
-      T d[3];
-
-      // Calcuate all the values once
-      T cos_phi1 = cosf(phi1);
-      T sin_phi1 = sinf(phi1);
-      T cos_phi = cosf(phi);
-      T sin_phi = sinf(phi);
-      T cos_phi2 = cosf(phi2);
-      T sin_phi2 = sinf(phi2);
+      float g[3][3]; // Rotation Matrix?
+      float cd[3];
+      float d[3];
 
       // 1) find rotation matrix from Euler angles
-      q1[0][0] = cos_phi1 * cos_phi2 - sin_phi1 * sin_phi2 * cos_phi;
-      q1[0][1] = sin_phi1 * cos_phi2 + cos_phi1 * sin_phi2 * cos_phi;
-      q1[0][2] = sin_phi2 * sin_phi;
-      q1[1][0] = -cos_phi1 * sin_phi2 - sin_phi1 * cos_phi2 * cos_phi;
-      q1[1][1] = -sin_phi1 * sin_phi2 + cos_phi1 * cos_phi2 * cos_phi;
-      q1[1][2] = cos_phi2 * sin_phi;
-      q1[2][0] = sin_phi1 * sin_phi;
-      q1[2][1] = -cos_phi1 * sin_phi;
-      q1[2][2] = cos_phi;
+	  OrientationMath::eulertoMat(phi1, phi, phi2, g);
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
-      cd[0] = q1[0][0] * refDir0 + q1[0][1] * refDir1 + q1[0][2] * refDir2;
-      cd[1] = q1[1][0] * refDir0 + q1[1][1] * refDir1 + q1[1][2] * refDir2;
-      cd[2] = q1[2][0] * refDir0 + q1[2][1] * refDir1 + q1[2][2] * refDir2;
+	  float refDirection[3];
+	  refDirection[0] = refDir0;
+	  refDirection[1] = refDir1;
+	  refDirection[2] = refDir2;
+	  MatrixMath::multiply3x3with3x1(g, refDirection, cd);
 
       //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
       cd[0] = fabs(cd[0]);
@@ -220,30 +208,30 @@ class EbsdColoring
       // Sort the cd array from smallest to largest
       EbsdColoring::TripletSort<T>(cd[0], cd[1], cd[2], cd);
 
-      T h = cd[0];
-      T k = cd[1];
-      T l = cd[2];
+      float h = cd[0];
+      float k = cd[1];
+      float l = cd[2];
       hkl[0] = static_cast<unsigned char> (h * 100);
       hkl[1] = static_cast<unsigned char> (k * 100);
       hkl[2] = static_cast<unsigned char> (l * 100);
-      T theta = (cd[0] * 0) + (cd[1] * -Detail::HalfSqrt2) + (cd[2] * Detail::HalfSqrt2);
+      float theta = (cd[0] * 0) + (cd[1] * -Detail::HalfSqrt2) + (cd[2] * Detail::HalfSqrt2);
       theta = (Detail::RadToDegs) * acos(theta);
-      T red = (90.0f - theta) / 45.0f;
+      float red = (90.0f - theta) / 45.0f;
       d[0] = (cd[1] * 1) - (cd[2] * 0);
       d[1] = (cd[2] * 0) - (cd[0] * 1);
       d[2] = (cd[0] * 0) - (cd[1] * 0);
       d[0] = -(d[1] + d[2]) / d[0];
       d[1] = 1;
       d[2] = 1;
-      T norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+      float norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
       d[0] = d[0] / norm;
       d[1] = d[1] / norm;
       d[2] = d[2] / norm;
-      T phi_local = (d[0] * 0) + (d[1] * Detail::HalfSqrt2) + (d[2] * Detail::HalfSqrt2);
+      float phi_local = (d[0] * 0) + (d[1] * Detail::HalfSqrt2) + (d[2] * Detail::HalfSqrt2);
       phi_local = (Detail::RadToDegs) * acos(phi_local);
-      T green = (1 - red) * ((35.26f - phi_local) / 35.26f);
-      T blue = (1 - red) - green;
-      T max = red;
+      float green = (1 - red) * ((35.26f - phi_local) / 35.26f);
+      float blue = (1 - red) - green;
+      float max = red;
       if (green > max) max = green;
       if (blue > max) max = blue;
 
@@ -304,35 +292,27 @@ class EbsdColoring
       float q1[5];
       float g[3][3];
       float p[3];
+      float refDirection[3];
       float d[3];
       float theta, phi_local;
       float _rgb[3] = { 0.0, 0.0, 0.0 };
 
       OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
-      for (int j = 0; j < 12; j++)
+
+	  for (int j = 0; j < 12; j++)
       {
 //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
 //        OrientationMath::multiplyQuaternions(q1, q2, qc);
         MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
 
-        g[0][0] = (1 - (2 * qc[2] * qc[2]) - (2 * qc[3] * qc[3]));
-        g[1][0] = ((2 * qc[1] * qc[2]) + (2 * qc[3] * qc[4]));
-        g[2][0] = ((2 * qc[1] * qc[3]) - (2 * qc[2] * qc[4]));
-        g[0][1] = ((2 * qc[1] * qc[2]) - (2 * qc[3] * qc[4]));
-        g[1][1] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[3] * qc[3]));
-        g[2][1] = ((2 * qc[2] * qc[3]) + (2 * qc[1] * qc[4]));
-        g[0][2] = ((2 * qc[1] * qc[3]) + (2 * qc[2] * qc[4]));
-        g[1][2] = ((2 * qc[2] * qc[3]) - (2 * qc[1] * qc[4]));
-        g[2][2] = (1 - (2 * qc[1] * qc[1]) - (2 * qc[2] * qc[2]));
+		OrientationMath::QuattoMat(qc, g);
 
-        p[0] = g[0][0] * refDir0 + g[1][0] * refDir1 + g[2][0] * refDir2;
-        p[1] = g[0][1] * refDir0 + g[1][1] * refDir1 + g[2][1] * refDir2;
-        p[2] = g[0][2] * refDir0 + g[1][2] * refDir1 + g[2][2] * refDir2;
-        float denom = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
-        denom = powf(denom, 0.5);
-        p[0] = p[0] / denom;
-        p[1] = p[1] / denom;
-        p[2] = p[2] / denom;
+		refDirection[0] = refDir0;
+		refDirection[1] = refDir1;
+		refDirection[2] = refDir2;
+		MatrixMath::multiply3x3with3x1(g, refDirection, p);
+		MatrixMath::normalize3x1(p);
+
         if (p[2] < 0)
         {
           p[0] = -p[0];
@@ -342,10 +322,7 @@ class EbsdColoring
         d[0] = p[0];
         d[1] = p[1];
         d[2] = 0;
-        float norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
-        d[0] = d[0] / norm;
-        d[1] = d[1] / norm;
-        d[2] = d[2] / norm;
+		MatrixMath::normalize3x1(d);
         if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
