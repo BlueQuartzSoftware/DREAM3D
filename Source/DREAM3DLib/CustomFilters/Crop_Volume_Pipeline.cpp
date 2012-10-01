@@ -404,7 +404,7 @@ for (DimType i = 1; i < 2; i++)
       pipeline->pushBack(ebsdsegment_grains);
 
       OpenCloseBadData::Pointer erode_dilate = OpenCloseBadData::New(); 
-      erode_dilate->setDirection(0); // 0 is erode? 
+      erode_dilate->setDirection(0); // 0 is erode.?
       erode_dilate->setNumIterations(m_NumIterations_Erode); 
       erode_dilate->setDataContainer(m);
       erode_dilate->setPreviousFilter(ebsdsegment_grains);
