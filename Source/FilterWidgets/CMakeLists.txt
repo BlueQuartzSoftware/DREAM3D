@@ -119,6 +119,7 @@ set(FILTER_HEADERS "#include \"DREAM3DLib/DREAM3DFilters.h\"")
 set(FILTER_WIDGETS_TEMP_DIR ${FilterWidgetsLib_BINARY_DIR}/Temp)
 set(FILTER_WIDGETS_BINARY_DIR ${FilterWidgetsLib_BINARY_DIR})
 set(FILTER_WIDGETS_SOURCE_DIR ${FilterWidgetsLib_SOURCE_DIR})
+set(FILTER_WIDGETS_DOCS_DIR ${DREAM3DProj_SOURCE_DIR}/Documentation/Filters)
 set(FILTER_INCLUDE_PREFIX "DREAM3DLib")
 
 file(MAKE_DIRECTORY ${FilterWidgetsLib_BINARY_DIR}/Temp)
@@ -147,12 +148,12 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
 # --------------------------------------------------------------------
 # Add in ONLY those headers and sources that need to have various Qt related
 # utilities run against them
-set(IOFILTER_WIDGET_HDRS 
+set(IOFILTER_WIDGET_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricItemDelegate.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.h
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h    
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h
 )
 set(IOFILTER_WIDGET_SRCS
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.cpp
@@ -198,10 +199,10 @@ QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
-QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS 
+QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/SamplingFiltersWidgets/QHex2SqrConverterWidget.ui
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui 
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
 )

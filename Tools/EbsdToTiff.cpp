@@ -118,7 +118,7 @@ int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image
 
 
    memset(software, 0, 1024);
-   snprintf(software, 1024, "%s using libTif", EbsdLib::Version::Complete());
+   snprintf(software, 1024, "%s using libTif", EbsdLib::Version::Complete().c_str());
 
    err = TIFFSetField(out, TIFFTAG_SOFTWARE, software);
 

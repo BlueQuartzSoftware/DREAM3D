@@ -72,6 +72,7 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 // C Includes
 #include <stdio.h>
@@ -93,49 +94,9 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-
-//#include "DREAM3DLib/HDF5/H5VoxelReader.h"
-
 #include "SMVtkPolyDataWriter.h"
 
 using namespace meshing;
-
-#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + filename;
-
-
-
-#define CHECK_FOR_ERROR(FuncClass, Message, err)\
-    if(err < 0) {\
-      setErrorCondition(err);\
-      PipelineMessage em (getHumanLabel(), #Message, err);\
-      addErrorMessage(em);\
-      notifyMessage(em);\
-      return;   }
-
-#define DREAM3D_BENCHMARKS 0
-
-#if DREAM3D_BENCHMARKS
-#define START_CLOCK()\
-  unsigned long long int millis;\
-  millis = MXA::getMilliSeconds();
-#else
-#define START_CLOCK() unsigned long long int millis = 0;\
-  millis = 0;
-#endif
-
-#define CHECK_FOR_CANCELED(FuncClass, Message, name)\
-    if (this->getCancel() ) { \
-      setErrorCondition(-1000);\
-      notifyErrorMessage(#Message, -1);\
-      return;}\
-      if(DREAM3D_BENCHMARKS) {\
-    std::cout << #name << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;\
-    millis = MXA::getMilliSeconds(); }
-
-
-//const static float m_pi = M_PI;
-//const static float m_OnepointThree = 1.33333333333f;
 
 #define WRITE_BINARY_TEMP_FILES 1
 
@@ -477,6 +438,7 @@ void LeeMarchingCubes::execute()
   }
 
   int err = 0;
+  std::stringstream ss;
 
   std::string NodesFile = m_StlOutputDirectory + MXADir::Separator
       + m_StlFilePrefix + DREAM3D::SurfaceMesh::NodesFileBin;
@@ -499,13 +461,17 @@ void LeeMarchingCubes::execute()
   // Create the output directory if needed
   if(m_WriteSTLFile == true && m_StlOutputDirectory.empty() == false)
   {
-	  if (MXADir::exists(m_StlOutputDirectory) == false)
-	  {
-	    if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
-	    {
-	      CHECK_FOR_ERROR(LeeMarchingCubes, "SurfaceMesh could not create the output directory", -1)
-	    }
-	  }
+    if (MXADir::exists(m_StlOutputDirectory) == false)
+    {
+      if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
+      {
+        ss.str("");
+        ss << "Error creating path '" << m_StlOutputDirectory << "'";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+      }
+    }
   }
 
   int cNodeID = 0;
@@ -611,7 +577,6 @@ void LeeMarchingCubes::execute()
 //  int* fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
   size_t offset = 0;
 
-  std::stringstream ss;
   for (int i = 0; i < zFileDim; i++)
   {
     ss.str("");
@@ -621,9 +586,14 @@ void LeeMarchingCubes::execute()
 
     // Get a pointer into the GrainIds Array at the appropriate offset
     int32_t* fileVoxelLayer = m_GrainIds + (i * xFileDim * yFileDim);
-
-    CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", readHyperSlab);
-
+    if (getCancel() == true)
+    {
+        ss.str("");
+        ss << "Cancelling filter";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        break;
+    }
     // Copy the Voxels from layer 2 to Layer 1;
     ::memcpy(&(voxels[1]), &(voxels[1 + NSP]), NSP * sizeof(int));
 
@@ -667,10 +637,24 @@ void LeeMarchingCubes::execute()
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output nodes and triangles...
     err = writeNodesFile(i, cNodeID, NodesFile);
-    CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing nodes temp file", err)
+    if (err < 0)
+    {
+        ss.str("");
+        ss << "Error writing nodes file '" << NodesFile << "'";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+    }
 
     err = writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
-    CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing triangle temp file", err)
+    if (err < 0)
+    {
+        ss.str("");
+        ss << "Error writing triangles file '" << TrianglesFile << "'";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+    }
 
     if (m_WriteSTLFile == true)
     {
@@ -725,10 +709,24 @@ void LeeMarchingCubes::execute()
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output nodes and triangles...
   err = writeNodesFile(i, cNodeID, NodesFile);
-  CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing nodes temp file", err)
+  if (err < 0)
+  {
+        ss.str("");
+        ss << "Error writing nodes file '" << NodesFile << "'";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+  }
 
   err = writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
-  CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing triangle temp file", err)
+    if (err < 0)
+    {
+        ss.str("");
+        ss << "Error writing triangles file '" << TrianglesFile << "'";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+    }
 
   // Write the last layers of the STL Files
   if (m_WriteSTLFile == true)
@@ -739,7 +737,14 @@ void LeeMarchingCubes::execute()
     {
       err |= (*iter).second->writeNumTrianglesToFile();
     }
-    CHECK_FOR_ERROR(LeeMarchingCubes, "Error writing STL file", err)
+        if (err < 0)
+    {
+        ss.str("");
+        ss << "Error writing STL file";
+        notifyErrorMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+    }
   }
 
   m_GrainChecker->analyzeGrains();

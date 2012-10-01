@@ -34,7 +34,7 @@ SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-
+set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 SET (PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
 SET (EXE_DEBUG_EXTENSION "_debug")
@@ -52,6 +52,9 @@ file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set (CMP_LIB_SEARCH_DIRS "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 
+if (UNIX AND NOT APPLE)
+    set (DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
+endif()
 
 # --------------------------------------------------------------------
 # In order to increment the version of DREAM3D simply adjust these variables.
