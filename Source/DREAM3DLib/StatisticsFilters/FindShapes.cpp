@@ -495,8 +495,8 @@ void FindShapes::find_axes()
   size_t bin;
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
-  float a, b, c, d, f, g, h;
-  float rsquare, r, theta;
+  double a, b, c, d, f, g, h;
+  double rsquare, r, theta;
   float A, B, C;
   float r1, r2, r3;
   float bovera, covera;
@@ -899,10 +899,10 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
     float ea2 = acos(n3z);
-    float cosine3 = (n3y / sinf(ea2));
-    float sine3 = (n3x / sinf(ea2));
-    float cosine1 = (-n2z / sinf(ea2));
-    float sine1 = (n1z / sinf(ea2));
+    float cosine1 = (-n3y / sinf(ea2));
+    float sine3 = (n1z / sinf(ea2));
+    float cosine3 = (n2z / sinf(ea2));
+    float sine1 = (n3x / sinf(ea2));
     float ea3 = acos(cosine3);
     float ea1 = acos(cosine1);
     if (sine3 < 0) ea3 = (2 * m_pi) - ea3;

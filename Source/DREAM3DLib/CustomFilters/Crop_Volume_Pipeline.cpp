@@ -74,6 +74,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighborhoods.h"
+#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/StatisticsFilters/FindODF.h"
 #include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 
@@ -373,11 +374,16 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
       pipeline->pushBack(ebsdsegment_grains);
 
       OpenCloseBadData::Pointer erode_dilate = OpenCloseBadData::New(); 
-      erode_dilate->setDirection(0); // 0 is erode? 
+      erode_dilate->setDirection(1); // 1 is erode.  
       erode_dilate->setNumIterations(m_NumIterations_Erode); 
       erode_dilate->setDataContainer(m);
       erode_dilate->execute();
       pipeline->pushBack(erode_dilate);
+    
+      FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+      find_neighbors->setDataContainer(m);
+      find_neighbors->execute();
+      pipeline->pushBack(find_neighbors);
 
 
       MinSize::Pointer min_size = MinSize::New();
@@ -403,7 +409,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
       FindShapes::Pointer find_shapes = FindShapes::New(); 
       find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
       find_shapes->setDataContainer(m);
-      //find_shapes->execute();
+      find_shapes->execute();
       pipeline->pushBack(find_shapes);
 
 
