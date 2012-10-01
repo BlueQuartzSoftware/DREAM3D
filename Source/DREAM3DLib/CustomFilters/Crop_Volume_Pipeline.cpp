@@ -400,14 +400,14 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
       pipeline->pushBack(min_neighbors);
 
       FindSizes::Pointer find_sizes = FindSizes::New(); 
-      find_sizes->setDistributionType(DREAM3D::DistributionType::Beta);
+      //find_sizes->setDistributionType(DREAM3D::DistributionType::Beta);
       find_sizes->setDataContainer(m);
       find_sizes->execute();
       pipeline->pushBack(find_sizes);
 
 
       FindShapes::Pointer find_shapes = FindShapes::New(); 
-      find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
+      //find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
       find_shapes->setDataContainer(m);
       find_shapes->execute();
       pipeline->pushBack(find_shapes);
@@ -479,7 +479,3 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 // -----------------------------------------------------------------------------
 
 
-
-
-
->>>>>>> Megna_test2
