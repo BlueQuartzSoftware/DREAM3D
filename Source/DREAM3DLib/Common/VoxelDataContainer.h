@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GrainGeneratorFunc_H
-#define _GrainGeneratorFunc_H
+#ifndef _VoxelDataContainer_H_
+#define _VoxelDataContainer_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -60,9 +60,11 @@
 
 
 /**
- * @class GrainGeneratorFunc GrainGeneratorFunc.h DREAM3DLib/Common/GrainGeneratorFunc.h
- * @brief
- * @author
+ * @class VoxelDataContainer VoxelDataContainer DREAM3DLib/Common/VoxelDataContainer.h
+ * @brief This data container holds data the represents a structured rectangular
+ * grid of data typically referred to as a Voxel Volume
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Michael A. Groeber for AFRL
  * @date
  * @version 1.0
  */
