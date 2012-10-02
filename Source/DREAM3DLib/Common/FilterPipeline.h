@@ -41,8 +41,14 @@
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-/*
- *
+/**
+ * @class FilterPipeline FilterPipeline.h DREAM3DLib/Common/FilterPipeline.h
+ * @brief  This class holds the list of filters that will be run. This should be
+ * the class (or a subclass) that you use to build up a pipeline in order to run
+ * it.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Sep 28, 2011
+ * @version 1.0
  */
 class DREAM3DLib_EXPORT FilterPipeline : public Observer
 {
