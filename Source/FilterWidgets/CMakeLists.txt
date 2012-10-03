@@ -95,6 +95,7 @@ WidgetGeneration(ProcessingFilters ProcessingFilters)
 WidgetGeneration(ReconstructionFilters ReconstructionFilters)
 WidgetGeneration(SamplingFilters SamplingFilters)
 WidgetGeneration(StatisticsFilters StatisticsFilters)
+WidgetGeneration(SurfaceMeshFilters SurfaceMesh_Filters)
 WidgetGeneration(SyntheticBuilderFilters Synthetic_BuilderFilters)
 
 

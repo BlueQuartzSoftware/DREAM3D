@@ -1,0 +1,26 @@
+/*!
+
+@page addingfilters Adding Filters to DREAM3D
+
+
+@section sf1 Adding Filter to Existing Category
+
+
+@section af2  Adding New Category
+
+Update DREAM3D/Source/DREAM3DLib/CMakeLists.txt file to add in the new filter
+category.
+
+@verbatim
+D3DCompileFilters(SurfaceMeshFilters ${AllFiltersHeaderFile})
+@endverbatim
+
+Update DREAM3D/Source/FilterWidgets/CMakeLists.txt file to add in the new filter
+category
+
+@verbatim
+WidgetGeneration(SurfaceMeshFilters SurfaceMesh_Filters)
+@endverbatim
+
+
+ */

@@ -92,10 +92,7 @@ public:
     virtual ~Node();
 
     int nodeKind; // 2 for binary, 3 for triple, and so on...
-    float xc;
-    float yc;
-    float zc;
-    int point;
+    float coord[3];
     int NodeID; // newID for used nodes; if not used, it's -1...
 };
 }
