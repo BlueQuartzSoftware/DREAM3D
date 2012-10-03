@@ -245,6 +245,8 @@ int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
@@ -255,6 +257,8 @@ int FilterPipeline::preflightPipeline()
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
     (*filter)->setVoxelDataContainer(m.get());
+    (*filter)->setSurfaceMeshDataContainer(sm.get());
+    (*filter)->setSolidMeshDataContainer(solid.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
     int err = (*filter)->getErrorCondition();
@@ -303,6 +307,11 @@ void FilterPipeline::execute()
   VoxelDataContainer::Pointer dataContainer = VoxelDataContainer::New();
   dataContainer->addObserver(static_cast<Observer*>(this));
 
+  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  sm->addObserver(static_cast<Observer*>(this));
+  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  solid->addObserver(static_cast<Observer*>(this));
+
   // Start looping through the Pipeline
   float progress = 0.0f;
   std::stringstream ss;
@@ -326,11 +335,15 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
-    //(*iter)->setVoxelDataContainer(m_DataContainer.get());
+    (*iter)->setVoxelDataContainer(dataContainer.get());
+    (*iter)->setSurfaceMeshDataContainer(sm.get());
+    (*iter)->setSolidMeshDataContainer(solid.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
     (*iter)->setVoxelDataContainer(NULL);
+    (*iter)->setSurfaceMeshDataContainer(NULL);
+    (*iter)->setSolidMeshDataContainer(NULL);
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {

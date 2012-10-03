@@ -97,7 +97,6 @@ namespace DREAM3D
     const std::string StatisticsFilters("Statistics");
     const std::string SurfaceMeshingFilters("Surface_Meshing");
     const std::string SyntheticBuilderFilters("Synthetic_Builder");
-
   }
 
   namespace CellData
@@ -116,6 +115,14 @@ namespace DREAM3D
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQuality("ImageQuality");
     const std::string IPFColor("IPFColor");
+
+    namespace SurfaceMesh
+    {
+
+      const std::string Nodes("SurfaceMesh_Nodes");
+      const std::string Triangles("SurfaceMesh_Triangles");
+      const std::string VoxelCoords("SurfaceMesh_VoxelCoords");
+    }
   }
 
   namespace FieldData

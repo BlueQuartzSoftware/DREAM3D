@@ -47,6 +47,10 @@
 #include <sstream>
 #include <list>
 
+//-- Boost includes
+#include <boost/shared_array.hpp>
+
+
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -54,6 +58,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/SurfaceMeshFilters/SurfaceMeshStructs.h"
+#include "DREAM3DLib/SurfaceMeshFilters/StructArray.hpp"
 
 /**
  * @class SurfaceMeshDataContainer SurfaceMeshDataContainer.h DREAM3DLib/Common/SurfaceMeshDataContainer.h
@@ -78,6 +84,10 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getCellData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
+
+
+    DREAM3D_INSTANCE_PROPERTY(StructArray<Node>::Pointer, Nodes)
+    DREAM3D_INSTANCE_PROPERTY(StructArray<Patch>::Pointer, Triangles)
 
     /**
      * @brief Adds/overwrites the data for a named array
