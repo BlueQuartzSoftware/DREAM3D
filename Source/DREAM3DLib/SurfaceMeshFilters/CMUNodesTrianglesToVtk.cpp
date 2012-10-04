@@ -338,8 +338,6 @@ void CMUNodesTrianglesToVtk::execute()
 
   setErrorCondition(0);
   notifyStatusMessage("Complete");
-
-  return;
 }
 
 
