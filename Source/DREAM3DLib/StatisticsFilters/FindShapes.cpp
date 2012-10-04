@@ -612,9 +612,9 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
     float ea2 = acos(n3z);
-    float cosine1 = (-n3y / sinf(ea2));
-    float sine3 = (n1z / sinf(ea2));
     float cosine3 = (n2z / sinf(ea2));
+    float sine3 = (n1z / sinf(ea2));
+    float cosine1 = (-n3y / sinf(ea2));
     float sine1 = (n3x / sinf(ea2));
     if (cosine3 > 1.0) cosine3 = 1.0;
     if (cosine3 <-1.0) cosine3 = -1.0; 
