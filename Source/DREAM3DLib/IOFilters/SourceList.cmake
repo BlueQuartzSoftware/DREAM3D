@@ -26,6 +26,7 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToVtk.h
 )
 
 
@@ -39,7 +40,7 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp   
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/H5VoxelFileReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxReader.cpp
@@ -51,6 +52,7 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToVtk.cpp
 )
 
 if (NOT DEFINED ONLY_FILTERS)
