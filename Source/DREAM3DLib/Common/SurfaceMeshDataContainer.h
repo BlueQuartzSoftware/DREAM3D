@@ -58,7 +58,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/SurfaceMeshFilters/SurfaceMeshStructs.h"
+#include "DREAM3DLib/SurfaceMeshFilters/MMCSurfaceMeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshFilters/StructArray.hpp"
 
 /**
@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
 
 
     DREAM3D_INSTANCE_PROPERTY(StructArray<Node>::Pointer, Nodes)
-    DREAM3D_INSTANCE_PROPERTY(StructArray<Patch>::Pointer, Triangles)
+    DREAM3D_INSTANCE_PROPERTY(StructArray<Triangle>::Pointer, Triangles)
 
     /**
      * @brief Adds/overwrites the data for a named array

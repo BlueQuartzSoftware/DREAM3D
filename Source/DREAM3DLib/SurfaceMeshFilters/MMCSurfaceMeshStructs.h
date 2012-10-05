@@ -29,8 +29,8 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SURFACEMESHSTRUCTS_H_
-#define SURFACEMESHSTRUCTS_H_
+#ifndef _MMCSURFACEMESHSTRUCTS_H_
+#define _MMCSURFACEMESHSTRUCTS_H_
 
 
 #include <string>
@@ -44,11 +44,11 @@ typedef struct _voxel{
 } voxel;
 #endif
 
-typedef struct _neighbor{
+typedef struct {
   int neigh_id[num_neigh+1];
 } Neighbor;
 
-typedef struct _face{
+typedef struct {
   int site_id[4];    // stores 4 sites at the corners of each square...
   int edge_id[4];    // stores edge id turned on...others will have dummy -1...
   int nEdge;         // number of edges on the square...
@@ -56,35 +56,35 @@ typedef struct _face{
   int effect;        // 0 if the square is useless; 1 is good...
 } Face;
 
-typedef struct _node{
+typedef struct {
   int nodeKind;      // 2 for binary, 3 for triple, and so on...
   float coord[3];
   int newID;         // newID for used nodes; if not used, it's -1...
 } Node;
 
-typedef struct _segment{
+typedef struct {
   int neigh_spin[2]; // 0 is to the left of the arrow; 1 is at right...
   int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
   int edgeKind;      // initially marked as 2; for face edges it's always 2...
 } Segment;
 
 /* Used for "inner edge" spin calculations */
-typedef struct _isegment{
+typedef struct {
   int node_id[2];
   int edgeKind;      // initially marked with 2...
   int nSpin[4];
-} isegment;
+} ISegment;
 
-typedef struct _patch{
+typedef struct {
   int node_id[3];       // stores three new node id for vertices of the triangles...
   int e_id[3];       // stores three new edge id for sides of the triangles...
   int nSpin[2];      // neighboring two spins...
   int edgePlace[3];
   int mCubeID;       // marching cube id = site id at corner 0 of the marching cube..
-} Patch;
+} Triangle;
 
-#if 0
-typedef struct _meshParameters {
+#if 1
+typedef struct {
     int32_t* point;    // This is the voxel volume
     int    xnum;
     int    ynum;
@@ -92,12 +92,12 @@ typedef struct _meshParameters {
     float xstep;
     float ystep;
     float zstep;
- //   std::string outputBaseName;
-//    std::string nodes_file;
-//    std::string edges_file;
-//    std::string triangles_file;
+    std::string outputBaseName;
+    std::string nodes_file;
+    std::string edges_file;
+    std::string triangles_file;
     bool   verbose;
-} MeshParameters;
+} MMC_MeshParameters;
 #endif
 
-#endif /* SURFACEMESHSTRUCTS_H_ */
+#endif /* _MMCSURFACEMESHSTRUCTS_H_ */

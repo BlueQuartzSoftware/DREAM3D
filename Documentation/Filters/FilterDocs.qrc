@@ -72,7 +72,7 @@
 
 <file>Surface_MeshingFilters/CMUNodesTrianglesToStl.html</file>
 <file>Surface_MeshingFilters/CMUNodesTrianglesToVtk.html</file>
-<file>Surface_MeshingFilters/CMUSurfaceMeshingFilter.html</file>
+<file>Surface_MeshingFilters/MMCSurfaceMeshingFilter.html</file>
 
 <file>Synthetic_BuilderFilters/AdjustVolume.html</file>
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>
