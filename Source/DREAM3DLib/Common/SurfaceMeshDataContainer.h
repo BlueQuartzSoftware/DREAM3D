@@ -89,6 +89,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     DREAM3D_INSTANCE_PROPERTY(StructArray<Node>::Pointer, Nodes)
     DREAM3D_INSTANCE_PROPERTY(StructArray<Triangle>::Pointer, Triangles)
 
+
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by

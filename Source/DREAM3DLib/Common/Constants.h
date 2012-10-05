@@ -124,6 +124,8 @@ namespace DREAM3D
       const std::string VoxelCoords("SurfaceMesh_VoxelCoords");
       const std::string Neighbors("SurfaceMesh_Neighbors");
       const std::string Faces("SurfaceMesh_Faces");
+      const std::string Edges("SurfaceMesh_Edgets");
+      const std::string InternalEdges("SurfaceMesh_Internal_Edges");
     }
   }
 

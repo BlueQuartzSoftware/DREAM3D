@@ -67,3 +67,33 @@ SurfaceMeshDataContainer::~SurfaceMeshDataContainer()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Cell array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_CellData[name] = data;
+  m_NumCellTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceMeshDataContainer::getCellData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_CellData.find(name);
+  if ( it == m_CellData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
