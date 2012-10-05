@@ -31,6 +31,8 @@
 <file>IOFilters/ReadH5Ebsd.html</file>
 <file>IOFilters/VtkRectilinearGridWriter.html</file>
 <file>IOFilters/YSChoiAbaqusReader.html</file>
+<file>IOFilters/SurfaceMeshToVtk.html</file>
+<file>IOFilters/SurfaceMeshToNTE.html</file>
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>

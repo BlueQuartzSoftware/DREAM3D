@@ -63,14 +63,14 @@ typedef struct {
 } Node;
 
 typedef struct {
-  int neigh_spin[2]; // 0 is to the left of the arrow; 1 is at right...
   int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
   int edgeKind;      // initially marked as 2; for face edges it's always 2...
+  int neigh_spin[2]; // 0 is to the left of the arrow; 1 is at right...
 } Segment;
 
 /* Used for "inner edge" spin calculations */
 typedef struct {
-  int node_id[2];
+  int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
   int edgeKind;      // initially marked with 2...
   int nSpin[4];
 } ISegment;
@@ -83,7 +83,7 @@ typedef struct {
   int mCubeID;       // marching cube id = site id at corner 0 of the marching cube..
 } Triangle;
 
-#if 1
+#if 0
 typedef struct {
     int32_t* point;    // This is the voxel volume
     int    xnum;
