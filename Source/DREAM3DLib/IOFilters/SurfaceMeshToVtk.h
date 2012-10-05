@@ -47,8 +47,6 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-//#include "DREAM3DLib/Common/VoxelDataContainer.h"
-//#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
@@ -121,6 +119,11 @@ class SurfaceMeshToVtk : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    int writeCellData(FILE* vtkFile);
+
+    int writePointData(FILE* vtkFile);
+
 
   private:
 

@@ -32,8 +32,8 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef CMUSurfaceMeshingFilter_H_
-#define CMUSurfaceMeshingFilter_H_
+#ifndef MMCSurfaceMeshingFilter_H_
+#define MMCSurfaceMeshingFilter_H_
 
 #include <string>
 
@@ -43,23 +43,23 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "SurfaceMeshStructs.h"
+#include "MMCSurfaceMeshStructs.h"
 
 /**
- * @class CMUSurfaceMeshingFilter CMUSurfaceMeshingFilter.h CMUSurfaceMeshing/Code/CMUSurfaceMeshingFilters/CMUSurfaceMeshingFilter.h
+ * @class MMCSurfaceMeshingFilter MMCSurfaceMeshingFilter.h CMUSurfaceMeshing/Code/MMCSurfaceMeshingFilters/MMCSurfaceMeshingFilter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class CMUSurfaceMeshingFilter : public AbstractFilter
+class MMCSurfaceMeshingFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CMUSurfaceMeshingFilter);
-    DREAM3D_STATIC_NEW_MACRO(CMUSurfaceMeshingFilter);
-    DREAM3D_TYPE_MACRO_SUPER(CMUSurfaceMeshingFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MMCSurfaceMeshingFilter);
+    DREAM3D_STATIC_NEW_MACRO(MMCSurfaceMeshingFilter);
+    DREAM3D_TYPE_MACRO_SUPER(MMCSurfaceMeshingFilter, AbstractFilter);
 
-    virtual ~CMUSurfaceMeshingFilter();
+    virtual ~MMCSurfaceMeshingFilter();
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -79,7 +79,7 @@ class CMUSurfaceMeshingFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Marching Cubes (Volume at a time)"; }
+    virtual const std::string getHumanLabel() { return "Multi-Material Marching Cubes"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -105,7 +105,7 @@ class CMUSurfaceMeshingFilter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    CMUSurfaceMeshingFilter();
+    MMCSurfaceMeshingFilter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -139,25 +139,26 @@ class CMUSurfaceMeshingFilter : public AbstractFilter
     int  get_number_case0_triangles (int *afe, StructArray<Node>::Pointer v1, Segment *e1, int nfedge);
     int  get_number_case2_triangles (int *afe, StructArray<Node>::Pointer v1, Segment *e1, int nfedge, int *afc, int nfctr);
     int  get_number_caseM_triangles (int *afe, StructArray<Node>::Pointer v1, Segment *e1, int nfedge, int *afc, int nfctr);
-    int  get_triangles (int32_t* p, Patch *t, StructArray<Face>::Pointer sq, StructArray<Node>::Pointer v, Segment *e,
+    int  get_triangles (int32_t* p, StructArray<Triangle>::Pointer triangles, StructArray<Face>::Pointer sq, StructArray<Node>::Pointer v, Segment *e,
             StructArray<Neighbor>::Pointer n, int ns, int nsp, int xDim);
-    void get_case0_triangles (Patch *t1, int *afe, StructArray<Node>::Pointer v1, Segment *e1,
+    void get_case0_triangles (StructArray<Triangle>::Pointer triangles, int *afe, StructArray<Node>::Pointer v1, Segment *e1,
             int nfedge, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
-    void get_case2_triangles (Patch *t1, int *afe, StructArray<Node>::Pointer v1, Segment *e1,
+    void get_case2_triangles (StructArray<Triangle>::Pointer triangles1, int *afe, StructArray<Node>::Pointer v1, Segment *e1,
             int nfedge, int *afc, int nfctr, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
-    void get_caseM_triangles (Patch *t1, int *afe, StructArray<Node>::Pointer v1, Segment *e1,
+    void get_caseM_triangles (StructArray<Triangle>::Pointer triangles1, int *afe, StructArray<Node>::Pointer v1, Segment *e1,
             int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid);
     void find_edgePlace(double tvcrd1[3], double tvcrd2[3], double tvcrd3[3], int tw[3],
             double xh, double xl, double yh, double yl, double zh, double zl);
-    int get_number_unique_inner_edges(Patch *t, int nT);
-    void get_unique_inner_edges(Patch *t, isegment *ie, int nT, int nfedge);
-    void update_triangle_sides_with_fedge(Patch *t, Segment *e, StructArray<Face>::Pointer squares, int nT, int xDim, int nsp);
-    void arrange_spins (int32_t* p, Patch *t, StructArray<Node>::Pointer v, int numT, int xDim, int nsp);
-    void update_node_edge_kind(StructArray<Node>::Pointer v, Segment *fe, isegment *ie, Patch *t, int nT, int nfedge);
+    int get_number_unique_inner_edges(StructArray<Triangle>::Pointer triangles, int nT);
+    void get_unique_inner_edges(StructArray<Triangle>::Pointer triangles, ISegment *ie, int nT, int nfedge);
+    void update_triangle_sides_with_fedge(StructArray<Triangle>::Pointer triangles, Segment *e, StructArray<Face>::Pointer squares, int nT, int xDim, int nsp);
+    void arrange_spins (int32_t* p, StructArray<Triangle>::Pointer triangles, StructArray<Node>::Pointer v, int numT, int xDim, int nsp);
+    void update_node_edge_kind(StructArray<Node>::Pointer v, Segment *fe, ISegment *ie, StructArray<Triangle>::Pointer triangles, int nT, int nfedge);
     int assign_new_nodeID (StructArray<Node>::Pointer v, int ns);
+    //void get_output(StructArray<Node>::Pointer v, Segment *fe, ISegment *ie, StructArray<Triangle>::Pointer triangles, int ns, int nN, int nfe, int nie, int nT, MMC_MeshParameters* mp);
 
-    CMUSurfaceMeshingFilter(const CMUSurfaceMeshingFilter&); // Copy Constructor Not Implemented
-    void operator=(const CMUSurfaceMeshingFilter&); // Operator '=' Not Implemented
+    MMCSurfaceMeshingFilter(const MMCSurfaceMeshingFilter&); // Copy Constructor Not Implemented
+    void operator=(const MMCSurfaceMeshingFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* CMUSurfaceMeshingFilter_H_ */
+#endif /* MMCSurfaceMeshingFilter_H_ */
