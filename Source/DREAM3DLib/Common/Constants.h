@@ -121,6 +121,7 @@ namespace DREAM3D
 
       const std::string Nodes("SurfaceMesh_Nodes");
       const std::string Triangles("SurfaceMesh_Triangles");
+      const std::string Voxels("SurfaceMesh_Voxels");
       const std::string VoxelCoords("SurfaceMesh_VoxelCoords");
       const std::string Neighbors("SurfaceMesh_Neighbors");
       const std::string Faces("SurfaceMesh_Faces");

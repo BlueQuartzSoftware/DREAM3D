@@ -63,10 +63,10 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
+    //DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
 
     //--------- Input Parameters
-
+    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -122,14 +122,30 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
     float*    m_VoxelCoords;
 
 
+#if 0
+    StructArray<Face>& sq = *squares;
+    int32_t* p = points->GetPointer(0);
+    StructArray<Segment>& e = *fedge;
+    StructArray<Node>& v = *vertices;
+    StructArray<Neighbor>& n = *neighbors;
+    StructArray<Triangle>& t = *triangles;
+#endif
+
+
     int createMesh();
+    void initialize_micro_from_grainIds(size_t dims[3], float res[3], size_t fileDims[3],
+                                        int32_t* grainIds,
+                                        DataArray<int32_t>::Pointer points,
+                                        StructArray<VoxelCoord>::Pointer voxelCoords);
     void get_neighbor_list(StructArray<Neighbor>::Pointer n, int ns, int nsp, int xDim, int yDim, int zDim);
 
-    void initialize_nodes (int32_t* p, StructArray<Node>::Pointer v, int ns, double dx, double dy, double dz);
+    void initialize_nodes (StructArray<VoxelCoord>::Pointer pointCoords,
+                           StructArray<Node>::Pointer vertices,
+                           int ns, float dx, float dy, float dz);
     void initialize_squares (StructArray<Neighbor>::Pointer neighbors, StructArray<Face>::Pointer sq, int ns, int nsp);
-    int  get_number_fEdges (StructArray<Face>::Pointer sq, int32_t* p, StructArray<Neighbor>::Pointer n, int eT2d[20][8], int ns);
+    int  get_number_fEdges (StructArray<Face>::Pointer sq, DataArray<int32_t>::Pointer points, StructArray<Neighbor>::Pointer n, int eT2d[20][8], int ns);
     void get_nodes_fEdges (StructArray<Face>::Pointer squares,
-                                               int32_t* p,
+                           DataArray<int32_t>::Pointer points,
                                                StructArray<Neighbor>::Pointer neighbors,
                                                StructArray<Node>::Pointer vertices,
                                                StructArray<Segment>::Pointer fedge,
@@ -139,10 +155,10 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
                                                int nsp,
                                                int xDim);
     int  get_square_index (int tns[4]);
-    int  treat_anomaly (int tnst[4], int32_t* p1, StructArray<Neighbor>::Pointer neighbors, int sqid);
+    int  treat_anomaly (int tnst[4], DataArray<int32_t>::Pointer points, StructArray<Neighbor>::Pointer neighbors, int sqid);
     void get_nodes (int cst, int ord, int nidx[2], int *nid, int nsp1, int xDim1);
-    void get_spins (int32_t* p1, int cst, int ord, int pID[2], int *pSpin, int nsp1, int xDim1);
-    int  get_number_triangles (int32_t* p,
+    void get_spins (DataArray<int32_t>::Pointer points, int cst, int ord, int pID[2], int *pSpin, int nsp1, int xDim1);
+    int  get_number_triangles (DataArray<int32_t>::Pointer points,
                                 StructArray<Face>::Pointer squares,
                                 StructArray<Node>::Pointer vertices,
                                 StructArray<Segment>::Pointer fedge,
@@ -152,15 +168,15 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
     int  get_number_case0_triangles (int *afe, StructArray<Node>::Pointer v1, StructArray<Segment>::Pointer fedge, int nfedge);
     int  get_number_case2_triangles (int *afe, StructArray<Node>::Pointer v1, StructArray<Segment>::Pointer fedge, int nfedge, int *afc, int nfctr);
     int  get_number_caseM_triangles (int *afe, StructArray<Node>::Pointer v1, StructArray<Segment>::Pointer fedge, int nfedge, int *afc, int nfctr);
-    int  get_triangles (int32_t* p,
-                         StructArray<Triangle>::Pointer triangles,
-                         StructArray<Face>::Pointer squares,
-                         StructArray<Node>::Pointer vertices,
-                         StructArray<Segment>::Pointer fedge,
-                         StructArray<Neighbor>::Pointer neighbors,
-                         int ns,
-                         int nsp,
-                         int xDim);
+    int  get_triangles (StructArray<VoxelCoord>::Pointer pointCoords,
+                        StructArray<Triangle>::Pointer triangles,
+                        StructArray<Face>::Pointer squares,
+                        StructArray<Node>::Pointer vertices,
+                        StructArray<Segment>::Pointer fedge,
+                        StructArray<Neighbor>::Pointer neighbors,
+                        int ns,
+                        int nsp,
+                        int xDim);
     void get_case0_triangles (StructArray<Triangle>::Pointer triangles, int *afe, StructArray<Node>::Pointer v1, StructArray<Segment>::Pointer fedge,
             int nfedge, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
     void get_case2_triangles (StructArray<Triangle>::Pointer triangles1, int *afe, StructArray<Node>::Pointer v1, StructArray<Segment>::Pointer fedge,
@@ -177,7 +193,11 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
                                                                int nT,
                                                                int xDim,
                                                                int nsp);
-    void arrange_spins (int32_t* p, StructArray<Triangle>::Pointer triangles, StructArray<Node>::Pointer v, int numT, int xDim, int nsp);
+    void arrange_spins (DataArray<int32_t>::Pointer points,
+                        StructArray<VoxelCoord>::Pointer pointCoords,
+                        StructArray<Triangle>::Pointer triangles,
+                        StructArray<Node>::Pointer vertices,
+                        int numT, int xDim, int nsp);
     void update_node_edge_kind(StructArray<Node>::Pointer v, StructArray<Segment>::Pointer fedge, StructArray<ISegment>::Pointer iedge, StructArray<Triangle>::Pointer triangles, int nT, int nfedge);
     int assign_new_nodeID (StructArray<Node>::Pointer v, int ns);
     //void get_output(StructArray<Node>::Pointer v, StructArray<Segment>::Pointer fedge, StructArray<ISegment>::Pointer iedge, StructArray<Triangle>::Pointer triangles, int ns, int nN, int nfe, int nie, int nT, MMC_MeshParameters* mp);

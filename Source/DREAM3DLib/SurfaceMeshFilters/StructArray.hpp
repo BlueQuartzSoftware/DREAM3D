@@ -524,6 +524,7 @@ class StructArray : public IDataArray
      */
     inline T& operator[](size_t i)
     {
+      assert(i < Size);
       return Array[i];
     }
 
