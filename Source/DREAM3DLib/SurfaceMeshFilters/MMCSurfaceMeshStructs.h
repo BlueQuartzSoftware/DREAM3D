@@ -38,11 +38,15 @@
 #define num_neigh 26
 
 #if 0
-typedef struct _voxel{
+typedef struct {
   int spin;
-  //float coord[3];
-} voxel;
+  float coord[3];
+} Voxel;
 #endif
+
+typedef struct {
+    float coord[3];
+} VoxelCoord;
 
 typedef struct {
   int neigh_id[num_neigh+1];
