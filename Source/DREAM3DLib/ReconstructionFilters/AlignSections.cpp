@@ -192,11 +192,19 @@ void AlignSections::execute()
   find_shifts(xshifts, yshifts);
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  DimType progIncrement = dims[2]/100;
+  DimType prog = 1;
+  std::stringstream ss;
+
   for (DimType i = 1; i < dims[2]; i++)
   {
-    std::stringstream ss;
-    ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
-   // notifyStatusMessage(ss.str());
+    if (i > prog)
+    {
+      ss.str("");
+      ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
+      notifyStatusMessage(ss.str());
+      prog = prog + progIncrement;
+    }
     slice = static_cast<int>( (dims[2] - 1) - i );
     for (DimType l = 0; l < dims[1]; l++)
     {
