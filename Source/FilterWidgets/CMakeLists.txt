@@ -97,6 +97,7 @@ WidgetGeneration(SamplingFilters SamplingFilters)
 WidgetGeneration(StatisticsFilters StatisticsFilters)
 WidgetGeneration(SurfaceMeshFilters SurfaceMesh_Filters)
 WidgetGeneration(SyntheticBuilderFilters Synthetic_BuilderFilters)
+WidgetGeneration(CustomFilters CustomFilters)
 
 
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
