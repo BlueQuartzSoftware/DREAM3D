@@ -95,8 +95,9 @@ namespace DREAM3D
     const std::string ReconstructionFilters("Reconstruction");
     const std::string SamplingFilters("Sampling");
     const std::string StatisticsFilters("Statistics");
-    const std::string SurfaceMeshingFilters("Surface_Meshing");
+    const std::string CustomFilters("Custom");
     const std::string SyntheticBuilderFilters("Synthetic_Builder");
+    const std::string SurfaceMeshingFilters("Surface_Meshing");
   }
 
   namespace CellData

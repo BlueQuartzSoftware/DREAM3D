@@ -7,6 +7,8 @@
 <file>catalog.css</file>
 <file>index.html</file>
 
+<file>CustomFilters/CropVolumePipeline.html</file>
+
 <file>GenericFilters/FindBoundingBoxGrains.html</file>
 <file>GenericFilters/FindCellQuats.html</file>
 <file>GenericFilters/FindGrainCentroids.html</file>
