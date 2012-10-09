@@ -35,6 +35,8 @@
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
 m_VoxelDataContainer(NULL),
+m_SurfaceMeshDataContainer(NULL),
+m_SolidMeshDataContainer(NULL),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
@@ -70,8 +72,8 @@ void AbstractFilter::execute()
 // -----------------------------------------------------------------------------
 void AbstractFilter::preflight()
 {
-	std::cout << "AbstractFilter::Preflight needs to be added in some class";
-	assert(false);
+  std::cout << "AbstractFilter::Preflight needs to be added in some class";
+  assert(false);
 }
 
 // -----------------------------------------------------------------------------
