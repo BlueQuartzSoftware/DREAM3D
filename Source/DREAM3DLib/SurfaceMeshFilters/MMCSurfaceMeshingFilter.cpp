@@ -68,7 +68,14 @@ MMCSurfaceMeshingFilter::~MMCSurfaceMeshingFilter()
 void MMCSurfaceMeshingFilter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-
+   {
+     FilterParameter::Pointer option = FilterParameter::New();
+     option->setHumanLabel("Add Surface Layer");
+     option->setPropertyName("AddSurfaceLayer");
+     option->setWidgetType(FilterParameter::BooleanWidget);
+     option->setValueType("bool");
+     parameters.push_back(option);
+   }
   setFilterParameters(parameters);
 }
 
@@ -77,6 +84,7 @@ void MMCSurfaceMeshingFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void MMCSurfaceMeshingFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
+  writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer() );
 
 }
 
@@ -136,6 +144,16 @@ void MMCSurfaceMeshingFilter::execute()
     ss << " SurfaceMeshDataContainer was NULL";
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
+    return;
+  }
+
+  setErrorCondition(0);
+  int64_t totalPoints = m->getTotalPoints();
+  size_t totalFields = m->getNumFieldTuples();
+  size_t totalEnsembles = m->getNumEnsembleTuples();
+  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  if(getErrorCondition() < 0)
+  {
     return;
   }
 
@@ -369,7 +387,7 @@ void MMCSurfaceMeshingFilter::initialize_micro_from_grainIds(size_t dims[3], flo
 
   if(m_AddSurfaceLayer == false)
   {
-    size_t totalPoints = points->GetNumberOfTuples();
+    size_t totalPoints = dims[0] * dims[1] * dims[2];
     int32_t* p = points->GetPointer(0);
     for (size_t i = 0; i < totalPoints; ++i)
     {
@@ -381,16 +399,16 @@ void MMCSurfaceMeshingFilter::initialize_micro_from_grainIds(size_t dims[3], flo
     size_t index = 0;
     size_t gIdx = 0;
     int32_t* p = points->GetPointer(0);
-
-    for (int i = 0; i < (fileDim[0] * fileDim[1]); ++i)
+    // Add bottom wrapping slice of voxels
+    for (size_t i = 0; i < (fileDim[0] * fileDim[1]); ++i)
     {
       p[++index] = -3;
     }
-
+    // Copy the bulk of the volume over
     for (size_t z = 0; z < dims[2]; ++z)
     {
       // Add a leading surface Row for this plane if needed
-      for (int i = 0; i < fileDim[0]; ++i)
+      for (size_t i = 0; i < fileDim[0]; ++i)
       {
         p[++index] = -4;
       }
@@ -409,13 +427,13 @@ void MMCSurfaceMeshingFilter::initialize_micro_from_grainIds(size_t dims[3], flo
         p[++index] = -6;
       }
       // Add a trailing surface Row for this plane if needed
-      for (int i = 0; i < fileDim[0]; ++i)
+      for (size_t i = 0; i < fileDim[0]; ++i)
       {
         p[++index] = -7;
       }
     }
 
-    for (int i = 0; i < (fileDim[0] * fileDim[1]); ++i)
+    for (size_t i = 0; i < (fileDim[0] * fileDim[1]); ++i)
     {
       p[++index] = -8;
     }
@@ -424,7 +442,7 @@ void MMCSurfaceMeshingFilter::initialize_micro_from_grainIds(size_t dims[3], flo
   // Point 0 is a garbage...
   points->SetValue(0, 0);
 
-  double tx, ty, tz;
+  float tx, ty, tz;
   size_t id = 0;
   // Let's fill out the coordinate of each voxel. Remember that x coordinate goes fastest...
   for (size_t k = 0; k < fileDim[2]; k++)
@@ -433,10 +451,10 @@ void MMCSurfaceMeshingFilter::initialize_micro_from_grainIds(size_t dims[3], flo
     {
       for (size_t i = 0; i < fileDim[0]; i++)
       {
-        id = k * fileDim[0] * fileDim[1] + j * fileDim[0] + i + 1;
-        tx = (double)(i) * res[0];
-        ty = (double)(j) * res[1];
-        tz = (double)(k) * res[2];
+        id = (k * fileDim[0] * fileDim[1]) + (j * fileDim[0]) + (i + 1);
+        tx = (float)(i) * res[0];
+        ty = (float)(j) * res[1];
+        tz = (float)(k) * res[2];
         //printf("%10d %6.3f %6.3f %6.3f\n", id, tx, ty, tz);
         point[id].coord[0] = tx;
         point[id].coord[1] = ty;
@@ -892,13 +910,12 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(StructArray<Face>::Pointer square
   int atBulk, sqIndex, anFlag;
   int edgeCount; // number of edges for each square...
   int nodeIndex[2], pixIndex[2];
-  int *nodeID, *pixSpin;
+  int nodeID[2];
+  int pixSpin[2];
   int tn1, tn2, tnk;
-  //int *pixSite;
 
-  nodeID = (int *)malloc(2 * sizeof(int));
-  //pixSite = (int *)malloc(2*sizeof(int));
-  pixSpin = (int *)malloc(2 * sizeof(int));
+  //nodeID = (int *)malloc(2 * sizeof(int));
+  //pixSpin = (int *)malloc(2 * sizeof(int));
   eid = 0;
 
   for (k = 0; k < (3 * ns); k++)
@@ -1673,7 +1690,6 @@ int MMCSurfaceMeshingFilter::get_number_case0_triangles(int *afe,
                                                         StructArray<Segment>::Pointer fedge,
                                                         int nfedge)
 {
-  StructArray<Node>& v1 = *vertices;
   StructArray<Segment>& e1 = *fedge;
 
   int ii, i, j, jj, k, kk, k1;
@@ -4529,13 +4545,16 @@ int MMCSurfaceMeshingFilter::get_number_unique_inner_edges(StructArray<Triangle>
   // make inner edge array, including duplicates inside each marching cube...
   do
   {
-    //printf("triangle %10d -->", i);
-    cmcID = t[i].mCubeID;
-    nmcID = t[i + 1].mCubeID;
-    if(i == (numT - 1))
-    {
-      nmcID = -1;
-    } // Let's get out when it hits the last triangle...
+      //printf("triangle %5d    ", i);
+      cmcID = t[i].mCubeID;
+      if(i == (numT - 1))
+      {
+        nmcID = -1;
+      }
+      else
+      {
+        nmcID = t[i + 1].mCubeID;
+      }// Let's get out when it hits the last triangle...
     //printf("cmcID = %10d, nmcID = %10d, index = %10d\n", cmcID, nmcID, index);
 
     for (j = 0; j < 3; j++)
@@ -4647,13 +4666,16 @@ void MMCSurfaceMeshingFilter::get_unique_inner_edges(StructArray<Triangle>::Poin
   // make inner edge array, including duplicates inside each marching cube...
   do
   {
-    //printf("triangle %5d    ", i);
-    cmcID = t[i].mCubeID;
-    nmcID = t[i + 1].mCubeID;
-    if(i == (numT - 1))
-    {
-      nmcID = -1;
-    } // Let's get out when it hits the last triangle...
+      //printf("triangle %5d    ", i);
+      cmcID = t[i].mCubeID;
+      if(i == (numT - 1))
+      {
+        nmcID = -1;
+      }
+      else
+      {
+        nmcID = t[i + 1].mCubeID;
+      }// Let's get out when it hits the last triangle...
 
     for (j = 0; j < 3; j++)
     {
