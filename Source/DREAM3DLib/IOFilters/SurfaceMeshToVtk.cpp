@@ -113,6 +113,31 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
+
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if (NULL == sm)
+  {
+      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+      setErrorCondition(-384);
+  }
+  else {
+    if (sm->getTriangles().get() == NULL)
+    {
+        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+        setErrorCondition(-384);
+    }
+    if (sm->getNodes().get() == NULL)
+    {
+        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
+        setErrorCondition(-384);
+    }
+    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::Edges);
+    if (edges.get() == NULL)
+    {
+        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -385);
+        setErrorCondition(-385);
+    }
+  }
 }
 
 

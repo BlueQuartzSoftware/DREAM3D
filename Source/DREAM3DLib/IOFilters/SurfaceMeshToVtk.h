@@ -82,7 +82,7 @@ class SurfaceMeshToVtk : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write Vtk PolyData File (From SurfaceMesh)"; }
+    virtual const std::string getHumanLabel() { return "Write SurfaceMesh (Vtk PolyData)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
