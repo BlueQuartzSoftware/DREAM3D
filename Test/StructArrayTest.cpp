@@ -68,7 +68,6 @@ void TestStructArray()
   for (size_t i = 0; i < size; ++i)
   {
     Node* node = nodes->GetPointer(i);
-    node->newID = i;
     node->coord[0] = i+23.0f;
     node->coord[1] = i+11.0f;
     node->coord[2] = i+20.0f;
@@ -80,7 +79,6 @@ void TestStructArray()
   for (size_t i = 0; i < size; ++i)
   {
     Node* node = nodes->GetPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->newID , i);
     DREAM3D_REQUIRE_EQUAL(node->coord[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[2] , i+20.0f);
@@ -93,7 +91,6 @@ void TestStructArray()
   for (size_t i = 0; i < size; ++i)
   {
     Node* node = nodes->GetPointer(i);
-    node->newID = i;
     node->coord[0] = i+23.0f;
     node->coord[1] = i+11.0f;
     node->coord[2] = i+20.0f;
@@ -103,7 +100,6 @@ void TestStructArray()
   for (size_t i = 0; i < size; ++i)
   {
     Node* node = nodes->GetPointer(i);
-    DREAM3D_REQUIRE_EQUAL(node->newID , i);
     DREAM3D_REQUIRE_EQUAL(node->coord[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[2] , i+20.0f);
@@ -114,7 +110,6 @@ void TestStructArray()
   for (size_t i = 0; i < size; ++i)
   {
     Node node = vertices[i]; // Uses the [] operator overload
-    DREAM3D_REQUIRE_EQUAL(node.newID , i);
     DREAM3D_REQUIRE_EQUAL(node.coord[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node.coord[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node.coord[2] , i+20.0f);
