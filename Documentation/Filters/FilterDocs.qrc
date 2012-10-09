@@ -32,7 +32,9 @@
 <file>IOFilters/VtkRectilinearGridWriter.html</file>
 <file>IOFilters/YSChoiAbaqusReader.html</file>
 <file>IOFilters/SurfaceMeshToVtk.html</file>
-<file>IOFilters/SurfaceMeshToNTE.html</file>
+<file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
+<file>IOFilters/CMUNodesTrianglesToStl.html</file>
+<file>IOFilters/CMUNodesTrianglesToVtk.html</file>
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
@@ -72,8 +74,7 @@
 <file>StatisticsFilters/FindSizes.html</file>
 <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
-<file>Surface_MeshingFilters/CMUNodesTrianglesToStl.html</file>
-<file>Surface_MeshingFilters/CMUNodesTrianglesToVtk.html</file>
+
 <file>Surface_MeshingFilters/MMCSurfaceMeshingFilter.html</file>
 
 <file>Synthetic_BuilderFilters/AdjustVolume.html</file>
