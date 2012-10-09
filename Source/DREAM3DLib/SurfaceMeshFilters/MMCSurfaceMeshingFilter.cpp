@@ -100,8 +100,22 @@ void MMCSurfaceMeshingFilter::dataCheck(bool preflight, size_t voxels, size_t fi
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Nodes);
-  StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Triangles);
+
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if (NULL == sm)
+  {
+      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+      setErrorCondition(-384);
+  }
+  else {
+    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Nodes);
+    StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Triangles);
+    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Edges);
+
+    sm->setNodes(vertices);
+    sm->setTriangles(triangles);
+    sm->addCellData(DREAM3D::CellData::SurfaceMesh::Edges, faceEdges);
+  }
 
 }
 
@@ -365,12 +379,13 @@ int MMCSurfaceMeshingFilter::createMesh()
   StructArray<Node>::Pointer nodes = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMesh::Nodes);
   nodes->initializeWithZeros();
 
-  generate_update_nodes_edges_array(new_ids_for_nodes, nodes, vertices, triangles, faceEdges, maxGrainId);
+  generate_update_nodes_edges_array(new_ids_for_nodes, nodes, vertices, triangles, faceEdges, internalEdges, maxGrainId);
 
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
   sm->setNodes(nodes);
-
+  sm->addCellData(DREAM3D::CellData::SurfaceMesh::Edges, faceEdges);
+  sm->addCellData(DREAM3D::CellData::SurfaceMesh::InternalEdges, internalEdges);
 
 
 
@@ -391,6 +406,7 @@ void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32
                                                                 StructArray<Node>::Pointer vertices,
                                                                 StructArray<Triangle>::Pointer triangles,
                                                                 StructArray<Segment>::Pointer faceEdges,
+                                                                StructArray<ISegment>::Pointer internalEdges,
                                                                 int maxGrainId)
 {
 
@@ -398,6 +414,7 @@ void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32
     Node* v = vertices->GetPointer(0);
     Triangle* t = triangles->GetPointer(0);
     Segment* e = faceEdges->GetPointer(0);
+    ISegment* ie = internalEdges->GetPointer(0);
 
     // Update the triangles with the new node ids (Which are offsets into an array of Node structs
     size_t numTri = triangles->GetNumberOfTuples();
@@ -419,10 +436,22 @@ void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32
       Segment& seg = e[i];
       seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
       seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
-      seg.node_id[2] = new_ids_for_nodes->GetValue(seg.node_id[2]);
       // Reset the MaxGrainId back to Zero to 'recover' those grains
       if (seg.neigh_spin[0] == maxGrainId) { seg.neigh_spin[0] = 0; }
       if (seg.neigh_spin[1] == maxGrainId) { seg.neigh_spin[1] = 0; }
+    }
+
+    size_t numIEdges = internalEdges->GetNumberOfTuples();
+    for(size_t i = 0; i < numIEdges; ++i)
+    {
+      ISegment& seg = ie[i];
+      seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
+      seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
+      // Reset the MaxGrainId back to Zero to 'recover' those grains
+      if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
+      if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
+      if (seg.nSpin[2] == maxGrainId) { seg.nSpin[2] = 0; }
+      if (seg.nSpin[3] == maxGrainId) { seg.nSpin[3] = 0; }
     }
 
     size_t numNodes = vertices->GetNumberOfTuples();
