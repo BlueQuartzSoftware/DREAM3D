@@ -119,7 +119,6 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
 
   private:
     int32_t*  m_GrainIds;
-    float*    m_VoxelCoords;
 
 
 #if 0
