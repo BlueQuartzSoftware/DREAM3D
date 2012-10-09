@@ -198,6 +198,10 @@ template<typename T>\
 void methodName(typename T::Pointer t, FILE* f){\
     VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
     t->setVoxelDataContainer(m.get());\
+    SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();\
+    t->setSurfaceMeshDataContainer(sm.get());\
+    SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();\
+    t->setSolidMeshDataContainer(solid.get());\
     t->preflight();\
     {\
       std::set<std::string> list = t->getRequiredCellData();\
