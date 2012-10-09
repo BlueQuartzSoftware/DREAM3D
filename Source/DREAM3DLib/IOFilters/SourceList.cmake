@@ -27,7 +27,9 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToVtk.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToNTE.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToNodesTrianglesEdges.h
+ #   ${DREAM3DLib_SOURCE_DIR}/IOFilters/CMUNodesTrianglesToVtk.h
+ #   ${DREAM3DLib_SOURCE_DIR}/IOFilters/CMUNodesTrianglesToStl.h
 )
 
 
@@ -54,7 +56,9 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToVtk.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToNTE.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/SurfaceMeshToNodesTrianglesEdges.cpp
+ #   ${DREAM3DLib_SOURCE_DIR}/IOFilters/CMUNodesTrianglesToVtk.cpp
+ #   ${DREAM3DLib_SOURCE_DIR}/IOFilters/CMUNodesTrianglesToStl.cpp
 )
 
 if (NOT DEFINED ONLY_FILTERS)
