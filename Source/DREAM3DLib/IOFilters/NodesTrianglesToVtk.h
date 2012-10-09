@@ -34,53 +34,53 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CMUNodesTrianglesToStl_H_
-#define CMUNodesTrianglesToStl_H_
+#ifndef CMUSmoothingToVtk_H_
+#define CMUSmoothingToVtk_H_
 
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
- * @class CMUNodesTrianglesToStl CMUNodesTrianglesToStl.h MFESurfaceSmoothing/CMUNodesTrianglesToStl.h
+ * @class CMUSmoothingToVtk CMUSmoothingToVtk.h NeverMind/Code/NeverMindFilters/CMUSmoothingToVtk.h
  * @brief Converts the Nodes and Triangles files produced by the CMU SurfaceMeshing
- * and Surface Smoothing algorithms into STL Files
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Jul 17, 2012
+ * and Surface Smoothing algorithms into a VTK Polydata File
+ * @author
+ * @date
  * @version 1.0
  */
-class CMUNodesTrianglesToStl : public AbstractFilter
+class NodesTrianglesToVtk : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CMUNodesTrianglesToStl);
-    DREAM3D_STATIC_NEW_MACRO(CMUNodesTrianglesToStl);
-    DREAM3D_TYPE_MACRO_SUPER(CMUNodesTrianglesToStl, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(NodesTrianglesToVtk);
+    DREAM3D_STATIC_NEW_MACRO(NodesTrianglesToVtk);
+    DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToVtk, AbstractFilter);
 
-    virtual ~CMUNodesTrianglesToStl();
+    virtual ~NodesTrianglesToVtk();
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix);
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile);
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile);
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "CMU Nodes&Triangles To STL"; }
+    virtual const std::string getHumanLabel() { return "CMU Nodes&Triangles To Vtk"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -106,7 +106,7 @@ class CMUNodesTrianglesToStl : public AbstractFilter
     virtual void preflight();
 
   protected:
-    CMUNodesTrianglesToStl();
+    NodesTrianglesToVtk();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -127,11 +127,9 @@ class CMUNodesTrianglesToStl : public AbstractFilter
 
 
   private:
-    int writeHeader(FILE* f, const std::string &header, int triCount);
-    int writeNumTrianglesToFile(const std::string &filename, int triCount);
 
-    CMUNodesTrianglesToStl(const CMUNodesTrianglesToStl&); // Copy Constructor Not Implemented
-    void operator=(const CMUNodesTrianglesToStl&); // Operator '=' Not Implemented
+    NodesTrianglesToVtk(const NodesTrianglesToVtk&); // Copy Constructor Not Implemented
+    void operator=(const NodesTrianglesToVtk&); // Operator '=' Not Implemented
 };
 
-#endif /* CMUNodesTrianglesToStl_H_ */
+#endif /* CMUSmoothingToVtk_H_ */

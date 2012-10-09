@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "CMUNodesTrianglesToVtk.h"
+#include "NodesTrianglesToVtk.h"
 
 
 #include "MXA/Common/MXAEndian.h"
@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CMUNodesTrianglesToVtk::CMUNodesTrianglesToVtk() :
+NodesTrianglesToVtk::NodesTrianglesToVtk() :
 AbstractFilter(),
 m_WriteBinaryFile(false),
 m_WriteConformalMesh(true)
@@ -53,14 +53,14 @@ m_WriteConformalMesh(true)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CMUNodesTrianglesToVtk::~CMUNodesTrianglesToVtk()
+NodesTrianglesToVtk::~NodesTrianglesToVtk()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToVtk::setupFilterParameters()
+void NodesTrianglesToVtk::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -110,7 +110,7 @@ void CMUNodesTrianglesToVtk::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );
@@ -122,7 +122,7 @@ void CMUNodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -149,7 +149,7 @@ void CMUNodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fie
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToVtk::preflight()
+void NodesTrianglesToVtk::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -157,7 +157,7 @@ void CMUNodesTrianglesToVtk::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToVtk::execute()
+void NodesTrianglesToVtk::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -346,7 +346,7 @@ void CMUNodesTrianglesToVtk::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CMUNodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
 //# first line = number of nodes
 //# column 1 = node id, starts from zero.
@@ -355,7 +355,7 @@ int CMUNodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, F
 //#                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
 //#                       12 = on the grain boundary trace area at the surface of microstructure
 //#                       13 = on the grain boundary trace line
-//#                 14 = on the triple point, and so on�
+//#                 14 = on the triple point, and so on‚àö√¢
 //# column 3 to 5 = coordinates of nodes, x, y, and z
 
   int err = 0;
@@ -394,7 +394,7 @@ int CMUNodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, F
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CMUNodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
   int err = 0;
   int nodeId = 0;
@@ -427,7 +427,7 @@ int CMUNodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FI
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CMUNodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
 //# first line = number of triangles
 //# column 1 = triangle id, starts from zero
@@ -501,7 +501,7 @@ int CMUNodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CMUNodesTrianglesToVtk::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
   int nread = 0;
   // Open the triangles file for reading
