@@ -227,7 +227,7 @@ void SurfaceMeshToVtk::execute()
   int tData[4];
   int nT = triangles.GetNumberOfTuples();
   int triangleCount = nT;
-  int tn1, tn2, tn3;
+//  int tn1, tn2, tn3;
   if (false == m_WriteConformalMesh)
   {
     triangleCount = nT * 2;
@@ -237,13 +237,13 @@ void SurfaceMeshToVtk::execute()
   for (int j = 0; j < nT; j++)
   {
   //  Triangle& t = triangles[j];
-    tn1 = triangles[j].node_id[0];
-    tn2 = triangles[j].node_id[1];
-    tn3 = triangles[j].node_id[2];
+    tData[1] = triangles[j].node_id[0];
+    tData[2] = triangles[j].node_id[1];
+    tData[3] = triangles[j].node_id[2];
 
-    tData[1] = nodes[tn1].newID;
-    tData[2] = nodes[tn2].newID;
-    tData[3] = nodes[tn3].newID;
+//    tData[1] = nodes[tn1].newID;
+//    tData[2] = nodes[tn2].newID;
+//    tData[3] = nodes[tn3].newID;
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
