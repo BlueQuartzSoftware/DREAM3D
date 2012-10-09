@@ -214,6 +214,7 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
                                             StructArray<Node>::Pointer vertices,
                                             StructArray<Triangle>::Pointer triangles,
                                             StructArray<Segment>::Pointer faceEdges,
+                                            StructArray<ISegment>::Pointer internalEdges,
                                              int maxGrainId);
 
     //void get_output(Node* v, Segment* fedge, ISegment* iedge, Triangle* triangles, int ns, int nN, int nfe, int nie, int nT, MMC_MeshParameters* mp);
