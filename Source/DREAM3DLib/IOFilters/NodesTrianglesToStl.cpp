@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "CMUNodesTrianglesToStl.h"
+#include "NodesTrianglesToStl.h"
 
 #include <boost/shared_array.hpp>
 
@@ -42,21 +42,12 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-
-//#include "SurfaceMeshStructs.h"
-
-
-namespace Detail {
-  typedef struct _triangle {
-    int v_id[3];       // stores three new node id for vertices of the triangles...
-    int nSpin[2];      // neighboring two spins...
-  } Triangle;
-}
+#include "DREAM3DLib/SurfaceMeshFilters/MMCSurfaceMeshStructs.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CMUNodesTrianglesToStl::CMUNodesTrianglesToStl() :
+NodesTrianglesToStl::NodesTrianglesToStl() :
     AbstractFilter()
 {
   setupFilterParameters();
@@ -66,14 +57,14 @@ CMUNodesTrianglesToStl::CMUNodesTrianglesToStl() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CMUNodesTrianglesToStl::~CMUNodesTrianglesToStl()
+NodesTrianglesToStl::~NodesTrianglesToStl()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToStl::setupFilterParameters()
+void NodesTrianglesToStl::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -116,7 +107,7 @@ void CMUNodesTrianglesToStl::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );
@@ -127,7 +118,7 @@ void CMUNodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -164,7 +155,7 @@ void CMUNodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fie
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToStl::preflight()
+void NodesTrianglesToStl::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -173,7 +164,7 @@ void CMUNodesTrianglesToStl::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CMUNodesTrianglesToStl::execute()
+void NodesTrianglesToStl::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -248,9 +239,10 @@ void CMUNodesTrianglesToStl::execute()
   float pos[3] =
   { 0.0f, 0.0f, 0.0f };
   size_t nread = 0;
-  // Write the POINTS data (Vertex)
+  // Read the POINTS data (Vertex)
   std::map<int, int> nodeIdToIndex;
-  boost::shared_array<node> nodes(new node[nNodes]);
+  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMesh::Nodes);
+  Node* nodes = nodesPtr->GetPointer(0);
   for (int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
@@ -259,11 +251,11 @@ void CMUNodesTrianglesToStl::execute()
       break;
     }
     nodeIdToIndex[nodeId] = i;
-    nodes[i].newID = nodeId;
-    nodes[i].nodeKind = nodeKind;
-    nodes[i].coord[0] = pos[0];
-    nodes[i].coord[1] = pos[1];
-    nodes[i].coord[2] = pos[2];
+   // nodes[i].newID = nodeId;
+    nodes[nodeId].nodeKind = nodeKind;
+    nodes[nodeId].coord[0] = pos[0];
+    nodes[nodeId].coord[1] = pos[1];
+    nodes[nodeId].coord[2] = pos[2];
   }
   fclose(nodesFile);
 
@@ -273,17 +265,18 @@ void CMUNodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
+  StructArray<Triangle>::Pointer trianglePtr = StructArray<Triangle>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMesh::Triangles);
+  Triangle* triangles = trianglePtr->GetPointer(0);
 
-  boost::shared_array<Detail::Triangle> triangles(new Detail::Triangle[nTriangles]);
   // Store all the unique Spins
   std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
-    triangles[i].v_id[0] = tData[1];
-    triangles[i].v_id[1] = tData[2];
-    triangles[i].v_id[2] = tData[3];
+    triangles[i].node_id[0] = tData[1];
+    triangles[i].node_id[1] = tData[2];
+    triangles[i].node_id[2] = tData[3];
     triangles[i].nSpin[0] = tData[7];
     triangles[i].nSpin[1] = tData[8];
     uniqueSpins.insert(tData[7]);
@@ -331,9 +324,9 @@ void CMUNodesTrianglesToStl::execute()
     {
       char winding = 2; // 2 = Do NOT write this triangle
       // Get the true indices of the 3 nodes
-      int nId0 = nodeIdToIndex[triangles[t].v_id[0]];
-      int nId1 = nodeIdToIndex[triangles[t].v_id[1]];
-      int nId2 = nodeIdToIndex[triangles[t].v_id[2]];
+      int nId0 = nodeIdToIndex[triangles[t].node_id[0]];
+      int nId1 = nodeIdToIndex[triangles[t].node_id[1]];
+      int nId2 = nodeIdToIndex[triangles[t].node_id[2]];
 
       vert1[0] = nodes[nId0].coord[0];
       vert1[1] = nodes[nId0].coord[1];
@@ -406,7 +399,7 @@ void CMUNodesTrianglesToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CMUNodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int triCount)
+int NodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int triCount)
 {
   if (NULL == f)
   {
@@ -426,7 +419,7 @@ int CMUNodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CMUNodesTrianglesToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
+int NodesTrianglesToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
 {
   // We need to update the number of triangles in the file
   int err =0;

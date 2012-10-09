@@ -33,8 +33,8 @@
 <file>IOFilters/YSChoiAbaqusReader.html</file>
 <file>IOFilters/SurfaceMeshToVtk.html</file>
 <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
-<file>IOFilters/CMUNodesTrianglesToStl.html</file>
-<file>IOFilters/CMUNodesTrianglesToVtk.html</file>
+<file>IOFilters/NodesTrianglesToStl.html</file>
+<file>IOFilters/NodesTrianglesToVtk.html</file>
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
