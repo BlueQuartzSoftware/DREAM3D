@@ -128,7 +128,7 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
     }
     if (sm->getNodes().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
+        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
         setErrorCondition(-384);
     }
     IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::Edges);
