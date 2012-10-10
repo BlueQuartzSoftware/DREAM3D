@@ -306,7 +306,17 @@ void PipelineViewWidget::preflightPipeline()
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
-        fw->setHasPreflightErrors(true);
+        for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+        {
+          if ( (*iter).getMessageType() == PipelineMessage::Error)
+          {
+            fw->setHasPreflightErrors(true);
+          }
+          else if ((*iter).getMessageType() == PipelineMessage::Warning)
+          {
+            fw->setHasPreflightWarnings(true);
+          }
+        }
       }
     }
   }
@@ -321,6 +331,7 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
 {
   if(NULL != errorTableWidget)
   {
+
     int rc = errorTableWidget->rowCount();
 
     for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
@@ -337,8 +348,13 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
 
       QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
       errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-      QColor errColor(255, 191, 193);
+      PipelineMessage& msg = errorStream.at(i);
+      QColor errColor(255, 255, 255);
+      if (msg.getMessageType() == PipelineMessage::Error) {
+        errColor = QColor(255, 191, 193);
+      } else if (msg.getMessageType() == PipelineMessage::Warning) {
+        errColor = QColor(251, 254, 137);
+      }
       QBrush errBrush(errColor);
 
       filterNameWidgetItem->setBackground(errBrush);

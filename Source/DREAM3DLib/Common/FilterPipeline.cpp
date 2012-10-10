@@ -262,11 +262,27 @@ int FilterPipeline::preflightPipeline()
     setCurrentFilter(*filter);
     (*filter)->preflight();
     int err = (*filter)->getErrorCondition();
+    std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
+    // Loop through all the messages making sure they are all error messages. If they are all
+    // warning messages we are going to let the preflight pass. Hopefully if the warning
+    // turns into an error the filter will handle it correctly and gracefully fail with
+    // a nice message to the user.
+    err = 0;
+    for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+    {
+       if ( (*iter).getMessageType() == PipelineMessage::Error)
+        {
+          err |= (*filter)->getErrorCondition();
+        }
+        else if ((*iter).getMessageType() == PipelineMessage::Warning)
+        {
+          err |= 0;
+        }
+    }
     if(err < 0)
     {
       preflightError |= err;
       setErrorCondition(preflightError);
-      setErrorCondition(err);
       sendPipelineMessages( (*filter)->getPipelineMessages());
     }
   }
