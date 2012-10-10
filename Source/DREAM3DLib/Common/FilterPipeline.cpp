@@ -257,6 +257,7 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setDataContainer(m.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
+    (*filter)->setDataContainer(NULL);
     int err = (*filter)->getErrorCondition();
     if(err < 0)
     {
