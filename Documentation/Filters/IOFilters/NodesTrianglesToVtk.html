@@ -20,13 +20,13 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
    width:98%;
 }
 </style>
-<title>CMU Nodes &amp; Triangles To Vtk</title>
+<title>Nodes &amp; Triangles To Vtk</title>
 </head>
 <body>
-<h1 class="pHeading1">CMU Nodes &amp; Triangles To Vtk Filter</h1>
-<p class="pCellBody"> 
-<a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp2">Summary</a> 
-| <a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp3">Options</a> 
+<h1 class="pHeading1">Nodes &amp; Triangles To Vtk Filter</h1>
+<p class="pCellBody">
+<a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp2">Summary</a>
+| <a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp3">Options</a>
 | <a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp4">Required Arrays</a>
 | <a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp5">Created Arrays</a>
 | <a href="../Surface_MeshingFilters/CMUNodesTrianglesToVtk.html#wp1">Authors</a>
@@ -42,7 +42,7 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <!-- Write all your documentation here -->
 <p class="pBody">
-This filter will convert a pair of triangle and nodes files commonly used by 
+This filter will convert a pair of triangle and nodes files commonly used by
 CMU in their GBCD studies and output a VTK PolyData File in either ASCII or
 Binary format. Note if the file is in Binary that the binary portions are written
 in Big Endian format as specified by the vtk file format.
@@ -52,11 +52,11 @@ The nodes file format is as follows:
 <ul>
 <li> first line = number of nodes</li>
 <li> column 1 = node id, starts from zero.</li>
-<li> column 2 = node type, 
+<li> column 2 = node type,
 <br />2 = on the grain boundary
 <br /> 3 = on the triple line,
-<br /> 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure. 
-                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains. 
+<br /> 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
+                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
                        12 = on the grain boundary trace area at the surface of microstructure
                        13 = on the grain boundary trace line
                  14 = on the triple point, and so on</li>
@@ -72,8 +72,8 @@ The triangles file format is as follows:
 <li> column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.</li>
 </ul>
 
-If the user selects to <b>disable</b> the <tt>Conformal Mesh</tt> option then 2 
-triangles will be written to the file and the scalar data will have 2 entries for 
+If the user selects to <b>disable</b> the <tt>Conformal Mesh</tt> option then 2
+triangles will be written to the file and the scalar data will have 2 entries for
 the <b>grain id</b> one for each grain that the triangle borders.
 <!-- Do NOT write documentation below this line -->
 
