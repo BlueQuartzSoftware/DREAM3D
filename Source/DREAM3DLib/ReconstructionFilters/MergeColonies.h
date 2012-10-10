@@ -67,8 +67,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     MergeColonies();
 
     void merge_colonies();
-	int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
+  int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
     void characterize_colonies();
 
   private:
@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     unsigned int* m_CrystalStructures;
 
     std::vector<int> parentnumbers;
-	int numParents;
+  int numParents;
 
 
     OrientationMath::Pointer m_CubicOps;

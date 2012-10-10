@@ -173,8 +173,6 @@ void FindShapes::find_moments()
   DataContainer* m = getDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
-  size_t bin;
-
   float u200 = 0;
   float u020 = 0;
   float u002 = 0;
@@ -256,7 +254,7 @@ void FindShapes::find_moments()
     grainmoments[gnum*6 + 3] = grainmoments[gnum*6 + 3] + u110;
     grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + u011;
     grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + u101;
-	m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
+  m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
   }
   float sphere = (2000.0f*m_pi*m_pi)/9.0f;
   //constant for moments because voxels are broken into smaller voxels
@@ -283,7 +281,7 @@ void FindShapes::find_moments()
     float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
-	if(vol5 == 0) omega3 = 0;
+  if(vol5 == 0) omega3 = 0;
     m_Omega3s[i] = omega3;
   }
 }
@@ -343,11 +341,14 @@ void FindShapes::find_moments2D()
     grainmoments[i*6 + 2] = -grainmoments[i*6 + 2] * konst1;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindShapes::find_axes()
 {
   DataContainer* m = getDataContainer();
 
-  size_t bin;
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
   float a, b, c, d, f, g, h;
@@ -378,7 +379,7 @@ void FindShapes::find_axes()
     h = (g * g / 4.0f) + (f * f * f / 27.0f);
     rsquare = (g * g / 4) - h;
     r = sqrt(rsquare);
-	  if(rsquare < 0) r = 0;
+    if(rsquare < 0) r = 0;
     theta = 0;
     if (r == 0)
     {
@@ -386,9 +387,9 @@ void FindShapes::find_axes()
     }
     if (r != 0)
     {
-	  value = -g / (2.0f * r);
-	  if(value > 1) value = 1.0f;
-	  if(value < -1) value = -1.0f;
+    value = -g / (2.0f * r);
+    if(value > 1) value = 1.0f;
+    if(value < -1) value = -1.0f;
       theta = acos(value);
     }
     float const1 = powf(r, 0.33333333333f);
@@ -399,9 +400,9 @@ void FindShapes::find_axes()
     r1 = 2 * const1 * const2 - (const3);
     r2 = -const1 * (const2 - (const4)) - const3;
     r3 = -const1 * (const2 + (const4)) - const3;
-	graineigenvals[3*i] = r1;
-	graineigenvals[3*i+1] = r2;
-	graineigenvals[3*i+2] = r3;
+  graineigenvals[3*i] = r1;
+  graineigenvals[3*i+1] = r2;
+  graineigenvals[3*i+2] = r3;
     I1 = (15 * r1) / (4 * m_pi);
     I2 = (15 * r2) / (4 * m_pi);
     I3 = (15 * r3) / (4 * m_pi);
@@ -418,16 +419,18 @@ void FindShapes::find_axes()
     m_AxisLengths[3*i+2] = c;
     bovera = b / a;
     covera = c / a;
-	if(A == 0 || B == 0 || C == 0) bovera = 0, covera = 0;
+  if(A == 0 || B == 0 || C == 0) bovera = 0, covera = 0;
     m_AspectRatios[2*i] = bovera;
     m_AspectRatios[2*i+1] = covera;
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindShapes::find_axes2D()
 {
   DataContainer* m = getDataContainer();
-
-  size_t bin;
 
   float Ixx, Iyy, Ixy;
 
@@ -451,8 +454,8 @@ void FindShapes::find_axes2D()
     r2 = preterm * postterm2;
     m_AxisLengths[3*i] = r1;
     m_AxisLengths[3*i+1] = r2;
-	m_AspectRatios[2*i] = r2/r1;
-	m_AspectRatios[2*i+1] = 0;
+  m_AspectRatios[2*i] = r2/r1;
+  m_AspectRatios[2*i+1] = 0;
   }
 }
 float FindShapes::find_xcoord(size_t index)

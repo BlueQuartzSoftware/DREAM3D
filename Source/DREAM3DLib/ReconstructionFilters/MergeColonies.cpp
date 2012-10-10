@@ -67,52 +67,52 @@ const static float m_pi = static_cast<float>(M_PI);
   static const float unit112_2 = 2.0/sqrtf(6.0);
 
   float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
-										{-unit111, -unit112_1, unit110},
-										{unit111, -unit112_2, 0}},
+                    {-unit111, -unit112_1, unit110},
+                    {unit111, -unit112_2, 0}},
 
-										{{-unit111, unit112_1, unit110},
-										{unit111, -unit112_1, unit110},
-										{unit111, unit112_2, 0}},
+                    {{-unit111, unit112_1, unit110},
+                    {unit111, -unit112_1, unit110},
+                    {unit111, unit112_2, 0}},
 
-										{{unit111, -unit112_1, unit110},
-										{unit111, -unit112_1, -unit110},
-										{unit111, unit112_2, 0}},
+                    {{unit111, -unit112_1, unit110},
+                    {unit111, -unit112_1, -unit110},
+                    {unit111, unit112_2, 0}},
 
-										{{unit111, unit112_1, unit110},
-										{unit111, unit112_1, -unit110},
-										{-unit111, unit112_2, 0}},
+                    {{unit111, unit112_1, unit110},
+                    {unit111, unit112_1, -unit110},
+                    {-unit111, unit112_2, 0}},
 
-										{{unit111, unit112_1, unit110},
-										{unit111, -unit112_2, 0},
-										{unit111, unit112_1, -unit110}},
+                    {{unit111, unit112_1, unit110},
+                    {unit111, -unit112_2, 0},
+                    {unit111, unit112_1, -unit110}},
 
-										{{unit111, -unit112_1, unit110},
-										{-unit111, -unit112_2, 0},
-										{unit111, -unit112_1, -unit110}},
+                    {{unit111, -unit112_1, unit110},
+                    {-unit111, -unit112_2, 0},
+                    {unit111, -unit112_1, -unit110}},
 
-										{{unit111, -unit112_1, unit110},
-										{unit111, unit112_2, 0},
-										{-unit111, unit112_1, unit110}},
+                    {{unit111, -unit112_1, unit110},
+                    {unit111, unit112_2, 0},
+                    {-unit111, unit112_1, unit110}},
 
-										{{-unit111, -unit112_1, unit110},
-										{unit111, -unit112_2, 0},
-										{unit111, unit112_1, unit110}},
+                    {{-unit111, -unit112_1, unit110},
+                    {unit111, -unit112_2, 0},
+                    {unit111, unit112_1, unit110}},
 
-										{{unit111, -unit112_2,0},
-										{unit111, unit112_1, unit110},
-										{-unit111, -unit112_1, unit110}},
+                    {{unit111, -unit112_2,0},
+                    {unit111, unit112_1, unit110},
+                    {-unit111, -unit112_1, unit110}},
 
-										{{unit111, unit112_2, 0},
-										{-unit111, unit112_1, unit110},
-										{unit111, -unit112_1, unit110}},
+                    {{unit111, unit112_2, 0},
+                    {-unit111, unit112_1, unit110},
+                    {unit111, -unit112_1, unit110}},
 
-										{{unit111, unit112_2, 0},
-										{unit111, -unit112_1, unit110},
-										{unit111, -unit112_1, -unit110}},
+                    {{unit111, unit112_2, 0},
+                    {unit111, -unit112_1, unit110},
+                    {unit111, -unit112_1, -unit110}},
 
-										{{-unit111, unit112_2, 0},
-										{unit111, unit112_1, unit110},
-										{unit111, unit112_1, -unit110}}};
+                    {{-unit111, unit112_2, 0},
+                    {unit111, unit112_1, unit110},
+                    {unit111, unit112_1, -unit110}}};
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -130,9 +130,9 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_RandomizeParentIds(true),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
+m_RandomizeParentIds(true),
 m_GrainIds(NULL),
 m_ParentIds(NULL),
 m_AvgQuats(NULL),
@@ -468,8 +468,8 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	if(grainname > 0) m_ParentIds[k] = parentnumbers[grainname];
-	else m_ParentIds[k] = 0;
+  if(grainname > 0) m_ParentIds[k] = parentnumbers[grainname];
+  else m_ParentIds[k] = 0;
   }
   numParents = parentcount+1;
 }
@@ -513,14 +513,14 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
   MatrixMath::transpose3x3(gAlpha, gAlphaT);
-  
+
   float mat[3][3];
   for(int i=0;i<12;i++)
   {
-	  MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
-	  w = OrientationMath::matrixMisorientation(mat, gAlphaT);
-	  if((w*radToDeg) < m_AngleTolerance) return 1;
-	  else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
+    MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
+    w = OrientationMath::matrixMisorientation(mat, gAlphaT);
+    if((w*radToDeg) < m_AngleTolerance) return 1;
+    else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
   }
 
   return 0;

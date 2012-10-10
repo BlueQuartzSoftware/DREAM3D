@@ -53,8 +53,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 
 /**
  * @class EbsdToH5Ebsd EbsdToH5Ebsd.h EbsdToH5Ebsd/EbsdToH5Ebsd.h

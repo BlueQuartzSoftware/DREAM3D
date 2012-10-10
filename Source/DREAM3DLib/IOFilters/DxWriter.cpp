@@ -39,6 +39,9 @@
 #include <iostream>
 #include <fstream>
 
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,8 +73,8 @@ void DxWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("dx");
-	option->setFileType("Open DX Visualization");
+  option->setFileExtension("dx");
+  option->setFileType("Open DX Visualization");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -170,6 +173,18 @@ int DxWriter::writeFile()
     static_cast<DimType>(udims[2]),
   };
   // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
+
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return -1;
+  }
 
   std::ofstream out(getOutputFile().c_str(), std::ios_base::binary);
   if(out.is_open() == false)

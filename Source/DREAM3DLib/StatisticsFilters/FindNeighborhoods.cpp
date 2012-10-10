@@ -173,29 +173,28 @@ void FindNeighborhoods::find_neighborhoods()
   float x, y, z;
   float xn, yn, zn;
   float dx, dy, dz;
-  size_t bin;
   size_t numgrains = m->getNumFieldTuples();
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	  m_Neighborhoods[i] = 0;
+    m_Neighborhoods[i] = 0;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
-	  if(m->getXPoints() == 1) x = 0;
-	  if(m->getYPoints() == 1) y = 0;
-	  if(m->getZPoints() == 1) z = 0;
+    if(m->getXPoints() == 1) x = 0;
+    if(m->getYPoints() == 1) y = 0;
+    if(m->getZPoints() == 1) z = 0;
       for (size_t j = i; j < numgrains; j++)
       {
-	    xn = m_Centroids[3*j];
-	    yn = m_Centroids[3*j+1];
-	    zn = m_Centroids[3*j+2];
-	    if(m->getXPoints() == 1) xn = 0;
-	    if(m->getYPoints() == 1) yn = 0;
-	    if(m->getZPoints() == 1) zn = 0;
+      xn = m_Centroids[3*j];
+      yn = m_Centroids[3*j+1];
+      zn = m_Centroids[3*j+2];
+      if(m->getXPoints() == 1) xn = 0;
+      if(m->getYPoints() == 1) yn = 0;
+      if(m->getZPoints() == 1) zn = 0;
         dx = fabs(x - xn);
         dy = fabs(y - yn);
         dz = fabs(z - zn);
