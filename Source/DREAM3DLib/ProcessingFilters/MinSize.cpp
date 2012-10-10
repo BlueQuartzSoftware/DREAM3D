@@ -354,19 +354,19 @@ void MinSize::remove_smallgrains()
 //	  notifyStatusMessage(ss.str());
 
 
-	  if(voxcounts[i] >= static_cast<size_t>(m_MinAllowedGrainSize) )
-	  {
-		m_Active[i] = true;
-	  }
-	  else if(voxcounts[i] < static_cast<size_t>(m_MinAllowedGrainSize) && m_FieldPhases[i] == m_PhaseNumber)
-	  {
-		m_Active[i] = false;
-	  }
-    else 
+    if(voxcounts[i] >= m_MinAllowedGrainSize )
     {
     m_Active[i] = true;
     }
-    
+    else if(voxcounts[i] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber)
+    {
+    m_Active[i] = false;
+    }
+    else
+    {
+    m_Active[i] = true;
+    }
+
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
