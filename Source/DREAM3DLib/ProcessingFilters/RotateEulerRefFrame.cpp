@@ -169,10 +169,6 @@ class RotateEulerRefFrameImpl
 RotateEulerRefFrame::RotateEulerRefFrame() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-<<<<<<< HEAD
-m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero),
-=======
->>>>>>> 49690ccf1a45f053518a61f21359ae99e22468c1
 m_RotationAxis(DREAM3D::EulerFrameRotationAxis::None),
 m_RotationAngle(DREAM3D::EulerFrameRotationAngle::Zero),
 m_CellEulerAngles(NULL)
