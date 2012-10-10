@@ -40,6 +40,7 @@
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Common/MXAMath.h"
 #include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "TiffUtilities.h"
 
@@ -145,27 +146,18 @@ int extractPatterns(const std::string &inputDir, const std::string &outputDir, M
     {
         ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
 
-        //        std::cout << "----------------" << std::endl;
-        //        std::cout << "File Pointer:" << reader.getFilePointer64() << std::endl;
+        // Read 25 byte header
         reader.readArray(reinterpret_cast<uint8_t*>(&header), Bcf::MapDescHeaderByteSize);
-        //        std::cout << "x_index: " << header.x_index << std::endl;
-        //        std::cout << "y_index: " << header.y_index << std::endl;
-        //        std::cout << "var2: " << header.var2 << std::endl;
-        //        std::cout << "width: " << header.width << std::endl;
-        //        std::cout << "height: " << header.height << std::endl;
-        //        std::cout << "var5: " << header.var5 << std::endl;
-        //        std::cout << "flag:" << (int)(header.flag) << std::endl;
-
 
         ebspPixelCount = header.width * header.height;
         if (ebspPixelCount != outImage.size())
         {
             outImage.resize(ebspPixelCount);
         }
-        // Read the data into the array
+        // Read the pattern data into the array
         reader.readArray<uint8_t>( &(outImage.front()), ebspPixelCount);
 
-
+        // Write the Tiff File for this X,Y pattern
         ss.str("");
         ss << outputDir << MXADir::Separator << header.x_index << "_" << header.y_index << "_pattern.tif";
         comment.str("");
@@ -234,6 +226,16 @@ int extractIndexingResults(const std::string &inputDir, const std::string &outpu
 #else
     float radToDeg = 1.0f;
 #endif
+    
+    std::string parentPath = MXAFileInfo::parentPath(outputFile);
+    if(!MXADir::mkdir(parentPath, true))
+    {
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      std::cout << ss.str() << std::endl;
+      return -1;
+    }
+
 
     FILE* f = fopen(outputFile.c_str(), "w");
     if (NULL == f)

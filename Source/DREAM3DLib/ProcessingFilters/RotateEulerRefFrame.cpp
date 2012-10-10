@@ -53,20 +53,20 @@ const static float m_pi = static_cast<float>(M_PI);
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
-	uint32_t angle;
-	uint32_t axis;
+  uint32_t angle;
+  uint32_t axis;
   public:
     RotateEulerRefFrameImpl(float* data, uint32_t rotAngle, uint32_t rotAxis) :
       m_CellEulerAngles(data),
-	  angle(rotAngle),
-	  axis(rotAxis)
+    angle(rotAngle),
+    axis(rotAxis)
     {}
     virtual ~RotateEulerRefFrameImpl(){}
 
     void convert(size_t start, size_t end) const
     {
-	  float rotMat[3][3];
-	  float degToRad = m_pi/180.0;
+    float rotMat[3][3];
+  //  float degToRad = m_pi/180.0;
 
 
 	  if (axis == DREAM3D::EulerFrameRotationAxis::RD)
@@ -137,13 +137,14 @@ class RotateEulerRefFrameImpl
 	  float g[3][3];
 	  float gNew[3][3];
 	  for (size_t i = start; i < end; i++)
+    for (size_t i = start; i < end; i++)
       {
-	    ea1 = m_CellEulerAngles[3*i+0];
-	    ea2 = m_CellEulerAngles[3*i+1];
-	    ea3 = m_CellEulerAngles[3*i+2];
-		OrientationMath::eulertoMat(ea1, ea2, ea3, g);
-		MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
-		OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
+      ea1 = m_CellEulerAngles[3*i+0];
+      ea2 = m_CellEulerAngles[3*i+1];
+      ea3 = m_CellEulerAngles[3*i+2];
+    OrientationMath::eulertoMat(ea1, ea2, ea3, g);
+    MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
+    OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
         m_CellEulerAngles[3*i+0] = ea1new;
         m_CellEulerAngles[3*i+1] = ea2new;
         m_CellEulerAngles[3*i+2] = ea3new;
@@ -168,8 +169,12 @@ class RotateEulerRefFrameImpl
 RotateEulerRefFrame::RotateEulerRefFrame() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+<<<<<<< HEAD
 m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero),
+=======
+>>>>>>> 49690ccf1a45f053518a61f21359ae99e22468c1
 m_RotationAxis(DREAM3D::EulerFrameRotationAxis::None),
+m_RotationAngle(DREAM3D::EulerFrameRotationAngle::Zero),
 m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
