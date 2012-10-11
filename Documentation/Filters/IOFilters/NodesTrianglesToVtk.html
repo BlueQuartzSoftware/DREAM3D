@@ -41,12 +41,12 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <h2 class="pHeading2">Summary</h2>
 
 <!-- Write all your documentation here -->
-<p class="pBody">
+<p>
 This filter will convert a pair of triangle and nodes files commonly used by
 CMU in their GBCD studies and output a VTK PolyData File in either ASCII or
 Binary format. Note if the file is in Binary that the binary portions are written
 in Big Endian format as specified by the vtk file format.
-
+</p>
 The nodes file format is as follows:
 </p>
 <ul>
@@ -56,10 +56,10 @@ The nodes file format is as follows:
 <br />2 = on the grain boundary
 <br /> 3 = on the triple line,
 <br /> 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
-                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
-                       12 = on the grain boundary trace area at the surface of microstructure
-                       13 = on the grain boundary trace line
-                 14 = on the triple point, and so on</li>
+                       <br />For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
+                       <br />12 = on the grain boundary trace area at the surface of microstructure
+                       <br />13 = on the grain boundary trace line
+                 <br />14 = on the triple point, and so on</li>
 <li> column 3 to 5 = coordinates of nodes, x, y, and z</li>
 </ul>
 
