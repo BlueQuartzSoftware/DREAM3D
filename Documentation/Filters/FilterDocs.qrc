@@ -79,6 +79,7 @@
 
 
 <file>Surface_MeshingFilters/MMCSurfaceMeshingFilter.html</file>
+<file>Surface_MeshingFilters/MovingFiniteElementSmoothing.html</file>
 
 <file>Synthetic_BuilderFilters/AdjustVolume.html</file>
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>

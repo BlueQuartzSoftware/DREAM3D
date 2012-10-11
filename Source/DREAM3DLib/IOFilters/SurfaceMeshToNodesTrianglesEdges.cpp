@@ -277,7 +277,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     newnid1 = fe[k].node_id[0];
     newnid2 = fe[k].node_id[1];
 
-    fprintf(eFile, "%10lu    %8d %8d    %6d    %6d %6d %6d %6d\n", k, newnid1, newnid2, kind, fe[k].neigh_spin[0], fe[k].neigh_spin[1], 0, 0);
+    fprintf(eFile, "%10lu    %8d %8d    %6d    %6d %6d %6d %6d\n", k, newnid1, newnid2, kind, fe[k].nSpin[0], fe[k].nSpin[1], 0, 0);
   }
 
   StructArray<ISegment>* internalEdges = StructArray<ISegment>::SafePointerDownCast(iEdges.get());

@@ -437,8 +437,8 @@ void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32
       seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
       seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
       // Reset the MaxGrainId back to Zero to 'recover' those grains
-      if (seg.neigh_spin[0] == maxGrainId) { seg.neigh_spin[0] = 0; }
-      if (seg.neigh_spin[1] == maxGrainId) { seg.neigh_spin[1] = 0; }
+      if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
+      if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
     }
 
     size_t numIEdges = internalEdges->GetNumberOfTuples();
@@ -1074,8 +1074,8 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(Face* sq,
             {
               e[eid].node_id[0] = nodeID[0]; // actual node ids for each edge...
               e[eid].node_id[1] = nodeID[1];
-              e[eid].neigh_spin[0] = pixSpin[0];
-              e[eid].neigh_spin[1] = pixSpin[1];
+              e[eid].nSpin[0] = pixSpin[0];
+              e[eid].nSpin[1] = pixSpin[1];
               sq[k].edge_id[edgeCount] = eid;
               e[eid].edgeKind = 2;
               edgeCount++; // edges of the open loops are always binary...
@@ -1836,8 +1836,8 @@ int MMCSurfaceMeshingFilter::get_number_case0_triangles(int *afe,
       {
 
         chaser = burnt_list[tail];
-        cspin1 = e1[chaser].neigh_spin[0];
-        cspin2 = e1[chaser].neigh_spin[1];
+        cspin1 = e1[chaser].nSpin[0];
+        cspin2 = e1[chaser].nSpin[1];
         cnode1 = e1[chaser].node_id[0];
         cnode2 = e1[chaser].node_id[1];
 
@@ -1850,8 +1850,8 @@ int MMCSurfaceMeshingFilter::get_number_case0_triangles(int *afe,
           if(nbflag == 0)
           {
 
-            nspin1 = e1[nedge].neigh_spin[0];
-            nspin2 = e1[nedge].neigh_spin[1];
+            nspin1 = e1[nedge].nSpin[0];
+            nspin2 = e1[nedge].nSpin[1];
             nnode1 = e1[nedge].node_id[0];
             nnode2 = e1[nedge].node_id[1];
             // checking if neighbor edge has same neighboring spins...
@@ -1887,8 +1887,8 @@ int MMCSurfaceMeshingFilter::get_number_case0_triangles(int *afe,
               burnt[j] = loopID;
               if(flip == 1)
               { // why do we flip the nodes and spins?
-                e1[nedge].neigh_spin[0] = nspin2;
-                e1[nedge].neigh_spin[1] = nspin1;
+                e1[nedge].nSpin[0] = nspin2;
+                e1[nedge].nSpin[1] = nspin1;
                 e1[nedge].node_id[0] = nnode2;
                 e1[nedge].node_id[1] = nnode1;
               }
@@ -2032,8 +2032,8 @@ int MMCSurfaceMeshingFilter::get_number_case2_triangles(int *afe,
       {
 
         chaser = burnt_list[tail];
-        cspin1 = e1[chaser].neigh_spin[0];
-        cspin2 = e1[chaser].neigh_spin[1];
+        cspin1 = e1[chaser].nSpin[0];
+        cspin2 = e1[chaser].nSpin[1];
         cnode1 = e1[chaser].node_id[0];
         cnode2 = e1[chaser].node_id[1];
 
@@ -2046,8 +2046,8 @@ int MMCSurfaceMeshingFilter::get_number_case2_triangles(int *afe,
           if(nbflag == 0)
           {
 
-            nspin1 = e1[nedge].neigh_spin[0];
-            nspin2 = e1[nedge].neigh_spin[1];
+            nspin1 = e1[nedge].nSpin[0];
+            nspin2 = e1[nedge].nSpin[1];
             nnode1 = e1[nedge].node_id[0];
             nnode2 = e1[nedge].node_id[1];
             // checking if neighbor edge has same neighboring spins...
@@ -2189,11 +2189,11 @@ int MMCSurfaceMeshingFilter::get_number_case2_triangles(int *afe,
       if(flip == 1)
       {
         tnode = e1[startEdge].node_id[0];
-        tspin = e1[startEdge].neigh_spin[0];
+        tspin = e1[startEdge].nSpin[0];
         e1[startEdge].node_id[0] = e1[startEdge].node_id[1];
         e1[startEdge].node_id[1] = tnode;
-        e1[startEdge].neigh_spin[0] = e1[startEdge].neigh_spin[1];
-        e1[startEdge].neigh_spin[1] = tspin;
+        e1[startEdge].nSpin[0] = e1[startEdge].nSpin[1];
+        e1[startEdge].nSpin[1] = tspin;
       }
       else
       {
@@ -2223,11 +2223,11 @@ int MMCSurfaceMeshingFilter::get_number_case2_triangles(int *afe,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -2282,11 +2282,11 @@ int MMCSurfaceMeshingFilter::get_number_case2_triangles(int *afe,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -2384,8 +2384,8 @@ int MMCSurfaceMeshingFilter::get_number_caseM_triangles(int *afe,
       {
 
         chaser = burnt_list[tail];
-        cspin1 = e1[chaser].neigh_spin[0];
-        cspin2 = e1[chaser].neigh_spin[1];
+        cspin1 = e1[chaser].nSpin[0];
+        cspin2 = e1[chaser].nSpin[1];
         cnode1 = e1[chaser].node_id[0];
         cnode2 = e1[chaser].node_id[1];
 
@@ -2398,8 +2398,8 @@ int MMCSurfaceMeshingFilter::get_number_caseM_triangles(int *afe,
           if(nbflag == 0)
           {
 
-            nspin1 = e1[nedge].neigh_spin[0];
-            nspin2 = e1[nedge].neigh_spin[1];
+            nspin1 = e1[nedge].nSpin[0];
+            nspin2 = e1[nedge].nSpin[1];
             nnode1 = e1[nedge].node_id[0];
             nnode2 = e1[nedge].node_id[1];
             // checking if neighbor edge has same neighboring spins...
@@ -2544,11 +2544,11 @@ int MMCSurfaceMeshingFilter::get_number_caseM_triangles(int *afe,
       if(flip == 1)
       {
         tnode = e1[startEdge].node_id[0];
-        tspin = e1[startEdge].neigh_spin[0];
+        tspin = e1[startEdge].nSpin[0];
         e1[startEdge].node_id[0] = e1[startEdge].node_id[1];
         e1[startEdge].node_id[1] = tnode;
-        e1[startEdge].neigh_spin[0] = e1[startEdge].neigh_spin[1];
-        e1[startEdge].neigh_spin[1] = tspin;
+        e1[startEdge].nSpin[0] = e1[startEdge].nSpin[1];
+        e1[startEdge].nSpin[1] = tspin;
       }
       else
       {
@@ -2578,11 +2578,11 @@ int MMCSurfaceMeshingFilter::get_number_caseM_triangles(int *afe,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -2636,11 +2636,11 @@ int MMCSurfaceMeshingFilter::get_number_caseM_triangles(int *afe,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -2918,8 +2918,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
       {
 
         chaser = burnt_list[tail];
-        cspin1 = e1[chaser].neigh_spin[0];
-        cspin2 = e1[chaser].neigh_spin[1];
+        cspin1 = e1[chaser].nSpin[0];
+        cspin2 = e1[chaser].nSpin[1];
         cnode1 = e1[chaser].node_id[0];
         cnode2 = e1[chaser].node_id[1];
 
@@ -2932,8 +2932,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
           if(nbflag == 0)
           {
 
-            nspin1 = e1[nedge].neigh_spin[0];
-            nspin2 = e1[nedge].neigh_spin[1];
+            nspin1 = e1[nedge].nSpin[0];
+            nspin2 = e1[nedge].nSpin[1];
             nnode1 = e1[nedge].node_id[0];
             nnode2 = e1[nedge].node_id[1];
 
@@ -2973,8 +2973,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
 
               if(flip == 1)
               {
-                e1[nedge].neigh_spin[0] = nspin2;
-                e1[nedge].neigh_spin[1] = nspin1;
+                e1[nedge].nSpin[0] = nspin2;
+                e1[nedge].nSpin[1] = nspin1;
                 e1[nedge].node_id[0] = nnode2;
                 e1[nedge].node_id[1] = nnode1;
               }
@@ -3074,8 +3074,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
         t1[ctid].edgePlace[jjj] = where[jjj];
       }
       // update spins...
-      t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-      t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+      t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+      t1[ctid].nSpin[1] = e1[te0].nSpin[1];
       t1[ctid].mCubeID = tmcid;
       ctid++;
 
@@ -3111,8 +3111,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
         t1[ctid].edgePlace[jjj] = where[jjj];
       }
       // update spins...
-      t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-      t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+      t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+      t1[ctid].nSpin[1] = e1[te0].nSpin[1];
       t1[ctid].mCubeID = tmcid;
       new_node0 = tv2;
       new_node1 = tv1;
@@ -3149,8 +3149,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
             t1[ctid].edgePlace[jjj] = where[jjj];
           }
           // update spins...
-          t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-          t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+          t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+          t1[ctid].nSpin[1] = e1[ce].nSpin[1];
           t1[ctid].mCubeID = tmcid;
           new_node0 = tv1;
           cnumT++;
@@ -3183,8 +3183,8 @@ void MMCSurfaceMeshingFilter::get_case0_triangles(Triangle* t1,
             t1[ctid].edgePlace[jjj] = where[jjj];
           }
           // update spins...
-          t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-          t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+          t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+          t1[ctid].nSpin[1] = e1[ce].nSpin[1];
           t1[ctid].mCubeID = tmcid;
           new_node0 = tv0;
           cnumT++;
@@ -3295,8 +3295,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
       {
 
         chaser = burnt_list[tail];
-        cspin1 = e1[chaser].neigh_spin[0];
-        cspin2 = e1[chaser].neigh_spin[1];
+        cspin1 = e1[chaser].nSpin[0];
+        cspin2 = e1[chaser].nSpin[1];
         cnode1 = e1[chaser].node_id[0];
         cnode2 = e1[chaser].node_id[1];
 
@@ -3309,8 +3309,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
           if(nbflag == 0)
           {
 
-            nspin1 = e1[nedge].neigh_spin[0];
-            nspin2 = e1[nedge].neigh_spin[1];
+            nspin1 = e1[nedge].nSpin[0];
+            nspin2 = e1[nedge].nSpin[1];
             nnode1 = e1[nedge].node_id[0];
             nnode2 = e1[nedge].node_id[1];
 
@@ -3459,11 +3459,11 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
       if(flip == 1)
       {
         tnode = e1[startEdge].node_id[0];
-        tspin = e1[startEdge].neigh_spin[0];
+        tspin = e1[startEdge].nSpin[0];
         e1[startEdge].node_id[0] = e1[startEdge].node_id[1];
         e1[startEdge].node_id[1] = tnode;
-        e1[startEdge].neigh_spin[0] = e1[startEdge].neigh_spin[1];
-        e1[startEdge].neigh_spin[1] = tspin;
+        e1[startEdge].nSpin[0] = e1[startEdge].nSpin[1];
+        e1[startEdge].nSpin[1] = tspin;
       }
       else
       {
@@ -3495,11 +3495,11 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -3539,8 +3539,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
           t1[ctid].edgePlace[jjj] = where[jjj];
         }
         // update spins...
-        t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-        t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+        t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+        t1[ctid].nSpin[1] = e1[te0].nSpin[1];
         t1[ctid].mCubeID = tmcid;
         ctid++;
 
@@ -3576,8 +3576,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
           t1[ctid].edgePlace[jjj] = where[jjj];
         }
         // update spins...
-        t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-        t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+        t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+        t1[ctid].nSpin[1] = e1[te0].nSpin[1];
         t1[ctid].mCubeID = tmcid;
         new_node0 = tv2;
         new_node1 = tv1;
@@ -3614,8 +3614,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
               t1[ctid].edgePlace[jjj] = where[jjj];
             }
             // update spins...
-            t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-            t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+            t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+            t1[ctid].nSpin[1] = e1[ce].nSpin[1];
             t1[ctid].mCubeID = tmcid;
             new_node0 = tv1;
             cnumT++;
@@ -3648,8 +3648,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
               t1[ctid].edgePlace[jjj] = where[jjj];
             }
             // update spins...
-            t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-            t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+            t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+            t1[ctid].nSpin[1] = e1[ce].nSpin[1];
             t1[ctid].mCubeID = tmcid;
             new_node0 = tv0;
             cnumT++;
@@ -3697,11 +3697,11 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -3742,8 +3742,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
           t1[ctid].edgePlace[jjj] = where[jjj];
         }
         // update spins...
-        t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-        t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+        t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+        t1[ctid].nSpin[1] = e1[te0].nSpin[1];
         t1[ctid].mCubeID = tmcid;
         ctid++;
 
@@ -3779,8 +3779,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
           t1[ctid].edgePlace[jjj] = where[jjj];
         }
         // update spins...
-        t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-        t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+        t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+        t1[ctid].nSpin[1] = e1[te0].nSpin[1];
         t1[ctid].mCubeID = tmcid;
         new_node0 = tv2;
         new_node1 = tv1;
@@ -3817,8 +3817,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
               t1[ctid].edgePlace[jjj] = where[jjj];
             }
             // update spins...
-            t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-            t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+            t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+            t1[ctid].nSpin[1] = e1[ce].nSpin[1];
             t1[ctid].mCubeID = tmcid;
             new_node0 = tv1;
             cnumT++;
@@ -3851,8 +3851,8 @@ void MMCSurfaceMeshingFilter::get_case2_triangles(Triangle* t1,
               t1[ctid].edgePlace[jjj] = where[jjj];
             }
             // update spins...
-            t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-            t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+            t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+            t1[ctid].nSpin[1] = e1[ce].nSpin[1];
             t1[ctid].mCubeID = tmcid;
             new_node0 = tv0;
             cnumT++;
@@ -3961,8 +3961,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
       {
 
         chaser = burnt_list[tail];
-        cspin1 = e1[chaser].neigh_spin[0];
-        cspin2 = e1[chaser].neigh_spin[1];
+        cspin1 = e1[chaser].nSpin[0];
+        cspin2 = e1[chaser].nSpin[1];
         cnode1 = e1[chaser].node_id[0];
         cnode2 = e1[chaser].node_id[1];
 
@@ -3975,8 +3975,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
           if(nbflag == 0)
           {
 
-            nspin1 = e1[nedge].neigh_spin[0];
-            nspin2 = e1[nedge].neigh_spin[1];
+            nspin1 = e1[nedge].nSpin[0];
+            nspin2 = e1[nedge].nSpin[1];
             nnode1 = e1[nedge].node_id[0];
             nnode2 = e1[nedge].node_id[1];
 
@@ -4122,11 +4122,11 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
       if(flip == 1)
       {
         tnode = e1[startEdge].node_id[0];
-        tspin = e1[startEdge].neigh_spin[0];
+        tspin = e1[startEdge].nSpin[0];
         e1[startEdge].node_id[0] = e1[startEdge].node_id[1];
         e1[startEdge].node_id[1] = tnode;
-        e1[startEdge].neigh_spin[0] = e1[startEdge].neigh_spin[1];
-        e1[startEdge].neigh_spin[1] = tspin;
+        e1[startEdge].nSpin[0] = e1[startEdge].nSpin[1];
+        e1[startEdge].nSpin[1] = tspin;
       }
       else
       {
@@ -4158,11 +4158,11 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -4182,8 +4182,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
         ce = burnt_loop[iii];
         tn0 = e1[ce].node_id[0];
         tn1 = e1[ce].node_id[1];
-        ts0 = e1[ce].neigh_spin[0];
-        ts1 = e1[ce].neigh_spin[1];
+        ts0 = e1[ce].nSpin[0];
+        ts1 = e1[ce].nSpin[1];
         t1[ctid].node_id[0] = ccn;
         t1[ctid].node_id[1] = tn0;
         t1[ctid].node_id[2] = tn1;
@@ -4240,11 +4240,11 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
             index++;
             // flip...
             tnode = e1[cedge].node_id[0];
-            tspin = e1[cedge].neigh_spin[0];
+            tspin = e1[cedge].nSpin[0];
             e1[cedge].node_id[0] = e1[cedge].node_id[1];
             e1[cedge].node_id[1] = tnode;
-            e1[cedge].neigh_spin[0] = e1[cedge].neigh_spin[1];
-            e1[cedge].neigh_spin[1] = tspin;
+            e1[cedge].nSpin[0] = e1[cedge].nSpin[1];
+            e1[cedge].nSpin[1] = tspin;
           }
           else
           {
@@ -4285,8 +4285,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
           t1[ctid].edgePlace[jjj] = where[jjj];
         }
         // update spins...
-        t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-        t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+        t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+        t1[ctid].nSpin[1] = e1[te0].nSpin[1];
         t1[ctid].mCubeID = tmcid;
         ctid++;
 
@@ -4322,8 +4322,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
           t1[ctid].edgePlace[jjj] = where[jjj];
         }
         // update spins...
-        t1[ctid].nSpin[0] = e1[te0].neigh_spin[0];
-        t1[ctid].nSpin[1] = e1[te0].neigh_spin[1];
+        t1[ctid].nSpin[0] = e1[te0].nSpin[0];
+        t1[ctid].nSpin[1] = e1[te0].nSpin[1];
         t1[ctid].mCubeID = tmcid;
         new_node0 = tv2;
         new_node1 = tv1;
@@ -4360,8 +4360,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
               t1[ctid].edgePlace[jjj] = where[jjj];
             }
             // update spins...
-            t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-            t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+            t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+            t1[ctid].nSpin[1] = e1[ce].nSpin[1];
             t1[ctid].mCubeID = tmcid;
             new_node0 = tv1;
             cnumT++;
@@ -4394,8 +4394,8 @@ void MMCSurfaceMeshingFilter::get_caseM_triangles(Triangle* t1,
               t1[ctid].edgePlace[jjj] = where[jjj];
             }
             // update spins...
-            t1[ctid].nSpin[0] = e1[ce].neigh_spin[0];
-            t1[ctid].nSpin[1] = e1[ce].neigh_spin[1];
+            t1[ctid].nSpin[0] = e1[ce].nSpin[0];
+            t1[ctid].nSpin[1] = e1[ce].nSpin[1];
             t1[ctid].mCubeID = tmcid;
             new_node0 = tv0;
             cnumT++;
@@ -5285,7 +5285,7 @@ void MMCSurfaceMeshingFilter::get_output(node *v, segment *fe, isegment *ie, pat
     newnid1 = v[tn1].newID;
     newnid2 = v[tn2].newID;
 
-    fprintf(f2, "%10d    %8d %8d    %6d    %6d %6d %6d %6d\n", k, newnid1, newnid2, kind, fe[k].neigh_spin[0], fe[k].neigh_spin[1], 0, 0);
+    fprintf(f2, "%10d    %8d %8d    %6d    %6d %6d %6d %6d\n", k, newnid1, newnid2, kind, fe[k].nSpin[0], fe[k].nSpin[1], 0, 0);
   }
 
   //fprintf(f2, "************\n");
