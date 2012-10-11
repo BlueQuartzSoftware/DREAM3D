@@ -110,7 +110,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+  option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -263,6 +263,10 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
     std::stringstream ss;
     ss << "Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
     notifyStatusMessage(ss.str());
+    if (getCancel() == true)
+    {
+      return;
+    }
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;

@@ -205,6 +205,10 @@ void AlignSections::execute()
       notifyStatusMessage(ss.str());
       prog = prog + progIncrement;
     }
+    if (getCancel() == true)
+    {
+      return;
+    }
     slice = static_cast<int>( (dims[2] - 1) - i );
     for (DimType l = 0; l < dims[1]; l++)
     {
