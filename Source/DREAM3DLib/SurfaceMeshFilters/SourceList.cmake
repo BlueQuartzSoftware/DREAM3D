@@ -8,7 +8,7 @@ set(FILTER_CATEGORY "SurfaceMeshFilters")
 # If you have more than a single filter add it to this list (headers)
 SET (${FILTER_CATEGORY}_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshingFilter.h
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/CMUNodesTrianglesToVtk.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MovingFiniteElementSmoothing.h
 #    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/CMUNodesTrianglesToStl.h
 )
 
@@ -16,7 +16,7 @@ SET (${FILTER_CATEGORY}_FILTERS_HDRS
 # If you have more than a single filter add it to this list (sources)
 SET (DREAM3DLib_${FILTER_CATEGORY}_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshingFilter.cpp
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/CMUNodesTrianglesToVtk.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MovingFiniteElementSmoothing.cpp
 #    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/CMUNodesTrianglesToStl.cpp
 )
 
@@ -27,6 +27,9 @@ SET (DREAM3DLib_${FILTER_CATEGORY}_HDRS
 #    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/SurfaceMeshGeneralMCABoundedMulti.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshStructs.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/StructArray.hpp
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshLinearAlgebra.h
 )
 
 #set_source_files_properties( ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/SurfaceMeshGeneralMCABoundedMulti.cpp
