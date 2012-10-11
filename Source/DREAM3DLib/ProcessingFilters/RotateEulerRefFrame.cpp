@@ -170,7 +170,7 @@ RotateEulerRefFrame::RotateEulerRefFrame() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_RotationAxis(DREAM3D::EulerFrameRotationAxis::None),
-m_RotationAngle(DREAM3D::EulerFrameRotationAngle::Zero),
+m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero),
 m_CellEulerAngles(NULL)
 {
   setupFilterParameters();

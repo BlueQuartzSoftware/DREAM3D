@@ -187,9 +187,15 @@ void FindShapes::find_moments()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  for (size_t i = 0; i < numgrains*6; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
-      grainmoments[i] = 0.0f;
+      grainmoments[6*i+0] = 0.0f;
+      grainmoments[6*i+1] = 0.0f;
+      grainmoments[6*i+2] = 0.0f;
+      grainmoments[6*i+3] = 0.0f;
+      grainmoments[6*i+4] = 0.0f;
+      grainmoments[6*i+5] = 0.0f;
+      m_Volumes[i] = 0.0f;
   }
   for (int64_t j = 0; j < totalPoints; j++)
   {
@@ -283,6 +289,9 @@ void FindShapes::find_moments()
     if (omega3 > 1) omega3 = 1;
   if(vol5 == 0) omega3 = 0;
     m_Omega3s[i] = omega3;
+    grainmoments[i*6 + 3] = -grainmoments[i*6 + 3];
+    grainmoments[i*6 + 4] = -grainmoments[i*6 + 4];
+    grainmoments[i*6 + 5] = -grainmoments[i*6 + 5];
   }
 }
 void FindShapes::find_moments2D()
@@ -351,8 +360,8 @@ void FindShapes::find_axes()
 
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
-  float a, b, c, d, f, g, h;
-  float rsquare, r, theta;
+  double a, b, c, d, f, g, h;
+  double rsquare, r, theta;
   float A, B, C;
   float r1, r2, r3;
   float bovera, covera;
@@ -367,9 +376,9 @@ void FindShapes::find_axes()
     Ixx = grainmoments[i*6+0];
     Iyy = grainmoments[i*6+1];
     Izz = grainmoments[i*6+2];
-    Ixy = -grainmoments[i*6+3];
-    Iyz = -grainmoments[i*6+4];
-    Ixz = -grainmoments[i*6+5];
+    Ixy = grainmoments[i*6+3];
+    Iyz = grainmoments[i*6+4];
+    Ixz = grainmoments[i*6+5];
     a = 1;
     b = -Ixx - Iyy - Izz;
     c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
@@ -596,10 +605,10 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
     float ea2 = acos(n3z);
-    float cosine3 = (n3y / sinf(ea2));
-    float sine3 = (n3x / sinf(ea2));
-    float cosine1 = (-n2z / sinf(ea2));
-    float sine1 = (n1z / sinf(ea2));
+    float cosine3 = (n2z / sinf(ea2));
+    float sine3 = (n1z / sinf(ea2));
+    float cosine1 = (-n3y / sinf(ea2));
+    float sine1 = (n3x / sinf(ea2));
     float ea3 = acos(cosine3);
     float ea1 = acos(cosine1);
     if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
