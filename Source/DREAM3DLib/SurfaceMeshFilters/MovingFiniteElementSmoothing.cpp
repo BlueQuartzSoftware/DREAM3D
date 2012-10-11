@@ -679,6 +679,9 @@ void MovingFiniteElementSmoothing::execute()
     {
       std::cout << "Update loop: " << updates << std::endl;
     }
+    ss.str("");
+    ss << "Iteration: " << updates;
+    notifyStatusMessage(ss.str());
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;
@@ -695,7 +698,7 @@ void MovingFiniteElementSmoothing::execute()
     //    leads to UNsmoothing of the mesh!
 
     // compute triangle contributions to K and F
-    int ntri = trianglesPtr->GetNumberOfTuples();
+    ntri = trianglesPtr->GetNumberOfTuples();
     Q_max = 0.;
     Q_sum = 0.;
     Dihedral_sum = 0.;
@@ -706,9 +709,10 @@ void MovingFiniteElementSmoothing::execute()
     { // Loop through each of the triangles
       Triangle& rtri = triangles[t];
       MFE::Vector<double> n(3);
-      n = TriangleFunctions::normal(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[1]]);
-      A = TriangleFunctions::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[1]]); //  current Area
-      Q = TriangleFunctions::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[1]], A); //  current quality
+      n = TriangleFunctions::normal(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
+      A = TriangleFunctions::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
+      assert(A != 0);
+      Q = TriangleFunctions::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], A); //  current quality
       if(Q > 100.) if(isVerbose)
       {
         std::cout << "Warning, tri no. " << t << " has Q= " << Q << std::endl;
@@ -716,7 +720,7 @@ void MovingFiniteElementSmoothing::execute()
       Q_sum += Q;
       if(Q > Q_max) Q_max = Q;
 
-      Dihedral = TriangleFunctions::MinDihedral(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[1]]);
+      Dihedral = TriangleFunctions::MinDihedral(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
       // debug
       //      std::cout << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI << std::endl;
       Dihedral_sum += Dihedral;
@@ -726,17 +730,19 @@ void MovingFiniteElementSmoothing::execute()
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
         int i = rtri.node_id[n0];
+        Node& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
           //double deltaDistance = 0.;
+
           if(m_SmoothTripleLines == true && (nodes[i].nodeKind == 3 || nodes[i].nodeKind == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
             LDistance = NodeFunctions::Distance(nodes[i], nodes[triplenn[i].triplenn1]) + NodeFunctions::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
           }
           nodes[i].coord[j] += small;
-          double Anew = TriangleFunctions::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[1]]); //  current Area
-          double Qnew = TriangleFunctions::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[1]], Anew);
+          double Anew = TriangleFunctions::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
+          double Qnew = TriangleFunctions::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], Anew);
           if(m_SmoothTripleLines == true && (nodes[i].nodeKind == 3 || nodes[i].nodeKind == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
@@ -745,18 +751,6 @@ void MovingFiniteElementSmoothing::execute()
             F[3 * i + j] -= TJ_scale * deltaLDistance;
           }
           nodes[i].coord[j] -= small;
-          //		  if( (Q_ave < 3.0) && (Q_max_ave < 10) ){
-          // A_scale = 4000.0 ;
-          // Q_scale = 1000.0 + 8000.0 * (double)updates/(double)(atoi(argv[4])) ;
-          //  designed to ramp up the weight attached to the Quality forces
-          // 		WAS: 	Q_scale = 1000;
-
-          // } else {
-          // 			A_scale = 1000;
-          // 			Q_scale = 500;
-          // 		  }
-          //F[3*i+j] -= ((Anew-A)*6500+(Qnew-Q)*800)/small;
-          //F[3*i+j] -= ((Anew-A)*1000+(Qnew-Q)*2500*A)/small;
           F[3 * i + j] -= (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
         }
         for (int n1 = 0; n1 < 3; n1++)

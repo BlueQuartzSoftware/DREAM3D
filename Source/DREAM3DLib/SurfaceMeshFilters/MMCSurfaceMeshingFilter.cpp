@@ -965,7 +965,7 @@ int MMCSurfaceMeshingFilter::get_number_fEdges(Face* sq,
         }
         else if(atBulk == 1)
         {
-          printf("\tone negative spin case is not supposed to happen! Wrong!\n");
+          notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
         }
         else
         { // positive spins only...normal case!
@@ -1113,7 +1113,7 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(Face* sq,
                   }
                   else if(atBulk == 1)
                   {
-                    printf("\tone negative spin case is not supposed to happen! Wrong!\n");
+                    notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
                     v[tnode].nodeKind = 3;
                   }
                   else
@@ -1240,11 +1240,7 @@ int MMCSurfaceMeshingFilter::get_square_index(int tns[4])
   if(tempIndex == 15)
   {
     subIndex = 2 * aBit[4] + 1 * aBit[5];
-    if(subIndex == 0)
-    {
-      tempIndex = tempIndex;
-    }
-    else
+    if(subIndex != 0)
     {
       tempIndex = tempIndex + subIndex + 1;
     }
@@ -1339,7 +1335,7 @@ int MMCSurfaceMeshingFilter::treat_anomaly(int tnst[4],
 
   if(minid == -1)
   {
-    printf("Something wrong with counting same-spin neighbors for each corner of the square!\n");
+    notifyErrorMessage("Something wrong with counting same-spin neighbors for each corner of the square!", -1001);
     tempFlag = 0;
   }
   else if(minid == 1 || minid == 3)
@@ -1552,9 +1548,8 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
                                                   int nsp,
                                                   int xDim)
 {
-
   int32_t* p = points->GetPointer(0);
-
+  std::stringstream ss;
 
   int i, ii, i1, i2, j, k, kk;
   int sqID[6];
@@ -1680,7 +1675,9 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
 
       if(nburnt != 8)
       {
-        printf("\tcorners are wrongfully burnt in this marching cube: cube id = %d, number burnt = %d\n", i, nburnt);
+        ss.str("");
+        ss << "corners are wrongfully burnt in this marching cube: cube id =" << i << " number burnt = " << nburnt;
+        notifyErrorMessage(ss.str(), -1001);
       }
       // update nodeKind of body center node in the current marching cube...
       if(nkFlag > 0)
@@ -1702,7 +1699,7 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
     }
     else if(nFE > 0 && nFE < 3)
     {
-      printf("\t? cube id = %d, # face edges %d --> cannot form any loop!\n", i, nFE);
+     // printf("\t? cube id = %d, # face edges %d --> cannot form any loop!\n", i, nFE);
       // not supposed to happen. We have to ignore this case...
     }
     else if(nFE == 0)
@@ -1711,7 +1708,7 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
     }
     else
     {
-      printf("\twhat?\n");
+      notifyErrorMessage("get_number_triangles - what?", -10666);
     }
 
     // if the current marching cube is a collection of 6 effective squares...and
@@ -1740,7 +1737,7 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
 
       if(tindex != nFE)
       {
-        printf("\tsomething wrong with counting number of edges for marching cube...\n");
+        notifyErrorMessage("something wrong with counting number of edges for marching cube...", -10667);
       }
 
       // Consider each case as Z. Wu's paper...
@@ -1772,7 +1769,9 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
     }
   }
 
-  printf("\tnumber of triangles for case 0, case 1 and case 2 = %d %d %d\n", nTri0, nTri2, nTriM);
+  ss.str("");
+  ss << "number of triangles for case 0, case 1 and case 2 = " << nTri0 << " " << nTri2 << " " << nTriM;
+  notifyStatusMessage(ss.str());
   // sum up triangle numbers...
   nTri = nTri0 + nTri2 + nTriM;
 
@@ -1787,7 +1786,7 @@ int MMCSurfaceMeshingFilter::get_number_case0_triangles(int *afe,
                                                         Segment* e1,
                                                         int nfedge)
 {
-
+  std::stringstream ss;
   int ii, i, j, jj, k, kk, k1;
   int loopID;
   int tail, head, coin;
@@ -1959,7 +1958,9 @@ int MMCSurfaceMeshingFilter::get_number_case0_triangles(int *afe,
     else
     {
       // do nothing...
-      printf("\tsomething wrong in counting # case 0 triangles...%d %d\n", numN, nfedge);
+      ss.str("");
+      ss << "something wrong in counting # case 0 triangles... " << numN << " " << nfedge;
+      notifyErrorMessage(ss.str(), -1000);
     }
   }
 
@@ -2688,7 +2689,7 @@ int MMCSurfaceMeshingFilter::get_triangles(VoxelCoord* p,
                                            int nsp,
                                            int xDim)
 {
-
+  std::stringstream ss;
   int i, ii, i1, i2, k;
   int sqID[6];
   int tsq; // current sq id...
@@ -2768,7 +2769,7 @@ int MMCSurfaceMeshingFilter::get_triangles(VoxelCoord* p,
     }
     else
     {
-      printf("\twhat?\n");
+      notifyErrorMessage("get_triangles - what?", -1001);
     }
 
     // if the current marching cube is a collection of 6 effective squares...and
@@ -2806,7 +2807,7 @@ int MMCSurfaceMeshingFilter::get_triangles(VoxelCoord* p,
 
       if(tindex != nFE)
       {
-        printf("Something wrong with counting number of edges for marching cube...\n");
+        notifyErrorMessage("Something wrong with counting number of edges for marching cube...", -1001);
       }
 
       // Consider each case as Z. Wu's paper...
@@ -2831,15 +2832,18 @@ int MMCSurfaceMeshingFilter::get_triangles(VoxelCoord* p,
       }
       else
       {
-        printf("Somthing's wrong in counting face centers turned on...\n");
-        printf("%5d %10d\n\n", nFC, i);
+        ss.str("");
+        ss << "Somthing's wrong in counting face centers turned on..." << nFC << "  " <<  i;
+        notifyErrorMessage(ss.str(), -1001);
       }
 
       free(arrayFE);
     }
   }
 
-  printf("\tnumber of triangles found = %5d\n", tidIn);
+  ss.str("");
+  ss << "number of triangles found = " << tidIn;
+  notifyStatusMessage(ss.str());
   return 0;
 }
 
@@ -4591,7 +4595,7 @@ void MMCSurfaceMeshingFilter::update_triangle_sides_with_fedge(Triangle* t,
 // -----------------------------------------------------------------------------
 int MMCSurfaceMeshingFilter::get_number_unique_inner_edges(Triangle* t, int nT)
 {
-
+  std::stringstream ss;
   int i, j, k, kk, m, mm;
   int cmcID, nmcID; // marching cube ids for the current triangle and next triangle...
   int nIEDmc, nIEmc; // number of inner edges, including duplicates, and unique inner edges in the current marching cube...
@@ -4693,11 +4697,14 @@ int MMCSurfaceMeshingFilter::get_number_unique_inner_edges(Triangle* t, int nT)
 
   }
   while (i < numT);
+  ss.str("");
+  ss << "total number of inner edges including duplicates = " <<  nIED;
+  notifyStatusMessage(ss.str());
+  ss.str("");
+  ss << "total number of unique inner edges = " << nIE;
+  notifyStatusMessage(ss.str());
 
-  printf("\ttotal number of inner edges including duplicates = %d\n", nIED);
-  printf("\ttotal number of unique inner edges = %d\n", nIE);
-
-  return (nIE);
+  return nIE;
 }
 
 // -----------------------------------------------------------------------------
@@ -4707,6 +4714,7 @@ void MMCSurfaceMeshingFilter::get_unique_inner_edges(Triangle* t,
                                                      ISegment* ie,
                                                      int nT, int nfedge)
 {
+  std::stringstream ss;
   int i, j, k, kk, m, mm, ii, jj, jjj;
   int cmcID, nmcID; // marching cube ids for the current triangle and next triangle...
   int nIEDmc; // number of inner edges, including duplicates, and unique inner edges in the current marching cube...
@@ -4897,7 +4905,9 @@ void MMCSurfaceMeshingFilter::get_unique_inner_edges(Triangle* t,
           ie[IEindex].edgeKind = tedgeKind;
           if(tedgeKind > 4)
           {
-            printf("something's wrong in counting inner edge kind!!! %d\n", tedgeKind);
+            ss.str("");
+            ss << "something's wrong in counting inner edge kind!!! " << tedgeKind;
+            notifyErrorMessage(ss.str(), -1001);
           }
           IEindex++;
         }
@@ -4911,8 +4921,9 @@ void MMCSurfaceMeshingFilter::get_unique_inner_edges(Triangle* t,
   }
   while (i < numT);
 
-  printf("\ttotal number of unique inner edges updated = %d\n", IEindex);
-
+  ss.str("");
+  ss << "total number of unique inner edges updated = " << IEindex;
+  notifyStatusMessage(ss.str());
 }
 
 // -----------------------------------------------------------------------------
