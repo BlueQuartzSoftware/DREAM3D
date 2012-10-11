@@ -614,19 +614,28 @@ void FindShapes::find_axiseulers()
     n3x = n3x / norm3;
     n3y = n3y / norm3;
     n3z = n3z / norm3;
-    float ea2 = acos(n3z);
+    float ea1= 0.0, ea2 = 0.0, ea3 = 0.0; 
+    ea2 = acos(n1z);
+    if (ea2 == 0.0) 
+    { 
+      ea1 = 0.0;
+      ea3 = acos(n2y);
+    }
+    else
+    {
     float cosine3 = (n2z / sinf(ea2));
-    float sine3 = (n1z / sinf(ea2));
-    float cosine1 = (-n3y / sinf(ea2));
-    float sine1 = (n3x / sinf(ea2));
+    float sine3 = (n3z / sinf(ea2));
+    float cosine1 = (-n1y / sinf(ea2));
+    float sine1 = (n1x / sinf(ea2));
     if (cosine3 > 1.0) cosine3 = 1.0;
     if (cosine3 <-1.0) cosine3 = -1.0; 
     if (cosine1 > 1.0) cosine1 = 1.0;
     if (cosine1 <-1.0) cosine1 = -1.0; 
-    float ea3 = acos(cosine3);
-    float ea1 = acos(cosine1);
+    ea3 = acos(cosine3);
+    ea1 = acos(cosine1);
     if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
     if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
+    }
     m_AxisEulerAngles[3*i] = ea1;
     m_AxisEulerAngles[3*i+1] = ea2;
     m_AxisEulerAngles[3*i+2] = ea3;
