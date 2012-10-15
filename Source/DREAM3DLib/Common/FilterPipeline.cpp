@@ -261,7 +261,9 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setSolidMeshDataContainer(solid.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
-    (*filter)->setDataContainer(NULL);
+    (*filter)->setVoxelDataContainer(NULL);
+    (*filter)->setSurfaceMeshDataContainer(NULL);
+    (*filter)->setSolidMeshDataContainer(NULL);
     int err = (*filter)->getErrorCondition();
     std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
     // Loop through all the messages making sure they are all error messages. If they are all
