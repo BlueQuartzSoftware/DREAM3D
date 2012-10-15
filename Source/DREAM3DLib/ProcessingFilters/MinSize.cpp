@@ -60,6 +60,7 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinAllowedGrainSize(1),
+m_PhaseNumber(1),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL),
@@ -90,13 +91,23 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Phase Number to Run Min Size Filter on");
+    option->setPropertyName("PhaseNumber");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
+
+  writer->writeValue("PhaseNumber", getPhaseNumber() );
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -105,7 +116,7 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -117,7 +128,7 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -144,7 +155,7 @@ void MinSize::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -166,7 +177,7 @@ void MinSize::execute()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
+  renumber_grains->setVoxelDataContainer(m);
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
   int err = renumber_grains->getErrorCondition();
@@ -186,7 +197,7 @@ void MinSize::execute()
 // -----------------------------------------------------------------------------
 void MinSize::assign_badpoints()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -322,7 +333,7 @@ void MinSize::assign_badpoints()
 
 void MinSize::remove_smallgrains()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   int gnum;
@@ -341,14 +352,21 @@ void MinSize::remove_smallgrains()
       std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	  notifyStatusMessage(ss.str());
-      if(voxcounts[i] >= m_MinAllowedGrainSize )
-      {
-        m_Active[i] = true;
-      }
-      else if(voxcounts[i] < m_MinAllowedGrainSize )
-      {
-        m_Active[i] = false;
-      }
+
+
+    if(voxcounts[i] >= m_MinAllowedGrainSize )
+    {
+    m_Active[i] = true;
+    }
+    else if(voxcounts[i] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber)
+    {
+    m_Active[i] = false;
+    }
+    else
+    {
+    m_Active[i] = true;
+    }
+
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {

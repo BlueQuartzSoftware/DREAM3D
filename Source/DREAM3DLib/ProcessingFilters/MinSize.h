@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }

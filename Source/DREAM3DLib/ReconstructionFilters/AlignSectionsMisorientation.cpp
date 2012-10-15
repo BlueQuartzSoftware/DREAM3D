@@ -110,7 +110,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+  option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -132,7 +132,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
@@ -150,7 +150,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
     find_cellquats->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
@@ -181,7 +181,7 @@ void AlignSectionsMisorientation::preflight()
 void AlignSectionsMisorientation::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -213,7 +213,7 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
@@ -263,6 +263,10 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
     std::stringstream ss;
     ss << "Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
     notifyStatusMessage(ss.str());
+    if (getCancel() == true)
+    {
+      return;
+    }
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;

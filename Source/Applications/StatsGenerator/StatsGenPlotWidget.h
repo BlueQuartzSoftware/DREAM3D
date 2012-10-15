@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 
 class SGAbstractTableModel;
@@ -75,7 +75,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     VectorOfFloatArray getStatisticsData();
 
-    int extractStatsData(DataContainer::Pointer m, int index,
+    int extractStatsData(VoxelDataContainer::Pointer m, int index,
                          QVector<float>  &binNumbers,
                          VectorOfFloatArray arrays);
 

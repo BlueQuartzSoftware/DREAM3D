@@ -97,8 +97,8 @@ void Patch::flipWinding()
 // -----------------------------------------------------------------------------
 int Patch::getintIndex(int label)
 {
-  if (label == ngrainname[0]) return 0;
-  if (label == ngrainname[1]) return 1;
+  if (label == nSpin[0]) return 0;
+  if (label == nSpin[1]) return 1;
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 

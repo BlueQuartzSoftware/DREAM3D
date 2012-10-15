@@ -166,17 +166,17 @@ int SMStlWriter::writeTriangleBlock(int numTriangles, const std::vector<Patch::P
     n2 = cTriangle[i]->node_id[1];
     n3 = cTriangle[i]->node_id[2];
 
-    vert1[0] = cVertex[n1].xc;
-    vert1[1] = cVertex[n1].yc;
-    vert1[2] = cVertex[n1].zc;
+    vert1[0] = cVertex[n1].coord[0];
+    vert1[1] = cVertex[n1].coord[1];
+    vert1[2] = cVertex[n1].coord[2];
 
-    vert2[0] = cVertex[n2].xc;
-    vert2[1] = cVertex[n2].yc;
-    vert2[2] = cVertex[n2].zc;
+    vert2[0] = cVertex[n2].coord[0];
+    vert2[1] = cVertex[n2].coord[1];
+    vert2[2] = cVertex[n2].coord[2];
 
-    vert3[0] = cVertex[n3].xc;
-    vert3[1] = cVertex[n3].yc;
-    vert3[2] = cVertex[n3].zc;
+    vert3[0] = cVertex[n3].coord[0];
+    vert3[1] = cVertex[n3].coord[1];
+    vert3[2] = cVertex[n3].coord[2];
 
     // Compute the normal
     u[0] = vert2[0] - vert1[0];

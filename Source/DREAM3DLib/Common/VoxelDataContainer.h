@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GrainGeneratorFunc_H
-#define _GrainGeneratorFunc_H
+#ifndef _VoxelDataContainer_H_
+#define _VoxelDataContainer_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -60,20 +60,22 @@
 
 
 /**
- * @class GrainGeneratorFunc GrainGeneratorFunc.h DREAM3DLib/Common/GrainGeneratorFunc.h
- * @brief
- * @author
+ * @class VoxelDataContainer VoxelDataContainer DREAM3DLib/Common/VoxelDataContainer.h
+ * @brief This data container holds data the represents a structured rectangular
+ * grid of data typically referred to as a Voxel Volume
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @author Michael A. Groeber for AFRL
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DataContainer : public Observable
+class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(DataContainer)
-    DREAM3D_STATIC_NEW_MACRO(DataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(DataContainer, Observable)
+    DREAM3D_SHARED_POINTERS(VoxelDataContainer)
+    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainer, Observable)
 
-    virtual ~DataContainer();
+    virtual ~VoxelDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
@@ -244,7 +246,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
   protected:
-    DataContainer();
+    VoxelDataContainer();
 
   private:
 
@@ -252,8 +254,8 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
     std::map<std::string, IDataArray::Pointer> m_FieldData;
     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
-    DataContainer(const DataContainer&);
-    void operator =(const DataContainer&);
+    VoxelDataContainer(const VoxelDataContainer&);
+    void operator =(const VoxelDataContainer&);
 };
 
 #endif

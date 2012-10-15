@@ -122,7 +122,7 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
@@ -133,7 +133,7 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
   }
@@ -149,7 +149,7 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
         setErrorCondition(0);
         FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
         find_avgorients->setObservers(this->getObservers());
-        find_avgorients->setDataContainer(getDataContainer());
+        find_avgorients->setVoxelDataContainer(getVoxelDataContainer());
         if(preflight == true) find_avgorients->preflight();
         if(preflight == false) find_avgorients->execute();
       }
@@ -163,7 +163,7 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
         setErrorCondition(0);
         FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
         find_euclideandistmap->setObservers(this->getObservers());
-        find_euclideandistmap->setDataContainer(getDataContainer());
+        find_euclideandistmap->setVoxelDataContainer(getVoxelDataContainer());
         if(preflight == true) find_euclideandistmap->preflight();
         if(preflight == false) find_euclideandistmap->execute();
       }
@@ -189,7 +189,7 @@ void FindGrainReferenceMisorientations::execute()
 {
   setErrorCondition(0);
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

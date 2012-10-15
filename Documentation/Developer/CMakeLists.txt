@@ -64,7 +64,7 @@ set (DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/WritingPlugin.dox
     ${PROJECT_SOURCE_DIR}/CodeGuidelines.dox
     ${PROJECT_SOURCE_DIR}/Compiling.dox
-  #  ${PROJECT_SOURCE_DIR}/H5VoxelVolume.dox
+    ${PROJECT_SOURCE_DIR}/AddingFilters.dox
  #   ${PROJECT_SOURCE_DIR}/MicrostructurePresets.dox
   #  ${PROJECT_SOURCE_DIR}/StructureReaders.dox
   #  ${PROJECT_SOURCE_DIR}/SurfaceMeshing.dox 

@@ -1,0 +1,32 @@
+/*!
+
+@page addingfilters Adding Filters to DREAM3D
+
+
+@section sf1 Adding Filter to Existing Category
+
+Create the header and implementation files (.h and .cpp)
+Add both files to the "SourceList.cmake" file that is in the same directory
+If you do NOT add a .html file to the Documentation/Filters/[Filter Category]/[Your Filter Name].html
+then a default file will be created for you the first time the code is compiled. The default file
+has all the skeleton html in the file and the programmer just needs to document what actions
+the filter performs.
+
+
+@section af2  Adding New Category
+
+Update DREAM3D/Source/DREAM3DLib/CMakeLists.txt file to add in the new filter
+category.
+
+@verbatim
+D3DCompileFilters(SurfaceMeshFilters ${AllFiltersHeaderFile})
+@endverbatim
+
+Update DREAM3D/Source/FilterWidgets/CMakeLists.txt file to add in the new filter
+category
+
+@verbatim
+WidgetGeneration(SurfaceMeshFilters SurfaceMesh_Filters)
+@endverbatim
+
+*/

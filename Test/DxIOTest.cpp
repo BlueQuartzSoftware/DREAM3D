@@ -72,7 +72,7 @@ class GenerateGrainIds : public AbstractFilter
     virtual void execute()
     {
       setErrorCondition(0);
-      DataContainer* m = getDataContainer();
+      VoxelDataContainer* m = getVoxelDataContainer();
       if(NULL == m)
       {
         setErrorCondition(-1);
@@ -117,7 +117,7 @@ class GenerateGrainIds : public AbstractFilter
     {
       setErrorCondition(0);
       std::stringstream ss;
-      DataContainer* m = getDataContainer();
+      VoxelDataContainer* m = getVoxelDataContainer();
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
@@ -183,13 +183,13 @@ int TestDxReader()
   size_t ny = 0;
   size_t nz = 0;
 
-  DataContainer::Pointer m = DataContainer::New();
-  reader->setDataContainer(m.get());
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  reader->setVoxelDataContainer(m.get());
   reader->execute( );
   int err = reader->getErrorCondition();
   m->getDimensions(nx, ny, nz);
 
-  IDataArray::Pointer mdata = reader->getDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
+  IDataArray::Pointer mdata = reader->getVoxelDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
 
   DREAM3D_REQUIRE_EQUAL(err, 0);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::DxIOTest::XSize);

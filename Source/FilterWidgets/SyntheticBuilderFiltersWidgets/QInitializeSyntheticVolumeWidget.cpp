@@ -235,10 +235,10 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      m_DataContainer = DataContainer::New();
+      m_DataContainer = VoxelDataContainer::New();
       DataContainerReader::Pointer reader = DataContainerReader::New();
       reader->setInputFile(m_InputFile->text().toStdString());
-      reader->setDataContainer(m_DataContainer.get());
+      reader->setVoxelDataContainer(m_DataContainer.get());
       reader->setReadCellData(false);
       reader->setReadFieldData(false);
       reader->setReadEnsembleData(true);
@@ -246,7 +246,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       int err = reader->getErrorCondition();
       if(err < 0)
       {
-        m_DataContainer = DataContainer::NullPointer();
+        m_DataContainer = VoxelDataContainer::NullPointer();
         QMessageBox::critical(this, tr("DREAM.3D"), tr("The DREAM3D Data File could not be read."), QMessageBox::Ok, QMessageBox::Ok);
         return;
       }

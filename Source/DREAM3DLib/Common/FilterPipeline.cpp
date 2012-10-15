@@ -244,7 +244,9 @@ void FilterPipeline::updatePrevNextFilters()
 int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
-  DataContainer::Pointer m = DataContainer::New();
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
@@ -254,16 +256,34 @@ int FilterPipeline::preflightPipeline()
   // Start looping through the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
-    (*filter)->setDataContainer(m.get());
+    (*filter)->setVoxelDataContainer(m.get());
+    (*filter)->setSurfaceMeshDataContainer(sm.get());
+    (*filter)->setSolidMeshDataContainer(solid.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
     (*filter)->setDataContainer(NULL);
     int err = (*filter)->getErrorCondition();
+    std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
+    // Loop through all the messages making sure they are all error messages. If they are all
+    // warning messages we are going to let the preflight pass. Hopefully if the warning
+    // turns into an error the filter will handle it correctly and gracefully fail with
+    // a nice message to the user.
+    err = 0;
+    for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+    {
+       if ( (*iter).getMessageType() == PipelineMessage::Error)
+        {
+          err |= (*filter)->getErrorCondition();
+        }
+        else if ((*iter).getMessageType() == PipelineMessage::Warning)
+        {
+          err |= 0;
+        }
+    }
     if(err < 0)
     {
       preflightError |= err;
       setErrorCondition(preflightError);
-      setErrorCondition(err);
       sendPipelineMessages( (*filter)->getPipelineMessages());
     }
   }
@@ -301,8 +321,13 @@ void FilterPipeline::execute()
 //    m_DataContainer = DataContainer::New();
 //  }
 
-  DataContainer::Pointer dataContainer = DataContainer::New();
+  VoxelDataContainer::Pointer dataContainer = VoxelDataContainer::New();
   dataContainer->addObserver(static_cast<Observer*>(this));
+
+  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  sm->addObserver(static_cast<Observer*>(this));
+  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  solid->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
   float progress = 0.0f;
@@ -327,11 +352,15 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainer(dataContainer.get());
+    (*iter)->setVoxelDataContainer(dataContainer.get());
+    (*iter)->setSurfaceMeshDataContainer(sm.get());
+    (*iter)->setSolidMeshDataContainer(solid.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainer(NULL);
+    (*iter)->setVoxelDataContainer(NULL);
+    (*iter)->setSurfaceMeshDataContainer(NULL);
+    (*iter)->setSolidMeshDataContainer(NULL);
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {
@@ -343,7 +372,7 @@ void FilterPipeline::execute()
       pipelineFinished();
       return;
     }
-    CHECK_FOR_CANCELED(DataContainer, "Pipeline was canceled", write_fielddata)
+    CHECK_FOR_CANCELED(VoxelDataContainer, "Pipeline was canceled", write_fielddata)
 
     if(DREAM3D_BENCHMARKS)
     {

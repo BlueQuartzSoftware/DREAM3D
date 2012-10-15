@@ -112,7 +112,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -125,7 +125,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
     find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setDataContainer(getDataContainer());
+    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_surfacefields->preflight();
     if(preflight == false) find_surfacefields->execute();
   }
@@ -137,7 +137,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -155,7 +155,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     setErrorCondition(0);
     FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
     find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setDataContainer(getDataContainer());
+    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_neighbors->preflight();
     if(preflight == false) find_neighbors->execute();
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -188,7 +188,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     setErrorCondition(0);
     FindNumFields::Pointer find_numfields = FindNumFields::New();
     find_numfields->setObservers(this->getObservers());
-    find_numfields->setDataContainer(getDataContainer());
+    find_numfields->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_numfields->preflight();
     if(preflight == false) find_numfields->execute();
   }
@@ -221,7 +221,7 @@ void MatchCrystallography::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -253,7 +253,7 @@ void MatchCrystallography::execute()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::initializeArrays()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -296,7 +296,7 @@ void MatchCrystallography::initializeArrays()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   size_t totalPoints = m->getNumCellTuples();
   size_t totalFields = m->getNumFieldTuples();
@@ -322,7 +322,7 @@ void MatchCrystallography::determine_volumes()
 void MatchCrystallography::assign_eulers()
 {
   DREAM3D_RANDOMNG_NEW()
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int numbins = 0;
   float totaldensity = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
@@ -439,7 +439,7 @@ void MatchCrystallography::MC_LoopBody2(int grain, int phase, int j, float neigh
 // -----------------------------------------------------------------------------
 void MatchCrystallography::matchCrystallography()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -758,7 +758,7 @@ void MatchCrystallography::matchCrystallography()
 
 void MatchCrystallography::measure_misorientations()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"

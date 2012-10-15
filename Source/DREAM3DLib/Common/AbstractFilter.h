@@ -43,7 +43,9 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
@@ -77,7 +79,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual const std::string getFilterVersion() { return DREAM3DLib::Version::Complete(); }
 
-    DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
+    DREAM3D_INSTANCE_PROPERTY(VoxelDataContainer*, VoxelDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(SurfaceMeshDataContainer*, SurfaceMeshDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(SolidMeshDataContainer*, SolidMeshDataContainer)
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages)
 
