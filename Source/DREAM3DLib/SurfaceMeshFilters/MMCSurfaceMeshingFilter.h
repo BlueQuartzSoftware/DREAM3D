@@ -43,11 +43,14 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "MMCSurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
 /**
- * @class MMCSurfaceMeshingFilter MMCSurfaceMeshingFilter.h CMUSurfaceMeshing/Code/MMCSurfaceMeshingFilters/MMCSurfaceMeshingFilter.h
- * @brief
+ * @class MMCSurfaceMeshingFilter MMCSurfaceMeshingFilter.h DREAM3DLic/SurfaceMeshingFilters/MMCSurfaceMeshingFilter.h
+ * @brief This filter was contributed by Dr. Sukbin Lee of Carnegi-Mellon University and uses a "MultiMaterial Marching
+ * Cubes" algorithm originally proposed by Wu & Sullivan.
+ * Multiple material marching cubes algorithm, Ziji Wu1, John M. Sullivan Jr2, International Journal for Numerical Methods in Engineering
+ * Special Issue: Trends in Unstructured Mesh Generation, Volume 58, Issue 2, pages 189–207, 14 September 2003
  * @author
  * @date
  * @version 1.0
@@ -55,9 +58,9 @@
 class MMCSurfaceMeshingFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MMCSurfaceMeshingFilter);
-    DREAM3D_STATIC_NEW_MACRO(MMCSurfaceMeshingFilter);
-    DREAM3D_TYPE_MACRO_SUPER(MMCSurfaceMeshingFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MMCSurfaceMeshingFilter)
+    DREAM3D_STATIC_NEW_MACRO(MMCSurfaceMeshingFilter)
+    DREAM3D_TYPE_MACRO_SUPER(MMCSurfaceMeshingFilter, AbstractFilter)
 
     virtual ~MMCSurfaceMeshingFilter();
 
@@ -66,7 +69,7 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
     //DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
 
     //--------- Input Parameters
-    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer);
+    DREAM3D_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

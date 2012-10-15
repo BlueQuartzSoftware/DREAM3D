@@ -38,8 +38,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/SurfaceMeshFilters/MMCSurfaceMeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshFilters/StructArray.hpp"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/StructArray.hpp"
 
 
 #include "UnitTestSupport.hpp"

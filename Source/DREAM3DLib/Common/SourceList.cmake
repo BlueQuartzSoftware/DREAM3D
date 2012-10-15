@@ -40,6 +40,8 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshStructs.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/StructArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.h

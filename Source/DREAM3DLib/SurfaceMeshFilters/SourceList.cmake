@@ -6,29 +6,22 @@ set(FILTER_CATEGORY "SurfaceMeshFilters")
 
 # --------------------------------------------------------------------
 # If you have more than a single filter add it to this list (headers)
-SET (${FILTER_CATEGORY}_FILTERS_HDRS
+SET(${FILTER_CATEGORY}_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshingFilter.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MovingFiniteElementSmoothing.h
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/CMUNodesTrianglesToStl.h
 )
 
 # --------------------------------------------------------------------
 # If you have more than a single filter add it to this list (sources)
-SET (DREAM3DLib_${FILTER_CATEGORY}_SRCS
+SET(DREAM3DLib_${FILTER_CATEGORY}_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshingFilter.cpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MovingFiniteElementSmoothing.cpp
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/CMUNodesTrianglesToStl.cpp
 )
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_${FILTER_CATEGORY}_HDRS
+SET(DREAM3DLib_${FILTER_CATEGORY}_HDRS
     ${${FILTER_CATEGORY}_FILTERS_HDRS}
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/SurfaceMeshGeneralMCABoundedMulti.cpp
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/SurfaceMeshGeneralMCABoundedMulti.h
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshStructs.h
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/StructArray.hpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.h
-#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.cpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshLinearAlgebra.h
 )
 
