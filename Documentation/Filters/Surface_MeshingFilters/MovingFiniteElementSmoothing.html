@@ -45,12 +45,16 @@ finite elements. SIAM Journal of Scientific Computing 22, 535-560.</i><br />
 The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving
 Finite Element method [SIAM].  A conformal triangular surface mesh represents the grain
  boundary network.  The curvature at each node is computed and used as the driving
-force for nodal motion.  Additional forces are computed based on element
-quality.  The user can choose a balance between the curvature and element quality
-  forces to find a compromise between smoothness and final element quality.  Certain
-  node types can be constrained in their motion. Nodes on an external surface can be
-  constrained to move in the plane of the surface.  Quad point nodes can be prevented
-  from moving.
+ force for nodal motion. Additional forces are computed based on element
+ quality. The user can choose a balance between the curvature and element quality
+ forces to find a compromise between smoothness and final element quality.  Certain
+ node types can be constrained in their motion.
+ <ol>
+ <li>Node Contraints .. </li>
+ <li> Nodes on an external surface can be constrained to move in the plane of the surface.</li>
+ <li> Triple Lines can be constrained</li>
+ <lib> Quad point nodes can be prevented from moving.</li>
+ </ol>
 <!-- Do NOT write documentation below this line -->
 </p>
 

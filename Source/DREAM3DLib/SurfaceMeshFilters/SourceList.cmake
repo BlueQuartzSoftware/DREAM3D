@@ -28,7 +28,7 @@ SET (DREAM3DLib_${FILTER_CATEGORY}_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshStructs.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/StructArray.hpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.h
-    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.cpp
+#    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshFunctions.cpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MeshLinearAlgebra.h
 )
 

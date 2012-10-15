@@ -77,6 +77,7 @@ typedef struct
     int triplenn2;
 } TripleNN;
 
+
 void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ")
 {
   // Skip delimiters at beginning.
@@ -109,6 +110,7 @@ inline int delta(int i, int j)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename Node, typename T>
 void LineCurvatureDirection(pvector& v, Node& n0, Node& n1, Node& n2)
 //  returns vector along which curvature points at node n1
 {
@@ -121,22 +123,23 @@ void LineCurvatureDirection(pvector& v, Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename Node, typename T>
 double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 //  returns angle approx. to curvature at node n1
 {
-  double v1[3], v2[3];
+  T v1[3], v2[3];
   v1[0] = n0.coord[0] - n1.coord[0];
   v1[1] = n0.coord[1] - n1.coord[1];
   v1[2] = n0.coord[2] - n1.coord[2];
   v2[0] = n1.coord[0] - n2.coord[0];
   v2[1] = n1.coord[1] - n2.coord[1];
   v2[2] = n1.coord[2] - n2.coord[2];
-  double d1 = NodeFunctions::Distance(n0, n1);
-  double d2 = NodeFunctions::Distance(n1, n2);
-  double product = sqrt((v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]) / d1 / d2);
+  T d1 = NodeFunctions<Node, T>::Distance(n0, n1);
+  T d2 = NodeFunctions<Node, T>::Distance(n1, n2);
+  T product = sqrt((v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]) / d1 / d2);
   if(product > 1.) product = 1.;
   if(product < -1.) product = -1.;
-  double angle = acos(product);
+  T angle = acos(product);
   return 2. * angle / (d1 + d2);
 }
 
@@ -144,7 +147,12 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 //
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
-    AbstractFilter()
+AbstractFilter(),
+m_IterationSteps(1),
+m_NodeConstraints(true),
+m_ConstrainSurfaceNodes(true),
+m_ConstrainQuadPoints(true),
+m_SmoothTripleLines(true)
 {
   setupFilterParameters();
 }
@@ -277,8 +285,8 @@ void MovingFiniteElementSmoothing::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
-  StructArray<Node>::Pointer nodesPtr = m->getNodes();
-  if(NULL == nodesPtr.get())
+  StructArray<Node>::Pointer floatNodesPtr = m->getNodes();
+  if(NULL == floatNodesPtr.get())
   {
     setErrorCondition(-555);
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
@@ -295,17 +303,32 @@ void MovingFiniteElementSmoothing::execute()
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
-  Node* nodes = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  Node* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+
   Triangle* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
-  int nnod = nodesPtr->GetNumberOfTuples();
+  int numberNodes = floatNodesPtr->GetNumberOfTuples();
   int ntri = trianglesPtr->GetNumberOfTuples();
-  // int junk;
+
+
+  StructArray<NodeD>::Pointer nodesDPtr = StructArray<NodeD>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  nodesDPtr->initializeWithZeros();
+  NodeD* nodes = nodesDPtr->GetPointer(0);
+
+  // Copy the nodes from the 32 bit floating point to the 64 bit floating point
+  for(int n = 0; n < numberNodes; ++n)
+  {
+    nodes[n].coord[0] = nodesF[n].coord[0];
+    nodes[n].coord[1] = nodesF[n].coord[1];
+    nodes[n].coord[2] = nodesF[n].coord[2];
+    nodes[n].nodeKind = nodesF[n].nodeKind;
+  }
+
   bool isVerbose = true;
 
   // We need a few more arrays to support the code from CMU:
-  StructArray<TripleNN>::Pointer triplennPtr = StructArray<TripleNN>::CreateArray(nnod, "TripleLine_Neighbors_Or_IDS");
+  StructArray<TripleNN>::Pointer triplennPtr = StructArray<TripleNN>::CreateArray(numberNodes, "TripleLine_Neighbors_Or_IDS");
   triplennPtr->initializeWithZeros();
   TripleNN* triplenn = triplennPtr->GetPointer(0);
 
@@ -320,17 +343,14 @@ void MovingFiniteElementSmoothing::execute()
 
   if(isVerbose)
   {
-    std::cout << "Number of nodes: " << nnod << std::endl;
+    std::cout << "Number of nodes: " << numberNodes << std::endl;
     std::cout << "Number of triangles: " << ntri << std::endl;
     std::cout << std::endl;
   }
 
-  //Allocate the triangle and node vectors
-  //  std::vector<node> nodes(nnod);
-  //  std::vector<triangle> triangles(ntri);
+
   std::vector<int> tid(ntri);
-  //  std::vector<int> nodeType(nnod) ;  //  not needed, already in nodes class
-  std::vector<int> nodeConstraint(nnod); //  0=unconstrained, 1=constrained in X, 2= in Y, 4= in Z
+  std::vector<int> nodeConstraint(numberNodes); //  0=unconstrained, 1=constrained in X, 2= in Y, 4= in Z
 
   //Read the nodes
 #if 0
@@ -570,7 +590,7 @@ void MovingFiniteElementSmoothing::execute()
   double max[3] =
   { std::numeric_limits<double>::min(), std::numeric_limits<double>::min(), std::numeric_limits<double>::min() };
 
-  int numberNodes = nodesPtr->GetNumberOfTuples();
+
   for (int i = 0; i < numberNodes; i++)
   {
     for (int j = 0; j < 3; j++)
@@ -630,7 +650,7 @@ void MovingFiniteElementSmoothing::execute()
   //  for measuring dihedral angles, Mar 2010
 
   //  now we determine constraints
-  for (unsigned int r = 0; r < numberNodes; r++)
+  for (int r = 0; r < numberNodes; r++)
   {
     nodeConstraint[r] = 0;
     if(m_NodeConstraints == true)
@@ -652,22 +672,15 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
       //  constraint for surface nodes
-      if(m_ConstrainSurfaceNodes == true && nodeConstraint[r] != 0) nodeConstraint[r] = 7;
+      if(m_ConstrainSurfaceNodes == true && nodeConstraint[r] != 0) { nodeConstraint[r] = 7; }
       //  totally constrain a surface node (temporary fix for connectivity issues in bounded box meshes)
 
     }
-    if(nodes[r].nodeKind == 4 && m_ConstrainQuadPoints == true) nodeConstraint[r] = 7;
+    if(nodes[r].nodeKind == 4 && m_ConstrainQuadPoints == true) { nodeConstraint[r] = 7; }
     //  constraint for quad point nodes is in all 3 coords.
-
-    /*  if ( nodeConstraint[r] > 0 ) {
-     std::cout << id(nodes[r]) <<" Coords: "<< nodes[r][0] <<" "<< nodes[r][1] <<" "<< nodes[r][2] << std::endl ;
-     std::cout << "Type, Constraint: "<< type(nodes[r]) <<" "<< nodeConstraint[r] << std::endl ;
-     }  */// debug
   }
 
   // update loop
-  //  for (int updates=1; updates<=atoi(argv[2]); updates++) {
-  //  for (int updates=1; updates<=atoi(argv[4]); updates++) {
   for (size_t updates = begin; updates <= static_cast<size_t>(final); ++updates)
   {
     if(getCancel() == true)
@@ -690,8 +703,6 @@ void MovingFiniteElementSmoothing::execute()
 
     TJ_scale = 19000.0; //  arbitrary choice for triple line smoothing !
     A_scale = 4000.0;
-    //    Q_scale = 1000.0 + 8000.0 * (double)updates/(double)(atoi(argv[4])) ;
-    //    Q_scale = 500.0 + 500.0 * (double)updates/(double)final ;
     //  designed to ramp up the weight attached to the Quality forces
     Q_scale = 500.0 + 50.0 * (double)updates / (double)final;
     // 		WAS: 	Q_scale = 1000;
@@ -706,22 +717,24 @@ void MovingFiniteElementSmoothing::execute()
     Dihedral_min = 180.;
     Dihedral_max = -1.; //  added may 10, ADR
     double LDistance, deltaLDistance;
+    // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
-    { // Loop through each of the triangles
+    {
       Triangle& rtri = triangles[t];
       MFE::Vector<double> n(3);
-      n = TriangleFunctions::normal(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
-      A = TriangleFunctions::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
-      assert(A != 0);
-      Q = TriangleFunctions::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], A); //  current quality
-      if(Q > 100.) if(isVerbose)
-      {
-        std::cout << "Warning, tri no. " << t << " has Q= " << Q << std::endl;
+      n = TriangleFunctions<NodeD, double>::normal(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
+      A = TriangleFunctions<NodeD, double>::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
+      Q = TriangleFunctions<NodeD, double>::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], A); //  current quality
+      if(Q > 100.) {
+        if(isVerbose)
+        {
+          std::cout << "Warning, tri no. " << t << " has Q= " << Q << std::endl;
+        }
       }
       Q_sum += Q;
-      if(Q > Q_max) Q_max = Q;
+      if(Q > Q_max) { Q_max = Q; }
 
-      Dihedral = TriangleFunctions::MinDihedral(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
+      Dihedral = TriangleFunctions<NodeD, double>::MinDihedral(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
       // debug
       //      std::cout << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI << std::endl;
       Dihedral_sum += Dihedral;
@@ -731,28 +744,27 @@ void MovingFiniteElementSmoothing::execute()
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
         int i = rtri.node_id[n0];
-        Node& node_i = nodes[i];
+        NodeD& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
-          //double deltaDistance = 0.;
-
-          if(m_SmoothTripleLines == true && (nodes[i].nodeKind == 3 || nodes[i].nodeKind == 13))
+          if(m_SmoothTripleLines == true && (node_i.nodeKind == 3 || node_i.nodeKind == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            LDistance = NodeFunctions::Distance(nodes[i], nodes[triplenn[i].triplenn1]) + NodeFunctions::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
+            LDistance = NodeFunctions<NodeD, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<NodeD, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
           }
-          nodes[i].coord[j] += small;
-          double Anew = TriangleFunctions::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
-          double Qnew = TriangleFunctions::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], Anew);
-          if(m_SmoothTripleLines == true && (nodes[i].nodeKind == 3 || nodes[i].nodeKind == 13))
+          node_i.coord[j] += small;
+          double Anew = TriangleFunctions<NodeD, double>::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
+          double Qnew = TriangleFunctions<NodeD, double>::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], Anew);
+          if(m_SmoothTripleLines == true && (node_i.nodeKind == 3 || node_i.nodeKind == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            deltaLDistance = NodeFunctions::Distance(nodes[i], nodes[triplenn[i].triplenn1]) + NodeFunctions::Distance(nodes[triplenn[i].triplenn2], nodes[i])
+            deltaLDistance = NodeFunctions<NodeD, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<NodeD, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i])
                 - LDistance; // change in line length
             F[3 * i + j] -= TJ_scale * deltaLDistance;
           }
-          nodes[i].coord[j] -= small;
-          F[3 * i + j] -= (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
+          node_i.coord[j] -= small;
+          double arg = (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
+          F[3 * i + j] -= arg;
         }
         for (int n1 = 0; n1 < 3; n1++)
         { //  for each of 3 nodes
@@ -769,7 +781,6 @@ void MovingFiniteElementSmoothing::execute()
     }
 
     // add epsilon to the diagonal
-
     for (int r = 0; r < numberNodes; r++)
     {
       for (int s = 0; s < 3; s++)
@@ -779,21 +790,10 @@ void MovingFiniteElementSmoothing::execute()
     }
 
     // apply boundary conditions
-    // if node i, component j is constrained, do this...
-    // K[3*i+j][3*i+j] += large;
     for (int r = 0; r < numberNodes; r++)
     {
       if(m_NodeConstraints == true || m_ConstrainQuadPoints == true)
       { // only do this if we want the constraint
-        /*
-         for (int s=0; s<3; s++) {
-         if( fabs(nodes[r][s] - max[s]) < tolerance)  K[3*r+s][3*r+s] += large ;
-         if( fabs(nodes[r][s] - min[s]) < tolerance)  K[3*r+s][3*r+s] += large ;
-         //  constraint for surface nodes
-         if( type(nodes[r]) == 4 && constrainQuads == 1 )  K[3*r+s][3*r+s] += large ;
-         //  constraint for quad point nodes
-         }
-         */
         if(nodeConstraint[r] % 2 != 0)
         {
           K[3 * r][3 * r] = large;
@@ -811,7 +811,7 @@ void MovingFiniteElementSmoothing::execute()
     }
 
     // solve for node velocities
-    int iterations = CR(K, x, F, 4000, 1.0e-5);
+    int iterations = MFE::CR(K, x, F, 4000, 1.0e-5);
     if(isVerbose) std::cout << iterations << " iterations ... " << std::endl;
 
     //Update the quality information
@@ -1008,6 +1008,16 @@ void MovingFiniteElementSmoothing::execute()
     std::cout << "You can combine the nodes and triangles to do further analysis or smoothing" << std::endl;
     // std::cout << "Look for " << outputNodesFile << std::endl;
   }
+
+  // Copy the nodes from the 64 bit floating point to the 32 bit floating point
+  for(int n = 0; n < numberNodes; ++n)
+  {
+    nodesF[n].coord[0] = nodes[n].coord[0];
+    nodesF[n].coord[1] = nodes[n].coord[1];
+    nodesF[n].coord[2] = nodes[n].coord[2];
+    nodesF[n].nodeKind = nodes[n].nodeKind;
+  }
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
