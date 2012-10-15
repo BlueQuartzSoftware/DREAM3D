@@ -84,11 +84,11 @@ endif()
 # --------------------------------------------------------------------
 # These are the NON-Filter but Qt derived sources of the plugin. In case you have
 # additional Qt source files that you need compiled.
-set (@PluginName@Plugin_HDRS
+set(@PluginName@Plugin_HDRS
   ${PROJECT_SOURCE_DIR}/Code/@PluginName@Plugin.h
 )
 
-set (@PluginName@Plugin_SRCS
+set(@PluginName@Plugin_SRCS
  ${PROJECT_SOURCE_DIR}/Code/@PluginName@Plugin.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "@PluginName@/" "${@PluginName@Plugin_HDRS}" "${@PluginName@Plugin_SRCS}" "0")
@@ -127,7 +127,7 @@ endif()
 
 # --------------------------------------------------------------------
 # Gather all the sources and headers into a single cmake variable
-set (@PluginName@Plugin_PROJECT_SRCS
+set(@PluginName@Plugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${@PluginName@Plugin_@PluginName@_SRCS}
     ${@PluginName@Plugin_@PluginName@_HDRS}
@@ -146,7 +146,7 @@ set (@PluginName@Plugin_PROJECT_SRCS
 # --------------------------------------------------------------------
 # Setup output Directory for the plugin
 if(NOT MSVC)
-  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 
 # --------------------------------------------------------------------
@@ -175,6 +175,6 @@ PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
 # --------------------------------------------------------------------
 # Put back the output directory 
 if (NOT MSVC)
-  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 

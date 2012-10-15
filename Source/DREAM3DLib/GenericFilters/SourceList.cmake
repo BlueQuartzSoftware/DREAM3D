@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (GenericFilters_FILTERS_HDRS
+set(GenericFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceCells.h
@@ -20,13 +20,13 @@ SET (GenericFilters_FILTERS_HDRS
 )
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_GenericFilters_HDRS
+set(DREAM3DLib_GenericFilters_HDRS
     ${GenericFilters_FILTERS_HDRS}
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.h
 )
 
-SET (DREAM3DLib_GenericFilters_SRCS
+set(DREAM3DLib_GenericFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.cpp
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.cpp    
     ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.cpp

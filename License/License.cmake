@@ -22,7 +22,7 @@ file(APPEND ${LICENSE_HEADER_FILE} "namespace ${PROJECT_PREFIX} {\n")
 file(APPEND ${LICENSE_HEADER_FILE} "  QStringList LicenseList = (QStringList()  ")
 foreach(lf ${LICENSE_FILES})
     get_filename_component(cmp_text_file_name ${lf} NAME_WE)
-    set (cmp_text_file_name "${cmp_text_file_name}.license")
+    set(cmp_text_file_name "${cmp_text_file_name}.license")
     get_filename_component(lf_fn ${lf} NAME_WE)
     # Copy the text file into the Build Directory
 #    message(STATUS "lf: ${lf}")
@@ -31,7 +31,7 @@ foreach(lf ${LICENSE_FILES})
     configure_file("${lf}" ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.license   COPYONLY )
         
     # create the Qt Resource File
-    set (CMP_RESOURCE_FILE_NAME ${lf_fn}.license)
+    set(CMP_RESOURCE_FILE_NAME ${lf_fn}.license)
     configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/QtResourceFile.qrc.in 
                    ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.qrc)
                    

@@ -8,7 +8,7 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-SET (ProcessingFilters_FILTERS_HDRS
+set(ProcessingFilters_FILTERS_HDRS
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
@@ -17,11 +17,11 @@ ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.h
 )
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_ProcessingFilters_HDRS
+set(DREAM3DLib_ProcessingFilters_HDRS
     ${ProcessingFilters_FILTERS_HDRS}
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.h
 )
-SET (DREAM3DLib_ProcessingFilters_SRCS
+set(DREAM3DLib_ProcessingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.cpp    

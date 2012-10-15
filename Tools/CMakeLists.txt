@@ -16,7 +16,7 @@ cmake_minimum_required(VERSION 2.8.3)
 # Setup the install rules for the various platforms
 set(install_dir "tools")
 if (WIN32)
-    set (install_dir ".")
+    set(install_dir ".")
 endif()
 
 #-------------------------------------------------------------------------------

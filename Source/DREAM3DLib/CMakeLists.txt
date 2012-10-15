@@ -15,9 +15,9 @@
 PROJECT( DREAM3DLib )
 cmake_minimum_required(VERSION 2.8.3)
 
-SET (DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
+set(DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)
-    SET (DREAM3DLib_BUILT_AS_DYNAMIC_LIB 1)
+    set(DREAM3DLib_BUILT_AS_DYNAMIC_LIB 1)
     IF (WIN32)
         ADD_DEFINITIONS("-DDREAM3DLib_BUILT_AS_DYNAMIC_LIB")
     ENDIF (WIN32)
@@ -28,23 +28,23 @@ IF (DREAM3D_DISABLE_MSVC_WARNINGS)
     add_definitions(-DDREAM3D_DISABLE_MSVC_WARNINGS)
 endif()
 
-SET (PROJECT_PREFIX "DREAM3D" CACHE STRING "The Prefix to be used for Preprocessor definitions")
-set (PROJECT_INSTALL_HEADERS 0)
+set(PROJECT_PREFIX "DREAM3D" CACHE STRING "The Prefix to be used for Preprocessor definitions")
+set(PROJECT_INSTALL_HEADERS 0)
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the 
 # project.
 #------------------------------------------------------------------------------- 
-set (CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
-set (CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
-set (CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
-set (CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
-set (CMP_VERSION_SOURCE_FILE_NAME "DREAM3DVersion.cpp")
-set (CMP_TOP_HEADER_FILE "DREAM3DLib.h")
-set (CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
-set (CMP_PROJECT_NAME "${PROJECT_NAME}")
-set (CMP_ENABLE_PLUGINS "0")
-set (CMP_LIB_SEARCH_DIRS "")
-set (CMP_GENERATE_VERSION_STRING 1)
+set(CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
+set(CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
+set(CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
+set(CMP_VERSION_HEADER_FILE_NAME "DREAM3DVersion.h")
+set(CMP_VERSION_SOURCE_FILE_NAME "DREAM3DVersion.cpp")
+set(CMP_TOP_HEADER_FILE "DREAM3DLib.h")
+set(CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
+set(CMP_PROJECT_NAME "${PROJECT_NAME}")
+set(CMP_ENABLE_PLUGINS "0")
+set(CMP_LIB_SEARCH_DIRS "")
+set(CMP_GENERATE_VERSION_STRING 1)
 
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
@@ -65,7 +65,7 @@ set(Project_SRCS
 
 Macro(D3DCompileDir DirName)
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
-    set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
+    set(Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
 endMacro()
 
 # Add in our NON-Filter classes
@@ -84,14 +84,14 @@ Macro(D3DCompileFilters DirName HeaderFile)
     file(APPEND ${HeaderFile} "\n/* ------ ${group} --------- */\n")
     
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
-    set (Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
+    set(Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
     foreach(file ${${DirName}_FILTERS_HDRS})
         get_filename_component(name ${file} NAME_WE)
         file(APPEND ${HeaderFile} "#include \"DREAM3DLib/${DirName}/${name}.h\"\n")
     endforeach()
 endMacro()
 
-set (AllFiltersHeaderFile ${DREAM3DLib_BINARY_DIR}/DREAM3DFilters.h)
+set(AllFiltersHeaderFile ${DREAM3DLib_BINARY_DIR}/DREAM3DFilters.h)
 file(WRITE ${AllFiltersHeaderFile} "#ifndef _DREAM3D_FILTERS_H_\n#define _DREAM3D_FILTERS_H_\n\n")
 
 # Add in our Filter classes
@@ -122,7 +122,7 @@ LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 set(install_dir "tools")
 set(lib_install_dir "lib")
 if (WIN32)
-    set (install_dir ".")
+    set(install_dir ".")
     set(lib_install_dir "")
 endif()
 

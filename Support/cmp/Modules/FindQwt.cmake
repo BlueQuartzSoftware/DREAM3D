@@ -12,14 +12,14 @@
 #  QWT_LIBRARY_RELEASE - Release Version of qwt library
 
 
-set (QWT_CMAKE_DEBUG 0)
+set(QWT_CMAKE_DEBUG 0)
 if (QWT_CMAKE_DEBUG)
     MESSAGE (STATUS "Finding Qwt library and headers..." )
 endif()
 
 # Only set QWT_INSTALL to the environment variable if it is blank
 if ("${QWT_INSTALL}" STREQUAL "")
-SET (QWT_INSTALL  $ENV{QWT_INSTALL})
+set(QWT_INSTALL  $ENV{QWT_INSTALL})
 endif()
 
 # Look for the header file.
@@ -30,11 +30,11 @@ SET(QWT_INCLUDE_SEARCH_DIRS
   /usr/include/qwt5
 )
 
-SET (QWT_LIB_SEARCH_DIRS
+set(QWT_LIB_SEARCH_DIRS
   ${QWT_INSTALL}/lib
   )
 
-SET (QWT_BIN_SEARCH_DIRS
+set(QWT_BIN_SEARCH_DIRS
   ${QWT_INSTALL}/bin
 )
 
@@ -44,11 +44,11 @@ FIND_PATH(QWT_INCLUDE_DIR
 )
 
 IF (WIN32 AND NOT MINGW)
-    SET (QWT_SEARCH_DEBUG_NAMES "qwt_debug;libqwt_debug")
-    SET (QWT_SEARCH_RELEASE_NAMES "qwt;libqwt")
+    set(QWT_SEARCH_DEBUG_NAMES "qwt_debug;libqwt_debug")
+    set(QWT_SEARCH_RELEASE_NAMES "qwt;libqwt")
 ELSE (WIN32 AND NOT MINGW)
-    SET (QWT_SEARCH_DEBUG_NAMES "qwt_debug")
-    SET (QWT_SEARCH_RELEASE_NAMES "qwt")
+    set(QWT_SEARCH_DEBUG_NAMES "qwt_debug")
+    set(QWT_SEARCH_RELEASE_NAMES "qwt")
 ENDIF(WIN32 AND NOT MINGW)
 
 # Look for the library.
@@ -128,7 +128,7 @@ IF (QWT_FOUND)
   CHECK_SYMBOL_EXISTS(QWT_BUILT_AS_DYNAMIC_LIB "QWTLib.h" HAVE_QWT_DLL)
 
   IF (HAVE_QWT_DLL STREQUAL "1")
-    SET (QWT_IS_SHARED 1 CACHE INTERNAL "Qwt Built as DLL or Shared Library")
+    set(QWT_IS_SHARED 1 CACHE INTERNAL "Qwt Built as DLL or Shared Library")
   ENDIF (HAVE_QWT_DLL STREQUAL "1")
 
   # Restore CMAKE_REQUIRED_INCLUDES and CMAKE_REQUIRED_FLAGS variables

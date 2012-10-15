@@ -9,18 +9,18 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (SamplingFilters_FILTERS_HDRS
+set(SamplingFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/Hex2SqrConverter.h
 )
 
-SET (DREAM3DLib_SamplingFilters_HDRS
+set(DREAM3DLib_SamplingFilters_HDRS
      ${SamplingFilters_FILTERS_HDRS}
 )
 
-SET (DREAM3DLib_SamplingFilters_SRCS
+set(DREAM3DLib_SamplingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.cpp
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.cpp
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.cpp

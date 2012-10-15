@@ -9,16 +9,16 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (CustomFilters_FILTERS_HDRS
+set(CustomFilters_FILTERS_HDRS
         ${DREAM3DLib_SOURCE_DIR}/CustomFilters/CropVolumePipeline.h
 )
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_CustomFilters_HDRS
+set(DREAM3DLib_CustomFilters_HDRS
     ${CustomFilters_FILTERS_HDRS}
 
 )
-SET (DREAM3DLib_CustomFilters_SRCS
+set(DREAM3DLib_CustomFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/CustomFilters/CropVolumePipeline.cpp
 
 )

@@ -8,7 +8,7 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-SET (StatisticsFilters_FILTERS_HDRS
+set(StatisticsFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.h
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.h
@@ -26,11 +26,11 @@ SET (StatisticsFilters_FILTERS_HDRS
 )
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_StatisticsFilters_HDRS 
+set(DREAM3DLib_StatisticsFilters_HDRS 
     ${StatisticsFilters_FILTERS_HDRS}
 )
 
-SET (DREAM3DLib_StatisticsFilters_SRCS
+set(DREAM3DLib_StatisticsFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.cpp
     ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.cpp
