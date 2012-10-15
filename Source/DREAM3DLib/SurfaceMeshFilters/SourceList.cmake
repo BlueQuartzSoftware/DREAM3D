@@ -9,6 +9,7 @@ set(FILTER_CATEGORY "SurfaceMeshFilters")
 SET(${FILTER_CATEGORY}_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshingFilter.h
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MovingFiniteElementSmoothing.h
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/LaplacianSmoothing.h
 )
 
 # --------------------------------------------------------------------
@@ -16,7 +17,9 @@ SET(${FILTER_CATEGORY}_FILTERS_HDRS
 SET(DREAM3DLib_${FILTER_CATEGORY}_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MMCSurfaceMeshingFilter.cpp
     ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/MovingFiniteElementSmoothing.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/LaplacianSmoothing.cpp
 )
+
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 SET(DREAM3DLib_${FILTER_CATEGORY}_HDRS
