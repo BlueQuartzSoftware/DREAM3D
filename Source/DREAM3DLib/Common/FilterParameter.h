@@ -66,8 +66,6 @@ class FilterParameter
       OutputFileWidget,
       OutputPathWidget,
       BooleanWidget,
-      IntConstrainedWidget,
-      DoubleConstrainedWidget,
       ChoiceWidget,
       CustomWidget
     };
@@ -80,6 +78,7 @@ class FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
+
 
   protected:
     FilterParameter() :
