@@ -3,7 +3,7 @@
 @page addingfilters Adding Filters to DREAM3D
 
 
-@section sf1 Adding Filter to Existing Category
+@section af1 Adding Filter to Existing Category
 
 Create the header and implementation files (.h and .cpp)
 Add both files to the "SourceList.cmake" file that is in the same directory
