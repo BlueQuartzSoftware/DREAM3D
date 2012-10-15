@@ -145,8 +145,9 @@ double TriangleFunctions::circularity(Node &n0, Node &n1, Node &n2, double area)
   double c = NodeFunctions::Distance(n2, n0);
   double s = 0.5 * (a + b + c); //  1/2 perimeter
   double r = area / s;
-  double R = a * b * c / 4 / area;
-  return R / r;
+  double R = a * b * c / 4.0 / area;
+  R = R/r;
+  return R;
 }
 
 double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another triangle quality measure
