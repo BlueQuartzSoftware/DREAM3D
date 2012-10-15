@@ -132,6 +132,7 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
+    find_grainphases->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -223,74 +224,74 @@ void OpenCloseBadData::execute()
   {
     for (int k = 0; k < dims[2]; k++)
     {
-		kstride = static_cast<int>( dims[0]*dims[1]*k );
-	    for (int j = 0; j < dims[1]; j++)
-	    {
-			jstride = static_cast<int>( dims[0]*j );
-		    for (int i = 0; i < dims[0]; i++)
-		    {
-			  count = kstride+jstride+i;
-			  std::stringstream ss;
-		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-		//	  notifyStatusMessage(ss.str());
-			  grainname = m_GrainIds[count];
-			  if (grainname == 0)
-			  {
-				current = 0;
-				most = 0;
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = static_cast<int>( count + neighpoints[l] );
-				  if (l == 0 && k == 0) good = 0;
-				  if (l == 5 && k == (dims[2] - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (dims[1] - 1)) good = 0;
-				  if (l == 2 && i == 0) good = 0;
-				  if (l == 3 && i == (dims[0] - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if (m_Direction == 0 && grain > 0)
-					{
+    kstride = static_cast<int>( dims[0]*dims[1]*k );
+      for (int j = 0; j < dims[1]; j++)
+      {
+      jstride = static_cast<int>( dims[0]*j );
+        for (int i = 0; i < dims[0]; i++)
+        {
+        count = kstride+jstride+i;
+        std::stringstream ss;
+    //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+    //	  notifyStatusMessage(ss.str());
+        grainname = m_GrainIds[count];
+        if (grainname == 0)
+        {
+        current = 0;
+        most = 0;
+        for (int l = 0; l < 6; l++)
+        {
+          good = 1;
+          neighpoint = static_cast<int>( count + neighpoints[l] );
+          if (l == 0 && k == 0) good = 0;
+          if (l == 5 && k == (dims[2] - 1)) good = 0;
+          if (l == 1 && j == 0) good = 0;
+          if (l == 4 && j == (dims[1] - 1)) good = 0;
+          if (l == 2 && i == 0) good = 0;
+          if (l == 3 && i == (dims[0] - 1)) good = 0;
+          if (good == 1)
+          {
+          grain = m_GrainIds[neighpoint];
+          if (m_Direction == 0 && grain > 0)
+          {
 //						m_Neighbors[neighpoint] = 0;
-						m_Neighbors[neighpoint] = count;
-					}
-					if ((grain > 0 && m_Direction == 1))
-					{
-					  n[grain]++;
-					  current = n[grain];
-					  if (current > most)
-					  {
-						most = current;
+            m_Neighbors[neighpoint] = count;
+          }
+          if ((grain > 0 && m_Direction == 1))
+          {
+            n[grain]++;
+            current = n[grain];
+            if (current > most)
+            {
+            most = current;
 //					    m_Neighbors[count] = grain;
-					    m_Neighbors[count] = neighpoint;
-					  }
-					}
-				  }
-				}
-				if (m_Direction == 1)
-				{
-					for (int l = 0; l < 6; l++)
-					{
-	//				  good = 1;
-					  neighpoint = static_cast<int>( count + neighpoints[l] );
-					  if (l == 0 && k == 0) good = 0;
-					  if (l == 5 && k == (dims[2] - 1)) good = 0;
-					  if (l == 1 && j == 0) good = 0;
-					  if (l == 4 && j == (dims[1] - 1)) good = 0;
-					  if (l == 2 && i == 0) good = 0;
-					  if (l == 3 && i == (dims[0] - 1)) good = 0;
-					  if (good == 1)
-					  {
-						grain = m_GrainIds[neighpoint];
-						n[grain] = 0;
-					  }
-					}
-				}
-			  }
-			}
-		}
+              m_Neighbors[count] = neighpoint;
+            }
+          }
+          }
+        }
+        if (m_Direction == 1)
+        {
+          for (int l = 0; l < 6; l++)
+          {
+  //				  good = 1;
+            neighpoint = static_cast<int>( count + neighpoints[l] );
+            if (l == 0 && k == 0) good = 0;
+            if (l == 5 && k == (dims[2] - 1)) good = 0;
+            if (l == 1 && j == 0) good = 0;
+            if (l == 4 && j == (dims[1] - 1)) good = 0;
+            if (l == 2 && i == 0) good = 0;
+            if (l == 3 && i == (dims[0] - 1)) good = 0;
+            if (good == 1)
+            {
+            grain = m_GrainIds[neighpoint];
+            n[grain] = 0;
+            }
+          }
+        }
+        }
+      }
+    }
 
     }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
