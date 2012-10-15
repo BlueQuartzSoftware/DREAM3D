@@ -54,7 +54,7 @@
  * @date Jul 17, 2012
  * @version 1.0
  */
-class NodesTrianglesToStl : public AbstractFilter
+class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(NodesTrianglesToStl);

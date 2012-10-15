@@ -47,12 +47,13 @@
 
 /**
  * @class SurfaceMeshToStl SurfaceMeshToStl.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToStl.h
- * @brief
+ * @brief This filter creates an STL file for each Grain ID, or Region ID that is encountered in
+ * the volume.
  * @author
  * @date
  * @version 1.0
  */
-class SurfaceMeshToStl : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(SurfaceMeshToStl);
