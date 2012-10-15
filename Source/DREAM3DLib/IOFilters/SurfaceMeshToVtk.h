@@ -50,12 +50,12 @@
 
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
- * @brief
+ * @brief This class creates a VTK Polydata file written in the VTK Legacy file format.
  * @author
  * @date
  * @version 1.0
  */
-class SurfaceMeshToVtk : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(SurfaceMeshToVtk);

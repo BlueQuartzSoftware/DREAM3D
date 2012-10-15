@@ -48,12 +48,12 @@
 
 /**
  * @class SurfaceMeshToNodesTrianglesEdges SurfaceMeshToNodesTrianglesEdges.h FilterCategory/Code/FilterCategoryFilters/SurfaceMeshToNodesTrianglesEdges.h
- * @brief
+ * @brief This filter writes a Nodes, Triangles and Edges file from a Surface Mesh.
  * @author
  * @date
  * @version 1.0
  */
-class SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(SurfaceMeshToNodesTrianglesEdges);

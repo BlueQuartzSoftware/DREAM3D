@@ -32,8 +32,8 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef MMCSurfaceMeshingFilter_H_
-#define MMCSurfaceMeshingFilter_H_
+#ifndef _MMCSurfaceMeshingFilter_H_
+#define _MMCSurfaceMeshingFilter_H_
 
 #include <string>
 
@@ -55,7 +55,7 @@
  * @date
  * @version 1.0
  */
-class MMCSurfaceMeshingFilter : public AbstractFilter
+class DREAM3DLib_EXPORT MMCSurfaceMeshingFilter : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(MMCSurfaceMeshingFilter)
@@ -229,4 +229,4 @@ class MMCSurfaceMeshingFilter : public AbstractFilter
     void operator=(const MMCSurfaceMeshingFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* MMCSurfaceMeshingFilter_H_ */
+#endif /* _MMCSurfaceMeshingFilter_H_ */
