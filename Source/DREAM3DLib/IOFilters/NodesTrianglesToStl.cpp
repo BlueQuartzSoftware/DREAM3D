@@ -42,7 +42,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/SurfaceMeshFilters/MMCSurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
 // -----------------------------------------------------------------------------
 //

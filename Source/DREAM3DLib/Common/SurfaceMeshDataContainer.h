@@ -58,8 +58,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/SurfaceMeshFilters/MMCSurfaceMeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshFilters/StructArray.hpp"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/StructArray.hpp"
 
 /**
  * @class SurfaceMeshDataContainer SurfaceMeshDataContainer.h DREAM3DLib/Common/SurfaceMeshDataContainer.h

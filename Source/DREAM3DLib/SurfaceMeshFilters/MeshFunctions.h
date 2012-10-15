@@ -39,8 +39,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/SurfaceMeshFilters/MMCSurfaceMeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshFilters/StructArray.hpp"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshFilters/MeshLinearAlgebra.h"
 
 /**
