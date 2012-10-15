@@ -65,6 +65,16 @@ typedef struct {
   float coord[3];
 } Node;
 
+
+/**
+ * @brief Double Precision Version
+ */
+typedef struct {
+  int nodeKind;      // 2 for binary, 3 for triple, and so on...
+  double coord[3];
+} NodeD;
+
+
 typedef struct {
   int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
   int edgeKind;      // initially marked as 2; for face edges it's always 2...
