@@ -506,6 +506,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setChecked(v.toBool());
     }
+    #if 0
     else if (wType == FilterParameter::IntConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
@@ -538,6 +539,7 @@ void QFilterWidget::setupGui()
       QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toDouble());
     }
+    #endif
     else if (wType == FilterParameter::ChoiceWidget)
     {
       ChoiceFilterParameter* choiceFilterParameter = ChoiceFilterParameter::SafeObjectDownCast<FilterParameter*, ChoiceFilterParameter*>(option);

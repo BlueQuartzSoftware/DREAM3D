@@ -68,6 +68,10 @@ class FilterParameter
       BooleanWidget,
       ChoiceWidget,
       CustomWidget
+      /* If you add more widget types you need to update the QFilterWidget code to
+       * account for these new types. You also need to update the FilterWidgetCodeGen.cpp
+       * file to generate default code for the new enumeration types
+       */
     };
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)

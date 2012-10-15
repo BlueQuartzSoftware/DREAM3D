@@ -833,6 +833,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
     }
+    #if 0
     else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
     {
       fprintf(f, "assert(false);\n");
@@ -841,6 +842,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     {
       fprintf(f, "assert(false);\n");
     }
+    #endif
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
       fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
@@ -951,6 +953,7 @@ void createListFile( const std::string &group, const std::string &filter)
       {
         fprintf(f, "  TYPE: Boolean (On or Off)");
       }
+      #if 0
       else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
       {
         fprintf(f, "  TYPE: Bounded Integer");
@@ -959,6 +962,7 @@ void createListFile( const std::string &group, const std::string &filter)
       {
         fprintf(f, "  TYPE: Bounded Double");
       }
+      #endif
       else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
       {
         fprintf(f, "  TYPE: Choices");
@@ -1206,6 +1210,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     {
       fprintf(f, "<td>Boolean (On or Off)</td>");
     }
+    #if 0
     else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
     {
       fprintf(f, "<td>Bounded Integer</td>");
@@ -1214,6 +1219,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
     {
       fprintf(f, "<td>Bounded Double</td>");
     }
+    #endif
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
       fprintf(f, "<td>Choices</td>");
