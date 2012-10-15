@@ -8,7 +8,7 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-SET (ReconstructionFilters_FILTERS_HDRS
+set(ReconstructionFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.h
@@ -20,12 +20,12 @@ SET (ReconstructionFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.h
 )
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_ReconstructionFilters_HDRS
+set(DREAM3DLib_ReconstructionFilters_HDRS
     ${ReconstructionFilters_FILTERS_HDRS}
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SegmentGrains.h
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.h
 )
-SET (DREAM3DLib_ReconstructionFilters_SRCS
+set(DREAM3DLib_ReconstructionFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.cpp
     ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.cpp

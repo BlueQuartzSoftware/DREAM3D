@@ -68,11 +68,11 @@ endif()
 
 
 #-- Setup Source files
-SET (SurfaceMeshingPlugin_HDRS
+set(SurfaceMeshingPlugin_HDRS
   ${PROJECT_SOURCE_DIR}/Code/SurfaceMeshingPlugin.h
 )
 
-SET (SurfaceMeshingPlugin_SRCS
+set(SurfaceMeshingPlugin_SRCS
  ${PROJECT_SOURCE_DIR}/Code/SurfaceMeshingPlugin.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "SurfaceMeshing/" "${SurfaceMeshingPlugin_HDRS}" "${SurfaceMeshingPlugin_SRCS}" "0")
@@ -100,7 +100,7 @@ if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
             COMPONENT Headers   )
 endif()
 
-set (SurfaceMeshingPlugin_PROJECT_SRCS
+set(SurfaceMeshingPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${SurfaceMeshingPlugin_SurfaceMeshing_SRCS}
     ${SurfaceMeshingPlugin_SurfaceMeshing_HDRS}
@@ -121,7 +121,7 @@ set (SurfaceMeshingPlugin_PROJECT_SRCS
 
 # ---------- Setup output Directories -------------------------
 if(NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
 endif()
 add_library(${PLUGIN_NAME} MODULE ${SurfaceMeshingPlugin_PROJECT_SRCS})
 target_link_libraries(${PLUGIN_NAME}
@@ -138,6 +138,6 @@ PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
                 "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
 
 if (NOT MSVC)
-  SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin  )
 endif()
 

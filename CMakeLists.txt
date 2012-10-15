@@ -14,46 +14,46 @@ cmake_minimum_required(VERSION 2.8.3)
 include (CMakeParseArguments)
 
 # ---------- Setup output Directories -------------------------
-SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all Libraries"
   )
 
 # --------- Setup the Executable output Directory -------------
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all Executables."
   )
 
 # --------- Setup the Executable output Directory -------------
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all static libraries."
   )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
-SET (PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
-SET (PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
-SET (EXE_DEBUG_EXTENSION "_debug")
-SET (PROJECT_INSTALL_HEADERS "0")
-SET (PROJECT_INSTALL_EXECUTABLES "1")
+set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
+set(PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
+set(EXE_DEBUG_EXTENSION "_debug")
+set(PROJECT_INSTALL_HEADERS "0")
+set(PROJECT_INSTALL_EXECUTABLES "1")
 
-set (CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Support/cmp)
+set(CMP_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Support/cmp)
 INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
-set (CMP_ENABLE_PLUGINS "1")
-set (CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
+set(CMP_ENABLE_PLUGINS "1")
+set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/DREAM3D_PluginList.txt)
 file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
-set (CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
+set(CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
 file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/plugins;")
 file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
-set (CMP_LIB_SEARCH_DIRS "")
+set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 
 if (UNIX AND NOT APPLE)
-    set (DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
+    set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
 
 # --------------------------------------------------------------------
@@ -70,13 +70,13 @@ set(CMP_VERSION_MAJOR "MultiConatiner")
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
 # directory first
-SET (CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 # Build shared libraries
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
-SET (LIB_TYPE STATIC)
+set(LIB_TYPE STATIC)
 IF (BUILD_SHARED_LIBS)
-    SET (LIB_TYPE SHARED)
+    set(LIB_TYPE SHARED)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
     if (MSVC)
         list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
@@ -85,13 +85,13 @@ IF (BUILD_SHARED_LIBS)
 ENDIF (BUILD_SHARED_LIBS)
 
 # ---------- Find Boost Headers/Libraries -----------------------
-#SET (Boost_FIND_REQUIRED FALSE)
-SET (Boost_DEBUG FALSE)
-set (Boost_USE_MULTITHREADED TRUE)
-set (Boost_USE_STATIC_LIBS TRUE)
-SET (Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.0" "1.44.0" "1.44" "1.41" "1.41.0" "1.39" "1.39.0")
-set (Boost_FIND_COMPONENTS "")
-set (Boost_NO_BOOST_CMAKE 1)
+#set(Boost_FIND_REQUIRED FALSE)
+set(Boost_DEBUG FALSE)
+set(Boost_USE_MULTITHREADED TRUE)
+set(Boost_USE_STATIC_LIBS TRUE)
+set(Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.0" "1.44.0" "1.44" "1.41" "1.41.0" "1.39" "1.39.0")
+set(Boost_FIND_COMPONENTS "")
+set(Boost_NO_BOOST_CMAKE 1)
 FIND_PACKAGE(Boost)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
@@ -115,7 +115,7 @@ ENDIF(HDF5_FOUND)
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
-set (DREAM3D_USE_PARALLEL_ALGORITHMS "")
+set(DREAM3D_USE_PARALLEL_ALGORITHMS "")
 option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
 if (DREAM3D_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
@@ -129,7 +129,7 @@ if (DREAM3D_USE_MULTITHREADED_ALGOS)
     else()
         message(FATAL_ERROR "The Intel Threading Building Blocks library is needed to enable the multithreaded algorithms. Please make sure it is installed properly")
     endif()
-    set (DREAM3D_USE_PARALLEL_ALGORITHMS "1")
+    set(DREAM3D_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
 
@@ -137,19 +137,19 @@ endif()
 # Include the cmp project to perform all the basic configuration tests for the
 # project.
 #-------------------------------------------------------------------------------
-#set (CMP_HEADER_DIR ${PROJECT_BINARY_DIR}/MXA)
-#set (CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
-#set (CMP_TYPES_FILE_NAME "MXATypes.h")
-#set (CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
-#set (CMP_TOP_HEADER_FILE "MXAConfiguration.h")
-#set (CMP_PROJECT_NAMESPACE "MXA")
-#set (CMP_PROJECT_NAME "MXA")
+#set(CMP_HEADER_DIR ${PROJECT_BINARY_DIR}/MXA)
+#set(CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
+#set(CMP_TYPES_FILE_NAME "MXATypes.h")
+#set(CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
+#set(CMP_TOP_HEADER_FILE "MXAConfiguration.h")
+#set(CMP_PROJECT_NAMESPACE "MXA")
+#set(CMP_PROJECT_NAME "MXA")
 
 #set(CMP_GENERATE_VERSION_STRING 1)
 #INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 # We do NOT want to install any of the headers
-SET (DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
+set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
 
 # --------------------------------------------------------------------
@@ -219,7 +219,7 @@ if (DREAM3D_BUILD_QT_APPS)
    # by default only QtCore and QtGui modules are enabled
    # other modules must be enabled like this:
    IF (WIN32)
-       SET (QT_USE_QTMAIN TRUE)
+       set(QT_USE_QTMAIN TRUE)
    ENDIF (WIN32)
 
    # this command finds Qt4 libraries and sets all required variables
@@ -251,8 +251,8 @@ endif()
 
 # Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks
 if (NOT DREAM3D_BUILD_QT_APPS)
-    set (DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
-    set (DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
+    set(DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
+    set(DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
@@ -284,7 +284,7 @@ endfunction()
 
 #-----------------
 # These are the core plugins
-set (DREAM3D_PLUGIN_LIST
+set(DREAM3D_PLUGIN_LIST
 #    SurfaceMeshingPlugin
 )
 

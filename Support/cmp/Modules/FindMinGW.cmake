@@ -14,7 +14,7 @@
 
 # Only set MINGW_INSTALL to the environment variable if it is blank
 if ("${MINGW_INSTALL}" STREQUAL "")
-    SET (MINGW_INSTALL  $ENV{MINGW_INSTALL})
+    set(MINGW_INSTALL  $ENV{MINGW_INSTALL})
 endif()
 
 # Look for the header file.
@@ -22,7 +22,7 @@ SET(MINGW_INCLUDE_SEARCH_DIRS
   ${MINGW_INSTALL}/include
 )
 
-SET (MINGW_LIB_SEARCH_DIRS
+set(MINGW_LIB_SEARCH_DIRS
   ${MINGW_INSTALL}/bin
   )
 
@@ -32,7 +32,7 @@ FIND_PATH(MINGW_INCLUDE_DIR
   NO_DEFAULT_PATH
 )
 
-SET (MINGW_SEARCH_NAMES "mingwm10")
+set(MINGW_SEARCH_NAMES "mingwm10")
 
 # Look for the library.
 FIND_LIBRARY(MINGW_LIBRARY

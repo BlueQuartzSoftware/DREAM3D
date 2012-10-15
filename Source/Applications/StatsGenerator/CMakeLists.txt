@@ -49,7 +49,7 @@ add_definitions(-DDREAM3D_USE_QT)
 set(PROJECT_PREFIX "StatsGenerator")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
            
-set (StatsGenerator_SRCS 
+set(StatsGenerator_SRCS 
     ${StatsGenerator_SOURCE_DIR}/main.cpp
     ${StatsGenerator_SOURCE_DIR}/SGApplication.cpp
   #  ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
@@ -68,7 +68,7 @@ set (StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
     )
-set (StatsGenerator_HDRS 
+set(StatsGenerator_HDRS 
 #    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
 )
                    
@@ -91,8 +91,8 @@ SET( StatsGenerator_MOC_HDRS
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-SET (StatsGenerator_DELEGATE_SRCS   "" )
-SET (StatsGenerator_DELEGATE_HDRS 
+set(StatsGenerator_DELEGATE_SRCS   "" )
+set(StatsGenerator_DELEGATE_HDRS 
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGBetaItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGLogNormalItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.h
@@ -101,7 +101,7 @@ SET (StatsGenerator_DELEGATE_HDRS
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
     
-SET (StatsGenerator_TABLEMODEL_SRCS 
+set(StatsGenerator_TABLEMODEL_SRCS 
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGBetaTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGPowerLawTableModel.cpp
@@ -110,7 +110,7 @@ SET (StatsGenerator_TABLEMODEL_SRCS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGMDFTableModel.cpp
     )
 
-SET (StatsGenerator_TABLEMODEL_HDRS 
+set(StatsGenerator_TABLEMODEL_HDRS 
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGBetaTableModel.h  
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGPowerLawTableModel.h
@@ -121,7 +121,7 @@ SET (StatsGenerator_TABLEMODEL_HDRS
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/TableModels" "${StatsGenerator_TABLEMODEL_HDRS}" "${StatsGenerator_TABLEMODEL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 
-set (StatsGenerator_PRESETS_SRCS
+set(StatsGenerator_PRESETS_SRCS
     ${StatsGenerator_SOURCE_DIR}/Presets/MicrostructurePresetManager.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/AbstractMicrostructurePreset.cpp
     ${StatsGenerator_SOURCE_DIR}/Presets/EquiaxedPreset.cpp
@@ -140,11 +140,11 @@ set(StatsGenerator_PRESETS_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets" "${StatsGenerator_PRESETS_HDRS}" "${StatsGenerator_PRESETS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-set (StatsGenerator_DIALOGS_SRCS
+set(StatsGenerator_DIALOGS_SRCS
 ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RolledPresetDialog.cpp
 ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RecrystallizedPresetDialog.cpp
 )
-set (StatsGenerator_DIALOGS_HDRS
+set(StatsGenerator_DIALOGS_HDRS
 ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RolledPresetDialog.h
 ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/RecrystallizedPresetDialog.h
 )
@@ -192,7 +192,7 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
-SET (StatsGenerator_PROJECT_SRCS 
+set(StatsGenerator_PROJECT_SRCS 
     ${StatsGenerator_SRCS}
     ${StatsGenerator_HDRS}
     ${StatsGenerator_MOC_HDRS}

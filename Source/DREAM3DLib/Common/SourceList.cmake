@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_Common_HDRS
+set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
@@ -54,7 +54,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
 )
 
-SET (DREAM3DLib_Common_SRCS
+set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.cpp

@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (SyntheticBuilderFilters_FILTERS_HDRS
+set(SyntheticBuilderFilters_FILTERS_HDRS
         
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackPrimaryPhases.h
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.h
@@ -19,11 +19,11 @@ SET (SyntheticBuilderFilters_FILTERS_HDRS
 )
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_SyntheticBuilderFilters_HDRS
+set(DREAM3DLib_SyntheticBuilderFilters_HDRS
     ${SyntheticBuilderFilters_FILTERS_HDRS}
 	${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.h
 )
-SET (DREAM3DLib_SyntheticBuilderFilters_SRCS
+set(DREAM3DLib_SyntheticBuilderFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.cpp
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackPrimaryPhases.cpp
     ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.cpp

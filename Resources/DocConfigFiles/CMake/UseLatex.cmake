@@ -386,19 +386,19 @@ ENDMACRO(LATEX_GET_OUTPUT_PATH)
 
 MACRO(LATEX_ADD_CONVERT_COMMAND output_path input_path output_extension
         input_extension flags)
-  SET (converter ${IMAGEMAGICK_CONVERT})
-  SET (convert_flags "")
+  set(converter ${IMAGEMAGICK_CONVERT})
+  set(convert_flags "")
   # ImageMagick has broken eps to pdf conversion
   # use ps2pdf instead
   IF (${input_extension} STREQUAL ".eps" AND ${output_extension} STREQUAL ".pdf")
     IF (PS2PDF_CONVERTER)
-      SET (converter ${PS2PDF_CONVERTER})
-      SET (convert_flags "-dEPSCrop ${flags}")
+      set(converter ${PS2PDF_CONVERTER})
+      set(convert_flags "-dEPSCrop ${flags}")
     ELSE (PS2PDF_CONVERTER)
       MESSAGE(SEND_ERROR "Using postscript files with pdflatex requires ps2pdf for conversion.")
     ENDIF (PS2PDF_CONVERTER)
   ELSE (${input_extension} STREQUAL ".eps" AND ${output_extension} STREQUAL ".pdf")
-    SET (convert_flags ${flags})
+    set(convert_flags ${flags})
   ENDIF (${input_extension} STREQUAL ".eps" AND ${output_extension} STREQUAL ".pdf")
 
   ADD_CUSTOM_COMMAND(OUTPUT ${output_path}

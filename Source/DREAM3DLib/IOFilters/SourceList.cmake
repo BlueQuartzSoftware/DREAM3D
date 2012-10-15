@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (IOFilters_FILTERS_HDRS
+set(IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/ReadH5Ebsd.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.h
@@ -35,11 +35,11 @@ SET (IOFilters_FILTERS_HDRS
 
 
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_IOFilters_HDRS
+set(DREAM3DLib_IOFilters_HDRS
       ${IOFilters_FILTERS_HDRS}
 )
 
-SET (DREAM3DLib_IOFilters_SRCS
+set(DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/ReadH5Ebsd.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
