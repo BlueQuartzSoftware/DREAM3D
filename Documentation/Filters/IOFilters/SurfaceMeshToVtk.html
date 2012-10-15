@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="qrichtext" content="1" />
+<style type="text/css">
+h1.pHeading1 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: x-large; font-weight: bold; text-align: left }
+h2.pHeading2 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: large; font-weight: bold; text-align: left }
+p.pBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }
+p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }
+#footer
+{
+   font-family: Arial, Verdana, Helvetica, sans-serif;
+   font-color:Blue;
+   font-size:small;
+   background-color:#CCCCCC;
+   padding:0pt;
+   position:fixed;
+   bottom:1%;
+   left:1%;
+   width:98%;
+}
+</style>
+<title>Write Vtk PolyData File (From SurfaceMesh)</title>
+</head>
+<body>
+<h1 class="pHeading1">Write Vtk PolyData File (From SurfaceMesh) Filter</h1>
+<p class="pCellBody">
+<a href="../IOFilters/SurfaceMeshToVtk.html#wp2">Description</a>
+| <a href="../IOFilters/SurfaceMeshToVtk.html#wp3">Options</a>
+| <a href="../IOFilters/SurfaceMeshToVtk.html#wp4">Required Arrays</a>
+| <a href="../IOFilters/SurfaceMeshToVtk.html#wp5">Created Arrays</a>
+| <a href="../IOFilters/SurfaceMeshToVtk.html#wp1">Authors</a> </p>
+
+<a name="wp7"></a>
+<h2 class="pHeading2">Group</h2>
+<p class="pBody">IO</p>
+
+<a name="wp2"> </a><h2 class="pHeading2">Description</h2>
+<p class="pBody">
+<!-- Write all your documentation here -->
+This filter will create a "legacy" vtk file (.vtk) that contains the POINTS and POLYGONS, where each POLYGON is a triangle.
+In addition the NODE_TYPE will be written as POINT_DATA and the GRAIN_ID will be written as CELL_DATA. There are 2 options
+for this filter. </p>
+
+<ol>
+<li>
+<b>Write Binary Vtk File</b> If this option is selected then the data portions of the file will be written in Big Endian
+binary format as stipulated by the VTK file format.
+</li>
+<li><b>Write Conformal Mesh</b> If this is <b><em>true</em></b> then only a single triangle will be written which will be shared
+between 2 grain (region) ids. If this is <b><em>false</em></b> then 2 triangles with opposite winding will be written and each
+will have a grain ID assigned to it.
+</li>
+</ol>
+
+<!-- Do NOT write documentation below this line -->
+</p>
+
+<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
+<!-- A TABLE OF Options FOR YOUR FILTER -->
+<a name="wp3"> </a><h2 class="pHeading2">Options</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
+<tr bgcolor="#E2E2E2">
+<td>Output Vtk File</td><td>Output File</td></tr>
+<tr bgcolor="#E2E2E2">
+<td>Write Binary Vtk File</td><td>Boolean (On or Off)</td></tr>
+<tr bgcolor="#E2E2E2">
+<td>Write Conformal Mesh</td><td>Boolean (On or Off)</td></tr>
+</table>
+<!-- A table of Required Data for your filter -->
+<a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2">
+<td>SurfaceMeshDataContainer Nodes</td><td>Nodes</td><td>The <em>nodes</em> property of the SurfaceMeshDataContainer must have a 
+list of nodes.</td></tr>
+<td>SurfaceMeshDataContainer Triangles</td><td>Triangles</td><td>The <em>triangles</em> property of the SurfaceMeshDataContainer must have a 
+list of triangles.</td></tr>
+</table>
+<!-- A table of Created Data for your filter -->
+<a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+</table>
+<a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
+<p class="pBody">
+Copyright 2012 Michael A. Groeber (AFRL), Michael A. Jackson (BlueQuartz Software)<br />
+Contact Info: dream3d@bluequartz.net<br />
+Version: 1.0.0<br />
+License: See the License.txt file that came with DREAM3D.<br />
+</p>
+<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
+<div>  <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>  </div>
+</body>
+</html>

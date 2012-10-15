@@ -99,7 +99,7 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getInputInfoFile().empty() == true)
   {
@@ -128,7 +128,7 @@ void EnsembleInfoReader::preflight()
 // -----------------------------------------------------------------------------
 int  EnsembleInfoReader::readFile()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     std::stringstream ss;

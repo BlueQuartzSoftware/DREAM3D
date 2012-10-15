@@ -84,7 +84,7 @@ void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -115,7 +115,7 @@ int VtkGrainIdWriter::writeFile()
 {
 
   // Copy all the variables into the helper class from above
-  if (NULL == getDataContainer())
+  if (NULL == getVoxelDataContainer())
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
@@ -123,7 +123,7 @@ int VtkGrainIdWriter::writeFile()
     setErrorCondition(-1);
     return -1;
   }
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;
@@ -140,13 +140,13 @@ int VtkGrainIdWriter::writeFile()
     return -40;
   }
 
-  VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<DataContainer>(m));
+  VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<VoxelDataContainer>(m));
   std::vector<VtkScalarWriter*> scalarsToWrite;
   w0->m_WriteBinaryFiles = m_WriteBinaryFiles;
   scalarsToWrite.push_back(w0);
   VTKRectilinearGridFileWriter writer;
   writer.setWriteBinaryFiles(m_WriteBinaryFiles);
-  int err = writer.write<DataContainer>(getOutputFile(), m, scalarsToWrite);
+  int err = writer.write<VoxelDataContainer>(getOutputFile(), m, scalarsToWrite);
   if (err < 0)
   {
     setErrorCondition(err);

@@ -189,7 +189,7 @@ add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
 # --------
-#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp 
+#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
 #                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
 #                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
 #                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackPrimaryPhases.cpp
@@ -212,3 +212,7 @@ target_link_libraries(RNGTest DREAM3DLib)
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
 target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
 
+
+# --------
+add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
+target_link_libraries(StructArrayTest EbsdLib MXA DREAM3DLib)

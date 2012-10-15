@@ -7,6 +7,8 @@
 <file>catalog.css</file>
 <file>index.html</file>
 
+<file>CustomFilters/CropVolumePipeline.html</file>
+
 <file>GenericFilters/FindBoundingBoxGrains.html</file>
 <file>GenericFilters/FindCellQuats.html</file>
 <file>GenericFilters/FindGrainCentroids.html</file>
@@ -31,6 +33,11 @@
 <file>IOFilters/ReadH5Ebsd.html</file>
 <file>IOFilters/VtkRectilinearGridWriter.html</file>
 <file>IOFilters/YSChoiAbaqusReader.html</file>
+<file>IOFilters/SurfaceMeshToVtk.html</file>
+<file>IOFilters/SurfaceMeshToStl.html</file>
+<file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
+<file>IOFilters/NodesTrianglesToStl.html</file>
+<file>IOFilters/NodesTrianglesToVtk.html</file>
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
@@ -69,6 +76,10 @@
 <file>StatisticsFilters/FindShapes.html</file>
 <file>StatisticsFilters/FindSizes.html</file>
 <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
+
+
+<file>Surface_MeshingFilters/MMCSurfaceMeshingFilter.html</file>
+<file>Surface_MeshingFilters/MovingFiniteElementSmoothing.html</file>
 
 <file>Synthetic_BuilderFilters/AdjustVolume.html</file>
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>

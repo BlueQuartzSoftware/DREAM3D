@@ -88,7 +88,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
@@ -98,7 +98,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(0);
     FindSizes::Pointer find_sizes = FindSizes::New();
     find_sizes->setObservers(this->getObservers());
-    find_sizes->setDataContainer(getDataContainer());
+    find_sizes->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_sizes->preflight();
     if(preflight == false) find_sizes->execute();
   }
@@ -110,7 +110,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -122,7 +122,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(0);
     FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
     find_graincentroids->setObservers(this->getObservers());
-    find_graincentroids->setDataContainer(getDataContainer());
+    find_graincentroids->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_graincentroids->preflight();
     if(preflight == false) find_graincentroids->execute();
   }
@@ -144,7 +144,7 @@ void FindNeighborhoods::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -168,7 +168,7 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   float x, y, z;
   float xn, yn, zn;

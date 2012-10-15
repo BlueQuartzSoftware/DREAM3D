@@ -117,7 +117,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -153,7 +153,7 @@ int DxReader::readHeader()
 int DxReader::readFile()
 {
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     ss.clear();
@@ -345,12 +345,12 @@ int DxReader::readFile()
     return -495;
   }
 
-//  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
-  getDataContainer()->setDimensions(nx, ny, nz);
+//  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
+  getVoxelDataContainer()->setDimensions(nx, ny, nz);
 
-  getDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
+  getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
 
-  getDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
+  getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 
   tokens.clear();
   inFile.close();

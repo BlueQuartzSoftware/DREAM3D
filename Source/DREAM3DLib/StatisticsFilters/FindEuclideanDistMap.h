@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
  * @class FindEuclideanDistMap FindEuclideanDistMap.h DREAM3DLib/GenericFilters/FindEuclideanDistMap.h

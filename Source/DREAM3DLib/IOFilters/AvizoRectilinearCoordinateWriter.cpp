@@ -101,7 +101,7 @@ void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if(m_OutputFile.empty() == true)
   {
@@ -133,7 +133,7 @@ void AvizoRectilinearCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -201,7 +201,7 @@ std::string AvizoRectilinearCoordinateWriter::generateHeader()
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getDataContainer()->getDimensions(x, y, z);
+  getVoxelDataContainer()->getDimensions(x, y, z);
   ss << "define Lattice " << x << " " << y << " " << z << "\n";
   ss << "define Coordinates " << (x + y + z) << "\n\n";
 
@@ -215,9 +215,9 @@ std::string AvizoRectilinearCoordinateWriter::generateHeader()
   ss << "         Coordinates \"microns\"\n";
   ss << "     }\n";
   float origin[3];
-  getDataContainer()->getOrigin(origin);
+  getVoxelDataContainer()->getOrigin(origin);
   float res[3];
-  getDataContainer()->getResolution(res);
+  getVoxelDataContainer()->getResolution(res);
 
   ss << "     CoordType \"rectilinear\"\n";
   ss << "}\n\n";
@@ -236,24 +236,24 @@ std::string AvizoRectilinearCoordinateWriter::generateHeader()
 int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
 {
   size_t dims[3];
-  getDataContainer()->getDimensions(dims);
+  getVoxelDataContainer()->getDimensions(dims);
   float origin[3];
-  getDataContainer()->getOrigin(origin);
+  getVoxelDataContainer()->getOrigin(origin);
   float res[3];
-  getDataContainer()->getResolution(res);
+  getVoxelDataContainer()->getResolution(res);
   char newLine = '\n';
 
   std::string start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
   writer.writeString(start);
   if (true == m_WriteBinaryFile)
   {
-    writer.writeArray(m_GrainIds, getDataContainer()->getTotalPoints());
+    writer.writeArray(m_GrainIds, getVoxelDataContainer()->getTotalPoints());
     writer.writeValue<char>( &newLine); // This puts a new line character
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = getDataContainer()->getTotalPoints();
+    int64_t totalPoints = getVoxelDataContainer()->getTotalPoints();
     int count = 0;
     std::stringstream ss;
     for (int64_t i = 0; i < totalPoints; ++i)

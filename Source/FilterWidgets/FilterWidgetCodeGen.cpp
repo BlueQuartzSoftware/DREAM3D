@@ -196,8 +196,12 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 #define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
 template<typename T>\
 void methodName(typename T::Pointer t, FILE* f){\
-    DataContainer::Pointer m = DataContainer::New();\
-    t->setDataContainer(m.get());\
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
+    t->setVoxelDataContainer(m.get());\
+    SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();\
+    t->setSurfaceMeshDataContainer(sm.get());\
+    SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();\
+    t->setSolidMeshDataContainer(solid.get());\
     t->preflight();\
     {\
       std::set<std::string> list = t->getRequiredCellData();\
@@ -407,8 +411,8 @@ void createHTMLFragment( const std::string &group, const std::string &filter)
   typename T::Pointer t = T::New();
 
 
-  DataContainer::Pointer m = DataContainer::New();
-  t->setDataContainer(m.get());
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  t->setVoxelDataContainer(m.get());
   t->preflight();
 
   fprintf(f, "<a href=\"../%s/%s.html#wp2\">Description</a> ", group.c_str(), filter.c_str());
@@ -458,8 +462,8 @@ void createOptionsWriterCode( const std::string &group, const std::string &filte
   }
 
 
-  DataContainer::Pointer m = DataContainer::New();
-  t->setDataContainer(m.get());
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  t->setVoxelDataContainer(m.get());
   t->preflight();
 
   {
@@ -968,8 +972,8 @@ void createListFile( const std::string &group, const std::string &filter)
       fprintf(f, "  DESCRIPTION: \n\n");
     }
 
-    DataContainer::Pointer m = DataContainer::New();
-    t->setDataContainer(m.get());
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+    t->setVoxelDataContainer(m.get());
     t->preflight();
 
 
@@ -1224,8 +1228,8 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   if (options.size() > 0) {
   fprintf(f, "</table>\n");
   }
-  DataContainer::Pointer m = DataContainer::New();
-  t->setDataContainer(m.get());
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  t->setVoxelDataContainer(m.get());
   t->preflight();
 
   fprintf(f, "<!-- A table of Required Data for your filter -->\n");
@@ -1303,7 +1307,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   }
   fprintf(f, "</table>\n");
 
-  t->setDataContainer(NULL);
+  t->setVoxelDataContainer(NULL);
 
   fprintf(f, "<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
 

@@ -80,7 +80,7 @@ class PipelineViewWidget : public QFrame
     void preflightPipeline();
 
     // Slots for the pipeline to communicate back to us
-    void preflightErrorMessage(std::vector<PipelineMessage> errorStream);
+    void preflightErrorMessage(std::vector<PipelineMessage> messages);
 
 
   signals:

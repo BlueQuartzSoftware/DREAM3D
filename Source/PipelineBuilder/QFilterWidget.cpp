@@ -73,7 +73,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
       m_CurrentBorderColorFactor(0),
       m_BorderIncrement(16),
       m_IsSelected(false),
-      m_HasPreflightErrors(false)
+      m_HasPreflightErrors(false),
+      m_HasPreflightWarnings(false)
 {
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
@@ -151,6 +152,25 @@ void QFilterWidget::setHasPreflightErrors(bool hasErrors)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QFilterWidget::setHasPreflightWarnings(bool hasWarnings)
+{
+  m_HasPreflightWarnings = hasWarnings;
+  if (m_HasPreflightWarnings == true)
+  {
+//    m_timer->start(100);
+//    m_CurrentBorderColorFactor = 64;
+//    m_BorderIncrement = 16;
+  }
+  else
+  {
+    m_timer->stop();
+  }
+  changeStyle();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QFilterWidget::setIsSelected(bool b)
 {
   m_IsSelected = b;
@@ -190,6 +210,10 @@ void QFilterWidget::changeStyle()
     style.append(", ");
     style.append(QString::number(m_CurrentBorderColorFactor, 10));
     style.append(");");
+  }
+  else if(m_HasPreflightWarnings)
+  {
+    style.append("border: 2px solid rgb(172, 168, 0);");
   }
   else if(m_IsSelected == true )
   {
@@ -231,10 +255,19 @@ void QFilterWidget::updateWidgetStyle()
   }
   else
 #endif
+
+
+  QString headerImage("background-image: url(:/filterWidgetBorder.png);");
+  if(m_HasPreflightWarnings == true)
   {
-      style.append("background-image: url(:/filterWidgetBorder.png);");
+      headerImage = "background-image: url(:/filterWidgetBorder_Warning.png);";
   }
 
+  if(m_HasPreflightErrors == true)
+  {
+      headerImage = "background-image: url(:/filterWidgetBorder_Error.png);";
+  }
+  style.append(headerImage);
   style.append("background-position: top ;\n background-repeat: repeat-x;");
 
   style.append(getBorderColorStyle());

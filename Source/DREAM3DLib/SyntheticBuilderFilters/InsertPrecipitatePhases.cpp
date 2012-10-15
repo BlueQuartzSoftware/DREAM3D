@@ -155,7 +155,7 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -166,7 +166,7 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
     setErrorCondition(0);
     FindSurfaceCells::Pointer find_surfacecells = FindSurfaceCells::New();
     find_surfacecells->setObservers(this->getObservers());
-    find_surfacecells->setDataContainer(getDataContainer());
+    find_surfacecells->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_surfacecells->preflight();
     if(preflight == false) find_surfacecells->execute();
   }
@@ -218,7 +218,7 @@ void InsertPrecipitatePhases::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if(NULL == m)
   {
@@ -258,7 +258,7 @@ void InsertPrecipitatePhases::execute()
   notifyStatusMessage("Packing Precipitates - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
+  renumber_grains->setVoxelDataContainer(m);
   renumber_grains->execute();
   err = renumber_grains->getErrorCondition();
   if (err < 0)
@@ -277,7 +277,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   notifyStatusMessage("Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -650,7 +650,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
- // DataContainer* m = getDataContainer();
+ // DataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -779,7 +779,7 @@ void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, 
 
 void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
@@ -814,7 +814,7 @@ void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
 
 float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -938,7 +938,7 @@ void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<st
 
 float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1074,7 +1074,7 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove)
 void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
- //   DataContainer* m = getDataContainer();
+ //   DataContainer* m = getVoxelDataContainer();
 //  float dist;
   float inside = -1;
   int column, row, plane;
@@ -1165,7 +1165,7 @@ void InsertPrecipitatePhases::assign_voxels()
 {
  notifyStatusMessage("Assigning Voxels");
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int index;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1330,7 +1330,7 @@ void InsertPrecipitatePhases::assign_gaps()
 {
  notifyStatusMessage("Assigning Gaps");
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
@@ -1507,7 +1507,7 @@ void InsertPrecipitatePhases::cleanup_grains()
 {
  notifyStatusMessage("Cleaning Up Grains");
 
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1663,7 +1663,7 @@ void InsertPrecipitatePhases::cleanup_grains()
 
 void InsertPrecipitatePhases::initialize_packinggrid()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   packingresx = m->getXRes() * 2.0f;
   packingresy = m->getYRes() * 2.0f;
@@ -1684,19 +1684,19 @@ void InsertPrecipitatePhases::initialize_packinggrid()
 }
 float InsertPrecipitatePhases::find_xcoord(long long int index)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float x = m->getXRes()*float(index%m->getXPoints());
   return x;
 }
 float InsertPrecipitatePhases::find_ycoord(long long int index)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float y = m->getYRes()*float((index/m->getXPoints())%m->getYPoints());
   return y;
 }
 float InsertPrecipitatePhases::find_zcoord(long long int index)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   float z = m->getZRes()*float(index/(m->getXPoints()*m->getYPoints()));
   return z;
 }

@@ -89,7 +89,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
@@ -98,7 +98,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
     find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setDataContainer(getDataContainer());
+    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_surfacefields->preflight();
     if(preflight == false) find_surfacefields->execute();
   }
@@ -111,7 +111,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -125,7 +125,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     setErrorCondition(0);
     FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
     find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setDataContainer(getDataContainer());
+    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_neighbors->preflight();
     if(preflight == false) find_neighbors->execute();
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
@@ -174,7 +174,7 @@ void FindMDF::preflight()
 // -----------------------------------------------------------------------------
 void FindMDF::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

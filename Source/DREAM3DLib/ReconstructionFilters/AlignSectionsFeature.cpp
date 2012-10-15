@@ -93,7 +93,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
@@ -119,7 +119,7 @@ void AlignSectionsFeature::preflight()
 void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -148,7 +148,7 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
