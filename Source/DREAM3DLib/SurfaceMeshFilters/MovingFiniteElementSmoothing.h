@@ -70,11 +70,11 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public AbstractFilter
     virtual ~MovingFiniteElementSmoothing();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, IterationSteps);
-    DREAM3D_INSTANCE_PROPERTY(bool, NodeConstraints);
-    DREAM3D_INSTANCE_PROPERTY(bool, ConstrainSurfaceNodes);
-    DREAM3D_INSTANCE_PROPERTY(bool, ConstrainQuadPoints);
-    DREAM3D_INSTANCE_PROPERTY(bool, SmoothTripleLines);
+    DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
+    DREAM3D_INSTANCE_PROPERTY(bool, NodeConstraints)
+    DREAM3D_INSTANCE_PROPERTY(bool, ConstrainSurfaceNodes)
+    DREAM3D_INSTANCE_PROPERTY(bool, ConstrainQuadPoints)
+    DREAM3D_INSTANCE_PROPERTY(bool, SmoothTripleLines)
 
 
 
