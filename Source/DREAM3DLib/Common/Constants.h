@@ -117,18 +117,15 @@ namespace DREAM3D
     const std::string ImageQuality("ImageQuality");
     const std::string IPFColor("IPFColor");
 
-    namespace SurfaceMesh
-    {
-
-      const std::string Nodes("SurfaceMesh_Nodes");
-      const std::string Triangles("SurfaceMesh_Triangles");
-      const std::string Voxels("SurfaceMesh_Voxels");
-      const std::string VoxelCoords("SurfaceMesh_VoxelCoords");
-      const std::string Neighbors("SurfaceMesh_Neighbors");
-      const std::string Faces("SurfaceMesh_Faces");
-      const std::string Edges("SurfaceMesh_Edgets");
-      const std::string InternalEdges("SurfaceMesh_Internal_Edges");
-    }
+    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
+    const std::string SurfaceMeshNodeKind("SurfaceMeshNodeKind");
+    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
+    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
+    const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
+    const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
+    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
+    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
+    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
   }
 
   namespace FieldData
