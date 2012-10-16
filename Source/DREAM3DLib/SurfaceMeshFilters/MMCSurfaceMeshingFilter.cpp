@@ -48,10 +48,14 @@
 //
 // -----------------------------------------------------------------------------
 MMCSurfaceMeshingFilter::MMCSurfaceMeshingFilter() :
-    AbstractFilter(),
-    m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-    m_AddSurfaceLayer(true),
-    m_GrainIds(NULL)
+AbstractFilter(),
+m_SurfaceMeshEdgesArrayName(DREAM3D::CellData::SurfaceMeshEdges),
+m_SurfaceMeshInternalEdgesArrayName(DREAM3D::CellData::SurfaceMeshInternalEdges),
+m_SurfaceMeshNodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_AddSurfaceLayer(true),
+m_GrainIds(NULL),
+m_SurfaceMeshNodeKind(NULL)
 {
   setupFilterParameters();
 }
@@ -108,13 +112,22 @@ void MMCSurfaceMeshingFilter::dataCheck(bool preflight, size_t voxels, size_t fi
       setErrorCondition(-384);
   }
   else {
-    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Nodes);
-    StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Triangles);
-    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMesh::Edges);
+    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
+    StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
+    StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
+
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeKind, ss, int8_t, Int8ArrayType, 0, 1, 1)
+
+
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
-    sm->addCellData(DREAM3D::CellData::SurfaceMesh::Edges, faceEdges);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
+
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshEdges);
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
   }
 
 }
@@ -275,10 +288,10 @@ int MMCSurfaceMeshingFilter::createMesh()
 
   //Copy the data from the m_GrainIds Array into the "Voxel" Struct
   // Add a complete layer of surface voxels
-  DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints+1, DREAM3D::CellData::SurfaceMesh::Voxels);
+  DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints+1, DREAM3D::CellData::SurfaceMeshVoxels);
   point->initializeWithZeros();
 
-  StructArray<VoxelCoord>::Pointer voxelCoords = StructArray<VoxelCoord>::CreateArray(totalPoints + 1, DREAM3D::CellData::SurfaceMesh::VoxelCoords);
+  StructArray<VoxelCoord>::Pointer voxelCoords = StructArray<VoxelCoord>::CreateArray(totalPoints + 1, DREAM3D::CellData::SurfaceMeshVoxelCoords);
   voxelCoords->initializeWithZeros();
   VoxelCoord* voxCoords = voxelCoords.get()->GetPointer(0);
 
@@ -289,17 +302,20 @@ int MMCSurfaceMeshingFilter::createMesh()
   int NS = fileDim[0] * fileDim[1] * fileDim[2];
   NSP = fileDim[0] * fileDim[1] ;
 
-  StructArray<Neighbor>::Pointer neighbors = StructArray<Neighbor>::CreateArray(NS + 1, DREAM3D::CellData::SurfaceMesh::Neighbors);
+  StructArray<Neighbor>::Pointer neighbors = StructArray<Neighbor>::CreateArray(NS + 1, DREAM3D::CellData::SurfaceMeshNeighbors);
   neighbors->initializeWithZeros();
-  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3*NS, DREAM3D::CellData::SurfaceMesh::Faces);
+  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3*NS, DREAM3D::CellData::SurfaceMeshFaces);
   squares->initializeWithZeros();
-  StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMesh::Nodes);
-  vertices->initializeWithZeros();
-  sm->setNodes(vertices);
+  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodes);
+  nodesPtr->initializeWithZeros();
+
+  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodeKind);
+  nodeKindPtr->initializeWithValues(0);
+  m_SurfaceMeshNodeKind = nodeKindPtr->GetPointer(0);
 
   Neighbor* neigh = neighbors.get()->GetPointer(0);
   Face* square = squares.get()->GetPointer(0);
-  Node* vertex = vertices.get()->GetPointer(0);
+  Node* vertex = nodesPtr.get()->GetPointer(0);
 
 
   notifyStatusMessage("Finding neighbors for each site...");
@@ -321,7 +337,7 @@ int MMCSurfaceMeshingFilter::createMesh()
 
   // memory allocation for face edges...
 //  fedge = (segment *)malloc(nFEdge * sizeof(segment));
-  StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(nFEdge, DREAM3D::CellData::SurfaceMesh::Edges);
+  StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(nFEdge, DREAM3D::CellData::SurfaceMeshEdges);
   faceEdges->initializeWithZeros();
   Segment* fedge = faceEdges.get()->GetPointer(0);
 
@@ -337,7 +353,7 @@ int MMCSurfaceMeshingFilter::createMesh()
 
   // memory allocation for triangle...
 //  triangle = (patch *)malloc(nTriangle * sizeof(patch));
-  StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(nTriangle, DREAM3D::CellData::SurfaceMesh::Triangles);
+  StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(nTriangle, DREAM3D::CellData::SurfaceMeshTriangles);
   triangles->initializeWithZeros();
   sm->setTriangles(triangles);
   Triangle* triangle = triangles.get()->GetPointer(0);
@@ -353,7 +369,7 @@ int MMCSurfaceMeshingFilter::createMesh()
   //printf("\ttotal number of unique inner edges = %d\n", tnIEdge);
   // memory allocation for inner edges...
 //  iedge = (isegment *)malloc(tnIEdge * sizeof(isegment));
-  StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(tnIEdge, DREAM3D::CellData::SurfaceMesh::InternalEdges);
+  StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(tnIEdge, DREAM3D::CellData::SurfaceMeshInternalEdges);
   internalEdges->initializeWithZeros();
   ISegment* iedge = internalEdges.get()->GetPointer(0);
 
@@ -375,22 +391,20 @@ int MMCSurfaceMeshingFilter::createMesh()
   ss << "number of nodes used = " << nNodes;
   notifyStatusMessage(ss.str());
 
-  // Create new shorten arrays for the Triangles and the Nodes
-  StructArray<Node>::Pointer nodes = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMesh::Nodes);
+  // Create new shortend arrays for the Triangles and the Nodes and NodeKind
+  StructArray<Node>::Pointer nodes = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
   nodes->initializeWithZeros();
+  DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodeKind);
 
-  generate_update_nodes_edges_array(new_ids_for_nodes, nodes, vertices, triangles, faceEdges, internalEdges, maxGrainId);
+
+  generate_update_nodes_edges_array(new_ids_for_nodes, shortNodeKindPtr, nodes, nodesPtr, triangles, faceEdges, internalEdges, maxGrainId);
 
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
   sm->setNodes(nodes);
-  sm->addCellData(DREAM3D::CellData::SurfaceMesh::Edges, faceEdges);
-  sm->addCellData(DREAM3D::CellData::SurfaceMesh::InternalEdges, internalEdges);
-
-
-
-  // Reset the Max Grain Id in the Triangle Spins back to Zero.
-
+  sm->addCellData(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
+  sm->addCellData(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
+  sm->addCellData(DREAM3D::CellData::SurfaceMeshNodeKind, shortNodeKindPtr);
 
 //  notifyStatusMessage("\nOutputting nodes and triangles...\n");
 //  get_output(vertex, fedge, iedge, triangle, NS, nNodes, nFEdge, tnIEdge, nTriangle, mp);
@@ -402,6 +416,7 @@ int MMCSurfaceMeshingFilter::createMesh()
 //
 // -----------------------------------------------------------------------------
 void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32_t>::Pointer new_ids_for_nodes,
+                                                                 DataArray<int8_t>::Pointer nodeKindPtr,
                                                                 StructArray<Node>::Pointer shortNodes,
                                                                 StructArray<Node>::Pointer vertices,
                                                                 StructArray<Triangle>::Pointer triangles,
@@ -455,6 +470,7 @@ void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32
     }
 
     size_t numNodes = vertices->GetNumberOfTuples();
+
     int32_t* nodeNewIds = new_ids_for_nodes->GetPointer(0);
     int offset = -1;
     for(size_t i = 0; i < numNodes; ++i)
@@ -462,7 +478,8 @@ void MMCSurfaceMeshingFilter::generate_update_nodes_edges_array( DataArray<int32
       offset = nodeNewIds[i];
       if (offset != -1)
       {
-        nodes[offset].nodeKind = v[i].nodeKind;
+        nodeKindPtr->SetValue(offset, m_SurfaceMeshNodeKind[i]);
+//        nodes[offset].nodeKind = v[i].nodeKind;
         nodes[offset].coord[0] = v[i].coord[0];
         nodes[offset].coord[1] = v[i].coord[1];
         nodes[offset].coord[2] = v[i].coord[2];
@@ -766,43 +783,43 @@ void MMCSurfaceMeshingFilter::initialize_nodes(VoxelCoord* p,
     v[id].coord[0] = tx + halfdx;
     v[id].coord[1] = ty;
     v[id].coord[2] = tz;
-    v[id].nodeKind = 0; // kind of the node; 2 for binary, 3 for triple points, 4 quadruple points and so on...
+    m_SurfaceMeshNodeKind[id] = 0; // kind of the node; 2 for binary, 3 for triple points, 4 quadruple points and so on...
 //    v[id].newID = -1; // newID for used nodes; if not used, it's -1...
 
     v[id + 1].coord[0] = tx;
     v[id + 1].coord[1] = ty + halfdy;
     v[id + 1].coord[2] = tz;
-    v[id + 1].nodeKind = 0;
+    m_SurfaceMeshNodeKind[id+1] = 0;
 //    v[id + 1].newID = -1;
 
     v[id + 2].coord[0] = tx;
     v[id + 2].coord[1] = ty;
     v[id + 2].coord[2] = tz + halfdz;
-    v[id + 2].nodeKind = 0;
+    m_SurfaceMeshNodeKind[id + 2] = 0;
  //   v[id + 2].newID = -1;
 
     v[id + 3].coord[0] = tx + halfdx;
     v[id + 3].coord[1] = ty + halfdy;
     v[id + 3].coord[2] = tz;
-    v[id + 3].nodeKind = 0;
+    m_SurfaceMeshNodeKind[id + 3] = 0;
 //    v[id + 3].newID = -1;
 
     v[id + 4].coord[0] = tx + halfdx;
     v[id + 4].coord[1] = ty;
     v[id + 4].coord[2] = tz + halfdz;
-    v[id + 4].nodeKind = 0;
+    m_SurfaceMeshNodeKind[id + 4] = 0;
 //    v[id + 4].newID = -1;
 
     v[id + 5].coord[0] = tx;
     v[id + 5].coord[1] = ty + halfdy;
     v[id + 5].coord[2] = tz + halfdz;
-    v[id + 5].nodeKind = 0;
+    m_SurfaceMeshNodeKind[id + 5] = 0;
 //    v[id + 5].newID = -1;
 
     v[id + 6].coord[0] = tx + halfdx;
     v[id + 6].coord[1] = ty + halfdy;
     v[id + 6].coord[2] = tz + halfdz;
-    v[id + 6].nodeKind = 0;
+    m_SurfaceMeshNodeKind[id + 6] = 0;
  //   v[id + 6].newID = -1;
     /*
      printf("\n%10d %5.2f %5.2f %5.2f\n", i, tx, ty, tz);
@@ -1087,8 +1104,8 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(Face* sq,
               tn2 = nodeID[1];
               assert(nodeID[0] < ns*7);
               assert(nodeID[1] < ns*7);
-              v[tn1].nodeKind = -1; // extra nodes from meshing the surface of the box...
-              v[tn2].nodeKind = -1; // we don't need them...
+              m_SurfaceMeshNodeKind[tn1] = -1;// extra nodes from meshing the surface o f the box...
+              m_SurfaceMeshNodeKind[tn2] = -1; // we don't need them...
             }
 
             // Categorize the node on the faces of marching cubes...if it's triple junction or not...
@@ -1105,20 +1122,20 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(Face* sq,
                   // Let's treat special cases for surface of the materials...
                   if(atBulk == 3)
                   { // 3 negative spins, ex, -4, -4, -3, 1 = corners and edges of microstructure
-                    v[tnode].nodeKind = 3; // mark face centered node as 13, corner & edge point on the surface of microstructure
+                    m_SurfaceMeshNodeKind[tnode] = 3; // mark face centered node as 13, corner & edge point on the surface of microstructure
                   }
                   else if(atBulk == 2)
                   { // 2 negative spins and 2 different positive spin, ex, -4, -4, 1, 2 = faces of microstructure, all will be used..
-                    v[tnode].nodeKind = 3; // mark face centered node as 13, triple point on the surface of microstructure
+                    m_SurfaceMeshNodeKind[tnode] = 3; // mark face centered node as 13, triple point on the surface of microstructure
                   }
                   else if(atBulk == 1)
                   {
                     notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
-                    v[tnode].nodeKind = 3;
+                    m_SurfaceMeshNodeKind[tnode] = 3;
                   }
                   else
                   { // positive spins only...normal case!
-                    v[tnode].nodeKind = 3; // mark face centered node as 3, triple point
+                    m_SurfaceMeshNodeKind[tnode] = 3; // mark face centered node as 3, triple point
                   }
 
                 }
@@ -1128,11 +1145,11 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(Face* sq,
                   sq[k].FCnode = tnode;
                   if(atBulk == 0)
                   {
-                    v[tnode].nodeKind = 4;
+                    m_SurfaceMeshNodeKind[tnode] = 4;
                   }
                   else
                   {
-                    v[tnode].nodeKind = 4;
+                    m_SurfaceMeshNodeKind[tnode] = 4;
                   }
                   //printf("atBulk = %3d and nk = %d\n", atBulk, 4);
                 }
@@ -1145,16 +1162,16 @@ void MMCSurfaceMeshingFilter::get_nodes_fEdges(Face* sq,
               else
               {
                 tnode = nodeID[ii];
-                tnk = v[tnode].nodeKind;
+                tnk = m_SurfaceMeshNodeKind[tnode];
                 if(tnk != -1)
                 {
                   if(atBulk == 0)
                   {
-                    v[tnode].nodeKind = 2;
+                    m_SurfaceMeshNodeKind[tnode] = 2;
                   }
                   else
                   {
-                    v[tnode].nodeKind = 2;
+                    m_SurfaceMeshNodeKind[tnode] = 2;
                   }
                 }
                 //printf("atBulk = %d and nk = %d  %3d %3d %3d %3d\n", atBulk, 2, tnspin[0], tnspin[1], tnspin[2], tnspin[3]);
@@ -1682,11 +1699,11 @@ int MMCSurfaceMeshingFilter::get_number_triangles(DataArray<int32_t>::Pointer po
       // update nodeKind of body center node in the current marching cube...
       if(nkFlag > 0)
       {
-        v[BCnode].nodeKind = nds;
+        m_SurfaceMeshNodeKind[BCnode] = nds;
       }
       else
       {
-        v[BCnode].nodeKind = nds;
+        m_SurfaceMeshNodeKind[BCnode] = nds;
       }
       //printf("%2d %2d\n", nds, v[BCnode].nodeKind);
 
@@ -5173,10 +5190,10 @@ void MMCSurfaceMeshingFilter::update_node_edge_kind(Node* v,
       {
         // nodeKind...
         tn = t[j].node_id[i];
-        tnkind = v[tn].nodeKind;
+        tnkind = m_SurfaceMeshNodeKind[tn];
         if(tnkind < 10)
         {
-          v[tn].nodeKind = tnkind + 10;
+          m_SurfaceMeshNodeKind[tn] = tnkind + 10;
         }
         // edgeKind...
         te = t[j].e_id[i];
@@ -5217,11 +5234,10 @@ int MMCSurfaceMeshingFilter::assign_new_nodeID(Node* v, DataArray<int32_t>::Poin
 
   for (int i = 0; i < numN; i++)
   {
-    nkind = v[i].nodeKind;
+    nkind = m_SurfaceMeshNodeKind[i];
     if(nkind > 0)
     {
       node_ids->SetValue(i, newnid);
-      //v[i].newID = newnid;
       newnid++;
     }
   }

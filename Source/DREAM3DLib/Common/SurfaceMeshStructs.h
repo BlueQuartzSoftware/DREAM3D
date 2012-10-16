@@ -61,18 +61,8 @@ typedef struct {
 } Face;
 
 typedef struct {
-  int nodeKind;      // 2 for binary, 3 for triple, and so on...
-  float coord[3];
-} Node;
-
-
-/**
- * @brief Double Precision Version
- */
-typedef struct {
-  int nodeKind;      // 2 for binary, 3 for triple, and so on...
   double coord[3];
-} NodeD;
+} Node;
 
 
 typedef struct {

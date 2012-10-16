@@ -64,6 +64,11 @@ class DREAM3DLib_EXPORT MMCSurfaceMeshingFilter : public AbstractFilter
 
     virtual ~MMCSurfaceMeshingFilter();
 
+    //------ Created Surface Mesh Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeKindArrayName)
+
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     //DREAM3D_INSTANCE_STRING_PROPERTY(VoxelCoordsArrayName)
@@ -122,6 +127,7 @@ class DREAM3DLib_EXPORT MMCSurfaceMeshingFilter : public AbstractFilter
 
   private:
     int32_t*  m_GrainIds;
+    int8_t*   m_SurfaceMeshNodeKind;
 
     int createMesh();
 
@@ -212,13 +218,14 @@ class DREAM3DLib_EXPORT MMCSurfaceMeshingFilter : public AbstractFilter
                         int numT, int xDim, int nsp);
     void update_node_edge_kind(Node* v, Segment* fe, ISegment* ie, Triangle* t, int nT, int nfedge);
     int assign_new_nodeID (Node* v, DataArray<int32_t>::Pointer node_ids, int ns);
-    void generate_update_nodes_edges_array(DataArray<int32_t>::Pointer new_ids_for_nodes,
-                                            StructArray<Node>::Pointer shortNodes,
-                                            StructArray<Node>::Pointer vertices,
-                                            StructArray<Triangle>::Pointer triangles,
-                                            StructArray<Segment>::Pointer faceEdges,
-                                            StructArray<ISegment>::Pointer internalEdges,
-                                             int maxGrainId);
+    void generate_update_nodes_edges_array( DataArray<int32_t>::Pointer new_ids_for_nodes,
+                                            DataArray<int8_t>::Pointer nodeKindPtr,
+                                           StructArray<Node>::Pointer shortNodes,
+                                           StructArray<Node>::Pointer vertices,
+                                           StructArray<Triangle>::Pointer triangles,
+                                           StructArray<Segment>::Pointer faceEdges,
+                                           StructArray<ISegment>::Pointer internalEdges,
+                                           int maxGrainId);
 
     //void get_output(Node* v, Segment* fedge, ISegment* iedge, Triangle* triangles, int ns, int nN, int nfe, int nie, int nT, MMC_MeshParameters* mp);
 

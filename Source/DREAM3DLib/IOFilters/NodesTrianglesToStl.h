@@ -63,7 +63,6 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 
     virtual ~NodesTrianglesToStl();
 
-
     DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
@@ -127,6 +126,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 
 
   private:
+
     int writeHeader(FILE* f, const std::string &header, int triCount);
     int writeNumTrianglesToFile(const std::string &filename, int triCount);
 

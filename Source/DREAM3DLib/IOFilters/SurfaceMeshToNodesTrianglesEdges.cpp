@@ -144,11 +144,18 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
       setErrorCondition(-384);
     }
-    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::Edges);
+    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
     if (edges.get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
       setErrorCondition(-385);
+    }
+    IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeKind);
+    if (nodeKinds.get() == NULL)
+    {
+      setErrorCondition(-559);
+      notifyErrorMessage("SurfaceMesh DataContainer missing Node Kind Array", -559);
+      return;
     }
   }
 }
@@ -195,7 +202,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
     return;
   }
-  IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::Edges);
+  IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
   if (edges.get() == NULL)
   {
     setErrorCondition(-557);
@@ -203,11 +210,19 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  IDataArray::Pointer iEdges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::InternalEdges);
+  IDataArray::Pointer iEdges = sm->getCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
   if (iEdges.get() == NULL)
   {
     setErrorCondition(-558);
     notifyErrorMessage("SurfaceMesh DataContainer missing Internal Edges", -558);
+    return;
+  }
+
+  IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeKind);
+  if (nodeKinds.get() == NULL)
+  {
+    setErrorCondition(-559);
+    notifyErrorMessage("SurfaceMesh DataContainer missing Node Kind Array", -559);
     return;
   }
 
@@ -238,9 +253,10 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   int numNodes = nodes->GetNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
   Node* v = nodes->GetPointer(0);
+  int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
-    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, v[i].nodeKind, v[i].coord[0], v[i].coord[1], v[i].coord[2]);
+    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(nodeKind[i]), v[i].coord[0], v[i].coord[1], v[i].coord[2]);
   }
   fclose(nodesFile);
 
