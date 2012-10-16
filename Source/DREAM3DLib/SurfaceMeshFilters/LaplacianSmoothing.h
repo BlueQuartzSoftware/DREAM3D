@@ -62,7 +62,16 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     virtual ~LaplacianSmoothing();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
      DREAM3D_INSTANCE_PROPERTY(float, Lambda)
+
+    /* This class is designed to be subclassed so that thoes subclasses can add
+     * more functionality such as constrained surface nodes or Triple Lines. We use
+     * this array to assign each vertex a specific Lambda value. Subclasses can set
+     * this array then simply call the 'smooth' protected method to actuall run the
+     * smoothing iterations
+     */
+     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
 
 
     /**
@@ -76,7 +85,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "LaplacianSmoothing Filter"; }
+    virtual const std::string getHumanLabel() { return "Laplacian Smoothing Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -113,6 +122,23 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    DataArray<int>::Pointer generateUniqueEdges();
+
+
+    /**
+     * @brief This method generates the Lambda array that will be use during the smoothing
+     * @return
+     */
+    virtual int generateLambdaArray();
+
+    /**
+     * @brief This method runs the actual Laplacian smoothing algorithm using the Lambda
+     * array to perform the smoothing. Subclasses may have set a more node type specific
+     * lambda array values.
+     * @return
+     */
+    virtual int smooth();
 
   private:
 
