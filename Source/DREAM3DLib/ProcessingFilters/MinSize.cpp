@@ -314,15 +314,18 @@ void MinSize::assign_badpoints()
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
-      if (grainname < 0 && m_GrainIds[neighbor] >= 0)
+      if (neighbor >= 0)
       {
+        if (grainname < 0 && m_GrainIds[neighbor] >= 0)
+        {
 
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-            p->CopyTuple(neighbor, j);
-          }
+            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            {
+              std::string name = *iter;
+              IDataArray::Pointer p = m->getCellData(*iter);
+              p->CopyTuple(neighbor, j);
+            }
+        }
       }
     }
 //    std::stringstream ss;
