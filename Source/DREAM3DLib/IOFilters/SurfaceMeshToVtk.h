@@ -64,6 +64,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
     virtual ~SurfaceMeshToVtk();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeKindArrayName)
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile);
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile);
@@ -126,6 +128,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
 
   private:
+    int8_t*  m_SurfaceMeshNodeKind;
 
     SurfaceMeshToVtk(const SurfaceMeshToVtk&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToVtk&); // Operator '=' Not Implemented

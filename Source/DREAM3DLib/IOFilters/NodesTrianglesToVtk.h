@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToVtk, AbstractFilter);
 
     virtual ~NodesTrianglesToVtk();
+    DREAM3D_INSTANCE_STRING_PROPERTY(NodeKindArrayName)
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
@@ -127,6 +128,8 @@ class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
 
 
   private:
+    int8_t*  m_NodeKind;
+
 
     NodesTrianglesToVtk(const NodesTrianglesToVtk&); // Copy Constructor Not Implemented
     void operator=(const NodesTrianglesToVtk&); // Operator '=' Not Implemented

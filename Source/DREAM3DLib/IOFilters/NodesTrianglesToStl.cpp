@@ -48,7 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToStl::NodesTrianglesToStl() :
-    AbstractFilter()
+AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -160,6 +160,9 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
+
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -251,8 +254,12 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   std::map<int, int> nodeIdToIndex;
-  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMesh::Nodes);
+  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
   Node* nodes = nodesPtr->GetPointer(0);
+
+//  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::CellData::SurfaceMeshNodeKind);
+//  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
+
   for (int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
@@ -261,8 +268,7 @@ void NodesTrianglesToStl::execute()
       break;
     }
     nodeIdToIndex[nodeId] = i;
-   // nodes[i].newID = nodeId;
-    nodes[nodeId].nodeKind = nodeKind;
+   // nodeKindArray[nodeId] = nodeKind;
     nodes[nodeId].coord[0] = pos[0];
     nodes[nodeId].coord[1] = pos[1];
     nodes[nodeId].coord[2] = pos[2];
@@ -275,7 +281,7 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  StructArray<Triangle>::Pointer trianglePtr = StructArray<Triangle>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMesh::Triangles);
+  StructArray<Triangle>::Pointer trianglePtr = StructArray<Triangle>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
   Triangle* triangles = trianglePtr->GetPointer(0);
 
   // Store all the unique Spins

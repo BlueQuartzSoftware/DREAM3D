@@ -44,8 +44,10 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToVtk::SurfaceMeshToVtk() :
 AbstractFilter(),
+m_SurfaceMeshNodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
 m_WriteBinaryFile(false),
-m_WriteConformalMesh(true)
+m_WriteConformalMesh(true),
+m_SurfaceMeshNodeKind(NULL)
 {
   setupFilterParameters();
 }
@@ -107,6 +109,7 @@ void SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* wri
 void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
 
   if (m_OutputVtkFile.empty() == true)
   {
@@ -120,23 +123,33 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
       addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
       setErrorCondition(-384);
   }
-  else {
+  else
+  {
     if (sm->getTriangles().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
         setErrorCondition(-384);
     }
+
     if (sm->getNodes().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
         setErrorCondition(-384);
     }
-    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::Edges);
+    else
+    {
+      int nNodes = sm->getNodes()->GetNumberOfTuples();
+      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeKind, ss, -385, int8_t, Int8ArrayType, nNodes, 1);
+    }
+
+
+    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
     if (edges.get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -385);
-        setErrorCondition(-385);
+        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -386);
+        setErrorCondition(-386);
     }
+
   }
 }
 
@@ -159,31 +172,20 @@ void SurfaceMeshToVtk::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
-  if(NULL == m)
+  dataCheck(false, 0, 0, 0);
+  if(getErrorCondition() < 0)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
-  if (NULL == m->getNodes())
-  {
-      setErrorCondition(-555);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
-    return;
-  }
-    if (NULL == m->getTriangles())
-  {
-      setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
+
 
   setErrorCondition(0);
-
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
   StructArray<Node>& nodes = *(m->getNodes());
   int nNodes = nodes.GetNumberOfTuples();
+
+
 
 // Open the output VTK File for writing
   FILE* vtkFile = NULL;
@@ -210,8 +212,8 @@ void SurfaceMeshToVtk::execute()
   int numberWrittenNodes = 0;
   for (int i = 0; i < nNodes; i++)
   {
-    Node& n = nodes[i]; // Get the current Node
-    if (n.nodeKind > 0) { ++numberWrittenNodes; }
+  //  Node& n = nodes[i]; // Get the current Node
+    if (m_SurfaceMeshNodeKind[i] > 0) { ++numberWrittenNodes; }
   }
 
 
@@ -224,7 +226,7 @@ void SurfaceMeshToVtk::execute()
   for (int i = 0; i < nNodes; i++)
   {
     Node& n = nodes[i]; // Get the current Node
-    if (n.nodeKind > 0)
+    if (m_SurfaceMeshNodeKind[i] > 0)
     {
       pos[0] = n.coord[0];
       pos[1] = n.coord[1];
@@ -333,8 +335,8 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   int swapped;
   for (int i = 0; i < numNodes; i++)
   {
-    Node& n = nodes[i]; // Get the current Node
-    if (n.nodeKind > 0) { ++nNodes; }
+  //  Node& n = nodes[i]; // Get the current Node
+    if (m_SurfaceMeshNodeKind[i] > 0) { ++nNodes; }
   }
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
@@ -344,18 +346,18 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 
   for(int i = 0; i < numNodes; ++i)
   {
-    Node& n = nodes[i]; // Get the current Node
-    if(n.nodeKind > 0)
+ //   Node& n = nodes[i]; // Get the current Node
+    if(m_SurfaceMeshNodeKind[i] > 0)
     {
       if(m_WriteBinaryFile == true)
       {
-        swapped = n.nodeKind;
+        swapped = m_SurfaceMeshNodeKind[i];
         MXA::Endian::FromSystemToBig::convert<int>(swapped);
         fwrite(&swapped, sizeof(int), 1, vtkFile);
       }
       else
       {
-        fprintf(vtkFile, "%d\n", n.nodeKind);
+        fprintf(vtkFile, "%d\n", m_SurfaceMeshNodeKind[i]);
       }
 
     }

@@ -45,8 +45,12 @@
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
 AbstractFilter(),
+m_SurfaceMeshNodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
 m_IterationSteps(1),
-m_Lambda(0.01)
+m_Lambda(0.01),
+m_QuadPointLambda(0.0),
+m_TripleLineLambda(0.0),
+m_SurfaceMeshNodeKind(NULL)
 {
   setupFilterParameters();
 }
@@ -82,6 +86,26 @@ void LaplacianSmoothing::setupFilterParameters()
     parameter->setCastableValueType("double");
     parameters.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Quad Points Lambda");
+    parameter->setPropertyName("QuadPointLambda");
+    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setUnits("Zero will Lock them in Place");
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Triple Line Lambda");
+    parameter->setPropertyName("TripleLineLambda");
+    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setUnits("Zero will Lock them in Place");
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -93,8 +117,9 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
     writer->writeValue("Lambda", getLambda() );
-      writer->writeValue("IterationSteps", getIterationSteps());
-
+    writer->writeValue("IterationSteps", getIterationSteps());
+    writer->writeValue("QuadPointLambda", getQuadPointLambda());
+    writer->writeValue("TripleLineLambda", getTripleLineLambda());
 }
 
 // -----------------------------------------------------------------------------
@@ -103,7 +128,7 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
 void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
+  std::stringstream ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -122,11 +147,10 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
-    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMesh::Edges);
-    if(edges.get() == NULL)
+    else
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -385);
-      setErrorCondition(-385);
+      int size = sm->getNodes()->GetNumberOfTuples();
+      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeKind, ss, -390, int8_t, Int8ArrayType, size, 1)
     }
   }
 
@@ -151,31 +175,21 @@ void LaplacianSmoothing::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
-  if(NULL == m)
+
+  dataCheck(false, 0, 0, 0);
+  if(getErrorCondition() < 0)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
-  StructArray<Node>::Pointer floatNodesPtr = m->getNodes();
-  if(NULL == floatNodesPtr.get())
-  {
-    setErrorCondition(-555);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
     return;
   }
 
+  setErrorCondition(0);
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  StructArray<Node>::Pointer floatNodesPtr = m->getNodes();
   StructArray<Triangle>::Pointer trianglesPtr = m->getTriangles();
-  if(NULL == trianglesPtr.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
 
   /* Place all your code to execute your filter here. */
   err = smooth();
+
   if (err < 0)
   {
     setErrorCondition(-558);
@@ -314,9 +328,9 @@ int LaplacianSmoothing::smooth()
   Node* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
   int numberNodes = floatNodesPtr->GetNumberOfTuples();
 
-  StructArray<NodeD>::Pointer nodesDPtr = StructArray<NodeD>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<Node>::Pointer nodesDPtr = StructArray<Node>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  NodeD* vsm = nodesDPtr->GetPointer(0);
+  Node* vsm = nodesDPtr->GetPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
@@ -324,7 +338,6 @@ int LaplacianSmoothing::smooth()
     vsm[n].coord[0] = nodesF[n].coord[0];
     vsm[n].coord[1] = nodesF[n].coord[1];
     vsm[n].coord[2] = nodesF[n].coord[2];
-    vsm[n].nodeKind = nodesF[n].nodeKind;
   }
 
   float delta0[3];
@@ -370,15 +383,12 @@ int LaplacianSmoothing::smooth()
 
   }
 
-
-
   // Copy the nodes from the 64 bit floating point to the 32 bit floating point
   for(int n = 0; n < numberNodes; ++n)
   {
     nodesF[n].coord[0] = vsm[n].coord[0];
     nodesF[n].coord[1] = vsm[n].coord[1];
     nodesF[n].coord[2] = vsm[n].coord[2];
-    nodesF[n].nodeKind = vsm[n].nodeKind;
   }
 
 

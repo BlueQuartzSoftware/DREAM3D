@@ -61,7 +61,7 @@ void RemoveTestFiles()
 void TestStructArray()
 {
 
-    StructArray<Node>::Pointer nodes = StructArray<Node>::CreateArray(10, DREAM3D::CellData::SurfaceMesh::Nodes);
+    StructArray<Node>::Pointer nodes = StructArray<Node>::CreateArray(10, DREAM3D::CellData::SurfaceMeshNodes);
     size_t size = nodes->GetNumberOfTuples();
     int typeSize = nodes->GetTypeSize();
     DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(Node));
@@ -71,7 +71,6 @@ void TestStructArray()
     node->coord[0] = i+23.0f;
     node->coord[1] = i+11.0f;
     node->coord[2] = i+20.0f;
-    node->nodeKind = i+i;
   }
   // Resize DOWN
   nodes->Resize(5);
@@ -82,7 +81,6 @@ void TestStructArray()
     DREAM3D_REQUIRE_EQUAL(node->coord[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[2] , i+20.0f);
-    DREAM3D_REQUIRE_EQUAL(node->nodeKind , i+i);
   }
 
 // Resize UP
@@ -94,7 +92,6 @@ void TestStructArray()
     node->coord[0] = i+23.0f;
     node->coord[1] = i+11.0f;
     node->coord[2] = i+20.0f;
-    node->nodeKind = i+i;
   }
 
   for (size_t i = 0; i < size; ++i)
@@ -103,7 +100,6 @@ void TestStructArray()
     DREAM3D_REQUIRE_EQUAL(node->coord[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node->coord[2] , i+20.0f);
-    DREAM3D_REQUIRE_EQUAL(node->nodeKind , i+i);
   }
 
   StructArray<Node>& vertices = *nodes; // Dereference the Shared_Pointer using the * operator which allows the [] operators
@@ -113,7 +109,6 @@ void TestStructArray()
     DREAM3D_REQUIRE_EQUAL(node.coord[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node.coord[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node.coord[2] , i+20.0f);
-    DREAM3D_REQUIRE_EQUAL(node.nodeKind , i+i);
   }
 
 #if 0
