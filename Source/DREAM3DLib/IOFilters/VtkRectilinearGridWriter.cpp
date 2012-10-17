@@ -92,8 +92,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("vtk");
-	option->setFileType("VTK Rectilinear Grid");
+    option->setFileExtension("vtk");
+    option->setFileType("VTK Rectilinear Grid");
     option->setValueType("string");
     parameters.push_back(option);
   }
