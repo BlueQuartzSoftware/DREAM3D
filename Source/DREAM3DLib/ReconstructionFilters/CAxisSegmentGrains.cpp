@@ -116,7 +116,7 @@ void CAxisSegmentGrains::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+  option->setUnits("Degrees");
     parameters.push_back(option);
   }
 #if 0
@@ -205,9 +205,9 @@ void CAxisSegmentGrains::execute()
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
-  for(size_t i=0;i<totalPoints;i++)
+  for(int64_t i=0;i<totalPoints;i++)
   {
-	m_GrainIds[i] = 0;
+    m_GrainIds[i] = 0;
   }
 
   SegmentGrains::execute();
@@ -262,10 +262,10 @@ void CAxisSegmentGrains::execute()
     {
        m_GrainIds[i] = gid[ m_GrainIds[i] ];
     }
-	for(size_t i = 0; i < totalFields; i++)
-	{
-		m_Active[i] = true;
-	}
+  for(size_t i = 0; i < totalFields; i++)
+  {
+    m_Active[i] = true;
+  }
   }
 
   // If there is an error set this to something negative and also set a message
@@ -309,9 +309,9 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
   }
   if (seed >= 0)
   {
-	  m_GrainIds[seed] = gnum;
-	  m->resizeFieldDataArrays(gnum+1);
-	  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+    m_GrainIds[seed] = gnum;
+    m->resizeFieldDataArrays(gnum+1);
+    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   }
   return seed;
 }
@@ -336,47 +336,47 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
-	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-	  q1[0] = 1;
-	  q1[1] = m_Quats[referencepoint * 5 + 1];
-	  q1[2] = m_Quats[referencepoint * 5 + 2];
-	  q1[3] = m_Quats[referencepoint * 5 + 3];
-	  q1[4] = m_Quats[referencepoint * 5 + 4];
+    phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
+    q1[0] = 1;
+    q1[1] = m_Quats[referencepoint * 5 + 1];
+    q1[2] = m_Quats[referencepoint * 5 + 2];
+    q1[3] = m_Quats[referencepoint * 5 + 3];
+    q1[4] = m_Quats[referencepoint * 5 + 4];
 
-	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
-	  q2[0] = 1;
-	  q2[1] = m_Quats[neighborpoint*5 + 1];
-	  q2[2] = m_Quats[neighborpoint*5 + 2];
-	  q2[3] = m_Quats[neighborpoint*5 + 3];
-	  q2[4] = m_Quats[neighborpoint*5 + 4];
+    phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+    q2[0] = 1;
+    q2[1] = m_Quats[neighborpoint*5 + 1];
+    q2[2] = m_Quats[neighborpoint*5 + 2];
+    q2[3] = m_Quats[neighborpoint*5 + 3];
+    q2[4] = m_Quats[neighborpoint*5 + 4];
 
-	  if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
-	  {
-		  OrientationMath::QuattoMat(q1, g1);
-		  OrientationMath::QuattoMat(q2, g2);
+    if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
+    {
+      OrientationMath::QuattoMat(q1, g1);
+      OrientationMath::QuattoMat(q2, g2);
 
-		  //transpose the g matricies so when caxis is multiplied by it
-		  //it will give the sample direction that the caxis is along
-		  MatrixMath::transpose3x3(g1, g1t);
-		  MatrixMath::transpose3x3(g2, g2t);
+      //transpose the g matricies so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::transpose3x3(g1, g1t);
+      MatrixMath::transpose3x3(g2, g2t);
 
-		  MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
-		  MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
+      MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+      MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
 
-		  //normalize so that the dot product can be taken below without
-		  //dividing by the magnitudes (they would be 1)
-		  MatrixMath::normalize3x1(c1);
-		  MatrixMath::normalize3x1(c2);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::normalize3x1(c1);
+      MatrixMath::normalize3x1(c2);
 
-		  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
-		  w = acosf(w);
-		  if (w <= m_MisorientationTolerance || (m_pi-w) <= m_MisorientationTolerance)
-		  {
-			group = true;
-			m_GrainIds[neighborpoint] = gnum;
-		  }
+      w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+      w = acosf(w);
+      if (w <= m_MisorientationTolerance || (m_pi-w) <= m_MisorientationTolerance)
+      {
+      group = true;
+      m_GrainIds[neighborpoint] = gnum;
+      }
 
-	  }
+    }
   }
 
   return group;

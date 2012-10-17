@@ -34,84 +34,69 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MinSize_H_
-#define MinSize_H_
+#ifndef CROP_VOLUME_PIPELINE_H_
+#define CROP_VOLUME_PIPELINE_H_
 
 #include <vector>
 #include <string>
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ProcessingFilters/MinSize.h
- * @brief This filter ensures each Grain or Region has a minimum number of voxels.
+ * @class FindShapes FindShapes.h DREAM3DLib/GenericFilters/FindShapes.h
+ * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MinSize : public AbstractFilter
+class DREAM3DLib_EXPORT Crop_Volume_Pipeline : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinSize)
-    DREAM3D_STATIC_NEW_MACRO(MinSize)
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(Crop_Volume_Pipeline)
+    DREAM3D_STATIC_NEW_MACRO(Crop_Volume_Pipeline)
+    DREAM3D_TYPE_MACRO_SUPER(Crop_Volume_Pipeline, AbstractFilter)
 
-    virtual ~MinSize();
+    virtual ~Crop_Volume_Pipeline();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
-    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAllPhases)
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::CustomFilters;}
+    virtual const std::string getHumanLabel() { return "Megna Filter"; }
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
+
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
 
     virtual void setupFilterParameters();
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-
-    virtual void execute();
+	  virtual void execute();
     virtual void preflight();
+   // virtual void getNumLinesinFile(int &num_lines);
+    virtual void get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin);
+    
 
   protected:
-    MinSize();
+    Crop_Volume_Pipeline();
 
-    void remove_smallgrains();
-    void assign_badpoints();
 
 
   private:
-    int32_t* m_Neighbors;
-
-    int32_t* m_GrainIds;
-    int32_t* m_CellPhases;
-    int32_t* m_FieldPhases;
-    bool* m_Active;
-
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
-
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
-    MinSize(const MinSize&); // Copy Constructor Not Implemented
-    void operator=(const MinSize&); // Operator '=' Not Implemented
+    Crop_Volume_Pipeline(const Crop_Volume_Pipeline&); // Copy Constructor Not Implemented
+    void operator=(const Crop_Volume_Pipeline&); // Operator '=' Not Implemented
 };
 
-#endif /* MinSize_H_ */
+#endif /* CROP_VOLUME_PIPELINE_H_ */

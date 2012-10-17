@@ -111,11 +111,12 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
 
     virtual void printFilterNames(std::ostream &out);
 
+    
 
   protected:
     FilterPipeline();
-
     void updatePrevNextFilters();
+    
 
   private:
     bool m_Cancel;

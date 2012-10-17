@@ -201,6 +201,9 @@ void FindShapes::find_moments()
   for (int64_t j = 0; j < totalPoints; j++)
   {
     int gnum = m_GrainIds[j];
+
+
+
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float z = find_zcoord(j);
@@ -234,6 +237,7 @@ void FindShapes::find_moments()
     float xdist8 = (x2 - m_Centroids[gnum*3 + 0]);
     float ydist8 = (y2 - m_Centroids[gnum*3 + 1]);
     float zdist8 = (z2 - m_Centroids[gnum*3 + 2]);
+
     xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
         + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
         + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
@@ -256,6 +260,7 @@ void FindShapes::find_moments()
     grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + yz;
     grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + xz;
 	m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
+
   }
   float sphere = (2000.0f*m_pi*m_pi)/9.0f;
   //constant for moments because voxels are broken into smaller voxels
@@ -366,13 +371,17 @@ void FindShapes::find_axes()
     Ixx = grainmoments[i*6+0];
     Iyy = grainmoments[i*6+1];
     Izz = grainmoments[i*6+2];
+
     Ixy = grainmoments[i*6+3];
     Iyz = grainmoments[i*6+4];
     Ixz = grainmoments[i*6+5];
+
     a = 1;
-    b = -Ixx - Iyy - Izz;
+    b = (-Ixx - Iyy - Izz);
     c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
+    d = 0.0;
     d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
+    // f and g are the p and q values when reducing the cubic equation to t^3 + pt + q = 0 
     f = ((3 * c / a) - ((b / a) * (b / a))) / 3.0f;
     g = ((2 * (b / a) * (b / a) * (b / a)) - (9.0f * b * c / (a * a)) + (27.0f * (d / a))) / 27.0f;
     h = (g * g / 4.0f) + (f * f * f / 27.0f);
@@ -402,6 +411,7 @@ void FindShapes::find_axes()
   graineigenvals[3*i] = r1;
   graineigenvals[3*i+1] = r2;
   graineigenvals[3*i+2] = r3;
+
     I1 = (15 * r1) / (4 * m_pi);
     I2 = (15 * r2) / (4 * m_pi);
     I3 = (15 * r3) / (4 * m_pi);
@@ -413,6 +423,7 @@ void FindShapes::find_axes()
     b = B / A;
     b = sqrt(b) * a;
     c = A / (a * a * a * b);
+
     m_AxisLengths[3*i] = a;
     m_AxisLengths[3*i+1] = b;
     m_AxisLengths[3*i+2] = c;
@@ -486,22 +497,25 @@ void FindShapes::find_axiseulers()
     float Ixx = grainmoments[i*6+0];
     float Iyy = grainmoments[i*6+1];
     float Izz = grainmoments[i*6+2];
-    float Ixy = grainmoments[i*6+3];
-    float Iyz = grainmoments[i*6+4];
-    float Ixz = grainmoments[i*6+5];
+    float Ixy = -grainmoments[i*6+3];
+    float Iyz = -grainmoments[i*6+4];
+    float Ixz = -grainmoments[i*6+5];
     float radius1 = graineigenvals[3*i];
     float radius2 = graineigenvals[3*i+1];
     float radius3 = graineigenvals[3*i+2];
+
+
     float e[3][1];
-    float uber[3][3];
-    float bmat[3][1];
     float vect[3][3];
     e[0][0] = radius1;
     e[1][0] = radius2;
     e[2][0] = radius3;
+    float uber[3][3];
+    float bmat[3][1];
     bmat[0][0] = 0.0000001f;
     bmat[1][0] = 0.0000001f;
     bmat[2][0] = 0.0000001f;
+
     for (int j = 0; j < 3; j++)
     {
       uber[0][0] = Ixx - e[j][0];
@@ -574,6 +588,7 @@ void FindShapes::find_axiseulers()
       delete uberelim;
       delete uberbelim;
     }
+
     float n1x = vect[0][0];
     float n1y = vect[0][1];
     float n1z = vect[0][2];
@@ -595,6 +610,7 @@ void FindShapes::find_axiseulers()
     n3x = n3x / norm3;
     n3y = n3y / norm3;
     n3z = n3z / norm3;
+
     ea2 = acos(n1z);
     if (ea2 == 0.0) 
     { 
@@ -615,6 +631,7 @@ void FindShapes::find_axiseulers()
 		ea1 = acos(cosine1);
 		if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
 		if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
+
     }
     m_AxisEulerAngles[3*i] = ea1;
     m_AxisEulerAngles[3*i+1] = ea2;

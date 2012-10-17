@@ -317,23 +317,23 @@ void MergeColonies::execute()
     pid[0] = 0;
     std::set<int32_t> parentIdSet;
     parentIdSet.insert(0);
-    for(size_t i = 1; i < numParents; ++i)
+    for(int i = 1; i < numParents; ++i)
     {
       pid[i] = i; //numberGenerator();
       parentIdSet.insert(pid[i]);
     }
 
-    size_t r;
+    int r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< numParents; i++) {
-        r = numberGenerator(); // Random remaining position.
-        if (r >= numParents) {
-          continue;
-        }
-        temp = pid[i];
-        pid[i] = pid[r];
-        pid[r] = temp;
+    for (int i=1; i< numParents; i++) {
+      r = numberGenerator(); // Random remaining position.
+      if (r >= numParents) {
+        continue;
+      }
+      temp = pid[i];
+      pid[i] = pid[r];
+      pid[r] = temp;
     }
 
     // Now adjust all the Grain Id values for each Voxel
@@ -376,10 +376,6 @@ void MergeColonies::merge_colonies()
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
       parentcount++;
-	  if(parentcount == 57)
-	  {
-		int stop = 0;
-	  }
       parentnumbers[i] = parentcount;
       m_Active[i] = true;
       colonylist.push_back(i);

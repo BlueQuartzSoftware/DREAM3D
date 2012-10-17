@@ -298,22 +298,20 @@ void OpenCloseBadData::execute()
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
-//	  if ((grain > 0 && m_Direction == 1) || (grain == 0 && m_Direction == 0))
-      if ((grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1) || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
+      if (neighbor >= 0)
       {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-            p->CopyTuple(neighbor, j);
-          }
-//		  m_GrainIds[j] = neighbor;
-//		  m_CellPhases[j] = m_FieldPhases[neighbor];
+        if ( (grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1)
+            || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
+        {
+            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            {
+              std::string name = *iter;
+              IDataArray::Pointer p = m->getCellData(*iter);
+              p->CopyTuple(neighbor, j);
+            }
+        }
       }
     }
-//    std::stringstream ss;
-//     ss << "Assigning Bad Voxels count = " << count;
-//    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
 
   // If there is an error set this to something negative and also set a message
