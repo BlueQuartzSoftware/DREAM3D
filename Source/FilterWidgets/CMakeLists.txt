@@ -96,7 +96,7 @@ WidgetGeneration(ReconstructionFilters ReconstructionFilters)
 WidgetGeneration(SamplingFilters SamplingFilters)
 WidgetGeneration(StatisticsFilters StatisticsFilters)
 WidgetGeneration(SyntheticBuilderFilters Synthetic_BuilderFilters)
-WidgetGeneration(CustomFilters CustomFilters)
+# WidgetGeneration(CustomFilters CustomFilters)
 
 
 file(APPEND ${AllFilterWidgetsHeaderFile} "\n#endif\n")
