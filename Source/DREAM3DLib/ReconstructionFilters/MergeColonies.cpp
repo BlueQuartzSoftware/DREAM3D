@@ -294,6 +294,7 @@ void MergeColonies::execute()
  notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
+  m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
     int64_t totalPoints = m->getTotalPoints();
@@ -375,6 +376,10 @@ void MergeColonies::merge_colonies()
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
       parentcount++;
+	  if(parentcount == 57)
+	  {
+		int stop = 0;
+	  }
       parentnumbers[i] = parentcount;
       m_Active[i] = true;
       colonylist.push_back(i);
@@ -440,8 +445,8 @@ void MergeColonies::merge_colonies()
                 colony = check_for_burgers(q2, q1);
                 if (colony == 1)
                 {
-                  parentnumbers[neigh] = parentcount;
-                  colonylist.push_back(neigh);
+//                  parentnumbers[neigh] = parentcount;
+//                  colonylist.push_back(neigh);
                 }
             }
             else if ((phase1 == Ebsd::CrystalStructure::Cubic && phase2 == Ebsd::CrystalStructure::Hexagonal))
@@ -449,8 +454,8 @@ void MergeColonies::merge_colonies()
                 colony = check_for_burgers(q1, q2);
                 if (colony == 1)
                 {
-                  parentnumbers[neigh] = parentcount;
-                  colonylist.push_back(neigh);
+//                  parentnumbers[neigh] = parentcount;
+//                  colonylist.push_back(neigh);
                 }
             }
           }

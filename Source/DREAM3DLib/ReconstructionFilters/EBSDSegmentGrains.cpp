@@ -148,7 +148,7 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   DataContainer* m = getDataContainer();
   int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType,  true, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
@@ -204,6 +204,10 @@ void EBSDSegmentGrains::execute()
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
+  for(size_t i=0;i<totalPoints;i++)
+  {
+	m_GrainIds[i] = 0;
+  }
 
   SegmentGrains::execute();
 

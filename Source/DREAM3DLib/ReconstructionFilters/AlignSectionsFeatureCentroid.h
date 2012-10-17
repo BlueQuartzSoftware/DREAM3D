@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSHAPES_H_
-#define FINDSHAPES_H_
+#ifndef AlignSectionsFeatureCentroid_H_
+#define AlignSectionsFeatureCentroid_H_
 
 #include <vector>
 #include <string>
@@ -43,86 +43,57 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 
 
 /**
- * @class FindShapes FindShapes.h DREAM3DLib/GenericFilters/FindShapes.h
+ * @class AlignSectionsFeatureCentroid AlignSectionsFeatureCentroid.h DREAM3DLib/ReconstructionFilters/AlignSectionsFeatureCentroid.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
+class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindShapes)
-    DREAM3D_STATIC_NEW_MACRO(FindShapes)
-    DREAM3D_TYPE_MACRO_SUPER(FindShapes, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AlignSectionsFeatureCentroid)
+    DREAM3D_STATIC_NEW_MACRO(AlignSectionsFeatureCentroid)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeatureCentroid, AlignSections)
 
-    virtual ~FindShapes();
+    virtual ~AlignSectionsFeatureCentroid();
 
-	  //------ Required Cell Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	  //------ Required Field Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-	  //------ Created Field Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
-    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float) // N x 6 Array
-    DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float) // N x 3 Array
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Align Sections (Feature Centroid)"; }
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Shapes"; }
-
+    virtual void setupFilterParameters();
+//    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
-    virtual void setupFilterParameters();
-	  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-
-	  virtual void execute();
+    virtual void execute();
     virtual void preflight();
 
+    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
   protected:
-    FindShapes();
-
-    void find_moments();
-    void find_moments2D();
-    void find_axes();
-    void find_axes2D();
-    void find_axiseulers();
-    void find_axiseulers2D();
-    float find_xcoord(size_t index);
-    float find_ycoord(size_t index);
-    float find_zcoord(size_t index);
+    AlignSectionsFeatureCentroid();
 
   private:
-    int32_t* m_GrainIds;
-    float* m_AxisEulerAngles;
-    float* m_Centroids;
-    float* m_AxisLengths;
-    float* m_Omega3s;
-    float* m_Volumes;
-    float* m_AspectRatios;
+    bool* m_GoodVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindShapes(const FindShapes&); // Copy Constructor Not Implemented
-    void operator=(const FindShapes&); // Operator '=' Not Implemented
+    AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&); // Copy Constructor Not Implemented
+    void operator=(const AlignSectionsFeatureCentroid&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDSHAPES_H_ */
+#endif /* AlignSectionsFeatureCentroid_H_ */

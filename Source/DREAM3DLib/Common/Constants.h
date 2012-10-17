@@ -321,12 +321,21 @@ namespace DREAM3D
     const unsigned int None = 3; //!<
   }
 
-  namespace EulerFrameRotationAngle
+  namespace SampleFrameRotationAxis
+  {
+    const unsigned int X = 0; //!<
+    const unsigned int Y = 1; //!<
+    const unsigned int Z = 2; //!<
+    const unsigned int None = 3; //!<
+  }
+
+  namespace RefFrameRotationAngle
   {
     const unsigned int Ninety = 0; //!<
     const unsigned int oneEighty = 1; //!<
     const unsigned int twoSeventy = 2; //!<
-    const unsigned int Zero = 3; //!<
+    const unsigned int Mirror = 3; //!<
+    const unsigned int Zero = 4; //!<
   }
 
   namespace Overlap
