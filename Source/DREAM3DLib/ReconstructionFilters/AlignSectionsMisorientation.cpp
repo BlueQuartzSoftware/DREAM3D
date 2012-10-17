@@ -110,6 +110,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+	option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -294,12 +295,12 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
               {
                 if((l + j + oldyshift) >= 0 && (l + j + oldyshift) < dims[1] && (n + k + oldxshift) >= 0 && (n + k + oldxshift) < dims[0])
                 {
+                  count++;
                   refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
                   curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                   {
                       w = 10000.0;
-                      count++;
                       if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                       {
                         q1[1] = m_Quats[refposition * 5 + 1];
@@ -327,7 +328,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
             }
             disorientation = disorientation/count;
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
-            if(disorientation < mindisorientation)
+            if(disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k+oldxshift) < abs(newxshift)) || (abs(j+oldyshift) < abs(newyshift)))))
             {
               newxshift = k + oldxshift;
               newyshift = j + oldyshift;

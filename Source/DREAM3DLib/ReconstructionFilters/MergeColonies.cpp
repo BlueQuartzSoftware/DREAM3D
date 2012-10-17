@@ -36,14 +36,20 @@
 
 #include "MergeColonies.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -54,6 +60,59 @@
 #define ERROR_TXT_OUT1 1
 
 const static float m_pi = static_cast<float>(M_PI);
+
+  static const float unit110 = 1.0/sqrtf(2.0);
+  static const float unit111 = 1.0/sqrtf(3.0);
+  static const float unit112_1 = 1.0/sqrtf(6.0);
+  static const float unit112_2 = 2.0/sqrtf(6.0);
+
+  float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
+                    {-unit111, -unit112_1, unit110},
+                    {unit111, -unit112_2, 0}},
+
+                    {{-unit111, unit112_1, unit110},
+                    {unit111, -unit112_1, unit110},
+                    {unit111, unit112_2, 0}},
+
+                    {{unit111, -unit112_1, unit110},
+                    {unit111, -unit112_1, -unit110},
+                    {unit111, unit112_2, 0}},
+
+                    {{unit111, unit112_1, unit110},
+                    {unit111, unit112_1, -unit110},
+                    {-unit111, unit112_2, 0}},
+
+                    {{unit111, unit112_1, unit110},
+                    {unit111, -unit112_2, 0},
+                    {unit111, unit112_1, -unit110}},
+
+                    {{unit111, -unit112_1, unit110},
+                    {-unit111, -unit112_2, 0},
+                    {unit111, -unit112_1, -unit110}},
+
+                    {{unit111, -unit112_1, unit110},
+                    {unit111, unit112_2, 0},
+                    {-unit111, unit112_1, unit110}},
+
+                    {{-unit111, -unit112_1, unit110},
+                    {unit111, -unit112_2, 0},
+                    {unit111, unit112_1, unit110}},
+
+                    {{unit111, -unit112_2,0},
+                    {unit111, unit112_1, unit110},
+                    {-unit111, -unit112_1, unit110}},
+
+                    {{unit111, unit112_2, 0},
+                    {-unit111, unit112_1, unit110},
+                    {unit111, -unit112_1, unit110}},
+
+                    {{unit111, unit112_2, 0},
+                    {unit111, -unit112_1, unit110},
+                    {unit111, -unit112_1, -unit110}},
+
+                    {{-unit111, unit112_2, 0},
+                    {unit111, unit112_1, unit110},
+                    {unit111, unit112_1, -unit110}}};
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -71,17 +130,16 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
+m_RandomizeParentIds(true),
 m_GrainIds(NULL),
 m_ParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
 m_NeighborList(NULL),
-m_CrystalStructures(NULL),
-m_NumFields(NULL)
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -113,6 +171,7 @@ void MergeColonies::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   {
@@ -122,6 +181,7 @@ void MergeColonies::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
 
@@ -149,10 +209,21 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
+  if(err == -303)
+  {
+    setErrorCondition(0);
+    FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+    find_avgorients->setObservers(this->getObservers());
+    find_avgorients->setDataContainer(getDataContainer());
+    if(preflight == true) find_avgorients->preflight();
+    if(preflight == false) find_avgorients->execute();
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
   if(err == -303)
   {
@@ -187,7 +258,6 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -224,15 +294,52 @@ void MergeColonies::execute()
  notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
- notifyStatusMessage("Renumbering Grains");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
+  if (true == m_RandomizeParentIds)
   {
-    return;
+    int64_t totalPoints = m->getTotalPoints();
+
+    // Generate all the numbers up front
+    const int rangeMin = 1;
+    const int rangeMax = numParents - 1;
+    typedef boost::uniform_int<int> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&,
+                                     NumberDistribution> Generator;
+
+    NumberDistribution distribution(rangeMin, rangeMax);
+    RandomNumberGenerator generator;
+    Generator numberGenerator(generator, distribution);
+    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
+    int32_t* pid = rndNumbers->GetPointer(0);
+    pid[0] = 0;
+    std::set<int32_t> parentIdSet;
+    parentIdSet.insert(0);
+    for(size_t i = 1; i < numParents; ++i)
+    {
+      pid[i] = i; //numberGenerator();
+      parentIdSet.insert(pid[i]);
+    }
+
+    size_t r;
+    size_t temp;
+    //--- Shuffle elements by randomly exchanging each with one other.
+    for (size_t i=1; i< numParents; i++) {
+        r = numberGenerator(); // Random remaining position.
+        if (r >= numParents) {
+          continue;
+        }
+        temp = pid[i];
+        pid[i] = pid[r];
+        pid[r] = temp;
+    }
+
+    // Now adjust all the Grain Id values for each Voxel
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+       m_ParentIds[i] = pid[ m_ParentIds[i] ];
+    }
   }
 
  notifyStatusMessage("Completed");
@@ -267,11 +374,11 @@ void MergeColonies::merge_colonies()
   {
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
-	  parentcount++;
-	  parentnumbers[i] = parentcount;
-	  m_Active[i] = true;
+      parentcount++;
+      parentnumbers[i] = parentcount;
+      m_Active[i] = true;
       colonylist.push_back(i);
-      for (int j = 0; j < colonylist.size(); j++)
+      for (std::vector<int>::size_type j = 0; j < colonylist.size(); j++)
       {
         int firstgrain = colonylist[j];
         int size = int(neighborlist[firstgrain].size());
@@ -281,53 +388,71 @@ void MergeColonies::merge_colonies()
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
-		    w = 10000.0f;
-			q1[0] = 1;
+            w = 10000.0f;
+            q1[0] = 1;
             q1[1] = m_AvgQuats[5*firstgrain+1];
             q1[2] = m_AvgQuats[5*firstgrain+2];
             q1[3] = m_AvgQuats[5*firstgrain+3];
             q1[4] = m_AvgQuats[5*firstgrain+4];
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-			q2[0] = 1;
+            q2[0] = 1;
             q2[1] = m_AvgQuats[5*neigh+1];
             q2[2] = m_AvgQuats[5*neigh+2];
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
-			{
-				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-				OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-				m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-				OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-				w = w * (180.0f/m_pi);
+            if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
+            {
+                w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+                OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+                m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
+                OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+                w = w * (180.0f/m_pi);
 //				float vecttol = 0.01f;
 //	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
 //	            if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
 //				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
 //				if (fabs(fabs(r1) - 0.5773f) < vecttol && fabs(fabs(r2) - 0.0530f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
 //				if (fabs(fabs(r1) - 0.5870f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.1858f) < vecttol) colony = 1;
-				float angdiff1 = fabs(w-10.53f);
-				float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
-				if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
-				float angdiff2 = fabs(w-90.00f);
-				float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
-				if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
-				float angdiff3 = fabs(w-60.00f);
-				float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
-				if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
-				float angdiff4 = fabs(w-60.83f);
-				float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
-				if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
-				float angdiff5 = fabs(w-63.26f);
-				float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
-				if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
-				if (colony == 1)
-				{
-				  parentnumbers[neigh] = parentcount;
-				  colonylist.push_back(neigh);
-				}
-			}
+                float angdiff1 = fabs(w-10.53f);
+                float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
+                if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
+                float angdiff2 = fabs(w-90.00f);
+                float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
+                if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
+                float angdiff3 = fabs(w-60.00f);
+                float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
+                if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
+                float angdiff4 = fabs(w-60.83f);
+                float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
+                if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
+                float angdiff5 = fabs(w-63.26f);
+                float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
+                if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
+                if (colony == 1)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  colonylist.push_back(neigh);
+                }
+            }
+            else if ((phase1 == Ebsd::CrystalStructure::Hexagonal && phase2 == Ebsd::CrystalStructure::Cubic))
+            {
+                colony = check_for_burgers(q2, q1);
+                if (colony == 1)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  colonylist.push_back(neigh);
+                }
+            }
+            else if ((phase1 == Ebsd::CrystalStructure::Cubic && phase2 == Ebsd::CrystalStructure::Hexagonal))
+            {
+                colony = check_for_burgers(q1, q2);
+                if (colony == 1)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  colonylist.push_back(neigh);
+                }
+            }
           }
         }
       }
@@ -338,8 +463,10 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	m_ParentIds[k] = parentnumbers[grainname];
+  if(grainname > 0) m_ParentIds[k] = parentnumbers[grainname];
+  else m_ParentIds[k] = 0;
   }
+  numParents = parentcount+1;
 }
 
 void MergeColonies::characterize_colonies()
@@ -350,4 +477,46 @@ void MergeColonies::characterize_colonies()
   {
 
   }
+}
+
+int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
+{
+
+/*  float ea1 = 0.0*m_pi/180.0f;
+  float ea2 = 0.0*m_pi/180.0f;
+  float ea3 = 0.0*m_pi/180.0f;
+  OrientationMath::eulertoQuat(betaQuat, ea1, ea2, ea3);
+
+  ea1 = 0.0*m_pi/180.0f;
+  ea2 = 45.0*m_pi/180.0f;
+  ea3 = 54.73*m_pi/180.0f;
+  OrientationMath::eulertoQuat(alphaQuat, ea1, ea2, ea3);*/
+
+  float w = 0.0;
+  float radToDeg = 180.0f/m_pi;
+
+  float gBeta[3][3];
+  float gBetaT[3][3];
+  OrientationMath::QuattoMat(betaQuat, gBeta);
+  //transpose gBeta so the sample direction is the output when
+  //gBeta is multiplied by the crystal directions below
+  MatrixMath::transpose3x3(gBeta, gBetaT);
+
+  float gAlpha[3][3];
+  float gAlphaT[3][3];
+  OrientationMath::QuattoMat(alphaQuat, gAlpha);
+  //transpose gBeta so the sample direction is the output when
+  //gBeta is multiplied by the crystal directions below
+  MatrixMath::transpose3x3(gAlpha, gAlphaT);
+
+  float mat[3][3];
+  for(int i=0;i<12;i++)
+  {
+    MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
+    w = OrientationMath::matrixMisorientation(mat, gAlphaT);
+    if((w*radToDeg) < m_AngleTolerance) return 1;
+    else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
+  }
+
+  return 0;
 }

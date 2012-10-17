@@ -46,8 +46,7 @@
 #include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
-
-#include "PipelineMessage.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 
 
@@ -80,7 +79,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages);
+    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages)
 
     void addErrorMessage(PipelineMessage &msg);
     void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);

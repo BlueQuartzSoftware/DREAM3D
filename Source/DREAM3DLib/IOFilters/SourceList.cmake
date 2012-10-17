@@ -20,6 +20,8 @@ SET (IOFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldInfoReader.h
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EnsembleInfoReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.h
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.h
@@ -43,6 +45,8 @@ SET (DREAM3DLib_IOFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldInfoReader.cpp
+    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EnsembleInfoReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.cpp
     ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.cpp

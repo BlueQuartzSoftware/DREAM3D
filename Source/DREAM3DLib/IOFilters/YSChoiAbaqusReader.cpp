@@ -46,6 +46,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 
 #define DIMS "DIMENSIONS"
 #define RES "SPACING"
@@ -141,7 +142,7 @@ void YSChoiAbaqusReader::execute()
 	int xpoints, ypoints, zpoints, totalpoints;
 	int numgrains = 0;
 	float resx, resy, resz;
-    double **mat;
+    float ***mat;
     const unsigned int size(1024);
     char buf[size];
     std::ifstream in(getInputFile().c_str());
@@ -158,7 +159,7 @@ void YSChoiAbaqusReader::execute()
 	    size_t dims[3] = {xpoints, ypoints, zpoints};
 	    m->setDimensions(dims);
         totalpoints = xpoints * ypoints * zpoints;
-        mat = new double *[totalpoints];
+        mat = new float **[totalpoints];
       }
 	  if (RES == word)
       {
@@ -179,7 +180,11 @@ void YSChoiAbaqusReader::execute()
     float value;
     for (int i = 0; i < totalpoints; i++)
     {
-      mat[i] = new double[9];
+	  mat[i] = new float *[3];
+	  for(int j=0;j<3;j++)
+	  {
+		mat[i][j] = new float [3];
+	  }
       onedge = false;
       in >> gnum;
       col = i % xpoints;
@@ -195,68 +200,50 @@ void YSChoiAbaqusReader::execute()
       }
       m_SurfaceFields[gnum] = onedge;
     }
-    for (int iter = 0; iter < 9; iter++)
+    for (int iter1 = 0; iter1 < 3; iter1++)
     {
-      headerdone = false;
-      while (headerdone == false)
-      {
-        in.getline(buf, size);
-        std::string line = buf;
-        in >> word;
-        if (LOOKUP == word)
-        {
-          headerdone = true;
-          in >> word;
-        }
-      }
-      for (int i = 0; i < totalpoints; i++)
-      {
-        onedge = 0;
-        in >> value;
-        mat[i][iter] = value;
-      }
+		for (int iter2 = 0; iter2 < 3; iter2++)
+		{
+		  headerdone = false;
+		  while (headerdone == false)
+		  {
+			in.getline(buf, size);
+			std::string line = buf;
+			in >> word;
+			if (LOOKUP == word)
+			{
+			  headerdone = true;
+			  in >> word;
+			}
+		  }
+		  for (int i = 0; i < totalpoints; i++)
+		  {
+			onedge = 0;
+			in >> value;
+			mat[i][iter1][iter2] = value;
+		  }
+		}
     }
 	float ea1, ea2, ea3;
 
 	float q[5];
 	double denom;
+	float g[3][3];
 	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
 	{
-		denom = mat[i][0]*mat[i][0]+mat[i][3]*mat[i][3]+mat[i][6]*mat[i][6];
-		denom = sqrt(denom);
-		mat[i][0] = mat[i][0]/denom;
-		mat[i][3] = mat[i][3]/denom;
-		mat[i][6] = mat[i][6]/denom;
-		denom = mat[i][1]*mat[i][1]+mat[i][4]*mat[i][4]+mat[i][7]*mat[i][7];
-		denom = sqrt(denom);
-		mat[i][1] = mat[i][1]/denom;
-		mat[i][4] = mat[i][4]/denom;
-		mat[i][7] = mat[i][7]/denom;
-		denom = mat[i][2]*mat[i][2]+mat[i][5]*mat[i][5]+mat[i][8]*mat[i][8];
-		denom = sqrt(denom);
-		mat[i][2] = mat[i][2]/denom;
-		mat[i][5] = mat[i][5]/denom;
-		mat[i][8] = mat[i][8]/denom;
-		if(mat[i][8] > 1) mat[i][8] = 1;
-		if(mat[i][8] < -1) mat[i][8] = -1;
-/*		ea2 = acos(mat[i][8]);
-		cosine3 = (mat[i][5]/sin(ea2));
-		sine3 = (mat[i][2]/sin(ea2));
-		cosine1 = (-mat[i][7]/sin(ea2));
-		sine1 = (mat[i][6]/sin(ea2));
-		if(cosine3 > 1) cosine3 = 1;
-		if(cosine3 < -1) cosine3 = -1;
-		ea3 = acos(cosine3);
-		if(cosine1 > 1) cosine1 = 1;
-		if(cosine1 < -1) cosine1 = -1;
-		ea1 = acos(cosine1);
-		if(sine3 < 0) ea3 = (2*3.1415926535897)-ea3;
-		if(sine1 < 0) ea1 = (2*3.1415926535897)-ea1;*/
+		for(int j=0;j<3;j++)
+		{
+			for(int k=0;k<3;k++)
+			{
+				g[j][k] = mat[i][j][k];
+			}
+		}
+		MatrixMath::normalize3x3(g);
 		q[0] = 1;
-		q[4] = static_cast<float>( sqrt((1.0+mat[i][0]+mat[i][4]+mat[i][8]))/2 );
-		q[1] = static_cast<float>( (mat[i][5]-mat[i][7])/(4*q[4]) );
-		q[2] = static_cast<float>( (mat[i][6]-mat[i][2])/(4*q[4]) );
-		q[3] = static_cast<float>( (mat[i][1]-mat[i][3])/(4*q[4]) );
+		q[4] = static_cast<float>( sqrt((1.0+g[0][0]+g[1][1]+g[2][2]))/2 );
+		q[1] = static_cast<float>( (g[1][2]-g[2][1])/(4*q[4]) );
+		q[2] = static_cast<float>( (g[2][0]-g[0][2])/(4*q[4]) );
+		q[3] = static_cast<float>( (g[0][1]-g[1][0])/(4*q[4]) );
 		m_Quats[5*i] = 1;
 		m_Quats[5*i+1] = q[1];
 		m_Quats[5*i+2] = q[2];

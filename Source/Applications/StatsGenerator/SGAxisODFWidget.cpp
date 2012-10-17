@@ -46,7 +46,15 @@
 //-- Qt Includes
 #include <QtGui/QAbstractItemDelegate>
 #include <QtCore/QtConcurrentMap>
-
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtCore/QSettings>
+#include <QtCore/QVector>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QMessageBox>
+#include <QtGui/QFileDialog>
 
 
 #include "EbsdLib/EbsdConstants.h"
@@ -661,7 +669,43 @@ void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
     m_ODFTableView->resizeColumnsToContents();
   }
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory;
+  QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  else
+  {
+    size_t numOrients = 0;
+	std::string filename = file.toStdString();
+	std::ifstream inFile;
+	inFile.open(filename.c_str());
 
+	inFile >> numOrients;
+
+	float e1, e2, e3, weight, sigma;
+	for(size_t i = 0; i < numOrients; i++)
+	{
+		inFile >> e1 >> e2 >> e3 >> weight >> sigma;
+
+		if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
+		int row = m_ODFTableModel->rowCount() - 1;
+		m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
+
+		m_ODFTableView->resizeColumnsToContents();
+		m_ODFTableView->scrollToBottom();
+		m_ODFTableView->setFocus();
+		QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
+		m_ODFTableView->setCurrentIndex(index);
+	}
+  }
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

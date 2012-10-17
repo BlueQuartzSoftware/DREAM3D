@@ -164,9 +164,9 @@ class name : public VtkScalarWriter\
       int64_t totalPoints = r->getTotalPoints();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
       if (m_WriteBinaryFiles == true) {\
-	    WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
+        WRITE_VTK_SCALARS_FROM_FIELD_BINARY(r, scalarName, m_msgType, var, grain_indicies)\
       }    else    {\
-	    WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
+        WRITE_VTK_SCALARS_FROM_FIELD_ASCII(r, scalarName, m_msgType, var, grain_indicies, format)\
       }\
       return err;\
   }\
@@ -208,8 +208,7 @@ VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, Cell, DREAM3D::CellData::
 VtkSCALARWRITER_CLASS_DEF(VoxelBCScalarWriter, r, Cell, Ebsd::Ctf::BC, Ebsd::Ctf::BC, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Cell, DREAM3D::CellData::GoodVoxels, DREAM3D::CellData::GoodVoxels, BoolArrayType, char, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, Cell, DREAM3D::CellData::KernelAverageMisorientations, DREAM3D::CellData::KernelAverageMisorientations, FloatArrayType, float, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelGAMScalarWriter, r, Cell, DREAM3D::CellData::GrainMisorientations, DREAM3D::CellData::GrainMisorientations, FloatArrayType, float, "%f ")
-VtkSCALARWRITER_CLASS_DEF(VoxelLMGScalarWriter, r, Cell, DREAM3D::CellData::MisorientationGradients, DREAM3D::CellData::MisorientationGradients, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF(VoxelGAMScalarWriter, r, Cell, DREAM3D::CellData::GrainReferenceMisorientations, DREAM3D::CellData::GrainReferenceMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, Cell, DREAM3D::CellData::SurfaceVoxels, DREAM3D::CellData::SurfaceVoxels, Int8ArrayType, char, "%d ")
 VtkSCALARWRITER_CLASS_DEF_FIELD(FieldSizeScalarWriter, r, Field, DREAM3D::FieldData::EquivalentDiameters, DREAM3D::FieldData::EquivalentDiameters, FloatArrayType, float, "%f ")
 
@@ -558,8 +557,8 @@ class VtkMiscFileWriter : public AbstractFilter
       int64_t totalPoints = m->totalPoints();
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::KernelAverageMisorientations, FloatArrayType, float, (totalPoints), kernelmisorientation);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::GrainMisorientations, FloatArrayType, float, (totalPoints), grainmisorientation);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradient);
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::GrainReferenceMisorientations, FloatArrayType, float, (totalPoints), grainmisorientation);
+//      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Voxel, DREAM3D::CellData::MisorientationGradients, FloatArrayType, float, (totalPoints), misorientationgradient);
 
       //size_t total = m->getXPoints() * m->getYPoints() * m->getZPoints();
       if (true == m_WriteBinaryFiles)
@@ -567,14 +566,14 @@ class VtkMiscFileWriter : public AbstractFilter
         WRITE_VTK_GRAIN_IDS_BINARY(m, DREAM3D::CellData::GrainIds);
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation)
         WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation)
-        WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
+   //     WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(m, DREAM3D::FieldData::LMG, float, misorientationgradient)
       }
       else
       {
         WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, grain_indicies)
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::KernelAvgMisorientations, float, kernelmisorientation, "%f ")
         WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::GrainAvgMisorientations, float, grainmisorientation, "%f ")
-        WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
+ //       WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(m, DREAM3D::FieldData::LMG, float, misorientationgradient, "%f ")
       }
       fclose(f);
       return 0;

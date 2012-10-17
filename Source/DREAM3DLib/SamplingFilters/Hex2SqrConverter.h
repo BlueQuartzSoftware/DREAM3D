@@ -53,8 +53,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AbstractPipeline.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 
 /**
  * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
@@ -107,10 +108,10 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
     * @param line The line to possibly modify
     */
-	std::string modifyAngHeaderLine(char* buf, size_t length);
+  std::string modifyAngHeaderLine(char* buf, size_t length);
 
-	std::string int_to_string(int value);
-	std::string float_to_string(float value);
+  std::string int_to_string(int value);
+  std::string float_to_string(float value);
 
     Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
     void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented

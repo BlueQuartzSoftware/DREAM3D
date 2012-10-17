@@ -14,6 +14,7 @@ ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.h
+${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.h
 )
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 SET (DREAM3DLib_ProcessingFilters_HDRS
@@ -27,6 +28,7 @@ SET (DREAM3DLib_ProcessingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.cpp    
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.cpp
 )
 if (NOT DEFINED ONLY_FILTERS)
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ProcessingFilters" "${DREAM3DLib_ProcessingFilters_HDRS}" "${DREAM3DLib_ProcessingFilters_SRCS}" "0")

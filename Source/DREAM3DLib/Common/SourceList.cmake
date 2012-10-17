@@ -12,7 +12,7 @@
 SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
+  #${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataArray.hpp
@@ -29,6 +29,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
@@ -53,7 +54,7 @@ SET (DREAM3DLib_Common_HDRS
 SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
+ # ${DREAM3DLib_SOURCE_DIR}/Common/AbstractPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.cpp
@@ -62,6 +63,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp

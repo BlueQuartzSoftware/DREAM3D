@@ -36,6 +36,7 @@
 
 #include "FindSchmids.h"
 
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -185,8 +186,10 @@ void FindSchmids::execute()
 
   int ss = 0;
   float q1[5];
+  float g[3][3];
+  float sampleLoading[3];
+  float crystalLoading[3];
   float schmid = 0;
-  float loadx, loady, loadz;
 
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
@@ -198,16 +201,20 @@ void FindSchmids::execute()
       q1[4] = m_AvgQuats[5*i+4];
 	  if(m_AvgQuats[5*i] == 0) q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
 
-      loadx = ((1 - 2*q1[2]*q1[2] - 2*q1[3]*q1[3]) * m_XLoading) + ((2*q1[1]*q1[2] + 2*q1[3]*q1[4]) * m_YLoading) + ((2*q1[1]*q1[3] - 2*q1[2]*q1[4]) * m_ZLoading);
-      loady = ((2*q1[1]*q1[2] - 2*q1[3]*q1[4]) * m_XLoading) + ((1 - 2*q1[1]*q1[1] - 2*q1[3]*q1[3]) * m_YLoading) + ((2*q1[2]*q1[3] + 2*q1[1]*q1[4]) * m_ZLoading);
-      loadz = ((2*q1[1]*q1[3] + 2*q1[2]*q1[4]) * m_XLoading) + ((2*q1[2]*q1[3] - 2*q1[1]*q1[4]) * m_YLoading) + ((1 - 2*q1[1]*q1[1] - 2*q1[2]*q1[2]) * m_ZLoading);
+	  OrientationMath::QuattoMat(q1, g);
 
-	  m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(loadx, loady, loadz, schmid, ss);
+	  sampleLoading[0] = m_XLoading;
+	  sampleLoading[1] = m_YLoading;
+	  sampleLoading[2] = m_ZLoading;
+
+	  MatrixMath::multiply3x3with3x1(g, sampleLoading, crystalLoading);
+
+	  m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
 
       m_Schmids[i] = schmid;
-	  m_Poles[3*i] = int32_t(loadx*100);
-	  m_Poles[3*i+1] = int32_t(loady*100);
-	  m_Poles[3*i+2] = int32_t(loadz*100);
+	  m_Poles[3*i] = int32_t(crystalLoading[0]*100);
+	  m_Poles[3*i+1] = int32_t(crystalLoading[1]*100);
+	  m_Poles[3*i+2] = int32_t(crystalLoading[2]*100);
 	  m_SlipSystems[i] = ss;
   }
 

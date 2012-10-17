@@ -42,6 +42,9 @@
 #include <iomanip>
 #include <map>
 
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -72,8 +75,8 @@ void PhWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("ph");
-	option->setFileType("CMU Grain Growth");
+    option->setFileExtension("ph");
+    option->setFileType("CMU Grain Growth");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -164,12 +167,19 @@ int PhWriter::writeFile()
     static_cast<DimType>(udims[2]),
   };
   int64_t totalpoints = dims[0] * dims[1] * dims[2];
-  // Change the name of the input filename for outout
-  // std::vector<std::string> tokens;
-  // std::string delimeters = "."; // Only a period
-  //  std::tokenize(filename, tokens, delimeters);
 
-  //OutputName = tokens[0] + ".ph";
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return -1;
+  }
+
   std::ofstream outfile;
   outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)

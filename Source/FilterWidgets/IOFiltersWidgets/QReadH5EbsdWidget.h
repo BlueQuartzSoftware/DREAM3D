@@ -60,6 +60,9 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
      * @param r
      */
     void setupQualityMetricFilters(ReadH5Ebsd::Pointer filter);
+
+    QString getFilterGroup();
+
   protected slots:
 
     void on_addQualityMetric_clicked();
