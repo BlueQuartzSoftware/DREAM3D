@@ -35,51 +35,6 @@
 #include "MXA/Utilities/MXADir.h"
 
 
-#define CREATE_INPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXADir::Separator + n;\
-    f = MXADir::toNativeSeparators(f);
-
-#define CREATE_OUTPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXADir::Separator + n;\
-    f = MXADir::toNativeSeparators(f);
-
-#define DREAM3D_BENCHMARKS 0
-
-#if DREAM3D_BENCHMARKS
-#define START_CLOCK()\
-  unsigned long long int millis;\
-  millis = MXA::getMilliSeconds();
-#else
-#define START_CLOCK() unsigned long long int millis = 0;\
-  millis = 0;
-#endif
-
-
-#define CHECK_FOR_CANCELED(FuncClass, Message, name)\
-    if (this->getCancel() ) { \
-              updatePipelineMessage(#Message);\
-              updatePipelineProgress(0);\
-              pipelineFinished();\
-              return;}\
-
-
-#define CHECK_FOR_ERROR(FuncClass, Message, err)\
-    if(err < 0) {\
-      setErrorCondition(err);\
-      std::string msg = std::string(Message);\
-      pipelineErrorMessage(PipelineMessage(getNameOfClass(), msg, err));\
-      updatePipelineProgress(0);\
-      pipelineFinished();\
-      return;   }
-
-
-#define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
-
-
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -302,6 +257,7 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setDataContainer(m.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
+    (*filter)->setDataContainer(NULL);
     int err = (*filter)->getErrorCondition();
     if(err < 0)
     {
@@ -340,12 +296,13 @@ void FilterPipeline::execute()
   }
 
   // Create the DataContainer object
-  if(NULL == m_DataContainer.get())
-  {
-    m_DataContainer = DataContainer::New();
-  }
+//  if(NULL == m_DataContainer.get())
+//  {
+//    m_DataContainer = DataContainer::New();
+//  }
 
-  m_DataContainer->addObserver(static_cast<Observer*>(this));
+  DataContainer::Pointer dataContainer = DataContainer::New();
+  dataContainer->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
   float progress = 0.0f;
@@ -370,7 +327,7 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setDataContainer(m_DataContainer.get());
+    (*iter)->setDataContainer(dataContainer.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));

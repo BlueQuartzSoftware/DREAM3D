@@ -77,8 +77,6 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	//------ Created Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
@@ -109,7 +107,6 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;
-	int32_t* m_NumFields;
 
     std::vector<int> parentnumbers;
 

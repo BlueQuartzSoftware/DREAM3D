@@ -40,6 +40,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
@@ -372,7 +373,7 @@ void  InsertPrecipitatePhases::place_precipitates()
   curphasevol.resize(precipitatephases.size());
   float change = 0.0f;
   float factor = 1.0;
-  float iter = 0;
+  size_t iter = 0;
   for (size_t j = 0; j < precipitatephases.size(); ++j)
   {
     curphasevol[j] = 0;
@@ -385,7 +386,7 @@ void  InsertPrecipitatePhases::place_precipitates()
       generate_precipitate(phase, static_cast<int>(Seed), &precip, m_ShapeTypes[phase], m_OrthoOps);
       currentsizedisterror = check_sizedisterror(&precip);
       change = (currentsizedisterror) - (oldsizedisterror);
-      if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
+      if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
         std::stringstream ss;
         ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
@@ -867,11 +868,11 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
     {
-      dia = m_EquivalentDiameters[index];
+      dia = m_EquivalentDiameters[gadd];
       if(dia > pp->getMaxGrainDiameter()) dia = pp->getMaxGrainDiameter();
       if(dia < pp->getMinGrainDiameter()) dia = pp->getMinGrainDiameter();
 	  dia = static_cast<float>( (dia - pp->getMinGrainDiameter()) / pp->getBinStepSize() );
-      nnum = m_Neighborhoods[index];
+      nnum = m_Neighborhoods[gadd];
 	  bin = static_cast<size_t>( nnum/neighbordiststep[iter] );
 	  if(bin >= 40) bin = 39;
       simneighbordist[iter][dia][bin]++;
@@ -1080,8 +1081,8 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   int centercolumn, centerrow, centerplane;
   int xmin, xmax, ymin, ymax, zmin, zmax;
   float xc, yc, zc;
-  float xp, yp, zp;
-  float x, y, z;
+  float coordsRotated[3];
+  float coords[3];
   float volcur = m_Volumes[gnum];
   float bovera = m_AxisLengths[3*gnum+1];
   float covera = m_AxisLengths[3*gnum+2];
@@ -1109,15 +1110,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   float PHI = m_AxisEulerAngles[3*gnum+1];
   float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
-  ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-  ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-  ga[0][2] = sinf(phi2) * sinf(PHI);
-  ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-  ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-  ga[1][2] = cosf(phi2) * sinf(PHI);
-  ga[2][0] = sinf(phi1) * sinf(PHI);
-  ga[2][1] = -cosf(phi1) * sinf(PHI);
-  ga[2][2] = cosf(PHI);
+  OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
@@ -1145,19 +1138,17 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
         column = iter1;
         row = iter2;
         plane = iter3;
-        x = float(column) * packingresx;
-        y = float(row) * packingresy;
-        z = float(plane) * packingresz;
+        coords[0] = float(column) * packingresx;
+        coords[1] = float(row) * packingresy;
+        coords[2] = float(plane) * packingresz;
         inside = -1;
-		x = x - xc;
-		y = y - yc;
-		z = z - zc;
-		xp = (x*ga[0][0])+(y*ga[0][1])+(z*ga[0][2]);
-		yp = (x*ga[1][0])+(y*ga[1][1])+(z*ga[1][2]);
-		zp = (x*ga[2][0])+(y*ga[2][1])+(z*ga[2][2]);
-		float axis1comp = xp / radcur1;
-		float axis2comp = yp / radcur2;
-		float axis3comp = zp / radcur3;
+		coords[0] = coords[0] - xc;
+		coords[1] = coords[1] - yc;
+		coords[2] = coords[2] - zc;
+		MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+		float axis1comp = coordsRotated[0] / radcur1;
+		float axis2comp = coordsRotated[1] / radcur2;
+		float axis3comp = coordsRotated[2] / radcur3;
 		inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 		if(inside >= 0)
 		{
@@ -1205,9 +1196,9 @@ void InsertPrecipitatePhases::assign_voxels()
   size_t column, row, plane;
   float inside;
   float xc, yc, zc;
-  float xp, yp, zp;
+  float coordsRotated[3];
   float dist;
-  float x, y, z;
+  float coords[3];
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
  // int64_t totpoints = m->totalPoints();
   gsizes.resize(m->getNumFieldTuples());
@@ -1249,15 +1240,7 @@ void InsertPrecipitatePhases::assign_voxels()
 	float PHI = m_AxisEulerAngles[3*i+1];
 	float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
-    ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-    ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-    ga[0][2] = sinf(phi2) * sinf(PHI);
-    ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-    ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-    ga[1][2] = cosf(phi2) * sinf(PHI);
-    ga[2][0] = sinf(phi1) * sinf(PHI);
-    ga[2][1] = -cosf(phi1) * sinf(PHI);
-    ga[2][2] = cosf(PHI);
+	OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
     plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
@@ -1302,28 +1285,26 @@ void InsertPrecipitatePhases::assign_voxels()
           if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
           index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
           inside = -1;
-          x = float(column) * xRes;
-          y = float(row) * yRes;
-          z = float(plane) * zRes;
-          if (iter1 < 0) x = x - sizex;
-          if (iter1 > dims[0] - 1) x = x + sizex;
-          if (iter2 < 0) y = y - sizey;
-          if (iter2 > dims[1] - 1) y = y + sizey;
-          if (iter3 < 0) z = z - sizez;
-          if (iter3 > dims[2] - 1) z = z + sizez;
-          dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+          coords[0] = float(column) * xRes;
+          coords[1] = float(row) * yRes;
+          coords[2] = float(plane) * zRes;
+          if (iter1 < 0) coords[0] = coords[0] - sizex;
+          if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
+          if (iter2 < 0) coords[1] = coords[1] - sizey;
+          if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
+          if (iter3 < 0) coords[2] = coords[2] - sizez;
+          if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
+          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
           dist = sqrtf(dist);
           if (dist < radcur1)
           {
-            x = x - xc;
-            y = y - yc;
-            z = z - zc;
-            xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
-            yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
-            zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
-            float axis1comp = xp / radcur1;
-            float axis2comp = yp / radcur2;
-            float axis3comp = zp / radcur3;
+            coords[0] = coords[0] - xc;
+            coords[1] = coords[1] - yc;
+            coords[2] = coords[2] - zc;
+			MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+            float axis1comp = coordsRotated[0] / radcur1;
+            float axis2comp = coordsRotated[1] / radcur2;
+            float axis3comp = coordsRotated[2] / radcur3;
             inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
             if (inside >= 0)
             {
@@ -1372,9 +1353,9 @@ void InsertPrecipitatePhases::assign_gaps()
   DimType column, row, plane;
   float inside;
   float xc, yc, zc;
-  float xp, yp, zp;
+  float coordsRotated[3];
   float dist;
-  float x, y, z;
+  float coords[3];
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
@@ -1430,15 +1411,7 @@ void InsertPrecipitatePhases::assign_gaps()
 		float PHI = m_AxisEulerAngles[3*i+1];
 		float phi2 = m_AxisEulerAngles[3*i+2];
 		float ga[3][3];
-		ga[0][0] = cosf(phi1) * cosf(phi2) - sinf(phi1) * sinf(phi2) * cosf(PHI);
-		ga[0][1] = sinf(phi1) * cosf(phi2) + cosf(phi1) * sinf(phi2) * cosf(PHI);
-		ga[0][2] = sinf(phi2) * sinf(PHI);
-		ga[1][0] = -cosf(phi1) * sinf(phi2) - sinf(phi1) * cosf(phi2) * cosf(PHI);
-		ga[1][1] = -sinf(phi1) * sinf(phi2) + cosf(phi1) * cosf(phi2) * cosf(PHI);
-		ga[1][2] = cosf(phi2) * sinf(PHI);
-		ga[2][0] = sinf(phi1) * sinf(PHI);
-		ga[2][1] = -cosf(phi1) * sinf(PHI);
-		ga[2][2] = cosf(PHI);
+		OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
 		column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
 		row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
 		plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
@@ -1485,28 +1458,26 @@ void InsertPrecipitatePhases::assign_gaps()
 			  if(m_GrainIds[index] <= 0)
 			  {
 				  inside = -1;
-				  x = float(column) * xRes;
-				  y = float(row) * yRes;
-				  z = float(plane) * zRes;
-				  if (iter1 < 0) x = x - sizex;
-				  if (iter1 > dims[0] - 1) x = x + sizex;
-				  if (iter2 < 0) y = y - sizey;
-				  if (iter2 > dims[1] - 1) y = y + sizey;
-				  if (iter3 < 0) z = z - sizez;
-				  if (iter3 > dims[2] - 1) z = z + sizez;
-				  dist = ((x - xc) * (x - xc)) + ((y - yc) * (y - yc)) + ((z - zc) * (z - zc));
+				  coords[0] = float(column) * xRes;
+				  coords[1] = float(row) * yRes;
+				  coords[2] = float(plane) * zRes;
+				  if (iter1 < 0) coords[0] = coords[0] - sizex;
+				  if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
+				  if (iter2 < 0) coords[1] = coords[1] - sizey;
+				  if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
+				  if (iter3 < 0) coords[2] = coords[2] - sizez;
+				  if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
+				  dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
 				  dist = sqrtf(dist);
 				  if (dist < radcur1)
 				  {
-					x = x - xc;
-					y = y - yc;
-					z = z - zc;
-					xp = (x * ga[0][0]) + (y * ga[0][1]) + (z * ga[0][2]);
-				    yp = (x * ga[1][0]) + (y * ga[1][1]) + (z * ga[1][2]);
-			        zp = (x * ga[2][0]) + (y * ga[2][1]) + (z * ga[2][2]);
-					float axis1comp = xp / radcur1;
-					float axis2comp = yp / radcur2;
-					float axis3comp = zp / radcur3;
+					coords[0] = coords[0] - xc;
+					coords[1] = coords[1] - yc;
+					coords[2] = coords[2] - zc;
+					MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+					float axis1comp = coordsRotated[0] / radcur1;
+					float axis2comp = coordsRotated[1] / radcur2;
+					float axis3comp = coordsRotated[2] / radcur3;
 					inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
 					if (inside >= 0 && inside > ellipfuncs[index])
 					{

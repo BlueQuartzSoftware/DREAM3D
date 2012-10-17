@@ -79,9 +79,15 @@ class FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Units)
 
   protected:
-    FilterParameter() : m_ValueType("Not_Set"){}
+    FilterParameter() :
+      m_ValueType("Not_Set"),
+      m_FileExtension(""),
+      m_FileType(""),
+      m_Units("")
+    {}
 
   private:
     FilterParameter(const FilterParameter&); // Copy Constructor Not Implemented

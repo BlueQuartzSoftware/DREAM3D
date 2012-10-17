@@ -36,6 +36,10 @@
 
 #include "MergeTwins.h"
 
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
@@ -43,7 +47,8 @@
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
+
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -71,17 +76,16 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
+m_RandomizeParentIds(true),
 m_GrainIds(NULL),
 m_ParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
 m_NeighborList(NULL),
-m_CrystalStructures(NULL),
-m_NumFields(NULL)
+m_CrystalStructures(NULL)
 {
 
   m_HexOps = HexagonalOps::New();
@@ -115,6 +119,7 @@ void MergeTwins::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+  option->setUnits("Degrees");
     parameters.push_back(option);
   }
   {
@@ -124,6 +129,7 @@ void MergeTwins::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+  option->setUnits("Degrees");
     parameters.push_back(option);
   }
 
@@ -154,7 +160,18 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
+  if(err == -303)
+  {
+  setErrorCondition(0);
+  FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+  find_avgorients->setObservers(this->getObservers());
+  find_avgorients->setDataContainer(getDataContainer());
+  if(preflight == true) find_avgorients->preflight();
+  if(preflight == false) find_avgorients->execute();
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303, int32_t, Int32ArrayType, fields, 1)
   if(err == -303)
   {
@@ -190,7 +207,6 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -228,15 +244,52 @@ void MergeTwins::execute()
  notifyStatusMessage("Characterizing Twins");
   characterize_twins();
 
- notifyStatusMessage("Renumbering Grains");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
+  if (true == m_RandomizeParentIds)
   {
-    return;
+    int64_t totalPoints = m->getTotalPoints();
+
+    // Generate all the numbers up front
+    const int rangeMin = 1;
+    const int rangeMax = numParents - 1;
+    typedef boost::uniform_int<int> NumberDistribution;
+    typedef boost::mt19937 RandomNumberGenerator;
+    typedef boost::variate_generator<RandomNumberGenerator&,
+                                     NumberDistribution> Generator;
+
+    NumberDistribution distribution(rangeMin, rangeMax);
+    RandomNumberGenerator generator;
+    Generator numberGenerator(generator, distribution);
+    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+
+    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
+    int32_t* pid = rndNumbers->GetPointer(0);
+    pid[0] = 0;
+    std::set<int32_t> parentIdSet;
+    parentIdSet.insert(0);
+    for(int i = 1; i < numParents; ++i)
+    {
+      pid[i] = i; //numberGenerator();
+      parentIdSet.insert(pid[i]);
+    }
+
+    int r;
+    size_t temp;
+    //--- Shuffle elements by randomly exchanging each with one other.
+    for (int i=1; i< numParents; i++) {
+        r = numberGenerator(); // Random remaining position.
+        if (r >= numParents) {
+          continue;
+        }
+        temp = pid[i];
+        pid[i] = pid[r];
+        pid[r] = temp;
+    }
+
+    // Now adjust all the Grain Id values for each Voxel
+    for(int64_t i = 0; i < totalPoints; ++i)
+    {
+       m_ParentIds[i] = pid[ m_ParentIds[i] ];
+    }
   }
 
  notifyStatusMessage("Completed");
@@ -271,11 +324,11 @@ void MergeTwins::merge_twins()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
+  if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
-	  parentcount++;
-	  parentnumbers[i] = parentcount;
-	  m_Active[i] = true;
+    parentcount++;
+    parentnumbers[i] = parentcount;
+    m_Active[i] = true;
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
       {
@@ -288,30 +341,30 @@ void MergeTwins::merge_twins()
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
-			q1[0] = 1;
+      q1[0] = 1;
             q1[1] = m_AvgQuats[5*firstgrain+1];
             q1[2] = m_AvgQuats[5*firstgrain+2];
             q1[3] = m_AvgQuats[5*firstgrain+3];
             q1[4] = m_AvgQuats[5*firstgrain+4];
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-			q2[0] = 1;
+      q2[0] = 1;
             q2[1] = m_AvgQuats[5*neigh+1];
             q2[2] = m_AvgQuats[5*neigh+2];
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic) 
-			{ 
-				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-				w = w * (180.0f/m_pi);
-	            float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
-	            float angdiff60 = fabs(w-60.0f);
-	            if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
-	            if (twin == 1)
-	            {
-	              parentnumbers[neigh] = parentcount;
-	              twinlist.push_back(neigh);
-				}
+      if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic)
+      {
+        w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+        w = w * (180.0f/m_pi);
+              float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
+              float angdiff60 = fabs(w-60.0f);
+              if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
+              if (twin == 1)
+              {
+                parentnumbers[neigh] = parentcount;
+                twinlist.push_back(neigh);
+        }
             }
           }
         }
@@ -323,8 +376,9 @@ void MergeTwins::merge_twins()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	m_ParentIds[k] = parentnumbers[grainname];
+  m_ParentIds[k] = parentnumbers[grainname];
   }
+  numParents = parentcount+1;
 }
 
 void MergeTwins::characterize_twins()

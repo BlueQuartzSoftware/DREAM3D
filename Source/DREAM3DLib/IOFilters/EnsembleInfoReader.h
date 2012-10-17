@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,57 +34,64 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AbstractPipeline.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractPipeline::AbstractPipeline() :
-    m_ErrorCondition(0), m_Cancel(false)
+#ifndef _EnsembleInfoReader_h_
+#define _EnsembleInfoReader_h_
+
+#include <string>
+#include <vector>
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/FileReader.h"
+
+/**
+ * @class EnsembleInfoReader EnsembleInfoReader.h DREAM3DLib/IO/EnsembleInfoReader.h
+ * @brief
+ * @author mjackson
+ * @date Sep 28, 2011
+ * @version $Revision$
+ */
+class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 {
-}
+  public:
+    DREAM3D_SHARED_POINTERS(EnsembleInfoReader)
+    DREAM3D_STATIC_NEW_MACRO(EnsembleInfoReader)
+    DREAM3D_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractPipeline::~AbstractPipeline()
-{
+    virtual ~EnsembleInfoReader();
 
-}
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputInfoFile)
+
+    //------ Created Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Ensemble Info File"; }
+
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+
+    virtual void preflight();
+
+  protected:
+    EnsembleInfoReader();
+
+    virtual int readFile();
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+  private:
+    unsigned int* m_CrystalStructures;
+    unsigned int* m_PhaseTypes;
+
+    EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
+    void operator=(const EnsembleInfoReader&); //Not Implemented
+
+};
+
+#endif //_EnsembleInfoReader_h_
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractPipeline::pipelineFinished()
-{
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractPipeline::setCancel(bool value)
-{
-  this->m_Cancel = value;
-  if (NULL != m_CurrentFilter.get())
-  {
-    m_CurrentFilter->setCancel(value);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AbstractPipeline::getCancel()
-{
-  return m_Cancel;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractPipeline::run()
-{
-  execute();
-  pipelineFinished();
-}

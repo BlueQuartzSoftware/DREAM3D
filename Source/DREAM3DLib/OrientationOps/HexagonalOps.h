@@ -40,15 +40,9 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
+
 namespace HexagonalMath {
   namespace Detail {
-
-    static const float HexDim1InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim3InitValue = powf((0.75f*((float(M_PI)/6.0f)-sinf((float(M_PI)/6.0f)))),(1.0f/3.0f));
-    static const float HexDim1StepValue = HexDim1InitValue/18.0f;
-    static const float HexDim2StepValue = HexDim2InitValue/18.0f;
-    static const float HexDim3StepValue = HexDim3InitValue/6.0f;
     static const float HexQuatSym[12][5] = {{0.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f},
                          {0.000000000f, 0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f},
                          {0.000000000f, 0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f},
@@ -61,21 +55,8 @@ namespace HexagonalMath {
                          {0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f},
                          {0.000000000f, -0.50000000f, 0.866025400f, 0.000000000f, 0.000000000f},
                          {0.000000000f, -0.86602540f, 0.500000000f, 0.000000000f, 0.000000000}};
-    static const float HexRodSym[12][3] = {{0.0f, 0.0f, 0.0f},
-                      {0.0f, 0.0f, 0.57735f},
-                      {0.0f, 0.0f, 1.73205f},
-                      {0.0f, 0.0f, 1000000000000.0f},
-                      {0.0f, 0.0f, -1.73205f},
-                      {0.0f, 0.0f, -0.57735f},
-                      {1000000000000.0f, 0.0f, 0.0f},
-                      {8660254000000.0f, 5000000000000.0f, 0.0f},
-                      {5000000000000.0f, 8660254000000.0f, 0.0f},
-                      {0.0f, 1000000000000.0f, 0.0f},
-					  {-5000000000000.0f, 8660254000000.0f, 0.0f},
-                      {-8660254000000.0f, 5000000000000.0f, 0.0f}};
   }
 }
-
 /**
  * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/OrientationOps/HexagonalOps.h
  * @brief
@@ -106,7 +87,7 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
 
   protected:
     float _calcMisoQuat(const float quatsym[24][5], int numsym,

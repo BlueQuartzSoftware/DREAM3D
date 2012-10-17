@@ -67,8 +67,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -76,17 +76,16 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    //------ Created Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getHumanLabel() { return "Merge Colonies"; }
+    virtual const std::string getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -98,6 +97,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     MergeColonies();
 
     void merge_colonies();
+  int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
     void characterize_colonies();
 
   private:
@@ -109,9 +109,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     NeighborList<int>* m_NeighborList;
 
     unsigned int* m_CrystalStructures;
-	int32_t* m_NumFields;
 
     std::vector<int> parentnumbers;
+  int numParents;
 
 
     OrientationMath::Pointer m_CubicOps;

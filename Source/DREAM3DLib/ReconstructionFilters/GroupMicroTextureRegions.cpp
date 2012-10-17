@@ -38,12 +38,12 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -71,7 +71,6 @@ m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
 m_ParentIds(NULL),
@@ -79,8 +78,7 @@ m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
 m_NeighborList(NULL),
-m_CrystalStructures(NULL),
-m_NumFields(NULL)
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -112,6 +110,7 @@ void GroupMicroTextureRegions::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
 
@@ -178,8 +177,6 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -210,38 +207,14 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
+  //Convert user defined tolerance to radians.
+  m_CAxisTolerance = m_CAxisTolerance * m_pi/180.0f;
+
  notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
  notifyStatusMessage("Characterizing MicroTexture Regions");
   characterize_micro_texture_regions();
-
- notifyStatusMessage("Renumbering Fields");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setDataContainer(m);
-  renumber_grains->execute();
-  int err = renumber_grains->getErrorCondition();
-  if (err < 0)
-  {
-    return;
-  }
-
-  setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  for(size_t i = 1; i < m->getNumEnsembleTuples(); i++)
-  {
-	m_NumFields[i] = 0;
-  }
-  for(size_t i = 1; i < m->getNumFieldTuples(); i++)
-  {
-	m_NumFields[m_FieldPhases[i]]++;
-  }
 
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("GroupMicroTextureRegions Completed");
@@ -261,10 +234,13 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float angcur = 180.0f;
   std::vector<int> microtexturelist;
   float w;
-  float cx1, cy1, cz1, denom1;
-  float cx2, cy2, cz2, denom2;
-  float ea11, ea12, ea13;
-  float ea21, ea22, ea23;
+  float g1[3][3];
+  float g2[3][3];
+  float g1t[3][3];
+  float g2t[3][3];
+  float c1[3];
+  float c2[3];
+  float caxis[3] = {0,0,1};
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
@@ -276,51 +252,60 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   {
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
-	  parentcount++;
-	  parentnumbers[i] = parentcount;
-	  m_Active[i] = true;
+      parentcount++;
+      parentnumbers[i] = parentcount;
+      m_Active[i] = true;
       microtexturelist.push_back(i);
-      for (int j = 0; j < microtexturelist.size(); j++)
+      for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
-		q1[0] = 1;
+        q1[0] = 1;
         q1[1] = m_AvgQuats[5*firstgrain+1];
         q1[2] = m_AvgQuats[5*firstgrain+2];
         q1[3] = m_AvgQuats[5*firstgrain+3];
         q1[4] = m_AvgQuats[5*firstgrain+4];
-		OrientationMath::QuattoEuler(q1, ea11, ea12, ea13);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-	    cx1 = (2 * q1[1] * q1[3] + 2 * q1[2] * q1[4]) * 1;
-	    cy1 = (2 * q1[2] * q1[3] - 2 * q1[1] * q1[4]) * 1;
-	    cz1 = (1 - 2 * q1[1] * q1[1] - 2 * q1[2] * q1[2]) * 1;
-		denom1 = sqrt((cx1*cx1)+(cy1*cy1)+(cz1*cz1));
-        for (int l = 0; l < size; l++)
+	    OrientationMath::QuattoMat(q1, g1);
+		//transpose the g matrix so when caxis is multiplied by it
+		//it will give the sample direction that the caxis is along
+		MatrixMath::transpose3x3(g1, g1t);
+		MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+		//normalize so that the dot product can be taken below without
+		//dividing by the magnitudes (they would be 1)
+		MatrixMath::normalize3x1(c1);
+
+		
+		for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
-			{
-			  q2[0] = 1;
+            if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
+            {
+              q2[0] = 1;
               q2[1] = m_AvgQuats[5*neigh+1];
               q2[2] = m_AvgQuats[5*neigh+2];
               q2[3] = m_AvgQuats[5*neigh+3];
               q2[4] = m_AvgQuats[5*neigh+4];
-			  OrientationMath::QuattoEuler(q2, ea21, ea22, ea23);
-			  cx2 = (2 * q2[1] * q2[3] + 2 * q2[2] * q2[4]) * 1;
-			  cy2 = (2 * q2[2] * q2[3] - 2 * q2[1] * q2[4]) * 1;
-			  cz2 = (1 - 2 * q2[1] * q2[1] - 2 * q2[2] * q2[2]) * 1;
-			  denom2 = sqrt((cx2*cx2)+(cy2*cy2)+(cz2*cz2));
-			  w = ((cx1*cx2)+(cy1*cy2)+(cz1*cz2))/(denom1*denom2);
-			  w = 180.0f*acosf(w)/m_pi;
-              if (w <= m_CAxisTolerance || (180.0-w) <= m_CAxisTolerance)
+			  OrientationMath::QuattoMat(q2, g2);
+			  //transpose the g matrix so when caxis is multiplied by it
+			  //it will give the sample direction that the caxis is along
+			  MatrixMath::transpose3x3(g2, g2t);
+			  MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
+			  //normalize so that the dot product can be taken below without
+			  //dividing by the magnitudes (they would be 1)
+			  MatrixMath::normalize3x1(c2);
+
+			  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+              w = acosf(w);
+              if (w <= m_CAxisTolerance || (m_pi-w) <= m_CAxisTolerance)
               {
                 parentnumbers[neigh] = parentcount;
                 microtexturelist.push_back(neigh);
-			  }
+              }
             }
           }
         }
@@ -332,7 +317,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-	m_ParentIds[k] = parentnumbers[grainname];
+    m_ParentIds[k] = parentnumbers[grainname];
   }
 }
 

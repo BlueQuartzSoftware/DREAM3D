@@ -98,6 +98,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     virtual void checkIOFiles();
 
+    virtual QString getFilterGroup();
     /**
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */

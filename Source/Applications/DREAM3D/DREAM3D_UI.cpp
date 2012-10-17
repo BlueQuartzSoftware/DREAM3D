@@ -217,7 +217,7 @@ void DREAM3D_UI::readWindowSettings(QSettings &prefs)
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
-    	std::cout << "Error Restoring the Window Geometry" << std::endl;
+      std::cout << "Error Restoring the Window Geometry" << std::endl;
     }
   }
 

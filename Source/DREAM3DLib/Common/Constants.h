@@ -91,12 +91,13 @@ namespace DREAM3D
   {
     const std::string GenericFilters("Generic");
     const std::string IOFilters("IO");
+    const std::string ProcessingFilters("Processing");
     const std::string ReconstructionFilters("Reconstruction");
     const std::string SamplingFilters("Sampling");
-    const std::string ProcessingFilters("Processing");
     const std::string StatisticsFilters("Statistics");
-    const std::string SyntheticBuilderFilters("Synthetic_Builder");
     const std::string SurfaceMeshingFilters("Surface_Meshing");
+    const std::string SyntheticBuilderFilters("Synthetic_Builder");
+
   }
 
   namespace CellData
@@ -111,8 +112,7 @@ namespace DREAM3D
     const std::string GoodVoxels("GoodVoxels");
     const std::string NearestNeighbors("NearestNeighbors");
     const std::string NearestNeighborDistances("NearestNeighborDistances");
-    const std::string GrainMisorientations("GrainMisorientations");
-    const std::string MisorientationGradients("MisorientationGradients");
+    const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQuality("ImageQuality");
     const std::string IPFColor("IPFColor");
@@ -309,6 +309,22 @@ namespace DREAM3D
   {
     const unsigned int DegreesToRadians = 0; //!<
     const unsigned int RadiansToDegrees = 1; //!<
+  }
+
+  namespace EulerFrameRotationAxis
+  {
+    const unsigned int RD = 0; //!<
+    const unsigned int TD = 1; //!<
+    const unsigned int ND = 2; //!<
+    const unsigned int None = 3; //!<
+  }
+
+  namespace EulerFrameRotationAngle
+  {
+    const unsigned int Ninety = 0; //!<
+    const unsigned int oneEighty = 1; //!<
+    const unsigned int twoSeventy = 2; //!<
+    const unsigned int Zero = 3; //!<
   }
 
   namespace Overlap

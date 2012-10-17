@@ -309,6 +309,7 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
    n1 = n1/denom;
    n2 = n2/denom;
    n3 = n3/denom;
+   if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
    if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
    wmin = 2.0f * wmin;
    return wmin;
