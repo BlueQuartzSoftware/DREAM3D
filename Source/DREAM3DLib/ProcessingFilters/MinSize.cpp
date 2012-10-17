@@ -61,6 +61,7 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinAllowedGrainSize(1),
 m_PhaseNumber(1),
+m_ApplyToAllPhases(false),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL),
@@ -93,6 +94,14 @@ void MinSize::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Apply To All Phases");
+    option->setPropertyName("ApplyToAllPhases");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Phase Number to Run Min Size Filter on");
     option->setPropertyName("PhaseNumber");
     option->setWidgetType(FilterParameter::IntWidget);
@@ -101,14 +110,18 @@ void MinSize::setupFilterParameters()
   }
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
-
   writer->writeValue("PhaseNumber", getPhaseNumber() );
+  writer->writeValue("ApplyToAllPhases", getApplyToAllPhases() );
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -134,11 +147,8 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
-
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -334,6 +344,9 @@ void MinSize::assign_badpoints()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MinSize::remove_smallgrains()
 {
   DataContainer* m = getDataContainer();
@@ -356,21 +369,24 @@ void MinSize::remove_smallgrains()
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	  notifyStatusMessage(ss.str());
 
-
-	  if(voxcounts[i] >= static_cast<size_t>(m_MinAllowedGrainSize) )
-	  {
-		m_Active[i] = true;
-	  }
-	  else if(voxcounts[i] < static_cast<size_t>(m_MinAllowedGrainSize) && m_FieldPhases[i] == m_PhaseNumber)
-	  {
-		m_Active[i] = false;
-	  }
-    else 
+    if(voxcounts[i] >= m_MinAllowedGrainSize )
     {
-    m_Active[i] = true;
+      m_Active[i] = true;
     }
-    
+    else if (m_ApplyToAllPhases == true)
+    {
+      m_Active[i] = false;
+    }
+    else if(voxcounts[i] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber)
+    {
+      m_Active[i] = false;
+    }
+    else
+    {
+      m_Active[i] = true;
+    }
   }
+
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];

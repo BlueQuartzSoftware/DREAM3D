@@ -36,8 +36,23 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <p class="pBody">IO</p>
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
-<p class="pBody">
+<p>
 <!-- Write all your documentation here -->
+This file reads information about the grain or regions that are in the voxel volume. The
+basic format of the file is the number of grains on the first line of the file followed by
+columnar formatted data about the <b>PhaseID</b>, <b>Euler Angle 1</b>, <b>Euler Angle 2</b> and <b>Euler Angle 3</b>.
+If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine. Grain/Region
+ Ids start from <b>0</b> Zero and Phase Ids start from <b>1</b> One.</p>
+<p>
+For example if you have a file with 123 grains and 2 phases then the file would be similar to the following: </p>
+<pre>
+123
+0   2  1.2  0.4  0.8
+1   1  0.8  0.99  1.0123
+.....
+122 1 0.3  0.5  0.9
+123 2 1.0  1.1  0.03
+</pre>
 
 <!-- Do NOT write documentation below this line -->
 </p>
@@ -67,10 +82,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-Copyright [INSERT YOUR NAME HERE]<br />
-Contact Info:[INSERT EMAIL ADDRESS HERE]<br />
-Version: 1.0.0<br />
-License: See the License.txt file that came with DREAM3D.<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
 </p>
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
 <div>  <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>  </div>
