@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,84 +33,54 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef MinSize_H_
-#define MinSize_H_
-
-#include <vector>
-#include <string>
-
+#ifndef RotateSampleRefFrame_H_
+#define RotateSampleRefFrame_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
-
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ReconstructionFilters/MinSize.h
- * @brief
- * @author
- * @date Nov 19, 2011
+ * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
+ * @brief This filter will convert the Euler Angles. Simply enter the conversion
+ * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
+ * to Degrees use 57.2957785
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Apr 26, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MinSize : public AbstractFilter
+class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinSize)
-    DREAM3D_STATIC_NEW_MACRO(MinSize)
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(RotateSampleRefFrame)
+    DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
+    DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
+    virtual ~RotateSampleRefFrame();
 
-    virtual ~MinSize();
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAxis)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAngle)
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
+	virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getHumanLabel() { return "Rotate Sample Reference Frame"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-
-    virtual void execute();
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void preflight();
+    virtual void execute();
 
   protected:
-    MinSize();
-
-    void remove_smallgrains();
-    void assign_badpoints();
-
-
-  private:
-    int32_t* m_Neighbors;
-
-    int32_t* m_GrainIds;
-    int32_t* m_CellPhases;
-    int32_t* m_FieldPhases;
-    bool* m_Active;
-
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+    RotateSampleRefFrame();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+  private:
 
-    MinSize(const MinSize&); // Copy Constructor Not Implemented
-    void operator=(const MinSize&); // Operator '=' Not Implemented
+    RotateSampleRefFrame(const RotateSampleRefFrame&); // Copy Constructor Not Implemented
+    void operator=(const RotateSampleRefFrame&); // Operator '=' Not Implemented
 };
 
-#endif /* MinSize_H_ */
+#endif /* RotateSampleRefFrame_H_ */

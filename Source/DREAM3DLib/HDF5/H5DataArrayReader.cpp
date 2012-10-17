@@ -270,73 +270,81 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
           NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
           NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
           NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
           NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
           NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
           NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
           NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else
         {
@@ -350,19 +358,21 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<float>::Pointer ptr = NeighborList<float>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else if(attr_size == 8)
         {
           NeighborList<double>::Pointer ptr = NeighborList<double>::New();
           ptr->SetName(name);
-          if(ptr->readH5Data(gid) >= 0)
+          if(false == preflightOnly)
           {
-            iDataArray = ptr;
+			ptr->readH5Data(gid);
           }
+          iDataArray = ptr;
         }
         else
         {
