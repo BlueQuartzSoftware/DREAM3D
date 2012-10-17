@@ -549,6 +549,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                     COMPONENT Applications)
             endif()
         elseif (UNIX AND NOT APPLE)
+message(STATUS "Creating Install Rule for Qt Plugin ${PLUGIN}")
             INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
                 DESTINATION ./plugins/${plugintype} 
                 CONFIGURATIONS ${BTYPE} 
