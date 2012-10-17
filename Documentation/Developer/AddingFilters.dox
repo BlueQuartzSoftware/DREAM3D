@@ -12,7 +12,7 @@ then a default file will be created for you the first time the code is compiled.
 has all the skeleton html in the file and the programmer just needs to document what actions
 the filter performs.
 
-@subsection example Example
+@subsection afexample Example
   We want to create a new filter called LaplacianSmoothing. We will do the following:
 
 @li Create LaplacianSmoothing.h inside of DREAM3D/Source/DREAM3DLib/SurfaceMeshFilters
