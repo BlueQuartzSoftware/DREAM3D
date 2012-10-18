@@ -35,9 +35,16 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This Filter determines for each <b>Field</b> the number of <i>neighboring <b>Fields</b></i>.  This is accomplished by iterating through the <b>Cell</b>s and querying the <b>Field</b> that owns each <b>Cell</b> and neighboring <b>Cell</b>s.  If two neighboring <b>Cell</b>s are owned by different <b>Fields</b>, then those <b>Fields</b> are said to be <i>neighbors</i>. <br />
-In determining for each <b>Field</b> the number of <i>neighboring fields</i> (and the list of <i>neighbors</i>), the <b>Cells</b> that have neighboring <b>Cell</b>(s) with a different <b>Field</b> owner are flagged as <i>surface</i> <b>Cell</b>s and are said to lie on the surface of the <b>Field</b> (i.e. the grain/field boundary). <br />
-Additionally, the surface areas shared between two <i>neighboring fields</i> are calculated by tracking the number of times two neighboring <b>Cell</b>s correspond to a <i>neighboring field</i> pair.
+This Filter determines, for each feature/grain, the number of other features/grains that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each feature/grain is as follows: <br />
+<br />
+1) Identify the feature/grain to which a voxel/datapoint belongs<br />
+2) Identify the features/grains to which each of the current voxel's six (6) face-face neighboring voxels (front, back, left, right, up, down) belong<br />
+3) If a neighboring voxel/datapoint belongs to a different feature/grain than the current voxel/datapoint, then that feature/grain (owner of the neighboring voxel/datapoint) is added to the list of contiguous neighbors of the feature/grain that owns the current voxel. <br />
+4) Repeat 1-3 for all voxels/datapoints<br />
+<br />
+While performing the above steps, the number of neighboring voxel(s)/datapoint(s) with different feature/grain owner(s) than a given voxel/datapoint is stored, which identifies whether a voxel/datapoint lies on the surface of a feature/grain (i.e. the feature/grain boundary).<br />
+Additionally, the surface area shared between each set of contiguous features/grains is calculated by tracking the number of times two neighboring voxels/datapoints correspond to a contiguous feature/grain pair.<br />
+The filter also notes which features/grains touch the outer surface of the sample (this is obtianed for "free" while performing the above algorithm).<br />
 <br />
 <!-- Do NOT write documentation below this line -->
 </p>
@@ -48,18 +55,17 @@ Additionally, the surface areas shared between two <i>neighboring fields</i> are
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td>Ids (ints) that specify to which feature/grain each voxel/datapoint belongs.</td><td>Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td>Filter will determine feature/grain phases if not previously determined</td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>SurfaceVoxels</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>NumNeighbors</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>SurfaceFields</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>TotalSurfaceAreas</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>SurfaceVoxels</td><td>Value (int) equal to the number of neighboring voxels/datapoints of a given voxel/datapoint that belong to a different feature/grain than itself</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>NumNeighbors</td><td>Value (int) equal to the number of contiguous neighboring features/grains for a given feature/grain</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>SurfaceFields</td><td>Boolean flag equal to 1 if the feature/grain touches an outer surface of the sample and equal to 0 if it does not.</td><td></td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
