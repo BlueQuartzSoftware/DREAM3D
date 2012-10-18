@@ -36,11 +36,8 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This filter determines which <b>Field</b>s intersect the outer surface of the sample.  
-This is accomplished by determining if any of the <b>Cell</b>s that are owned by a 
-<b>Field</b> lie on the outer surface of the sample.  If any one <b>Cell</b> owned 
-by a <b>Field</b> lies on the outer surface of the sample (sample surface/grain boundary), 
-then that <b>Field</b> is said to be a <i>surface field</i>. 
+This filter determines whether a feature/grain touches an outer surface of the sample. This is accomplished by simply querying the feature/grain owners of the voxels/datapoints that sit at either xMin, xMax, yMin, yMax, zMin or zMax.  
+Any feature/grain that owns one of those voxels/datapoints is said to touch an outer surface and all other features/grains are said to not touch an outer surface of the sample.<br />
 <br /> 
 <!-- Do NOT write documentation below this line -->
 </p>
@@ -51,14 +48,14 @@ then that <b>Field</b> is said to be a <i>surface field</i>.
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td>Ids (ints) that specify to which feature/grain each voxel/datapoint belongs.</td><td>Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>SurfaceFields</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>SurfaceFields</td><td>Boolean flag equal to 1 if the feature/grain touches an outer surface of the sample and equal to 0 if it does not.</td><td></td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
