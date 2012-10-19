@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,75 +33,54 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef FINDSIZES_H_
-#define FINDSIZES_H_
-
-#include <vector>
-#include <string>
+#ifndef RotateSampleRefFrame_H_
+#define RotateSampleRefFrame_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 /**
- * @class FindSizes FindSizes.h DREAM3DLib/GenericFilters/FindSizes.h
- * @brief
- * @author
- * @date Nov 19, 2011
+ * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
+ * @brief This filter will convert the Euler Angles. Simply enter the conversion
+ * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
+ * to Degrees use 57.2957785
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Apr 26, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
+class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSizes)
-    DREAM3D_STATIC_NEW_MACRO(FindSizes)
-    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(RotateSampleRefFrame)
+    DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
+    DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
+    virtual ~RotateSampleRefFrame();
 
-    virtual ~FindSizes();
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAxis)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAngle)
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+	virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getHumanLabel() { return "Rotate Sample Reference Frame"; }
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Sizes"; }
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
-    virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-
-    virtual void execute();
     virtual void preflight();
+    virtual void execute();
 
   protected:
-    FindSizes();
-    void find_sizes();
-    void find_sizes2D();
-
-
-  private:
-    int32_t* m_GrainIds;
-    float* m_Volumes;
-    float* m_EquivalentDiameters;
-    int32_t* m_NumCells;
+    RotateSampleRefFrame();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindSizes(const FindSizes&); // Copy Constructor Not Implemented
-    void operator=(const FindSizes&); // Operator '=' Not Implemented
+  private:
+
+    RotateSampleRefFrame(const RotateSampleRefFrame&); // Copy Constructor Not Implemented
+    void operator=(const RotateSampleRefFrame&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDSIZES_H_ */
+#endif /* RotateSampleRefFrame_H_ */

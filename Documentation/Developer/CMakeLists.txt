@@ -58,17 +58,13 @@ set(LATEX_AUTHOR "DREAM3D Development Team")
 
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
-set(DOCUMENTATION_SOURCE_FILES
+set (DOCUMENTATION_SOURCE_FILES
+  ${PROJECT_SOURCE_DIR}/Compiling.dox
+  ${PROJECT_SOURCE_DIR}/AddingFilters.dox
   ${PROJECT_SOURCE_DIR}/H5EbsdFile.dox
-    ${PROJECT_SOURCE_DIR}/DataContainerStrategies.dox
-    ${PROJECT_SOURCE_DIR}/WritingPlugin.dox
-    ${PROJECT_SOURCE_DIR}/CodeGuidelines.dox
-    ${PROJECT_SOURCE_DIR}/Compiling.dox
-    ${PROJECT_SOURCE_DIR}/AddingFilters.dox
- #   ${PROJECT_SOURCE_DIR}/MicrostructurePresets.dox
-  #  ${PROJECT_SOURCE_DIR}/StructureReaders.dox
-  #  ${PROJECT_SOURCE_DIR}/SurfaceMeshing.dox 
-    ${DREAM3D_SOURCE_DIR}/ToDo.dox
+  ${PROJECT_SOURCE_DIR}/DataContainerStrategies.dox
+  ${PROJECT_SOURCE_DIR}/WritingPlugin.dox
+  ${PROJECT_SOURCE_DIR}/CodeGuidelines.dox
 )
 
 set(LATEX_EPS_FILES 

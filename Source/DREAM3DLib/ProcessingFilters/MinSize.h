@@ -52,8 +52,8 @@
 
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ReconstructionFilters/MinSize.h
- * @brief
+ * @class MinSize MinSize.h DREAM3DLib/ProcessingFilters/MinSize.h
+ * @brief This filter ensures each Grain or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011
  * @version 1.0
@@ -67,22 +67,23 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     virtual ~MinSize();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
+    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAllPhases)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
     virtual void execute();
@@ -98,7 +99,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
   private:
     int32_t* m_Neighbors;
 
-	int32_t* m_GrainIds;
+    int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     int32_t* m_FieldPhases;
     bool* m_Active;

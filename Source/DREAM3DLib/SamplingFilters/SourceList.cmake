@@ -12,6 +12,7 @@
 set(SamplingFilters_FILTERS_HDRS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.h
+    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RotateSampleRefFrame.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.h
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/Hex2SqrConverter.h
 )
@@ -23,6 +24,7 @@ set(DREAM3DLib_SamplingFilters_HDRS
 set(DREAM3DLib_SamplingFilters_SRCS
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.cpp
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.cpp
+    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RotateSampleRefFrame.cpp
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.cpp
     ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/Hex2SqrConverter.cpp
 )

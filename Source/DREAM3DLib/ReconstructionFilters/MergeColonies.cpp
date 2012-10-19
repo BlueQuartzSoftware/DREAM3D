@@ -294,6 +294,7 @@ void MergeColonies::execute()
  notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
+  m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
     int64_t totalPoints = m->getTotalPoints();
@@ -316,23 +317,23 @@ void MergeColonies::execute()
     pid[0] = 0;
     std::set<int32_t> parentIdSet;
     parentIdSet.insert(0);
-    for(size_t i = 1; i < numParents; ++i)
+    for(int i = 1; i < numParents; ++i)
     {
       pid[i] = i; //numberGenerator();
       parentIdSet.insert(pid[i]);
     }
 
-    size_t r;
+    int r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< numParents; i++) {
-        r = numberGenerator(); // Random remaining position.
-        if (r >= numParents) {
-          continue;
-        }
-        temp = pid[i];
-        pid[i] = pid[r];
-        pid[r] = temp;
+    for (int i=1; i< numParents; i++) {
+      r = numberGenerator(); // Random remaining position.
+      if (r >= numParents) {
+        continue;
+      }
+      temp = pid[i];
+      pid[i] = pid[r];
+      pid[r] = temp;
     }
 
     // Now adjust all the Grain Id values for each Voxel
@@ -440,8 +441,8 @@ void MergeColonies::merge_colonies()
                 colony = check_for_burgers(q2, q1);
                 if (colony == 1)
                 {
-                  parentnumbers[neigh] = parentcount;
-                  colonylist.push_back(neigh);
+//                  parentnumbers[neigh] = parentcount;
+//                  colonylist.push_back(neigh);
                 }
             }
             else if ((phase1 == Ebsd::CrystalStructure::Cubic && phase2 == Ebsd::CrystalStructure::Hexagonal))
@@ -449,8 +450,8 @@ void MergeColonies::merge_colonies()
                 colony = check_for_burgers(q1, q2);
                 if (colony == 1)
                 {
-                  parentnumbers[neigh] = parentcount;
-                  colonylist.push_back(neigh);
+//                  parentnumbers[neigh] = parentcount;
+//                  colonylist.push_back(neigh);
                 }
             }
           }

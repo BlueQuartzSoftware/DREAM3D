@@ -39,6 +39,42 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <p class="pBody">
 <!-- Write all your documentation here -->
 
+This filter reads in information about the Crystal Structure and Phases of
+all the grains or regions that are contained in a voxel based volume. These
+values are needed to allow the calculation of statistics on the volume.  
+The format of that file is a simple text file where the first line is the 
+number of phases that are contained in the volume and subsequent lines in
+the file list the <b>Phase Number</b>, <b>Crystal Structure</b> and <b>Phase Type</b>.
+The proper values for the crystal structure and phase type come from internal
+constants within DREAM3D and are listed here:
+<h5>Crystal Structure</h5>
+<ul>
+<li>Hexagonal = 0</li>
+<li>Cubic = 1</li>
+<li>OrthoRhombic = 2</li>
+<li>AxisOrthoRhombic = 3</li>
+<li>UnknownCrystalStructure = 999</li>
+</ul>
+
+<h5>Phase Type</h5>
+<ul>
+<li>PrimaryPhase = 0</li>
+<li>PrecipitatePhase = 1</li>
+<li>TransformationPhase = 2</li>
+<li>MatrixPhase = 3</li>
+<li>BoundaryPhase = 4</li>
+<li>UnknownPhaseType = 999</li>
+</ul>
+
+</p>
+<p>For example if you have a structure that has 2 phases that consist of a Cubic Primary
+phase and a Hexagonal Matrix phase the file would be the following:</p>
+
+<pre>
+2
+0  1  0
+1  0  3
+</pre>
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -64,10 +100,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-Copyright [INSERT YOUR NAME HERE]<br />
-Contact Info:[INSERT EMAIL ADDRESS HERE]<br />
-Version: 1.0.0<br />
-License: See the License.txt file that came with DREAM3D.<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
 </p>
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
 <div>  <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>  </div>

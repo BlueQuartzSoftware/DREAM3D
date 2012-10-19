@@ -31,7 +31,7 @@ endif()
 set(PROJECT_PREFIX "DREAM3D" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(PROJECT_INSTALL_HEADERS 0)
 #-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the 
+# Include the cmp project to perform all the basic configuration tests for the
 # project.
 #------------------------------------------------------------------------------- 
 set(CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
@@ -47,15 +47,16 @@ set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_GENERATE_VERSION_STRING 1)
 
 
+
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 configure_file(${DREAM3DLib_SOURCE_DIR}/DREAM3DConfiguration.h.in
                ${DREAM3DProj_BINARY_DIR}/DREAM3DLib/${CMP_TOP_HEADER_FILE})
 
-cmp_IDE_GENERATED_PROPERTIES("Generated" 
+cmp_IDE_GENERATED_PROPERTIES("Generated"
                              "${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE};${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME};${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME};${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}"
                              "${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}")
-                             
-set(Project_SRCS 
+
+set(Project_SRCS
     ${CMP_HEADER_DIR}/${CMP_TOP_HEADER_FILE}
     ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
     ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
@@ -82,7 +83,7 @@ D3DCompileDir(VTKUtils )
 Macro(D3DCompileFilters DirName HeaderFile)
     set(group ${DirName})
     file(APPEND ${HeaderFile} "\n/* ------ ${group} --------- */\n")
-    
+
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set(Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
     foreach(file ${${DirName}_FILTERS_HDRS})
@@ -103,7 +104,7 @@ D3DCompileFilters(SamplingFilters   ${AllFiltersHeaderFile})
 D3DCompileFilters(StatisticsFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(SurfaceMeshFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(SyntheticBuilderFilters ${AllFiltersHeaderFile})
-D3DCompileFilters(CustomFilters ${AllFiltersHeaderFile})
+# D3DCompileFilters(CustomFilters ${AllFiltersHeaderFile})
 
 
 file(APPEND ${AllFiltersHeaderFile} "\n#endif\n")
@@ -128,13 +129,12 @@ endif()
 
 
 if (BUILD_SHARED_LIBS  AND NOT APPLE)
-    INSTALL(TARGETS ${PROJECT_NAME} 
+    INSTALL(TARGETS ${PROJECT_NAME}
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}
         LIBRARY DESTINATION ${lib_install_dir}
-        ARCHIVE DESTINATION ${lib_install_dir}       
+        ARCHIVE DESTINATION ${lib_install_dir}
         BUNDLE DESTINATION "."
-    ) 
-endif() 
+    )
+endif()
 
-  

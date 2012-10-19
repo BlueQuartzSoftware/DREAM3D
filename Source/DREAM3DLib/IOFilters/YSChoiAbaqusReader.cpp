@@ -227,7 +227,6 @@ void YSChoiAbaqusReader::execute()
   float ea1, ea2, ea3;
 
   float q[5];
-//	double denom;
   float g[3][3];
   for(int i=0;i<(xpoints*ypoints*zpoints);i++)
   {
