@@ -179,6 +179,7 @@ void FindShapes::find_moments()
   float u110 = 0;
   float u011 = 0;
   float u101 = 0;
+  float xx, yy, zz, xy, xz, yz;
   size_t numgrains = m->getNumFieldTuples();
 
   grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
@@ -187,19 +188,22 @@ void FindShapes::find_moments()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  for (size_t i = 0; i < numgrains*6; i++)
+  for (size_t i = 0; i < numgrains; i++)
   {
-      grainmoments[i] = 0.0f;
+      grainmoments[6*i+0] = 0.0f;
+      grainmoments[6*i+1] = 0.0f;
+      grainmoments[6*i+2] = 0.0f;
+      grainmoments[6*i+3] = 0.0f;
+      grainmoments[6*i+4] = 0.0f;
+      grainmoments[6*i+5] = 0.0f;
+      m_Volumes[i] = 0.0f;
   }
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    u200 = 0;
-    u020 = 0;
-    u002 = 0;
-    u110 = 0;
-    u011 = 0;
-    u101 = 0;
     int gnum = m_GrainIds[j];
+
+
+
     float x = find_xcoord(j);
     float y = find_ycoord(j);
     float z = find_zcoord(j);
@@ -233,28 +237,30 @@ void FindShapes::find_moments()
     float xdist8 = (x2 - m_Centroids[gnum*3 + 0]);
     float ydist8 = (y2 - m_Centroids[gnum*3 + 1]);
     float zdist8 = (z2 - m_Centroids[gnum*3 + 2]);
-    u200 = u200 + ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
+
+    xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
         + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
         + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
-    u020 = u020 + ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3))
+    yy = ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3))
         + ((xdist4) * (xdist4)) + ((zdist4) * (zdist4)) + ((xdist5) * (xdist5)) + ((zdist5) * (zdist5)) + ((xdist6) * (xdist6)) + ((zdist6) * (zdist6))
         + ((xdist7) * (xdist7)) + ((zdist7) * (zdist7)) + ((xdist8) * (xdist8)) + ((zdist8) * (zdist8));
-    u002 = u002 + ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3))
+    zz = ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3))
         + ((xdist4) * (xdist4)) + ((ydist4) * (ydist4)) + ((xdist5) * (xdist5)) + ((ydist5) * (ydist5)) + ((xdist6) * (xdist6)) + ((ydist6) * (ydist6))
         + ((xdist7) * (xdist7)) + ((ydist7) * (ydist7)) + ((xdist8) * (xdist8)) + ((ydist8) * (ydist8));
-    u110 = u110 + ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6))
+    xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6))
         + ((xdist7) * (ydist7)) + ((xdist8) * (ydist8));
-    u011 = u011 + ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6))
+    yz = ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6))
         + ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
-    u101 = u101 + ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
+    xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
         + ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
-    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + u200;
-    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + u020;
-    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + u002;
-    grainmoments[gnum*6 + 3] = grainmoments[gnum*6 + 3] + u110;
-    grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + u011;
-    grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + u101;
-  m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
+    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + xx;
+    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + yy;
+    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + zz;
+    grainmoments[gnum*6 + 3] = grainmoments[gnum*6 + 3] + xy;
+    grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + yz;
+    grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + xz;
+	m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
+
   }
   float sphere = (2000.0f*m_pi*m_pi)/9.0f;
   //constant for moments because voxels are broken into smaller voxels
@@ -267,21 +273,21 @@ void FindShapes::find_moments()
     grainmoments[i*6 + 0] = grainmoments[i*6 + 0] * konst1;
     grainmoments[i*6 + 1] = grainmoments[i*6 + 1] * konst1;
     grainmoments[i*6 + 2] = grainmoments[i*6 + 2] * konst1;
-    grainmoments[i*6 + 3] = grainmoments[i*6 + 3] * konst1;
-    grainmoments[i*6 + 4] = grainmoments[i*6 + 4] * konst1;
-    grainmoments[i*6 + 5] = grainmoments[i*6 + 5] * konst1;
+    grainmoments[i*6 + 3] = -grainmoments[i*6 + 3] * konst1;
+    grainmoments[i*6 + 4] = -grainmoments[i*6 + 4] * konst1;
+    grainmoments[i*6 + 5] = -grainmoments[i*6 + 5] * konst1;
     u200 = (grainmoments[i*6 + 1] + grainmoments[i*6 + 2] - grainmoments[i*6 + 0]) / 2.0f;
     u020 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 2] - grainmoments[i*6 + 1]) / 2.0f;
     u002 = (grainmoments[i*6 + 0] + grainmoments[i*6 + 1] - grainmoments[i*6 + 2]) / 2.0f;
-    u110 = grainmoments[i*6 + 3];
-    u011 = grainmoments[i*6 + 4];
-    u101 = grainmoments[i*6 + 5];
+    u110 = -grainmoments[i*6 + 3];
+    u011 = -grainmoments[i*6 + 4];
+    u101 = -grainmoments[i*6 + 5];
     float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
     float vol5 = powf(m_Volumes[i],5);
     float omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) omega3 = 1;
-  if(vol5 == 0) omega3 = 0;
+	if(vol5 == 0) omega3 = 0;
     m_Omega3s[i] = omega3;
   }
 }
@@ -292,6 +298,7 @@ void FindShapes::find_moments2D()
   float u200 = 0;
   float u020 = 0;
   float u110 = 0;
+  float xx, yy, xy;
   size_t numgrains = m->getNumFieldTuples();
   grainmoments = m_GrainMoments->WritePointer(0, numgrains*6);
   m_GrainMoments->SetNumberOfComponents(6);
@@ -308,9 +315,6 @@ void FindShapes::find_moments2D()
   }
   for (int j = 0; j < totalPoints; j++)
   {
-    u200 = 0;
-    u020 = 0;
-    u110 = 0;
     int gnum = m_GrainIds[j];
     float x = find_xcoord(j);
     float y = find_ycoord(j);
@@ -326,12 +330,12 @@ void FindShapes::find_moments2D()
     float ydist3 = (y1 - m_Centroids[gnum*3 + 1]);
     float xdist4 = (x2 - m_Centroids[gnum*3 + 0]);
     float ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
-    u200 = u200 + ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
-    u020 = u020 + ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
-    u110 = u110 + ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
-    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + u200;
-    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + u020;
-    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + u110;
+    xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
+    yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
+    xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
+    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + xx;
+    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + yy;
+    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + xy;
   }
   float konst1 = (Res1 / 2.0f) * (Res2 / 2.0f);
   for (size_t i = 1; i < numgrains; i++)
@@ -367,10 +371,11 @@ void FindShapes::find_axes()
     Ixx = grainmoments[i*6+0];
     Iyy = grainmoments[i*6+1];
     Izz = grainmoments[i*6+2];
-    Ixy = -grainmoments[i*6+3];
-    Iyz = -grainmoments[i*6+4];
-    Ixz = -grainmoments[i*6+5];
-    //a b c and d are the coefficients of the characteristic equation for the eigenvalues 
+
+    Ixy = grainmoments[i*6+3];
+    Iyz = grainmoments[i*6+4];
+    Ixz = grainmoments[i*6+5];
+
     a = 1;
     b = (-Ixx - Iyy - Izz);
     c = ((Ixx * Izz) + (Ixx * Iyy) + (Iyy * Izz) - (Ixz * Ixz) - (Ixy * Ixy) - (Iyz * Iyz));
@@ -486,6 +491,7 @@ void FindShapes::find_axiseulers()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
   size_t numgrains = m->getNumFieldTuples();
+  float ea1=0, ea2=0, ea3=0;
   for (size_t i = 1; i < numgrains; i++)
   {
     float Ixx = grainmoments[i*6+0];
@@ -509,13 +515,6 @@ void FindShapes::find_axiseulers()
     bmat[0][0] = 0.0000001f;
     bmat[1][0] = 0.0000001f;
     bmat[2][0] = 0.0000001f;
-
-    if (i==77) 
-    {
-      float dummy;
-      dummy = 1.0; 
-    } 
-
 
     for (int j = 0; j < 3; j++)
     {
@@ -611,19 +610,29 @@ void FindShapes::find_axiseulers()
     n3x = n3x / norm3;
     n3y = n3y / norm3;
     n3z = n3z / norm3;
-    float ea2 = acos(n3z);
-    float cosine1 = (-n3y / sinf(ea2));
-    float sine3 = (n1z / sinf(ea2));
-    float cosine3 = (n2z / sinf(ea2));
-    float sine1 = (n3x / sinf(ea2));
-    if (cosine3 > 1.0) cosine3 = 1.0;
-    if (cosine3 <-1.0) cosine3 = -1.0; 
-    if (cosine1 > 1.0) cosine1 = 1.0;
-    if (cosine1 <-1.0) cosine1 = -1.0; 
-    float ea3 = acos(cosine3);
-    float ea1 = acos(cosine1);
-    if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
-    if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
+
+    ea2 = acos(n1z);
+    if (ea2 == 0.0) 
+    { 
+      ea1 = 0.0;
+      ea3 = acos(n2y);
+    }
+    else
+    {
+		float cosine3 = (n2z / sinf(ea2));
+		float sine3 = (n3z / sinf(ea2));
+		float cosine1 = (-n1y / sinf(ea2));
+		float sine1 = (n1x / sinf(ea2));
+		if (cosine3 > 1.0) cosine3 = 1.0;
+		if (cosine3 <-1.0) cosine3 = -1.0; 
+		if (cosine1 > 1.0) cosine1 = 1.0;
+		if (cosine1 <-1.0) cosine1 = -1.0; 
+		ea3 = acos(cosine3);
+		ea1 = acos(cosine1);
+		if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
+		if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
+
+    }
     m_AxisEulerAngles[3*i] = ea1;
     m_AxisEulerAngles[3*i+1] = ea2;
     m_AxisEulerAngles[3*i+2] = ea3;

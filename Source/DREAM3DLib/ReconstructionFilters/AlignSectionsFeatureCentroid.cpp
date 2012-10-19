@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AlignSections.h"
+#include "AlignSectionsFeatureCentroid.h"
 
 #include <iostream>
 #include <fstream>
@@ -59,83 +59,56 @@ using namespace std;
 
 const static float m_pi = static_cast<float>(M_PI);
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSections::AlignSections() :
-AbstractFilter(),
-m_WriteAlignmentShifts(true),
-m_AlignmentShiftFileName("aligntest.txt")
+AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
+AlignSections(),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_GoodVoxels(NULL)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSections::~AlignSections()
+AlignSectionsFeatureCentroid::~AlignSectionsFeatureCentroid()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::setupFilterParameters()
+void AlignSectionsFeatureCentroid::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Alignment Shift File");
-    option->setPropertyName("WriteAlignmentShifts");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Alignment File");
-    option->setPropertyName("AlignmentShiftFileName");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-
-  setFilterParameters(parameters);
+  // Run the superclass first.
+  //AlignSections::setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer)
-{
-  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
-  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
+  DataContainer* m = getDataContainer();
 
-  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
 
-
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::preflight()
+void AlignSectionsFeatureCentroid::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -143,16 +116,14 @@ void AlignSections::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::execute()
+void AlignSectionsFeatureCentroid::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if (NULL == m)
+  DataContainer* m = getDataContainer();
+  if(NULL == m)
   {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -165,6 +136,25 @@ void AlignSections::execute()
     return;
   }
 
+  AlignSections::execute();
+
+  // If there is an error set this to something negative and also set a message
+ notifyStatusMessage("Aligning Sections Complete");
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+{
+  DataContainer* m = getDataContainer();
+  //int64_t totalPoints = m->totalPoints();
+
+  ofstream outFile;
+  if (getWriteAlignmentShifts() == true) {
+    outFile.open(getAlignmentShiftFileName().c_str());
+  }
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -178,81 +168,51 @@ void AlignSections::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  int slice;
-  int xspot, yspot;
-  DimType newPosition;
-  DimType currentPosition;
-//  unsigned int  phase2;
+  int newxshift = 0;
+  int newyshift = 0;
+  int count = 0;
+  int slice = 0;
+  int64_t point;
+//  int xspot, yspot;
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  std::vector<float> xCentroid(dims[2],0.0);
+  std::vector<float> yCentroid(dims[2],0.0);
 
-  std::vector<int> xshifts;
-  std::vector<int> yshifts;
-  xshifts.resize(dims[2],0);
-  yshifts.resize(dims[2],0);
-
-  find_shifts(xshifts, yshifts);
-
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  DimType progIncrement = dims[2]/100;
-  DimType prog = 1;
-  std::stringstream ss;
-
-  for (DimType i = 1; i < dims[2]; i++)
+  for (DimType iter = 0; iter < dims[2]; iter++)
   {
-    if (i > prog)
-    {
-      ss.str("");
-      ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
-      notifyStatusMessage(ss.str());
-      prog = prog + progIncrement;
-    }
-    if (getCancel() == true)
-    {
-      return;
-    }
-    slice = static_cast<int>( (dims[2] - 1) - i );
+    count = 0;
+    xCentroid[iter] = 0;
+    yCentroid[iter] = 0;
+    std::stringstream ss;
+    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+  //  notifyStatusMessage(ss.str());
+    slice = static_cast<int>( (dims[2] - 1) - iter );
     for (DimType l = 0; l < dims[1]; l++)
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-        if(yshifts[i] >= 0) yspot = static_cast<int>(l);
-        else if(yshifts[i] < 0) yspot = static_cast<int>( dims[1] - 1 - l );
-        if(xshifts[i] >= 0) xspot = static_cast<int>(n);
-		else if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
-        newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
-        currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
-        if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
-            && (xspot + xshifts[i]) <= dims[0] - 1)
-        {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-              p->CopyTuple(currentPosition, newPosition);
-          }
-        }
-        if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
-            || (xspot + xshifts[i]) > dims[0] - 1)
-        {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-              p->InitializeTuple(newPosition, 0.0);          }
-        }
+		  point = static_cast<int>( ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n );
+          if(m_GoodVoxels[point] == true)
+		  {
+			xCentroid[iter] = xCentroid[iter] + (float(n)*xRes);
+			yCentroid[iter] = yCentroid[iter] + (float(l)*yRes);
+            count++;
+		  }
       }
     }
+	xCentroid[iter] = xCentroid[iter]/float(count);
+	yCentroid[iter] = yCentroid[iter]/float(count);
   }
-
-  // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Complete");
+  for (DimType iter = 1; iter < dims[2]; iter++)
+  {
+    xshifts[iter] = xshifts[iter-1] + int((xCentroid[iter]-xCentroid[iter-1])/xRes);
+    yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
+    if (getWriteAlignmentShifts() == true) {
+      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+    }
+  }
+  if (getWriteAlignmentShifts() == true) {
+    outFile.close();
+  }
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
-{
-
-}
-

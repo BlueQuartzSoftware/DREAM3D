@@ -21,7 +21,14 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-
+This filter will convert Hexagonal Gridded TSL .ang files into Square Grids by means of 
+interpolation between points. Note that depending on how this filter is used the new
+files may have more or less rows of data and that some data may be interpolated based on
+its neighbor data.</p>
+<p class="pBody">
+Run this filter by itself in order to convert all of your Hex Grid .ang files into square
+grid .ang files. Then use the "Import Ebsd Data to H5Ebsd file" filter to import your data
+into a .h5ebsd file archive.
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -40,10 +47,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-Copyright 2012 Michael A. Groeber (AFRL), Michael A. Jackson (BlueQuartz Software)<br />
-Contact Info: dream3d@bluequartz.net<br />
-Version: 1.0.0<br />
-License: See the License.txt file that came with DREAM3D.<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
 </p>
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
 <div>

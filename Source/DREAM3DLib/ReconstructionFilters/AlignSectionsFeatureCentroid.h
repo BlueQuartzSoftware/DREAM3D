@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSIZES_H_
-#define FINDSIZES_H_
+#ifndef AlignSectionsFeatureCentroid_H_
+#define AlignSectionsFeatureCentroid_H_
 
 #include <vector>
 #include <string>
@@ -43,65 +43,57 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
+#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
+
 
 /**
- * @class FindSizes FindSizes.h DREAM3DLib/GenericFilters/FindSizes.h
+ * @class AlignSectionsFeatureCentroid AlignSectionsFeatureCentroid.h DREAM3DLib/ReconstructionFilters/AlignSectionsFeatureCentroid.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
+class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindSizes)
-    DREAM3D_STATIC_NEW_MACRO(FindSizes)
-    DREAM3D_TYPE_MACRO_SUPER(FindSizes, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AlignSectionsFeatureCentroid)
+    DREAM3D_STATIC_NEW_MACRO(AlignSectionsFeatureCentroid)
+    DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeatureCentroid, AlignSections)
 
-    virtual ~FindSizes();
+    virtual ~AlignSectionsFeatureCentroid();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Sizes"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getHumanLabel() { return "Align Sections (Feature Centroid)"; }
+
+    virtual void setupFilterParameters();
+//    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
-    virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-
     virtual void execute();
     virtual void preflight();
 
-  protected:
-    FindSizes();
-    void find_sizes();
-    void find_sizes2D();
+    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
+  protected:
+    AlignSectionsFeatureCentroid();
 
   private:
-    int32_t* m_GrainIds;
-    float* m_Volumes;
-    float* m_EquivalentDiameters;
-    int32_t* m_NumCells;
+    bool* m_GoodVoxels;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindSizes(const FindSizes&); // Copy Constructor Not Implemented
-    void operator=(const FindSizes&); // Operator '=' Not Implemented
+    AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&); // Copy Constructor Not Implemented
+    void operator=(const AlignSectionsFeatureCentroid&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDSIZES_H_ */
+#endif /* AlignSectionsFeatureCentroid_H_ */

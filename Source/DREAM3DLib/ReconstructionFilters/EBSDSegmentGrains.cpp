@@ -115,7 +115,7 @@ void EBSDSegmentGrains::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+  option->setUnits("Degrees");
     parameters.push_back(option);
   }
 #if 0
@@ -148,7 +148,7 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType,  voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType,  true, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
@@ -204,6 +204,10 @@ void EBSDSegmentGrains::execute()
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
+  for(int64_t i=0;i<totalPoints;i++)
+  {
+    m_GrainIds[i] = 0;
+  }
 
   SegmentGrains::execute();
 
@@ -297,9 +301,9 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
   }
   if (seed >= 0)
   {
-	  m_GrainIds[seed] = gnum;
-	  m->resizeFieldDataArrays(gnum+1);
-	  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+    m_GrainIds[seed] = gnum;
+    m->resizeFieldDataArrays(gnum+1);
+    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   }
   return seed;
 }
@@ -317,27 +321,27 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
 
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
-	  phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-	  q1[0] = 1;
-	  q1[1] = m_Quats[referencepoint * 5 + 1];
-	  q1[2] = m_Quats[referencepoint * 5 + 2];
-	  q1[3] = m_Quats[referencepoint * 5 + 3];
-	  q1[4] = m_Quats[referencepoint * 5 + 4];
+    phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
+    q1[0] = 1;
+    q1[1] = m_Quats[referencepoint * 5 + 1];
+    q1[2] = m_Quats[referencepoint * 5 + 2];
+    q1[3] = m_Quats[referencepoint * 5 + 3];
+    q1[4] = m_Quats[referencepoint * 5 + 4];
 
-	  phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
-	  q2[0] = 1;
-	  q2[1] = m_Quats[neighborpoint*5 + 1];
-	  q2[2] = m_Quats[neighborpoint*5 + 2];
-	  q2[3] = m_Quats[neighborpoint*5 + 3];
-	  q2[4] = m_Quats[neighborpoint*5 + 4];
+    phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+    q2[0] = 1;
+    q2[1] = m_Quats[neighborpoint*5 + 1];
+    q2[2] = m_Quats[neighborpoint*5 + 2];
+    q2[3] = m_Quats[neighborpoint*5 + 3];
+    q2[4] = m_Quats[neighborpoint*5 + 4];
 
 //	  if (phase1 == phase2 && m_GoodVoxels[referencepoint] == true && m_GoodVoxels[neighborpoint] == true) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-	  if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-	  if (w < m_MisorientationTolerance)
-	  {
-		group = true;
-		m_GrainIds[neighborpoint] = gnum;
-	  }
+    if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+    if (w < m_MisorientationTolerance)
+    {
+    group = true;
+    m_GrainIds[neighborpoint] = gnum;
+    }
   }
 
   return group;
