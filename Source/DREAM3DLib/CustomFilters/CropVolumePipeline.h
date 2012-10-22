@@ -37,16 +37,12 @@
 #ifndef CROP_VOLUME_PIPELINE_H_
 #define CROP_VOLUME_PIPELINE_H_
 
-#include <vector>
-#include <string>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
@@ -77,15 +73,13 @@ class DREAM3DLib_EXPORT CropVolumePipeline : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void execute();
     virtual void preflight();
-   // virtual void getNumLinesinFile(int &num_lines);
-    virtual void get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin);
 
+    virtual void get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin);
 
   protected:
     CropVolumePipeline();

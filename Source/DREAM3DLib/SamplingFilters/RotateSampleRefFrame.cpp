@@ -52,11 +52,6 @@ const static float m_pi = static_cast<float>(M_PI);
 
 class RotateSampleRefFrameImpl
 {
-
-    VoxelDataContainer* m;
-    uint32_t angle;
-    uint32_t axis;
-
   public:
     RotateSampleRefFrameImpl(VoxelDataContainer* dc, uint32_t rotAngle, uint32_t rotAxis) :
       m(dc),

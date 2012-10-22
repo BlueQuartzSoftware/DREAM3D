@@ -38,8 +38,8 @@
 
 #include <stdlib.h>
 
-#include <iostream>
-#include <fstream>
+//#include <iostream>
+//#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -65,7 +65,7 @@
 #include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
 #include "DREAM3DLib/ReconstructionFilters/AlignSectionsMisorientation.h"
 #include "DREAM3DLib/ReconstructionFilters/EBSDSegmentGrains.h"
-#include "DREAM3DLib/ProcessingFilters/MinSize.h"
+#include "DREAM3DLib/ProcessingFilters/PerPhaseMinSize.h"
 #include "DREAM3DLib/ProcessingFilters/OpenCloseBadData.h"
 #include "DREAM3DLib/ProcessingFilters/MinNeighbors.h"
 #include "DREAM3DLib/ProcessingFilters/ConvertEulerAngles.h"
@@ -411,7 +411,7 @@ void CropVolumePipeline::execute()
     pipeline->pushBack(find_neighbors);
 
 
-    MinSize::Pointer min_size = MinSize::New();
+    PerPhaseMinSize::Pointer min_size = PerPhaseMinSize::New();
     min_size->setMinAllowedGrainSize(m_MinAllowedGrainSize);
     min_size->setPhaseNumber(m_PhaseNumberMinSize);
     min_size->setVoxelDataContainer(m);

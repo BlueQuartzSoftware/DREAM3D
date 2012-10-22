@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MinSize_H_
-#define MinSize_H_
+#ifndef _PerPhaseMinSize_H_
+#define _PerPhaseMinSize_H_
 
 #include <vector>
 #include <string>
@@ -43,29 +43,31 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+// #include "DREAM3DLib/Common/IDataArray.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+//#include "DREAM3DLib/Common/AbstractFilter.h"
+//#include "DREAM3DLib/Common/VoxelDataContainer.h"
+//#include "DREAM3DLib/Common/OrientationMath.h"
+//#include "DREAM3DLib/Common/NeighborList.hpp"
+
+#include "DREAM3DLib/ProcessingFilters/MinSize.h"
 
 
 /**
- * @class MinSize MinSize.h DREAM3DLib/ProcessingFilters/MinSize.h
+ * @class PerPhaseMinSize PerPhaseMinSize.h DREAM3DLib/ProcessingFilters/PerPhaseMinSize.h
  * @brief This filter ensures each Grain or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MinSize : public AbstractFilter
+class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
 {
   public:
-    DREAM3D_SHARED_POINTERS(MinSize)
-    DREAM3D_STATIC_NEW_MACRO(MinSize)
-    DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(PerPhaseMinSize)
+    DREAM3D_STATIC_NEW_MACRO(PerPhaseMinSize)
+    DREAM3D_TYPE_MACRO_SUPER(PerPhaseMinSize, AbstractFilter)
 
-    virtual ~MinSize();
+    virtual ~PerPhaseMinSize();
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -76,25 +78,19 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
+    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter (All Phases)"; }
+    virtual const std::string getHumanLabel() { return "Minimum Size Filter (Per Phase)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-
-    virtual void execute();
-    virtual void preflight();
-
-    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
   protected:
-    MinSize();
+    PerPhaseMinSize();
 
+    // We over ride this method because we need to change the functionality
     virtual void remove_smallgrains();
-    virtual void assign_badpoints();
-
 
   private:
     int32_t* m_Neighbors;
@@ -108,8 +104,8 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     std::vector<int> nuclei;
 
 
-    MinSize(const MinSize&); // Copy Constructor Not Implemented
-    void operator=(const MinSize&); // Operator '=' Not Implemented
+    PerPhaseMinSize(const PerPhaseMinSize&); // Copy Constructor Not Implemented
+    void operator=(const PerPhaseMinSize&); // Operator '=' Not Implemented
 };
 
-#endif /* MinSize_H_ */
+#endif /* _PerPhaseMinSize_H_ */

@@ -202,7 +202,6 @@ void methodName(typename T::Pointer t, FILE* f){\
     t->setSurfaceMeshDataContainer(sm.get());\
     SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();\
     t->setSolidMeshDataContainer(solid.get());\
-
     t->preflight();\
     {\
       std::set<std::string> list = t->getRequiredCellData();\
