@@ -372,6 +372,7 @@ void QFilterWidget::setupGui()
       QLineEdit* le = new QLineEdit(this);
       le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QDoubleValidator* ival = new QDoubleValidator(this);
+      ival->setDecimals(8);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
