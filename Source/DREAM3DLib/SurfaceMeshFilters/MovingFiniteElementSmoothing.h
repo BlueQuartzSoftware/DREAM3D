@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public AbstractFilter
 
     virtual ~MovingFiniteElementSmoothing();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeKindArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int8_t*  m_SurfaceMeshNodeKind;
+    int8_t*  m_SurfaceMeshNodeType;
 
 
     MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&); // Copy Constructor Not Implemented
