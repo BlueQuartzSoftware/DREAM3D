@@ -44,6 +44,7 @@
 <file>ProcessingFilters/IdentifySample.html</file>
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
+<file>ProcessingFilters/PerPhaseMinSize.html</file>
 <file>ProcessingFilters/OpenCloseBadData.html</file>
 <file>ProcessingFilters/RotateEulerRefFrame.html</file>
 
