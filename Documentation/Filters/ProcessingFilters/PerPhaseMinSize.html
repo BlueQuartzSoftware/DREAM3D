@@ -22,9 +22,9 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <title>Minimum Size Filter</title>
 </head>
 <body>
-<h1 class="pHeading1">Minimum Size Filter Filter</h1>
+<h1 class="pHeading1">Per Phase Minimum Size Filter Filter</h1>
 <p class="pCellBody">
-<a href="../ProcessingFilters/MinSize.html#wp2">Description</a> | <a href="../ProcessingFilters/MinSize.html#wp3">Options</a> | <a href="../ProcessingFilters/MinSize.html#wp4">Required Arrays</a> | <a href="../ProcessingFilters/MinSize.html#wp5">Created Arrays</a> | <a href="../ProcessingFilters/MinSize.html#wp1">Authors</a> </p>
+<a href="../ProcessingFilters/PerPhaseMinSize.html#wp2">Description</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp3">Options</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp4">Required Arrays</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp5">Created Arrays</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp1">Authors</a> </p>
 
 
 
@@ -42,7 +42,8 @@ This Filter removes grains that have a total of <i>voxels</i> below the <i>minim
   The number of <i>voxels</i> in the largest grain is determined during the running of this filter. Hence, a conservative
   approach to selecting the minimum number of <i>voxels</i> is strongly recommended.</b><br />
 After removing all the small grains, the remaining grains are <i>coarsened</i> to fill the gaps left by the small grains.
- The iteration <i>coarsens</i> the grains by one <i>voxel</i> each iteration.
+ The iteration <i>coarsens</i> the grains by one <i>voxel</i> each iteration. This filter has the additional ability to
+ only apply the filter to a single phase of the users choosing.
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -52,7 +53,7 @@ After removing all the small grains, the remaining grains are <i>coarsened</i> t
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th><th>Comment</th></tr>
 <tr bgcolor="#E2E2E2"><td>Minimum Allowed Grain Size</td><td>Integer</td><td></td></tr>
-
+<tr bgcolor="#E2E2E2"><td>Phase Number</td><td>Integer</td><td>The phase number to apply this filter to.</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>

@@ -9,12 +9,13 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 set(ProcessingFilters_FILTERS_HDRS
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.h
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.h
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/PerPhaseMinSize.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.h
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.h
 )
 #-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
 set(DREAM3DLib_ProcessingFilters_HDRS
@@ -22,11 +23,12 @@ set(DREAM3DLib_ProcessingFilters_HDRS
 ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.h
 )
 set(DREAM3DLib_ProcessingFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.cpp    
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/PerPhaseMinSize.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.cpp
+    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.cpp
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.cpp
     ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.cpp
 )
