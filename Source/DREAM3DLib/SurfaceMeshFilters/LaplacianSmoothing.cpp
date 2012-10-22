@@ -45,12 +45,13 @@
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
 AbstractFilter(),
-m_SurfaceMeshNodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
+m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_IterationSteps(1),
 m_Lambda(0.01),
-m_QuadPointLambda(0.0),
 m_TripleLineLambda(0.0),
-m_SurfaceMeshNodeKind(NULL)
+m_QuadPointLambda(0.0),
+m_SurfacePointLambda(0.0),
+m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
@@ -88,6 +89,16 @@ void LaplacianSmoothing::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Triple Line Lambda");
+    parameter->setPropertyName("TripleLineLambda");
+    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setUnits("Zero will Lock them in Place");
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Quad Points Lambda");
     parameter->setPropertyName("QuadPointLambda");
     parameter->setWidgetType(FilterParameter::DoubleWidget);
@@ -98,8 +109,8 @@ void LaplacianSmoothing::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Triple Line Lambda");
-    parameter->setPropertyName("TripleLineLambda");
+    parameter->setHumanLabel("Surface Points Lambda");
+    parameter->setPropertyName("SurfacePointLambda");
     parameter->setWidgetType(FilterParameter::DoubleWidget);
     parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
@@ -118,8 +129,9 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
    AbstractFilterParametersWriter class for the proper API to use. */
     writer->writeValue("Lambda", getLambda() );
     writer->writeValue("IterationSteps", getIterationSteps());
-    writer->writeValue("QuadPointLambda", getQuadPointLambda());
     writer->writeValue("TripleLineLambda", getTripleLineLambda());
+    writer->writeValue("QuadPointLambda", getQuadPointLambda());
+    writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +162,7 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
     else
     {
       int size = sm->getNodes()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeKind, ss, -390, int8_t, Int8ArrayType, size, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
     }
   }
 
@@ -207,18 +219,44 @@ void LaplacianSmoothing::execute()
 // -----------------------------------------------------------------------------
 int LaplacianSmoothing::generateLambdaArray()
 {
-  StructArray<Node>::Pointer floatNodesPtr = getSurfaceMeshDataContainer()->getNodes();
-  if(NULL == floatNodesPtr.get())
+  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+  if(NULL == nodesPtr.get())
   {
     setErrorCondition(-555);
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
     return -1;
   }
-  int numNodes = floatNodesPtr->GetNumberOfTuples();
+  int numNodes = nodesPtr->GetNumberOfTuples();
+
   DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "Laplacian_Smoothing_Lambda_Array");
   for(int i = 0; i < numNodes; ++i)
   {
     lambdas->SetValue(i, m_Lambda);
+    switch(m_SurfaceMeshNodeType[i])
+    {
+      case DREAM3D::SurfaceMesh::NodeType::Unused:
+        break;
+      case DREAM3D::SurfaceMesh::NodeType::Default:
+        lambdas->SetValue(i, m_Lambda);
+        break;
+      case DREAM3D::SurfaceMesh::NodeType::TriplePoint:
+        lambdas->SetValue(i, m_TripleLineLambda);
+        break;
+      case DREAM3D::SurfaceMesh::NodeType::QuadPoint:
+        lambdas->SetValue(i, m_QuadPointLambda);
+        break;
+      case DREAM3D::SurfaceMesh::NodeType::SurfaceDefault:
+        lambdas->SetValue(i, m_SurfacePointLambda);
+        break;
+      case DREAM3D::SurfaceMesh::NodeType::SurfaceTriplePoint:
+        lambdas->SetValue(i, m_SurfacePointLambda);
+        break;
+      case DREAM3D::SurfaceMesh::NodeType::SurfaceQuadPoint:
+        lambdas->SetValue(i, m_SurfacePointLambda);
+        break;
+      default:
+        break;
+    }
   }
 
   setLambdaArray(lambdas);
