@@ -284,6 +284,7 @@ void PipelineViewWidget::preflightPipeline()
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
   SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+
   std::stringstream ss;
 
 
@@ -300,6 +301,7 @@ void PipelineViewWidget::preflightPipeline()
       filter->setVoxelDataContainer(m.get());
       filter->setSurfaceMeshDataContainer(sm.get());
       filter->setSolidMeshDataContainer(solid.get());
+
       filter->preflight();
       int err = filter->getErrorCondition();
       std::vector<PipelineMessage> msgs = filter->getPipelineMessages();

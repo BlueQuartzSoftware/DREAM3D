@@ -133,6 +133,7 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
     find_grainphases->setObservers(this->getObservers());
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     find_grainphases->setMessagePrefix(getMessagePrefix());
+
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
