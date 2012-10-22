@@ -77,7 +77,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
@@ -88,7 +88,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     setErrorCondition(0);
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
     find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setDataContainer(getDataContainer());
+    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_surfacefields->preflight();
     if(preflight == false) find_surfacefields->execute();
   }
@@ -101,7 +101,7 @@ void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -132,7 +132,7 @@ void FindAxisODF::preflight()
 // -----------------------------------------------------------------------------
 void FindAxisODF::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

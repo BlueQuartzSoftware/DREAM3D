@@ -49,7 +49,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
@@ -119,7 +119,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int initDataContainerDimsRes(int64_t dims[3], DataContainer* m);
+    int initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m);
 
 
     /**
@@ -159,9 +159,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
       }
-      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PTypes);
-      getDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PTypes);
+      getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
 

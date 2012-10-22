@@ -44,7 +44,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/SyntheticBuilderFilters/InitializeSyntheticVolume.h"
 
 #include "PipelineBuilder/QFilterWidget.h"
@@ -94,7 +94,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
     QString                     m_OpenDialogLastDirectory;
-    DataContainer::Pointer      m_DataContainer;
+    VoxelDataContainer::Pointer      m_DataContainer;
     QList<QLabel*>              m_ShapeTypeLabels;
     QList<QComboBox*>           m_ShapeTypeCombos;
 

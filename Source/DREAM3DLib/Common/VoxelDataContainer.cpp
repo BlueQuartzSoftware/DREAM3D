@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 // C Includes
 
@@ -54,7 +54,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::DataContainer() :
+VoxelDataContainer::VoxelDataContainer() :
 m_NumCellTuples(0),
 m_NumFieldTuples(0),
 m_NumEnsembleTuples(0)
@@ -67,7 +67,7 @@ m_NumEnsembleTuples(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::~DataContainer()
+VoxelDataContainer::~VoxelDataContainer()
 {
 
 }
@@ -75,7 +75,7 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -91,7 +91,7 @@ void DataContainer::addCellData(const std::string &name, IDataArray::Pointer dat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer DataContainer::getCellData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getCellData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
@@ -105,7 +105,7 @@ IDataArray::Pointer DataContainer::getCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer DataContainer::removeCellData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeCellData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
@@ -121,7 +121,7 @@ IDataArray::Pointer DataContainer::removeCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::clearCellData()
+void VoxelDataContainer::clearCellData()
 {
   m_CellData.clear();
 }
@@ -129,7 +129,7 @@ void DataContainer::clearCellData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> DataContainer::getCellArrayNameList()
+std::list<std::string> VoxelDataContainer::getCellArrayNameList()
 {
   std::list<std::string> keys;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
@@ -142,7 +142,7 @@ std::list<std::string> DataContainer::getCellArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::getNumCellArrays()
+int VoxelDataContainer::getNumCellArrays()
 {
   return static_cast<int>(m_CellData.size());
 }
@@ -152,7 +152,7 @@ int DataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer DataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getFieldData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -166,7 +166,7 @@ IDataArray::Pointer DataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -182,7 +182,7 @@ void DataContainer::addFieldData(const std::string &name, IDataArray::Pointer da
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer DataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeFieldData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -198,7 +198,7 @@ IDataArray::Pointer DataContainer::removeFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::clearFieldData()
+void VoxelDataContainer::clearFieldData()
 {
   m_FieldData.clear();
 }
@@ -206,7 +206,7 @@ void DataContainer::clearFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> DataContainer::getFieldArrayNameList()
+std::list<std::string> VoxelDataContainer::getFieldArrayNameList()
 {
   std::list<std::string> keys;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
@@ -219,7 +219,7 @@ std::list<std::string> DataContainer::getFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::getNumFieldArrays()
+int VoxelDataContainer::getNumFieldArrays()
 {
   return static_cast<int>(m_FieldData.size());
 }
@@ -227,7 +227,7 @@ int DataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::resizeFieldDataArrays(size_t size)
+void VoxelDataContainer::resizeFieldDataArrays(size_t size)
 {
  // int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
@@ -242,7 +242,7 @@ void DataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer DataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getEnsembleData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -256,7 +256,7 @@ IDataArray::Pointer DataContainer::getEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -273,7 +273,7 @@ void DataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer DataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeEnsembleData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -289,7 +289,7 @@ IDataArray::Pointer DataContainer::removeEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::clearEnsembleData()
+void VoxelDataContainer::clearEnsembleData()
 {
   m_EnsembleData.clear();
   m_NumEnsembleTuples = 0;
@@ -298,7 +298,7 @@ void DataContainer::clearEnsembleData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> DataContainer::getEnsembleArrayNameList()
+std::list<std::string> VoxelDataContainer::getEnsembleArrayNameList()
 {
   std::list<std::string> keys;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
@@ -311,7 +311,7 @@ std::list<std::string> DataContainer::getEnsembleArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::getNumEnsembleArrays()
+int VoxelDataContainer::getNumEnsembleArrays()
 {
   return static_cast<int>(m_EnsembleData.size());
 }

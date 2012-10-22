@@ -147,7 +147,7 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType,  true, voxels, 1)
@@ -159,7 +159,7 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
   }
@@ -187,7 +187,7 @@ void CAxisSegmentGrains::preflight()
 void CAxisSegmentGrains::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -279,7 +279,7 @@ void CAxisSegmentGrains::execute()
 int CAxisSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);

@@ -130,7 +130,7 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -301, float, FloatArrayType, fields, 5)
@@ -154,7 +154,7 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setDataContainer(getDataContainer());
+    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_grainphases->preflight();
     if(preflight == false) find_grainphases->execute();
   }
@@ -181,7 +181,7 @@ void FindSchmids::preflight()
 // -----------------------------------------------------------------------------
 void FindSchmids::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

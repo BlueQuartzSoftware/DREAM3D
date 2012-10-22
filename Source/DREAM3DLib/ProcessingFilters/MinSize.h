@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
@@ -76,11 +76,9 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
-    DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
-    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToAllPhases)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter"; }
+    virtual const std::string getHumanLabel() { return "Minimum Size Filter (All Phases)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -89,11 +87,13 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
   protected:
     MinSize();
 
-    void remove_smallgrains();
-    void assign_badpoints();
+    virtual void remove_smallgrains();
+    virtual void assign_badpoints();
 
 
   private:
@@ -106,8 +106,6 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
     MinSize(const MinSize&); // Copy Constructor Not Implemented

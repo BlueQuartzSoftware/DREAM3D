@@ -158,7 +158,7 @@ int VtkGrainIdReader::readHeader()
     return -1;
   }
 
-  if (NULL == getDataContainer())
+  if (NULL == getVoxelDataContainer())
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
@@ -220,7 +220,7 @@ int VtkGrainIdReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   size_t dims[3];
   err = parseSizeT_3V(buf, dims, 0);
-  getDataContainer()->setDimensions(dims);
+  getVoxelDataContainer()->setDimensions(dims);
 
 #if 0
   ::memset(buf, 0, kBufferSize);
@@ -289,7 +289,7 @@ int VtkGrainIdReader::readFile()
 
   // These should have been set from reading the header
   size_t dims[3];
-  getDataContainer()->getDimensions(dims);
+  getVoxelDataContainer()->getDimensions(dims);
 
 
   size_t dim = 0;
@@ -343,7 +343,7 @@ int VtkGrainIdReader::readFile()
   // This makes a very bad assumption that the Rectilinear grid has even spacing
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
-  getDataContainer()->setResolution(xscale, yscale, zscale);
+  getVoxelDataContainer()->setResolution(xscale, yscale, zscale);
 
 
   // Now we need to search for the 'GrainID' and
@@ -361,8 +361,8 @@ int VtkGrainIdReader::readFile()
 
   //size_t index = 0;
   //Cell Data is one less in each direction
-  getDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-  getDataContainer()->getDimensions(dims);
+  getVoxelDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
+  getVoxelDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
   grainIds->SetName("GrainIds");
@@ -434,7 +434,7 @@ int VtkGrainIdReader::readFile()
   }
 
   // push our grain id data into the DataContainer map
-  getDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
   instream.close();
   return err;

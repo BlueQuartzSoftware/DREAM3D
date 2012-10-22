@@ -200,7 +200,7 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
 // -----------------------------------------------------------------------------
 void DataContainerReader::execute()
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
@@ -283,7 +283,7 @@ int DataContainerReader::gatherData(bool preflight)
   { 1.0f, 1.0f, 1.0f };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
@@ -416,15 +416,15 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     {
       if(groupName.compare(H5_CELL_DATA_GROUP_NAME) == 0)
       {
-        getDataContainer()->addCellData(dPtr->GetName(), dPtr);
+        getVoxelDataContainer()->addCellData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+        getVoxelDataContainer()->addFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+        getVoxelDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 
