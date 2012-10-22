@@ -93,7 +93,7 @@ void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
@@ -119,7 +119,7 @@ void AlignSectionsFeatureCentroid::preflight()
 void AlignSectionsFeatureCentroid::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -148,7 +148,7 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
@@ -192,17 +192,17 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-		  point = static_cast<int>( ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n );
+      point = static_cast<int>( ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n );
           if(m_GoodVoxels[point] == true)
-		  {
-			xCentroid[iter] = xCentroid[iter] + (float(n)*xRes);
-			yCentroid[iter] = yCentroid[iter] + (float(l)*yRes);
+      {
+      xCentroid[iter] = xCentroid[iter] + (float(n)*xRes);
+      yCentroid[iter] = yCentroid[iter] + (float(l)*yRes);
             count++;
-		  }
+      }
       }
     }
-	xCentroid[iter] = xCentroid[iter]/float(count);
-	yCentroid[iter] = yCentroid[iter]/float(count);
+  xCentroid[iter] = xCentroid[iter]/float(count);
+  yCentroid[iter] = yCentroid[iter]/float(count);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {

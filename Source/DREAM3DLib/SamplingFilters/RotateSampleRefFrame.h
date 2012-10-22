@@ -42,10 +42,8 @@
 
 /**
  * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
- * @brief This filter will convert the Euler Angles. Simply enter the conversion
- * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
- * to Degrees use 57.2957785
- * @author Michael A. Jackson for BlueQuartz Software
+ * @brief This filter will
+ * @author
  * @date Apr 26, 2012
  * @version 1.0
  */
@@ -60,7 +58,7 @@ class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAxis)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAngle)
 
-	virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const std::string getHumanLabel() { return "Rotate Sample Reference Frame"; }
 
     virtual void setupFilterParameters();
@@ -70,6 +68,8 @@ class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void preflight();
+
+
     virtual void execute();
 
   protected:
