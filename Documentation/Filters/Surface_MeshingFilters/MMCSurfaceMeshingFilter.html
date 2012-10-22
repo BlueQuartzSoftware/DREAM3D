@@ -38,7 +38,18 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-
+This filter creates a surface mesh using a Marching Cubes algorithm originally
+developed at Carnegie-Mellon University by Dr. Sukbin Lee in the Marterials Engineering
+department based on the Wu/Sullivan algorithm. Heavy modifications were performed by M. Grober and M. Jackson for
+the DREAM3D project. This version of the code meshes by looking at the entire volume
+of voxels at one time which means that this version may be more memory intensive
+than other versions.
+</p>
+<p>
+The option to <i>Add Surface Layer</i> is needed in most cases as the algorithm needs a dummy layer of voxels around
+the entire volume to properly work. Sometimes when importing a volume through some of the IO filters (Dx and Ph Readers)
+the volume that is being imported already has this surface layer added. If this is true then the parameter is not
+needed.
 <!-- Do NOT write documentation below this line -->
 </p>
 

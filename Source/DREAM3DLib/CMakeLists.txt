@@ -33,7 +33,7 @@ set(PROJECT_INSTALL_HEADERS 0)
 #-------------------------------------------------------------------------------
 # Include the cmp project to perform all the basic configuration tests for the
 # project.
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 set(CMP_HEADER_DIR ${DREAM3DLib_BINARY_DIR})
 set(CMP_CONFIGURATION_FILE_NAME "DREAM3DConfiguration.h")
 set(CMP_TYPES_FILE_NAME "DREAM3DLibTypes.h")
@@ -104,7 +104,7 @@ D3DCompileFilters(SamplingFilters   ${AllFiltersHeaderFile})
 D3DCompileFilters(StatisticsFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(SurfaceMeshFilters ${AllFiltersHeaderFile})
 D3DCompileFilters(SyntheticBuilderFilters ${AllFiltersHeaderFile})
-# D3DCompileFilters(CustomFilters ${AllFiltersHeaderFile})
+D3DCompileFilters(CustomFilters ${AllFiltersHeaderFile})
 
 
 file(APPEND ${AllFiltersHeaderFile} "\n#endif\n")
