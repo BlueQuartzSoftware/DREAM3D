@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 NodesTrianglesToVtk::NodesTrianglesToVtk() :
 AbstractFilter(),
-m_NodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
+m_NodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_WriteBinaryFile(false),
 m_WriteConformalMesh(true),
 m_NodeKind(NULL)

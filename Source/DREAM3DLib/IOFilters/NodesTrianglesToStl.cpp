@@ -257,7 +257,7 @@ void NodesTrianglesToStl::execute()
   StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
   Node* nodes = nodesPtr->GetPointer(0);
 
-//  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::CellData::SurfaceMeshNodeKind);
+//  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::CellData::SurfaceMeshNodeType);
 //  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
 
   for (int i = 0; i < nNodes; i++)

@@ -150,7 +150,7 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
       setErrorCondition(-385);
     }
-    IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeKind);
+    IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
     if (nodeKinds.get() == NULL)
     {
       setErrorCondition(-559);
@@ -218,7 +218,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeKind);
+  IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
   if (nodeKinds.get() == NULL)
   {
     setErrorCondition(-559);

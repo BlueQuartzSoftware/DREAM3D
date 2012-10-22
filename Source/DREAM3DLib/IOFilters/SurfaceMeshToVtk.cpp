@@ -44,10 +44,10 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToVtk::SurfaceMeshToVtk() :
 AbstractFilter(),
-m_SurfaceMeshNodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
+m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_WriteBinaryFile(false),
 m_WriteConformalMesh(true),
-m_SurfaceMeshNodeKind(NULL)
+m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
@@ -139,7 +139,7 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
     else
     {
       int nNodes = sm->getNodes()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeKind, ss, -385, int8_t, Int8ArrayType, nNodes, 1);
+      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -385, int8_t, Int8ArrayType, nNodes, 1);
     }
 
 
@@ -213,7 +213,7 @@ void SurfaceMeshToVtk::execute()
   for (int i = 0; i < nNodes; i++)
   {
   //  Node& n = nodes[i]; // Get the current Node
-    if (m_SurfaceMeshNodeKind[i] > 0) { ++numberWrittenNodes; }
+    if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenNodes; }
   }
 
 
@@ -226,7 +226,7 @@ void SurfaceMeshToVtk::execute()
   for (int i = 0; i < nNodes; i++)
   {
     Node& n = nodes[i]; // Get the current Node
-    if (m_SurfaceMeshNodeKind[i] > 0)
+    if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = n.coord[0];
       pos[1] = n.coord[1];
@@ -336,7 +336,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   for (int i = 0; i < numNodes; i++)
   {
   //  Node& n = nodes[i]; // Get the current Node
-    if (m_SurfaceMeshNodeKind[i] > 0) { ++nNodes; }
+    if (m_SurfaceMeshNodeType[i] > 0) { ++nNodes; }
   }
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
@@ -347,17 +347,17 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   for(int i = 0; i < numNodes; ++i)
   {
  //   Node& n = nodes[i]; // Get the current Node
-    if(m_SurfaceMeshNodeKind[i] > 0)
+    if(m_SurfaceMeshNodeType[i] > 0)
     {
       if(m_WriteBinaryFile == true)
       {
-        swapped = m_SurfaceMeshNodeKind[i];
+        swapped = m_SurfaceMeshNodeType[i];
         MXA::Endian::FromSystemToBig::convert<int>(swapped);
         fwrite(&swapped, sizeof(int), 1, vtkFile);
       }
       else
       {
-        fprintf(vtkFile, "%d\n", m_SurfaceMeshNodeKind[i]);
+        fprintf(vtkFile, "%d\n", m_SurfaceMeshNodeType[i]);
       }
 
     }
