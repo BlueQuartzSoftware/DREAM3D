@@ -52,21 +52,35 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <!-- Do NOT write documentation below this line -->
+This filter attempts to align consecutive serial sections by determining the position that closest aligns the centroid(s) of previously 
+defined "regions".  The "regions" are defined by a binary/boolean array where the voxels/datapoints have been flagged by another filter.  
+Typically, during reading of the data, each voxel/datapoint is subject to a "Quality Metric" (or threshold) that defines if the voxel/datapoint 
+is "good".  This threshold can be used to define areas of each slice that are bad, either due to actual features in the microstructure or 
+external references inserted by the user/experimentalist.  If these "regions" of "bad" voxels/datapoints are believed to be consistent through 
+sections, then this filter will preserve that by aligning those "regions" on top of one another on consecutive sections.<br />
+The algorithm of this filter is as follows:<br />
+<br />
+1) Determine the centroid of all voxels/datapoints that are flagged with a boolean value of one (or true) for each section <br />
+2) Determine the full voxel/datapoint shifts that place centroids of consecutive sections as close as possible.<br />
+*Note that this is algorithm cannot get caught in a local minima*<br />
+<br />
+  
+<!-- Do NOT write documentation below this line -->
 </p>
 
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
 <!-- A TABLE OF Options FOR YOUR FILTER -->
-<a name="wp3"> </a><h2 class="pHeading2">Options</h2>
+<a name="wp3"> </a><h2 class="pHeading2">Parameters</h2>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GoodVoxels</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GoodVoxels</td><td>Boolean values used to define "regions" to be aligned</td><td>Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions" </td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Decription</th><th>Comment</th></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">

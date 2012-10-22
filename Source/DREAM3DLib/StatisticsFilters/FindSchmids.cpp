@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -132,10 +133,21 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   DataContainer* m = getDataContainer();
   int err = 0;
 
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -301, float, FloatArrayType, fields, 5)
+  if(err == -302)
+  {
+    setErrorCondition(0);
+    FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
+    find_avgorients->setObservers(this->getObservers());
+    find_avgorients->setDataContainer(getDataContainer());
+    if(preflight == true) find_avgorients->preflight();
+    if(preflight == false) find_avgorients->execute();
+  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, int32_t, Int32ArrayType, 0, fields, 3)
+  err = 0;
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
   if(err == -302)
   {

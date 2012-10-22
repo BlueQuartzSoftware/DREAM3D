@@ -58,17 +58,17 @@ then the grains are merged together and called one grain.  Hence, the outputs of
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>AvgQuats</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td>Ids (ints) that specify to which feature/grain each voxel/datapoint belongs.</td><td>Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>AvgQuats</td><td>Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation</td><td>Filter will calculate average quaternions for features/grains if not already calculated.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td>Filter will determine feature/grain phases if not previously determined</td></tr>
+<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td>Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2)</td><td>Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>Active</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>Active</td><td>Boolean value specifying if the feature/grain is still in the sample (1 if the feature/grain is in the sample and 0 if it is not)</td><td>At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed. </td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">

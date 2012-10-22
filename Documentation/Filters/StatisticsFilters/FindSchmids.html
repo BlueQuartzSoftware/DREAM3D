@@ -36,15 +36,16 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-The <i>Schmid factors</i> are found using this Filter. The component of the axial force F that lies parallel to the slip direction is F cos λ. The resolved shear stress on the slip plane parallel to the slip direction is therefore given by:<br /><br />
-
- resolved shear stress = (applied stress)(cos φ cos λ)<br /><br />
- 
-The angle φ is the angle between the tensile axis and the slip plane normal, and λ is the angle between the tensile axis and the slip direction in the slip plane.<br />
-It is found that the value of the resolved shear stress at which slip occurs in a given material with specified dislocation density and purity is a constant known as the <i>critical resolved shear stress</i> τ(Critical). <i>This is Schmid's Law</i>.
-The quantity <i>cos φ cos λ </i> is called the <i>Schmid factor</i>. The tensile stress at which the crystal starts to slip is known as the yield stress <i>σy</i>, and corresponds to the quantity 'applied stress' in the above equation.<br />
--------------<br />
-<i>Source: www.doitpoms.ac.uk/tlplib/slip/printall.php</i>
+This filter calculates the Schmid Factor of each feature/grain given its average orientation and a user defined loading axis.<br />
+The Schmid Factor is the combination of the component of the axial force F that lies parallel to the slip direction and the component 
+that lies perpendicular to the slip plane.  The equation for the Schmid Factor is given as:<br />
+<br />
+Schmid Factor = (cos φ cos λ)<br />
+*The angle φ is the angle between the tensile axis and the slip plane normal, and λ is the angle between the tensile axis and the slip direction in the slip plane.*<br />
+<br /> 
+The filter determines the Schmid Factor for each feature/grain by using the above equation for all possible slip systems (given the feature/grain's crystal structure).  The largest 
+Schmid Factor from all of the slip systems is stored for the feature/grain.
+<br />
 
 <!-- Do NOT write documentation below this line -->
 </p>
@@ -53,29 +54,29 @@ The quantity <i>cos φ cos λ </i> is called the <i>Schmid factor</i>. The tensi
 <!-- A TABLE OF Options FOR YOUR FILTER -->
 <a name="wp3"> </a><h2 class="pHeading2">Parameters</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th><th>Description</th></tr>
 <tr bgcolor="#E2E2E2">
-<td>Loading X:</td><td>Double</td></tr>
+<td>Loading X:</td><td>Double</td><td>X component of the loading axis in the sample reference frame</td></tr>
 <tr bgcolor="#E2E2E2">
-<td>Loading Y:</td><td>Double</td></tr>
+<td>Loading Y:</td><td>Double</td><td>Y component of the loading axis in the sample reference frame</td></tr>
 <tr bgcolor="#E2E2E2">
-<td>Loading Z:</td><td>Double</td></tr>
+<td>Loading Z:</td><td>Double</td><td>Z component of the loading axis in the sample reference frame</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>AvgQuats</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>AvgQuats</td><td>Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation</td><td>Filter will calculate average quaternions for features/grains if not already calculated.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td>Filter will calculate feature/grain phases if not already calculated.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td>Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2)</td><td>Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>Poles</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>Schmids</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>SlipSystems</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>Poles</td><td>Three (3) values (ints) giving the crystallographic pole that points along the user defined loading direction.</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>Schmids</td><td>Value of the Schmid Factor (float) for the most favorably oriented slip system (ie the one with the highest Schmid Factor).</td><td>Only the Schmid Factor was used in determining which slip system's Schmid Factor to report.  The critical resolved shear stress for the different slip systems is not considered.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>SlipSystems</td><td>Enumeration (int) of the slip system that has the highest Schmid Factor</td><td>Numbers correspond to specific slip systems for the different crystal structures as follows:</td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
