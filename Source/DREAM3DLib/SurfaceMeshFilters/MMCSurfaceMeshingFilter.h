@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT MMCSurfaceMeshingFilter : public AbstractFilter
     //------ Created Surface Mesh Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeKindArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT MMCSurfaceMeshingFilter : public AbstractFilter
 
   private:
     int32_t*  m_GrainIds;
-    int8_t*   m_SurfaceMeshNodeKind;
+    int8_t*   m_SurfaceMeshNodeType;
 
     int createMesh();
 

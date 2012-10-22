@@ -57,6 +57,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/SurfaceMeshFilters/MeshFunctions.h"
 #include "DREAM3DLib/SurfaceMeshFilters/MeshLinearAlgebra.h"
 
@@ -148,13 +149,13 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
 AbstractFilter(),
-m_SurfaceMeshNodeKindArrayName(DREAM3D::CellData::SurfaceMeshNodeKind),
+m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_IterationSteps(1),
 m_NodeConstraints(true),
 m_ConstrainSurfaceNodes(true),
 m_ConstrainQuadPoints(true),
 m_SmoothTripleLines(true),
-m_SurfaceMeshNodeKind(NULL)
+m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
@@ -256,7 +257,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     else
     {
       int size = sm->getNodes()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeKind, ss, -390, int8_t, Int8ArrayType, size, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
     }
     IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
     if(edges.get() == NULL)
@@ -451,7 +452,7 @@ void MovingFiniteElementSmoothing::execute()
         // std::cout << std::endl << "edge#  ID1  ID2  " << i << " " << nid[0] << " " << nid[1] << std::endl ;
         tedges++;
         //  now to assign NN nodes at any node on a TJ, but not quads
-        if(m_SurfaceMeshNodeKind[nid[0]] == 3 || m_SurfaceMeshNodeKind[nid[0]] == 13)
+        if(m_SurfaceMeshNodeType[nid[0]] == 3 || m_SurfaceMeshNodeType[nid[0]] == 13)
         {
           if(triplenn[nid[0]].triplenn1 == 0)
           {
@@ -476,7 +477,7 @@ void MovingFiniteElementSmoothing::execute()
           }
         }
         //      if ( nodes[nid[0]] == 0 ) ;
-        if(m_SurfaceMeshNodeKind[nid[1]] == 3 || m_SurfaceMeshNodeKind[nid[1]] == 13)
+        if(m_SurfaceMeshNodeType[nid[1]] == 3 || m_SurfaceMeshNodeType[nid[1]] == 13)
         {
           if(triplenn[nid[1]].triplenn1 == 0)
           {
@@ -675,7 +676,7 @@ void MovingFiniteElementSmoothing::execute()
       if(fabs(nodes[r].coord[1] - max[1]) < tolerance || fabs(nodes[r].coord[1] - min[1]) < tolerance) nodeConstraint[r] += 2;
       if(fabs(nodes[r].coord[2] - max[2]) < tolerance || fabs(nodes[r].coord[2] - min[2]) < tolerance) nodeConstraint[r] += 4;
       // debug
-      if(m_SurfaceMeshNodeKind[r] > 10 && nodeConstraint[r] == 0)
+      if(m_SurfaceMeshNodeType[r] > 10 && nodeConstraint[r] == 0)
       {
         if(isVerbose)
         {
@@ -683,7 +684,7 @@ void MovingFiniteElementSmoothing::execute()
           std::cout << " Coord. Diffs. for X: " << fabs(nodes[r].coord[0] - max[0]) << " " << fabs(nodes[r].coord[0] - min[0]) << std::endl;
           std::cout << " Coord. Diffs. for Y: " << fabs(nodes[r].coord[1] - max[1]) << " " << fabs(nodes[r].coord[1] - min[1]) << std::endl;
           std::cout << " Coord. Diffs. for Z: " << fabs(nodes[r].coord[2] - max[2]) << " " << fabs(nodes[r].coord[2] - min[2]) << std::endl;
-          std::cout << "Type, Constraint: " << m_SurfaceMeshNodeKind[r] << " " << nodeConstraint[r] << std::endl;
+          std::cout << "Type, Constraint: " << m_SurfaceMeshNodeType[r] << " " << nodeConstraint[r] << std::endl;
           std::cout << "Check whether there is a problem with applying constraints ... " << std::endl;
         }
       }
@@ -692,7 +693,7 @@ void MovingFiniteElementSmoothing::execute()
       //  totally constrain a surface node (temporary fix for connectivity issues in bounded box meshes)
 
     }
-    if(m_SurfaceMeshNodeKind[r] == 4 && m_ConstrainQuadPoints == true) { nodeConstraint[r] = 7; }
+    if(m_SurfaceMeshNodeType[r] == DREAM3D::SurfaceMesh::NodeType::QuadPoint && m_ConstrainQuadPoints == true) { nodeConstraint[r] = 7; }
     //  constraint for quad point nodes is in all 3 coords.
   }
 
@@ -763,7 +764,7 @@ void MovingFiniteElementSmoothing::execute()
         Node& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
-          if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeKind[i] == 3 || m_SurfaceMeshNodeKind[i] == 13))
+          if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
             LDistance = NodeFunctions<Node, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<Node, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
@@ -771,7 +772,7 @@ void MovingFiniteElementSmoothing::execute()
           node_i.coord[j] += small;
           double Anew = TriangleFunctions<Node, double>::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
           double Qnew = TriangleFunctions<Node, double>::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], Anew);
-          if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeKind[i] == 3 || m_SurfaceMeshNodeKind[i] == 13))
+          if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
             deltaLDistance = NodeFunctions<Node, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<Node, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i])
