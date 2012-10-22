@@ -39,9 +39,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 This Filter removes grains that have a total of <i>voxels</i> below the <i>minimum number</i> input by the user. The <i>minimum</i> is 1. The <i>maximum</i> is the number of <i>voxels</i> in the largest grain. <b>Entering 0 is not permitted</b> because all grains would be eliminated. Entering the number of <i>voxels</i> associated with the largest grain, all grains will be removed. <br />
 <b>NOTE: If the minimum number entered is larger than the largest grain,<br />
  THE PIPELINE WILL EXIT DURING THE FILTER!<br />
-  The number of <i>voxels</i> in the largest grain is determined during the running of this filter. Hence, a conservative approach to selecting the minimum number of <i>voxels</i> is strongly recommended.</b><br />
-After removing all the small grains, the remaining grains are <i>coarsened</i> to fill the gaps left by the small grains. The iteration <i>coarsens</i> the grains by one <i>voxel</i> each iteration.
-<br />
+  The number of <i>voxels</i> in the largest grain is determined during the running of this filter. Hence, a conservative
+  approach to selecting the minimum number of <i>voxels</i> is strongly recommended.</b><br />
+After removing all the small grains, the remaining grains are <i>coarsened</i> to fill the gaps left by the small grains.
+ The iteration <i>coarsens</i> the grains by one <i>voxel</i> each iteration.
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -49,9 +50,12 @@ After removing all the small grains, the remaining grains are <i>coarsened</i> t
 <!-- A TABLE OF Options FOR YOUR FILTER -->
 <a name="wp3"> </a><h2 class="pHeading2">Parameters</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
-<tr bgcolor="#E2E2E2">
-<td>Minimum Allowed Grain Size</td><td>Integer</td></tr>
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Minimum Allowed Grain Size</td><td>Integer</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Apply to All Phases</td><td>Boolean</td><td>If this parameter is enabled (Checked ON) then the
+<i>Phase Number</i> parameter is disabled</td></tr>
+<tr bgcolor="#E2E2E2"><td>Phase Number</td><td>Integer</td><td>The phase number to apply this filter to. If the
+ <i>Apply to all Phases</i> parameter is enabled (Checked ON) then this parameter has <b>NO</b> effect.</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>

@@ -43,9 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/DataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
