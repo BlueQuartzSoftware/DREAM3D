@@ -137,7 +137,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 {
   setErrorCondition(0);
   std::stringstream ss;
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
@@ -154,7 +154,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
     find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setDataContainer(getDataContainer());
+    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
   }
@@ -183,7 +183,7 @@ void AlignSectionsMutualInformation::preflight()
 void AlignSectionsMutualInformation::execute()
 {
   setErrorCondition(0);
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -218,7 +218,7 @@ void AlignSectionsMutualInformation::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
@@ -421,7 +421,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
 void AlignSectionsMutualInformation::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
-  DataContainer* m = getDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

@@ -180,7 +180,7 @@ QString MatrixPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MatrixPhaseWidget::gatherStatsData(DataContainer::Pointer m)
+int MatrixPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 {
   if (m_PhaseIndex < 1)
   {
@@ -219,7 +219,7 @@ int MatrixPhaseWidget::gatherStatsData(DataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatrixPhaseWidget::extractStatsData(DataContainer::Pointer m, int index)
+void MatrixPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
 {
 
   setPhaseIndex(index);
