@@ -97,3 +97,4 @@ IDataArray::Pointer SurfaceMeshDataContainer::getCellData(const std::string &nam
   }
   return (*it).second;
 }
+

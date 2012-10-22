@@ -53,6 +53,10 @@ const static float m_pi = static_cast<float>(M_PI);
 class RotateSampleRefFrameImpl
 {
 
+    VoxelDataContainer* m;
+    uint32_t angle;
+    uint32_t axis;
+
   public:
     RotateSampleRefFrameImpl(VoxelDataContainer* dc, uint32_t rotAngle, uint32_t rotAxis) :
       m(dc),
@@ -262,6 +266,7 @@ class RotateSampleRefFrameImpl
       }
       m->setResolution(xResNew, yResNew, zResNew);
       m->setDimensions(xpNew, ypNew, zpNew);
+
     }
 
   private:
@@ -290,7 +295,6 @@ m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero)
 RotateSampleRefFrame::~RotateSampleRefFrame()
 {
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -377,7 +381,6 @@ void RotateSampleRefFrame::execute()
   }
 
   //  std::cout << "RotateSampleRefFrame: " << m_ConversionFactor << std::endl;
-
   RotateSampleRefFrameImpl serial(m, m_RotationAngle, m_RotationAxis);
   serial.convert();
 

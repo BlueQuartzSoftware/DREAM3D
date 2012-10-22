@@ -247,6 +247,7 @@ int FilterPipeline::preflightPipeline()
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
   SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
@@ -355,14 +356,20 @@ void FilterPipeline::execute()
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setVoxelDataContainer(dataContainer.get());
+<<<<<<< HEAD
     (*iter)->setSurfaceMeshDataContainer(sm.get());
     (*iter)->setSolidMeshDataContainer(solid.get());
+=======
+>>>>>>> master
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
     (*iter)->setVoxelDataContainer(NULL);
+<<<<<<< HEAD
     (*iter)->setSurfaceMeshDataContainer(NULL);
     (*iter)->setSolidMeshDataContainer(NULL);
+=======
+>>>>>>> master
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {

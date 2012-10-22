@@ -136,7 +136,7 @@ int DxWriter::writeHeader()
 int DxWriter::writeFile()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
