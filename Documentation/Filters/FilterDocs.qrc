@@ -41,7 +41,6 @@
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
-<file>ProcessingFilters/IdentifySample.html</file>
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
 <file>ProcessingFilters/PerPhaseMinSize.html</file>
@@ -84,8 +83,6 @@
 <file>Surface_MeshingFilters/MMCSurfaceMeshingFilter.html</file>
 <file>Surface_MeshingFilters/MovingFiniteElementSmoothing.html</file>
 
-
-<file>Synthetic_BuilderFilters/AdjustVolume.html</file>
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>
 <file>Synthetic_BuilderFilters/InitSynthVol.jpg</file>
 <file>Synthetic_BuilderFilters/InitializeSyntheticVolume.html</file>
