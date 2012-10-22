@@ -257,7 +257,7 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setVoxelDataContainer(m.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
-    (*filter)->setDataContainer(NULL);
+    (*filter)->setVoxelDataContainer(NULL);
     int err = (*filter)->getErrorCondition();
     if(err < 0)
     {
@@ -327,7 +327,7 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setVoxelDataContainer(m_DataContainer.get());
+    (*iter)->setVoxelDataContainer(dataContainer.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
