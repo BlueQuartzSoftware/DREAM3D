@@ -34,7 +34,6 @@
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
-<file>ProcessingFilters/IdentifySample.html</file>
 <file>ProcessingFilters/MinNeighbors.html</file>
 <file>ProcessingFilters/MinSize.html</file>
 <file>ProcessingFilters/OpenCloseBadData.html</file>
@@ -72,7 +71,6 @@
 <file>StatisticsFilters/FindSizes.html</file>
 <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
-<file>Synthetic_BuilderFilters/AdjustVolume.html</file>
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>
 <file>Synthetic_BuilderFilters/InitSynthVol.jpg</file>
 <file>Synthetic_BuilderFilters/InitializeSyntheticVolume.html</file>
