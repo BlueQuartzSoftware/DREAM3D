@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html>
+<head>
+<meta name="qrichtext" content="1" />
+<style type="text/css">
+h1.pHeading1 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: x-large; font-weight: bold; text-align: left }
+h2.pHeading2 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: large; font-weight: bold; text-align: left }
+p.pBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }
+p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }
+#footer
+{
+   font-family: Arial, Verdana, Helvetica, sans-serif;
+   font-color:Blue;
+   font-size:small;
+   background-color:#CCCCCC;
+   padding:0pt;
+   position:fixed;
+   bottom:1%;
+   left:1%;
+   width:98%;
+}
+</style>
+<title>Minimum Size Filter</title>
+</head>
+<body>
+<h1 class="pHeading1">Per Phase Minimum Size Filter Filter</h1>
+<p class="pCellBody">
+<a href="../ProcessingFilters/PerPhaseMinSize.html#wp2">Description</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp3">Options</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp4">Required Arrays</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp5">Created Arrays</a> | <a href="../ProcessingFilters/PerPhaseMinSize.html#wp1">Authors</a> </p>
+
+
+
+<a name="wp7"></a>
+<h2 class="pHeading2">Group</h2>
+<p class="pBody">Processing Filters</p>
+
+
+<a name="wp2"> </a><h2 class="pHeading2">Description</h2>
+<p class="pBody">
+<!-- Write all your documentation here -->
+This Filter removes grains that have a total of <i>voxels</i> below the <i>minimum number</i> input by the user. The <i>minimum</i> is 1. The <i>maximum</i> is the number of <i>voxels</i> in the largest grain. <b>Entering 0 is not permitted</b> because all grains would be eliminated. Entering the number of <i>voxels</i> associated with the largest grain, all grains will be removed. <br />
+<b>NOTE: If the minimum number entered is larger than the largest grain,<br />
+ THE PIPELINE WILL EXIT DURING THE FILTER!<br />
+  The number of <i>voxels</i> in the largest grain is determined during the running of this filter. Hence, a conservative
+  approach to selecting the minimum number of <i>voxels</i> is strongly recommended.</b><br />
+After removing all the small grains, the remaining grains are <i>coarsened</i> to fill the gaps left by the small grains.
+ The iteration <i>coarsens</i> the grains by one <i>voxel</i> each iteration. This filter has the additional ability to
+ only apply the filter to a single phase of the users choosing.
+<!-- Do NOT write documentation below this line -->
+</p>
+
+<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
+<!-- A TABLE OF Options FOR YOUR FILTER -->
+<a name="wp3"> </a><h2 class="pHeading2">Parameters</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Minimum Allowed Grain Size</td><td>Integer</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Phase Number</td><td>Integer</td><td>The phase number to apply this filter to.</td></tr>
+</table>
+<!-- A table of Required Data for your filter -->
+<a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td></td></tr>
+</table>
+<!-- A table of Created Data for your filter -->
+<a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>Active</td><td></td></tr>
+</table>
+<a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
+<p class="pBody">
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
+</p>
+<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
+<div>
+<table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>
+</div>
+</body>
+</html>

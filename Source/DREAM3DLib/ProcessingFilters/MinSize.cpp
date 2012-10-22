@@ -60,8 +60,6 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinAllowedGrainSize(1),
-m_PhaseNumber(1),
-m_ApplyToAllPhases(false),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL),
@@ -92,22 +90,6 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Apply To All Phases");
-    option->setPropertyName("ApplyToAllPhases");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Phase Number to Run Min Size Filter on");
-    option->setPropertyName("PhaseNumber");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    parameters.push_back(option);
-  }
   setFilterParameters(parameters);
 }
 
@@ -117,9 +99,6 @@ void MinSize::setupFilterParameters()
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
-  writer->writeValue("PhaseNumber", getPhaseNumber() );
-  writer->writeValue("ApplyToAllPhases", getApplyToAllPhases() );
-
 }
 
 // -----------------------------------------------------------------------------
@@ -373,17 +352,9 @@ void MinSize::remove_smallgrains()
     {
       m_Active[i] = true;
     }
-    else if (m_ApplyToAllPhases == true)
-    {
-      m_Active[i] = false;
-    }
-    else if(voxcounts[i] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber)
-    {
-      m_Active[i] = false;
-    }
     else
     {
-      m_Active[i] = true;
+      m_Active[i] = false;
     }
   }
 
