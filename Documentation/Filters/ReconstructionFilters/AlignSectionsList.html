@@ -36,10 +36,8 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-In this Filter, the user can point to a <i>.txt</i> file that has shifts
-already calculated in it.  These shifts could be from some source, e.g., from one of the other Filters in which they were manually modified, or they were manually determined
-in <i>Photoshop</i>, etc. <br /><br />
- The format of the file is as follows: 
+This Filter accepts a <i>.txt</i> file that has full voxel/datapoints shifts that have already been calculated in it.<br />  
+The format of the file is as follows: 
 <br />
 <i>slice number, xshift, yshift<br />
 slice number, xshift, yshift <br />
@@ -47,10 +45,8 @@ slice number, xshift, yshift<br />
 etc...</i>
 <br />
 <br />
-
-Note: there are other Filters that write out a <i>.txt</i> file with shifts in it; so
-the user could change those values, and then <i>Read</i> them back in with this
-Filter if the shifts in the other Filter were unsatisfactory.
+*Note: some/many of the other alignment filters write out a <i>.txt</i> file with their calculated shifts in it; so
+the user could manually modify those values, and then use them in this filter if the shifts in the other filter were deemed unsatisfactory.
 <br />
 <!-- Do NOT write documentation below this line -->
 </p>
@@ -66,12 +62,12 @@ Filter if the shifts in the other Filter were unsatisfactory.
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
