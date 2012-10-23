@@ -36,13 +36,13 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
 <!-- Write all your documentation here -->
-This Filter removes grains that have a total of <i>voxels</i> below the <i>minimum number</i> input by the user. The <i>minimum</i> is 1. The <i>maximum</i> is the number of <i>voxels</i> in the largest grain. <b>Entering 0 is not permitted</b> because all grains would be eliminated. Entering the number of <i>voxels</i> associated with the largest grain, all grains will be removed. <br />
-<b>NOTE: If the minimum number entered is larger than the largest grain,<br />
- THE PIPELINE WILL EXIT DURING THE FILTER!<br />
-  The number of <i>voxels</i> in the largest grain is determined during the running of this filter. Hence, a conservative
-  approach to selecting the minimum number of <i>voxels</i> is strongly recommended.</b><br />
-After removing all the small grains, the remaining grains are <i>coarsened</i> to fill the gaps left by the small grains.
- The iteration <i>coarsens</i> the grains by one <i>voxel</i> each iteration.
+This filter removes features/grains that have a total number of voxels/datapoints below the minimum threshold defined by the user. If the user chooses a
+value larger than the largest feature/grain, then all features/grains will be eliminated and the filter will become stuck in an inifinite loop trying to 
+fill the eliminated features/grains. <br />
+*The number of voxels/datapoints in the largest grain is determined during the running of this filter. Hence, a choice of threshold should be carefully be choosen
+if it is not known how many voxels/datapoints are in the largest features/grains.<br />
+After removing all the small features/grains, the remaining features/grains are isotropically coarsened to fill the gaps left by the small features/grains.<br />
+<br />
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -50,23 +50,23 @@ After removing all the small grains, the remaining grains are <i>coarsened</i> t
 <!-- A TABLE OF Options FOR YOUR FILTER -->
 <a name="wp3"> </a><h2 class="pHeading2">Parameters</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Minimum Allowed Grain Size</td><td>Integer</td><td></td></tr>
-
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th><th>Decription</th></tr>
+<tr bgcolor="#E2E2E2">
+<td>Minimum Allowed Grain Size</td><td>Integer</td><td>Number of voxels/datapoints that must be present in the feature/grain for it to remain in the sample</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td>Phase Id (int) specifying the phase of the voxel/datapoint</td><td>Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td>Ids (ints) that specify to which feature/grain each voxel/datapoint belongs.</td><td>Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td>Filter will determine feature/grain phases if not previously determined</td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>Active</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>Active</td><td>Boolean value specifying if the feature/grain is still in the sample (1 if the feature/grain is in the sample and 0 if it is not)</td><td>At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed. </td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">

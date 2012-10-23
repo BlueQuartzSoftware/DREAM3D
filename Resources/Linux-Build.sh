@@ -195,8 +195,8 @@ cd $SDK_SOURCE
 git clone  ssh://code@scm.bluequartz.net/DREAM3D.git
 cd DREAM3D
 git fetch
-git checkout b1
-git pull origin b1
+git checkout master
+git pull origin master
 mkdir Build
 cd Build
 cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=OFF ../

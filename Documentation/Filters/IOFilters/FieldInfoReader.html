@@ -38,11 +38,11 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p>
 <!-- Write all your documentation here -->
-This file reads information about the grain or regions that are in the voxel volume. The
-basic format of the file is the number of grains on the first line of the file followed by
-columnar formatted data about the <b>PhaseID</b>, <b>Euler Angle 1</b>, <b>Euler Angle 2</b> and <b>Euler Angle 3</b>.
-If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine. Grain/Region
- Ids start from <b>0</b> Zero and Phase Ids start from <b>1</b> One.</p>
+This filter reads information about the features/grains that are in the sample. The
+basic format of the file is the number of features/grains on the first line of the file followed by
+columnar formatted data listing: PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.<br />
+*If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine. Feature/Grain Ids 
+start from zero (0) and Phase Ids start from one (1).<br/>
 <p>
 For example if you have a file with 123 grains and 2 phases then the file would be similar to the following: </p>
 <pre>
@@ -68,17 +68,17 @@ For example if you have a file with 123 grains and 2 phases then the file would 
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td>Ids (ints) that specify to which feature/grain each voxel/datapoint belongs.</td><td>Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.</td></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellEulerAngles</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldEulerAngles</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellEulerAngles</td><td>Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z)</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td>Phase Id (int) specifying the phase of the voxel/datapoint</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldEulerAngles</td><td>Three (3) angles (floats) defining the orientation of each feature/grain in Bunge convention (Z-X-Z)</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td></td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
