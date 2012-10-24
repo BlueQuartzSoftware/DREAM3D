@@ -31,8 +31,8 @@ echo "Host System: $HOST_SYSTEM"
 # everything.
 BUILD_CMAKE="0"
 BUILD_MXABOOST="0"
-BUILD_HDF5="0"
-BUILD_QWT="1"
+BUILD_HDF5="1"
+BUILD_QWT="0"
 
 make_command=gmake
 if [[ "$HOST_SYSTEM" = "Darwin" ]];
