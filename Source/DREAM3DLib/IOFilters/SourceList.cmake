@@ -9,57 +9,25 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (IOFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/ReadH5Ebsd.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/H5VoxelFileReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldInfoReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EnsembleInfoReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.h
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.h
-)
 
+set (DREAM3D_FILTER_GROUP_NAME IOFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
-#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_IOFilters_HDRS
-      ${IOFilters_FILTERS_HDRS}
-)
-
-SET (DREAM3DLib_IOFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/ReadH5Ebsd.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DataContainerWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldDataCSVWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/VtkRectilinearGridWriter.cpp   
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/H5VoxelFileReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/DxReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/PhReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/FieldInfoReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EnsembleInfoReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/YSChoiAbaqusReader.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/EbsdToH5Ebsd.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoRectilinearCoordinateWriter.cpp
-    ${DREAM3DLib_SOURCE_DIR}/IOFilters/AvizoUniformCoordinateWriter.cpp
-)
-
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/IOFilters" "${DREAM3DLib_IOFilters_HDRS}" "${DREAM3DLib_IOFilters_SRCS}" "0")
-endif()
-
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_IO_HDRS}
-            DESTINATION include/DREAM3D/IO
-            COMPONENT Headers   )
-endif()
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ReadH5Ebsd ReadH5Ebsd.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DataContainerReader DataContainerReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DataContainerWriter DataContainerWriter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FieldDataCSVWriter FieldDataCSVWriter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkRectilinearGridWriter VtkRectilinearGridWriter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} H5VoxelFileReader H5VoxelFileReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DxWriter DxWriter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DxReader DxReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} PhWriter PhWriter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} PhReader PhReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FieldInfoReader FieldInfoReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} EnsembleInfoReader EnsembleInfoReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} YSChoiAbaqusReader YSChoiAbaqusReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} EbsdToH5Ebsd EbsdToH5Ebsd.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.html "" TRUE)
 
