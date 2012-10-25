@@ -9,33 +9,14 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(SamplingFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.h
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.h
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RotateSampleRefFrame.h
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.h
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/Hex2SqrConverter.h
-)
+set (DREAM3D_FILTER_GROUP_NAME SamplingFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
-set(DREAM3DLib_SamplingFilters_HDRS
-     ${SamplingFilters_FILTERS_HDRS}
-)
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
-set(DREAM3DLib_SamplingFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/ChangeResolution.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RegularizeZSpacing.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/RotateSampleRefFrame.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/CropVolume.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SamplingFilters/Hex2SqrConverter.cpp
-)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ChangeResolution ChangeResolution.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RegularizeZSpacing RegularizeZSpacing.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RotateSampleRefFrame RotateSampleRefFrame.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} CropVolume CropVolume.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} Hex2SqrConverter Hex2SqrConverter.html "" TRUE)
 
-
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SamplingFilters" "${DREAM3DLib_SamplingFilters_HDRS}" "${DREAM3DLib_SamplingFilters_SRCS}" "0")
-endif()
-
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_SamplingFilters_HDRS}
-            DESTINATION include/DREAM3D/SamplingFilters
-            COMPONENT Headers   )
-endif()

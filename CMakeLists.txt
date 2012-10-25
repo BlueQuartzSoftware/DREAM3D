@@ -204,10 +204,14 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/MXA ${PROJECT_BINARY_DIR}/MXA
 # -- Add in the Necessary EBSD Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
 
+#--- This needs to be set here as we are going to look for files in this directory
+set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
+set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
+
 
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)

@@ -8,35 +8,20 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-set(ProcessingFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.h
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.h
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/PerPhaseMinSize.h
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.h
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.h
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.h
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.h
-)
-#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-set(DREAM3DLib_ProcessingFilters_HDRS
-    ${ProcessingFilters_FILTERS_HDRS}
-${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.h
-)
-set(DREAM3DLib_ProcessingFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinNeighbors.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/MinSize.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/PerPhaseMinSize.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/FillBadData.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/OpenCloseBadData.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/IdentifySample.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/ConvertEulerAngles.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/RotateEulerRefFrame.cpp
-)
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ProcessingFilters" "${DREAM3DLib_ProcessingFilters_HDRS}" "${DREAM3DLib_ProcessingFilters_SRCS}" "0")
-endif()
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_ProcessingFilters_HDRS}
-            DESTINATION include/DREAM3D/ProcessingFilters
-            COMPONENT Headers   )
-endif()
+
+set (DREAM3D_FILTER_GROUP_NAME ProcessingFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MinNeighbors MinNeighbors.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MinSize MinSize.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} PerPhaseMinSize PerPhaseMinSize.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FillBadData FillBadData.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} OpenCloseBadData OpenCloseBadData.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ConvertEulerAngles ConvertEulerAngles.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame RotateEulerRefFrame.html "" TRUE)
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} IdentifySample IdentifySample.html "" FALSE)
+
+
