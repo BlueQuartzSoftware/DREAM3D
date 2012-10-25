@@ -271,8 +271,8 @@ void RotateEulerRefFrame::execute()
   }
 
 //  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
-//#if 0
+//#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     RotateEulerRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
 

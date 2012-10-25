@@ -9,33 +9,18 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(SyntheticBuilderFilters_FILTERS_HDRS
-        
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackPrimaryPhases.h
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.h
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InsertPrecipitatePhases.h
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/EstablishMatrixPhase.h
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InitializeSyntheticVolume.h
-)
+set (DREAM3D_FILTER_GROUP_NAME SyntheticBuilderFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
-#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-set(DREAM3DLib_SyntheticBuilderFilters_HDRS
-    ${SyntheticBuilderFilters_FILTERS_HDRS}
-	${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.h
-)
-set(DREAM3DLib_SyntheticBuilderFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/AdjustVolume.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/PackPrimaryPhases.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/MatchCrystallography.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InsertPrecipitatePhases.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/EstablishMatrixPhase.cpp
-    ${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/InitializeSyntheticVolume.cpp
-)
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/SyntheticBuilderFilters" "${DREAM3DLib_SyntheticBuilderFilters_HDRS}" "${DREAM3DLib_SyntheticBuilderFilters_SRCS}" "0")
-endif()
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_SyntheticBuilderFilters_HDRS}
-            DESTINATION include/DREAM3D/SyntheticBuilderFilters
-            COMPONENT Headers   )
-endif()
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} PackPrimaryPhases PackPrimaryPhases.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MatchCrystallography MatchCrystallography.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} InsertPrecipitatePhases InsertPrecipitatePhases.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} EstablishMatrixPhase EstablishMatrixPhase.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} InitializeSyntheticVolume 
+                                                InitializeSyntheticVolume.html 
+                                                "InitSynthVol.jpg" 
+                                                TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AdjustVolume AdjustVolume.html "" FALSE)
+

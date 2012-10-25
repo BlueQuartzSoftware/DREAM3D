@@ -9,42 +9,19 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(GenericFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceCells.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindCellQuats.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainCentroids.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.h
-)
+set (DREAM3D_FILTER_GROUP_NAME GenericFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
-#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-set(DREAM3DLib_GenericFilters_HDRS
-    ${GenericFilters_FILTERS_HDRS}
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.h
-)
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
-set(DREAM3DLib_GenericFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/DetermineGoodVoxels.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindNeighbors.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainPhases.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindCellQuats.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceCells.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindGrainCentroids.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/RenumberGrains.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindSurfaceGrains.cpp
-    ${DREAM3DLib_SOURCE_DIR}/GenericFilters/FindBoundingBoxGrains.cpp
-)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindNeighbors FindNeighbors.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindGrainPhases FindGrainPhases.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindSurfaceCells FindSurfaceCells.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindCellQuats FindCellQuats.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindGrainCentroids FindGrainCentroids.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindSurfaceGrains FindSurfaceGrains.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains FindBoundingBoxGrains.html "" TRUE)
 
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DetermineGoodVoxels DetermineGoodVoxels.html "" FALSE)
 
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/GenericFilters" "${DREAM3DLib_GenericFilters_HDRS}" "${DREAM3DLib_GenericFilters_SRCS}" "0")
-endif()
-
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_GenericFilters_HDRS}
-            DESTINATION include/DREAM3D/GenericFilters
-            COMPONENT Headers   )
-endif()
