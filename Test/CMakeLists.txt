@@ -216,3 +216,10 @@ target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
 # --------
 add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
 target_link_libraries(StructArrayTest EbsdLib MXA DREAM3DLib)
+
+
+# --------
+include_directories(${VXL_CORE_INCLUDE_DIR} ${VXL_VCL_INCLUDE_DIR} )
+add_executable(VXLTest ${DREAM3DTest_SOURCE_DIR}/VXLTest.cpp)
+target_link_libraries(VXLTest ${VXL_LIBRARIES})
+

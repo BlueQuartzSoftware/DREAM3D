@@ -96,7 +96,7 @@ FIND_PACKAGE(Boost)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
-# -- This needs to be here so that the configured file gets written correctly
+# ---------- Find HDF5 Headers/Libraries -----------------------
 find_package(HDF5)
 IF(HDF5_FOUND)
     file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
@@ -111,6 +111,20 @@ ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDIF(HDF5_FOUND)
 
+# ---------- Find VXL Headers/Libraries -----------------------
+find_package(VXL)
+if (VXL_FOUND)
+    file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${VXL_LIB_DIR};")
+    include_directories(${VXL_INCLUDE_DIRS} )
+    # This copies the DLL (if needed) into the various build directories on MSVC systems
+    CMP_COPY_DEPENDENT_LIBRARIES("vxl_vcl")
+    # Append the locations of the VXL libraries to our Library Search Paths
+    list(APPEND CMP_LIB_SEARCH_DIRS ${VXL_LIB_DIR} )
+    # Create an install rule to copy the dependent shared library over to the installed location
+    CMP_LIBRARIES_INSTALL_RULES("vxl_vcl" ".")
+ELSE(VXL_FOUND)
+    MESSAGE(FATAL_ERROR "Cannot build without VXL.  Please set VXL_INSTALL environment variable to point to your VXL installation.")
+ENDIF(VXL_FOUND)
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
@@ -132,21 +146,6 @@ if (DREAM3D_USE_MULTITHREADED_ALGOS)
     set(DREAM3D_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
-
-#-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the
-# project.
-#-------------------------------------------------------------------------------
-#set(CMP_HEADER_DIR ${PROJECT_BINARY_DIR}/MXA)
-#set(CMP_CONFIGURATION_FILE_NAME "CMPConfiguration.h")
-#set(CMP_TYPES_FILE_NAME "MXATypes.h")
-#set(CMP_VERSION_HEADER_FILE_NAME "MXAVersion.h")
-#set(CMP_TOP_HEADER_FILE "MXAConfiguration.h")
-#set(CMP_PROJECT_NAMESPACE "MXA")
-#set(CMP_PROJECT_NAME "MXA")
-
-#set(CMP_GENERATE_VERSION_STRING 1)
-#INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 # We do NOT want to install any of the headers
 set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
