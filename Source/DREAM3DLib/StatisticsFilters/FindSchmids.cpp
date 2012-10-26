@@ -139,7 +139,7 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     setErrorCondition(0);
     FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
     find_avgorients->setObservers(this->getObservers());
-    find_avgorients->setDataContainer(getDataContainer());
+    find_avgorients->setVoxelDataContainer(getVoxelDataContainer());
     if(preflight == true) find_avgorients->preflight();
     if(preflight == false) find_avgorients->execute();
   }
