@@ -31,8 +31,8 @@ echo "Host System: $HOST_SYSTEM"
 # everything.
 BUILD_CMAKE="0"
 BUILD_MXABOOST="0"
-BUILD_HDF5="0"
-BUILD_QWT="1"
+BUILD_HDF5="1"
+BUILD_QWT="0"
 
 make_command=gmake
 if [[ "$HOST_SYSTEM" = "Darwin" ]];
@@ -195,8 +195,8 @@ cd $SDK_SOURCE
 git clone  ssh://code@scm.bluequartz.net/DREAM3D.git
 cd DREAM3D
 git fetch
-git checkout b1
-git pull origin b1
+git checkout master
+git pull origin master
 mkdir Build
 cd Build
 cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/DREAM3D -DBUILD_SHARED_LIBS=OFF ../
