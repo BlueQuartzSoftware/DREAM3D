@@ -125,6 +125,7 @@ macro(START_FILTER_GROUP filterGroup)
     file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
     file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
     file(MAKE_DIRECTORY ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets)
+    message(STATUS "Generating Widgets for ${filterGroup}")
 endmacro()
 
 #-------------------------------------------------------------------------------
@@ -155,7 +156,7 @@ macro(ADD_DREAM3D_FILTER filterGroup filterName filterDocFile filterDocImages pu
     file (APPEND ${AllFiltersHeaderFile} "#include \"DREAM3DLib/${filterGroup}/${filterName}.h\"\n")
 
     if ( ${publicFilter} STREQUAL TRUE)
-        message(STATUS "  Generating Widget For ${filterName}")
+        message(STATUS "    ${filterName}")
         if (NOT EXISTS ${FilterWidgetsLib_SOURCE_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h )
 #            set(FilterWidget_GEN_HDRS ${FilterWidget_GEN_HDRS} ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h)
             file(APPEND ${FilterWidget_GEN_HDRS_File} "${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h;")
@@ -187,7 +188,6 @@ macro(ADD_DREAM3D_FILTER filterGroup filterName filterDocFile filterDocImages pu
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory); \n\n")
         
     endif()
-    
 endmacro()
 
 
@@ -217,7 +217,7 @@ include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 #-- Add a library for the DREAM3DLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} MXA EbsdLib ${TBB_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} MXA EbsdLib ${TBB_LIBRARIES} ${VXL_LIBRARIES} )
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
