@@ -8,52 +8,23 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-SET (StatisticsFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindMDF.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNeighborhoods.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindODF.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNumFields.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindDeformationStatistics.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindGrainReferenceMisorientations.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindKernelAvgMisorientations.h
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSlicetoSliceRotations.h
-)
 
-#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_StatisticsFilters_HDRS 
-    ${StatisticsFilters_FILTERS_HDRS}
-)
+set (DREAM3D_FILTER_GROUP_NAME StatisticsFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
-SET (DREAM3DLib_StatisticsFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAvgOrientations.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindAxisODF.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindEuclideanDistMap.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindMDF.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNeighborhoods.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindODF.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindNumFields.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindDeformationStatistics.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSchmids.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindShapes.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSizes.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindGrainReferenceMisorientations.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindKernelAvgMisorientations.cpp
-    ${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/FindSlicetoSliceRotations.cpp
-)
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/StatisticsFilters" "${DREAM3DLib_StatisticsFilters_HDRS}" "${DREAM3DLib_StatisticsFilters_SRCS}" "0")
-endif()
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_StatisticsFilters_HDRS}
-            DESTINATION include/DREAM3D/StatisticsFilters
-            COMPONENT Headers   )
-endif()
-
-
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindAvgOrientations FindAvgOrientations.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindAxisODF FindAxisODF.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindDeformationStatistics FindDeformationStatistics.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindEuclideanDistMap FindEuclideanDistMap.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindGrainReferenceMisorientations FindGrainReferenceMisorientations.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindKernelAvgMisorientations FindKernelAvgMisorientations.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindMDF FindMDF.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindNeighborhoods FindNeighborhoods.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindNumFields FindNumFields.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindODF FindODF.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindSchmids FindSchmids.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindShapes FindShapes.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindSizes FindSizes.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindSlicetoSliceRotations FindSlicetoSliceRotations.html "" TRUE)

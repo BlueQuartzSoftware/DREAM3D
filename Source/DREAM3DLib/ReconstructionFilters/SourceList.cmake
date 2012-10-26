@@ -8,43 +8,23 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-SET (ReconstructionFilters_FILTERS_HDRS
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeatureCentroid.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsList.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CAxisSegmentGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.h
-)
-#-- Add in any additional NON Filter classes or filters that will NOT show up in the GUI filter list
-SET (DREAM3DLib_ReconstructionFilters_HDRS
-    ${ReconstructionFilters_FILTERS_HDRS}
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SegmentGrains.h
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.h
-)
-SET (DREAM3DLib_ReconstructionFilters_SRCS
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSections.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMisorientation.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsMutualInformation.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeature.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsFeatureCentroid.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/AlignSectionsList.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SegmentGrains.cpp    
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/EBSDSegmentGrains.cpp     
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/CAxisSegmentGrains.cpp
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeTwins.cpp 
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/MergeColonies.cpp  
-    ${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/GroupMicroTextureRegions.cpp
-)
-if (NOT DEFINED ONLY_FILTERS)
-cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/ReconstructionFilters" "${DREAM3DLib_ReconstructionFilters_HDRS}" "${DREAM3DLib_ReconstructionFilters_SRCS}" "0")
-endif()
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL (FILES ${DREAM3DLib_ReconstructionFilters_HDRS}
-            DESTINATION include/DREAM3D/ReconstructionFilters
-            COMPONENT Headers   )
-endif()
+
+set (DREAM3D_FILTER_GROUP_NAME ReconstructionFilters)
+set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+
+START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AlignSectionsMisorientation AlignSectionsMisorientation.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AlignSectionsMutualInformation AlignSectionsMutualInformation.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AlignSectionsFeature AlignSectionsFeature.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AlignSectionsFeatureCentroid AlignSectionsFeatureCentroid.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AlignSectionsList AlignSectionsList.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} EBSDSegmentGrains EBSDSegmentGrains.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} CAxisSegmentGrains CAxisSegmentGrains.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MergeTwins MergeTwins.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MergeColonies MergeColonies.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GroupMicroTextureRegions GroupMicroTextureRegions.html "" TRUE)
+
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SegmentGrains SegmentGrains.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AlignSections AlignSections.html "" FALSE)
