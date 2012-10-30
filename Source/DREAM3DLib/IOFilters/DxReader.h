@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
   private:
     int32_t* m_GrainIds;
+
     DxReader(const DxReader&); // Copy Constructor Not Implemented
     void operator=(const DxReader&); // Operator '=' Not Implemented
 };
