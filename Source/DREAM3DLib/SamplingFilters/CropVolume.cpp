@@ -211,7 +211,7 @@ void CropVolume::execute()
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
-  // updateProgressAndMessage(("Operating on Volume"), 50);
+  // Check to see if the dims have actually changed.
   if(dims[0] == (m_XMax - m_XMin) && dims[1] == (m_YMax - m_YMin) && dims[2] == (m_ZMax - m_ZMin))
   {
     return;
@@ -228,7 +228,7 @@ void CropVolume::execute()
   for (int i = 0; i < m_ZP; i++)
   {
     std::stringstream ss;
-    ss << "Cropping Volume - " << ((float)i / m->getZPoints()) * 100 << " Percent Complete";
+    ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
     {
@@ -252,6 +252,7 @@ void CropVolume::execute()
   int64_t totalPoints = m->getTotalPoints();
   totalPoints = static_cast<int64_t>( m_XP * m_YP * m_ZP );
 
+  // Resize all the other Voxel Arrays
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     std::string name = *iter;

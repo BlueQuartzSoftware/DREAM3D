@@ -83,6 +83,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
   protected:
     FieldInfoReader();
 
+    virtual int readHeader();
     virtual int readFile();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
