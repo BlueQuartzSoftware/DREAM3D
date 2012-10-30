@@ -97,12 +97,11 @@ class RotateSampleRefFrameImpl
           index = index + (j * m_params->xpNew);
           for (size_t i = colStrart; i < colEnd; i++)
           {
-            index = index + i;
             x = abs(int(m_params->xStart-i));
             y = abs(int(m_params->yStart-j));
             z = abs(int(m_params->zStart-k));
             index_old = (m_params->xStart + (i*m_params->xStride)) + (m_params->yStart + (j*m_params->yStride)) + (m_params->zStart + (k*m_params->zStride));
-            newindicies[index] = index_old;
+            newindicies[index + i] = index_old;
           }
         }
       }
