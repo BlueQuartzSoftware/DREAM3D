@@ -192,6 +192,10 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
+# -- Add in the Necessary MXA Sources into a library
+#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/imesh ${PROJECT_BINARY_DIR}/imesh)
+
+# -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
 

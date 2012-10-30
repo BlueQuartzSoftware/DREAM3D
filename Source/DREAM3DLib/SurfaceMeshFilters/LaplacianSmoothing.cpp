@@ -196,7 +196,7 @@ void LaplacianSmoothing::execute()
 
   setErrorCondition(0);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
-  StructArray<Node>::Pointer floatNodesPtr = m->getNodes();
+  StructArray<Node>::Pointer vertexPtr = m->getNodes();
   StructArray<Triangle>::Pointer trianglesPtr = m->getTriangles();
 
   /* Place all your code to execute your filter here. */
@@ -361,24 +361,11 @@ int LaplacianSmoothing::smooth()
 
 
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
-  StructArray<Node>::Pointer floatNodesPtr = getSurfaceMeshDataContainer()->getNodes();
-  int nvert = floatNodesPtr->GetNumberOfTuples();
-  Node* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
-  int numberNodes = floatNodesPtr->GetNumberOfTuples();
+  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+  int nvert = nodesPtr->GetNumberOfTuples();
+  Node* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  StructArray<Node>::Pointer nodesDPtr = StructArray<Node>::CreateArray(numberNodes, "MFE_Double_Nodes");
-  nodesDPtr->initializeWithZeros();
-  Node* vsm = nodesDPtr->GetPointer(0);
-
-  // Copy the nodes from the 32 bit floating point to the 64 bit floating point
-  for(int n = 0; n < numberNodes; ++n)
-  {
-    vsm[n].coord[0] = nodesF[n].coord[0];
-    vsm[n].coord[1] = nodesF[n].coord[1];
-    vsm[n].coord[2] = nodesF[n].coord[2];
-  }
-
-  float delta0[3];
+  double delta0[3];
 
   DataArray<int>::Pointer numConnections = DataArray<int>::CreateArray(nvert, "Laplacian_Smoothing_NumberConnections_Array");
   int* ncon = numConnections->GetPointer(0);
@@ -420,17 +407,6 @@ int LaplacianSmoothing::smooth()
     }
 
   }
-
-  // Copy the nodes from the 64 bit floating point to the 32 bit floating point
-  for(int n = 0; n < numberNodes; ++n)
-  {
-    nodesF[n].coord[0] = vsm[n].coord[0];
-    nodesF[n].coord[1] = vsm[n].coord[1];
-    nodesF[n].coord[2] = vsm[n].coord[2];
-  }
-
-
-
 
   return 1;
 }
