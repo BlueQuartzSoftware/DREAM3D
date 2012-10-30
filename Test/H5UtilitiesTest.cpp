@@ -459,17 +459,43 @@ void StressTestCreateGroups()
   DREAM3D_REQUIRE(err >= 0);
 }
 
+// -----------------------------------------------------------------------------
+//  This function tests if we can write a data set larger than 2GB on Darwin/Apple
+//  systems. There is a bug in HDF5 versions up to and including 1.8.9 where this
+//  type of write will fail. This was used to report the bug to HDFGroup and should
+//  NOT be used for any test. At least not yet.
+// -----------------------------------------------------------------------------
+#if __APPLE__
+void HDF5Darwin2GBWriteTest()
+{
+  std::cout << "sizeof(ssize_t): " << sizeof(ssize_t) << std::endl;
+  size_t dim1 = 3;
+  size_t dim0 = 178956971;
+  int* data = (int*)(malloc(sizeof(int) * dim0 * dim1));
 
+  hid_t   file_id;
+  /* Create a new file using default properties. */
+  file_id = H5Fcreate( "/tmp/HDF5_LARGE_WRITE_BUG.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  DREAM3D_REQUIRE(file_id > 0);
+  int32_t rank = 2;
+  hsize_t dims[2] = {dim0, dim1};
+
+  herr_t err = H5Lite::writePointerDataset(file_id, "data", rank, dims, data);
+  assert(err > -1);
+}
+#endif
 
 // -----------------------------------------------------------------------------
-//  Use Boost unit test framework
+//  Use unit test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( H5UtilitiesTest() )
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
+
   return err;
 }
 

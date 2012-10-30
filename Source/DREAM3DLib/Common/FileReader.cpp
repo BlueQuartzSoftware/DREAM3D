@@ -80,7 +80,7 @@ void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 int FileReader::readHeader()
 {
   setErrorCondition(-1);
-  notifyErrorMessage( "FileReader should be subclassed and functionality implemented there", -1);
+  notifyErrorMessage( "FileReader::readHeader() should be subclassed and functionality implemented.\nPlease notify dream3d@bluequartz.net", -1);
   return -1;
 }
 
@@ -90,7 +90,7 @@ int FileReader::readHeader()
 int FileReader::readFile()
 {
   setErrorCondition(-1);
-  notifyErrorMessage("FileReader should be subclassed and functionality implemented there", -1);
+  notifyErrorMessage("FileReader::readFile() should be subclassed and functionality implemented\nPlease notify dream3d@bluequartz.net", -1);
   return -1;
 }
 

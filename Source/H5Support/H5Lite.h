@@ -421,7 +421,17 @@ static herr_t writePointerDataset (hid_t loc_id,
   {
     err = H5Dwrite( did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, data );
     if (err < 0 ) {
-      std::cout << "Error Writing Data" << std::endl;
+      std::cout << "Error Writing Data '" << dsetName << "'" << std::endl;
+      std::cout << "    rank=" << rank << std::endl;
+      uint64_t totalSize = 1;
+      for(size_t i = 0; i < _dims.size(); ++i)
+      {
+        std::cout << "    dim[" << i << "]=" << _dims[i] << std::endl;
+        totalSize = totalSize * _dims[i];
+      }
+      std::cout << "    TotalElements=" << totalSize << std::endl;
+      std::cout << "    Size of Type (Bytes):" << sizeof(T) << std::endl;
+      std::cout << "    TotalBytes to Write: " << (sizeof(T) * totalSize) << std::endl;
       retErr = err;
     }
     err = H5Dclose( did );

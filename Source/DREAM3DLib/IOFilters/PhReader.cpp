@@ -129,7 +129,6 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
     addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
