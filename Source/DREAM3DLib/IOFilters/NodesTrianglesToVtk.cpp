@@ -37,7 +37,7 @@
 
 
 #include "MXA/Common/MXAEndian.h"
-
+#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -134,11 +134,31 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
   }
+  else if (MXADir::exists(m_TrianglesFile) == false)
+  {
+
+    if (preflight == true)
+    addWarningMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+    else {
+    setErrorCondition(-1001);
+    addErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+    }
+  }
 
   if (m_NodesFile.empty() == true)
   {
     setErrorCondition(-1002);
-    addErrorMessage(getHumanLabel(), "Nodes file is not set correctly", -1002);
+    addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
+  }
+  else if (MXADir::exists(m_NodesFile)== false)
+  {
+
+    if (preflight == true)
+    addWarningMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+    else {
+      setErrorCondition(-1002);
+      addErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+    }
   }
 
   if (m_OutputVtkFile.empty() == true)
