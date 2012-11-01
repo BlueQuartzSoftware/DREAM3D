@@ -91,7 +91,6 @@
     <file>SurfaceMeshFilters/MMCSurfaceMeshingFilter.html</file>
     <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
-    <file>SurfaceMeshFilters/QSAMCurvature.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
     <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>

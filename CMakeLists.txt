@@ -112,6 +112,7 @@ ELSE(HDF5_FOUND)
 ENDIF(HDF5_FOUND)
 
 # ---------- Find VXL Headers/Libraries -----------------------
+if(0)
 find_package(VXL)
 if (VXL_FOUND)
     file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${VXL_LIB_DIR};")
@@ -125,6 +126,7 @@ if (VXL_FOUND)
 ELSE(VXL_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without VXL.  Please set VXL_INSTALL environment variable to point to your VXL installation.")
 ENDIF(VXL_FOUND)
+endif()
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
@@ -292,7 +294,7 @@ endfunction()
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-#    SurfaceMeshingPlugin
+    SurfaceMeshingPlugin
 )
 
  # Build the DREAM3D Application
