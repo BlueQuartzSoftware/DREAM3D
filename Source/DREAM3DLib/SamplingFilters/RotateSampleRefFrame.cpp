@@ -115,6 +115,7 @@ class RotateSampleRefFrameImpl
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
+#endif
 
   private:
     VoxelDataContainer* m;
