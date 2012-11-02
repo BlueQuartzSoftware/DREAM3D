@@ -68,6 +68,7 @@ m_WriteGAMs(false),
 m_WriteKAMs(false),
 m_WriteIPFColors(false),
 m_WriteGrainSizes(false),
+m_WriteEulerAngles(false),
 m_WriteBinaryFile(false)
 {
   setupFilterParameters();
@@ -170,6 +171,14 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Euler Angles");
+    option->setPropertyName("WriteEulerAngles");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Binary File");
     option->setPropertyName("WriteBinaryFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -192,6 +201,7 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteKAMs", getWriteKAMs() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
+  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
 }
 
@@ -243,6 +253,11 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
+  if(m_WriteEulerAngles == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+  }
+
   if(m_WriteGrainSizes == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
@@ -350,6 +365,13 @@ void VtkRectilinearGridWriter::execute()
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
+  if (m_WriteEulerAngles == true)
+  {
+
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelEulerAngleScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
 
   if(m_WriteGrainSizes == true)
   {
@@ -374,7 +396,7 @@ void VtkRectilinearGridWriter::execute()
     setErrorCondition(-1);
   }
 
-  notifyStatusMessage("VtkRectilinearGridWriter Complete");
+  notifyStatusMessage("Complete");
 }
 
 
@@ -408,9 +430,14 @@ int VtkRectilinearGridWriter::write(const std::string &file, VoxelDataContainer*
   size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
+  std::stringstream ss;
+  int index = 0;
   // Now loop on all of our Scalars and write those arrays as CELL_DATA
   for (std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)
   {
+    ss.str("");
+    ss << "Writing Scalar " << index++ << " of " << scalars.size();
+    notifyStatusMessage(ss.str());
     err = (*iter)->writeScalars(f);
     if(err < 0)
     {
