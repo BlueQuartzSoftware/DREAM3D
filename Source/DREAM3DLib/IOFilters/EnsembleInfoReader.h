@@ -79,6 +79,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
   protected:
     EnsembleInfoReader();
 
+    virtual int readHeader();
     virtual int readFile();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

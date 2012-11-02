@@ -260,7 +260,7 @@ int AngReader::readFile()
 
   if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
   {
-	  transformData();
+    transformData();
   }
 
   return err;
@@ -322,7 +322,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   size_t counter = 0;
   // The buf variable already has the first line of data in it
-  for(int i = 0; i < totalDataRows; ++i)
+  for(size_t i = 0; i < totalDataRows; ++i)
   {
       this->parseDataLine(buf, i);
       ::memset(buf, 0, bufSize); // Clear the buffer
@@ -575,22 +575,22 @@ void AngReader::transformData()
    {
      for(size_t col = 0; col < xCells; ++col)
      {
-	   adjustedcol = col;
-	   adjustedrow = row;
-	   if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
-	   if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
+     adjustedcol = col;
+     adjustedrow = row;
+     if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
+     if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
        offset = (adjustedrow*xCells)+(adjustedcol);
        if(getAlignEulers() == true)
-	   {
-		   if (p1[i] - M_PI_2 < 0.0f)
-		   {
-			  p1[i] = static_cast<float>( p1[i] + M_PI_2*3.0f );
-		   }
-		   else
-		   {
-			  p1[i] = static_cast<float>( p1[i] - M_PI_2 );
-		   }
-	   }
+     {
+       if (p1[i] - M_PI_2 < 0.0f)
+       {
+        p1[i] = static_cast<float>( p1[i] + M_PI_2*3.0f );
+       }
+       else
+       {
+        p1[i] = static_cast<float>( p1[i] - M_PI_2 );
+       }
+     }
        shuffleTable[(row*xCells)+col] = offset;
        ++i;
       }
