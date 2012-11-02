@@ -263,18 +263,14 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
-<<<<<<< HEAD
   if(m_WriteRodriguesGAMColors == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceRotations, ss, -305, float, FloatArrayType, voxels, 3)
   }
-=======
   if(m_WriteEulerAngles == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
-
->>>>>>> 6aa2ad1df4238131e54c16cff0661b51ca1bede4
   if(m_WriteGrainSizes == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
