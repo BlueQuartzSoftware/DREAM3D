@@ -53,6 +53,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     virtual ~YSChoiAbaqusReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputGrainInfoFile)
 
 	//------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -60,6 +61,8 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+	//------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -81,6 +84,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     int32_t* m_CellPhases;
     bool* m_SurfaceFields;
     float* m_Quats;
+    float* m_AvgQuats;
     float* m_CellEulerAngles;
 
 	unsigned int* m_CrystalStructures;

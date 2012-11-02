@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceRotationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
@@ -88,6 +89,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBandContrasts)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteRodriguesGAMColors)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGAMs)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteKAMs)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteIPFColors)
@@ -121,6 +123,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     int32_t* m_BC;
     bool*    m_GoodVoxels;
     float*   m_CellEulerAngles;
+    float*   m_GrainReferenceRotations;
     float*   m_GrainReferenceMisorientations;
     float*   m_KernelAverageMisorientations;
     float*   m_EquivalentDiameters;
