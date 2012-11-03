@@ -251,6 +251,9 @@ m_DeleteTempFiles(true),
 m_WriteSTLFile(true),
 m_StlOutputDirectory(""),
 m_StlFilePrefix(""),
+m_VtkOutputFile(""),
+m_WriteBinaryVTKFiles(false),
+m_WriteConformalMesh(true),
 neigh(NULL),
 voxels(NULL),
 cSquare(NULL)
@@ -445,13 +448,13 @@ void LeeMarchingCubes::execute()
   int err = 0;
   std::stringstream ss;
 
-
+ // std::string NodesFile = "/tmp/" + Detail::NodesFile;
   std::string NodesFile = MXADir::tempPath() + Detail::NodesFile;
   m_NodesFile = SMTempFile::New();
   m_NodesFile->setFilePath(NodesFile);
   m_NodesFile->setAutoDelete(this->m_DeleteTempFiles);
 
-
+  //std::string TrianglesFile = "/tmp/" + Detail::TrianglesFile;
   std::string TrianglesFile = MXADir::tempPath() + Detail::TrianglesFile;
   m_TrianglesFile = SMTempFile::New();
   m_TrianglesFile->setFilePath(TrianglesFile);
@@ -604,8 +607,8 @@ void LeeMarchingCubes::execute()
     // now splice the data into the 2nd z layer for our marching cubes remembering
     // that we have a layer of border voxels.
     int* vxPtr = voxels;
-    vxPtr = voxels + 1; // Should be 4 bytes farther in memory
-    int* fVxPtr = fileVoxelLayer;
+    vxPtr = voxels + 1; // Pointer to start of layer 2 - Should be 4 bytes farther in memory because of junk voxel at voxel[0]
+    int* fVxPtr = fileVoxelLayer; // Pointer to actual Grain Ids
     for (int y = 0; y < yFileDim; ++y)
     {
       // Get the offset into the data just read from the file
@@ -619,7 +622,18 @@ void LeeMarchingCubes::execute()
 
       ::memcpy((void*)vxPtr, (void*)fVxPtr, xFileDim * sizeof(int));
     }
+#if 0
+    int32_t maxGrainId =0;
+    for (size_t a = 0; a < 2 * NSP + 1; ++a)
+    {
+      if (voxels[a] > maxGrainId) {
+      maxGrainId = voxels[a];
+      std::cout << "here" << std::endl;
+      }
+    }
 
+    std::cout << "maxGainId for z slice: " << i << " = " << maxGrainId << std::endl;
+#endif
     get_neighbor_list();
     initialize_nodes(i);
     initialize_squares(i);
@@ -2859,12 +2873,14 @@ int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &t
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(trianglesFile.c_str(), "ab");
+    f = fopen(trianglesFile.c_str(), "wb");
     if (NULL == f)
     {
       return -1;
     }
-    fprintf(f, "XXXXXXXXXXXX\n"); // This should get over written at some point with the actual number of triangles
+#if (WRITE_BINARY_TEMP_FILES == 0)
+      fprintf(f, "XXXXXXXXXXXX\n"); // This should get over written at some point with the actual number of triangles
+#endif
   }
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
