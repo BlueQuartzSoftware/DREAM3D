@@ -100,6 +100,12 @@ using namespace meshing;
 
 #define WRITE_BINARY_TEMP_FILES 1
 
+namespace Detail
+{
+  const std::string NodesFile("Nodes.bin");
+  const std::string TrianglesFile("Triangles.bin");
+}
+
 
 class GrainChecker
 {
