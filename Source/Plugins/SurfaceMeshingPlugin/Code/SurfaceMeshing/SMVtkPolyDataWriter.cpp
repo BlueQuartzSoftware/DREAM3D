@@ -644,6 +644,7 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
 // -----------------------------------------------------------------------------
 int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
+  static const size_t DATA_COUNT = 9;
   int err = 0;
   size_t offset = 1;
   size_t nread = 0;
@@ -667,19 +668,19 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   std::vector<int> cell_data(triangleCount);
   for (int i = 0; i < nTriangles; i++)
   {
-    nread = fread(tData, sizeof(int), 6, triFile);
-    if(nread != 6)
+    nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
+    if(nread != DATA_COUNT)
     {
       return -1;
     }
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
     tri_ids[i * offset] = tData[0];
-    MXA::Endian::FromSystemToBig::convert<int>(tData[4]);
-    cell_data[i * offset] = tData[4];
+    MXA::Endian::FromSystemToBig::convert<int>(tData[7]);
+    cell_data[i * offset] = tData[7];
     if(false == conformalMesh)
     {
-      MXA::Endian::FromSystemToBig::convert<int>(tData[5]);
-      cell_data[i * offset + 1] = tData[5];
+      MXA::Endian::FromSystemToBig::convert<int>(tData[8]);
+      cell_data[i * offset + 1] = tData[8];
       tri_ids[i * offset + 1] = tData[0];
     }
   }
@@ -711,6 +712,7 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
+  static const size_t DATA_COUNT = 9;
   size_t nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
@@ -728,15 +730,15 @@ int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FI
   int tData[6];
   for (int i = 0; i < nTriangles; i++)
   {
-    nread = fread(tData, sizeof(int), 6, triFile);
-    if(nread != 6)
+    nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
+    if(nread != DATA_COUNT)
     {
       break;
     }
-    fprintf(vtkFile, "%d\n", tData[4]);
+    fprintf(vtkFile, "%d\n", tData[7]);
     if(false == conformalMesh)
     {
-      fprintf(vtkFile, "%d\n", tData[5]);
+      fprintf(vtkFile, "%d\n", tData[8]);
     }
   }
   fclose(triFile);
