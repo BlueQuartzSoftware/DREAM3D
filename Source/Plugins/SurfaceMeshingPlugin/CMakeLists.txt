@@ -104,6 +104,7 @@ set (SurfaceMeshingPlugin_PROJECT_SRCS
     ${PROJECT_CODE_DIR}/QtSupport/DREAM3DPluginInterface.h
     ${SurfaceMeshingPlugin_SurfaceMeshing_SRCS}
     ${SurfaceMeshingPlugin_SurfaceMeshing_HDRS}
+	${DREAM3DLib_SurfaceMeshing_HDRS}
     ${SurfaceMeshingPlugin_IO_SRCS}
     ${SurfaceMeshingPlugin_IO_HDRS}
     ${SurfaceMeshingPlugin_Meshing_SRCS}
