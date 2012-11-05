@@ -219,17 +219,17 @@ void RotateSampleRefFrame::execute()
     return;
   }
 
-  size_t xp, yp, zp;
+  int32_t xp, yp, zp;
   float xRes, yRes, zRes;
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
 
 
-  xp = m->getXPoints();
+  xp = static_cast<int32_t>(m->getXPoints());
   xRes = m->getXRes();
-  yp = m->getYPoints();
+  yp = static_cast<int32_t>(m->getYPoints());
   yRes = m->getYRes();
-  zp = m->getZPoints();
+  zp = static_cast<int32_t>(m->getZPoints());
   zRes = m->getZRes();
 
   params.xpNew = xp;
