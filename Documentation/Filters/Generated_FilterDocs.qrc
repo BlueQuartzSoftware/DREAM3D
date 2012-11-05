@@ -88,7 +88,7 @@
     <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
     <!-- ***** SurfaceMeshFilters ***** -->
-    <file>SurfaceMeshFilters/MMCSurfaceMeshingFilter.html</file>
+    <file>SurfaceMeshFilters/M3CEntireVolume.html</file>
     <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
 
