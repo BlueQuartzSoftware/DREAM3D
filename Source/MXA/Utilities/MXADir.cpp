@@ -189,7 +189,6 @@ std::string MXA_FILESYSTEM_BASE_CLASS::tempPath()
 {
   std::string ret;
 #if (WIN32)
-
   TCHAR path[MAX_PATH];
 
   DWORD retLength = GetTempPath(MAX_PATH, path);
@@ -207,7 +206,6 @@ std::string MXA_FILESYSTEM_BASE_CLASS::tempPath()
   {
     ret = std::string("/Temp");
   }
-
 #else
 
     char* pPath;
