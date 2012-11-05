@@ -401,8 +401,8 @@ class EbsdColoring
      */
     static void GenerateHexRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
     {
-	  float range1 = 2.0*(tanf(m_pi/4.0));
-	  float range2 = 2.0*(tanf(m_pi/12.0));
+	  float range1 = 2.0f*(tanf(M_PI/4.0f));
+	  float range2 = 2.0f*(tanf(M_PI/12.0f));
 	  float max1 = range1/2.0;
 	  float max2 = range2/2.0;
       float red = (r1+max1)/range1;
