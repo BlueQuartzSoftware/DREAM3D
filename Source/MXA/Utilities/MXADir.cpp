@@ -188,19 +188,23 @@ std::string MXA_FILESYSTEM_BASE_CLASS::tempPath()
 {
   std::string ret;
 #if (WIN32)
-    {
-        wchar_t tempPath[MXA_PATH_MAX];
-        if (GetTempPath(MXA_PATH_MAX, tempPath))
-            ret = std::string(tempPath);
-        if (!ret.isEmpty()) {
-            while (ret.endsWith('\\'))
-                ret.chop(1);
-            ret = MXADir::fromNativeSeparators(ret);
-        }
-    }
-    if (ret.isEmpty()) {
-        ret = std::string("/Temp");
-    }
+  TCHAR path[MAX_PATH];
+
+  DWORD retLength = GetTempPath(MAX_PATH, path);
+
+  if (retLength) 
+  {
+    ret = std::string(path);
+  }
+
+  if (!ret.empty()) 
+  {
+    ret = MXADir::fromNativeSeparators(ret);
+  }
+  else
+  {
+    ret = std::string("/Temp");
+  }
 #else
 
     char* pPath;
