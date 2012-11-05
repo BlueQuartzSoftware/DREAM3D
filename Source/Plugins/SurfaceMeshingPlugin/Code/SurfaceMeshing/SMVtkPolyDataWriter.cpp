@@ -337,6 +337,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
 
 void SMVtkPolyDataWriter::execute()
 {
+  static const size_t DATA_COUNT = 9;
   int err = 0;
   std::stringstream s;
   // Open the Nodes file for reading
@@ -384,10 +385,10 @@ void SMVtkPolyDataWriter::execute()
     notifyMessage(em);
     return;
   }
-  // Calculate how many nodes are in the file based in the file size
+  // Calculate how many Triangles are in the file based in the file size
   fseek(triFile, 0, SEEK_END);
   fLength = ftell(triFile);
-  size_t nTriangles = fLength / 24;
+  size_t nTriangles = fLength / (sizeof(int) * DATA_COUNT);
   fseek(triFile, 0, SEEK_SET);
   fLength = ftell(triFile);
   if(0 != fLength)
@@ -467,7 +468,8 @@ void SMVtkPolyDataWriter::execute()
   fclose(nodesFile);
 
   // Write the triangle indices into the vtk File
-  int tData[6];
+
+  int tData[DATA_COUNT];
   int triangleCount = nTriangles;
   if(false == m_WriteConformalMesh)
   {
@@ -478,7 +480,7 @@ void SMVtkPolyDataWriter::execute()
   for (size_t i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fread(tData, sizeof(int), 6, triFile);
+    nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
     if(m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
