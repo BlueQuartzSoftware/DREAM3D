@@ -39,19 +39,21 @@
 
 #include <string>
 
-//#include "DREAM3DLib/Common/DREAM3DMath.h"
-
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
-#define M_PI_OVER_4   0.785398163397448
-#define m_pi   3.1415926535897
 namespace Detail
 {
   static const float DegToRads = static_cast<float>(M_PI/180.0f);
   static const float HalfSqrt2 = sqrt(2.0f) / 2.0f;
   static const float RadToDegs = static_cast<float>(180.0f/M_PI);
+  static const float PiOver4  = static_cast<float>(M_PI_4);
+  static const float Pi_f = static_cast<float>(M_PI);
+  static const float PiOver12 = static_cast<float>(M_PI/12.0);
+
 }
 
 /**
@@ -256,6 +258,35 @@ class EbsdColoring
       rgb[2] = static_cast<unsigned char> (blue);
     }
 
+    /**
+     * @brief Generates an RGB color based on the Rodrigues Space coloring
+     * for a Cubic Crystal Structure
+     * @param rod - Rodrigues Vector (3 component rotation description)
+     * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
+     */
+    static void GenerateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+    {
+	    float range = static_cast<float>(2.0*(sqrt(2.0) - 1.0)+0.000001);
+	    float max = range/2.0f;
+      float red = (r1+max)/range;
+      float green = (r2+max)/range;
+      float blue = (r3+max)/range;
+
+      // Scale values from 0 to 1.0
+//      red = red / max;
+//      green = green / max;
+//      blue = blue / max;
+
+      // Multiply by 255 to get an R/G/B value
+      red = red * 255.0f;
+      green = green * 255.0f;
+      blue = blue * 255.0f;
+
+      rgb[0] = static_cast<unsigned char> (red);
+      rgb[1] = static_cast<unsigned char> (green);
+      rgb[2] = static_cast<unsigned char> (blue);
+    }
+
 
     /**
      * @brief Wrapper for convenience - Generates an RGB color based on the Inverse
@@ -364,6 +395,36 @@ class EbsdColoring
       rgb[2] = static_cast<unsigned char>(_rgb[2]);
     }
 
+    /**
+     * @brief Generates an RGB color based on the Rodrigues Space coloring
+     * for a Cubic Crystal Structure
+     * @param rod - Rodrigues Vector (3 component rotation description)
+     * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
+     */
+    static void GenerateHexRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+    {
+      float range1 = 2.0f*(tanf(Detail::PiOver4));
+      float range2 = 2.0f*(tanf(Detail::PiOver12));
+	    float max1 = range1/2.0f;
+	    float max2 = range2/2.0f;
+      float red = (r1+max1)/range1;
+      float green = (r2+max1)/range1;
+      float blue = (r3+max2)/range2;
+
+      // Scale values from 0 to 1.0
+      red = red / max1;
+      green = green / max1;
+      blue = blue / max2;
+
+      // Multiply by 255 to get an R/G/B value
+      red = red * 255.0f;
+      green = green * 255.0f;
+      blue = blue * 255.0f;
+
+      rgb[0] = static_cast<unsigned char> (red);
+      rgb[1] = static_cast<unsigned char> (green);
+      rgb[2] = static_cast<unsigned char> (blue);
+    }
 
   protected:
     EbsdColoring() {}

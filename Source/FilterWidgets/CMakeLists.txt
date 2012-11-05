@@ -14,6 +14,7 @@ project(FilterWidgetsLib)
 cmake_minimum_required(VERSION 2.8.4)
 
 set(Project_SRCS "")
+
 # Set up our various files that were written during the DREAM3DLib build phase
 set(RegisterKnownFilterWidgetsFile ${FilterWidgetsLib_BINARY_DIR}/RegisterKnownFilterWidgets.cpp)
 set(CodeGeneratorFile  ${FilterWidgetsLib_BINARY_DIR}/CodeGenerator.h)
@@ -95,6 +96,7 @@ set(SAMPLING_WIDGET_SRCS
     ${FilterWidgetsLib_SOURCE_DIR}/SamplingFiltersWidgets/QHex2SqrConverterWidget.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/SamplingFiltersWidgets" "${SAMPLING_WIDGET_HDRS}" "${SAMPLING_WIDGET_SRCS}" "0")
+
 set(QFilterWidget_HDRS
     ${IOFILTER_WIDGET_HDRS} ${SYNTHETIC_WIDGET_HDRS} ${SAMPLING_WIDGET_HDRS}
 )

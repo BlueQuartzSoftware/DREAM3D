@@ -27,5 +27,5 @@ set(SurfaceMeshingPlugin_SurfaceMeshing_SRCS
     ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/SMVtkPolyDataWriter.cpp
 )
 
-cmp_IDE_SOURCE_PROPERTIES( "SurfaceMeshing" "${SurfaceMeshingPlugin_SurfaceMeshing_HDRS}" "${SurfaceMeshingPlugin_SurfaceMeshing_SRCS}" "${PROJECT_INSTALL_HEADERS}")
+cmp_IDE_SOURCE_PROPERTIES( "SurfaceMeshing" "${SurfaceMeshingPlugin_SurfaceMeshing_HDRS};${DREAM3DLib_SurfaceMeshing_HDRS}" "${SurfaceMeshingPlugin_SurfaceMeshing_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 

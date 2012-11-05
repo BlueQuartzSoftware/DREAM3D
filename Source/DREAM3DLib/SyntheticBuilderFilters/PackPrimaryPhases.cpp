@@ -652,6 +652,21 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage("Packing Grains - Assigning Voxels");
   assign_voxels();
 
+  notifyStatusMessage("Packing Grains - Renumbering Grains");
+  RenumberGrains::Pointer renumber_grains1 = RenumberGrains::New();
+  renumber_grains1->setObservers(this->getObservers());
+  renumber_grains1->setVoxelDataContainer(m);
+  renumber_grains1->execute();
+  err = renumber_grains1->getErrorCondition();
+  if (err < 0)
+  {
+    setErrorCondition(renumber_grains1->getErrorCondition());
+    addErrorMessages(renumber_grains1->getPipelineMessages());
+    return;
+  }
+
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
   notifyStatusMessage("Packing Grains - Filling Gaps");
   assign_gaps();
 
@@ -659,15 +674,15 @@ void PackPrimaryPhases::execute()
   cleanup_grains();
 
   notifyStatusMessage("Packing Grains - Renumbering Grains");
-  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
-  renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVoxelDataContainer(m);
-  renumber_grains->execute();
-  err = renumber_grains->getErrorCondition();
+  RenumberGrains::Pointer renumber_grains2 = RenumberGrains::New();
+  renumber_grains2->setObservers(this->getObservers());
+  renumber_grains2->setVoxelDataContainer(m);
+  renumber_grains2->execute();
+  err = renumber_grains2->getErrorCondition();
   if (err < 0)
   {
-    setErrorCondition(renumber_grains->getErrorCondition());
-    addErrorMessages(renumber_grains->getPipelineMessages());
+    setErrorCondition(renumber_grains2->getErrorCondition());
+    addErrorMessages(renumber_grains2->getPipelineMessages());
     return;
   }
 
@@ -1297,6 +1312,7 @@ void PackPrimaryPhases::assign_voxels()
   neighpoints[4] = dims[0];
   neighpoints[5] = dims[0]*dims[1];
 
+  float totalPoints = dims[0]*dims[1]*dims[2];
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
@@ -1428,6 +1444,16 @@ void PackPrimaryPhases::assign_voxels()
         }
       }
     }
+  }
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
+  {
+	m_Active[i] = false;
+  }
+  int gnum;
+  for(size_t i=0;i<totalPoints;i++)
+  {
+    gnum = m_GrainIds[i];
+	if(gnum >= 0) m_Active[gnum] = true;
   }
 }
 

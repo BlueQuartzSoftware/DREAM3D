@@ -70,7 +70,7 @@ m_AspectRatios(NULL)
   grainmoments = NULL;
   graineigenvals = NULL;
 
-  INIT_DataArray(m_GrainMoments,float);
+  INIT_DataArray(m_GrainMoments,double);
   INIT_DataArray(m_GrainEigenVals,float);
 
   setupFilterParameters();
@@ -306,9 +306,9 @@ void FindShapes::find_moments2D()
   else if(m->getYPoints() == 1) Res1 = m->getXRes(), Res2 = m->getZRes();
   else if(m->getZPoints() == 1) Res1 = m->getXRes(), Res2 = m->getYRes();
 
-  for (size_t i = 0; i < numgrains; i++)
+  for (size_t i = 0; i < 6*numgrains; i++)
   {
-      grainmoments[i] = 0.0f;
+      grainmoments[i] = 0.0;
   }
   for (int j = 0; j < totalPoints; j++)
   {
@@ -449,8 +449,8 @@ void FindShapes::find_axes2D()
     Ixx = grainmoments[i*6+0];
     Iyy = grainmoments[i*6+1];
     Ixy = grainmoments[i*6+2];
-    float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
-    float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f + (Ixy * Ixy - Ixx * Iyy));
+    float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f - (Ixx * Iyy - Ixy * Ixy));
+    float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f - (Ixx * Iyy - Ixy * Ixy));
     float preterm = 4.0f / m_pi;
     preterm = powf(preterm, 0.25f);
     float postterm1 = r1 * r1 * r1 / r2;

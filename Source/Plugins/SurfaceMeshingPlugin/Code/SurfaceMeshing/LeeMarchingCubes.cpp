@@ -106,6 +106,7 @@ namespace Detail
   const std::string TrianglesFile("Triangles.bin");
 }
 
+
 class GrainChecker
 {
   public:
@@ -448,13 +449,12 @@ void LeeMarchingCubes::execute()
   int err = 0;
   std::stringstream ss;
 
- // std::string NodesFile = "/tmp/" + Detail::NodesFile;
+
   std::string NodesFile = MXADir::tempPath() + Detail::NodesFile;
   m_NodesFile = SMTempFile::New();
   m_NodesFile->setFilePath(NodesFile);
   m_NodesFile->setAutoDelete(this->m_DeleteTempFiles);
 
-  //std::string TrianglesFile = "/tmp/" + Detail::TrianglesFile;
   std::string TrianglesFile = MXADir::tempPath() + Detail::TrianglesFile;
   m_TrianglesFile = SMTempFile::New();
   m_TrianglesFile->setFilePath(TrianglesFile);

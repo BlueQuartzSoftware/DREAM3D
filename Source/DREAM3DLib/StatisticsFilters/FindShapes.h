@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
 	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
 
-    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, float) // N x 6 Array
+    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, double) // N x 6 Array
     DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float) // N x 3 Array
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
