@@ -50,6 +50,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
@@ -391,6 +394,127 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
 };
 
 
+/**
+ * @brief This class will write the IPF colors to a Scalar array in the VTK file
+ */
+template<typename T>
+class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
+{
+  public:
+  VoxelRodriguesColorScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
+  DREAM3D_TYPE_MACRO_SUPER(VoxelRodriguesColorScalarWriter<T>, VtkScalarWriter)\
+
+  virtual ~VoxelRodriguesColorScalarWriter(){}
+
+  int writeScalars(FILE* f)
+  {
+    int err = 0;
+    size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
+    int phase;
+    unsigned char* rgba = NULL;
+    float red, green, blue;
+    size_t index = 0;
+    if (m_WriteBinaryFiles == true)
+    {
+      fprintf(f, "COLOR_SCALARS Rodrigues_Colors 4\n");
+      rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
+    }
+    else
+    {
+      fprintf(f, "COLOR_SCALARS Rodrigues_Colors 3\n");
+      rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
+    }
+
+    int64_t totalPoints = r->getTotalPoints();
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, gnums);
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulers);
+
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
+
+    // Write the Rodrigues Coloring Cell Data
+    float r1, r2, r3;
+
+    std::vector<OrientationMath*> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+    m_HexOps = HexagonalOps::New();
+    m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
+
+    m_CubicOps = CubicOps::New();
+    m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
+
+    m_OrthoOps = OrthoRhombicOps::New();
+    m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
+    for (size_t i = 0; i < total; i++)
+    {
+      phase = phases[i];
+      if(true == m_WriteBinaryFiles)
+      {
+        index = i * 4;
+      }
+      else
+      {
+        index = 0;
+      }
+      if(phase > 0)
+      {
+        if(crystruct[phase] == Ebsd::CrystalStructure::Cubic)
+        {
+          OrientationMath::eulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
+          m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
+          EbsdColoring::GenerateRodriguesColor(r1, r2, r3, &rgba[index]);
+          //            EbsdColoring::GenerateRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
+        }
+        else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)
+        {
+          OrientationMath::eulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
+          m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
+          EbsdColoring::GenerateHexRodriguesColor(r1, r2, r3, &rgba[index]);
+          //            EbsdColoring::GenerateHexRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
+        }
+      }
+      else if(phase <= 0)
+      {
+        rgba[index] = 0;
+        rgba[index + 1] = 0;
+        rgba[index + 2] = 0;
+      }
+      if(true == m_WriteBinaryFiles)
+      {
+        rgba[index + 3] = 255;
+      }
+      else
+      {
+        red = static_cast<float>(float(rgba[index]) / 255.0f);
+        green = static_cast<float>(float(rgba[index + 1]) / 255.0f);
+        blue = static_cast<float>(float(rgba[index + 2]) / 255.0f);
+        fprintf(f, "%f %f %f\n", red, green, blue);
+      }
+    }
+
+    if (true == m_WriteBinaryFiles)
+    {
+      size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
+      if (totalWritten != total * 4)
+      {
+        std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
+        fclose( f);
+        return -1;
+      }
+    }
+    // Clean up the allocated memory
+    delete[] rgba;
+
+    return err;
+  }
+
+  private:
+    T* r;
+    VoxelRodriguesColorScalarWriter(const VoxelRodriguesColorScalarWriter&); // Copy Constructor Not Implemented
+    void operator=(const VoxelRodriguesColorScalarWriter&); // Operator '=' Not Implemented
+};
 
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h

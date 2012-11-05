@@ -34,12 +34,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CropVolumePipeline.h"
-
-
 #include <stdlib.h>
 
-//#include <iostream>
-//#include <fstream>
+#include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -80,18 +78,21 @@
 #include "DREAM3DLib/StatisticsFilters/FindODF.h"
 #include "DREAM3DLib/StatisticsFilters/FindMDF.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-CropVolumePipeline::CropVolumePipeline() :
-  AbstractFilter()
-{
-  setupFilterParameters();
-}
+
+typedef int64_t DimType;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+CropVolumePipeline::CropVolumePipeline() :
+AbstractFilter()
+{
+  setupFilterParameters();
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
 CropVolumePipeline::~CropVolumePipeline()
 {
 }
@@ -101,7 +102,7 @@ CropVolumePipeline::~CropVolumePipeline()
 // -----------------------------------------------------------------------------
 void CropVolumePipeline::setupFilterParameters()
 {
-  // Now append our options
+    // Now append our options
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -150,14 +151,15 @@ void CropVolumePipeline::preflight()
 }
 
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 std::string convertIntToString(int number)
 {
-  std::stringstream ss;//create a stringstream
-  ss << number;//add number to the stream
-  return ss.str();//return a string with the contents of the stream
+   std::stringstream ss;//create a stringstream
+   ss << number;//add number to the stream
+   return ss.str();//return a string with the contents of the stream
 }
 
 
@@ -188,22 +190,23 @@ std::string getFieldDataFile()
   return s;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin)
 {
-  //  VoxelDataContainer* m = getVoxelDataContainer();
+    VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
   int numinlist;
   std::ifstream inFile;
   inFile.open(m_InputFile.c_str());
 
-#if (CMP_SIZEOF_SIZE_T == 4)
+  #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
-#else
+  #else
   typedef int64_t DimType;
-#endif
+  #endif
 
   int a, b, c, d, e, f;
   //DimType iter = 1;
@@ -255,13 +258,14 @@ int getZStartIndex() { return 11; }
 // -----------------------------------------------------------------------------
 int getZEndIndex() { return 173; }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DataArray<unsigned int>::Pointer getPhaseTypes()
 {
   DataArray<unsigned int>::Pointer phaseTypes
-      = DataArray<unsigned int>::CreateArray(4, DREAM3D::EnsembleData::PhaseTypes);
+                = DataArray<unsigned int>::CreateArray(4, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
   phaseTypes->SetValue(1, DREAM3D::PhaseType::PrimaryPhase);
   phaseTypes->SetValue(2, DREAM3D::PhaseType::PrimaryPhase);
@@ -269,9 +273,6 @@ DataArray<unsigned int>::Pointer getPhaseTypes()
   return phaseTypes;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
 {
   std::vector<QualityMetricFilter::Pointer> filters;
@@ -306,12 +307,9 @@ std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
 
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void CropVolumePipeline::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+    VoxelDataContainer* m = getVoxelDataContainer();
   float m_MisorientationTolerance = 5.0f;
   float m_AlignMisorientationTolerance = 5.0f;
   float m_Zres = 4.0f;
@@ -335,167 +333,172 @@ void CropVolumePipeline::execute()
   int m_Ymax = 355;
   int m_Zmax = 163;*/
 
-  for (int i = 1; i < NUM_OF_CROPS+1; i++)
-  {
+for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
+{
 
 
-    // Create our Pipeline object
-    FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-
-
-
-    // updateProgressAndMessage(("Loading Slices"), 10);
-    ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
-
-    read_h5ebsd->setH5EbsdFile(getH5EbsdFile());
-    //read_h5ebsd->setRefFrameZDir(Ebsd::LowtoHigh);
-    read_h5ebsd->setZStartIndex(getZStartIndex());
-    read_h5ebsd->setZEndIndex(getZEndIndex());
-    read_h5ebsd->setPTypes(getPhaseTypes());
-    read_h5ebsd->setQualityMetricFilters(getQualityMetricFilters());
-    read_h5ebsd->setVoxelDataContainer(m);
-    read_h5ebsd->execute();
-    pipeline->pushBack(read_h5ebsd);
+      // Create our Pipeline object
+      FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
 
-    ConvertEulerAngles::Pointer convert_euler = ConvertEulerAngles::New();
-    convert_euler->setConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians);
-    convert_euler->setVoxelDataContainer(m);
-    convert_euler->execute();
-    pipeline->pushBack(convert_euler);
 
+     // updateProgressAndMessage(("Loading Slices"), 10);
+      ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();
 
-    AlignSectionsMisorientation::Pointer align_sections = AlignSectionsMisorientation::New();
-    align_sections->setMisorientationTolerance(m_AlignMisorientationTolerance);
-    align_sections->setVoxelDataContainer(m);
-    align_sections->execute();
-    pipeline->pushBack(align_sections);
-
-    CropVolume::Pointer crop_volume = CropVolume::New();
-    crop_volume->setXMin(m_Xmin[i]);
-    crop_volume->setYMin(m_Ymin[i]);
-    crop_volume->setZMin(m_Zmin[i]);
-    crop_volume->setXMax(m_Xmax[i]);
-    crop_volume->setYMax(m_Ymax[i]);
-    crop_volume->setZMax(m_Zmax[i]);
-    crop_volume->setRenumberGrains(false);
-    crop_volume->setVoxelDataContainer(m);
-    crop_volume->execute();
-    pipeline->pushBack(crop_volume);
-
-    RegularizeZSpacing::Pointer regularize_z = RegularizeZSpacing::New();
-    regularize_z->setInputFile(getZ_spacingfile());
-    regularize_z->setZRes(m_Zres);
-    regularize_z->setVoxelDataContainer(m);
-    regularize_z->execute();
-    pipeline->pushBack(regularize_z);
-
-    EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
-    ebsdsegment_grains->setMisorientationTolerance(m_MisorientationTolerance);
-    ebsdsegment_grains->setVoxelDataContainer(m);
-    ebsdsegment_grains->execute();
-    pipeline->pushBack(ebsdsegment_grains);
-
-    OpenCloseBadData::Pointer erode_dilate = OpenCloseBadData::New();
-    erode_dilate->setDirection(1); // 1 is erode.
-    erode_dilate->setNumIterations(m_NumIterations_Erode);
-    erode_dilate->setVoxelDataContainer(m);
-    erode_dilate->execute();
-    pipeline->pushBack(erode_dilate);
-
-    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setVoxelDataContainer(m);
-    find_neighbors->execute();
-    pipeline->pushBack(find_neighbors);
-
-
-    PerPhaseMinSize::Pointer min_size = PerPhaseMinSize::New();
-    min_size->setMinAllowedGrainSize(m_MinAllowedGrainSize);
-    min_size->setPhaseNumber(m_PhaseNumberMinSize);
-    min_size->setVoxelDataContainer(m);
-    min_size->execute();
-    pipeline->pushBack(min_size);
-
-    MinNeighbors::Pointer min_neighbors = MinNeighbors::New();
-    min_neighbors->setMinNumNeighbors(m_MinNumNeighbors);
-    min_neighbors->setVoxelDataContainer(m);
-    min_neighbors->execute();
-    pipeline->pushBack(min_neighbors);
-
-    FindSizes::Pointer find_sizes = FindSizes::New();
-    //find_sizes->setDistributionType(DREAM3D::DistributionType::Beta);
-    find_sizes->setVoxelDataContainer(m);
-    find_sizes->execute();
-    pipeline->pushBack(find_sizes);
-
-
-    FindShapes::Pointer find_shapes = FindShapes::New();
-    //find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
-    find_shapes->setVoxelDataContainer(m);
-    find_shapes->execute();
-    pipeline->pushBack(find_shapes);
+      read_h5ebsd->setH5EbsdFile(getH5EbsdFile());
+      //read_h5ebsd->setRefFrameZDir(Ebsd::LowtoHigh);
+      read_h5ebsd->setZStartIndex(getZStartIndex());
+      read_h5ebsd->setZEndIndex(getZEndIndex());
+      read_h5ebsd->setPTypes(getPhaseTypes());
+      read_h5ebsd->setQualityMetricFilters(getQualityMetricFilters());
+      read_h5ebsd->setVoxelDataContainer(m);
+      read_h5ebsd->execute();
+      pipeline->pushBack(read_h5ebsd);
 
 
 
-    FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New();
-    std::string field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
-    field_data_write_csv->setFieldDataFile(field_csv);
-    field_data_write_csv->setVoxelDataContainer(m);
-    field_data_write_csv->execute();
-    pipeline->pushBack(field_data_write_csv);
+      ConvertEulerAngles::Pointer convert_euler = ConvertEulerAngles::New();
+      convert_euler->setConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians);
+      convert_euler->setVoxelDataContainer(m);
+      convert_euler->execute();
+      pipeline->pushBack(convert_euler);
+
+
+      AlignSectionsMisorientation::Pointer align_sections = AlignSectionsMisorientation::New();
+      align_sections->setMisorientationTolerance(m_AlignMisorientationTolerance);
+      align_sections->setVoxelDataContainer(m);
+      align_sections->execute();
+      pipeline->pushBack(align_sections);
+
+      CropVolume::Pointer crop_volume = CropVolume::New();
+      crop_volume->setXMin(m_Xmin[i]);
+      crop_volume->setYMin(m_Ymin[i]);
+      crop_volume->setZMin(m_Zmin[i]);
+      crop_volume->setXMax(m_Xmax[i]);
+      crop_volume->setYMax(m_Ymax[i]);
+      crop_volume->setZMax(m_Zmax[i]);
+      crop_volume->setRenumberGrains(false);
+      crop_volume->setVoxelDataContainer(m);
+      crop_volume->execute();
+      pipeline->pushBack(crop_volume);
+
+      RegularizeZSpacing::Pointer regularize_z = RegularizeZSpacing::New();
+      regularize_z->setInputFile(getZ_spacingfile());
+      regularize_z->setZRes(m_Zres);
+      regularize_z->setVoxelDataContainer(m);
+      regularize_z->execute();
+      pipeline->pushBack(regularize_z);
+
+      EBSDSegmentGrains::Pointer ebsdsegment_grains = EBSDSegmentGrains::New();
+      ebsdsegment_grains->setMisorientationTolerance(m_MisorientationTolerance);
+      ebsdsegment_grains->setVoxelDataContainer(m);
+      ebsdsegment_grains->execute();
+      pipeline->pushBack(ebsdsegment_grains);
+
+      OpenCloseBadData::Pointer erode_dilate = OpenCloseBadData::New();
+      erode_dilate->setDirection(1); // 1 is erode.
+      erode_dilate->setNumIterations(m_NumIterations_Erode);
+      erode_dilate->setVoxelDataContainer(m);
+      erode_dilate->execute();
+      pipeline->pushBack(erode_dilate);
+
+      FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+      find_neighbors->setVoxelDataContainer(m);
+      find_neighbors->execute();
+      pipeline->pushBack(find_neighbors);
+
+
+      PerPhaseMinSize::Pointer min_size = PerPhaseMinSize::New();
+      min_size->setMinAllowedGrainSize(m_MinAllowedGrainSize);
+      min_size->setPhaseNumber(m_PhaseNumberMinSize);
+      min_size->setVoxelDataContainer(m);
+      min_size->execute();
+      pipeline->pushBack(min_size);
+
+      MinNeighbors::Pointer min_neighbors = MinNeighbors::New();
+      min_neighbors->setMinNumNeighbors(m_MinNumNeighbors);
+      min_neighbors->setVoxelDataContainer(m);
+      min_neighbors->execute();
+      pipeline->pushBack(min_neighbors);
+
+      FindSizes::Pointer find_sizes = FindSizes::New();
+      //find_sizes->setDistributionType(DREAM3D::DistributionType::Beta);
+      find_sizes->setVoxelDataContainer(m);
+      find_sizes->execute();
+      pipeline->pushBack(find_sizes);
+
+
+      FindShapes::Pointer find_shapes = FindShapes::New();
+      //find_shapes->setDistributionType(DREAM3D::DistributionType::Beta);
+      find_shapes->setVoxelDataContainer(m);
+      find_shapes->execute();
+      pipeline->pushBack(find_shapes);
 
 
 
-    bool m_WriteVtkFile = true ;
-    bool m_WriteBinaryVTKFiles= true ;
-    bool m_WriteGrainID= true;
-    bool m_WritePhaseId= true ;
-    bool m_WriteIPFColor= true ;
-    bool m_WriteGoodVoxels= true ;
-    bool m_WriteGrainSizes = true ;
-    bool m_WriteBandContrasts = true ;
+      FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New();
+      std::string field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
+      field_data_write_csv->setFieldDataFile(field_csv);
+      field_data_write_csv->setVoxelDataContainer(m);
+      field_data_write_csv->execute();
+      pipeline->pushBack(field_data_write_csv);
 
-    VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
 
-    if(m_WriteVtkFile)
-    {
-      std::string vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
-      vtkWriter->setOutputFile(vtk_file);
-      vtkWriter->setWriteGrainIds(m_WriteGrainID);
-      vtkWriter->setWritePhaseIds(m_WritePhaseId);
-      vtkWriter->setWriteBandContrasts(m_WriteBandContrasts);
-      vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
-      vtkWriter->setWriteIPFColors(m_WriteIPFColor);
-      vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
-      vtkWriter->setWriteBinaryFile(m_WriteGrainSizes);
-      vtkWriter->setVoxelDataContainer(m);
-      vtkWriter->execute();
-      pipeline->pushBack(vtkWriter);
-    }
 
-    DataContainerWriter::Pointer writer = DataContainerWriter::New();
-    std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
-    writer->setOutputFile(dream_3d_file);
-    writer->setVoxelDataContainer(m);
-    pipeline->pushBack(writer);
-    writer->execute();
+      bool m_WriteVtkFile = true ;
+      bool m_WriteBinaryVTKFiles= true ;
+      bool m_WriteGrainID= true;
+      bool m_WritePhaseId= true ;
+      bool m_WriteIPFColor= true ;
+      bool m_WriteGoodVoxels= true ;
+      bool m_WriteGrainSizes = true ;
+      bool m_WriteBandContrasts = true ;
+
+      VtkRectilinearGridWriter::Pointer vtkWriter = VtkRectilinearGridWriter::New();
+
+      if(m_WriteVtkFile)
+      {
+        std::string vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
+        vtkWriter->setOutputFile(vtk_file);
+        vtkWriter->setWriteGrainIds(m_WriteGrainID);
+        vtkWriter->setWritePhaseIds(m_WritePhaseId);
+        vtkWriter->setWriteBandContrasts(m_WriteBandContrasts);
+        vtkWriter->setWriteGoodVoxels(m_WriteGoodVoxels);
+        vtkWriter->setWriteIPFColors(m_WriteIPFColor);
+        vtkWriter->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+        vtkWriter->setWriteBinaryFile(m_WriteGrainSizes);
+        vtkWriter->setVoxelDataContainer(m);
+        vtkWriter->execute();
+        pipeline->pushBack(vtkWriter);
+      }
+
+      DataContainerWriter::Pointer writer = DataContainerWriter::New();
+      std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
+      writer->setOutputFile(dream_3d_file);
+      writer->setVoxelDataContainer(m);
+      pipeline->pushBack(writer);
+      writer->execute();
 
 
 
     //  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
     // // pipeline->run();
-    pipeline->clear();
+      pipeline->clear();
 
 
-    //delete [] m;
-    m->clearCellData();
-    m->clearEnsembleData();
-    m->clearFieldData();
+      //delete [] m;
+      m->clearCellData();
+      m->clearEnsembleData();
+      m->clearFieldData();
 
 
 
-  }
 }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
 

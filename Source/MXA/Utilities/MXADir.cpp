@@ -184,7 +184,6 @@ bool MXA_FILESYSTEM_BASE_CLASS::remove(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
 std::string MXA_FILESYSTEM_BASE_CLASS::tempPath()
 {
   std::string ret;

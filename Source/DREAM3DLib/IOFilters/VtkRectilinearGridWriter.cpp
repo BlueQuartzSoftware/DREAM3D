@@ -55,6 +55,7 @@ m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
+m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
@@ -64,6 +65,7 @@ m_WriteParentIds(false),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
 m_WriteGoodVoxels(false),
+m_WriteRodriguesGAMColors(false),
 m_WriteGAMs(false),
 m_WriteKAMs(false),
 m_WriteIPFColors(false),
@@ -160,6 +162,13 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
+  }  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Rodrigues GAM Colors");
+    option->setPropertyName("WriteRodriguesGAMColors");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -200,6 +209,7 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteGAMs", getWriteGAMs() );
   writer->writeValue("WriteKAMs", getWriteKAMs() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
+  writer->writeValue("WriteRodrgiuesGAMColors", getWriteRodriguesGAMColors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
@@ -253,6 +263,12 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
+
+  if(m_WriteRodriguesGAMColors == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceRotations, ss, -305, float, FloatArrayType, voxels, 3)
+  }
+
   if(m_WriteEulerAngles == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
@@ -372,6 +388,15 @@ void VtkRectilinearGridWriter::execute()
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
+
+
+  if(m_WriteRodriguesGAMColors == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelRodriguesColorScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
 
   if(m_WriteGrainSizes == true)
   {
