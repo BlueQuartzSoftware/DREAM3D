@@ -84,7 +84,43 @@ typedef struct {
   int nSpin[2];      // neighboring two spins...
   int edgePlace[3];
   int mCubeID;       // marching cube id = site id at corner 0 of the marching cube..
+  int tIndex;
 } Triangle;
+
+typedef Triangle Patch;
+
+
+namespace SurfaceMesh
+{
+  namespace NodesFile
+  {
+    typedef struct
+    {
+        int nodeId;
+        int nodeKind;
+        float x;
+        float y;
+        float z;
+    } NodesFileRecord_t;
+    const int ByteCount = sizeof(NodesFileRecord_t);
+  }
+
+  namespace TrianglesFile
+  {
+    typedef struct
+    {
+      int triId;
+      int nodeId_0;
+      int nodeId_1;
+      int nodeId_2;
+      int label_0;
+      int label_1;
+    } TrianglesFileRecord_t;
+    const int ByteCount = sizeof(TrianglesFileRecord_t);
+  }
+}
+
+
 
 #if 0
 typedef struct {

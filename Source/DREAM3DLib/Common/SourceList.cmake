@@ -52,7 +52,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.h
+#  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.h
 )
 
 set(DREAM3DLib_Common_SRCS
@@ -86,7 +86,7 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

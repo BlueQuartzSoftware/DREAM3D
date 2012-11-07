@@ -15,6 +15,7 @@ set(SurfaceMeshingPlugin_Meshing_HDRS
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Node.h
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Patch.h
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Segment.h
+  ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/SharedEdge.h
 
 )
 set(SurfaceMeshingPlugin_Meshing_SRCS

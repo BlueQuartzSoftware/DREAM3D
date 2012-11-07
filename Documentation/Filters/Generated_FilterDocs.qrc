@@ -89,6 +89,7 @@
 
     <!-- ***** SurfaceMeshFilters ***** -->
     <file>SurfaceMeshFilters/M3CEntireVolume.html</file>
+    <file>SurfaceMeshFilters/M3CSliceBySlice.html</file>
     <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
 
