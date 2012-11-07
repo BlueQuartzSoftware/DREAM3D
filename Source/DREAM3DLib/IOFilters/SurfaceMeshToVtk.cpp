@@ -38,6 +38,8 @@
 
 
 #include "MXA/Common/MXAEndian.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -143,12 +145,12 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
     }
 
 
-    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
-    if (edges.get() == NULL)
-    {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -386);
-        setErrorCondition(-386);
-    }
+//    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
+//    if (edges.get() == NULL)
+//    {
+//        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -386);
+//        setErrorCondition(-386);
+//    }
 
   }
 }
@@ -185,6 +187,17 @@ void SurfaceMeshToVtk::execute()
   StructArray<Node>& nodes = *(m->getNodes());
   int nNodes = nodes.GetNumberOfTuples();
 
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      ss.str("");
+      ss << "Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return;
+  }
 
 
 // Open the output VTK File for writing
@@ -192,12 +205,11 @@ void SurfaceMeshToVtk::execute()
   vtkFile = fopen(getOutputVtkFile().c_str(), "wb");
   if (NULL == vtkFile)
   {
-    ss.str("");
-    ss  << ": Error creating Triangles VTK Visualization '" << getOutputVtkFile() << "'";
-    setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss.str(), -666);
-    addErrorMessage(em);
-    return;
+      ss.str("");
+      ss << "Error creating file '" << getOutputVtkFile() << "'";
+      notifyErrorMessage(ss.str(), -18542);
+      setErrorCondition(-18542);
+      return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");

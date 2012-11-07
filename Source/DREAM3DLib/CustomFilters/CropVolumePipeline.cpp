@@ -196,7 +196,7 @@ std::string getFieldDataFile()
 // -----------------------------------------------------------------------------
 void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin)
 {
-    VoxelDataContainer* m = getVoxelDataContainer();
+  //VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
   int numinlist;
   std::ifstream inFile;

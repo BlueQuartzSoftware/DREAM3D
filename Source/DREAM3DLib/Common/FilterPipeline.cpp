@@ -349,7 +349,7 @@ void FilterPipeline::execute()
 
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-
+    std::cout << ss.str() << std::endl;
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss.str());
     sendPipelineMessage(progValue);
@@ -369,13 +369,16 @@ void FilterPipeline::execute()
     {
       setErrorCondition(err);
       sendPipelineMessages((*iter)->getPipelineMessages());
-      progValue.setMessageType(PipelineMessage::StatusValue);
+      progValue.setMessageType(PipelineMessage::Error);
       progValue.setProgressValue(100);
       sendPipelineMessage(progValue);
       pipelineFinished();
       return;
     }
-    CHECK_FOR_CANCELED(VoxelDataContainer, "Pipeline was canceled", write_fielddata)
+    if (this->getCancel() == true)
+    {
+      break;
+    }
 
     if(DREAM3D_BENCHMARKS)
     {

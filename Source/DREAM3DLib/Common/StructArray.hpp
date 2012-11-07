@@ -422,7 +422,6 @@ class StructArray : public IDataArray
       return (T*)(&(Array[i]));
     }
 
-
     /**
      * @brief Splats the same value c across all values in the Tuple
      * @param i The index of the Tuple

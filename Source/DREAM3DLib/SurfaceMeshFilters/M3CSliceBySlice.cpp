@@ -63,7 +63,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "LeeMarchingCubes.h"
+#include "M3CSliceBySlice.h"
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -94,7 +94,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "SMVtkPolyDataWriter.h"
+//#include "SMVtkPolyDataWriter.h"
 
 
 
@@ -104,9 +104,8 @@ namespace Detail
 {
   const std::string NodesFile("Nodes.bin");
   const std::string TrianglesFile("Triangles.bin");
-}
 
-  int edgeTable_2d[20][8] =
+    int edgeTable_2d[20][8] =
   {
   { -1, -1, -1, -1, -1, -1, -1, -1 },
   { -1, -1, -1, -1, -1, -1, -1, -1 },
@@ -154,6 +153,38 @@ namespace Detail
 
 
 
+}
+
+/**
+ * @brief This class is a wrapper for an absolute path to a temp file or any
+ * file that you want to be automatically deleted when the variable goes out
+ * of scope.
+ * @author Mike Jackson for BlueQuartz Software
+ */
+class SMTempFile
+{
+  public:
+    DREAM3D_SHARED_POINTERS(SMTempFile)
+    DREAM3D_STATIC_NEW_MACRO(SMTempFile)
+    virtual ~SMTempFile()
+    {
+      if (m_AutoDelete == true) {
+      MXADir::remove(m_FilePath); }
+    }
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilePath)
+    DREAM3D_INSTANCE_PROPERTY(bool, AutoDelete)
+
+  protected:
+    SMTempFile()
+    {}
+  private:
+    SMTempFile(const SMTempFile&); // Copy Constructor Not Implemented
+    void operator=(const SMTempFile&); // Operator '=' Not Implemented
+};
+
+
+#if 0
 class GrainChecker
 {
   public:
@@ -192,7 +223,7 @@ class GrainChecker
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-    void addData(int numTriangles, int ctid, const std::vector<meshing::Patch::Pointer>& cTriangle, meshing::Node* cVertex)
+    void addData(int numTriangles, int ctid, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex)
     {
 
       int n1, n2, n3;
@@ -213,9 +244,9 @@ class GrainChecker
           MapType& vertMap = grainMaps[gid];
           MapType& triMap = tCounts[gid];
 
-          n1 = cTriangle[i]->node_id[0];
-          n2 = cTriangle[i]->node_id[1];
-          n3 = cTriangle[i]->node_id[2];
+          n1 = cTriangle[i].node_id[0];
+          n2 = cTriangle[i].node_id[1];
+          n3 = cTriangle[i].node_id[2];
           n1 = cVertex[n1].NodeID;
           n2 = cVertex[n2].NodeID;
           n3 = cVertex[n3].NodeID;
@@ -238,9 +269,9 @@ class GrainChecker
           MapType& vertMap = grainMaps[gid];
           MapType& triMap = tCounts[gid];
 
-          n1 = cTriangle[i]->node_id[0];
-          n2 = cTriangle[i]->node_id[1];
-          n3 = cTriangle[i]->node_id[2];
+          n1 = cTriangle[i].node_id[0];
+          n2 = cTriangle[i].node_id[1];
+          n3 = cTriangle[i].node_id[2];
           n1 = cVertex[n1].NodeID;
           n2 = cVertex[n2].NodeID;
           n3 = cVertex[n3].NodeID;
@@ -287,25 +318,28 @@ class GrainChecker
     GrainChecker(const GrainChecker&); // Copy Constructor Not Implemented
     void operator=(const GrainChecker&); // Operator '=' Not Implemented
 };
-
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LeeMarchingCubes::LeeMarchingCubes() :
+M3CSliceBySlice::M3CSliceBySlice() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_DeleteTempFiles(true),
-m_WriteSTLFile(true),
-m_StlOutputDirectory(""),
-m_StlFilePrefix(""),
-m_VtkOutputFile(""),
-m_WriteBinaryVTKFiles(false),
-m_WriteConformalMesh(true),
-neigh(NULL),
-voxels(NULL),
-cSquare(NULL),
-cVertex(NULL)
+m_GrainIds(NULL),
+m_SurfaceMeshNodeType(NULL)
+//m_WriteSTLFile(true),
+//m_StlOutputDirectory(""),
+//m_StlFilePrefix(""),
+//m_VtkOutputFile(""),
+//m_WriteBinaryVTKFiles(false),
+//m_WriteConformalMesh(true),
+//neigh(NULL),
+//voxels(NULL),
+//cSquare(NULL),
+//cVertex(NULL)
 {
   setupFilterParameters();
 }
@@ -313,45 +347,21 @@ cVertex(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-LeeMarchingCubes::~LeeMarchingCubes()
+M3CSliceBySlice::~M3CSliceBySlice()
 {
-  if (neigh) delete[] neigh;
-  if (cSquare) delete[] cSquare;
-  if (cVertex) delete[] cVertex;
+//  if (neigh) delete[] neigh;
+//  if (cSquare) delete[] cSquare;
+//  if (cVertex) delete[] cVertex;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::setupFilterParameters()
+void M3CSliceBySlice::setupFilterParameters()
 {
 
   std::vector<FilterParameter::Pointer> parameters;
 #if 0
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("DREAM3D Input Data File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-
-   This should be read from the file so we are NOT going to expose it to the user
-  {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Reference Frame");
-    option->setPropertyName("RefFrameZDir");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("Ebsd::RefFrameZDir");
-    option->setCastableValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Low To High");
-    choices.push_back("High To Low");
-    option->setChoices(choices);
-    parameters.push_back(option);
-  }
-#endif
    {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Vtk PolyData Output File");
@@ -387,14 +397,6 @@ void LeeMarchingCubes::setupFilterParameters()
    }
    {
      FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Delete Temp Files");
-     option->setPropertyName("DeleteTempFiles");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Write Binary Vtk File");
      option->setPropertyName("WriteBinaryVTKFiles");
      option->setWidgetType(FilterParameter::BooleanWidget);
@@ -409,57 +411,67 @@ void LeeMarchingCubes::setupFilterParameters()
      option->setValueType("bool");
      parameters.push_back(option);
    }
+   #endif
+   {
+     FilterParameter::Pointer option = FilterParameter::New();
+     option->setHumanLabel("Delete Temp Files");
+     option->setPropertyName("DeleteTempFiles");
+     option->setWidgetType(FilterParameter::BooleanWidget);
+     option->setValueType("bool");
+     parameters.push_back(option);
+   }
+
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("DeleteTempFiles", getWriteBinaryVTKFiles() );
-  writer->writeValue("WriteSTLFile", getWriteSTLFile() );
-  writer->writeValue("StlOutputDirectory", getStlOutputDirectory() );
-  writer->writeValue("StlFilePrefix", getStlFilePrefix() );
-  writer->writeValue("VtkOutputFile", getVtkOutputFile() );
-  writer->writeValue("WriteBinaryVTKFiles", getWriteBinaryVTKFiles() );
-  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+  writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
+//  writer->writeValue("WriteSTLFile", getWriteSTLFile() );
+//  writer->writeValue("StlOutputDirectory", getStlOutputDirectory() );
+//  writer->writeValue("StlFilePrefix", getStlFilePrefix() );
+//  writer->writeValue("VtkOutputFile", getVtkOutputFile() );
+//  writer->writeValue("WriteBinaryVTKFiles", getWriteBinaryVTKFiles() );
+//  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  if (true == m_WriteSTLFile )
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if (NULL == sm)
   {
-    if (true == m_StlOutputDirectory.empty())
-    {
-      ss.str(""); ss << getHumanLabel() << " needs the STL Output directory set";
-      setErrorCondition(-387);
-      addErrorMessage(getHumanLabel(), ss.str(), -387);
-    }
-    if (true == m_StlFilePrefix.empty())
-    {
-      ss.str(""); ss << getHumanLabel() << " needs the STL File Prefix set";
-      setErrorCondition(-388);
-      addErrorMessage(getHumanLabel(), ss.str(), -388);
-    }
+      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+      setErrorCondition(-384);
   }
-  if (true == m_VtkOutputFile.empty())
-  {
-    ss.str(""); ss << getHumanLabel() << " needs the VTK output file set";
-    setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), -387);
-  }
+  else {
+    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
+    StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+ //   StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
+ //   StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+
+    sm->setNodes(vertices);
+    sm->setTriangles(triangles);
+//    sm->addCellData(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
+//    sm->addCellData(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
+
+//    addCreatedCellData(DREAM3D::CellData::SurfaceMeshEdges);
+//    addCreatedCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
+  }
 
 
 }
@@ -467,7 +479,7 @@ void LeeMarchingCubes::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::preflight()
+void M3CSliceBySlice::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -476,7 +488,7 @@ void LeeMarchingCubes::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::execute()
+void M3CSliceBySlice::execute()
 {
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -498,21 +510,22 @@ void LeeMarchingCubes::execute()
   std::stringstream ss;
 
 
-  std::string NodesFile = MXADir::tempPath() + Detail::NodesFile;
-  m_NodesFile = SMTempFile::New();
-  m_NodesFile->setFilePath(NodesFile);
-  m_NodesFile->setAutoDelete(this->m_DeleteTempFiles);
+  std::string nodesFile = MXADir::tempPath() + Detail::NodesFile;
+//  std::cout << nodesFile << std::endl;
+  SMTempFile::Pointer nodesTempFile = SMTempFile::New();
+  nodesTempFile->setFilePath(nodesFile);
+  nodesTempFile->setAutoDelete(this->m_DeleteTempFiles);
 
-  std::string TrianglesFile = MXADir::tempPath() + Detail::TrianglesFile;
-  m_TrianglesFile = SMTempFile::New();
-  m_TrianglesFile->setFilePath(TrianglesFile);
-  m_TrianglesFile->setAutoDelete(this->m_DeleteTempFiles);
-
-//  MAKE_OUTPUT_FILE_PATH( VisualizationFile, DREAM3D::SurfaceMesh::VisualizationVizFile)
+  std::string trianglesFile = MXADir::tempPath() + Detail::TrianglesFile;
+//  std::cout << trianglesFile << std::endl;
+  SMTempFile::Pointer trianglesTempFile = SMTempFile::New();
+  trianglesTempFile->setFilePath(trianglesFile);
+  trianglesTempFile->setAutoDelete(this->m_DeleteTempFiles);
 
   // Initialize some benchmark timers
   START_CLOCK()
 
+#if 0
   // Create the output directory if needed
   if(m_WriteSTLFile == true && m_StlOutputDirectory.empty() == false)
   {
@@ -528,46 +541,51 @@ void LeeMarchingCubes::execute()
       }
     }
   }
-
+#endif
   int cNodeID = 0;
   int cTriID = 0;
+  int cEdgeID = 0;
   int nTriangle = 0; // number of triangles...
   int nEdge = 0; // number of edges...
-  int nNodes = 0; // number of total meshing::Nodes used...
+  int nNodes = 0; // number of total Nodes used...
 
-  GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
+
+  //GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
   size_t dims[3];
-  float scaling[3];
+  float res[3];
   float origin[3];
 
   m->getDimensions(dims);
-  m->getResolution(scaling);
+  m->getResolution(res);
   m->getOrigin(origin);
 
-  // Initialize our LeeMarchingCubes Variable
+  // Initialize our M3CSliceBySlice Variable
   // Add a layer of padding around the volume which are going to be our boundary voxels
-  xDim = dims[0] + 2;
-  yDim = dims[1] + 2;
-  zDim = dims[2] + 2;
+//  int xDim = dims[0] + 2;
+//  int yDim = dims[1] + 2;
+//  int zDim = dims[2] + 2;
+  int wrappedDims[3] = { dims[0] + 2, dims[1] + 2, dims[2] + 2};
 
-  NS = xDim * yDim * zDim;
-  NSP = xDim * yDim;
+  int NS = wrappedDims[0] * wrappedDims[1] * wrappedDims[2];
+  int NSP = wrappedDims[0] * wrappedDims[1];
 
-  DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, 1, "LeeMarchingCubes_Working_Voxels");
-  voxels = voxelsPtr->GetPointer(0);
+  DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, 1, "M3CSliceBySlice_Working_Voxels");
+  int32_t* voxels = voxelsPtr->GetPointer(0);
 
-  neigh = new meshing::Neighbor[2 * NSP + 1];
-  cSquare = new meshing::Face[3 * 2 * NSP];
-  cVertex = new meshing::Node[2 * 7 * NSP];
+  StructArray<Neighbor>::Pointer neighborsPtr = StructArray<Neighbor>::CreateArray(2*NSP+1, "M3CSliceBySlice_Neighbor_Array");
+  DataArray<int32_t>::Pointer neighCSiteIdPtr = DataArray<int32_t>::CreateArray(2*NSP+1, "M3CSliceBySlice_Neighbor_CSiteId_Array");
+  StructArray<Face>::Pointer cSquarePtr = StructArray<Face>::CreateArray(3*2*NSP, "M3CSliceBySlice_Face_Array");
+  StructArray<Node>::Pointer cVertexPtr = StructArray<Node>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
+  DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeId_Array");
+  DataArray<int8_t>::Pointer cVertexNodeKindPtr = DataArray<int8_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeKind_Array");
+  StructArray<Patch>::Pointer  cTrianglePtr = StructArray<Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
 
-  xOrigin = 0.0f;
-  yOrigin = 0.0f;
-  zOrigin = 0.0f;
+  StructArray<Segment>::Pointer cEdgePtr = StructArray<Segment>::CreateArray(0, "M3CSliceBySlice_Segment_Array");
 
-  xRes = scaling[0];
-  yRes = scaling[1];
-  zRes = scaling[2];
+  //neigh = new Neighbor[2 * NSP + 1];
+  //cSquare = new Face[3 * 2 * NSP];
+  //cVertex = new Node[2 * 7 * NSP];
 
   // Prime the working voxels (2 layers worth) with -3 values indicating border voxels
   int size = 2 * NSP + 1;
@@ -576,18 +594,12 @@ void LeeMarchingCubes::execute()
     voxels[i] = -3;
   }
 
-  std::map<int, meshing::SMStlWriter::Pointer> gidToSTLWriter;
+//  std::map<int, SMStlWriter::Pointer> gidToSTLWriter;
 
-  // Save the actual volume dimensions from the input file
-//  int xFileDim = dims[0];
-//  int yFileDim = dims[1];
-//  int zFileDim = dims[2];
-//  size_t totalBytes = dims[0] * yFileDim * sizeof(int32_t);
-
-//  DataArray<int>::Pointer m_FileVoxelLayer = DataArray<int>::CreateArray(0, "FileVoxelLayer");
-//  int* fileVoxelLayer = m_FileVoxelLayer->WritePointer(0, totalBytes);
   size_t offset = 0;
-
+  // Loop over all the Z Slices. An Optimization for memory would be to loop over
+  // a different plane say the XZ in case that plane is smaller in dimensions than
+  // the XY plane, ie, the volume is rectangular
   for (size_t i = 0; i < dims[2]; i++)
   {
     ss.str("");
@@ -601,7 +613,7 @@ void LeeMarchingCubes::execute()
     {
         ss.str("");
         ss << "Cancelling filter";
-        notifyErrorMessage(ss.str(), -1);
+        notifyWarningMessage(ss.str(), -1);
         setErrorCondition(-1);
         break;
     }
@@ -619,81 +631,80 @@ void LeeMarchingCubes::execute()
       fVxPtr = fileVoxelLayer + (y * dims[0]);
       // Get the offset into the second layer remembering the border voxel and
       // the fact that we do not use voxel[0] for anything.
-      offset = ((y + 1) * xDim) + 1 + (NSP + 1);
+      offset = ((y + 1) * wrappedDims[0]) + 1 + (NSP + 1);
       // Use a straight memory copy to move the values from the temp array into the
       // array used for the meshing
       vxPtr = voxels + offset;
 
       ::memcpy((void*)vxPtr, (void*)fVxPtr, dims[0] * sizeof(int));
     }
-#if 0
-    int32_t maxGrainId =0;
-    for (size_t a = 0; a < 2 * NSP + 1; ++a)
-    {
-      if (voxels[a] > maxGrainId) {
-      maxGrainId = voxels[a];
-      std::cout << "here" << std::endl;
-      }
-    }
 
-    std::cout << "maxGainId for z slice: " << i << " = " << maxGrainId << std::endl;
-#endif
-    get_neighbor_list();
-    initialize_nodes(i);
-    initialize_squares(i);
+    // This starts the actual M3C Algorithm codes
+    get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);
+    initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    initialize_squares(i, NSP, cSquarePtr, neighborsPtr);
 
-    // find meshing::Face edges of each square of marching cubes in each layer...
-    nEdge = get_nodes_Edges(edgeTable_2d, nsTable_2d, i);
+    // find Face edges of each square of marching cubes in each layer...
+    nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeKindPtr, neighborsPtr);
 
     // find triangles and arrange the spins across each triangle...
-    nTriangle = get_triangles();
-    arrange_grainnames(nTriangle, i);
+    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeKindPtr, cEdgePtr, cTrianglePtr);
+    arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
 
-    // assign new, cumulative meshing::Node id...
-    nNodes = assign_nodeID(cNodeID);
-//    std::cout << "LeeMarchingCubes nNodes: " << nNodes << std::endl;
+    // assign new, cumulative Node id...
+    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    //std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
 
-    analyzeWinding();
-    eMap.clear();
-    labelTriangleMap.clear();
+//    analyzeWinding();
+//    eMap.clear();
+//    labelTriangleMap.clear();
 
     // std::cout << "nNodes: " << nNodes << std::endl;
-    // Output meshing::Nodes and triangles...
-    err = writeNodesFile(i, cNodeID, NodesFile);
+    // Output Nodes and triangles...
+    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
     if (err < 0)
     {
         ss.str("");
-        ss << "Error writing meshing::Nodes file '" << NodesFile << "'";
+        ss << "Error writing Nodes file '" << nodesFile << "'";
         notifyErrorMessage(ss.str(), -1);
         setErrorCondition(-1);
         return;
     }
 
-    err = writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
+    err = writeTrianglesFile(i, cTriID, trianglesFile, nTriangle,cTrianglePtr,cVertexNodeIdPtr);
     if (err < 0)
     {
         ss.str("");
-        ss << "Error writing triangles file '" << TrianglesFile << "'";
+        ss << "Error writing triangles file '" << trianglesFile << "'";
         notifyErrorMessage(ss.str(), -1);
         setErrorCondition(-1);
         return;
     }
 
-    if (m_WriteSTLFile == true)
-    {
-      m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
-      writeSTLFiles(nTriangle, gidToSTLWriter);
-    }
+//    if (m_WriteSTLFile == true)
+//    {
+//      m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
+//      writeSTLFiles(nTriangle, gidToSTLWriter);
+//    }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
+    cEdgeID = cEdgeID + nEdge;
     if (nTriangle > 0)
     {
-      cTriangle.clear();
+      cTrianglePtr->Resize(0);
     }
   }
 
-  //  CHECK_FOR_CANCELED(LeeMarchingCubes, "Surface Mesh was canceled", readHyperSlab);
-
+  if (getCancel() == true)
+  {
+    ss.str("");
+    ss << " Cancelled";
+    notifyWarningMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    trianglesTempFile->setAutoDelete(true);
+    nodesTempFile->setAutoDelete(true);
+    return;
+  }
   ss.str("");
   ss << "Marching Cubes Between Layers " << dims[2] - 1 << " and " << dims[2] << " of " << dims[2];
   notifyProgressValue( (dims[2] * 90 / dims[2]));
@@ -710,68 +721,70 @@ void LeeMarchingCubes::execute()
   }
 
   int i = dims[2];
-  get_neighbor_list();
-  initialize_nodes(i);
-  initialize_squares(i);
-  // find meshing::Face edges of each square of marching cubes in each layer...
-  get_nodes_Edges(edgeTable_2d, nsTable_2d, i);
+  get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);
+  initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
+  initialize_squares(i, NSP, cSquarePtr, neighborsPtr);
+
+  // find Face edges of each square of marching cubes in each layer...
+  nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeKindPtr, neighborsPtr);
   // find triangles and arrange the spins across each triangle...
   if (nTriangle > 0)
   {
-    nTriangle = get_triangles();
-    arrange_grainnames(nTriangle, i);
+    // find triangles and arrange the spins across each triangle...
+    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeKindPtr, cEdgePtr, cTrianglePtr);
+    arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
   }
-  // assign new, cumulative meshing::Node id...
-  nNodes = assign_nodeID(cNodeID);
-//  std::cout << "LeeMarchingCubes nNodes: " << nNodes << std::endl;
+  // assign new, cumulative Node id...
+    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeKindPtr);
+  //  std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
 
-  analyzeWinding();
-  eMap.clear();
-  labelTriangleMap.clear();
+//  analyzeWinding();
+//  eMap.clear();
+//  labelTriangleMap.clear();
 
 
   // std::cout << "nNodes: " << nNodes << std::endl;
-  // Output meshing::Nodes and triangles...
-  err = writeNodesFile(i, cNodeID, NodesFile);
+  // Output Nodes and triangles...
+    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
   if (err < 0)
   {
         ss.str("");
-        ss << "Error writing meshing::Nodes file '" << NodesFile << "'";
+        ss << "Error writing Nodes file '" << nodesFile << "'";
         notifyErrorMessage(ss.str(), -1);
         setErrorCondition(-1);
         return;
   }
 
-  err = writeTrianglesFile(i, cTriID, TrianglesFile, nTriangle);
+    err = writeTrianglesFile(i, cTriID, trianglesFile, nTriangle,cTrianglePtr,cVertexNodeIdPtr);
     if (err < 0)
     {
         ss.str("");
-        ss << "Error writing triangles file '" << TrianglesFile << "'";
+        ss << "Error writing triangles file '" << trianglesFile << "'";
         notifyErrorMessage(ss.str(), -1);
         setErrorCondition(-1);
         return;
     }
 
   // Write the last layers of the STL Files
-  if (m_WriteSTLFile == true)
-  {
-    m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
-    err |= writeSTLFiles(nTriangle, gidToSTLWriter);
-    for (std::map<int, meshing::SMStlWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
-    {
-      err |= (*iter).second->writeNumTrianglesToFile();
-    }
-        if (err < 0)
-    {
-        ss.str("");
-        ss << "Error writing STL file";
-        notifyErrorMessage(ss.str(), -1);
-        setErrorCondition(-1);
-        return;
-    }
-  }
+//  if (m_WriteSTLFile == true)
+//  {
+//    m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
+//    err |= writeSTLFiles(nTriangle, gidToSTLWriter);
+//    for (std::map<int, SMStlWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
+//    {
+//      err |= (*iter).second->writeNumTrianglesToFile();
+//    }
+//        if (err < 0)
+//    {
+//        ss.str("");
+//        ss << "Error writing STL file";
+//        notifyErrorMessage(ss.str(), -1);
+//        setErrorCondition(-1);
+//        return;
+//    }
+//  }
 
-  m_GrainChecker->analyzeGrains();
+ // m_GrainChecker->analyzeGrains();
 
   cNodeID = nNodes;
   cTriID = cTriID + nTriangle;
@@ -780,23 +793,35 @@ void LeeMarchingCubes::execute()
 
   if (nTriangle > 0)
   {
-    cTriangle.clear();
+    cTrianglePtr->Resize(0);
   }
 
-  SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
-  writer->setOutputVtkFile(m_VtkOutputFile);
-  writer->setNodesFile(NodesFile);
-  writer->setTrianglesFile(TrianglesFile);
-  writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);
-  writer->setWriteConformalMesh(m_WriteConformalMesh);
-  writer->execute();
-  setErrorCondition(writer->getErrorCondition());
+//  SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
+//  writer->setOutputVtkFile(m_VtkOutputFile);
+//  writer->setNodesFile(NodesFile);
+//  writer->setTrianglesFile(TrianglesFile);
+//  writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);
+//  writer->setWriteConformalMesh(m_WriteConformalMesh);
+//  writer->execute();
+//  setErrorCondition(writer->getErrorCondition());
 
+  // Clear out all the memory that we have used:
+  voxelsPtr = DataArray<int32_t>::NullPointer();
+  neighborsPtr = StructArray<Neighbor>::NullPointer();
+  neighCSiteIdPtr = DataArray<int32_t>::NullPointer();
+  cSquarePtr = StructArray<Face>::NullPointer();
+  cVertexPtr = StructArray<Node>::NullPointer();
+  cVertexNodeIdPtr = DataArray<int32_t>::NullPointer();
+  cVertexNodeKindPtr = DataArray<int8_t>::NullPointer();
+  cTrianglePtr = StructArray<Patch>::NullPointer();
+  cEdgePtr = StructArray<Segment>::NullPointer();
 
-  // This will possibly delete the triangles and meshing::Nodes file depending on the
+  readNodesTriangles(nodesFile, trianglesFile);
+
+  // This will possibly delete the triangles and Nodes file depending on the
   // DeleteTempFiles setting
-  m_TrianglesFile = SMTempFile::NullPointer();
-  m_NodesFile = SMTempFile::NullPointer();
+  trianglesTempFile = SMTempFile::NullPointer();
+  nodesTempFile = SMTempFile::NullPointer();
 
 
   setErrorCondition(0);
@@ -804,13 +829,155 @@ void LeeMarchingCubes::execute()
 }
 
 
-void LeeMarchingCubes::get_neighbor_list()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const std::string &trianglesFileName)
+{
+  //int err = 0;
+  std::stringstream s;
+  // Open the Nodes file for reading
+  FILE* nodesFile = fopen(nodesFileName.c_str(), "rb+");
+  if(nodesFile == NULL)
+  {
+    s.str("");
+    s << "Error opening nodes file '" << nodesFileName << "'";
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em);
+    return;
+  }
+
+  // Calculate how many nodes are in the file based on the file size
+  fseek(nodesFile, 0, SEEK_END);
+  size_t fLength = ftell(nodesFile);
+  size_t nNodes = fLength / SurfaceMesh::NodesFile::ByteCount;
+  fseek(nodesFile, 0, SEEK_SET);
+  fLength = ftell(nodesFile);
+  if(0 != fLength)
+  {
+    s.str("");
+    s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << nodesFileName << "'";
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em);
+    return;
+  }
+  s.str("");
+  s << "Calc Node Count from Nodes.bin File: " << nNodes;
+  notifyStatusMessage(s.str());
+
+  // Open the triangles file for reading
+  FILE* triFile = fopen(trianglesFileName.c_str(), "rb+");
+  if(triFile == NULL)
+  {
+    s.str("");
+    s << getNameOfClass() << ": Error opening Triangles file '" << trianglesFileName << "'";
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em);
+    return;
+  }
+  // Calculate how many Triangles are in the file based in the file size
+  fseek(triFile, 0, SEEK_END);
+  fLength = ftell(triFile);
+  size_t nTriangles = fLength / SurfaceMesh::TrianglesFile::ByteCount;
+  fseek(triFile, 0, SEEK_SET);
+  fLength = ftell(triFile);
+  if(0 != fLength)
+  {
+    s.str("");
+    s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << trianglesFileName << "'";
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), s.str(), -1);
+    addErrorMessage(em);
+    notifyMessage(em);
+    return;
+  }
+  s.str("");
+  s << "Calc Triangle Count from Triangles.bin File: " << nTriangles;
+  notifyStatusMessage(s.str());
+
+  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  nodesPtr->initializeWithZeros();
+  Node* nodes = nodesPtr->GetPointer(0);
+  DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodeType);
+  int8_t* nodeKind = shortNodeKindPtr->GetPointer(0);
+
+  s.str("");
+  s << "Reading Nodes file into Memory";
+  notifyStatusMessage(s.str());
+  size_t nread = 0;
+  SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
+  for (size_t i = 0; i < nNodes; i++)
+  {
+    nread = fread(&nRecord, SurfaceMesh::NodesFile::ByteCount, 1, nodesFile); // Read one set of positions from the nodes file
+    if(nread != 1)
+    {
+      break;
+    }
+    Node& node = nodes[i];
+    node.coord[0] = nRecord.x;
+    node.coord[1] = nRecord.y;
+    node.coord[2] = nRecord.z;
+    nodeKind[i] = nRecord.nodeKind;
+  }
+  fclose(nodesFile);
+
+
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  sm->setNodes(nodesPtr);
+  sm->addCellData(DREAM3D::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
+
+
+  StructArray<Triangle>::Pointer trianglesPtr = StructArray<Triangle>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
+  trianglesPtr->initializeWithZeros();
+  Triangle* triangles = trianglesPtr->GetPointer(0);
+
+  s.str("");
+  s << "Reading Triangles file into Memory";
+  notifyStatusMessage(s.str());
+
+  SurfaceMesh::TrianglesFile::TrianglesFileRecord_t tRecord;
+  for (size_t i = 0; i < nTriangles; i++)
+  {
+    // Read from the Input Triangles Temp File
+    nread = fread(&tRecord, SurfaceMesh::TrianglesFile::ByteCount, 1, triFile);
+    if(nread != 1)
+    {
+      break;
+    }
+    Triangle& t = triangles[i];
+    t.node_id[0] = tRecord.nodeId_0;
+    t.node_id[1] = tRecord.nodeId_1;
+    t.node_id[2] = tRecord.nodeId_2;
+    t.nSpin[0] = tRecord.label_0;
+    t.nSpin[1] = tRecord.label_1;
+    t.e_id[0] = t.e_id[1] = t.e_id[2] = -1;
+    t.edgePlace[0] = t.edgePlace[1] = t.edgePlace[2] = -1;
+    t.mCubeID = -1;
+    t.tIndex = -1;
+  }
+  fclose(triFile);
+
+  sm->setTriangles(trianglesPtr);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
+                                        StructArray<Neighbor>::Pointer neighborsPtr,
+                                        DataArray<int32_t>::Pointer neighborCSiteIdPtr)
 {
   // NSP = number of sites in a plane of xDim by yDim...
-  // neigh[][] = 2 dimeNSional array storing its site number and meshing::Neighbors...
+  // neigh[][] = 2 dimeNSional array storing its site number and Neighbors...
   // site_id = id number for each site...starting from 1 to xDim*yDim*zDim....
   //
-  // I assumed the square lattice...so the order of meshing::Neighbors as follows...
+  // I assumed the square lattice...so the order of Neighbors as follows...
   //
   //    4   3   2         13  12  11          22  21  20
   //    5 site  1         14   9  10          23  18  19
@@ -820,10 +987,16 @@ void LeeMarchingCubes::get_neighbor_list()
   int ii; // loop index...
   int i, j, k, r; // position indices...
   int site_id; // id number for each site...
+
+  Neighbor* neigh = neighborsPtr->GetPointer(0);
+  int32_t* csiteid = neighborCSiteIdPtr->GetPointer(0);
+  int xDim = wrappedDims[0];
+
+
   for (ii = 1; ii <= 2 * NSP; ii++)
   {
     site_id = ii;
-    neigh[ii].csiteid = site_id;
+    csiteid[ii] = site_id;
     k = (site_id - 1) / NSP;
     k = k * NSP;
     r = (site_id - 1) % NSP;
@@ -866,7 +1039,7 @@ void LeeMarchingCubes::get_neighbor_list()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float LeeMarchingCubes::find_xcoord(int index)
+float M3CSliceBySlice::find_xcoord(int index, int xDim, float xRes)
 {
   index = index - 1;
   float x = xRes * float(index % xDim);
@@ -876,7 +1049,7 @@ float LeeMarchingCubes::find_xcoord(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float LeeMarchingCubes::find_ycoord(int index)
+float M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, float yRes)
 {
   index = index - 1;
   float y = yRes * float((index / xDim) % yDim);
@@ -886,20 +1059,25 @@ float LeeMarchingCubes::find_ycoord(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float LeeMarchingCubes::find_zcoord(int index)
+float M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, float zRes)
 {
   index = index - 1;
   float z = zRes * float(index / (xDim * yDim));
   return z;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::initialize_nodes(int zID)
+void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float* res,
+                                      StructArray<Node>::Pointer cVertexPtr,
+                                      DataArray<int32_t>::Pointer voxelsPtr,
+                                      DataArray<int32_t>::Pointer cVertexNodeIdPtr,
+                                      DataArray<int8_t>::Pointer cVertexNodeKindPtr  )
 {
 
-  // Finds the coordinates of meshing::Nodes...
+  // Finds the coordinates of Nodes...
   int i, j;
   int id, oid;
   int tsite, locale;
@@ -910,7 +1088,17 @@ void LeeMarchingCubes::initialize_nodes(int zID)
    start = 1;
    numgrains = 0;
    }
-  // meshing::Node id starts with 0....
+
+  float xRes = res[0];
+  float yRes = res[1];
+  float zRes = res[2];
+
+  Node* cVertex = cVertexPtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->GetPointer(0);
+  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
+
+  // Node id starts with 0....
   if (zID > 0)
   {
     for (i = 1; i <= NSP; i++)
@@ -920,6 +1108,8 @@ void LeeMarchingCubes::initialize_nodes(int zID)
       for (j = 0; j < 7; j++)
       {
         cVertex[id + j] = cVertex[oid + j];
+        nodeKind[id + j] = nodeKind[oid + j];
+        nodeID[id + j] = nodeID[oid + j];
       }
     }
   }
@@ -929,61 +1119,68 @@ void LeeMarchingCubes::initialize_nodes(int zID)
     id = 7 * (i - 1);
     tsite = i;
     locale = tsite + shift;
-    x = find_xcoord(locale);
-    y = find_ycoord(locale);
-    z = find_zcoord(locale);
+    x = find_xcoord(locale, wrappedDims[0], xRes);
+    y = find_ycoord(locale, wrappedDims[0], wrappedDims[1], yRes);
+    z = find_zcoord(locale, wrappedDims[0], wrappedDims[1], zRes);
     int grainid = voxels[tsite];
     if (grainid > numgrains) numgrains = grainid;
     cVertex[id].coord[0] = x + (0.5f * xRes);
     cVertex[id].coord[1] = y;
     cVertex[id].coord[2] = z;
-    cVertex[id].nodeKind = 0;
-    cVertex[id].NodeID = -1;
+    nodeKind[id] = 0;
+    nodeID[id] = -1;
     cVertex[id + 1].coord[0] = x;
     cVertex[id + 1].coord[1] = y + (0.5f * yRes);
     cVertex[id + 1].coord[2] = z;
-    cVertex[id + 1].nodeKind = 0;
-    cVertex[id + 1].NodeID = -1;
+    nodeKind[id + 1] = 0;
+    nodeID[id + 1] = -1;
     cVertex[id + 2].coord[0] = x;
     cVertex[id + 2].coord[1] = y;
     cVertex[id + 2].coord[2] = z + (0.5f * zRes);
-    cVertex[id + 2].nodeKind = 0;
-    cVertex[id + 2].NodeID = -1;
+    nodeKind[id + 2] = 0;
+    nodeID[id + 2] = -1;
     cVertex[id + 3].coord[0] = x + (0.5f * xRes);
     cVertex[id + 3].coord[1] = y + (0.5f * yRes);
     cVertex[id + 3].coord[2] = z;
-    cVertex[id + 3].nodeKind = 0;
-    cVertex[id + 3].NodeID = -1;
+    nodeKind[id + 3] = 0;
+    nodeID[id + 3] = -1;
     cVertex[id + 4].coord[0] = x + (0.5f * xRes);
     cVertex[id + 4].coord[1] = y;
     cVertex[id + 4].coord[2] = z + (0.5f * zRes);
-    cVertex[id + 4].nodeKind = 0;
-    cVertex[id + 4].NodeID = -1;
+    nodeKind[id + 4] = 0;
+    nodeID[id + 4] = -1;
     cVertex[id + 5].coord[0] = x;
     cVertex[id + 5].coord[1] = y + (0.5f * yRes);
     cVertex[id + 5].coord[2] = z + (0.5f * zRes);
-    cVertex[id + 5].nodeKind = 0;
-    cVertex[id + 5].NodeID = -1;
+    nodeKind[id + 5] = 0;
+    nodeID[id + 5] = -1;
     cVertex[id + 6].coord[0] = x + (0.5f * xRes);
     cVertex[id + 6].coord[1] = y + (0.5f * yRes);
     cVertex[id + 6].coord[2] = z + (0.5f * zRes);
-    cVertex[id + 6].nodeKind = 0;
-    cVertex[id + 6].NodeID = -1;
+    nodeKind[id + 6] = 0;
+    nodeID[id + 6] = -1;
   }
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::initialize_squares(int zID)
+void M3CSliceBySlice::initialize_squares(int zID, int NSP,
+                                          StructArray<Face>::Pointer cSquarePtr,
+                                          StructArray<Neighbor>::Pointer neighborsPtr)
 {
 
   // Gather initial information on each square...
   int id;
   int i, j;
   int csite;
+
+  Face* cSquare = cSquarePtr->GetPointer(0);
+  Neighbor* neigh = neighborsPtr->GetPointer(0);
+
   // square id starts with 0....
-  // notice that point at the surface will have the wrong values of meshing::Node at the other end...
+  // notice that point at the surface will have the wrong values of Node at the other end...
   // since it includes periodic boundary condition...
   // but, since the structure surrounded by ghost layer of grainname -3, it's OK...
   for (i = 1; i <= 2 * NSP; i++)
@@ -1003,7 +1200,7 @@ void LeeMarchingCubes::initialize_squares(int zID)
     cSquare[id + 2].site_id[1] = csite;
     cSquare[id + 2].site_id[2] = neigh[i].neigh_id[18];
     cSquare[id + 2].site_id[3] = neigh[i].neigh_id[25];
-    // initialize meshing::Node, edge...-1 is dummy initial value...
+    // initialize Node, edge...-1 is dummy initial value...
     for (j = 0; j < 4; j++)
     {
       cSquare[id].edge_id[j] = -1;
@@ -1022,7 +1219,12 @@ void LeeMarchingCubes::initialize_squares(int zID)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int zID)
+size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
+                                        StructArray<Face>::Pointer cSquarePtr,
+                                        DataArray<int32_t>::Pointer voxelsPtr,
+                                        StructArray<Segment>::Pointer cEdgePtr,
+                                        DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                                        StructArray<Neighbor>::Pointer neighborsPtr)
 {
   int j, k, m, ii;
   int tsite;
@@ -1039,12 +1241,20 @@ size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int 
   int tn1, tn2;
   int tnk;
   int pixIndex[2];
-  int eid; // edge id...
+  int eid = 0; // edge id...
 //  int tnode1, tnode2;
   int edgeCount; // number of edges for each square...
   int NodeID[2];
   int pixgrainname[2];
-  eid = 0;
+
+  size_t edgeResize = 1000;
+  int    edgeResizeCount = 0;
+
+
+  Face* cSquare = cSquarePtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->GetPointer(0);
+  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+
   for (k = 0; k < 3 * 2 * NSP; k++)
   { // for each square...
     quot = k / (3 * NSP);
@@ -1070,35 +1280,47 @@ size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int 
       edgeCount = 0;
       // Let's find the edges...
       if (atBulk != 4)
-      { // coNSider the square inside the bulk only...
+      { // consider the square inside the bulk only...
         cSquare[k].effect = 1;
         sqIndex = get_square_index(tnSpin);
         if (sqIndex == 15)
         {
-          anFlag = treat_anomaly(tNSite, zID);
+          anFlag = treat_anomaly(tNSite, zID, voxelsPtr, neighborsPtr);
           sqIndex = sqIndex + anFlag;
         }
         if (sqIndex != 0)
         {
           for (j = 0; j < 8; j = j + 2)
           {
-            if (eT2d[sqIndex][j] != -1)
+            if (Detail::edgeTable_2d[sqIndex][j] != -1)
             {
-              NodeIndex[0] = eT2d[sqIndex][j];
-              NodeIndex[1] = eT2d[sqIndex][j + 1];
-              pixIndex[0] = NST2d[sqIndex][j];
-              pixIndex[1] = NST2d[sqIndex][j + 1];
-              get_nodes(cubeOrigin, sqOrder, NodeIndex, NodeID);
-              get_grainnames(cubeOrigin, sqOrder, pixIndex, pixgrainname);
+              NodeIndex[0] = Detail::edgeTable_2d[sqIndex][j];
+              NodeIndex[1] = Detail::edgeTable_2d[sqIndex][j + 1];
+              pixIndex[0] = Detail::nsTable_2d[sqIndex][j];
+              pixIndex[1] = Detail::nsTable_2d[sqIndex][j + 1];
+              get_nodes(cubeOrigin, sqOrder, NodeIndex, NodeID, NSP, wrappedDims);
+              get_grainnames(cubeOrigin, sqOrder, pixIndex, pixgrainname, NSP, wrappedDims, voxelsPtr);
               if (pixgrainname[0] > 0 || pixgrainname[1] > 0)
               {
-                cEdge.resize(eid + 1);
-                cEdge[eid] = meshing::Segment::New();
-                cEdge[eid]->node_id[0] = NodeID[0]; // actual meshing::Node ids for each edge...
-                cEdge[eid]->node_id[1] = NodeID[1];
-                cEdge[eid]->neigh_spin[0] = pixgrainname[0];
-                cEdge[eid]->neigh_spin[1] = pixgrainname[1];
-                cEdge[eid]->edgeKind = 2; // edges of the open loops are always binary...
+                size_t currentEdgeArraySize = cEdgePtr->GetNumberOfTuples();
+                if (currentEdgeArraySize < eid+1)
+                {
+                  edgeResizeCount++;
+                  if (edgeResizeCount == 10) {
+                    edgeResizeCount = 0;
+                    edgeResize *= 10; // Increment the resize factor by an order of magnitude
+                  }
+                  cEdgePtr->Resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
+                  currentEdgeArraySize = cEdgePtr->GetNumberOfTuples();
+                  //std::cout << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << std::endl;
+                }
+
+                Segment* cEdge = cEdgePtr->GetPointer(0);
+                cEdge[eid].node_id[0] = NodeID[0]; // actual Node ids for each edge...
+                cEdge[eid].node_id[1] = NodeID[1];
+                cEdge[eid].nSpin[0] = pixgrainname[0];
+                cEdge[eid].nSpin[1] = pixgrainname[1];
+                cEdge[eid].edgeKind = 2; // edges of the open loops are always binary...
                 // triple lines only occurs inside the marching cubes...
                 cSquare[k].edge_id[edgeCount] = eid;
                 edgeCount++;
@@ -1108,10 +1330,10 @@ size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int 
               {
                 tn1 = NodeID[0];
                 tn2 = NodeID[1];
-                cVertex[tn1].nodeKind = -1; // extra meshing::Nodes from meshing the surface of the box...
-                cVertex[tn2].nodeKind = -1; // we don't need them...
+                nodeKind[tn1] = -1; // extra Nodes from meshing the surface of the box...
+                nodeKind[tn2] = -1; // we don't need them...
               }
-              // Categorize the meshing::Node...if it's triple junction or not...
+              // Categorize the Node...if it's triple junction or not...
               for (ii = 0; ii < 2; ii++)
               {
                 if (NodeIndex[ii] == 4)
@@ -1119,23 +1341,23 @@ size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int 
                   if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
                   {
                     tnode = NodeID[ii];
-                    cVertex[tnode].nodeKind = 3;
+                    nodeKind[tnode] = 3;
                     cSquare[k].FCnode = tnode;
                   }
                   else if (sqIndex == 19)
                   {
                     tnode = NodeID[ii];
-                    cVertex[tnode].nodeKind = 4;
+                   nodeKind[tnode] = 4;
                     cSquare[k].FCnode = tnode;
                   }
                 }
                 else
                 {
                   tnode = NodeID[ii];
-                  tnk = cVertex[tnode].nodeKind;
+                  tnk = nodeKind[tnode];
                   if (tnk != -1)
                   {
-                    cVertex[tnode].nodeKind = 2;
+                    nodeKind[tnode] = 2;
                   }
                 }
               }
@@ -1146,14 +1368,14 @@ size_t LeeMarchingCubes::get_nodes_Edges(int eT2d[20][8], int NST2d[20][8], int 
       cSquare[k].nEdge = edgeCount;
     }
   }
-//  std::cout << "cEdge.size() " << cEdge.size() << std::endl;
-  return (cEdge.size());
+  cEdgePtr->Resize(eid);
+  return eid;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::get_square_index(int tNS[4])
+int M3CSliceBySlice::get_square_index(int tNS[4])
 {
   // identify each square configuration using binary bit...
   // returNS the unique decimal integer for each configuration...
@@ -1187,7 +1409,9 @@ int LeeMarchingCubes::get_square_index(int tNS[4])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::treat_anomaly(int tNSt[4], int zID1)
+int M3CSliceBySlice::treat_anomaly(int tNSt[4], int zID1,
+                                    DataArray<int32_t>::Pointer voxelsPtr,
+                                    StructArray<Neighbor>::Pointer neighborsPtr)
 {
   int i, j, k, ii;
   int csite, cgrainname;
@@ -1198,6 +1422,10 @@ int LeeMarchingCubes::treat_anomaly(int tNSt[4], int zID1)
   int numNeigh[4];
   min = 1000;
   minid = -1;
+
+  int32_t* voxels = voxelsPtr->GetPointer(0);
+  Neighbor* neigh = neighborsPtr->GetPointer(0);
+
   for (k = 0; k < 4; k++)
   {
     numNeigh[k] = 0;
@@ -1240,7 +1468,7 @@ int LeeMarchingCubes::treat_anomaly(int tNSt[4], int zID1)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::get_nodes(int cst, int ord, int nidx[2], int *nid)
+void M3CSliceBySlice::get_nodes(int cst, int ord, int nidx[2], int* nid, int NSP, int* wrappedDims)
 {
   int ii;
   int tempIndex;
@@ -1258,7 +1486,7 @@ void LeeMarchingCubes::get_nodes(int cst, int ord, int nidx[2], int *nid)
           nid[ii] = 7 * cst + 1;
           break;
         case 2:
-          nid[ii] = 7 * (cst + xDim - 1);
+          nid[ii] = 7 * (cst + wrappedDims[0] - 1);
           break;
         case 3:
           nid[ii] = 7 * (cst - 1) + 1;
@@ -1303,7 +1531,7 @@ void LeeMarchingCubes::get_nodes(int cst, int ord, int nidx[2], int *nid)
           nid[ii] = 7 * (cst + NSP - 1) + 1;
           break;
         case 3:
-          nid[ii] = 7 * (cst + xDim - 1) + 2;
+          nid[ii] = 7 * (cst + wrappedDims[0] - 1) + 2;
           break;
         case 4:
           nid[ii] = 7 * (cst - 1) + 5;
@@ -1316,10 +1544,13 @@ void LeeMarchingCubes::get_nodes(int cst, int ord, int nidx[2], int *nid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::get_grainnames(int cst, int ord, int pID[2], int *pgrainname)
+void M3CSliceBySlice::get_grainnames(int cst, int ord, int pID[2], int* pgrainname,
+                                      int NSP, int* wrappedDims,
+                                      DataArray<int32_t>::Pointer voxelsPtr)
 {
   int i;
   int pixTemp, tempgrainname;
+  int32_t* voxels = voxelsPtr->GetPointer(0);
   for (i = 0; i < 2; i++)
   {
     pixTemp = pID[i];
@@ -1336,11 +1567,11 @@ void LeeMarchingCubes::get_grainnames(int cst, int ord, int pID[2], int *pgrainn
           pgrainname[i] = tempgrainname;
           break;
         case 2:
-          tempgrainname = voxels[cst + xDim + 1];
+          tempgrainname = voxels[cst + wrappedDims[0] + 1];
           pgrainname[i] = tempgrainname;
           break;
         case 3:
-          tempgrainname = voxels[cst + xDim];
+          tempgrainname = voxels[cst + wrappedDims[0]];
           pgrainname[i] = tempgrainname;
           break;
       }
@@ -1372,7 +1603,7 @@ void LeeMarchingCubes::get_grainnames(int cst, int ord, int pID[2], int *pgrainn
       switch(pixTemp)
       {
         case 0:
-          tempgrainname = voxels[cst + xDim];
+          tempgrainname = voxels[cst + wrappedDims[0]];
           pgrainname[i] = tempgrainname;
           break;
         case 1:
@@ -1384,7 +1615,7 @@ void LeeMarchingCubes::get_grainnames(int cst, int ord, int pID[2], int *pgrainn
           pgrainname[i] = tempgrainname;
           break;
         case 3:
-          tempgrainname = voxels[cst + NSP + xDim];
+          tempgrainname = voxels[cst + NSP + wrappedDims[0]];
           pgrainname[i] = tempgrainname;
           break;
       }
@@ -1392,20 +1623,31 @@ void LeeMarchingCubes::get_grainnames(int cst, int ord, int pID[2], int *pgrainn
   }
 }
 
+namespace Detail
+{
+  static int triangleResizeCount = 0;
+  static size_t triangleResize = 1000;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::get_triangles()
+int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
+                                    StructArray<Face>::Pointer cSquarePtr,
+                                    DataArray<int32_t>::Pointer voxelsPtr,
+                                    DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                                    StructArray<Segment>::Pointer cEdgePtr,
+                                    StructArray<Patch>::Pointer  cTrianglePtr)
 {
   int i, ii, i1, i2;
   int sqID[6];
   int tsq; // current sq id...
   int tnE; // temp number of edges...
   int nFC; // number of FC turned on...
-  int nE; // number of meshing::Face edges...
+  int nE; // number of Face edges...
   int eff; // all the squares effective?...
   int cubeFlag; // if 1, we can do marching cube; if 0, useless...
-  int BCnode; // cube center meshing::Node...
+  int BCnode; // cube center Node...
   int nkFlag;
   int tsqid1, tsqid2;
   int *arrayE;
@@ -1418,27 +1660,35 @@ int LeeMarchingCubes::get_triangles()
   int arraygrainname[8];
   int tidIn, tidOut;
   int arrayFC[6];
+
+  Face* cSquare = cSquarePtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->GetPointer(0);
+  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  // Reset these variables each time into this loop.
+  Detail::triangleResize = 1000;
+  Detail::triangleResizeCount = 0;
+
   tidIn = 0;
   for (i = 1; i <= NSP; i++)
   {
     cubeFlag = 0;
-    // for each marching cube, collect meshing::Faces...
+    // for each marching cube, collect Faces...
     sqID[0] = 3 * (i - 1);
     sqID[1] = 3 * (i - 1) + 1;
     sqID[2] = 3 * (i - 1) + 2;
     sqID[3] = 3 * i + 2;
-    sqID[4] = 3 * (i + xDim - 1) + 1;
+    sqID[4] = 3 * (i + wrappedDims[0] - 1) + 1;
     sqID[5] = 3 * (i + NSP - 1);
     BCnode = 7 * (i - 1) + 6;
     nFC = 0;
     nE = 0;
     eff = 0;
-    //initialize meshing::Face center array...
+    //initialize Face center array...
     for (ii = 0; ii < 6; ii++)
     {
       arrayFC[ii] = -1;
     }
-    // Count the number of meshing::Face center turned on and meshing::Face edges...
+    // Count the number of Face center turned on and Face edges...
     fcid = 0;
     ii = 0;
     for (ii = 0; ii < 6; ii++)
@@ -1457,8 +1707,8 @@ int LeeMarchingCubes::get_triangles()
     if (eff > 0) cubeFlag = 1;
     if (nFC >= 3)
     {
-      // If number of meshing::Face centers turned on is more than 2...
-      // let's update the meshing::NodeKind of body center meshing::Node...
+      // If number of Face centers turned on is more than 2...
+      // let's update the NodeKind of body center Node...
       tsqid1 = sqID[0];
       tsqid2 = sqID[5];
       nkFlag = 0;
@@ -1474,7 +1724,7 @@ int LeeMarchingCubes::get_triangles()
         if (tgrainname1 < 0 || tgrainname2 < 0) nkFlag++;
       }
       nds = 0; // number of different spins in each marching cube...
-      nburnt = 0; // so nds = meshing::NodeKind of body center position...
+      nburnt = 0; // so nds = NodeKind of body center position...
       for (int k = 0; k < 8; k++)
       {
         // arraySpin contains no -1 before any of it is burnt...
@@ -1495,21 +1745,21 @@ int LeeMarchingCubes::get_triangles()
           }
         }
       }
-      // update meshing::NodeKind of body center meshing::Node in the current marching cube...
+      // update NodeKind of body center Node in the current marching cube...
       if (nkFlag > 0)
       {
-        cVertex[BCnode].nodeKind = nds;
+        nodeKind[BCnode] = nds;
       }
       else
       {
-        cVertex[BCnode].nodeKind = nds;
+        nodeKind[BCnode] = nds;
       }
     }
     // Checking the number of edges for loops in the cube...
     // if the current marching cube is a collection of 6 effective squares...and
-    // the number of meshing::Face edges at least 3...
+    // the number of Face edges at least 3...
     // when nE==2, it doen't happen
-    // when nE==1, the edge will contribute for the meshing::Neighboring marching cube...
+    // when nE==1, the edge will contribute for the Neighboring marching cube...
     // when nE==0, it meaNS the cube is inside a grain...
     if (cubeFlag == 1 && nE > 2)
     {
@@ -1531,57 +1781,78 @@ int LeeMarchingCubes::get_triangles()
       }
       // CoNSider each case as Z. Wu's paper...
       if (nFC == 0)
-      { // when there's no meshing::Face center
-        get_case0_triangles(i, arrayE, nE, tidIn, &tidOut);
+      { // when there's no Face center
+        get_case0_triangles(i, arrayE, nE, tidIn, &tidOut, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
       }
       else if (nFC == 2)
       {
-        get_case2_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut);
+        get_case2_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
       }
       else if (nFC > 2 && nFC <= 6)
       {
-        get_caseM_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, BCnode);
+        get_caseM_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, BCnode, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
       }
       delete[] arrayE;
     }
   }
-  cEdge.clear();
-  return (cTriangle.size());
+
+//  std::cout << "cTrianglePtr->Resize(" << tidIn << ")" << std::endl;
+  cTrianglePtr->Resize(tidIn);
+
+//  std::cout << "cEdgePtr numTuples: " << cEdgePtr->GetNumberOfTuples() << " - Clearing Array" << std::endl;
+  cEdgePtr->Resize(0);
+
+  return cTrianglePtr->GetNumberOfTuples();
 }
 
-#define ADD_TRIANGLE(cTriangle, ctid, n0, n1, n2, label0, label1)\
-  cTriangle.resize(ctid + 1);\
-  cTriangle[ctid] = meshing::Patch::New();\
-  cTriangle[ctid]->node_id[0] = n0;\
-  cTriangle[ctid]->node_id[1] = n1;\
-  cTriangle[ctid]->node_id[2] = n2;\
-  cTriangle[ctid]->nSpin[0] = label0;\
-  cTriangle[ctid]->nSpin[1] = label1;\
-  cTriangle[ctid]->tIndex = ctid;\
-  meshing::SharedEdge::Pointer e0 = meshing::SharedEdge::New(cTriangle[ctid]->node_id[0], cTriangle[ctid]->node_id[1]);\
-  meshing::SharedEdge::Pointer e = eMap[e0->getId()];\
+#define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)\
+{\
+  size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
+  if (current_##cTrianglePtr##_size < ctid + 1) {\
+    Detail::triangleResizeCount++; \
+    if (Detail::triangleResizeCount == 10) { \
+      Detail::triangleResizeCount = 0;\
+      Detail::triangleResize *= 10;\
+    }\
+    cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
+  }\
+}\
+StructArray<Triangle>& cTriangle = *(cTrianglePtr.get());\
+cTriangle[ctid].node_id[0] = n0;\
+cTriangle[ctid].node_id[1] = n1;\
+cTriangle[ctid].node_id[2] = n2;\
+cTriangle[ctid].nSpin[0] = label0;\
+cTriangle[ctid].nSpin[1] = label1;\
+cTriangle[ctid].tIndex = ctid;
+
+  #if 0
+  SharedEdge::Pointer e0 = SharedEdge::New(cTriangle[ctid].node_id[0], cTriangle[ctid].node_id[1]);\
+  SharedEdge::Pointer e = eMap[e0->getId()];\
   if (NULL == e.get()) { eMap[e0->getId()] = e0; }else{ e0 = e; }\
   e0->triangles.insert(ctid);\
-  meshing::SharedEdge::Pointer e1 = meshing::SharedEdge::New(cTriangle[ctid]->node_id[1], cTriangle[ctid]->node_id[2]);\
+  SharedEdge::Pointer e1 = SharedEdge::New(cTriangle[ctid].node_id[1], cTriangle[ctid].node_id[2]);\
   e = eMap[e1->getId()];\
   if (NULL == e.get()) { eMap[e1->getId()] = e1; }else{ e1 = e;}\
   e1->triangles.insert(ctid);\
-  meshing::SharedEdge::Pointer e2 = meshing::SharedEdge::New(cTriangle[ctid]->node_id[2], cTriangle[ctid]->node_id[0]);\
+  SharedEdge::Pointer e2 = SharedEdge::New(cTriangle[ctid].node_id[2], cTriangle[ctid].node_id[0]);\
   e = eMap[e2->getId()]; \
   if (NULL == e.get()){ eMap[e2->getId()] = e2; }else{ e2 = e; }\
   e2->triangles.insert(ctid);\
   cTriangle[ctid]->edges[0] = e0;  cTriangle[ctid]->edges[1] = e1;  cTriangle[ctid]->edges[2] = e2;\
   labelTriangleMap[label0] = ctid;\
   labelTriangleMap[label1] = ctid;
-
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin, int *tout)
+void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
+                                          int tin, int* tout,
+                                          StructArray<Segment>::Pointer cEdgePtr,
+                                          StructArray<Patch>::Pointer cTrianglePtr)
 {
   int ii, i, j, jj, k, kk, k1, mm;
   int loopID;
@@ -1605,7 +1876,10 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
   int numT, cnumT, new_node0;
   burnt = new int[nedge];
   burnt_list = new int[nedge];
-  // initialize burn flags for meshing::Face edges...
+
+  Segment* cEdge = cEdgePtr->GetPointer(0);
+
+  // initialize burn flags for Face edges...
   for (ii = 0; ii < nedge; ii++)
   {
     burnt[ii] = 0;
@@ -1627,21 +1901,21 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
       while (coin)
       {
         chaser = burnt_list[tail];
-        cgrainname1 = cEdge[chaser]->neigh_spin[0];
-        cgrainname2 = cEdge[chaser]->neigh_spin[1];
-        cnode1 = cEdge[chaser]->node_id[0];
-        cnode2 = cEdge[chaser]->node_id[1];
+        cgrainname1 = cEdge[chaser].nSpin[0];
+        cgrainname2 = cEdge[chaser].nSpin[1];
+        cnode1 = cEdge[chaser].node_id[0];
+        cnode2 = cEdge[chaser].node_id[1];
         for (j = 0; j < nedge; j++)
         {
           ne = ae[j];
           nbflag = burnt[j];
           if (nbflag == 0)
           {
-            nSpin1 = cEdge[ne]->neigh_spin[0];
-            nSpin2 = cEdge[ne]->neigh_spin[1];
-            nnode1 = cEdge[ne]->node_id[0];
-            nnode2 = cEdge[ne]->node_id[1];
-            // checking if meshing::Neighbor edge has same meshing::Neighboring grainnames...
+            nSpin1 = cEdge[ne].nSpin[0];
+            nSpin2 = cEdge[ne].nSpin[1];
+            nnode1 = cEdge[ne].node_id[0];
+            nnode2 = cEdge[ne].node_id[1];
+            // checking if Neighbor edge has same Neighboring grainnames...
             if (((cgrainname1 == nSpin1) && (cgrainname2 == nSpin2)) || ((cgrainname1 == nSpin2) && (cgrainname2 == nSpin1)))
             {
               grainnameFlag = 1;
@@ -1673,10 +1947,10 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
               burnt[j] = loopID;
               if (flip == 1)
               {
-                cEdge[ne]->neigh_spin[0] = nSpin2;
-                cEdge[ne]->neigh_spin[1] = nSpin1;
-                cEdge[ne]->node_id[0] = nnode2;
-                cEdge[ne]->node_id[1] = nnode1;
+                cEdge[ne].nSpin[0] = nSpin2;
+                cEdge[ne].nSpin[1] = nSpin1;
+                cEdge[ne].node_id[0] = nnode2;
+                cEdge[ne].node_id[1] = nnode1;
               }
             }
           }
@@ -1729,8 +2003,7 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
       te0 = loop[0];
       te1 = loop[1];
       te2 = loop[2];
-
-      ADD_TRIANGLE(cTriangle, ctid, cEdge[te0]->node_id[0], cEdge[te1]->node_id[0], cEdge[te2]->node_id[0], cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1] )
+      ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
       ctid++;
     }
     else if (numN > 3)
@@ -1741,10 +2014,10 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
       back = numN - 1;
       te0 = loop[front];
       te1 = loop[back];
-      tv0 = cEdge[te0]->node_id[0];
-      tcVertex = cEdge[te0]->node_id[1];
-      tv2 = cEdge[te1]->node_id[0];
-      ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1] )
+      tv0 = cEdge[te0].node_id[0];
+      tcVertex = cEdge[te0].node_id[1];
+      tv2 = cEdge[te1].node_id[0];
+      ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
 
       new_node0 = tv2;
     //  new_node1 = tcVertex;
@@ -1756,10 +2029,10 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
         {
           front = front + 1;
           ce = loop[front];
-          tv0 = cEdge[ce]->node_id[0];
-          tcVertex = cEdge[ce]->node_id[1];
+          tv0 = cEdge[ce].node_id[0];
+          tcVertex = cEdge[ce].node_id[1];
           tv2 = new_node0;
-          ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1] )
+          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
           new_node0 = tcVertex;
           cnumT++;
@@ -1769,10 +2042,10 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
         {
           back = back - 1;
           ce = loop[back];
-          tv0 = cEdge[ce]->node_id[0];
-          tcVertex = cEdge[ce]->node_id[1];
+          tv0 = cEdge[ce].node_id[0];
+          tcVertex = cEdge[ce].node_id[1];
           tv2 = new_node0;
-          ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1] )
+          ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
           new_node0 = tv0;
           cnumT++;
@@ -1791,7 +2064,10 @@ void LeeMarchingCubes::get_case0_triangles(int site, int *ae, int nedge, int tin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout)
+void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc,
+                                          int nfctr, int tin, int* tout,
+                                          StructArray<Segment>::Pointer cEdgePtr,
+                                          StructArray<Patch>::Pointer cTrianglePtr)
 {
   int ii, i, j, k, kk, k1, n, i1, j1;
   int loopID;
@@ -1822,7 +2098,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
   int numT, cnumT, new_node0;
   burnt = new int[nedge];
   burnt_list = new int[nedge];
-  // initialize burn flags for meshing::Face edges...
+
+  Segment* cEdge = cEdgePtr->GetPointer(0);
+
+  // initialize burn flags for Face edges...
   for (ii = 0; ii < nedge; ii++)
   {
     burnt[ii] = 0;
@@ -1844,21 +2123,21 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
       while (coin)
       {
         chaser = burnt_list[tail];
-        cgrainname1 = cEdge[chaser]->neigh_spin[0];
-        cgrainname2 = cEdge[chaser]->neigh_spin[1];
-        cnode1 = cEdge[chaser]->node_id[0];
-        cnode2 = cEdge[chaser]->node_id[1];
+        cgrainname1 = cEdge[chaser].nSpin[0];
+        cgrainname2 = cEdge[chaser].nSpin[1];
+        cnode1 = cEdge[chaser].node_id[0];
+        cnode2 = cEdge[chaser].node_id[1];
         for (j = 0; j < nedge; j++)
         {
           ne = ae[j];
           nbflag = burnt[j];
           if (nbflag == 0)
           {
-            nSpin1 = cEdge[ne]->neigh_spin[0];
-            nSpin2 = cEdge[ne]->neigh_spin[1];
-            nnode1 = cEdge[ne]->node_id[0];
-            nnode2 = cEdge[ne]->node_id[1];
-            // checking if meshing::Neighbor edge has same meshing::Neighboring grainnames...
+            nSpin1 = cEdge[ne].nSpin[0];
+            nSpin2 = cEdge[ne].nSpin[1];
+            nnode1 = cEdge[ne].node_id[0];
+            nnode2 = cEdge[ne].node_id[1];
+            // checking if Neighbor edge has same Neighboring grainnames...
             if (((cgrainname1 == nSpin1) && (cgrainname2 == nSpin2)) || ((cgrainname1 == nSpin2) && (cgrainname2 == nSpin1)))
             {
               grainnameFlag = 1;
@@ -1945,8 +2224,8 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
     for (i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
-      cnode1 = cEdge[ce]->node_id[0];
-      cnode2 = cEdge[ce]->node_id[1];
+      cnode1 = cEdge[ce].node_id[0];
+      cnode2 = cEdge[ce].node_id[1];
       if (start == cnode1)
       {
         openL = 1; // loop is open...
@@ -1964,24 +2243,24 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
     { // if current loop is an open loop...
       if (flip == 1)
       {
-        tnode = cEdge[startEdge]->node_id[0];
-        tgrainname = cEdge[startEdge]->neigh_spin[0];
-        cEdge[startEdge]->node_id[0] = cEdge[startEdge]->node_id[1];
-        cEdge[startEdge]->node_id[1] = tnode;
-        cEdge[startEdge]->neigh_spin[0] = cEdge[startEdge]->neigh_spin[1];
-        cEdge[startEdge]->neigh_spin[1] = tgrainname;
+        tnode = cEdge[startEdge].node_id[0];
+        tgrainname = cEdge[startEdge].nSpin[0];
+        cEdge[startEdge].node_id[0] = cEdge[startEdge].node_id[1];
+        cEdge[startEdge].node_id[1] = tnode;
+        cEdge[startEdge].nSpin[0] = cEdge[startEdge].nSpin[1];
+        cEdge[startEdge].nSpin[1] = tgrainname;
       }
       burnt_loop[0] = startEdge;
       index = 1;
-      endNode = cEdge[startEdge]->node_id[1];
+      endNode = cEdge[startEdge].node_id[1];
       chaser = startEdge;
       while (index < numN)
       {
         for (n = from; n < to; n++)
         {
           ce = burnt_list[n];
-          cnode1 = cEdge[ce]->node_id[0];
-          cnode2 = cEdge[ce]->node_id[1];
+          cnode1 = cEdge[ce].node_id[0];
+          cnode2 = cEdge[ce].node_id[1];
           if ((ce != chaser) && (endNode == cnode1))
           {
             burnt_loop[index] = ce;
@@ -1992,22 +2271,22 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
             burnt_loop[index] = ce;
             index++;
             // flip...
-            tnode = cEdge[ce]->node_id[0];
-            tgrainname = cEdge[ce]->neigh_spin[0];
-            cEdge[ce]->node_id[0] = cEdge[ce]->node_id[1];
-            cEdge[ce]->node_id[1] = tnode;
-            cEdge[ce]->neigh_spin[0] = cEdge[ce]->neigh_spin[1];
-            cEdge[ce]->neigh_spin[1] = tgrainname;
+            tnode = cEdge[ce].node_id[0];
+            tgrainname = cEdge[ce].nSpin[0];
+            cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
+            cEdge[ce].node_id[1] = tnode;
+            cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
+            cEdge[ce].nSpin[1] = tgrainname;
           }
         }
         chaser = burnt_loop[index - 1];
-        endNode = cEdge[chaser]->node_id[1];
+        endNode = cEdge[chaser].node_id[1];
       }
       if (numN == 2)
       {
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
-        ADD_TRIANGLE(cTriangle, ctid, cEdge[te0]->node_id[0], cEdge[te1]->node_id[0], cEdge[te1]->node_id[1], cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1] )
+        ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te1].node_id[1], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
 
         ctid++;
       }
@@ -2019,10 +2298,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
         back = numN;
         te0 = burnt_loop[front];
         te1 = burnt_loop[back - 1];
-        tv0 = cEdge[te0]->node_id[0];
-        tcVertex = cEdge[te0]->node_id[1];
-        tv2 = cEdge[te1]->node_id[1];
-        ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1] )
+        tv0 = cEdge[te0].node_id[0];
+        tcVertex = cEdge[te0].node_id[1];
+        tv2 = cEdge[te1].node_id[1];
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
 
         new_node0 = tv2;
     //    new_node1 = tcVertex;
@@ -2034,10 +2313,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
           {
             front = front + 1;
             ce = burnt_loop[front];
-            tv0 = cEdge[ce]->node_id[0];
-            tcVertex = cEdge[ce]->node_id[1];
+            tv0 = cEdge[ce].node_id[0];
+            tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1] )
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
             new_node0 = tcVertex;
             cnumT++;
@@ -2047,10 +2326,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
           {
             back = back - 1;
             ce = burnt_loop[back];
-            tv0 = cEdge[ce]->node_id[0];
-            tcVertex = cEdge[ce]->node_id[1];
+            tv0 = cEdge[ce].node_id[0];
+            tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1] )
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
             new_node0 = tv0;
             cnumT++;
@@ -2065,15 +2344,15 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
       startEdge = burnt_list[from];
       burnt_loop[0] = startEdge;
       index = 1;
-      endNode = cEdge[startEdge]->node_id[1];
+      endNode = cEdge[startEdge].node_id[1];
       chaser = startEdge;
       while (index < numN)
       {
         for (n = from; n < to; n++)
         {
           ce = burnt_list[n];
-          cnode1 = cEdge[ce]->node_id[0];
-          cnode2 = cEdge[ce]->node_id[1];
+          cnode1 = cEdge[ce].node_id[0];
+          cnode2 = cEdge[ce].node_id[1];
           if ((ce != chaser) && (endNode == cnode1))
           {
             burnt_loop[index] = ce;
@@ -2084,23 +2363,23 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
             burnt_loop[index] = ce;
             index++;
             // flip...
-            tnode = cEdge[ce]->node_id[0];
-            tgrainname = cEdge[ce]->neigh_spin[0];
-            cEdge[ce]->node_id[0] = cEdge[ce]->node_id[1];
-            cEdge[ce]->node_id[1] = tnode;
-            cEdge[ce]->neigh_spin[0] = cEdge[ce]->neigh_spin[1];
-            cEdge[ce]->neigh_spin[1] = tgrainname;
+            tnode = cEdge[ce].node_id[0];
+            tgrainname = cEdge[ce].nSpin[0];
+            cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
+            cEdge[ce].node_id[1] = tnode;
+            cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
+            cEdge[ce].nSpin[1] = tgrainname;
           }
         }
         chaser = burnt_loop[index - 1];
-        endNode = cEdge[chaser]->node_id[1];
+        endNode = cEdge[chaser].node_id[1];
       }
       if (numN == 3)
       {
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
         te2 = burnt_loop[2];
-        ADD_TRIANGLE(cTriangle, ctid, cEdge[te0]->node_id[0], cEdge[te1]->node_id[0], cEdge[te2]->node_id[0], cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1] )
+        ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
 
         ctid++;
       }
@@ -2112,10 +2391,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
         back = numN - 1;
         te0 = burnt_loop[front];
         te1 = burnt_loop[back];
-        tv0 = cEdge[te0]->node_id[0];
-        tcVertex = cEdge[te0]->node_id[1];
-        tv2 = cEdge[te1]->node_id[0];
-        ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1] )
+        tv0 = cEdge[te0].node_id[0];
+        tcVertex = cEdge[te0].node_id[1];
+        tv2 = cEdge[te1].node_id[0];
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
 
         new_node0 = tv2;
       //  new_node1 = tcVertex;
@@ -2127,10 +2406,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
           {
             front = front + 1;
             ce = burnt_loop[front];
-            tv0 = cEdge[ce]->node_id[0];
-            tcVertex = cEdge[ce]->node_id[1];
+            tv0 = cEdge[ce].node_id[0];
+            tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1] )
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
             new_node0 = tcVertex;
             cnumT++;
@@ -2140,10 +2419,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
           {
             back = back - 1;
             ce = burnt_loop[back];
-            tv0 = cEdge[ce]->node_id[0];
-            tcVertex = cEdge[ce]->node_id[1];
+            tv0 = cEdge[ce].node_id[0];
+            tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1] )
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
             new_node0 = tv0;
             cnumT++;
@@ -2164,7 +2443,10 @@ void LeeMarchingCubes::get_case2_triangles(int site, int *ae, int nedge, int *af
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *afc, int nfctr, int tin, int *tout, int ccn)
+void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc,
+                                          int nfctr, int tin, int *tout, int ccn,
+                                          StructArray<Segment>::Pointer cEdgePtr,
+                                          StructArray<Patch>::Pointer cTrianglePtr)
 {
   int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
   int loopID;
@@ -2194,7 +2476,10 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
   int numT, cnumT, new_node0, new_node1;
   burnt = new int[nedge];
   burnt_list = new int[nedge];
-  // initialize burn flags for meshing::Face edges...
+
+  Segment* cEdge = cEdgePtr->GetPointer(0);
+
+  // initialize burn flags for Face edges...
   for (ii = 0; ii < nedge; ii++)
   {
     burnt[ii] = 0;
@@ -2216,21 +2501,21 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
       while (coin)
       {
         chaser = burnt_list[tail];
-        cgrainname1 = cEdge[chaser]->neigh_spin[0];
-        cgrainname2 = cEdge[chaser]->neigh_spin[1];
-        cnode1 = cEdge[chaser]->node_id[0];
-        cnode2 = cEdge[chaser]->node_id[1];
+        cgrainname1 = cEdge[chaser].nSpin[0];
+        cgrainname2 = cEdge[chaser].nSpin[1];
+        cnode1 = cEdge[chaser].node_id[0];
+        cnode2 = cEdge[chaser].node_id[1];
         for (j = 0; j < nedge; j++)
         {
           ne = ae[j];
           nbflag = burnt[j];
           if (nbflag == 0)
           {
-            nSpin1 = cEdge[ne]->neigh_spin[0];
-            nSpin2 = cEdge[ne]->neigh_spin[1];
-            nnode1 = cEdge[ne]->node_id[0];
-            nnode2 = cEdge[ne]->node_id[1];
-            // checking if meshing::Neighbor edge has same meshing::Neighboring grainnames...
+            nSpin1 = cEdge[ne].nSpin[0];
+            nSpin2 = cEdge[ne].nSpin[1];
+            nnode1 = cEdge[ne].node_id[0];
+            nnode2 = cEdge[ne].node_id[1];
+            // checking if Neighbor edge has same Neighboring grainnames...
             if (((cgrainname1 == nSpin1) && (cgrainname2 == nSpin2)) || ((cgrainname1 == nSpin2) && (cgrainname2 == nSpin1)))
             {
               grainnameFlag = 1;
@@ -2314,8 +2599,8 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
     for (i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
-      cnode1 = cEdge[ce]->node_id[0];
-      cnode2 = cEdge[ce]->node_id[1];
+      cnode1 = cEdge[ce].node_id[0];
+      cnode2 = cEdge[ce].node_id[1];
       for (n1 = 0; n1 < nfctr; n1++)
       {
         start = afc[n1];
@@ -2337,24 +2622,24 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
     { // if current loop is an open loop...
       if (flip == 1)
       {
-        tnode = cEdge[startEdge]->node_id[0];
-        tgrainname = cEdge[startEdge]->neigh_spin[0];
-        cEdge[startEdge]->node_id[0] = cEdge[startEdge]->node_id[1];
-        cEdge[startEdge]->node_id[1] = tnode;
-        cEdge[startEdge]->neigh_spin[0] = cEdge[startEdge]->neigh_spin[1];
-        cEdge[startEdge]->neigh_spin[1] = tgrainname;
+        tnode = cEdge[startEdge].node_id[0];
+        tgrainname = cEdge[startEdge].nSpin[0];
+        cEdge[startEdge].node_id[0] = cEdge[startEdge].node_id[1];
+        cEdge[startEdge].node_id[1] = tnode;
+        cEdge[startEdge].nSpin[0] = cEdge[startEdge].nSpin[1];
+        cEdge[startEdge].nSpin[1] = tgrainname;
       }
       burnt_loop[0] = startEdge;
       index = 1;
-      endNode = cEdge[startEdge]->node_id[1];
+      endNode = cEdge[startEdge].node_id[1];
       chaser = startEdge;
       while (index < numN)
       {
         for (n = from; n < to; n++)
         {
           ce = burnt_list[n];
-          cnode1 = cEdge[ce]->node_id[0];
-          cnode2 = cEdge[ce]->node_id[1];
+          cnode1 = cEdge[ce].node_id[0];
+          cnode2 = cEdge[ce].node_id[1];
           if ((ce != chaser) && (endNode == cnode1))
           {
             burnt_loop[index] = ce;
@@ -2365,26 +2650,26 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
             burnt_loop[index] = ce;
             index++;
             // flip...
-            tnode = cEdge[ce]->node_id[0];
-            tgrainname = cEdge[ce]->neigh_spin[0];
-            cEdge[ce]->node_id[0] = cEdge[ce]->node_id[1];
-            cEdge[ce]->node_id[1] = tnode;
-            cEdge[ce]->neigh_spin[0] = cEdge[ce]->neigh_spin[1];
-            cEdge[ce]->neigh_spin[1] = tgrainname;
+            tnode = cEdge[ce].node_id[0];
+            tgrainname = cEdge[ce].nSpin[0];
+            cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
+            cEdge[ce].node_id[1] = tnode;
+            cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
+            cEdge[ce].nSpin[1] = tgrainname;
           }
         }
         chaser = burnt_loop[index - 1];
-        endNode = cEdge[chaser]->node_id[1];
+        endNode = cEdge[chaser].node_id[1];
       }
       //triangulation...
       for (iii = 0; iii < numN; iii++)
       {
         ce = burnt_loop[iii];
-        tn0 = cEdge[ce]->node_id[0];
-        tn1 = cEdge[ce]->node_id[1];
-        ts0 = cEdge[ce]->neigh_spin[0];
-        ts1 = cEdge[ce]->neigh_spin[1];
-        ADD_TRIANGLE(cTriangle, ctid, ccn, tn0, tn1, ts0, ts1)
+        tn0 = cEdge[ce].node_id[0];
+        tn1 = cEdge[ce].node_id[1];
+        ts0 = cEdge[ce].nSpin[0];
+        ts1 = cEdge[ce].nSpin[1];
+        ADD_TRIANGLE(cTrianglePtr, ctid, ccn, tn0, tn1, ts0, ts1)
 
         ctid++;
       }
@@ -2395,15 +2680,15 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
       startEdge = burnt_list[from];
       burnt_loop[0] = startEdge;
       index = 1;
-      endNode = cEdge[startEdge]->node_id[1];
+      endNode = cEdge[startEdge].node_id[1];
       chaser = startEdge;
       while (index < numN)
       {
         for (n = from; n < to; n++)
         {
           ce = burnt_list[n];
-          cnode1 = cEdge[ce]->node_id[0];
-          cnode2 = cEdge[ce]->node_id[1];
+          cnode1 = cEdge[ce].node_id[0];
+          cnode2 = cEdge[ce].node_id[1];
           if ((ce != chaser) && (endNode == cnode1))
           {
             burnt_loop[index] = ce;
@@ -2414,23 +2699,23 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
             burnt_loop[index] = ce;
             index++;
             // flip...
-            tnode = cEdge[ce]->node_id[0];
-            tgrainname = cEdge[ce]->neigh_spin[0];
-            cEdge[ce]->node_id[0] = cEdge[ce]->node_id[1];
-            cEdge[ce]->node_id[1] = tnode;
-            cEdge[ce]->neigh_spin[0] = cEdge[ce]->neigh_spin[1];
-            cEdge[ce]->neigh_spin[1] = tgrainname;
+            tnode = cEdge[ce].node_id[0];
+            tgrainname = cEdge[ce].nSpin[0];
+            cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
+            cEdge[ce].node_id[1] = tnode;
+            cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
+            cEdge[ce].nSpin[1] = tgrainname;
           }
         }
         chaser = burnt_loop[index - 1];
-        endNode = cEdge[chaser]->node_id[1];
+        endNode = cEdge[chaser].node_id[1];
       }
       if (numN == 3)
       {
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
         te2 = burnt_loop[2];
-        ADD_TRIANGLE(cTriangle, ctid, cEdge[te0]->node_id[0], cEdge[te1]->node_id[0], cEdge[te2]->node_id[0], cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1])
+        ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
 
         ctid++;
       }
@@ -2442,10 +2727,10 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
         back = numN - 1;
         te0 = burnt_loop[front];
         te1 = burnt_loop[back];
-        tv0 = cEdge[te0]->node_id[0];
-        tcVertex = cEdge[te0]->node_id[1];
-        tv2 = cEdge[te1]->node_id[0];
-        ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[te0]->neigh_spin[0], cEdge[te0]->neigh_spin[1])
+        tv0 = cEdge[te0].node_id[0];
+        tcVertex = cEdge[te0].node_id[1];
+        tv2 = cEdge[te1].node_id[0];
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
 
         new_node0 = tv2;
         new_node1 = tcVertex;
@@ -2457,10 +2742,10 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
           {
             front = front + 1;
             ce = burnt_loop[front];
-            tv0 = cEdge[ce]->node_id[0];
-            tcVertex = cEdge[ce]->node_id[1];
+            tv0 = cEdge[ce].node_id[0];
+            tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1])
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
             new_node0 = tcVertex;
             cnumT++;
@@ -2470,10 +2755,10 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
           {
             back = back - 1;
             ce = burnt_loop[back];
-            tv0 = cEdge[ce]->node_id[0];
-            tcVertex = cEdge[ce]->node_id[1];
+            tv0 = cEdge[ce].node_id[0];
+            tcVertex = cEdge[ce].node_id[1];
             tv2 = new_node0;
-            ADD_TRIANGLE(cTriangle, ctid, tv0, tcVertex, tv2, cEdge[ce]->neigh_spin[0], cEdge[ce]->neigh_spin[1])
+            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
 
             new_node0 = tv0;
             cnumT++;
@@ -2493,14 +2778,18 @@ void LeeMarchingCubes::get_caseM_triangles(int site, int *ae, int nedge, int *af
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
+void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims,float* res,
+                                        StructArray<Patch>::Pointer cTrianglePtr,
+                                        StructArray<Node>::Pointer cVertexPtr,
+                                        DataArray<int32_t>::Pointer voxelsPtr,
+                                        StructArray<Neighbor>::Pointer neighborsPtr)
 {
   //int i, j;
   int cnode;
   int csite, kind;
-    int tsite1[3] = { -1, -1, -1};
-    int tsite2[3] = { -1, -1, -1};
-//  int nSpin1, nSpin2;
+  int tsite1[3] = { -1, -1, -1};
+  int tsite2[3] = { -1, -1, -1};
+  //  int nSpin1, nSpin2;
   int tgrainname1[3], tgrainname2[3];
   float cx, cy, cz;
   float xSum, ySum, zSum;
@@ -2511,22 +2800,28 @@ void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
   float sidecheck;
   int shift = (zID * NSP);
   int locale;
+
+  Patch* cTriangle = cTrianglePtr->GetPointer(0);
+  Node* cVertex = cVertexPtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->GetPointer(0);
+  Neighbor* neigh = neighborsPtr->GetPointer(0);
+
   for (int i = 0; i < numT; i++)
   { // for each triangle...
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
-  //  nSpin1 = cTriangle[i]->nSpin[0];
-  //  nSpin2 = cTriangle[i]->nSpin[1];
-    cTriangle[i]->nSpin[0] = -1;
-    cTriangle[i]->nSpin[1] = -1;
+    //  nSpin1 = cTriangle[i]->nSpin[0];
+    //  nSpin2 = cTriangle[i]->nSpin[1];
+    cTriangle[i].nSpin[0] = -1;
+    cTriangle[i].nSpin[1] = -1;
     for (int j = 0; j < 3; j++)
-    { // for each meshing::Node inside the triangle...
+    { // for each Node inside the triangle...
       tsite1[j] = -1;
       tsite2[j] = -1;
       tgrainname1[j] = -1;
       tgrainname2[j] = -1;
-      cnode = cTriangle[i]->node_id[j];
+      cnode = cTriangle[i].node_id[j];
       csite = cnode / 7 + 1;
       kind = cnode % 7;
       xSum = xSum + cVertex[cnode].coord[0];
@@ -2581,11 +2876,11 @@ void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
     if (fabs(a) < 0.00001) a = 0.0;
     if (fabs(b) < 0.00001) b = 0.0;
     if (fabs(c) < 0.00001) c = 0.0;
-    // update meshing::Patch info...
-    cTriangle[i]->normal[0] = a;
-    cTriangle[i]->normal[1] = b;
-    cTriangle[i]->normal[2] = c;
-    cTriangle[i]->area = 0.5 * length;
+    // update Patch info...
+//    cTriangle[i]->normal[0] = a;
+//    cTriangle[i]->normal[1] = b;
+//    cTriangle[i]->normal[2] = c;
+//    cTriangle[i]->area = 0.5 * length;
     // determine which way normal should point...
     d = -(a * cx + b * cy + c * cz);
     for (int j = 0; j < 3; j++)
@@ -2593,19 +2888,19 @@ void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
       if (tsite1[j] != -1)
       {
         locale = tsite1[j] + shift;
-        x = find_xcoord(locale);
-        y = find_ycoord(locale);
-        z = find_zcoord(locale);
+        x = find_xcoord(locale,wrappedDims[0], res[0]);
+        y = find_ycoord(locale, wrappedDims[0],wrappedDims[1], res[1]);
+        z = find_zcoord(locale, wrappedDims[0], wrappedDims[1], res[2]);
         sidecheck = (a * x + b * y + c * z + d);
         if (sidecheck < -0.000001)
         {
-          cTriangle[i]->nSpin[0] = tgrainname2[j];
-          cTriangle[i]->nSpin[1] = tgrainname1[j];
+          cTriangle[i].nSpin[0] = tgrainname2[j];
+          cTriangle[i].nSpin[1] = tgrainname1[j];
         }
         else if (sidecheck > 0.000001)
         {
-          cTriangle[i]->nSpin[0] = tgrainname1[j];
-          cTriangle[i]->nSpin[1] = tgrainname2[j];
+          cTriangle[i].nSpin[0] = tgrainname1[j];
+          cTriangle[i].nSpin[1] = tgrainname2[j];
         }
       }
     }
@@ -2613,7 +2908,10 @@ void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
     int index = 0;
     int testtsite = 0;
     //int sidechecked = 1;
-    while (cTriangle[i]->nSpin[0] == -1 && k < 6)
+    int xDim = wrappedDims[0];
+    int yDim = wrappedDims[1];
+
+    while (cTriangle[i].nSpin[0] == -1 && k < 6)
     {
       while (tsite1[k] == -1)
       {
@@ -2628,61 +2926,73 @@ void LeeMarchingCubes::arrange_grainnames(int numT, int zID)
       int gname = voxels[testtsite];
       if (gname == tgrainname1[index])
       {
-        if (k < 3) cTriangle[i]->nSpin[0] = tgrainname1[index], cTriangle[i]->nSpin[1] = tgrainname2[index];
-        if (k >= 3) cTriangle[i]->nSpin[0] = tgrainname2[index], cTriangle[i]->nSpin[1] = tgrainname1[index];
+        if (k < 3) cTriangle[i].nSpin[0] = tgrainname1[index], cTriangle[i].nSpin[1] = tgrainname2[index];
+        if (k >= 3) cTriangle[i].nSpin[0] = tgrainname2[index], cTriangle[i].nSpin[1] = tgrainname1[index];
       }
       if (gname == tgrainname2[index])
       {
-        if (k < 3) cTriangle[i]->nSpin[0] = tgrainname2[index], cTriangle[i]->nSpin[1] = tgrainname1[index];
-        if (k >= 3) cTriangle[i]->nSpin[0] = tgrainname1[index], cTriangle[i]->nSpin[1] = tgrainname2[index];
+        if (k < 3) cTriangle[i].nSpin[0] = tgrainname2[index], cTriangle[i].nSpin[1] = tgrainname1[index];
+        if (k >= 3) cTriangle[i].nSpin[0] = tgrainname1[index], cTriangle[i].nSpin[1] = tgrainname2[index];
       }
       if (gname != tgrainname1[index] && gname != tgrainname2[index]) k++;
     }
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::assign_nodeID(int nN)
+int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
+                                   DataArray<int32_t>::Pointer cVertexNodeIdPtr,
+                                   DataArray<int8_t>::Pointer cVertexNodeKindPtr)
 {
-  int i;
-  int nid;
-  int nkind;
-  int cnid;
- // int plane;
+  int nid = 0;
+  int nkind = 0;
+  int cnid = 0;
+
+  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
   nid = nN;
-  for (i = 0; i < (7 * 2 * NSP); i++)
+  for (int i = 0; i < (7 * 2 * NSP); i++)
   {
-    nkind = cVertex[i].nodeKind;
-    cnid = cVertex[i].NodeID;
+    nkind = nodeKind[i];
+    cnid = nodeID[i];
   //  plane = i % 7;
     if (nkind != 0 && cnid == -1)
     {
-      cVertex[i].NodeID = nid;
+      nodeID[i] = nid;
       nid++;
     }
   }
-  return (nid);
+  return nid;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::writeNodesFile(int zID, int cNodeID, const std::string &nodesFile)
+int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
+                                    const std::string &nodesFile,
+                                    StructArray<Node>::Pointer cVertexPtr,
+                                    DataArray<int32_t>::Pointer cVertexNodeIdPtr,
+                                    DataArray<int8_t>::Pointer cVertexNodeKindPtr )
 {
-  static const size_t BYTE_COUNT = 20;
-//  int count;
-//  count = 0;
 
+  #if 0
+  static const size_t BYTE_COUNT = 20;
   unsigned char data[BYTE_COUNT];
   int* tId = (int*)(&data[0]);
   int* nk = (int*)(&data[4]);
   float* vec3f = (float*)(&data[8]);
+  #endif
+  const size_t BYTE_COUNT = sizeof(SurfaceMesh::NodesFile::NodesFileRecord_t);
+  SurfaceMesh::NodesFile::NodesFileRecord_t record;
+
   size_t totalWritten = 0;
   FILE* f = NULL;
 
-//  std::cout << "LeeMarchingCubes writing Nodes file " << cNodeID << std::endl;
+ // std::cout << "M3CSliceBySlice writing Nodes file " << cNodeID << std::endl;
+
   // Create a new file if this is our first slice
   if (zID == 0)
   {
@@ -2702,19 +3012,29 @@ int LeeMarchingCubes::writeNodesFile(int zID, int cNodeID, const std::string &no
     }
   }
   int total = (7 * 2 * NSP);
+  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
+  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  Node* cVertex = cVertexPtr->GetPointer(0);
+
   for (int k = 0; k < total; k++)
   {
-    *tId = cVertex[k].NodeID;
-    if (*tId > cNodeID - 1)
+    //*tId = nodeID[k];
+    record.nodeId = nodeID[k];
+    if (record.nodeId > cNodeID - 1)
     {
-      *nk = cVertex[k].nodeKind;
-      vec3f[0] = cVertex[k].coord[0];
-      vec3f[1] = cVertex[k].coord[1];
-      vec3f[2] = cVertex[k].coord[2];
-//      fprintf(f, "%d %d %f %f %f\n", tID, nk, x, y, z);
-      totalWritten = fwrite(data, sizeof(unsigned char), BYTE_COUNT, f);
-      if (totalWritten != BYTE_COUNT) {
-        std::cout << "Not enough data written to the meshing::Nodes file." << std::endl;
+      //*nk = nodeKind[k];
+      record.nodeKind = nodeKind[k];
+      record.x = cVertex[k].coord[0];
+      record.y = cVertex[k].coord[1];
+      record.z = cVertex[k].coord[2];
+
+//      vec3f[0] = cVertex[k].coord[0];
+//      vec3f[1] = cVertex[k].coord[1];
+//      vec3f[2] = cVertex[k].coord[2];
+      totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
+      if (totalWritten != 1)
+      {
+        std::cout << "Not enough data written to the Nodes file." << std::endl;
         return -1;
       }
     }
@@ -2726,18 +3046,30 @@ int LeeMarchingCubes::writeNodesFile(int zID, int cNodeID, const std::string &no
 // -----------------------------------------------------------------------------
 //  Write a BINARY file which is only TEMP during the surface meshing
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &trianglesFile, int nt)
+int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
+                                    const std::string &trianglesFile, int nt,
+                                    StructArray<Patch>::Pointer cTrianglePtr,
+                                    DataArray<int32_t>::Pointer cVertexNodeIdPtr)
 {
-  static const size_t DATA_COUNT = 9;
- // int tag;
-  int end;
-  int n1, n2, n3;
-  int data[DATA_COUNT];
 
-//  std::cout << "LeeMarchingCubes::Writing Triangles starting at " << ctid << std::endl;
-  end = nt;
+  #if 0
+  static const size_t DATA_COUNT = 9;
+  int data[DATA_COUNT];
   data[0] = ctid;
+  #endif
+
+  const size_t BYTE_COUNT = SurfaceMesh::TrianglesFile::ByteCount;
+  SurfaceMesh::TrianglesFile::TrianglesFileRecord_t record;
+  record.triId = ctid;
+//  std::cout << "Writing Triangles Starting at " << record.triId << std::endl;
+ // int tag;
+  int end = nt;
+  int n1, n2, n3;
+
   FILE* f = NULL;
+
+  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
+  Patch* cTriangle = cTrianglePtr->GetPointer(0);
 
   // Create a new file if this is our first slice
   if (zID == 0)
@@ -2765,21 +3097,21 @@ int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &t
   for (int i = 0; i < end; i++)
   {
 
-    n1 = cTriangle[i]->node_id[0];
-    n2 = cTriangle[i]->node_id[1];
-    n3 = cTriangle[i]->node_id[2];
-#if WRITE_BINARY_TEMP_FILES
-    data[1] = cVertex[n1].NodeID;
-    data[2] = cVertex[n2].NodeID;
-    data[3] = cVertex[n3].NodeID;
-    data[4] = cTriangle[i]->edges[0]->getId();
-    data[5] = cTriangle[i]->edges[1]->getId();
-    data[6] = cTriangle[i]->edges[2]->getId();
-    data[7] = cTriangle[i]->nSpin[0];
-    data[8] = cTriangle[i]->nSpin[1];
+    n1 = cTriangle[i].node_id[0];
+    n2 = cTriangle[i].node_id[1];
+    n3 = cTriangle[i].node_id[2];
+#if (WRITE_BINARY_TEMP_FILES == 1)
+    record.nodeId_0 = nodeID[n1];
+    record.nodeId_1 = nodeID[n2];
+    record.nodeId_2 = nodeID[n3];
+//    data[4] = cTriangle[i].edges[0]->getId();
+//    data[5] = cTriangle[i]->edges[1]->getId();
+//    data[6] = cTriangle[i]->edges[2]->getId();
+    record.label_0 = cTriangle[i].nSpin[0];
+    record.label_1 = cTriangle[i].nSpin[1];
 
-    totalWritten = fwrite(data, sizeof(int), DATA_COUNT, f);
-    if (totalWritten != DATA_COUNT)
+    totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
+    if (totalWritten != 1)
     {
       std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
       return -1;
@@ -2791,7 +3123,7 @@ int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &t
             cTriangle[i]->nSpin[0], cTriangle[i]->nSpin[1]);
 #endif
 //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
-    data[0] = data[0] + 1;
+    record.triId = record.triId + 1;
   }
   // Go to beginning of file and update the number of triangles
   //fseek(f, 0, SEEK_SET);
@@ -2808,10 +3140,12 @@ int LeeMarchingCubes::writeTrianglesFile(int zID, int ctid, const std::string &t
 }
 
 
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LeeMarchingCubes::writeSTLFiles(int nTriangle, std::map<int, meshing::SMStlWriter::Pointer> &gidToSTLWriter)
+int M3CSliceBySlice::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::Pointer> &gidToSTLWriter)
 {
 // First loop through All the triangles adding up how many triangles are
 // in each grain and create STL Files for each Grain if needed
@@ -2828,55 +3162,55 @@ int LeeMarchingCubes::writeSTLFiles(int nTriangle, std::map<int, meshing::SMStlW
       stlFile = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_StlFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
-      gidToSTLWriter[g0] = meshing::SMStlWriter::CreateNewSTLWriter(g0, stlFile);
+      gidToSTLWriter[g0] = SMStlWriter::CreateNewSTLWriter(g0, stlFile);
     }
     if (gidToSTLWriter[g1].get() == NULL)
     {
       std::string stlFile = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + "STL_Files/";
       MXADir::mkdir(stlFile, true);
       stlFile.append(m_StlFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
-      gidToSTLWriter[g1] = meshing::SMStlWriter::CreateNewSTLWriter(g1, stlFile);
+      gidToSTLWriter[g1] = SMStlWriter::CreateNewSTLWriter(g1, stlFile);
     }
     grainIdMap[cTriangle[i]->nSpin[0]]++;
     grainIdMap[cTriangle[i]->nSpin[1]]++;
   }
 
-// Allocate all the new meshing::Patch Blocks
-  std::map<int, meshing::Patch::ContainerType> gidToPatch;
+// Allocate all the new Patch Blocks
+  std::map<int, Patch::ContainerType> gidToPatch;
   std::map<int, int> gidToCurIdx;
   for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter)
   {
     int gid = (*iter).first;
     int count = (*iter).second;
-    gidToPatch[gid] = meshing::Patch::ContainerType(count);
+    gidToPatch[gid] = Patch::ContainerType(count);
     gidToCurIdx[gid] = 0;
   }
 
   int idx = 0;
 
-// Loop over all the triangles and copy the meshing::Patch Pointers into our new Pointers
+// Loop over all the triangles and copy the Patch Pointers into our new Pointers
   for (int i = 0; i < nTriangle; ++i)
   {
     g0 = cTriangle[i]->nSpin[0];
-    meshing::Patch::ContainerType& frontG0 = gidToPatch[g0];
+    Patch::ContainerType& frontG0 = gidToPatch[g0];
     idx = gidToCurIdx[g0];
     frontG0[idx] = cTriangle[i];
     gidToCurIdx[g0]++;
 
     g1 = cTriangle[i]->nSpin[1];
-    meshing::Patch::ContainerType& frontG1 = gidToPatch[g1];
+    Patch::ContainerType& frontG1 = gidToPatch[g1];
     idx = gidToCurIdx[g1];
     frontG1[idx] = cTriangle[i];
     gidToCurIdx[g1]++;
   }
 
-  for (std::map<int, meshing::Patch::ContainerType >::iterator iter = gidToPatch.begin(); iter != gidToPatch.end(); ++iter)
+  for (std::map<int, Patch::ContainerType >::iterator iter = gidToPatch.begin(); iter != gidToPatch.end(); ++iter)
   {
     int gid = (*iter).first;
-    meshing::Patch::ContainerType& cTriangle = (*iter).second;
+    Patch::ContainerType& cTriangle = (*iter).second;
     int nTriangle = grainIdMap[gid];
 
-    meshing::SMStlWriter::Pointer writer = gidToSTLWriter[gid];
+    SMStlWriter::Pointer writer = gidToSTLWriter[gid];
     if (NULL != writer.get())
     {
       err |= writer->writeTriangleBlock(nTriangle, cTriangle, cVertex);
@@ -2884,12 +3218,14 @@ int LeeMarchingCubes::writeSTLFiles(int nTriangle, std::map<int, meshing::SMStlW
   }
   return err;
 }
+#endif
 
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LeeMarchingCubes::analyzeWinding()
+void M3CSliceBySlice::analyzeWinding()
 {
 //  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 //  std::cout << " Edge Count: " << eMap.size() << std::endl;
@@ -2914,7 +3250,7 @@ void LeeMarchingCubes::analyzeWinding()
     int currentLabel = cLabel->first;
   //  if (currentLabel != 1) { continue; }
     masterTriangleIndex = cLabel->second;
-    meshing::Patch::Pointer t = cTriangle[masterTriangleIndex];
+    Patch::Pointer t = cTriangle[masterTriangleIndex];
 
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
@@ -2937,7 +3273,7 @@ void LeeMarchingCubes::analyzeWinding()
 
     while (triangleDeque.empty() == false)
     {
-      meshing::Patch::Pointer currentTri = cTriangle[triangleDeque.front()];
+      Patch::Pointer currentTri = cTriangle[triangleDeque.front()];
   //    std::cout << "tIndex = " << t->tIndex << std::endl;
       localVisited.insert(currentTri->tIndex);
       std::vector<int> adjTris = findAdjacentTriangles(currentTri, currentLabel);
@@ -2947,7 +3283,7 @@ void LeeMarchingCubes::analyzeWinding()
         if (masterVisited[*adjTri] == false)
         {
           //   std::cout << "   * Checking Winding: " << (*adjTri)->tIndex << std::endl;
-          meshing::Patch::Pointer triToVerify = cTriangle[*adjTri];
+          Patch::Pointer triToVerify = cTriangle[*adjTri];
           currentTri->verifyWinding( triToVerify.get(), currentLabel);
         }
 
@@ -2969,13 +3305,14 @@ void LeeMarchingCubes::analyzeWinding()
  // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> LeeMarchingCubes::findAdjacentTriangles(meshing::Patch::Pointer triangle, int label)
+std::vector<int> M3CSliceBySlice::findAdjacentTriangles(Triangle* triangle, int label)
 {
   std::vector<int> adjacentTris;
-  typedef meshing::SharedEdge::Pointer EdgeType;
+  typedef SharedEdge::Pointer EdgeType;
   // Get the 3 edges from the triangle
 
 
@@ -2989,7 +3326,7 @@ std::vector<int> LeeMarchingCubes::findAdjacentTriangles(meshing::Patch::Pointer
     // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
     for (std::set<int>::iterator iter = tIndices.begin(); iter != tIndices.end(); ++iter )
     {
-      meshing::Patch::Pointer t = cTriangle.at(*iter);
+      Patch::Pointer t = cTriangle.at(*iter);
       if ( (t->nSpin[0] == label || t->nSpin[1] == label)
           && (t->tIndex != triangle->tIndex) )
       {
@@ -3002,3 +3339,6 @@ std::vector<int> LeeMarchingCubes::findAdjacentTriangles(meshing::Patch::Pointer
   return adjacentTris;
 
 }
+
+
+#endif
