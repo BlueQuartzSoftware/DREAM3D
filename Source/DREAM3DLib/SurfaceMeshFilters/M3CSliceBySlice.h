@@ -65,42 +65,37 @@
 #ifndef _M3CSliceBySlice_H_
 #define _M3CSliceBySlice_H_
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
-#endif
 
-//#include <assert.h>
-//#include <stdio.h>
-//#include <time.h>
-//#include <stdlib.h>
-
-//#include <cstddef>
 #include <vector>
 #include <string>
-//#include <iostream>
-//#include <cmath>
-//#include <fstream>
-//#include <list>
-//#include <algorithm>
-//#include <numeric>
-//#include <map>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
-//#include "SurfaceMeshing/IO/SMTempFile.hpp"
-//#include "SurfaceMeshing/IO/SMStlWriter.h"
-//#include "SurfaceMeshing/Meshing/Patch.h"
-//#include "SurfaceMeshing/Meshing/Face.h"
-//#include "SurfaceMeshing/Meshing/Neighbor.h"
-//#include "SurfaceMeshing/Meshing/Node.h"
-//#include "SurfaceMeshing/Meshing/Segment.h"
-//#include "SurfaceMeshing/Meshing/SharedEdge.h"
-
-
-class M3CSliceBySlice : public AbstractFilter
+/**
+ * @class M3CSliceBySlice M3CSliceBySlice.h DREAM3DLic/SurfaceMeshingFilters/M3CSliceBySlice.h
+ * @brief This filter was contributed by Dr. Sukbin Lee of Carnegi-Mellon University and uses a "MultiMaterial Marching
+ * Cubes" algorithm originally proposed by Wu & Sullivan. @n
+ * This version of the code only considers 2 slices of the volume at any give instant
+ * in time during the algorithm. The 2 slices are meshed and the resulting triangles
+ * and nodes are written out to disk. At the conclusion of all slices the entire
+ * generated triangle array and node array are read into memory. This version trades
+ * off mush lower memory footprint during execution of the filter for some speed.
+ * The increase in time to mesh a volume is due to the File I/O of the algorithm. File
+ * writes are done in pure binary so to make them as quick as possible. An adaptive
+ * memory allocation routine is also employeed to be able to scale the speed of the
+ * algorithm from small voxel volumes to very large voxel volumes.
+ *
+ * Multiple material marching cubes algorithm, Ziji Wu1, John M. Sullivan Jr2, International Journal for Numerical Methods in Engineering
+ * Special Issue: Trends in Unstructured Mesh Generation, Volume 58, Issue 2, pages 189–207, 14 September 2003
+ * @author
+ * @date
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 {
 
   public:
@@ -112,25 +107,15 @@ class M3CSliceBySlice : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
+ //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
-    //DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
-//    DREAM3D_INSTANCE_PROPERTY(bool, WriteSTLFile)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(StlOutputDirectory)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
 
-//    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
-//    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryVTKFiles)
-//    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
-
-//    DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, NodesFile)
-//    DREAM3D_INSTANCE_PROPERTY(SMTempFile::Pointer, TrianglesFile)
 
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-    virtual const std::string getHumanLabel() { return "M3C Surface Mesh (Slice at a time)"; }
+    virtual const std::string getHumanLabel() { return "M3C Surface Meshing (Slice at a time)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -178,8 +163,8 @@ class M3CSliceBySlice : public AbstractFilter
      * @param neighborsPtr
      */
     void initialize_squares(int zID, int NSP,
-                                          StructArray<Face>::Pointer cSquarePtr,
-                                          StructArray<Neighbor>::Pointer neighborsPtr);
+                            StructArray<Face>::Pointer cSquarePtr,
+                            StructArray<Neighbor>::Pointer neighborsPtr);
 
 
     /**
@@ -367,13 +352,27 @@ class M3CSliceBySlice : public AbstractFilter
                            const std::string &trianglesFile, int nt,
                            StructArray<Patch>::Pointer cTrianglePtr,
                            DataArray<int32_t>::Pointer cVertexNodeIdPtr);
-  //  int writeSTLFiles(int nTriangle, std::map<int, meshing::SMStlWriter::Pointer> &gidToSTLWriter);
-
+    /**
+     * @brief readNodesTriangles
+     * @param nodesFile
+     * @param trianglesFile
+     */
     void readNodesTriangles(const std::string &nodesFile, const std::string &trianglesFile);
+
+    /**
+     * @brief volumeHasGhostLayer
+     * @return
+     */
+    bool volumeHasGhostLayer();
+    void copyBulkSliceIntoWorkingArray(int i, int *wrappedDims, size_t *dims, int32_t *voxels);
+    void update_node_edge_kind(int nT,
+                               StructArray<Patch>::Pointer cTrianglePtr,
+                               DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                               StructArray<Segment>::Pointer cEdgePtr);
 
   private:
     int32_t* m_GrainIds;
-    int8_t* m_SurfaceMeshNodeType;
+ //   int8_t* m_SurfaceMeshNodeType;
     int numgrains;
 
 

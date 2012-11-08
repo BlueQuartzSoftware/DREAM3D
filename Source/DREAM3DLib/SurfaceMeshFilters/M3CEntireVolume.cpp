@@ -40,55 +40,9 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 
-namespace Detail {
-
-static int edgeTable_2d[20][8] =
-{
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 0, 1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 0, 2, -1, -1, -1, -1, -1, -1 },
-{ 1, 2, -1, -1, -1, -1, -1, -1 },
-{ 0, 4, 2, 4, 1, 4, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 3, 0, -1, -1, -1, -1, -1, -1 },
-{ 3, 1, -1, -1, -1, -1, -1, -1 },
-{ 3, 4, 0, 4, 1, 4, -1, -1 },
-{ 2, 3, -1, -1, -1, -1, -1, -1 },
-{ 3, 4, 0, 4, 2, 4, -1, -1 },
-{ 3, 4, 1, 4, 2, 4, -1, -1 },
-{ 3, 0, 1, 2, -1, -1, -1, -1 },
-{ 0, 1, 2, 3, -1, -1, -1, -1 },
-{ 0, 1, 2, 3, -1, -1, -1, -1 },
-{ 3, 0, 1, 2, -1, -1, -1, -1 },
-{ 3, 4, 1, 4, 0, 4, 2, 4 } };
-
-static int nsTable_2d[20][8] =
-{
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 1, 0, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 1, 0, -1, -1, -1, -1, -1, -1, },
-{ 2, 1, -1, -1, -1, -1, -1, -1 },
-{ 1, 0, 3, 2, 2, 1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, 1, 0, 2, 1, -1, -1 },
-{ 3, 2, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, 1, 0, 3, 2, -1, -1 },
-{ 0, 3, 2, 1, 3, 2, -1, -1 },
-{ 0, 3, 2, 1, -1, -1, -1, -1 },
-{ 1, 0, 3, 2, -1, -1, -1, -1 },
-{ 1, 0, 3, 2, -1, -1, -1, -1 },
-{ 0, 3, 2, 1, -1, -1, -1, -1 },
-{ 0, 3, 2, 1, 1, 0, 3, 2 } };
-
-}
+#ifndef M_PI
+#define M_PI 3.14159265
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -103,15 +57,6 @@ m_AddSurfaceLayer(true),
 m_GrainIds(NULL),
 m_SurfaceMeshNodeType(NULL)
 {
- for (int i = 0; i < 20; ++i)
-  {
-    for(int j = 0; j < 8; ++j)
-    {
-      EdgeTable2D[i][j] = Detail::edgeTable_2d[i][j];
-      NSTable2D[i][j] = Detail::nsTable_2d[i][j];
-    }
-  }
-
   setupFilterParameters();
 }
 
@@ -159,6 +104,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
+
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
@@ -172,6 +118,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+
 
 
     sm->setNodes(vertices);
@@ -235,8 +182,90 @@ void M3CEntireVolume::execute()
     return;
   }
 
+  err = createMesh();
+  if(err < 0)
+  {
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << "Error Creating the Surface Mesh";
+    PipelineMessage em(getNameOfClass(), ss.str(), -1);
+    addErrorMessage(em);
+    return;
+  }
+
+  notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+static int edgeTable_2d[20][8] =
+{
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ 0, 1, -1, -1, -1, -1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ 0, 2, -1, -1, -1, -1, -1, -1 },
+{ 1, 2, -1, -1, -1, -1, -1, -1 },
+{ 0, 4, 2, 4, 1, 4, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ 3, 0, -1, -1, -1, -1, -1, -1 },
+{ 3, 1, -1, -1, -1, -1, -1, -1 },
+{ 3, 4, 0, 4, 1, 4, -1, -1 },
+{ 2, 3, -1, -1, -1, -1, -1, -1 },
+{ 3, 4, 0, 4, 2, 4, -1, -1 },
+{ 3, 4, 1, 4, 2, 4, -1, -1 },
+{ 3, 0, 1, 2, -1, -1, -1, -1 },
+{ 0, 1, 2, 3, -1, -1, -1, -1 },
+{ 0, 1, 2, 3, -1, -1, -1, -1 },
+{ 3, 0, 1, 2, -1, -1, -1, -1 },
+{ 3, 4, 1, 4, 0, 4, 2, 4 } };
+
+static int nsTable_2d[20][8] =
+{
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ 1, 0, -1, -1, -1, -1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ 1, 0, -1, -1, -1, -1, -1, -1, },
+{ 2, 1, -1, -1, -1, -1, -1, -1 },
+{ 1, 0, 3, 2, 2, 1, -1, -1 },
+{ -1, -1, -1, -1, -1, -1, -1, -1 },
+{ 0, 3, -1, -1, -1, -1, -1, -1 },
+{ 0, 3, -1, -1, -1, -1, -1, -1 },
+{ 0, 3, 1, 0, 2, 1, -1, -1 },
+{ 3, 2, -1, -1, -1, -1, -1, -1 },
+{ 0, 3, 1, 0, 3, 2, -1, -1 },
+{ 0, 3, 2, 1, 3, 2, -1, -1 },
+{ 0, 3, 2, 1, -1, -1, -1, -1 },
+{ 1, 0, 3, 2, -1, -1, -1, -1 },
+{ 1, 0, 3, 2, -1, -1, -1, -1 },
+{ 0, 3, 2, 1, -1, -1, -1, -1 },
+{ 0, 3, 2, 1, 1, 0, 3, 2 } };
+
+// Functions...
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int M3CEntireVolume::createMesh()
+{
+
+  std::stringstream ss;
+  VoxelDataContainer* m = getVoxelDataContainer();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+
+  int NSP;
+  int nFEdge; // number of edges on the square...
+  int nTriangle; // number of triangles...
+  int nNodes; // number of total nodes used...
+  int tnIEdge; // number of endges inside marching square...
+
   float res[3];
   m->getResolution(res);
+  int64_t totalPoints = m->getTotalPoints();
   size_t dims[3] =
   { 0, 0, 0 };
   m->getDimensions(dims);
@@ -255,46 +284,10 @@ void M3CEntireVolume::execute()
     posDim[1] = fileDim[1] + 1;
     posDim[2] = fileDim[2] + 1;
   }
-
-
-
-
-  err = createMesh(dims, res, fileDim);
-
-
-  if(err < 0)
-  {
-    setErrorCondition(-1);
-    std::stringstream ss;
-    ss << "Error Creating the Surface Mesh";
-    PipelineMessage em(getNameOfClass(), ss.str(), -1);
-    addErrorMessage(em);
-    return;
-  }
-
-  notifyStatusMessage("Complete");
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
-{
-
-  std::stringstream ss;
- // VoxelDataContainer* m = getVoxelDataContainer();
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  size_t totalPoints = fileDim[0] * fileDim[1] * fileDim[2];
-
-  int NSP;
-  int nFEdge; // number of edges on the square...
-  int nTriangle; // number of triangles...
-  int nNodes; // number of total nodes used...
-  int tnIEdge; // number of endges inside marching square...
+  totalPoints = fileDim[0] * fileDim[1] * fileDim[2];
 
   //Copy the data from the m_GrainIds Array into the "Voxel" Struct
+  // Add a complete layer of surface voxels
   DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints+1, DREAM3D::CellData::SurfaceMeshVoxels);
   point->initializeWithZeros();
 
@@ -303,8 +296,8 @@ int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
   VoxelCoord* voxCoords = voxelCoords.get()->GetPointer(0);
 
   // Get the Max Grain ID so that we can reset it when the meshing is complete
-
   int maxGrainId = initialize_micro_from_grainIds(dims, res, fileDim, m_GrainIds, point, voxCoords);
+
 
   int NS = fileDim[0] * fileDim[1] * fileDim[2];
   NSP = fileDim[0] * fileDim[1] ;
@@ -318,7 +311,7 @@ int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
 
   DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodeType);
   nodeKindPtr->initializeWithValues(0);
-  m_SurfaceMeshNodeType = nodeKindPtr->GetPointer(0); // Push the point to the superclass
+  m_SurfaceMeshNodeType = nodeKindPtr->GetPointer(0);
 
   Neighbor* neigh = neighbors.get()->GetPointer(0);
   Face* square = squares.get()->GetPointer(0);
@@ -338,7 +331,7 @@ int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
   initialize_squares(neigh, square, NS, NSP);
 
   notifyStatusMessage("\nCounting number of total edges turned on...\n");
-  nFEdge = get_number_fEdges(square, point, neigh, NS);
+  nFEdge = get_number_fEdges(square, point, neigh, edgeTable_2d, NS);
   ss.str(""); ss << "total number of face edges = " << nFEdge;
   notifyStatusMessage(ss.str());
 
@@ -349,7 +342,7 @@ int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
   Segment* fedge = faceEdges.get()->GetPointer(0);
 
   notifyStatusMessage("Finding nodes and edges on each square...");
-  get_nodes_fEdges(square, point, neigh, vertex, fedge, NS, NSP, fileDim[0]);
+  get_nodes_fEdges(square, point, neigh, vertex, fedge, edgeTable_2d, nsTable_2d, NS, NSP, fileDim[0]);
 
   notifyStatusMessage("\nCounting number of triangles...");
   nTriangle = get_number_triangles(point, square, vertex, fedge, NS, NSP, fileDim[0]);
@@ -404,8 +397,7 @@ int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
   DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodeType);
 
 
-  generate_update_nodes_edges_array(new_ids_for_nodes, shortNodeKindPtr, nodes, nodesPtr, triangles, faceEdges, internalEdges);
-  resetMaxGrainIdToZero(new_ids_for_nodes, shortNodeKindPtr, nodes, nodesPtr, triangles, faceEdges, internalEdges, maxGrainId);
+  generate_update_nodes_edges_array(new_ids_for_nodes, shortNodeKindPtr, nodes, nodesPtr, triangles, faceEdges, internalEdges, maxGrainId);
 
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
@@ -420,58 +412,6 @@ int M3CEntireVolume::createMesh(size_t* dims, float* res, size_t* fileDim)
 
   return 0;
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void M3CEntireVolume::resetMaxGrainIdToZero( DataArray<int32_t>::Pointer new_ids_for_nodes,
-                                                                 DataArray<int8_t>::Pointer nodeKindPtr,
-                                                                StructArray<Node>::Pointer shortNodes,
-                                                                StructArray<Node>::Pointer vertices,
-                                                                StructArray<Triangle>::Pointer triangles,
-                                                                StructArray<Segment>::Pointer faceEdges,
-                                                                StructArray<ISegment>::Pointer internalEdges,
-                                                                int maxGrainId)
-{
-  //Node* nodes = shortNodes->GetPointer(0);
-  //Node* v = vertices->GetPointer(0);
-  Triangle* t = triangles->GetPointer(0);
-  Segment* e = faceEdges->GetPointer(0);
-  ISegment* ie = internalEdges->GetPointer(0);
-
-  // Update the triangles with the new node ids (Which are offsets into an array of Node structs
-  size_t numTri = triangles->GetNumberOfTuples();
-  for(size_t i = 0; i < numTri; ++i)
-  {
-    Triangle& tri = t[i];
-    // Reset the MaxGrainId back to Zero to 'recover' those grains
-    if (tri.nSpin[0] == maxGrainId) { tri.nSpin[0] = 0; }
-    if (tri.nSpin[1] == maxGrainId) { tri.nSpin[1] = 0; }
-  }
-
-  // Update the Edges with the new nodes ids
-  size_t numEdges = faceEdges->GetNumberOfTuples();
-  for(size_t i = 0; i < numEdges; ++i)
-  {
-    Segment& seg = e[i];
-    // Reset the MaxGrainId back to Zero to 'recover' those grains
-    if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
-    if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
-  }
-
-  size_t numIEdges = internalEdges->GetNumberOfTuples();
-  for(size_t i = 0; i < numIEdges; ++i)
-  {
-    ISegment& seg = ie[i];
-    // Reset the MaxGrainId back to Zero to 'recover' those grains
-    if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
-    if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
-    if (seg.nSpin[2] == maxGrainId) { seg.nSpin[2] = 0; }
-    if (seg.nSpin[3] == maxGrainId) { seg.nSpin[3] = 0; }
-  }
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -481,7 +421,8 @@ void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Poi
                                                                 StructArray<Node>::Pointer vertices,
                                                                 StructArray<Triangle>::Pointer triangles,
                                                                 StructArray<Segment>::Pointer faceEdges,
-                                                                StructArray<ISegment>::Pointer internalEdges)
+                                                                StructArray<ISegment>::Pointer internalEdges,
+                                                                int maxGrainId)
 {
 
     Node* nodes = shortNodes->GetPointer(0);
@@ -498,15 +439,21 @@ void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Poi
         tri.node_id[0] = new_ids_for_nodes->GetValue(tri.node_id[0]);
         tri.node_id[1] = new_ids_for_nodes->GetValue(tri.node_id[1]);
         tri.node_id[2] = new_ids_for_nodes->GetValue(tri.node_id[2]);
+        // Reset the MaxGrainId back to Zero to 'recover' those grains
+        if (tri.nSpin[0] == maxGrainId) { tri.nSpin[0] = 0; }
+        if (tri.nSpin[1] == maxGrainId) { tri.nSpin[1] = 0; }
     }
 
-    // Update the Edges with the new nodes ids
+    // Update the Edges with teh new nodes ids
     size_t numEdges = faceEdges->GetNumberOfTuples();
     for(size_t i = 0; i < numEdges; ++i)
     {
       Segment& seg = e[i];
       seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
       seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
+      // Reset the MaxGrainId back to Zero to 'recover' those grains
+      if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
+      if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
     }
 
     size_t numIEdges = internalEdges->GetNumberOfTuples();
@@ -515,6 +462,11 @@ void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Poi
       ISegment& seg = ie[i];
       seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
       seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
+      // Reset the MaxGrainId back to Zero to 'recover' those grains
+      if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
+      if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
+      if (seg.nSpin[2] == maxGrainId) { seg.nSpin[2] = 0; }
+      if (seg.nSpin[3] == maxGrainId) { seg.nSpin[3] = 0; }
     }
 
     size_t numNodes = vertices->GetNumberOfTuples();
@@ -527,6 +479,7 @@ void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Poi
       if (offset != -1)
       {
         nodeKindPtr->SetValue(offset, m_SurfaceMeshNodeType[i]);
+//        nodes[offset].nodeKind = v[i].nodeKind;
         nodes[offset].coord[0] = v[i].coord[0];
         nodes[offset].coord[1] = v[i].coord[1];
         nodes[offset].coord[2] = v[i].coord[2];
@@ -534,6 +487,104 @@ void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Poi
     }
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3], size_t fileDim[3],
+                                                             int32_t* grainIds,
+                                                             DataArray<int32_t>::Pointer points,
+                                                             VoxelCoord* point)
+{
+  int maxGrainId = 0;
+  int32_t* p = points->GetPointer(0);
+
+
+  if(m_AddSurfaceLayer == false)
+  {
+    size_t totalPoints = dims[0] * dims[1] * dims[2];
+    for (size_t i = 0; i < totalPoints; ++i)
+    {
+      p[i + 1] = grainIds[i];
+      if (p[i+1] > maxGrainId) { maxGrainId = p[i+1]; }
+    }
+  }
+  else
+  {
+    size_t index = 0;
+    size_t gIdx = 0;
+
+    // Add bottom wrapping slice of voxels
+    for (size_t i = 0; i < (fileDim[0] * fileDim[1]); ++i)
+    {
+      p[++index] = -3;
+    }
+    // Copy the bulk of the volume over
+    for (size_t z = 0; z < dims[2]; ++z)
+    {
+      // Add a leading surface Row for this plane if needed
+      for (size_t i = 0; i < fileDim[0]; ++i)
+      {
+        p[++index] = -4;
+      }
+
+      for (size_t y = 0; y < dims[1]; ++y)
+      {
+        // write leading surface voxel for this row
+        p[++index] = -5;
+
+        // Write the actual voxel data
+        for (size_t x = 0; x < dims[0]; ++x)
+        {
+          p[++index] = grainIds[gIdx++];
+          if (p[index] > maxGrainId) { maxGrainId = p[index]; }
+        }
+        // write trailing surface voxel for this row
+        p[++index] = -6;
+      }
+      // Add a trailing surface Row for this plane if needed
+      for (size_t i = 0; i < fileDim[0]; ++i)
+      {
+        p[++index] = -7;
+      }
+    }
+
+    for (size_t i = 0; i < (fileDim[0] * fileDim[1]); ++i)
+    {
+      p[++index] = -8;
+    }
+  }
+
+  // Increment MaxGrainId by one so we have an independent grain
+  maxGrainId = maxGrainId + 1;
+
+  // Point 0 is a garbage...
+  points->SetValue(0, 0);
+
+  float tx, ty, tz;
+  size_t id = 0;
+  // Let's fill out the coordinate of each voxel. Remember that x coordinate goes fastest...
+  for (size_t k = 0; k < fileDim[2]; k++)
+  {
+    for (size_t j = 0; j < fileDim[1]; j++)
+    {
+      for (size_t i = 0; i < fileDim[0]; i++)
+      {
+        id = (k * fileDim[0] * fileDim[1]) + (j * fileDim[0]) + (i + 1);
+        tx = (float)(i) * res[0];
+        ty = (float)(j) * res[1];
+        tz = (float)(k) * res[2];
+        //printf("%10d %6.3f %6.3f %6.3f\n", id, tx, ty, tz);
+        point[id].coord[0] = tx;
+        point[id].coord[1] = ty;
+        point[id].coord[2] = tz;
+        // Adjust all GrainIds=0 to maxGrainId;
+        if (p[id] == 0) { p[id] = maxGrainId; }
+      }
+    }
+  }
+  return maxGrainId;
+}
 
 #if 0
 // -----------------------------------------------------------------------------
@@ -851,7 +902,8 @@ void M3CEntireVolume::initialize_squares(Neighbor* n,
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::get_number_fEdges(Face* sq,
                                                DataArray<int32_t>::Pointer points,
-                                               Neighbor* n, int ns)
+                                               Neighbor* n,
+                                               int eT2d[20][8], int ns)
 {
   int32_t* p = points->GetPointer(0);
 
@@ -957,6 +1009,8 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
                                                Neighbor* n,
                                                Node* v,
                                                Segment* e,
+                                               int eT2d[20][8],
+                                               int nsT2d[20][8],
                                                int ns,
                                                int nsp,
                                                int xDim)
@@ -1022,13 +1076,13 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
         for (j = 0; j < 8; j = j + 2)
         {
 
-          if(EdgeTable2D[sqIndex][j] != -1)
+          if(eT2d[sqIndex][j] != -1)
           {
 
-            nodeIndex[0] = EdgeTable2D[sqIndex][j];
-            nodeIndex[1] = EdgeTable2D[sqIndex][j + 1];
-            pixIndex[0] = NSTable2D[sqIndex][j];
-            pixIndex[1] = NSTable2D[sqIndex][j + 1];
+            nodeIndex[0] = eT2d[sqIndex][j];
+            nodeIndex[1] = eT2d[sqIndex][j + 1];
+            pixIndex[0] = nsT2d[sqIndex][j];
+            pixIndex[1] = nsT2d[sqIndex][j + 1];
             // get id of the nodes of edge and spins across the edge...
             get_nodes(cubeOrigin, sqOrder, nodeIndex, nodeID, nsp, xDim);
             get_spins(points, cubeOrigin, sqOrder, pixIndex, pixSpin, nsp, xDim);
@@ -1064,24 +1118,11 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
 
                   tnode = nodeID[ii];
                   sq[k].FCnode = tnode;
+                  m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
 
-                  // Let's treat special cases for surface of the materials...
-                  if(atBulk == 3)
-                  { // 3 negative spins, ex, -4, -4, -3, 1 = corners and edges of microstructure
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint; // mark face centered node as 13, corner & edge point on the surface of microstructure
-                  }
-                  else if(atBulk == 2)
-                  { // 2 negative spins and 2 different positive spin, ex, -4, -4, 1, 2 = faces of microstructure, all will be used..
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint; // mark face centered node as 13, triple point on the surface of microstructure
-                  }
-                  else if(atBulk == 1)
+                  if(atBulk == 1)
                   {
                     notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
-                  }
-                  else
-                  { // positive spins only...normal case!
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint; // mark face centered node as 3, triple point
                   }
 
                 }
@@ -1089,14 +1130,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
                 {
                   tnode = nodeID[ii];
                   sq[k].FCnode = tnode;
-                  if(atBulk == 0)
-                  {
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
-                  }
-                  else
-                  {
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
-                  }
+                  m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
                   //printf("atBulk = %3d and nk = %d\n", atBulk, 4);
                 }
                 else
@@ -1111,14 +1145,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
                 tnk = m_SurfaceMeshNodeType[tnode];
                 if(tnk != -1)
                 {
-                  if(atBulk == 0)
-                  {
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
-                  }
-                  else
-                  {
-                    m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
-                  }
+                   m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
                 }
                 //printf("atBulk = %d and nk = %d  %3d %3d %3d %3d\n", atBulk, 2, tnspin[0], tnspin[1], tnspin[2], tnspin[3]);
               }
@@ -5305,101 +5332,3 @@ void M3CEntireVolume::get_output(node *v, segment *fe, isegment *ie, patch *t, i
 #endif
 
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3], size_t fileDim[3],
-                                                             int32_t* grainIds,
-                                                             DataArray<int32_t>::Pointer points,
-                                                             VoxelCoord* point)
-{
-  int maxGrainId = 0;
-  int32_t* p = points->GetPointer(0);
-
-
-  if(m_AddSurfaceLayer == false)
-  {
-    size_t totalPoints = dims[0] * dims[1] * dims[2];
-    for (size_t i = 0; i < totalPoints; ++i)
-    {
-      p[i + 1] = grainIds[i];
-      if (p[i+1] > maxGrainId) { maxGrainId = p[i+1]; }
-    }
-  }
-  else
-  {
-    size_t index = 0;
-    size_t gIdx = 0;
-
-    // Add bottom wrapping slice of voxels
-    for (size_t i = 0; i < (fileDim[0] * fileDim[1]); ++i)
-    {
-      p[++index] = -3;
-    }
-    // Copy the bulk of the volume over
-    for (size_t z = 0; z < dims[2]; ++z)
-    {
-      // Add a leading surface Row for this plane if needed
-      for (size_t i = 0; i < fileDim[0]; ++i)
-      {
-        p[++index] = -4;
-      }
-
-      for (size_t y = 0; y < dims[1]; ++y)
-      {
-        // write leading surface voxel for this row
-        p[++index] = -5;
-
-        // Write the actual voxel data
-        for (size_t x = 0; x < dims[0]; ++x)
-        {
-          p[++index] = grainIds[gIdx++];
-          if (p[index] > maxGrainId) { maxGrainId = p[index]; }
-        }
-        // write trailing surface voxel for this row
-        p[++index] = -6;
-      }
-      // Add a trailing surface Row for this plane if needed
-      for (size_t i = 0; i < fileDim[0]; ++i)
-      {
-        p[++index] = -7;
-      }
-    }
-
-    for (size_t i = 0; i < (fileDim[0] * fileDim[1]); ++i)
-    {
-      p[++index] = -8;
-    }
-  }
-
-  // Increment MaxGrainId by one so we have an independent grain
-  maxGrainId = maxGrainId + 1;
-
-  // Point 0 is a garbage...
-  points->SetValue(0, 0);
-
-  float tx, ty, tz;
-  size_t id = 0;
-  // Let's fill out the coordinate of each voxel. Remember that x coordinate goes fastest...
-  for (size_t k = 0; k < fileDim[2]; k++)
-  {
-    for (size_t j = 0; j < fileDim[1]; j++)
-    {
-      for (size_t i = 0; i < fileDim[0]; i++)
-      {
-        id = (k * fileDim[0] * fileDim[1]) + (j * fileDim[0]) + (i + 1);
-        tx = (float)(i) * res[0];
-        ty = (float)(j) * res[1];
-        tz = (float)(k) * res[2];
-        //printf("%10d %6.3f %6.3f %6.3f\n", id, tx, ty, tz);
-        point[id].coord[0] = tx;
-        point[id].coord[1] = ty;
-        point[id].coord[2] = tz;
-        // Adjust all GrainIds=0 to maxGrainId;
-        if (p[id] == 0) { p[id] = maxGrainId; }
-      }
-    }
-  }
-  return maxGrainId;
-}

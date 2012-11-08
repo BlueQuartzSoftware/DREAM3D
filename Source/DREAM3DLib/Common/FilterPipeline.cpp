@@ -349,7 +349,7 @@ void FilterPipeline::execute()
 
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-    std::cout << ss.str() << std::endl;
+  //  std::cout << ss.str() << std::endl;
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss.str());
     sendPipelineMessage(progValue);

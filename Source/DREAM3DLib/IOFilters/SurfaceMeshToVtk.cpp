@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToVtk::SurfaceMeshToVtk() :
 AbstractFilter(),
-m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+//m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_WriteBinaryFile(false),
 m_WriteConformalMesh(true),
 m_SurfaceMeshNodeType(NULL)
@@ -138,11 +138,11 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
         setErrorCondition(-384);
     }
-    else
-    {
-      int nNodes = sm->getNodes()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -385, int8_t, Int8ArrayType, nNodes, 1);
-    }
+//    else
+//    {
+//      int nNodes = sm->getNodes()->GetNumberOfTuples();
+//      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -385, int8_t, Int8ArrayType, nNodes, 1);
+//    }
 
 
 //    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
@@ -184,8 +184,28 @@ void SurfaceMeshToVtk::execute()
   setErrorCondition(0);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<Node>& nodes = *(m->getNodes());
+  StructArray<Node>::Pointer nodesPtr = m->getNodes();
+  StructArray<Node>& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
+
+  // Make sure we have a node type array or create a default one.
+  DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
+  DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
+
+  if (NULL == iNodeTypePtr.get() )
+  {
+    // The node type array does not exist so create one with the default node type populated
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
+    nodeTypePtr = nodeTypeSharedPtr.get();
+  }
+  else
+  {
+    // The node type array does exist so use that one.
+    nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
+  }
+  m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

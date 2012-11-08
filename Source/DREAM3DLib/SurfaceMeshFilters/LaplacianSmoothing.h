@@ -66,9 +66,12 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
     DREAM3D_INSTANCE_PROPERTY(float, Lambda)
+    DREAM3D_INSTANCE_PROPERTY(float, SurfacePointLambda)
     DREAM3D_INSTANCE_PROPERTY(float, TripleLineLambda)
     DREAM3D_INSTANCE_PROPERTY(float, QuadPointLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfacePointLambda)
+    DREAM3D_INSTANCE_PROPERTY(float, SurfaceTripleLineLambda)
+    DREAM3D_INSTANCE_PROPERTY(float, SurfaceQuadPointLambda)
+
 
     /* This class is designed to be subclassed so that thoes subclasses can add
      * more functionality such as constrained surface nodes or Triple Lines. We use
@@ -135,7 +138,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
      * @brief This method generates the Lambda array that will be use during the smoothing
      * @return
      */
-    virtual int generateLambdaArray();
+    virtual int generateLambdaArray(DataArray<int8_t> *nodeTypePtr);
 
     /**
      * @brief This method runs the actual Laplacian smoothing algorithm using the Lambda
@@ -146,7 +149,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     virtual int smooth();
 
   private:
-    int8_t*  m_SurfaceMeshNodeType;
+    //int8_t*  m_SurfaceMeshNodeType;
 
 
     LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented
