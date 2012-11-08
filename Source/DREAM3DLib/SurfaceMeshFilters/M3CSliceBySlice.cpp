@@ -65,14 +65,11 @@
 
 #include "M3CSliceBySlice.h"
 
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/PipelineMessage.h"
+
+
 
 // C Includes
 #include <stdio.h>
@@ -94,14 +91,19 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-//#include "SMVtkPolyDataWriter.h"
 
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/PipelineMessage.h"
 
 
 #define WRITE_BINARY_TEMP_FILES 1
 
 namespace Detail
 {
+
+  static int triangleResizeCount = 0;
+  static size_t triangleResize = 1000;
+
   const std::string NodesFile("Nodes.bin");
   const std::string TrianglesFile("Triangles.bin");
 
@@ -326,20 +328,9 @@ class GrainChecker
 M3CSliceBySlice::M3CSliceBySlice() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+//m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_DeleteTempFiles(true),
-m_GrainIds(NULL),
-m_SurfaceMeshNodeType(NULL)
-//m_WriteSTLFile(true),
-//m_StlOutputDirectory(""),
-//m_StlFilePrefix(""),
-//m_VtkOutputFile(""),
-//m_WriteBinaryVTKFiles(false),
-//m_WriteConformalMesh(true),
-//neigh(NULL),
-//voxels(NULL),
-//cSquare(NULL),
-//cVertex(NULL)
+m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -349,9 +340,6 @@ m_SurfaceMeshNodeType(NULL)
 // -----------------------------------------------------------------------------
 M3CSliceBySlice::~M3CSliceBySlice()
 {
-//  if (neigh) delete[] neigh;
-//  if (cSquare) delete[] cSquare;
-//  if (cVertex) delete[] cVertex;
 }
 
 // -----------------------------------------------------------------------------
@@ -462,7 +450,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
  //   StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
  //   StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+ //   CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
@@ -522,26 +510,7 @@ void M3CSliceBySlice::execute()
   trianglesTempFile->setFilePath(trianglesFile);
   trianglesTempFile->setAutoDelete(this->m_DeleteTempFiles);
 
-  // Initialize some benchmark timers
-  START_CLOCK()
 
-#if 0
-  // Create the output directory if needed
-  if(m_WriteSTLFile == true && m_StlOutputDirectory.empty() == false)
-  {
-    if (MXADir::exists(m_StlOutputDirectory) == false)
-    {
-      if (MXADir::mkdir(m_StlOutputDirectory, true) == false)
-      {
-        ss.str("");
-        ss << "Error creating path '" << m_StlOutputDirectory << "'";
-        notifyErrorMessage(ss.str(), -1);
-        setErrorCondition(-1);
-        return;
-      }
-    }
-  }
-#endif
   int cNodeID = 0;
   int cTriID = 0;
   int cEdgeID = 0;
@@ -560,43 +529,61 @@ void M3CSliceBySlice::execute()
   m->getResolution(res);
   m->getOrigin(origin);
 
+  int wrappedDims[3] = { dims[0], dims[1], dims[2]};
+
   // Initialize our M3CSliceBySlice Variable
-  // Add a layer of padding around the volume which are going to be our boundary voxels
-//  int xDim = dims[0] + 2;
-//  int yDim = dims[1] + 2;
-//  int zDim = dims[2] + 2;
-  int wrappedDims[3] = { dims[0] + 2, dims[1] + 2, dims[2] + 2};
+  // Check to see if there is already a layer of bounding negative grain ids around the volume
+  bool isWrapped = volumeHasGhostLayer();
+  // If the volume is NOT wrapped by a ghost layer of negative voxels then we need to wrap
+  // volume in a ghost layer of voxels.
+  if (isWrapped == false)
+  {
+    wrappedDims[0] += 2;
+    wrappedDims[1] += 2;
+    wrappedDims[2] += 2;
+  }
+
 
   int NS = wrappedDims[0] * wrappedDims[1] * wrappedDims[2];
   int NSP = wrappedDims[0] * wrappedDims[1];
 
   DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, 1, "M3CSliceBySlice_Working_Voxels");
+  voxelsPtr->initializeWithValues(-3);
   int32_t* voxels = voxelsPtr->GetPointer(0);
 
   StructArray<Neighbor>::Pointer neighborsPtr = StructArray<Neighbor>::CreateArray(2*NSP+1, "M3CSliceBySlice_Neighbor_Array");
+  neighborsPtr->initializeWithZeros();
   DataArray<int32_t>::Pointer neighCSiteIdPtr = DataArray<int32_t>::CreateArray(2*NSP+1, "M3CSliceBySlice_Neighbor_CSiteId_Array");
+  neighCSiteIdPtr->initializeWithZeros();
   StructArray<Face>::Pointer cSquarePtr = StructArray<Face>::CreateArray(3*2*NSP, "M3CSliceBySlice_Face_Array");
+  cSquarePtr->initializeWithZeros();
   StructArray<Node>::Pointer cVertexPtr = StructArray<Node>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
+  cVertexPtr->initializeWithZeros();
   DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeId_Array");
+  cVertexNodeIdPtr->initializeWithZeros();
   DataArray<int8_t>::Pointer cVertexNodeKindPtr = DataArray<int8_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeKind_Array");
+  cVertexNodeKindPtr->initializeWithZeros();
   StructArray<Patch>::Pointer  cTrianglePtr = StructArray<Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
-
+  cTrianglePtr->initializeWithZeros();
   StructArray<Segment>::Pointer cEdgePtr = StructArray<Segment>::CreateArray(0, "M3CSliceBySlice_Segment_Array");
+  cEdgePtr->initializeWithZeros();
 
   //neigh = new Neighbor[2 * NSP + 1];
   //cSquare = new Face[3 * 2 * NSP];
   //cVertex = new Node[2 * 7 * NSP];
 
-  // Prime the working voxels (2 layers worth) with -3 values indicating border voxels
-  int size = 2 * NSP + 1;
-  for (int i = 0; i < size; ++i)
+  // Prime the working voxels (2 layers worth) with -3 values indicating border voxels if the
+  // volume does NOT have a ghost layer
+  if(isWrapped == false)
   {
-    voxels[i] = -3;
+    int size = 2 * NSP + 1;
+    for (int i = 0; i < size; ++i)
+    {
+      voxels[i] = -3;
+    }
   }
-
 //  std::map<int, SMStlWriter::Pointer> gidToSTLWriter;
 
-  size_t offset = 0;
   // Loop over all the Z Slices. An Optimization for memory would be to loop over
   // a different plane say the XZ in case that plane is smaller in dimensions than
   // the XY plane, ie, the volume is rectangular
@@ -607,8 +594,6 @@ void M3CSliceBySlice::execute()
     notifyProgressValue((i * 90 / dims[2]));
     notifyStatusMessage(ss.str());
 
-    // Get a pointer into the GrainIds Array at the appropriate offset
-    int32_t* fileVoxelLayer = m_GrainIds + (i * dims[0] * dims[1]);
     if (getCancel() == true)
     {
         ss.str("");
@@ -617,26 +602,34 @@ void M3CSliceBySlice::execute()
         setErrorCondition(-1);
         break;
     }
+
     // Copy the Voxels from layer 2 to Layer 1;
     ::memcpy(&(voxels[1]), &(voxels[1 + NSP]), NSP * sizeof(int));
 
-    // now splice the data into the 2nd z layer for our marching cubes remembering
-    // that we have a layer of border voxels.
-    int* vxPtr = voxels;
-    vxPtr = voxels + 1; // Pointer to start of layer 2 - Should be 4 bytes farther in memory because of junk voxel at voxel[0]
-    int* fVxPtr = fileVoxelLayer; // Pointer to actual Grain Ids
-    for (size_t y = 0; y < dims[1]; ++y)
+    // Either interleave the voxels of just a straight copy depending if a ghost
+    // layer was already present
+    if (isWrapped == true)
     {
-      // Get the offset into the data just read from the file
-      fVxPtr = fileVoxelLayer + (y * dims[0]);
-      // Get the offset into the second layer remembering the border voxel and
-      // the fact that we do not use voxel[0] for anything.
-      offset = ((y + 1) * wrappedDims[0]) + 1 + (NSP + 1);
-      // Use a straight memory copy to move the values from the temp array into the
-      // array used for the meshing
-      vxPtr = voxels + offset;
+      // Get a pointer into the GrainIds Array at the appropriate offset
+      int32_t* fileVoxelLayer = m_GrainIds + (i * dims[0] * dims[1]);
+      // Copy the grain id values into the 2nd slice layer of the working voxels.
+      ::memcpy( &(voxels[1 + NSP]), fileVoxelLayer, NSP * sizeof(int));
+      for(int ii = 0; ii < 2 * NSP + 1; ++ii) { if (voxels[ii] < 0) { voxels[ii] = -3;} } // Ensure all ghost cells are -3
+    }
+    else
+    {
+      copyBulkSliceIntoWorkingArray(i, wrappedDims, dims, voxels);
+    }
 
-      ::memcpy((void*)vxPtr, (void*)fVxPtr, dims[0] * sizeof(int));
+    // If we are on the last slice then we need both layers to be ghost cells with
+    // negative grain ids but ONLY if the voxel volume was NOT originally wrapped in
+    // ghost cells
+    if (i == dims[2] && isWrapped == false)
+    {
+        for (int i = NSP; i < 2 * NSP + 1; ++i)
+        {
+          voxels[i] = -3;
+        }
     }
 
     // This starts the actual M3C Algorithm codes
@@ -653,6 +646,8 @@ void M3CSliceBySlice::execute()
 
     // assign new, cumulative Node id...
     nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    update_node_edge_kind(nTriangle,cTrianglePtr, cVertexNodeKindPtr, cEdgePtr);
+
     //std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
 
 //    analyzeWinding();
@@ -695,6 +690,7 @@ void M3CSliceBySlice::execute()
     }
   }
 
+#if 0
   if (getCancel() == true)
   {
     ss.str("");
@@ -804,7 +800,7 @@ void M3CSliceBySlice::execute()
 //  writer->setWriteConformalMesh(m_WriteConformalMesh);
 //  writer->execute();
 //  setErrorCondition(writer->getErrorCondition());
-
+#endif
   // Clear out all the memory that we have used:
   voxelsPtr = DataArray<int32_t>::NullPointer();
   neighborsPtr = StructArray<Neighbor>::NullPointer();
@@ -827,6 +823,73 @@ void M3CSliceBySlice::execute()
   setErrorCondition(0);
   notifyStatusMessage("Surface Meshing Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool M3CSliceBySlice::volumeHasGhostLayer()
+{
+  size_t fileDim[3];
+  getVoxelDataContainer()->getDimensions(fileDim);
+  size_t index = 0;
+  int32_t* p = m_GrainIds;
+  bool p_value = false;
+
+  for (size_t z = 0; z < fileDim[2]; ++z)
+  {
+    for (size_t y = 0; y < fileDim[1]; ++y)
+    {
+      for (size_t x = 0; x < fileDim[0]; ++x)
+      {
+        index = (fileDim[0] * fileDim[1] * z) + (fileDim[0] * y) + x;
+        p_value = p[index] >= 0;
+             if (z == 0 && p_value) { return false;}
+        else if (z == fileDim[2]-1 && p_value) { return false;}
+        else if (y == 0 && p_value) { return false;}
+        else if (y == fileDim[1]-1 && p_value) { return false;}
+        else if (x == 0 && p_value) { return false;}
+        else if (x == fileDim[0]-1 && p_value) { return false;}
+      }
+    }
+  }
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
+                                                    size_t* dims, int32_t* voxels)
+{
+  std::stringstream ss;
+  int NSP = wrappedDims[0] * wrappedDims[1];
+  size_t offset = 0;
+
+  // Get a pointer into the GrainIds Array at the appropriate offset
+  int32_t* fileVoxelLayer = m_GrainIds + (i * dims[0] * dims[1]);
+
+
+
+  // now splice the data into the 2nd z layer for our marching cubes remembering
+  // that we have a layer of border voxels.
+  int* vxPtr = voxels;
+  vxPtr = voxels + 1; // Pointer to start of layer 2 - Should be 4 bytes farther in memory because of junk voxel at voxel[0]
+  int* fVxPtr = fileVoxelLayer; // Pointer to actual Grain Ids
+  for (size_t y = 0; y < dims[1]; ++y)
+  {
+    // Get the offset into the data just read from the file
+    fVxPtr = fileVoxelLayer + (y * dims[0]);
+    // Get the offset into the second layer remembering the border voxel and
+    // the fact that we do not use voxel[0] for anything.
+    offset = ((y + 1) * wrappedDims[0]) + 1 + (NSP + 1);
+    // Use a straight memory copy to move the values from the temp array into the
+    // array used for the meshing
+    vxPtr = voxels + offset;
+
+    ::memcpy((void*)vxPtr, (void*)fVxPtr, dims[0] * sizeof(int));
+  }
+}
+
 
 
 // -----------------------------------------------------------------------------
@@ -1241,7 +1304,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
   int tn1, tn2;
   int tnk;
   int pixIndex[2];
-  int eid = 0; // edge id...
+  size_t eid = 0; // edge id...
 //  int tnode1, tnode2;
   int edgeCount; // number of edges for each square...
   int NodeID[2];
@@ -1330,8 +1393,8 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
               {
                 tn1 = NodeID[0];
                 tn2 = NodeID[1];
-                nodeKind[tn1] = -1; // extra Nodes from meshing the surface of the box...
-                nodeKind[tn2] = -1; // we don't need them...
+                nodeKind[tn1] = DREAM3D::SurfaceMesh::NodeType::Unused; // extra Nodes from meshing the surface of the box...
+                nodeKind[tn2] = DREAM3D::SurfaceMesh::NodeType::Unused; // we don't need them...
               }
               // Categorize the Node...if it's triple junction or not...
               for (ii = 0; ii < 2; ii++)
@@ -1341,13 +1404,13 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
                   {
                     tnode = NodeID[ii];
-                    nodeKind[tnode] = 3;
+                    nodeKind[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
                     cSquare[k].FCnode = tnode;
                   }
                   else if (sqIndex == 19)
                   {
                     tnode = NodeID[ii];
-                   nodeKind[tnode] = 4;
+                    nodeKind[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
                     cSquare[k].FCnode = tnode;
                   }
                 }
@@ -1357,7 +1420,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   tnk = nodeKind[tnode];
                   if (tnk != -1)
                   {
-                    nodeKind[tnode] = 2;
+                    nodeKind[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
                   }
                 }
               }
@@ -1623,11 +1686,6 @@ void M3CSliceBySlice::get_grainnames(int cst, int ord, int pID[2], int* pgrainna
   }
 }
 
-namespace Detail
-{
-  static int triangleResizeCount = 0;
-  static size_t triangleResize = 1000;
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -1779,7 +1837,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
           }
         }
       }
-      // CoNSider each case as Z. Wu's paper...
+      // Consider each case as Z. Wu's paper...
       if (nFC == 0)
       { // when there's no Face center
         get_case0_triangles(i, arrayE, nE, tidIn, &tidOut, cEdgePtr, cTrianglePtr);
@@ -1811,7 +1869,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
 #define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)\
 {\
   size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
-  if (current_##cTrianglePtr##_size < ctid + 1) {\
+  if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
     Detail::triangleResizeCount++; \
     if (Detail::triangleResizeCount == 10) { \
       Detail::triangleResizeCount = 0;\
@@ -1870,7 +1928,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
   int numN, sumN;
   int from;
   int *loop;
-  int ctid;
+  size_t ctid;
   int front, back;
   int te0, te1, te2, tv0, tcVertex, tv2;
   int numT, cnumT, new_node0;
@@ -2966,6 +3024,70 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
     }
   }
   return nid;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::update_node_edge_kind(int nT,
+                                            StructArray<Patch>::Pointer cTrianglePtr,
+                                            DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                                            StructArray<Segment>::Pointer cEdgePtr)
+{
+
+  int tn = 0;
+ // int te;
+  int tnkind;
+//  int tekind;
+  int tspin1, tspin2;
+
+  Triangle* t = cTrianglePtr->GetPointer(0);
+  int8_t* nodeType = cVertexNodeKindPtr->GetPointer(0);
+//  Segment* fe = cEdgePtr->GetPointer(0);
+//  int nfedge = cEdgePtr->GetNumberOfTuples();
+
+  for (int j = 0; j < nT; j++)
+  {
+
+    tspin1 = t[j].nSpin[0];
+    tspin2 = t[j].nSpin[1];
+
+    if(tspin1 * tspin2 < 0)
+    { // if the triangle is the surface of whole microstructure...
+      // increase edge and node kind by 10...
+      for (int i = 0; i < 3; i++)
+      {
+        // nodeKind...
+        tn = t[j].node_id[i];
+        tnkind = nodeType[tn];
+        if(tnkind < 10)
+        {
+          nodeType[tn] = tnkind + 10;
+        }
+        // edgeKind...
+//        te = t[j].e_id[i];
+//        if(te < nfedge)
+//        {
+//          tekind = fe[te].edgeKind;
+//          if(tekind < 10)
+//          {
+//            fe[te].edgeKind = tekind + 10;
+//          }
+//        }
+//        else
+//        {
+//          te = te - nfedge;
+//          tekind = ie[te].edgeKind;
+//          if(tekind < 10)
+//          {
+//            ie[te].edgeKind = tekind + 10;
+//          }
+//        }
+      }
+    }
+
+  }
+
 }
 
 // -----------------------------------------------------------------------------

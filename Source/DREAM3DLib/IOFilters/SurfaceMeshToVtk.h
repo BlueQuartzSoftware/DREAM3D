@@ -64,14 +64,12 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
     virtual ~SurfaceMeshToVtk();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
+    // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
-
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
