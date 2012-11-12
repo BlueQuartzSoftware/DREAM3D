@@ -147,13 +147,13 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexPtr
      * @param voxelsPtr
      * @param cVertexNodeIdPtr
-     * @param cVertexNodeKindPtr
+     * @param cVertexNodeTypePtr
      */
     void initialize_nodes(int NSP, int zID, int *wrappedDims, float* res,
                           StructArray<Node>::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                          DataArray<int8_t>::Pointer cVertexNodeKindPtr );
+                          DataArray<int8_t>::Pointer cVertexNodeTypePtr );
 
     /**
      * @brief initialize_squares
@@ -175,7 +175,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cSquarePtr
      * @param voxelsPtr
      * @param cEdgePtr
-     * @param cVertexNodeKindPtr
+     * @param cVertexNodeTypePtr
      * @param neighborsPtr
      * @return
      */
@@ -183,7 +183,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                            StructArray<Face>::Pointer cSquarePtr,
                            DataArray<int32_t>::Pointer voxelsPtr,
                            StructArray<Segment>::Pointer cEdgePtr,
-                           DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                           DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                            StructArray<Neighbor>::Pointer neighborsPtr);
     /**
      * @brief get_triangles
@@ -191,7 +191,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param wrappedDims
      * @param cSquarePtr
      * @param voxelsPtr
-     * @param cVertexNodeKindPtr
+     * @param cVertexNodeTypePtr
      * @param cEdgePtr
      * @param cTrianglePtr
      * @return
@@ -199,7 +199,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     int get_triangles(int NSP, int* wrappedDims,
                       StructArray<Face>::Pointer cSquarePtr,
                       DataArray<int32_t>::Pointer voxelsPtr,
-                      DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                      DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                       StructArray<Segment>::Pointer cEdgePtr,
                       StructArray<Patch>::Pointer cTrianglePtr);
 
@@ -300,17 +300,26 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                              StructArray<Segment>::Pointer cEdgePtr,
                              StructArray<Patch>::Pointer cTrianglePtr);
 
+    void get_case_triangles_helper(int nedge, int* burnt, int* burnt_list, int &loopID, int *ae,
+                                  StructArray<Segment>::Pointer cEdgePtr, std::vector<int> &countVec);
+
+    void get_case_triangles_helper_2(int* burnt_loop, int* burnt_list,
+                                                int from, int to, int numN, int &ctid,
+                                                StructArray<Segment>::Pointer cEdgePtr,
+                                                StructArray<Patch>::Pointer cTrianglePtr);
+
+
     /**
      * @brief assign_nodeID
      * @param nN
      * @param NSP
      * @param cVertexNodeIdPtr
-     * @param cVertexNodeKindPtr
+     * @param cVertexNodeTypePtr
      * @return
      */
     int assign_nodeID(int nN, int NSP,
                       DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                      DataArray<int8_t>::Pointer cVertexNodeKindPtr);
+                      DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 
     int get_square_index(int tns[4]);
 
@@ -329,14 +338,14 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param nodesFile
      * @param cVertexPtr
      * @param cVertexNodeIdPtr
-     * @param cVertexNodeKindPtr
+     * @param cVertexNodeTypePtr
      * @return
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
                                     const std::string &nodesFile,
                                     StructArray<Node>::Pointer cVertexPtr,
                                     DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                    DataArray<int8_t>::Pointer cVertexNodeKindPtr);
+                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 
     /**
      * @brief writeTrianglesFile
@@ -367,7 +376,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     void copyBulkSliceIntoWorkingArray(int i, int *wrappedDims, size_t *dims, int32_t *voxels);
     void update_node_edge_kind(int nT,
                                StructArray<Patch>::Pointer cTrianglePtr,
-                               DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                               DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                StructArray<Segment>::Pointer cEdgePtr);
 
   private:
