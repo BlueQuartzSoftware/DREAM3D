@@ -72,8 +72,8 @@ void AbstractFilter::execute()
 // -----------------------------------------------------------------------------
 void AbstractFilter::preflight()
 {
-  std::cout << "AbstractFilter::Preflight needs to be added in some class";
-  assert(false);
+  setErrorCondition(-999);
+  notifyErrorMessage("AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
 }
 
 // -----------------------------------------------------------------------------
