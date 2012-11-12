@@ -561,8 +561,8 @@ void M3CSliceBySlice::execute()
   cVertexPtr->initializeWithZeros();
   DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeId_Array");
   cVertexNodeIdPtr->initializeWithZeros();
-  DataArray<int8_t>::Pointer cVertexNodeKindPtr = DataArray<int8_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeKind_Array");
-  cVertexNodeKindPtr->initializeWithZeros();
+  DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeKind_Array");
+  cVertexNodeTypePtr->initializeWithZeros();
   StructArray<Patch>::Pointer  cTrianglePtr = StructArray<Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
   cTrianglePtr->initializeWithZeros();
   StructArray<Segment>::Pointer cEdgePtr = StructArray<Segment>::CreateArray(0, "M3CSliceBySlice_Segment_Array");
@@ -587,11 +587,16 @@ void M3CSliceBySlice::execute()
   // Loop over all the Z Slices. An Optimization for memory would be to loop over
   // a different plane say the XZ in case that plane is smaller in dimensions than
   // the XY plane, ie, the volume is rectangular
-  for (size_t i = 0; i < dims[2]; i++)
+  size_t sliceCount = dims[2];
+  if (isWrapped == false)
+  {
+    sliceCount = dims[2] + 1;
+  }
+  for (size_t i = 0; i < sliceCount; i++)
   {
     ss.str("");
-    ss << " Layers " << i << " and " << i + 1 << " of " << dims[2];
-    notifyProgressValue((i * 90 / dims[2]));
+    ss << " Layers " << i << " and " << i + 1 << " of " << sliceCount;
+    notifyProgressValue((i * 90 / sliceCount));
     notifyStatusMessage(ss.str());
 
     if (getCancel() == true)
@@ -634,19 +639,19 @@ void M3CSliceBySlice::execute()
 
     // This starts the actual M3C Algorithm codes
     get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);
-    initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
     initialize_squares(i, NSP, cSquarePtr, neighborsPtr);
 
     // find Face edges of each square of marching cubes in each layer...
-    nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeKindPtr, neighborsPtr);
+    nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeTypePtr, neighborsPtr);
 
     // find triangles and arrange the spins across each triangle...
-    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeKindPtr, cEdgePtr, cTrianglePtr);
+    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeTypePtr, cEdgePtr, cTrianglePtr);
     arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
 
     // assign new, cumulative Node id...
-    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeKindPtr);
-    update_node_edge_kind(nTriangle,cTrianglePtr, cVertexNodeKindPtr, cEdgePtr);
+    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeTypePtr);
+    update_node_edge_kind(nTriangle,cTrianglePtr, cVertexNodeTypePtr, cEdgePtr);
 
     //std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
 
@@ -656,7 +661,7 @@ void M3CSliceBySlice::execute()
 
     // std::cout << "nNodes: " << nNodes << std::endl;
     // Output Nodes and triangles...
-    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
     if (err < 0)
     {
         ss.str("");
@@ -718,20 +723,20 @@ void M3CSliceBySlice::execute()
 
   int i = dims[2];
   get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);
-  initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
+  initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
   initialize_squares(i, NSP, cSquarePtr, neighborsPtr);
 
   // find Face edges of each square of marching cubes in each layer...
-  nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeKindPtr, neighborsPtr);
+  nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeTypePtr, neighborsPtr);
   // find triangles and arrange the spins across each triangle...
   if (nTriangle > 0)
   {
     // find triangles and arrange the spins across each triangle...
-    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeKindPtr, cEdgePtr, cTrianglePtr);
+    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeTypePtr, cEdgePtr, cTrianglePtr);
     arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
   }
   // assign new, cumulative Node id...
-    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeTypePtr);
   //  std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
 
 //  analyzeWinding();
@@ -741,7 +746,7 @@ void M3CSliceBySlice::execute()
 
   // std::cout << "nNodes: " << nNodes << std::endl;
   // Output Nodes and triangles...
-    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeKindPtr);
+    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
   if (err < 0)
   {
         ss.str("");
@@ -808,7 +813,7 @@ void M3CSliceBySlice::execute()
   cSquarePtr = StructArray<Face>::NullPointer();
   cVertexPtr = StructArray<Node>::NullPointer();
   cVertexNodeIdPtr = DataArray<int32_t>::NullPointer();
-  cVertexNodeKindPtr = DataArray<int8_t>::NullPointer();
+  cVertexNodeTypePtr = DataArray<int8_t>::NullPointer();
   cTrianglePtr = StructArray<Patch>::NullPointer();
   cEdgePtr = StructArray<Segment>::NullPointer();
 
@@ -1137,7 +1142,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
                                       StructArray<Node>::Pointer cVertexPtr,
                                       DataArray<int32_t>::Pointer voxelsPtr,
                                       DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                      DataArray<int8_t>::Pointer cVertexNodeKindPtr  )
+                                      DataArray<int8_t>::Pointer cVertexNodeTypePtr  )
 {
 
   // Finds the coordinates of Nodes...
@@ -1158,7 +1163,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
 
   Node* cVertex = cVertexPtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
-  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
 
   // Node id starts with 0....
@@ -1286,7 +1291,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                                         StructArray<Face>::Pointer cSquarePtr,
                                         DataArray<int32_t>::Pointer voxelsPtr,
                                         StructArray<Segment>::Pointer cEdgePtr,
-                                        DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                                        DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                         StructArray<Neighbor>::Pointer neighborsPtr)
 {
   int j, k, m, ii;
@@ -1316,7 +1321,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
 
   Face* cSquare = cSquarePtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
-  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
 
   for (k = 0; k < 3 * 2 * NSP; k++)
   { // for each square...
@@ -1393,8 +1398,8 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
               {
                 tn1 = NodeID[0];
                 tn2 = NodeID[1];
-                nodeKind[tn1] = DREAM3D::SurfaceMesh::NodeType::Unused; // extra Nodes from meshing the surface of the box...
-                nodeKind[tn2] = DREAM3D::SurfaceMesh::NodeType::Unused; // we don't need them...
+                nodeType[tn1] = DREAM3D::SurfaceMesh::NodeType::Unused; // extra Nodes from meshing the surface of the box...
+                nodeType[tn2] = DREAM3D::SurfaceMesh::NodeType::Unused; // we don't need them...
               }
               // Categorize the Node...if it's triple junction or not...
               for (ii = 0; ii < 2; ii++)
@@ -1404,23 +1409,23 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   if (sqIndex == 7 || sqIndex == 11 || sqIndex == 13 || sqIndex == 14)
                   {
                     tnode = NodeID[ii];
-                    nodeKind[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
+                    nodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::TriplePoint;
                     cSquare[k].FCnode = tnode;
                   }
                   else if (sqIndex == 19)
                   {
                     tnode = NodeID[ii];
-                    nodeKind[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+                    nodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
                     cSquare[k].FCnode = tnode;
                   }
                 }
                 else
                 {
                   tnode = NodeID[ii];
-                  tnk = nodeKind[tnode];
+                  tnk = nodeType[tnode];
                   if (tnk != -1)
                   {
-                    nodeKind[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
+                    nodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
                   }
                 }
               }
@@ -1693,7 +1698,7 @@ void M3CSliceBySlice::get_grainnames(int cst, int ord, int pID[2], int* pgrainna
 int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
                                     StructArray<Face>::Pointer cSquarePtr,
                                     DataArray<int32_t>::Pointer voxelsPtr,
-                                    DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                     StructArray<Segment>::Pointer cEdgePtr,
                                     StructArray<Patch>::Pointer  cTrianglePtr)
 {
@@ -1721,7 +1726,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
 
   Face* cSquare = cSquarePtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
-  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
   // Reset these variables each time into this loop.
   Detail::triangleResize = 1000;
   Detail::triangleResizeCount = 0;
@@ -1806,11 +1811,11 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
       // update NodeKind of body center Node in the current marching cube...
       if (nkFlag > 0)
       {
-        nodeKind[BCnode] = nds;
+        nodeType[BCnode] = nds;
       }
       else
       {
-        nodeKind[BCnode] = nds;
+        nodeType[BCnode] = nds;
       }
     }
     // Checking the number of edges for loops in the cube...
@@ -2122,53 +2127,32 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc,
-                                          int nfctr, int tin, int* tout,
-                                          StructArray<Segment>::Pointer cEdgePtr,
-                                          StructArray<Patch>::Pointer cTrianglePtr)
+void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burnt_list, int &loopID,
+                                                int* ae, StructArray<Segment>::Pointer cEdgePtr,
+                                                std::vector<int> &countVec)
 {
-  int ii, i, j, k, kk, k1, n, i1, j1;
-  int loopID;
-  int tail, head, coin;
-  int ce, ne;
-  int cgrainname1, cgrainname2, cnode1, cnode2;
   int nSpin1, nSpin2, nnode1, nnode2;
-  int tgrainname, tnode;
-  int nucleus;
-  int chaser;
-  int start;
-  int end;
-  int from, to;
-  int grainnameFlag, NodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  int *count;
-  int numN;
-  int *burnt_loop;
-  int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
-  int startEdge;
-  int endNode;
-  int index;
-  int ctid;
-  int front, back;
-  int te0, te1, te2, tv0, tcVertex, tv2;
-  int numT, cnumT, new_node0;
-  burnt = new int[nedge];
-  burnt_list = new int[nedge];
-
+  int cgrainname1, cgrainname2;
+  int grainnameFlag, NodeFlag;
+  int nucleus;
+  int ne;
+  int chaser;
+  int cnode1, cnode2;
+  int ce;
   Segment* cEdge = cEdgePtr->GetPointer(0);
 
   // initialize burn flags for Face edges...
-  for (ii = 0; ii < nedge; ii++)
+  for (int ii = 0; ii < nedge; ii++)
   {
     burnt[ii] = 0;
     burnt_list[ii] = -1;
   }
   loopID = 1;
-  tail = 0;
-  head = 0;
-  for (i = 0; i < nedge; i++)
+  int tail = 0;
+  int head = 0;
+  int coin;
+  for (int i = 0; i < nedge; i++)
   {
     ce = ae[i];
     bflag = burnt[i];
@@ -2185,7 +2169,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
         cgrainname2 = cEdge[chaser].nSpin[1];
         cnode1 = cEdge[chaser].node_id[0];
         cnode2 = cEdge[chaser].node_id[1];
-        for (j = 0; j < nedge; j++)
+        for (int j = 0; j < nedge; j++)
         {
           ne = ae[j];
           nbflag = burnt[j];
@@ -2248,14 +2232,15 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
       }
     }
   }
-  count = new int[loopID];
-  for (k1 = 1; k1 < loopID; k1++)
+  countVec.resize(loopID);
+  int* count = &(countVec.front());
+  for (int k1 = 1; k1 < loopID; k1++)
   {
     count[k1] = 0;
   }
-  for (k = 1; k < loopID; k++)
+  for (int k = 1; k < loopID; k++)
   {
-    for (kk = 0; kk < nedge; kk++)
+    for (int kk = 0; kk < nedge; kk++)
     {
       if (k == burnt[kk])
       {
@@ -2263,17 +2248,171 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_list,
+                                                  int from, int to, int numN, int &ctid,
+                                                  StructArray<Segment>::Pointer cEdgePtr,
+                                                  StructArray<Patch>::Pointer cTrianglePtr)
+{
+  int front, back;
+  int te0, te1, te2, tv0, tcVertex, tv2;
+  int numT, cnumT, new_node0;
+  int ce;
+  int cnode1, cnode2;
+  int tnode;
+  int tgrainname;
+
+  Segment* cEdge = cEdgePtr->GetPointer(0);
+
+  int startEdge = burnt_list[from];
+  burnt_loop[0] = startEdge;
+  int index = 1;
+  int endNode = cEdge[startEdge].node_id[1];
+  int chaser = startEdge;
+  while (index < numN)
+  {
+    for (int n = from; n < to; n++)
+    {
+      ce = burnt_list[n];
+      cnode1 = cEdge[ce].node_id[0];
+      cnode2 = cEdge[ce].node_id[1];
+      if ((ce != chaser) && (endNode == cnode1))
+      {
+        burnt_loop[index] = ce;
+        index++;
+      }
+      else if ((ce != chaser) && (endNode == cnode2))
+      {
+        burnt_loop[index] = ce;
+        index++;
+        // flip...
+        tnode = cEdge[ce].node_id[0];
+        tgrainname = cEdge[ce].nSpin[0];
+        cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
+        cEdge[ce].node_id[1] = tnode;
+        cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
+        cEdge[ce].nSpin[1] = tgrainname;
+      }
+    }
+    chaser = burnt_loop[index - 1];
+    endNode = cEdge[chaser].node_id[1];
+  }
+  if (numN == 3)
+  {
+    te0 = burnt_loop[0];
+    te1 = burnt_loop[1];
+    te2 = burnt_loop[2];
+    ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+
+        ctid++;
+  }
+  else if (numN > 3)
+  {
+    numT = numN - 2;
+    cnumT = 0;
+    front = 0;
+    back = numN - 1;
+    te0 = burnt_loop[front];
+    te1 = burnt_loop[back];
+    tv0 = cEdge[te0].node_id[0];
+    tcVertex = cEdge[te0].node_id[1];
+    tv2 = cEdge[te1].node_id[0];
+    ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
+
+        new_node0 = tv2;
+    //  new_node1 = tcVertex;
+    cnumT++;
+    ctid++;
+    while (cnumT < numT)
+    {
+      if ((cnumT % 2) != 0)
+      {
+        front = front + 1;
+        ce = burnt_loop[front];
+        tv0 = cEdge[ce].node_id[0];
+        tcVertex = cEdge[ce].node_id[1];
+        tv2 = new_node0;
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+
+            new_node0 = tcVertex;
+        cnumT++;
+        ctid++;
+      }
+      else
+      {
+        back = back - 1;
+        ce = burnt_loop[back];
+        tv0 = cEdge[ce].node_id[0];
+        tcVertex = cEdge[ce].node_id[1];
+        tv2 = new_node0;
+        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
+
+            new_node0 = tv0;
+        cnumT++;
+        ctid++;
+      }
+    }
+  }
+  delete[] burnt_loop;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc,
+                                          int nfctr, int tin, int* tout,
+                                          StructArray<Segment>::Pointer cEdgePtr,
+                                          StructArray<Patch>::Pointer cTrianglePtr)
+{
+
+  int n, i1;
+  int loopID;
+
+  int cnode1, cnode2;
+  int tgrainname, tnode;
+  int chaser;
+  int start;
+  int end;
+  int from, to;
+  int flip;
+  int* burnt;
+  int* burnt_list;
+  int* count;
+  std::vector<int> countVec;
+  int numN;
+  int* burnt_loop;
+  int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
+
+  int index;
+  int ctid;
+  int front, back;
+  int te0, te1, tv0, tcVertex, tv2;
+  int numT, cnumT, new_node0;
+  burnt = new int[nedge];
+  burnt_list = new int[nedge];
+
+  Segment* cEdge = cEdgePtr->GetPointer(0);
+
+  get_case_triangles_helper(nedge, burnt, burnt_list, loopID, ae, cEdgePtr, countVec);
+  count = &(countVec.front());
+
   // Let's make complete loops...
-//  numTri = 0;
+  // numTri = 0;
   start = afc[0];
   end = afc[1];
   to = 0;
   from = 0;
-  j1 = 1;
   // Let's do triangulation...
   ctid = tin;
-  for (j1 = 1; j1 < loopID; j1++)
+  for (int j1 = 1; j1 < loopID; j1++)
   {
+    int startEdge;
+    int endNode;
+    int ce;
     openL = 0; // current loop is closed...
     numN = count[j1];
     to = to + numN;
@@ -2344,8 +2483,12 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
       {
         te0 = burnt_loop[0];
         te1 = burnt_loop[1];
-        ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te1].node_id[1], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-
+        int ccn = cEdge[te0].node_id[0];
+        int tn0 = cEdge[te1].node_id[0];
+        int tn1 = cEdge[te1].node_id[1];
+        int ts0 = cEdge[te0].nSpin[0];
+        int ts1 = cEdge[te0].nSpin[1];
+        ADD_TRIANGLE(cTrianglePtr, ctid, ccn, tn0, tn1, ts0, ts1 )
         ctid++;
       }
       else if (numN > 2)
@@ -2361,8 +2504,8 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
         tv2 = cEdge[te1].node_id[1];
         ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
 
-        new_node0 = tv2;
-    //    new_node1 = tcVertex;
+            new_node0 = tv2;
+        //    new_node1 = tcVertex;
         cnumT++;
         ctid++;
         while (cnumT < numT)
@@ -2376,7 +2519,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
             tv2 = new_node0;
             ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
-            new_node0 = tcVertex;
+                new_node0 = tcVertex;
             cnumT++;
             ctid++;
           }
@@ -2389,7 +2532,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
             tv2 = new_node0;
             ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
 
-            new_node0 = tv0;
+                new_node0 = tv0;
             cnumT++;
             ctid++;
           }
@@ -2398,104 +2541,14 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
       delete[] burnt_loop;
     }
     else
-    { // if current loop is a closed one....i.e., openL = 0...
-      startEdge = burnt_list[from];
-      burnt_loop[0] = startEdge;
-      index = 1;
-      endNode = cEdge[startEdge].node_id[1];
-      chaser = startEdge;
-      while (index < numN)
-      {
-        for (n = from; n < to; n++)
-        {
-          ce = burnt_list[n];
-          cnode1 = cEdge[ce].node_id[0];
-          cnode2 = cEdge[ce].node_id[1];
-          if ((ce != chaser) && (endNode == cnode1))
-          {
-            burnt_loop[index] = ce;
-            index++;
-          }
-          else if ((ce != chaser) && (endNode == cnode2))
-          {
-            burnt_loop[index] = ce;
-            index++;
-            // flip...
-            tnode = cEdge[ce].node_id[0];
-            tgrainname = cEdge[ce].nSpin[0];
-            cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
-            cEdge[ce].node_id[1] = tnode;
-            cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
-            cEdge[ce].nSpin[1] = tgrainname;
-          }
-        }
-        chaser = burnt_loop[index - 1];
-        endNode = cEdge[chaser].node_id[1];
-      }
-      if (numN == 3)
-      {
-        te0 = burnt_loop[0];
-        te1 = burnt_loop[1];
-        te2 = burnt_loop[2];
-        ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-
-        ctid++;
-      }
-      else if (numN > 3)
-      {
-        numT = numN - 2;
-        cnumT = 0;
-        front = 0;
-        back = numN - 1;
-        te0 = burnt_loop[front];
-        te1 = burnt_loop[back];
-        tv0 = cEdge[te0].node_id[0];
-        tcVertex = cEdge[te0].node_id[1];
-        tv2 = cEdge[te1].node_id[0];
-        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-
-        new_node0 = tv2;
-      //  new_node1 = tcVertex;
-        cnumT++;
-        ctid++;
-        while (cnumT < numT)
-        {
-          if ((cnumT % 2) != 0)
-          {
-            front = front + 1;
-            ce = burnt_loop[front];
-            tv0 = cEdge[ce].node_id[0];
-            tcVertex = cEdge[ce].node_id[1];
-            tv2 = new_node0;
-            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
-
-            new_node0 = tcVertex;
-            cnumT++;
-            ctid++;
-          }
-          else
-          {
-            back = back - 1;
-            ce = burnt_loop[back];
-            tv0 = cEdge[ce].node_id[0];
-            tcVertex = cEdge[ce].node_id[1];
-            tv2 = new_node0;
-            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1] )
-
-            new_node0 = tv0;
-            cnumT++;
-            ctid++;
-          }
-        }
-
-      }
-      delete[] burnt_loop;
+    {
+      // if current loop is a closed one....i.e., openL = 0...
+      get_case_triangles_helper_2(burnt_loop, burnt_list, from, to, numN, ctid, cEdgePtr, cTrianglePtr);
     }
   }
   *tout = ctid;
   delete[] burnt;
   delete[] burnt_list;
-  delete[] count;
 }
 
 // -----------------------------------------------------------------------------
@@ -2506,148 +2559,45 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
                                           StructArray<Segment>::Pointer cEdgePtr,
                                           StructArray<Patch>::Pointer cTrianglePtr)
 {
-  int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
+  int n, i1;
+  int n1, iii;
   int loopID;
-  int tail, head, coin;
-  int ce, ne;
-  int cgrainname1, cgrainname2, cnode1, cnode2;
-  int nSpin1, nSpin2, nnode1, nnode2;
+  int ce;
+  int cnode1, cnode2;
   int tgrainname, tnode;
-  int nucleus, chaser;
+  int chaser;
   int start;
   int from, to;
-  int grainnameFlag, NodeFlag, flip;
-  int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  int *count;
+  int flip;
+  int* burnt;
+  int* burnt_list;
+  int* count;
+  std::vector<int> countVec;
   int numN, numTri;
   int tn0, tn1;
-  int *burnt_loop;
+  int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
   int endNode;
   int index;
   int ctid;
-  int front, back;
-  int te0, te1, te2, tv0, tcVertex, tv2, ts0, ts1;
-  int numT, cnumT, new_node0, new_node1;
+  int ts0, ts1;
+
   burnt = new int[nedge];
   burnt_list = new int[nedge];
 
   Segment* cEdge = cEdgePtr->GetPointer(0);
 
-  // initialize burn flags for Face edges...
-  for (ii = 0; ii < nedge; ii++)
-  {
-    burnt[ii] = 0;
-    burnt_list[ii] = -1;
-  }
-  loopID = 1;
-  tail = 0;
-  head = 0;
-  for (i = 0; i < nedge; i++)
-  {
-    ce = ae[i];
-    bflag = burnt[i];
-    if (bflag == 0)
-    {
-      nucleus = ce;
-      burnt[i] = loopID;
-      burnt_list[tail] = ce;
-      coin = 1;
-      while (coin)
-      {
-        chaser = burnt_list[tail];
-        cgrainname1 = cEdge[chaser].nSpin[0];
-        cgrainname2 = cEdge[chaser].nSpin[1];
-        cnode1 = cEdge[chaser].node_id[0];
-        cnode2 = cEdge[chaser].node_id[1];
-        for (j = 0; j < nedge; j++)
-        {
-          ne = ae[j];
-          nbflag = burnt[j];
-          if (nbflag == 0)
-          {
-            nSpin1 = cEdge[ne].nSpin[0];
-            nSpin2 = cEdge[ne].nSpin[1];
-            nnode1 = cEdge[ne].node_id[0];
-            nnode2 = cEdge[ne].node_id[1];
-            // checking if Neighbor edge has same Neighboring grainnames...
-            if (((cgrainname1 == nSpin1) && (cgrainname2 == nSpin2)) || ((cgrainname1 == nSpin2) && (cgrainname2 == nSpin1)))
-            {
-              grainnameFlag = 1;
-            }
-            else
-            {
-              grainnameFlag = 0;
-            }
-            // checking if neighor egde is contiguous...
-            if ((cnode1 == nnode1) && (cnode2 != nnode2))
-            {
-              NodeFlag = 1;
-            }
-            else if ((cnode1 == nnode2) && (cnode2 != nnode1))
-            {
-              NodeFlag = 1;
-            }
-            else if ((cnode2 == nnode1) && (cnode1 != nnode2))
-            {
-              NodeFlag = 1;
-            }
-            else if ((cnode2 == nnode2) && (cnode1 != nnode1))
-            {
-              NodeFlag = 1;
-            }
-            else
-            {
-              NodeFlag = 0;
-            }
-            if (grainnameFlag == 1 && NodeFlag == 1)
-            {
-              head = head + 1;
-              burnt_list[head] = ne;
-              burnt[j] = loopID;
-            }
-          }
-        }
-        if (tail == head)
-        {
-          coin = 0;
-          tail = tail + 1;
-          head = tail;
-          loopID++;
-        }
-        else
-        {
-          tail = tail + 1;
-          coin = 1;
-        }
-      }
-    }
-  }
-  count = new int[loopID];
-  for (k1 = 1; k1 < loopID; k1++)
-  {
-    count[k1] = 0;
-  }
-  for (k = 1; k < loopID; k++)
-  {
-    for (kk = 0; kk < nedge; kk++)
-    {
-      if (k == burnt[kk])
-      {
-        count[k] = count[k] + 1;
-      }
-    }
-  }
+  get_case_triangles_helper(nedge, burnt, burnt_list, loopID, ae, cEdgePtr, countVec);
+  count = &(countVec.front());
+
   // Let's make complete loops...
   numTri = 0;
   to = 0;
   from = 0;
-  j1 = 1;
+  // Let's do triangulation...
   ctid = tin;
-  for (j1 = 1; j1 < loopID; j1++)
+  for (int j1 = 1; j1 < loopID; j1++)
   {
     openL = 0; // current loop is closed...
     numN = count[j1];
@@ -2728,109 +2678,19 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
         ts0 = cEdge[ce].nSpin[0];
         ts1 = cEdge[ce].nSpin[1];
         ADD_TRIANGLE(cTrianglePtr, ctid, ccn, tn0, tn1, ts0, ts1)
-
         ctid++;
       }
       delete[] burnt_loop;
     }
     else
-    { // if current loop is a closed one....i.e., openL = 0...
-      startEdge = burnt_list[from];
-      burnt_loop[0] = startEdge;
-      index = 1;
-      endNode = cEdge[startEdge].node_id[1];
-      chaser = startEdge;
-      while (index < numN)
-      {
-        for (n = from; n < to; n++)
-        {
-          ce = burnt_list[n];
-          cnode1 = cEdge[ce].node_id[0];
-          cnode2 = cEdge[ce].node_id[1];
-          if ((ce != chaser) && (endNode == cnode1))
-          {
-            burnt_loop[index] = ce;
-            index++;
-          }
-          else if ((ce != chaser) && (endNode == cnode2))
-          {
-            burnt_loop[index] = ce;
-            index++;
-            // flip...
-            tnode = cEdge[ce].node_id[0];
-            tgrainname = cEdge[ce].nSpin[0];
-            cEdge[ce].node_id[0] = cEdge[ce].node_id[1];
-            cEdge[ce].node_id[1] = tnode;
-            cEdge[ce].nSpin[0] = cEdge[ce].nSpin[1];
-            cEdge[ce].nSpin[1] = tgrainname;
-          }
-        }
-        chaser = burnt_loop[index - 1];
-        endNode = cEdge[chaser].node_id[1];
-      }
-      if (numN == 3)
-      {
-        te0 = burnt_loop[0];
-        te1 = burnt_loop[1];
-        te2 = burnt_loop[2];
-        ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
-
-        ctid++;
-      }
-      else if (numN > 3)
-      {
-        numT = numN - 2;
-        cnumT = 0;
-        front = 0;
-        back = numN - 1;
-        te0 = burnt_loop[front];
-        te1 = burnt_loop[back];
-        tv0 = cEdge[te0].node_id[0];
-        tcVertex = cEdge[te0].node_id[1];
-        tv2 = cEdge[te1].node_id[0];
-        ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[te0].nSpin[0], cEdge[te0].nSpin[1])
-
-        new_node0 = tv2;
-        new_node1 = tcVertex;
-        cnumT++;
-        ctid++;
-        while (cnumT < numT)
-        {
-          if ((cnumT % 2) != 0)
-          {
-            front = front + 1;
-            ce = burnt_loop[front];
-            tv0 = cEdge[ce].node_id[0];
-            tcVertex = cEdge[ce].node_id[1];
-            tv2 = new_node0;
-            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
-
-            new_node0 = tcVertex;
-            cnumT++;
-            ctid++;
-          }
-          else
-          {
-            back = back - 1;
-            ce = burnt_loop[back];
-            tv0 = cEdge[ce].node_id[0];
-            tcVertex = cEdge[ce].node_id[1];
-            tv2 = new_node0;
-            ADD_TRIANGLE(cTrianglePtr, ctid, tv0, tcVertex, tv2, cEdge[ce].nSpin[0], cEdge[ce].nSpin[1])
-
-            new_node0 = tv0;
-            cnumT++;
-            ctid++;
-          }
-        }
-      }
-      delete[] burnt_loop;
+    {
+    // if current loop is a closed one....i.e., openL = 0...
+      get_case_triangles_helper_2(burnt_loop, burnt_list, from, to, numN, ctid, cEdgePtr, cTrianglePtr);
     }
   }
   *tout = ctid;
   delete[] burnt;
   delete[] burnt_list;
-  delete[] count;
 }
 
 // -----------------------------------------------------------------------------
@@ -3003,18 +2863,18 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
 // -----------------------------------------------------------------------------
 int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
                                    DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                   DataArray<int8_t>::Pointer cVertexNodeKindPtr)
+                                   DataArray<int8_t>::Pointer cVertexNodeTypePtr)
 {
   int nid = 0;
   int nkind = 0;
   int cnid = 0;
 
-  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
   nid = nN;
   for (int i = 0; i < (7 * 2 * NSP); i++)
   {
-    nkind = nodeKind[i];
+    nkind = nodeType[i];
     cnid = nodeID[i];
   //  plane = i % 7;
     if (nkind != 0 && cnid == -1)
@@ -3031,27 +2891,23 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::update_node_edge_kind(int nT,
                                             StructArray<Patch>::Pointer cTrianglePtr,
-                                            DataArray<int8_t>::Pointer cVertexNodeKindPtr,
+                                            DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                             StructArray<Segment>::Pointer cEdgePtr)
 {
-
   int tn = 0;
  // int te;
-  int tnkind;
+  int triangleNodeType;
 //  int tekind;
   int tspin1, tspin2;
 
   Triangle* t = cTrianglePtr->GetPointer(0);
-  int8_t* nodeType = cVertexNodeKindPtr->GetPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
 //  Segment* fe = cEdgePtr->GetPointer(0);
 //  int nfedge = cEdgePtr->GetNumberOfTuples();
-
   for (int j = 0; j < nT; j++)
   {
-
     tspin1 = t[j].nSpin[0];
     tspin2 = t[j].nSpin[1];
-
     if(tspin1 * tspin2 < 0)
     { // if the triangle is the surface of whole microstructure...
       // increase edge and node kind by 10...
@@ -3059,10 +2915,10 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
       {
         // nodeKind...
         tn = t[j].node_id[i];
-        tnkind = nodeType[tn];
-        if(tnkind < 10)
+        triangleNodeType = nodeType[tn];
+        if(triangleNodeType < 10)
         {
-          nodeType[tn] = tnkind + 10;
+          nodeType[tn] = triangleNodeType + 10;
         }
         // edgeKind...
 //        te = t[j].e_id[i];
@@ -3097,7 +2953,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
                                     const std::string &nodesFile,
                                     StructArray<Node>::Pointer cVertexPtr,
                                     DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                    DataArray<int8_t>::Pointer cVertexNodeKindPtr )
+                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr )
 {
 
   #if 0
@@ -3135,7 +2991,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   }
   int total = (7 * 2 * NSP);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
-  int8_t* nodeKind = cVertexNodeKindPtr->GetPointer(0);
+  int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
   Node* cVertex = cVertexPtr->GetPointer(0);
 
   for (int k = 0; k < total; k++)
