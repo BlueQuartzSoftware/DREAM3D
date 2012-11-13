@@ -162,6 +162,28 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
+  if (getXMax() < getXMin())
+  {
+    ss.str("");
+    ss << ClassName() << " X Max (" << getXMax() << ") less than X Min (" << getXMin() << ")";
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getYMax() < getYMin())
+  {
+    ss.str("");
+    ss << ClassName() << " Y Max (" << getYMax() << ") less than Y Min (" << getYMin() << ")";
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getZMax() < getZMin())
+  {
+    ss.str("");
+    ss << ClassName() << " Z Max (" << getZMax() << ") less than Z Min (" << getZMin() << ")";
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+
   if (m_RenumberGrains == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -194,7 +216,7 @@ void CropVolume::execute()
   }
 
   setErrorCondition(0);
-
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -263,7 +285,7 @@ void CropVolume::execute()
   // Grain Ids MUST already be renumbered.
   if (m_RenumberGrains == true)
   {
-    int64_t totalPoints = m->getTotalPoints();
+    totalPoints = m->getTotalPoints();
     size_t totalFields = m->getNumFieldTuples();
     if (0 == totalFields)
     {

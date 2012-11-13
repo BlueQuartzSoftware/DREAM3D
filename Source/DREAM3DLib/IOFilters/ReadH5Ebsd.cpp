@@ -173,9 +173,18 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+  if (NULL == m)
+  {
+    ss.str("");
+    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    setErrorCondition(-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    return;
+  }
 
   if (m_H5EbsdFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
+    ss.str("");
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);

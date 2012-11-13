@@ -25,8 +25,9 @@
     <file>IOFilters/H5VoxelFileReader.html</file>
     <file>IOFilters/DxWriter.html</file>
     <file>IOFilters/DxReader.html</file>
-    <file>IOFilters/PhWriter.html</file>
+    <file>IOFilters/INLWriter.html</file>
     <file>IOFilters/PhReader.html</file>
+    <file>IOFilters/PhWriter.html</file>
     <file>IOFilters/FieldInfoReader.html</file>
     <file>IOFilters/EnsembleInfoReader.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
