@@ -31,6 +31,7 @@
     <file>IOFilters/FieldDataCSVWriter.html</file>
     <file>IOFilters/FieldInfoReader.html</file>
     <file>IOFilters/H5VoxelFileReader.html</file>
+    <file>IOFilters/INLWriter.html</file>
     <file>IOFilters/NodesTrianglesToStl.html</file>
     <file>IOFilters/NodesTrianglesToVtk.html</file>
     <file>IOFilters/PhReader.html</file>
