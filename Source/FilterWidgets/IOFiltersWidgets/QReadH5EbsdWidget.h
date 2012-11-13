@@ -96,7 +96,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
      */
     bool checkPhaseTypes();
 
-
+    void populateCreatedRequiredLists( QString filePath );
 
     QReadH5EbsdWidget(const QReadH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const QReadH5EbsdWidget&); // Operator '=' Not Implemented
