@@ -52,8 +52,9 @@ FileWriter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-
-m_GrainIds(NULL)
+m_GrainIds(NULL),
+m_CellPhases(NULL),
+m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
 }
