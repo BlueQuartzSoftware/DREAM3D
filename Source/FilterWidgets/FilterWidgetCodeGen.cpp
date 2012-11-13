@@ -1170,12 +1170,12 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   fprintf(f, "<p class=\"pBody\">%s</p>\n\n", groupName);
 
   fprintf(f, "<a name=\"wp2\"> </a>");
-  fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n<p class=\"pBody\">\n");
-  fprintf(f, "<!-- Write all your documentation here -->\n\n");
+  fprintf(f, "<h2 class=\"pHeading2\">Description</h2>\n");
+  fprintf(f, "<!-- Write all your documentation here -->\n\n<p class=\"pBody\">\n");
 //  fprintf(f, "This filter does ....\n");
-  fprintf(f, "<!-- Do NOT write documentation below this line -->\n</p>\n\n");
+  fprintf(f, "</p>\n\n<!-- Do NOT write documentation below this line -->\n");
   fprintf(f, "<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->\n");
-  fprintf(f, "<!-- A TABLE OF Options FOR YOUR FILTER -->\n");
+  fprintf(f, "\n<!-- A TABLE OF Parameters FOR YOUR FILTER -->\n");
   fprintf(f, "<a name=\"wp3\"> </a><h2 class=\"pHeading2\">Options</h2>\n");
   if (options.size() > 0) {
     fprintf(f, "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
@@ -1238,7 +1238,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   t->setVoxelDataContainer(m.get());
   t->preflight();
 
-  fprintf(f, "<!-- A table of Required Data for your filter -->\n");
+  fprintf(f, "\n<!-- A table of Required Data for your filter -->\n");
   fprintf(f, "<a name=\"wp4\"> </a><h2 class=\"pHeading2\">Required Arrays</h2>\n");
   fprintf(f, "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
   fprintf(f, "<tr bgcolor=\"#A2A2A2\"><th>Type</th><th>Name</th><th>Comment</th></tr>\n");
@@ -1274,7 +1274,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
   }
   fprintf(f, "</table>\n");
 
-  fprintf(f, "<!-- A table of Created Data for your filter -->\n");
+  fprintf(f, "\n<!-- A table of Created Data for your filter -->\n");
   fprintf(f, "<a name=\"wp5\"> </a><h2 class=\"pHeading2\">Created Arrays</h2>\n");
   fprintf(f, "<table border=\"0\" cellpadding=\"4\" cellspacing=\"1\">\n");
   fprintf(f, "<tr bgcolor=\"#A2A2A2\"><th>Type</th><th>Name</th><th>Comment</th></tr>\n");
@@ -1315,7 +1315,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 
   t->setVoxelDataContainer(NULL);
 
-  fprintf(f, "<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
+  fprintf(f, "\n<a name=\"wp1\"> </a><h2 class=\"pHeading2\">Authors</h2>\n<p class=\"pBody\">\n");
 
   fprintf(f, "Copyright [INSERT YOUR NAME HERE]<br />\n");
 

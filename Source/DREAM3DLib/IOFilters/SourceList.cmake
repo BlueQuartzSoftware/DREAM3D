@@ -15,6 +15,9 @@ set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
 
+
+
+
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DataContainerReader DataContainerReader.html "" TRUE)
@@ -35,8 +38,9 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ReadH5Ebsd ReadH5Ebsd.html "" TR
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToNodesTrianglesEdges SurfaceMeshToNodesTrianglesEdges.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToStl SurfaceMeshToStl.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToVtk SurfaceMeshToVtk.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader VtkGrainIdReader.html "" TRUE)
+#ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader VtkGrainIdReader.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkRectilinearGridWriter VtkRectilinearGridWriter.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} YSChoiAbaqusReader YSChoiAbaqusReader.html "" TRUE)
+
 
 
