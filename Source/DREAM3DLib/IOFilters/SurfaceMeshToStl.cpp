@@ -234,9 +234,9 @@ void SurfaceMeshToStl::execute()
       int nId1 = triangles[t].node_id[1];
       int nId2 = triangles[t].node_id[2];
 
-      vert1[0] = nodes[nId0].coord[0];
-      vert1[1] = nodes[nId0].coord[1];
-      vert1[2] = nodes[nId0].coord[2];
+      vert1[0] = static_cast<float>(nodes[nId0].coord[0]);
+      vert1[1] = static_cast<float>(nodes[nId0].coord[1]);
+      vert1[2] = static_cast<float>(nodes[nId0].coord[2]);
 
       if (triangles[t].nSpin[0] == spin)
       {
@@ -255,13 +255,13 @@ void SurfaceMeshToStl::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = nodes[nId1].coord[0];
-      vert2[1] = nodes[nId1].coord[1];
-      vert2[2] = nodes[nId1].coord[2];
+      vert2[0] = static_cast<float>(nodes[nId1].coord[0]);
+      vert2[1] = static_cast<float>(nodes[nId1].coord[1]);
+      vert2[2] = static_cast<float>(nodes[nId1].coord[2]);
 
-      vert3[0] = nodes[nId2].coord[0];
-      vert3[1] = nodes[nId2].coord[1];
-      vert3[2] = nodes[nId2].coord[2];
+      vert3[0] = static_cast<float>(nodes[nId2].coord[0]);
+      vert3[1] = static_cast<float>(nodes[nId2].coord[1]);
+      vert3[2] = static_cast<float>(nodes[nId2].coord[2]);
 
       //
       // Compute the normal
