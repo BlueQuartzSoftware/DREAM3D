@@ -260,9 +260,9 @@ void SurfaceMeshToVtk::execute()
     Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
-      pos[0] = n.coord[0];
-      pos[1] = n.coord[1];
-      pos[2] = n.coord[2];
+      pos[0] = static_cast<float>(n.coord[0]);
+      pos[1] = static_cast<float>(n.coord[1]);
+      pos[2] = static_cast<float>(n.coord[2]);
       if (m_WriteBinaryFile == true)
       {
         MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
