@@ -1,10 +1,10 @@
 message(FATAL_ERROR "Volume Mesh is NOT working. All the sources need to be updated")
-SET (DREAM3D_VolumeMesh_HDRS
+set(DREAM3D_VolumeMesh_HDRS
   ${DREAM3DLib_SOURCE_DIR}/VolumeMesh/MeshGenerator.h
 #  ${DREAM3DLib_SOURCE_DIR}/VolumeMesh/VolumeMesh.h
 )
 
-SET (DREAM3D_VolumeMesh_SRCS
+set(DREAM3D_VolumeMesh_SRCS
   ${DREAM3DLib_SOURCE_DIR}/VolumeMesh/MeshGenerator.cpp
 #  ${DREAM3DLib_SOURCE_DIR}/VolumeMesh/VolumeMesh.cpp
 )

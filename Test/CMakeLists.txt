@@ -29,7 +29,7 @@ FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMP
 file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BINARY_DIR_NATIVE)
 file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" MXA_BINARY_DIR_NATIVE)
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
-SET (DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${MXA_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
+set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${MXA_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
 ConvertPathToHeaderCompatible(MXA_TEMP_DIR)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
@@ -189,7 +189,7 @@ add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 
 # --------
-#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp 
+#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
 #                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
 #                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
 #                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackPrimaryPhases.cpp
@@ -211,4 +211,17 @@ target_link_libraries(RNGTest DREAM3DLib)
 # --------
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
 target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
+
+
+# --------
+add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
+target_link_libraries(StructArrayTest EbsdLib MXA DREAM3DLib)
+
+
+# --------
+if(0)
+include_directories(${VXL_CORE_INCLUDE_DIR} ${VXL_VCL_INCLUDE_DIR} )
+add_executable(VXLTest ${DREAM3DTest_SOURCE_DIR}/VXLTest.cpp)
+target_link_libraries(VXLTest ${VXL_LIBRARIES})
+endif()
 

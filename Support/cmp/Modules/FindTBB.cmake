@@ -35,7 +35,7 @@ if (WIN32)
     set(_TBB_LIB_DEBUG_NAME "${_TBB_LIB_NAME}_debug")
     set(_TBB_LIB_MALLOC_DEBUG_NAME "${_TBB_LIB_MALLOC_NAME}_debug")
     if (MSVC71)
-        set (_TBB_COMPILER "vc7.1")
+        set(_TBB_COMPILER "vc7.1")
     endif(MSVC71)
     if (MSVC80)
         set(_TBB_COMPILER "vc8")
@@ -88,36 +88,36 @@ endif (CMAKE_SYSTEM MATCHES "SunOS.*")
 
 
 #-- Clear the public variables
-set (TBB_FOUND "NO")
+set(TBB_FOUND "NO")
 
 #-- Find TBB install dir and set ${_TBB_INSTALL_DIR} and cached ${TBB_INSTALL_DIR}
 # first: use CMake variable TBB_INSTALL_DIR
 if (TBB_INSTALL_DIR)
-    set (_TBB_INSTALL_DIR ${TBB_INSTALL_DIR})
+    set(_TBB_INSTALL_DIR ${TBB_INSTALL_DIR})
 endif (TBB_INSTALL_DIR)
 # second: use environment variable
 if (NOT _TBB_INSTALL_DIR)
     if (NOT "$ENV{TBB_INSTALL_DIR}" STREQUAL "")
-        set (_TBB_INSTALL_DIR $ENV{TBB_INSTALL_DIR})
+        set(_TBB_INSTALL_DIR $ENV{TBB_INSTALL_DIR})
     endif (NOT "$ENV{TBB_INSTALL_DIR}" STREQUAL "")
     # Intel recommends setting TBB21_INSTALL_DIR
     if (NOT "$ENV{TBB21_INSTALL_DIR}" STREQUAL "")
-        set (_TBB_INSTALL_DIR $ENV{TBB21_INSTALL_DIR})
+        set(_TBB_INSTALL_DIR $ENV{TBB21_INSTALL_DIR})
     endif (NOT "$ENV{TBB21_INSTALL_DIR}" STREQUAL "")
     if (NOT "$ENV{TBB22_INSTALL_DIR}" STREQUAL "")
-        set (_TBB_INSTALL_DIR $ENV{TBB22_INSTALL_DIR})
+        set(_TBB_INSTALL_DIR $ENV{TBB22_INSTALL_DIR})
     endif (NOT "$ENV{TBB22_INSTALL_DIR}" STREQUAL "")
     if (NOT "$ENV{TBB30_INSTALL_DIR}" STREQUAL "")
-        set (_TBB_INSTALL_DIR $ENV{TBB30_INSTALL_DIR})
+        set(_TBB_INSTALL_DIR $ENV{TBB30_INSTALL_DIR})
     endif (NOT "$ENV{TBB30_INSTALL_DIR}" STREQUAL "")
     if (NOT "$ENV{TBB40_INSTALL_DIR}" STREQUAL "")
-        set (_TBB_INSTALL_DIR $ENV{TBB40_INSTALL_DIR})
+        set(_TBB_INSTALL_DIR $ENV{TBB40_INSTALL_DIR})
     endif (NOT "$ENV{TBB40_INSTALL_DIR}" STREQUAL "")
 endif (NOT _TBB_INSTALL_DIR)
 # third: try to find path automatically
 if (NOT _TBB_INSTALL_DIR)
     if (_TBB_DEFAULT_INSTALL_DIR)
-        set (_TBB_INSTALL_DIR $ENV{_TBB_DEFAULT_INSTALL_DIR})
+        set(_TBB_INSTALL_DIR $ENV{_TBB_DEFAULT_INSTALL_DIR})
     endif (_TBB_DEFAULT_INSTALL_DIR)
 endif (NOT _TBB_INSTALL_DIR)
 # sanity check
@@ -126,7 +126,7 @@ if (NOT _TBB_INSTALL_DIR)
 else (NOT _TBB_INSTALL_DIR)
 # finally: set the cached CMake variable TBB_INSTALL_DIR
 if (NOT TBB_INSTALL_DIR)
-    set (TBB_INSTALL_DIR ${_TBB_INSTALL_DIR} CACHE PATH "Intel TBB install directory")
+    set(TBB_INSTALL_DIR ${_TBB_INSTALL_DIR} CACHE PATH "Intel TBB install directory")
     mark_as_advanced(TBB_INSTALL_DIR)
 endif (NOT TBB_INSTALL_DIR)
 
@@ -146,7 +146,7 @@ endmacro(TBB_CORRECT_LIB_DIR var_content)
 
 
 #-- Look for include directory and set ${TBB_INCLUDE_DIR}
-set (TBB_INC_SEARCH_DIR ${_TBB_INSTALL_DIR}/include)
+set(TBB_INC_SEARCH_DIR ${_TBB_INSTALL_DIR}/include)
 find_path(TBB_INCLUDE_DIR
     tbb/task_scheduler_init.h
     PATHS ${TBB_INC_SEARCH_DIR}
@@ -160,14 +160,14 @@ message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
 # GvdB: $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
 message(STATUS "TBB_ARCH_PLATFORM: $ENV{TBB_ARCH_PLATFORM}")
 # if (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
-    set (_TBB_LIBRARY_DIR 
+    set(_TBB_LIBRARY_DIR 
          ${_TBB_INSTALL_DIR}/lib/$ENV{TBB_ARCH_PLATFORM}
          ${_TBB_INSTALL_DIR}/$ENV{TBB_ARCH_PLATFORM}/lib
         )
 #else (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
     # HH: deprecated
 #    message(STATUS "[Warning] FindTBB.cmake: The use of TBB_ARCHITECTURE and TBB_COMPILER is deprecated and may not be supported in future versions. Please set $ENV{TBB_ARCH_PLATFORM} (using tbbvars.[bat|csh|sh]).")
-#    set (TBB_LIBRARY_DIR "${_TBB_INSTALL_DIR}/${_TBB_ARCHITECTURE}/${_TBB_COMPILER}/lib")
+#    set(TBB_LIBRARY_DIR "${_TBB_INSTALL_DIR}/${_TBB_ARCHITECTURE}/${_TBB_COMPILER}/lib")
 #endif (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
 
 #message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
@@ -200,14 +200,14 @@ cmp_ADJUST_LIB_VARS(TBB_MALLOC)
 
 if (TBB_INCLUDE_DIR)
     if (TBB_LIBRARY)
-        set (TBB_FOUND 1)
-        set (TBB_LIBRARIES ${TBB_LIBRARY} ${TBB_MALLOC_LIBRARY} )
-        set (TBB_MALLOC_LIBRARIES ${TBB_MALLOC_LIBRARY})
-        set (TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR} CACHE PATH "TBB include directory")
-        set (TBB_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
-        set (TBB_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
-        set (TBB_MALLOC_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
-        set (TBB_MALLOC_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
+        set(TBB_FOUND 1)
+        set(TBB_LIBRARIES ${TBB_LIBRARY} ${TBB_MALLOC_LIBRARY} )
+        set(TBB_MALLOC_LIBRARIES ${TBB_MALLOC_LIBRARY})
+        set(TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR} CACHE PATH "TBB include directory")
+        set(TBB_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
+        set(TBB_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
+        set(TBB_MALLOC_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
+        set(TBB_MALLOC_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
         IF (TBB_LIBRARY_DEBUG)
             GET_FILENAME_COMPONENT(TBB_LIBRARY_PATH ${TBB_LIBRARY_DEBUG} PATH)
             SET(TBB_LIBRARY_DIR  ${TBB_LIBRARY_PATH} CACHE FILEPATH "Path to tbb Library Directory")

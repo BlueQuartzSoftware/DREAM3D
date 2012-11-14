@@ -42,8 +42,10 @@
 
 #include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
 #include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/HKL/CtfFields.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
 
 #include "DREAM3DLib/Common/Observable.h"
@@ -89,13 +91,6 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-//  DataContainer* m = getVoxelDataContainer();
-
-//  for (std::vector<std::string>::iterator iter = m_EbsdFileList.begin(); iter != m_EbsdFileList.end(); ++iter )
-//  {
-//    std::cout << (*iter) << std::endl;
-//  }
-
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -103,6 +98,34 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     ss << "No files have been selected for import. Have you set the input directory?";
     addErrorMessage(getHumanLabel(), ss.str(), -11);
     setErrorCondition(-1);
+  }
+  else
+  {
+    // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
+    std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
+    std::vector<std::string> columnNames;
+    AbstractEbsdFields* ebsdFields = NULL;
+    if(ext.compare(Ebsd::Ang::FileExt) == 0)
+    {
+      ebsdFields = new AngFields;
+    }
+    else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
+    {
+       ebsdFields = new CtfFields;
+    }
+    else
+    {
+      ss.str("");
+      ss << "The File extension '" << ext << "' was not recognized. Currently .ang or .ctf are the only recognized file extensions";
+      addErrorMessage(getHumanLabel(), ss.str(), -997);
+      setErrorCondition(-1);
+      return;
+    }
+    columnNames = ebsdFields->getFieldNames();
+    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
+    {
+      addCreatedCellData(columnNames[i]);
+    }
   }
 
   if(m_OutputFile.empty() == true)
@@ -112,6 +135,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     addErrorMessage(getHumanLabel(), ss.str(), -12);
     setErrorCondition(-1);
   }
+
 
 }
 

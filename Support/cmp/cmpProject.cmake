@@ -12,7 +12,7 @@ set(CMP_LINUX_TOOLS_SOURCE_DIR ${CMP_SOURCE_DIR}/Linux_Tools CACHE INTERNAL "")
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
 # directory first
-SET (CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 
@@ -22,39 +22,39 @@ if (NOT DEFINED CMP_PROJECT_NAMESPACE)
 endif()
 
 if (NOT DEFINED CMP_HEADER_DIR)
-    set (CMP_HEADER_DIR ${PROJECT_BINARY_DIR}/cmp)
+    set(CMP_HEADER_DIR ${PROJECT_BINARY_DIR}/cmp)
 endif()
 
 if (NOT DEFINED CMP_CONFIGURATION_FILE_NAME)
-    set (CMP_CONFIGURATION_FILE_NAME "cmpConfiguration.h")
+    set(CMP_CONFIGURATION_FILE_NAME "cmpConfiguration.h")
 endif()
 
 if (NOT DEFINED CMP_TYPES_FILE_NAME)
-    set (CMP_TYPES_FILE_NAME "cmpTypes.h")
+    set(CMP_TYPES_FILE_NAME "cmpTypes.h")
 endif()
 
 if (NOT DEFINED CMP_VERSION_HEADER_FILE_NAME)
-    set (CMP_VERSION_HEADER_FILE_NAME "cmpVersion.h")
+    set(CMP_VERSION_HEADER_FILE_NAME "cmpVersion.h")
 endif()
 
 if (NOT DEFINED CMP_VERSION_SOURCE_FILE_NAME)
-    set (CMP_VERSION_HEADER_FILE_NAME "cmpVersion.cpp")
+    set(CMP_VERSION_HEADER_FILE_NAME "cmpVersion.cpp")
 endif()
 
 if (NOT DEFINED CMP_TOP_HEADER_FILE)
-    set (CMP_TOP_HEADER_FILE "")
+    set(CMP_TOP_HEADER_FILE "")
 endif()
 
 if (NOT DEFINED CMP_PROJECT_NAME)
-    set (CMP_PROJECT_NAME "CMP")
+    set(CMP_PROJECT_NAME "CMP")
 endif()
 
 if (NOT DEFINED CMP_PLUGIN_LIST_FILE)
-    set (CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/plugins.txt)
+    set(CMP_PLUGIN_LIST_FILE ${PROJECT_BINARY_DIR}/plugins.txt)
 endif()
 
 if (NOT DEFINED CMP_PLUGIN_SEARCHDIR_FILE)
-    set (CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
+    set(CMP_PLUGIN_SEARCHDIR_FILE ${PROJECT_BINARY_DIR}/libsearchdirs.txt)
 endif()
 
 if (NOT DEFINED CMP_VERSION_MAJOR)

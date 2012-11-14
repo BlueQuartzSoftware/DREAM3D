@@ -9,15 +9,16 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (SurfaceMeshingPlugin_Meshing_HDRS
+set(SurfaceMeshingPlugin_Meshing_HDRS
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Face.h
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Neighbor.h
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Node.h
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Patch.h
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Segment.h
+  ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/SharedEdge.h
 
 )
-SET (SurfaceMeshingPlugin_Meshing_SRCS
+set(SurfaceMeshingPlugin_Meshing_SRCS
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Face.cpp
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Neighbor.cpp
   ${SurfaceMeshingPlugin_SOURCE_DIR}/Code/SurfaceMeshing/Meshing/Node.cpp

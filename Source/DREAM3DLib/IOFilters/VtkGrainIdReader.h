@@ -56,15 +56,23 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdScalarName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Read Vtk File (Rectilinear Grid, Grain Ids Only)"; }
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getHumanLabel() { return "Read Vtk File (STRUCTURED_POINTS) Grain Ids Only"; }
+
+    virtual void setupFilterParameters();
+
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void preflight();
 
   protected:
     VtkGrainIdReader();
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     /**
      * @brief Reads the VTK header and sets the values that are described in the header
@@ -189,6 +197,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
 
 
   private:
+    int32_t* m_GrainIds;
 
     VtkGrainIdReader(const VtkGrainIdReader&); // Copy Constructor Not Implemented
     void operator=(const VtkGrainIdReader&); // Operator '=' Not Implemented

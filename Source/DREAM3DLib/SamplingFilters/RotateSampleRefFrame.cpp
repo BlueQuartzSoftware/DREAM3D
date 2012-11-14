@@ -68,6 +68,7 @@ typedef struct {
  */
 class RotateSampleRefFrameImpl
 {
+
     DataArray<size_t>::Pointer newIndicesPtr;
     RotateSampleRefFrameImplArg_t*  m_params;
 
@@ -114,6 +115,10 @@ class RotateSampleRefFrameImpl
     }
 #endif
 
+  private:
+    VoxelDataContainer* m;
+    uint32_t angle;
+    uint32_t axis;
 
 };
 
@@ -121,9 +126,9 @@ class RotateSampleRefFrameImpl
 //
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
-  AbstractFilter(),
-  m_RotationAxis(DREAM3D::SampleFrameRotationAxis::None),
-  m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero)
+AbstractFilter(),
+m_RotationAxis(DREAM3D::SampleFrameRotationAxis::None),
+m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero)
 {
   setupFilterParameters();
 }

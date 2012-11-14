@@ -54,7 +54,10 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
-m_GrainIds(NULL)
+m_GrainIds(NULL),
+m_CellPhases(NULL),
+m_CellEulerAngles(NULL)
+
 {
   setupFilterParameters();
 }

@@ -7,6 +7,9 @@
     <file>catalog.css</file>
     <file>index.html</file>
 
+    <!-- ***** CustomFilters ***** -->
+    <file>CustomFilters/CropVolumePipeline.html</file>
+
     <!-- ***** GenericFilters ***** -->
     <file>GenericFilters/FindNeighbors.html</file>
     <file>GenericFilters/FindGrainPhases.html</file>
@@ -29,9 +32,14 @@
     <file>IOFilters/FieldInfoReader.html</file>
     <file>IOFilters/H5VoxelFileReader.html</file>
     <file>IOFilters/INLWriter.html</file>
+    <file>IOFilters/NodesTrianglesToStl.html</file>
+    <file>IOFilters/NodesTrianglesToVtk.html</file>
     <file>IOFilters/PhReader.html</file>
     <file>IOFilters/PhWriter.html</file>
     <file>IOFilters/ReadH5Ebsd.html</file>
+    <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
+    <file>IOFilters/SurfaceMeshToStl.html</file>
+    <file>IOFilters/SurfaceMeshToVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
 
@@ -81,6 +89,10 @@
 
     <!-- ***** SurfaceMeshFilters ***** -->
     <file>SurfaceMeshFilters/QuickSurfaceMesh.html</file>
+    <file>SurfaceMeshFilters/M3CEntireVolume.html</file>
+    <file>SurfaceMeshFilters/M3CSliceBySlice.html</file>
+    <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
+    <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
     <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>

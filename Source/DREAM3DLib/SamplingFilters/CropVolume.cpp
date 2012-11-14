@@ -83,7 +83,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("XMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Column");
+  option->setUnits("Column");
     parameters.push_back(option);
   }
   {
@@ -92,7 +92,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("YMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Row");
+  option->setUnits("Row");
     parameters.push_back(option);
   }
   {
@@ -101,7 +101,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("ZMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Plane");
+  option->setUnits("Plane");
     parameters.push_back(option);
   }
   {
@@ -110,7 +110,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("XMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Column");
+  option->setUnits("Column");
     parameters.push_back(option);
   }
   {
@@ -119,7 +119,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("YMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Row");
+  option->setUnits("Row");
     parameters.push_back(option);
   }
   {
@@ -128,7 +128,7 @@ void CropVolume::setupFilterParameters()
     option->setPropertyName("ZMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Plane");
+  option->setUnits("Plane");
     parameters.push_back(option);
   }
   {
@@ -310,6 +310,7 @@ void CropVolume::execute()
     RenumberGrains::Pointer renum = RenumberGrains::New();
     renum->setVoxelDataContainer(m);
     renum->setObservers(getObservers());
+    renum->setMessagePrefix(getMessagePrefix());
     renum->execute();
     setErrorCondition(renum->getErrorCondition());
     addErrorMessages(renum->getPipelineMessages());

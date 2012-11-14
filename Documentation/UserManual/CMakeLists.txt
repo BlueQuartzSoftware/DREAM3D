@@ -11,7 +11,7 @@ project (UserManual)
 cmake_minimum_required(VERSION 2.8.3)
 
 if (NOT DEFINED PROJECT_RESOURCES_DIR)
-set (PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
+set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
 endif()
 
 set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
@@ -21,24 +21,24 @@ if (NOT DOXYGEN_FOUND)
   message(FATAL_ERROR "Doxygen is needed to build the documentation but was not found on your system. Please install it correctly and rerun cmake.")
 endif()
 
-SET (DOX_GENERATE_RTF "NO")
+set(DOX_GENERATE_RTF "NO")
 option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
 if (DREAM3D_GENERATE_RTF STREQUAL "ON")
-    SET (DOX_GENERATE_RTF "YES")
+    set(DOX_GENERATE_RTF "YES")
 endif()
   
 
-SET (DOX_GENERATE_HTML "YES")
+set(DOX_GENERATE_HTML "YES")
 option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
 if (DREAM3D_GENERATE_HTML STREQUAL "ON")
-    SET (DOX_GENERATE_HTML "YES")
+    set(DOX_GENERATE_HTML "YES")
 endif()
 
 
-SET (DOX_GENERATE_LATEX "NO")
+set(DOX_GENERATE_LATEX "NO")
 option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" OFF)
 if (DREAM3D_GENERATE_LATEX STREQUAL "ON")
-    SET (DOX_GENERATE_LATEX "YES")
+    set(DOX_GENERATE_LATEX "YES")
     # Check for existence of LaTex executable files
     INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
 endif()
@@ -51,16 +51,16 @@ endif()
 
 include ( ${DOCUMENTATION_RESOURCES_DIR}/CMake/Macros.cmake)
 
-set (LATEX_TITLE "DREAM.3D:\\\\User Manual")
-set (LATEX_AUTHOR "DREAM3D Development Team")
+set(LATEX_TITLE "DREAM.3D:\\\\User Manual")
+set(LATEX_AUTHOR "DREAM3D Development Team")
 
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
-set (DOCUMENTATION_SOURCE_FILES
+set(DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/UserManual.dox
 )
 
-set (LATEX_EPS_FILES 
+set(LATEX_EPS_FILES 
 
 )
 
@@ -79,7 +79,7 @@ if (DOX_GENERATE_LATEX)
                      IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
 endif()
 
-set (DOCUMENTATION_SOURCE_FILES
+set(DOCUMENTATION_SOURCE_FILES
         ${DOCUMENTATION_SOURCE_FILES})
 
 

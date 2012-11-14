@@ -9,14 +9,14 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_DistributionAnalysisOps_HDRS
+set(DREAM3DLib_DistributionAnalysisOps_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/BetaOps.h
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/DistributionAnalysisOps.h
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/LogNormalOps.h
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/PowerLawOps.h
 )
 
-SET (DREAM3DLib_DistributionAnalysisOps_SRCS
+set(DREAM3DLib_DistributionAnalysisOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/BetaOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/DistributionAnalysisOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/LogNormalOps.cpp

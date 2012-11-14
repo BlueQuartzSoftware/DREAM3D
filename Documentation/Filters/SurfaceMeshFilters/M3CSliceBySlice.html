@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="qrichtext" content="1" />
+<style type="text/css">
+h1.pHeading1 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: x-large; font-weight: bold; text-align: left }
+h2.pHeading2 { color: #003366; font-family: Arial, Verdana, Helvetica, sans-serif; font-size: large; font-weight: bold; text-align: left }
+p.pBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }
+p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: medium; text-align: left }
+#footer
+{
+   font-family: Arial, Verdana, Helvetica, sans-serif;
+   font-color:Blue;
+   font-size:small;
+   background-color:#CCCCCC;
+   padding:0pt;
+   position:fixed;
+   bottom:1%;
+   left:1%;
+   width:98%;
+}
+</style>
+<title>Multi-Material Marching Cubes (Slice at a Time)</title>
+</head>
+<body>
+<h1 class="pHeading1">Multi-Material Marching Cubes (Slice at a Time)</h1>
+<p class="pCellBody">
+<a href="../SurfaceMeshFilters/LeeMarchingCubes.html#wp2">Description</a>
+| <a href="../SurfaceMeshFilters/LeeMarchingCubes.html#wp3">Options</a>
+| <a href="../SurfaceMeshFilters/LeeMarchingCubes.html#wp4">Required Arrays</a>
+| <a href="../SurfaceMeshFilters/LeeMarchingCubes.html#wp5">Created Arrays</a>
+| <a href="../SurfaceMeshFilters/LeeMarchingCubes.html#wp1">Authors</a> </p>
+
+<a name="wp7"></a>
+<h2 class="pHeading2">Group</h2>
+<p class="pBody">Surface Meshing</p>
+
+<a name="wp2"> </a><h2 class="pHeading2">Description</h2>
+
+<!-- Write all your documentation here -->
+<p class="pBody">
+This filter creates a surface mesh using a MultiMaterial Marching Cubes (M3C) algorithm originally
+ developed at Carnegie-Mellon University by Dr. Sukbin Lee in the Marterials Engineering
+ department based on the Wu/Sullivan algorithm. Heavy modifications were performed by
+ M. Groeber and M. Jackson for the DREAM3D project.
+</p>
+<p>
+ This version of the code meshes by looking at 2 slices of voxles at a time. The temporary data is
+ then serialized out to disk and is then gathered into the complete shared vertex list and triangle
+ list at the conclusion of the filter. The ramifications of this means that the working amount of RAM
+ during the main part of the algorithm is much lower than the <i>Volume at a Time</i> version of the
+ M3C algorithm but does involve potentially a large amout of disk activity. At the conclusion of the
+ filter the entire mesh is then read into memory which means that the user's computer must still have
+ enough RAM to hold the fiinal mesh in memory.
+</p>
+<p class="pBody">
+ This version of the code does not have any restrictions on the wrapping of the voxel volume with a
+ ghost layer of voxels. If the user's volume does have a ghost layer then those voxels should have a
+ value that is <b>NEGATIVE</b>. This is very important as the algorithm that determines if a layer needs
+ to be added looks specifically for negative values along the outside of the volume.
+</p>
+
+<p class="pBody">
+The values for the <b>Node Type</b> array can take one of the following values.
+<pre>
+namespace SurfaceMesh {<br/>
+  namespace NodeType {<br/>
+    const int8_t Unused = -1;<br/>
+    const int8_t Default = 2;<br/>
+    const int8_t TriplePoint = 3;<br/>
+    const int8_t QuadPoint = 4;<br/>
+    const int8_t SurfaceDefault = 12;<br/>
+    const int8_t SurfaceTriplePoint = 13;<br/>
+    const int8_t SurfaceQuadPoint = 14;<br/>
+  }<br/>
+}<br/>
+</pre>
+</p>
+<!-- Do NOT write documentation below this line -->
+
+
+<!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
+<!-- A TABLE OF Options FOR YOUR FILTER -->
+<a name="wp3"> </a><h2 class="pHeading2">Options</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
+<tr bgcolor="#E2E2E2"><td>Delete Temp Files</td><td>Boolean: Should the temporary files that are generated
+be deleted at the end of the filter. This is mostly for debugging.</td></tr>
+</table>
+<!-- A table of Required Data for your filter -->
+<a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
+</table>
+<!-- A table of Created Data for your filter -->
+<a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+</table>
+
+
+<a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
+<p class="pBody">
+Copyright 2012 Michael A. Groeber (AFRL), Michael A. Jackson (BlueQuartz Software)<br />
+Contact Info: dream3d@bluequartz.net<br />
+Version: 1.0.0<br />
+License: See the License.txt file that came with DREAM3D.<br />
+</p>
+<!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
+<div>  <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>  </div>
+</body>
+</html>

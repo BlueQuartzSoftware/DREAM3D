@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_Common_HDRS
+set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
@@ -40,6 +40,8 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshStructs.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/StructArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.h
@@ -51,9 +53,10 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
+#  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.h
 )
 
-SET (DREAM3DLib_Common_SRCS
+set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.cpp
@@ -84,6 +87,7 @@ SET (DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.cpp
+#  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")
 if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
