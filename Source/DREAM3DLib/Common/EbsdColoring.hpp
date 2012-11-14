@@ -39,19 +39,21 @@
 
 #include <string>
 
-//#include "DREAM3DLib/Common/DREAM3DMath.h"
-
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
-#define M_PI_OVER_4   0.785398163397448
-#define m_pi   3.1415926535897
 namespace Detail
 {
   static const float DegToRads = static_cast<float>(M_PI/180.0f);
   static const float HalfSqrt2 = sqrt(2.0f) / 2.0f;
   static const float RadToDegs = static_cast<float>(180.0f/M_PI);
+  static const float PiOver4  = static_cast<float>(M_PI_4);
+  static const float Pi_f = static_cast<float>(M_PI);
+  static const float PiOver12 = static_cast<float>(M_PI/12.0);
+
 }
 
 /**
@@ -264,8 +266,8 @@ class EbsdColoring
      */
     static void GenerateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
     {
-	  float range = 2.0*(sqrt(2.0) - 1.0)+0.000001;
-	  float max = range/2.0;
+	    float range = static_cast<float>(2.0*(sqrt(2.0) - 1.0)+0.000001);
+	    float max = range/2.0f;
       float red = (r1+max)/range;
       float green = (r2+max)/range;
       float blue = (r3+max)/range;
@@ -401,10 +403,10 @@ class EbsdColoring
      */
     static void GenerateHexRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
     {
-	  float range1 = 2.0*(tanf(m_pi/4.0));
-	  float range2 = 2.0*(tanf(m_pi/12.0));
-	  float max1 = range1/2.0;
-	  float max2 = range2/2.0;
+      float range1 = 2.0f*(tanf(Detail::PiOver4));
+      float range2 = 2.0f*(tanf(Detail::PiOver12));
+	    float max1 = range1/2.0f;
+	    float max2 = range2/2.0f;
       float red = (r1+max1)/range1;
       float green = (r2+max1)/range1;
       float blue = (r3+max2)/range2;
