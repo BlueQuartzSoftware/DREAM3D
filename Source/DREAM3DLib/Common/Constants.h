@@ -154,9 +154,12 @@ namespace DREAM3D
     const std::string TotalSurfaceAreas("TotalSurfaceAreas");
     const std::string CrystalStructures("CrystalStructures");
     const std::string PhaseTypes("PhaseTypes");
+    const std::string BravaisLattice("BravaisLattice");
     const std::string PrecipitateFractions("PrecipitateFractions");
     const std::string ShapeTypes("ShapeTypes");
     const std::string Statistics("Statistics");
+    const std::string PhaseName("PhaseName");
+    const std::string MaterialName("MaterialName");
   }
 
 #if 0

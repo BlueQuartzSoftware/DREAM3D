@@ -52,7 +52,8 @@ FileWriter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
 m_GrainIds(NULL)
 {
   setupFilterParameters();
@@ -112,6 +113,16 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+
+
+  #if (__APPLE__)
+    #warning Fix code that checks for a required Ensemble data that is of type StringDataArray
+//  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, MaterialNames, ss, -304, std::string, StringDataArray, ensembles, 1)
+
+  #endif
 
 }
 
@@ -209,10 +220,10 @@ int INLWriter::writeFile()
   int32_t grainId;
   int32_t phaseId;
 
-  GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(m, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (m->getNumEnsembleTuples()), crystruct);
   unsigned char rgba[4] = {0,0,0,255};
   unsigned char hkl[3] = { 0, 0, 0 };
   float refDir[3] = {0.0f, 0.0f, 1.0f};
+  uint32_t symmetry = 0;
 
   size_t index = 0;
   for(size_t z = 0; z < dims[2]; ++z)
@@ -231,21 +242,21 @@ int INLWriter::writeFile()
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
         rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
-
+        symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {
-          if(crystruct[phaseId] == Ebsd::CrystalStructure::Cubic)
+          if(symmetry == Ebsd::CrystalStructure::Cubic)
           {
             EbsdColoring::GenerateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
           }
-          else if(crystruct[phaseId] == Ebsd::CrystalStructure::Hexagonal)
+          else if(symmetry == Ebsd::CrystalStructure::Hexagonal)
           {
             EbsdColoring::CalculateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
           }
         }
 
 
-        fprintf(f, "%f %f %f %f %f %f %d %d %d %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, (int)(rgba[0]), (int)(rgba[1]), (int)(rgba[2]));
+        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
       }
     }
   }

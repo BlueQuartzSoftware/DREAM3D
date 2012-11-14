@@ -262,6 +262,17 @@ class DataArray : public IDataArray
     }
 
     /**
+     * @brief Sets all the values to value.
+     */
+    void initializeWithValues(T value)
+    {
+      for (size_t i = 0; i < this->Size; i++)
+      {
+        this->Array[i] = value;
+      }
+    }
+
+    /**
      * @brief Sets all the values to zero.
      */
     virtual void initializeWithZeros()
@@ -270,18 +281,7 @@ class DataArray : public IDataArray
       ::memset(this->Array, 0, this->Size * typeSize);
     }
 
-    /**
-     * @brief Sets all the values to value.
-     */
-    void initializeWithValues(T value)
-    {
-		for (size_t i = 0; i < this->Size; i++)
-		{
-			this->Array[i] = value;
-		}
-    }
-
-	/**
+  /**
      * @brief Removes Tuples from the Array
      * @param idxs The indices to remove
      * @return

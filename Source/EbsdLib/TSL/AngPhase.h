@@ -183,6 +183,8 @@ class EbsdLib_EXPORT AngPhase
      */
     unsigned int determineCrystalStructure();
 
+
+
   protected:
     AngPhase();
 

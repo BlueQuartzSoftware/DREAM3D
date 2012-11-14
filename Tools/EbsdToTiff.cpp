@@ -180,7 +180,7 @@ int main(int argc, char **argv)
 
   //unsigned char* rgb;
   unsigned char hkl[3] = { 0, 0, 0 };
-  float RefDirection[3] = { 0.0, 1.0, 0.0 };
+  float RefDirection[3] = { 0.0, 0.0, 1.0 };
 
   int width = ebsdReader->getXDimension();
   int height = ebsdReader->getYDimension();

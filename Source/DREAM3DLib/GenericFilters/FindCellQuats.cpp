@@ -49,15 +49,15 @@
 //
 // -----------------------------------------------------------------------------
 FindCellQuats::FindCellQuats() :
-AbstractFilter(),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_CellPhases(NULL),
-m_Quats(NULL),
-m_CellEulerAngles(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellPhases(NULL),
+  m_Quats(NULL),
+  m_CellEulerAngles(NULL),
+  m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(m_HexOps.get());
@@ -88,10 +88,10 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
@@ -134,9 +134,9 @@ void FindCellQuats::execute()
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
-	phase = m_CellPhases[i];
+    phase = m_CellPhases[i];
     OrientationMath::eulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
-	OrientationMath::normalizeQuat(qr);
+    OrientationMath::normalizeQuat(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       qr[1] = 0.0;
@@ -147,7 +147,7 @@ void FindCellQuats::execute()
     else
     {
       m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-	  OrientationMath::normalizeQuat(qr);
+      OrientationMath::normalizeQuat(qr);
     }
 
     m_Quats[i*5 + 0] = 1.0f;

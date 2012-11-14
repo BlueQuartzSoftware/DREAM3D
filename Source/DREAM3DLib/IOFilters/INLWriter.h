@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/FileWriter.h"
+#include "DREAM3DLib/Common/StringDataArray.hpp"
 
 /**
  * @class INLWriter INLWriter.h DREAM3DLib/IOFilters/INLWriter.h
@@ -65,6 +66,9 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -85,6 +89,8 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     float*   m_CellEulerAngles;
+    unsigned int* m_CrystalStructures;
+    StringDataArray::Pointer m_MaterialNames;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

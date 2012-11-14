@@ -97,6 +97,23 @@ namespace Ctf
 
    };
 
+   class SpaceGroupQuery
+   {
+    public:
+      SpaceGroupQuery(){}
+      virtual ~SpaceGroupQuery(){}
+
+      static bool isCubic(int spaceGroup)
+      {
+        return (spaceGroup >= 195 && spaceGroup <= 230);
+      }
+      static bool isHexagonal(int spaceGroup)
+      {
+        return (spaceGroup >= 168 && spaceGroup <= 194);
+      }
+
+   };
+
   const std::string FileExt("ctf");
 
   const std::string Manufacturer("HKL");

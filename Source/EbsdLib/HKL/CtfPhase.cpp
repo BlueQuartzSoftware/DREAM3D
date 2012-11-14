@@ -71,14 +71,14 @@ void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
   m_LaueGroup = static_cast<Ebsd::Ctf::LaueGroupTable>(sym);
   if(tokens.size() == 8)
   {
-	  stringToNum<int>(m_SpaceGroup, tokens[4]);
-	  m_Internal1 = tokens[5];
-	  m_Internal2 = tokens[6];
-	  m_Comment = tokens[7];
+    stringToNum<int>(m_SpaceGroup, tokens[4]);
+    m_Internal1 = tokens[5];
+    m_Internal2 = tokens[6];
+    m_Comment = tokens[7];
   }
   if(tokens.size() == 5)
   {
-	  m_Comment = tokens[4];
+    m_Comment = tokens[4];
   }
 }
 
@@ -107,4 +107,12 @@ unsigned int CtfPhase::determineCrystalStructure()
   if (symmetry == Ebsd::Ctf::LG_Cubic_High || symmetry == Ebsd::Ctf::LG_Cubic_Low) crystal_structure = Ebsd::CrystalStructure::Cubic;
   else if (symmetry == Ebsd::Ctf::LG_Hexagonal_High || symmetry == Ebsd::Ctf::LG_Hexagonal_Low) crystal_structure = Ebsd::CrystalStructure::Hexagonal;
   return crystal_structure;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string CtfPhase::getMaterialName()
+{
+  return m_PhaseName;
 }

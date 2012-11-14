@@ -154,6 +154,19 @@ if (COMPILE_EBSD_TO_TIFF)
         LINK_LIBRARIES MXA ${TIFF_LIBRARY}
     )
     
+    # create a tool to generate the IPF Triangle
+  COMPILE_TOOL(
+       TARGET TSLTriangle
+       SOURCES ${DREAM3DTools_SOURCE_DIR}/TSLTriangle.cpp
+       DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+       VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+       VERSION_MINOR ${DREAM3D_VER_MINOR}
+       VERSION_PATCH ${DREAM3D_VER_PATCH}
+       BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+       COMPONENT     Applications
+       INSTALL_DEST  "${install_dir}"
+       LINK_LIBRARIES ${TIFF_LIBRARY}
+   )
 
 
 endif()

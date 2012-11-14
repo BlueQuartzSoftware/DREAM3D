@@ -581,12 +581,12 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
   size_t nread = 0;
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
+  fprintf(vtkFile, "POINT_DATA %d\n", (int)(nNodes));
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
   std::vector<int> data(nNodes, 0);
-  for (int i = 0; i < nNodes; i++)
+  for (size_t i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     if(nread != 1)
@@ -597,7 +597,7 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
     MXA::Endian::FromSystemToBig::convert<int>(swapped);
     data[i] = swapped;
   }
-  int totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
+  size_t totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
   fclose(nodesFile);
   if(totalWritten != nNodes)
   {
@@ -621,10 +621,10 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
 
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
+  fprintf(vtkFile, "POINT_DATA %d\n", (int)(nNodes));
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for (int i = 0; i < nNodes; i++)
+  for (size_t i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     if(nread != 1)
@@ -666,7 +666,7 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   int tData[DATA_COUNT];
 
   std::vector<int> cell_data(triangleCount);
-  for (int i = 0; i < nTriangles; i++)
+  for (size_t i = 0; i < nTriangles; i++)
   {
     nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
     if(nread != DATA_COUNT)
