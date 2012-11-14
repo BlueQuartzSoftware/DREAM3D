@@ -215,17 +215,17 @@ int INLWriter::writeFile()
 
   // Write the header, Each line starts with a "#" symbol
   fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().c_str());
-  fprintf(f, "# XSTEP: %f\r\n", res[0]);
-  fprintf(f, "# YSTEP: %f\r\n", res[1]);
-  fprintf(f, "# ZSTEP: %f\r\n", res[2]);
+  fprintf(f, "# X_STEP: %f\r\n", res[0]);
+  fprintf(f, "# Y_STEP: %f\r\n", res[1]);
+  fprintf(f, "# Z_STEP: %f\r\n", res[2]);
   fprintf(f, "#\r\n");
-  fprintf(f, "# MIN X: %f\r\n", origin[0]);
-  fprintf(f, "# MIN Y: %f\r\n", origin[1]);
-  fprintf(f, "# MIN Z: %f\r\n", origin[2]);
+  fprintf(f, "# X_MIN: %f\r\n", origin[0]);
+  fprintf(f, "# Y_MIN: %f\r\n", origin[1]);
+  fprintf(f, "# Z_MIN: %f\r\n", origin[2]);
   fprintf(f, "#\r\n");
-  fprintf(f, "# MAX X: %f\r\n", origin[0]+(dims[0]*res[0]));
-  fprintf(f, "# MAX Y: %f\r\n", origin[1]+(dims[1]*res[1]));
-  fprintf(f, "# MAX Z: %f\r\n", origin[2]+(dims[0]*res[2]));
+  fprintf(f, "# X_MAX: %f\r\n", origin[0]+(dims[0]*res[0]));
+  fprintf(f, "# Y_MAX: %f\r\n", origin[1]+(dims[1]*res[1]));
+  fprintf(f, "# Z_MAX: %f\r\n", origin[2]+(dims[0]*res[2]));
   fprintf(f, "#\r\n");
   fprintf(f, "# X_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[0]));
   fprintf(f, "# Y_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[1]));
@@ -280,7 +280,7 @@ int INLWriter::writeFile()
 //  fprintf(f, "# Column 8: Phase ID\r\n");
 
 
-  fprintf(f,"# phi1 PHI phi2 x y z GrainId PhaseId\r\n");
+  fprintf(f,"# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
 
   float phi1, phi, phi2;
   float xPos, yPos, zPos;
@@ -315,15 +315,23 @@ int INLWriter::writeFile()
           if(symmetry == Ebsd::CrystalStructure::Cubic)
           {
             EbsdColoring::GenerateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
+            symmetry = Ebsd::Ang::CubicSymmetry;
+
           }
           else if(symmetry == Ebsd::CrystalStructure::Hexagonal)
           {
             EbsdColoring::CalculateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
+            symmetry = Ebsd::Ang::HexagonalSymmetry;
           }
+          else
+          {
+            symmetry = Ebsd::Ang::UnknownSymmetry;
+          }
+
         }
 
 
-        fprintf(f, "%f %f %f %f %f %f %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId);
+        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
       }
     }
   }
