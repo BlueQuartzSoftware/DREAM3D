@@ -79,6 +79,7 @@
     <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
     <!-- ***** SurfaceMeshFilters ***** -->
+    <file>SurfaceMeshFilters/QuickSurfaceMesh.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
     <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>
