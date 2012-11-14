@@ -662,8 +662,6 @@ class DataArray : public IDataArray
       return "DataArray<UnknownType>";
     }
 
-
-
     /**
      *
      * @param parentId
@@ -671,7 +669,6 @@ class DataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-
       return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
