@@ -300,7 +300,6 @@ class StringDataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-
       size_t totalSize = 0;
       for(size_t i = 0; i < m_Array.size(); ++i)
       {
