@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 //-- TIFF Headers
 #include <tif_config.h>
@@ -38,7 +39,7 @@ const float GammaConstant = 5.27183797467291f;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t writeOutputAsTiff(unsigned char* segData,
+int writeOutputAsTiff(unsigned char* segData,
                           int width,
                           int height,
                       const std::string &outputFile,
