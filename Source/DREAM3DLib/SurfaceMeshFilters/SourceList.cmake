@@ -7,6 +7,7 @@ set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
 START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} QuickSurfaceMesh QuickSurfaceMesh.html "" TRUE)
 #ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MMCSurfaceMeshingFilter MMCSurfaceMeshingFilter.html "" TRUE)
 #ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MovingFiniteElementSmoothing MovingFiniteElementSmoothing.html "" TRUE)
 #ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} LaplacianSmoothing LaplacianSmoothing.html "" TRUE)
