@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_HDF5_HDRS
+set(DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/VTKH5Constants.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.h
@@ -22,7 +22,7 @@ SET (DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5Macros.h
 )
 
-SET (DREAM3DLib_HDF5_SRCS
+set(DREAM3DLib_HDF5_SRCS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.cpp

@@ -11,8 +11,8 @@
 
 project(PipelineBuilderLib)
 
-SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB)
-SET (PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB 1)
+set(PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB)
+set(PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB 1)
 IF (WIN32)
     ADD_DEFINITIONS("-DPipelineBuilderLib_BUILT_AS_DYNAMIC_LIB")
 ENDIF (WIN32)
@@ -28,12 +28,12 @@ include_directories(${PROJECT_CODE_DIR}/QtSupport
 
 
 #-- Non Qt based source files
-SET (PipelineBuilder_HDRS
+set(PipelineBuilder_HDRS
     ${PROJECT_SOURCE_DIR}/IFilterWidgetFactory.h
     ${PROJECT_SOURCE_DIR}/FilterWidgetManager.h
 )
 
-SET (PipelineBuilder_SRCS
+set(PipelineBuilder_SRCS
     ${PROJECT_SOURCE_DIR}/FilterWidgetManager.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "PipelineBuilderLib" "${PipelineBuilder_HDRS}" "${PipelineBuilder_SRCS}" "0")
@@ -48,7 +48,7 @@ endif()
 set(CLASS_NAME "PipelineBuilder")
 
 
-set (PipelineBuilderLib_HDRS
+set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.h  
@@ -56,7 +56,7 @@ set (PipelineBuilderLib_HDRS
 	${PROJECT_SOURCE_DIR}/AddFavoriteWidget.h
     )
     
-set (PipelineBuilderLib_SRCS 
+set(PipelineBuilderLib_SRCS 
     ${PROJECT_SOURCE_DIR}/QFilterWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.cpp
@@ -81,7 +81,7 @@ QT4_WRAP_CPP( PipelineBuilderLib_Generated_MOC_SRCS ${PipelineBuilderLib_HDRS} )
 cmp_IDE_SOURCE_PROPERTIES("Generated" "${PipelineBuilderLib_Generated_UI_HDRS};${PipelineBuilderLib_Generated_RC_SRCS}" "${PipelineBuilderLib_Generated_MOC_SRCS}" "0")
 
 
-set (PipelineBuilderLib_PROJECT_SRCS
+set(PipelineBuilderLib_PROJECT_SRCS
     ${PipelineBuilderLib_SRCS}
     ${PipelineBuilderLib_HDRS}
     ${PipelineBuilderLib_Generated_MOC_SRCS} 
@@ -111,7 +111,7 @@ LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
 set(install_dir "tools")
 set(lib_install_dir "lib")
 if (WIN32)
-    set (install_dir ".")
+    set(install_dir ".")
     set(lib_install_dir "")
 endif()
 

@@ -68,10 +68,10 @@
 
 #define QFILTERWIDGET_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      m_msgType   m_##prpty;\
+  m_msgType   m_##prpty;\
   public:\
-    QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty)\
-    QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty)
+  QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty)\
+  QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty)
 
 #endif
 
@@ -129,63 +129,66 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
   public slots:
 
-     virtual void updateFilterValues();
-     virtual void updateQLineEditDoubleValue();
-     virtual void updateQLineEditIntValue();
-     virtual void selectInputFile();
-     virtual void selectInputPath();
-     virtual void selectOutputFile();
-     virtual void selectOutputPath();
-     virtual void updateComboBoxValue(int v);
-     virtual void updateQSpinBoxValue(int v);
-     virtual void updateQDoubleSpinBoxValue(double v);
-     virtual void updateQCheckBoxValue(int v);
-     virtual void updateQLineEditStringValue(const QString &v);
+    virtual void updateFilterValues();
+    virtual void updateQLineEditDoubleValue();
+    virtual void updateQLineEditIntValue();
+    virtual void selectInputFile();
+    virtual void selectInputPath();
+    virtual void selectOutputFile();
+    virtual void selectOutputPath();
+    virtual void updateComboBoxValue(int v);
+    virtual void updateQSpinBoxValue(int v);
+    virtual void updateQDoubleSpinBoxValue(double v);
+    virtual void updateQCheckBoxValue(int v);
+    virtual void updateQLineEditStringValue(const QString &v);
 
-     virtual void updateLineEdit(const QString &v);
+    virtual void updateLineEdit(const QString &v);
 
-     virtual void setIsSelected(bool b);
+    virtual void setIsSelected(bool b);
 
 
-     /**
+    /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
       * state
       * @param selected Is the widget selected or not.
       */
-     void changeStyle();
+    void changeStyle();
 
-     /**
+    /**
       *@brief
       */
-     void updateWidgetStyle();
+    void updateWidgetStyle();
 
-     /**
+    /**
       * @brief Slot for a QTime to call to update the border of the wiget in a
       * pulsing fashing
       */
-     void setHasPreflightErrors(bool hasErrors);
+    void setHasPreflightErrors(bool hasErrors);
+
+    void setHasPreflightWarnings(bool hasWarnings);
 
   signals:
     void widgetSelected(QFilterWidget* w);
 
 
   protected:
-     virtual void mousePressEvent( QMouseEvent* event );
-     virtual void mouseReleaseEvent( QMouseEvent* event );
-     virtual void mouseMoveEvent( QMouseEvent* event );
-     virtual QString getFileExtension(std::string propName);
-     virtual QString getFileType(std::string propName);
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void mouseReleaseEvent( QMouseEvent* event );
+    virtual void mouseMoveEvent( QMouseEvent* event );
+    virtual QString getFileExtension(std::string propName);
+    virtual QString getFileType(std::string propName);
 
   private:
-     QRect      m_DeleteRect;
-     QPoint     dragStartPosition;
-     QTimer*    m_timer;
-     unsigned char  m_CurrentBorderColorFactor;
-     unsigned char        m_BorderIncrement;
-     QString    m_BorderColorStyle;
-     bool       m_IsSelected;
-     bool       m_HasPreflightErrors;
-     static QString m_OpenDialogLastDirectory;
+    QRect      m_DeleteRect;
+    QPoint     dragStartPosition;
+    QTimer*    m_timer;
+    unsigned char  m_CurrentBorderColorFactor;
+    unsigned char        m_BorderIncrement;
+    QString    m_BorderColorStyle;
+    bool       m_IsSelected;
+    bool       m_HasPreflightErrors;
+    bool       m_HasPreflightWarnings;
+    static QString m_OpenDialogLastDirectory;
 
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented

@@ -14,21 +14,21 @@ cmake_minimum_required(VERSION 2.8.3)
 
 
 # ---------- Setup output Directories -------------------------
-SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all Libraries"
   )
 
 # --------- Setup the Executable output Directory -------------
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all Executables."
   )
 
 # --------- Setup the Executable output Directory -------------
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   ${PROJECT_BINARY_DIR}/Bin
   CACHE PATH
   "Single Directory for all static libraries."
@@ -66,12 +66,12 @@ set(PROJECT_PREFIX "DREAM3D")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
 # List the source files here
-SET (DREAM3D_SRCS
+set(DREAM3D_SRCS
     ${DREAM3D_SOURCE_DIR}/main.cpp
     ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.cpp
 )
 
-SET (DREAM3D_HDRS
+set(DREAM3D_HDRS
     ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
@@ -108,7 +108,7 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${DREAM3D_Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${DREAM3D_Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
-SET (DREAM3D_PROJECT_SRCS 
+set(DREAM3D_PROJECT_SRCS 
     ${DREAM3D_SRCS}
     ${DREAM3D_HDRS}
     ${DREAM3D_Generated_RC_SRCS} 

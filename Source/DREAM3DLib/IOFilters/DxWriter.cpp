@@ -46,10 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-FileWriter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_AddSurfaceLayer(false),
-m_GrainIds(NULL)
+    FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -73,8 +70,8 @@ void DxWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-  option->setFileExtension("dx");
-  option->setFileType("Open DX Visualization");
+    option->setFileExtension("dx");
+    option->setFileType("Open DX Visualization");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -94,8 +91,8 @@ void DxWriter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer() );
+  writer->writeValue("OutputFile", getOutputFile());
+  writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer());
 }
 // -----------------------------------------------------------------------------
 //
@@ -106,7 +103,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getOutputFile().empty() == true)
+  if(getOutputFile().empty() == true)
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Output File Set and it was not.";
@@ -125,7 +122,6 @@ void DxWriter::preflight()
   dataCheck(true, 1, 1, 1);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -133,7 +129,6 @@ int DxWriter::writeHeader()
 {
   return 0;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -144,7 +139,7 @@ int DxWriter::writeFile()
   if (NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
@@ -152,7 +147,7 @@ int DxWriter::writeFile()
 
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, 1, 1);
-  if (getErrorCondition() < 0)
+  if(getErrorCondition() < 0)
   {
     return -40;
   }
@@ -160,18 +155,16 @@ int DxWriter::writeFile()
   //GET_NAMED_ARRAY_SIZE_CHK_NOMSG_RET(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, totalPoints, grain_indicies);
 
   int err = 0;
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] =
+  { 0, 0, 0 };
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
   // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
   // Make sure any directory path is also available as the user may have just typed
@@ -179,11 +172,11 @@ int DxWriter::writeFile()
   std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return -1;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return -1;
   }
 
   std::ofstream out(getOutputFile().c_str(), std::ios_base::binary);
@@ -340,5 +333,4 @@ int DxWriter::writeFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
 

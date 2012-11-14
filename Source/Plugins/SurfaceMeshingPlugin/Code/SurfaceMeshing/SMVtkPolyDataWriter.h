@@ -135,11 +135,11 @@ class  SMVtkPolyDataWriter : public AbstractFilter
     SMVtkPolyDataWriter();
 
 
-    int writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, size_t nTriangles, bool conformalMesh);
-    int writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, size_t nTriangles, bool conformalMesh);
+    int writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, uint32_t nTriangles, bool conformalMesh);
+    int writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, uint32_t nTriangles, bool conformalMesh);
 
-    int writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, size_t nNodes, bool conformalMesh);
-    int writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, size_t nNodes, bool conformalMesh);
+    int writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, uint32_t nNodes, bool conformalMesh);
+    int writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, uint32_t nNodes, bool conformalMesh);
 
   private:
     SMVtkPolyDataWriter(const SMVtkPolyDataWriter&); // Copy Constructor Not Implemented

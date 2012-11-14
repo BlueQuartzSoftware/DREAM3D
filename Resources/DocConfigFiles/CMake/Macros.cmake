@@ -28,16 +28,16 @@ function(ADD_DOXYGEN_TARGETS)
 #    message(STATUS "DOX_AUTHOR:${LATEX_AUTHOR}")
 #    message(STATUS "DOX_TEMPLATE_FILE: ${DOX_TEMPLATE_FILE}")
     
-    set (GENERATE_HTML ${GENERATE_HTML})
-    set (GENERATE_LATEX ${GENERATE_LATEX})
-    set (GENERATE_RTF  ${GENERATE_RTF})
+    set(GENERATE_HTML ${GENERATE_HTML})
+    set(GENERATE_LATEX ${GENERATE_LATEX})
+    set(GENERATE_RTF  ${GENERATE_RTF})
     
     STRING(REPLACE ";" " " DOXYGEN_INPUT_FILES "${DOX_SOURCE_FILES}"  )
-    set (LATEX_HEADER_FILE ${DOX_PROJECT_BINARY_DIR}/BlueQuartz.tex )
-    set (LATEX_STYLE_FILE  ${DOX_PROJECT_BINARY_DIR}/BlueQuartz.sty )
+    set(LATEX_HEADER_FILE ${DOX_PROJECT_BINARY_DIR}/BlueQuartz.tex )
+    set(LATEX_STYLE_FILE  ${DOX_PROJECT_BINARY_DIR}/BlueQuartz.sty )
     
-    set (DOXYFILE ${DOX_PROJECT_NAME}_Doxyfile)
-    set (DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/Documentation/Developer)
+    set(DOXYFILE ${DOX_PROJECT_NAME}_Doxyfile)
+    set(DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/Documentation/Developer)
     configure_file(${DOX_TEMPLATE_DIR}/Doxyfile.in 
                      ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE}  @ONLY IMMEDIATE)
     
@@ -66,7 +66,7 @@ function(ADD_DOXYGEN_TARGETS)
         # file(COPY ${LATEX_EPS_FILES} DESTINATION ${DOX_PROJECT_BINARY_DIR}/latex )
         
         #-- Set some additional Directories to remove when cleaning the project (Not sure if this actually works)
-        set ( ADDITIONAL_MAKE_CLEAN_FILES ${ADDITIONAL_MAKE_CLEAN_FILES} ${DOX_PROJECT_BINARY_DIR}/latex )
+        set( ADDITIONAL_MAKE_CLEAN_FILES ${ADDITIONAL_MAKE_CLEAN_FILES} ${DOX_PROJECT_BINARY_DIR}/latex )
         
         #-- Setup some additional LaTex processor arguments
         SET(LATEX_COMPILER_FLAGS "-interaction=nonstopmode"
@@ -74,12 +74,12 @@ function(ADD_DOXYGEN_TARGETS)
         SET(PDFLATEX_COMPILER_FLAGS ${LATEX_COMPILER_FLAGS}
           CACHE STRING "Flags passed to pdflatex.")
         
-        SET (LATEX_OUTPUT_PATH ${DOX_PROJECT_BINARY_DIR}/latex/output)
+        set(LATEX_OUTPUT_PATH ${DOX_PROJECT_BINARY_DIR}/latex/output)
         
         #-- Create more directory structures
         file(MAKE_DIRECTORY ${LATEX_OUTPUT_PATH})
         
-        set (LATEX_MAIN_INPUT ${DOX_PROJECT_BINARY_DIR}/latex/refman)
+        set(LATEX_MAIN_INPUT ${DOX_PROJECT_BINARY_DIR}/latex/refman)
                             
                    
         add_custom_command(TARGET ${DOX_PROJECT_NAME}  POST_BUILD

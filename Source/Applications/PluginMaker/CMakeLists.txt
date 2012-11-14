@@ -26,7 +26,7 @@ add_definitions(-DDREAM3D_USE_QT)
 set(PROJECT_PREFIX "PluginMakerProj")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
 
-set (PluginMaker_SRCS 
+set(PluginMaker_SRCS 
     ${PluginMaker_SOURCE_DIR}/main.cpp
 	${PluginMaker_SOURCE_DIR}/PluginMaker.cpp
 	${PluginMaker_SOURCE_DIR}/HelpWidget.cpp
@@ -83,7 +83,7 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${PluginMaker_Generated_MOC_SRCS}"
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${PluginMaker_Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
-SET (${PROJECT_NAME}_PROJECT_SRCS 
+set(${PROJECT_NAME}_PROJECT_SRCS 
 	${PluginMaker_SRCS}
     ${PluginMaker_HDRS}
 	${PluginMaker_MOC_HDRS}

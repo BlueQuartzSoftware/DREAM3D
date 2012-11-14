@@ -272,14 +272,17 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
+
   if(m_WriteRodriguesGAMColors == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceRotations, ss, -305, float, FloatArrayType, voxels, 3)
   }
+
   if(m_WriteEulerAngles == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
+
   if(m_WriteGrainSizes == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
@@ -395,12 +398,14 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
+
   if(m_WriteRodriguesGAMColors == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelRodriguesColorScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
+
 
   if(m_WriteGrainSizes == true)
   {

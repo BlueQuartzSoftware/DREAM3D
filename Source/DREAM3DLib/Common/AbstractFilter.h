@@ -106,6 +106,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
 
+    /**
+     * @brief These methods are here to collect list of Arrays that a filter may either create or require
+     **/
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredCellData)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedCellData)
 

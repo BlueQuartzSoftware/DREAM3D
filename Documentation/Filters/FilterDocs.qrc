@@ -1,9 +1,12 @@
+<!--  -->
 <!DOCTYPE RCC>
 <RCC version="1.0">
 <qresource>
 <file>document.css</file>
 <file>catalog.css</file>
 <file>index.html</file>
+
+<file>CustomFilters/CropVolumePipeline.html</file>
 
 <file>GenericFilters/FindBoundingBoxGrains.html</file>
 <file>GenericFilters/FindCellQuats.html</file>
@@ -29,6 +32,11 @@
 <file>IOFilters/ReadH5Ebsd.html</file>
 <file>IOFilters/VtkRectilinearGridWriter.html</file>
 <file>IOFilters/YSChoiAbaqusReader.html</file>
+<file>IOFilters/SurfaceMeshToVtk.html</file>
+<file>IOFilters/SurfaceMeshToStl.html</file>
+<file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
+<file>IOFilters/NodesTrianglesToStl.html</file>
+<file>IOFilters/NodesTrianglesToVtk.html</file>
 
 <file>ProcessingFilters/ConvertEulerAngles.html</file>
 <file>ProcessingFilters/FillBadData.html</file>
@@ -70,6 +78,10 @@
 <file>StatisticsFilters/FindSizes.html</file>
 <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
+<file>Surface_MeshingFilters/LaplacianSmoothing.html</file>
+<file>Surface_MeshingFilters/MMCSurfaceMeshingFilter.html</file>
+<file>Surface_MeshingFilters/MovingFiniteElementSmoothing.html</file>
+
 <file>Synthetic_BuilderFilters/EstablishMatrixPhase.html</file>
 <file>Synthetic_BuilderFilters/InitSynthVol.jpg</file>
 <file>Synthetic_BuilderFilters/InitializeSyntheticVolume.html</file>
@@ -79,4 +91,3 @@
 
 </qresource>
 </RCC>
-

@@ -4,13 +4,13 @@
 
 # --------------------------------------------------------------------
 # If you have more than a single filter add it to this list (headers)
-SET (@PluginName@Plugin_@PluginName@_HDRS
+set(@PluginName@Plugin_@PluginName@_HDRS
      @GENERATED_CMAKE_HEADERS_CODE@
 )
 
 # --------------------------------------------------------------------
 # If you have more than a single filter add it to this list (sources)
-SET (@PluginName@Plugin_@PluginName@_SRCS
+set(@PluginName@Plugin_@PluginName@_SRCS
     @GENERATED_CMAKE_SOURCE_CODE@
 )
 

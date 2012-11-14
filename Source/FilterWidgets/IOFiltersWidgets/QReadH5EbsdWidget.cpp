@@ -362,6 +362,8 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
         on_addQualityMetric_clicked();
       }
       setOpenDialogLastDirectory( fi.path() );
+
+      populateCreatedRequiredLists( m_H5EbsdFile->text() );
     }
   }
   else
@@ -381,6 +383,24 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
     m_StackingOrder->setText("xxx");
   }
   emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::populateCreatedRequiredLists(QString filePath)
+{
+  ReadH5Ebsd::Pointer readH5Ebsd = ReadH5Ebsd::New();
+  readH5Ebsd->setH5EbsdFile(filePath.toStdString());
+  VoxelDataContainer::Pointer voxelDataContainer = VoxelDataContainer::New();
+  readH5Ebsd->setVoxelDataContainer(voxelDataContainer.get());
+  readH5Ebsd->preflight(); // This gets all the create/required array names
+  m_CreatedArrays->clear();
+  std::set<std::string> createdCellData = readH5Ebsd->getCreatedCellData();
+  for(std::set<std::string>::iterator i = createdCellData.begin(); i != createdCellData.end(); ++i)
+  {
+    m_CreatedArrays->addItem(QString::fromStdString(*i));
+  }
 }
 
 // -----------------------------------------------------------------------------

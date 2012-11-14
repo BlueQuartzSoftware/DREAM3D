@@ -94,8 +94,9 @@ public:
 
     virtual ~Segment();
 
-    int neigh_grainname[2]; // 0 is to the left of the arrow; 1 is at right...
     int node_id[2]; // the segment heads from node_id[0] to node_id[1]...
+    int neigh_spin[2]; // 0 is to the left of the arrow; 1 is at right...
+
     int segKind; // 2 for binary line, 3 for triple line, and so on...
     int edgeID;
     int edgeKind;
@@ -104,13 +105,12 @@ public:
     int eff; // flag for output, if it's 1 it will be used for output...
     int where; // 0 for upper squares, 1 for side squares and 2 for bottom squares...
 
-
 protected:
     Segment();
 private:
 
     Segment(const Segment&);    // Copy Constructor Not Implemented
-      void operator=(const Segment&);  // Operator '=' Not Implemented
+    void operator=(const Segment&);  // Operator '=' Not Implemented
 };
 
 }
