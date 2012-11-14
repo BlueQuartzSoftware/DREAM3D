@@ -46,6 +46,7 @@ SET (DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/MatrixStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/StringDataArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h

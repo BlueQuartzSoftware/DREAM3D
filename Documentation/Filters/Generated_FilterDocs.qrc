@@ -17,22 +17,23 @@
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
 
     <!-- ***** IOFilters ***** -->
-    <file>IOFilters/ReadH5Ebsd.html</file>
-    <file>IOFilters/DataContainerReader.html</file>
-    <file>IOFilters/DataContainerWriter.html</file>
-    <file>IOFilters/FieldDataCSVWriter.html</file>
-    <file>IOFilters/VtkRectilinearGridWriter.html</file>
-    <file>IOFilters/H5VoxelFileReader.html</file>
-    <file>IOFilters/DxWriter.html</file>
-    <file>IOFilters/DxReader.html</file>
-    <file>IOFilters/PhWriter.html</file>
-    <file>IOFilters/PhReader.html</file>
-    <file>IOFilters/FieldInfoReader.html</file>
-    <file>IOFilters/EnsembleInfoReader.html</file>
-    <file>IOFilters/YSChoiAbaqusReader.html</file>
-    <file>IOFilters/EbsdToH5Ebsd.html</file>
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
     <file>IOFilters/AvizoUniformCoordinateWriter.html</file>
+    <file>IOFilters/DataContainerReader.html</file>
+    <file>IOFilters/DataContainerWriter.html</file>
+    <file>IOFilters/DxReader.html</file>
+    <file>IOFilters/DxWriter.html</file>
+    <file>IOFilters/EbsdToH5Ebsd.html</file>
+    <file>IOFilters/EnsembleInfoReader.html</file>
+    <file>IOFilters/FieldDataCSVWriter.html</file>
+    <file>IOFilters/FieldInfoReader.html</file>
+    <file>IOFilters/H5VoxelFileReader.html</file>
+    <file>IOFilters/INLWriter.html</file>
+    <file>IOFilters/PhReader.html</file>
+    <file>IOFilters/PhWriter.html</file>
+    <file>IOFilters/ReadH5Ebsd.html</file>
+    <file>IOFilters/VtkRectilinearGridWriter.html</file>
+    <file>IOFilters/YSChoiAbaqusReader.html</file>
 
     <!-- ***** ProcessingFilters ***** -->
     <file>ProcessingFilters/MinNeighbors.html</file>

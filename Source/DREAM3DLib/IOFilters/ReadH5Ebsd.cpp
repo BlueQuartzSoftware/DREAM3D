@@ -76,6 +76,7 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
@@ -265,6 +266,8 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   typedef DataArray<unsigned int> PTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+
+  addCreatedEnsembleData(m_MaterialNamesArrayName);
 
 }
 
