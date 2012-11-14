@@ -369,7 +369,7 @@ void LeeMarchingCubes::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void LeeMarchingCubes::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("DeleteTempFiles", getWriteBinaryVTKFiles() );
+  writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
   writer->writeValue("WriteSTLFile", getWriteSTLFile() );
   writer->writeValue("StlOutputDirectory", getStlOutputDirectory() );
   writer->writeValue("StlFilePrefix", getStlFilePrefix() );

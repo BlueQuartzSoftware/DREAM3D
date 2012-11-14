@@ -132,6 +132,13 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1);
   }
 
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if (MXADir::exists(parentPath) == false)
+  {
+    ss.str("");
+    ss <<  "The directory path for the output file does not exist.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
+  }
 
 }
 
@@ -185,8 +192,6 @@ void DataContainerWriter::execute()
       setErrorCondition(-1);
       return;
   }
-
-
 
   err = openFile(false); // Do NOT append to any existing file
   if (err < 0)
