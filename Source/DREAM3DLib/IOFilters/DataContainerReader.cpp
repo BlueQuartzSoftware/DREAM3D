@@ -383,7 +383,7 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
 
   NameListType names;
   H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-//  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
   std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
@@ -395,6 +395,10 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     if(classType.find("DataArray") == 0)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
+    }
+    else if(classType.compare("StringDataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readStringDataArray(gid, *iter, preflight);
     }
     else if(classType.compare("vector") == 0)
     {

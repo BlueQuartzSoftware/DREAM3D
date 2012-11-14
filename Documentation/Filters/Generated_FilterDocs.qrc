@@ -8,7 +8,6 @@
     <file>index.html</file>
 
     <!-- ***** CustomFilters ***** -->
-    <file>CustomFilters/CropVolumePipeline.html</file>
 
     <!-- ***** GenericFilters ***** -->
     <file>GenericFilters/FindNeighbors.html</file>
