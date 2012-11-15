@@ -46,16 +46,20 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
-
-
+/**
+ * @class StringDataArray StringDataArray.h DREAM3DLib/Common/StringDataArray.h
+ * @brief Stores an array of std::string objects
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Nov 13, 2012
+ * @version 1.0
+ */
 class StringDataArray : public IDataArray
 {
   public:
     DREAM3D_SHARED_POINTERS(StringDataArray )
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
-
-
 
     static Pointer CreateArray(size_t numElements, const std::string &name)
     {
@@ -118,7 +122,7 @@ class StringDataArray : public IDataArray
       this->_ownsData = false;
     }
 
-/**
+     /**
      * @brief Returns a void pointer pointing to the index of the array. NULL
      * pointers are entirely possible. No checks are performed to make sure
      * the index is with in the range of the internal data array.
@@ -258,17 +262,36 @@ class StringDataArray : public IDataArray
       return 1;
     }
 
-
+    /**
+     * @brief printTuple
+     * @param out
+     * @param i
+     * @param delimiter
+     */
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
       out << m_Array[i];
     }
 
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
       out << m_Array[i];
     }
 
+    /**
+     * @brief getFullNameOfClass
+     * @return
+     */
+    std::string getFullNameOfClass()
+    {
+      return "StringDataArray";
+    }
 
     /**
      *
@@ -277,19 +300,62 @@ class StringDataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-      return -1;
+      size_t totalSize = 0;
+      for(size_t i = 0; i < m_Array.size(); ++i)
+      {
+        totalSize += 1 + m_Array[i].size();
+      }
+      DataArray<int8_t>::Pointer strPtr = DataArray<int8_t>::CreateArray(totalSize, "Strings");
+      strPtr->initializeWithZeros();
+      int8_t* str = strPtr->GetPointer(0);
+
+      for(size_t i = 0; i < m_Array.size(); ++i)
+      {
+        ::memcpy(str, m_Array[i].c_str(), m_Array[i].size());
+        str = str + m_Array[i].size() + 1;
+      }
+
+      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, strPtr->GetPointer(0), getFullNameOfClass());
     }
 
+    /**
+     * @brief readH5Data
+     * @param parentId
+     * @return
+     */
     virtual int readH5Data(hid_t parentId)
     {
-      return -1;
+      int err = 0;
+      this->Resize(0);
+      IDataArray::Pointer p = H5DataArrayReader::readStringDataArray(parentId, GetName());
+      if (p.get() == NULL)
+      {
+        return -1;
+      }
+      StringDataArray* srcPtr = StringDataArray::SafePointerDownCast(p.get());
+      size_t count = srcPtr->GetNumberOfTuples();
+      for (size_t i = 0; i < count; ++i)
+      {
+        m_Array.push_back( srcPtr->GetValue(i) );
+      }
+      return err;
     }
 
+    /**
+     * @brief SetValue
+     * @param i
+     * @param value
+     */
     void SetValue(size_t i, const std::string &value)
     {
       m_Array.at(i) = value;
     }
 
+    /**
+     * @brief GetValue
+     * @param i
+     * @return
+     */
     std::string GetValue(size_t i)
     {
       return m_Array.at(i);

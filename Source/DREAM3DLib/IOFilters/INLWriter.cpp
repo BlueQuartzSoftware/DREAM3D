@@ -42,7 +42,10 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
+#include "EbsdLib/TSL/AngConstants.h"
+
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/DREAM3DVersion.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -120,12 +123,20 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
+  IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
+  if (NULL == materialNames)
+  {
+    ss.str("");
+    ss << ClassName() << " requires the " << DREAM3D::EnsembleData::MaterialName << " Ensemble array to be present in the Data Container.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1111);
+    setErrorCondition(-1111);
+  }
+  else
+  {
+    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  }
 
-  #if (__APPLE__)
-    #warning Fix code that checks for a required Ensemble data that is of type StringDataArray
-//  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, MaterialNames, ss, -304, std::string, StringDataArray, ensembles, 1)
-
-  #endif
 
 }
 
@@ -161,7 +172,9 @@ int INLWriter::writeFile()
   }
   std::stringstream ss;
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, 1, 1);
+  size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+  dataCheck(false, totalPoints, numgrains, numensembles);
   if(getErrorCondition() < 0)
   {
     return -40;
@@ -200,23 +213,74 @@ int INLWriter::writeFile()
     return -1;
   }
 
-
-
-
   // Write the header, Each line starts with a "#" symbol
+  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().c_str());
   fprintf(f, "# XSTEP: %f\r\n", res[0]);
   fprintf(f, "# YSTEP: %f\r\n", res[1]);
   fprintf(f, "# ZSTEP: %f\r\n", res[2]);
-
+  fprintf(f, "#\r\n");
+  fprintf(f, "# MIN X: %f\r\n", origin[0]);
+  fprintf(f, "# MIN Y: %f\r\n", origin[1]);
+  fprintf(f, "# MIN Z: %f\r\n", origin[2]);
+  fprintf(f, "#\r\n");
+  fprintf(f, "# MAX X: %f\r\n", origin[0]+(dims[0]*res[0]));
+  fprintf(f, "# MAX Y: %f\r\n", origin[1]+(dims[1]*res[1]));
+  fprintf(f, "# MAX Z: %f\r\n", origin[2]+(dims[0]*res[2]));
+  fprintf(f, "#\r\n");
   fprintf(f, "# X_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[0]));
   fprintf(f, "# Y_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[1]));
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
+  fprintf(f, "#\r\n");
 
-  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
-  fprintf(f, "# Column 4-6: x, y, z (coordinates of point in microns)\r\n");
-  fprintf(f, "# Column 7: Grain ID\r\n");
-  fprintf(f, "# Column 8: Phase ID\r\n");
-  fprintf(f, "# Column 9-11: RGB (Reference Direction [001])\r\n");
+  IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
+  if (NULL == materialNames)
+  {
+  fclose(f);
+    ss.str("");
+    ss << "The MaterialNames Ensemble Array was not in the Data Container";
+    notifyErrorMessage(ss.str(), -1111);
+    setErrorCondition(-1111);
+    return -1;
+  }
+  uint32_t symmetry = 0;
+  for(size_t i = 1; i < pDataPtr->GetNumberOfTuples(); ++i)
+  {
+    fprintf(f, "# Phase %zu \r\n", i);
+    fprintf(f, "# MaterialName %s\r\n",  materialNames->GetValue(i).c_str());
+    symmetry = m_CrystalStructures[i];
+    if(symmetry == Ebsd::CrystalStructure::Cubic)
+    {
+      symmetry = Ebsd::Ang::CubicSymmetry;
+    }
+    else if(symmetry == Ebsd::CrystalStructure::Hexagonal)
+    {
+     symmetry = Ebsd::Ang::HexagonalSymmetry;
+    }
+    else
+    {
+      symmetry = Ebsd::Ang::UnknownSymmetry;
+    }
+    fprintf(f, "# Symmetry %u\r\n", symmetry);
+    fprintf(f, "#\r\n");
+  }
+
+  std::set<int32_t> uniqueGrainIds;
+  for(int64_t i = 0; i < totalPoints; ++i)
+  {
+    uniqueGrainIds.insert(m_GrainIds[i]);
+  }
+  fprintf(f, "# Num Grains: %zu \r\n", uniqueGrainIds.size());
+  fprintf(f, "#\r\n");
+
+//  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
+//  fprintf(f, "# Column 4-6: x, y, z (coordinates of point in microns)\r\n");
+//  fprintf(f, "# Column 7: Grain ID\r\n");
+//  fprintf(f, "# Column 8: Phase ID\r\n");
+
+
+  fprintf(f,"# phi1 PHI phi2 x y z GrainId PhaseId\r\n");
 
   float phi1, phi, phi2;
   float xPos, yPos, zPos;
@@ -226,7 +290,7 @@ int INLWriter::writeFile()
   unsigned char rgba[4] = {0,0,0,255};
   unsigned char hkl[3] = { 0, 0, 0 };
   float refDir[3] = {0.0f, 0.0f, 1.0f};
-  uint32_t symmetry = 0;
+
 
   size_t index = 0;
   for(size_t z = 0; z < dims[2]; ++z)
@@ -259,7 +323,7 @@ int INLWriter::writeFile()
         }
 
 
-        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
+        fprintf(f, "%f %f %f %f %f %f %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId);
       }
     }
   }

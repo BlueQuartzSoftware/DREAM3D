@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <limits>
 
 //-- TIFF Headers
 #include <tif_config.h>
@@ -20,7 +21,7 @@ namespace Detail
 {
   static int TRI_WIDTH = 2000;
   static int TRI_HEIGHT = 2000;
-  static float ReferenceDirection[3] = { 0.0f, 0.0f, 1.0f};
+  // static float ReferenceDirection[3] = { 0.0f, 0.0f, 1.0f};
 }
 #define RGB_NUM_COMP 3
 #define OR ||
@@ -38,7 +39,7 @@ const float GammaConstant = 5.27183797467291f;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t writeOutputAsTiff(unsigned char* segData,
+int writeOutputAsTiff(unsigned char* segData,
                           int width,
                           int height,
                       const std::string &outputFile,
@@ -355,5 +356,5 @@ int main(int argc, char **argv)
   int err = writeOutputAsTiff(image, width, height, outputFile, std::string("Crystal Orientation Color Legend"));
   freeMemory(image);
 
-  return EXIT_SUCCESS;
+  return err;
 }

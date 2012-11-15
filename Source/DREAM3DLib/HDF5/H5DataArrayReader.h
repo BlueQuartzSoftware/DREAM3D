@@ -68,6 +68,16 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      */
     static IDataArray::Pointer readNeighborListData(hid_t gid, const std::string &name, bool preflightOnly = false);
 
+    /**
+     * @brief readStringDataArray
+     * @param gid
+     * @param name
+     * @param preflightOnly
+     * @return
+     */
+    static IDataArray::Pointer readStringDataArray(hid_t gid, const std::string &name, bool preflightOnly = false);
+
+
   protected:
     H5DataArrayReader();
 
