@@ -249,21 +249,29 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
     }
+
     if(sm->getNodes().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
-    else
+
+    if (getErrorCondition() >= 0)
     {
+      // Check for Node Type Array
       int size = sm->getNodes()->GetNumberOfTuples();
       GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
     }
-    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
-    if(edges.get() == NULL)
+
+
+    if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Edges", -385);
-      setErrorCondition(-385);
+      IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
+      if(edges.get() == NULL)
+      {
+        addErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", -385);
+        setErrorCondition(-385);
+      }
     }
   }
 
@@ -399,14 +407,16 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-  StructArray<Segment> *edgesStructArray = StructArray<Segment>::SafePointerDownCast(edgesDataArray.get());
-  Segment* edges = edgesStructArray->GetPointer(0);
 
-  StructArray<ISegment> *internalEdgesStructArray = StructArray<ISegment>::SafePointerDownCast(iEdgesDataArray.get());
-  ISegment* iEdges = internalEdgesStructArray->GetPointer(0);
 
   if(m_SmoothTripleLines == true)
   {
+    StructArray<Segment> *edgesStructArray = StructArray<Segment>::SafePointerDownCast(edgesDataArray.get());
+    Segment* edges = edgesStructArray->GetPointer(0);
+
+    StructArray<ISegment> *internalEdgesStructArray = StructArray<ISegment>::SafePointerDownCast(iEdgesDataArray.get());
+    ISegment* iEdges = internalEdgesStructArray->GetPointer(0);
+
     //  Read the edges, if we are going to smooth them explicitly
 #if 0
     if (isVerbose) std::cout << "reading edges " << std::endl;

@@ -328,7 +328,7 @@ class GrainChecker
 M3CSliceBySlice::M3CSliceBySlice() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-//m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_DeleteTempFiles(true),
 m_GrainIds(NULL)
 {
@@ -450,7 +450,8 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
  //   StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
  //   StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
- //   CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+    int8_t* m_SurfaceMeshNodeType;
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
