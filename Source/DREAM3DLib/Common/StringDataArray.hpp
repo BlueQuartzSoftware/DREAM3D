@@ -277,12 +277,12 @@ class StringDataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-      assert(false);
+      return -1;
     }
 
     virtual int readH5Data(hid_t parentId)
     {
-      assert(false);
+      return -1;
     }
 
     void SetValue(size_t i, const std::string &value)
