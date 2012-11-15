@@ -84,8 +84,8 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-m_ErrorOutputFile("error.txt"),
-m_VtkOutputFile("filling.vtk"),
+m_ErrorOutputFile(""),
+m_VtkOutputFile(""),
 m_PeriodicBoundaries(false),
 m_NeighborhoodErrorWeight(1.0f),
 m_GrainIds(NULL),
@@ -1269,7 +1269,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-		MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+    MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
         float axis1comp = coordsRotated[0] / radcur1;
         float axis2comp = coordsRotated[1] / radcur2;
         float axis3comp = coordsRotated[2] / radcur3;
@@ -1360,8 +1360,8 @@ void PackPrimaryPhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3*i+1];
     float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
-	OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
-	column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
+  OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+  column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
     plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
     xmin = int(column - ((radcur1 / xRes) + 1));
@@ -1421,8 +1421,8 @@ void PackPrimaryPhases::assign_voxels()
             coords[0] = coords[0] - xc;
             coords[1] = coords[1] - yc;
             coords[2] = coords[2] - zc;
-			MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-			float axis1comp = coordsRotated[0] / radcur1;
+      MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+      float axis1comp = coordsRotated[0] / radcur1;
             float axis2comp = coordsRotated[1] / radcur2;
             float axis3comp = coordsRotated[2] / radcur3;
             inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
@@ -1447,13 +1447,13 @@ void PackPrimaryPhases::assign_voxels()
   }
   for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
-	m_Active[i] = false;
+  m_Active[i] = false;
   }
   int gnum;
   for(size_t i=0;i<totalPoints;i++)
   {
     gnum = m_GrainIds[i];
-	if(gnum >= 0) m_Active[gnum] = true;
+  if(gnum >= 0) m_Active[gnum] = true;
   }
 }
 
@@ -1542,7 +1542,7 @@ void PackPrimaryPhases::assign_gaps()
         float PHI = m_AxisEulerAngles[3*i+1];
         float phi2 = m_AxisEulerAngles[3*i+2];
         float ga[3][3];
-		OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+    OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
         column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
         row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
         plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
@@ -1605,7 +1605,7 @@ void PackPrimaryPhases::assign_gaps()
                     coords[0] = coords[0] - xc;
                     coords[1] = coords[1] - yc;
                     coords[2] = coords[2] - zc;
-					MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+          MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
                     float axis1comp = coordsRotated[0] / radcur1;
                     float axis2comp = coordsRotated[1] / radcur2;
                     float axis3comp = coordsRotated[2] / radcur3;

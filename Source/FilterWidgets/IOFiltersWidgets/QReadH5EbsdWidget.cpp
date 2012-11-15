@@ -206,7 +206,6 @@ void QReadH5EbsdWidget::setupGui()
            this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
 
   m_QualityMetricTableModel = new QualityMetricTableModel;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -390,6 +389,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void QReadH5EbsdWidget::populateCreatedRequiredLists(QString filePath)
 {
+#if 0
   ReadH5Ebsd::Pointer readH5Ebsd = ReadH5Ebsd::New();
   readH5Ebsd->setH5EbsdFile(filePath.toStdString());
   VoxelDataContainer::Pointer voxelDataContainer = VoxelDataContainer::New();
@@ -401,6 +401,7 @@ void QReadH5EbsdWidget::populateCreatedRequiredLists(QString filePath)
   {
     m_CreatedArrays->addItem(QString::fromStdString(*i));
   }
+  #endif
 }
 
 // -----------------------------------------------------------------------------
