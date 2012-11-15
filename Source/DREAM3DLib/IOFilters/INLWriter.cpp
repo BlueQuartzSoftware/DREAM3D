@@ -215,6 +215,7 @@ int INLWriter::writeFile()
 
   // Write the header, Each line starts with a "#" symbol
   fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().c_str());
+  fprintf(f, "# DateTime: %s\r\n", tifDateTime().c_str());
   fprintf(f, "# X_STEP: %f\r\n", res[0]);
   fprintf(f, "# Y_STEP: %f\r\n", res[1]);
   fprintf(f, "# Z_STEP: %f\r\n", res[2]);
@@ -247,9 +248,8 @@ int INLWriter::writeFile()
   uint32_t symmetry = 0;
   for(size_t i = 1; i < pDataPtr->GetNumberOfTuples(); ++i)
   {
-    fprintf(f, "# Phase %zu \r\n", i);
-    fprintf(f, "# MaterialName %s\r\n",  materialNames->GetValue(i).c_str());
     symmetry = m_CrystalStructures[i];
+    fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).c_str());
     if(symmetry == Ebsd::CrystalStructure::Cubic)
     {
       symmetry = Ebsd::Ang::CubicSymmetry;
@@ -262,7 +262,7 @@ int INLWriter::writeFile()
     {
       symmetry = Ebsd::Ang::UnknownSymmetry;
     }
-    fprintf(f, "# Symmetry %u\r\n", symmetry);
+    fprintf(f, "# Symmetry_%zu: %u\r\n", i, symmetry);
     fprintf(f, "#\r\n");
   }
 
@@ -271,7 +271,7 @@ int INLWriter::writeFile()
   {
     uniqueGrainIds.insert(m_GrainIds[i]);
   }
-  fprintf(f, "# Num Grains: %zu \r\n", uniqueGrainIds.size());
+  fprintf(f, "# Num_Grains: %zu \r\n", uniqueGrainIds.size());
   fprintf(f, "#\r\n");
 
 //  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
@@ -327,7 +327,10 @@ int INLWriter::writeFile()
           {
             symmetry = Ebsd::Ang::UnknownSymmetry;
           }
-
+        }
+        else
+        {
+          symmetry = Ebsd::Ang::UnknownSymmetry;
         }
 
 
