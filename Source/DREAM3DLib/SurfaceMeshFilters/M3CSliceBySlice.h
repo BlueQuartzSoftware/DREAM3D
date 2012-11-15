@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
- //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
 
@@ -320,15 +320,18 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     int assign_nodeID(int nN, int NSP,
                       DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                       DataArray<int8_t>::Pointer cVertexNodeTypePtr);
-
+    /**
+     * @brief get_square_index
+     * @param tns
+     * @return
+     */
     int get_square_index(int tns[4]);
 
-
+    /**
+     * @brief update_current_triangles
+     * @param nT
+     */
     void update_current_triangles(int nT);
-
-    // The next two methods are for analyzing the winding
-    // void analyzeWinding();
-    // std::vector<int> findAdjacentTriangles(Triangle *triangle, int label);
 
     /**
      * @brief writeNodesFile
@@ -379,9 +382,12 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                                DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                StructArray<Segment>::Pointer cEdgePtr);
 
+    // The next two methods are for analyzing the winding
+    // void analyzeWinding();
+    // std::vector<int> findAdjacentTriangles(Triangle *triangle, int label);
+
   private:
     int32_t* m_GrainIds;
- //   int8_t* m_SurfaceMeshNodeType;
     int numgrains;
 
 
