@@ -55,7 +55,7 @@
 
 #include "FilterWidgetManager.h"
 #include "QFilterPipeline.h"
-
+#include "PipelineArraySelectionWidget.h"
 
 
 
@@ -264,6 +264,18 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
   return w;
 }
 
+
+#define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
+{\
+  std::list<std::string> theList = dataContainer->get##type##ArrayNameList();\
+  QList<QString> list;\
+  for(std::list<std::string>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
+    list << QString::fromStdString(*iter);\
+  }\
+  PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
+  if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
+}\
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -289,6 +301,7 @@ void PipelineViewWidget::preflightPipeline()
 
 
   // Build up the pipeline
+  std::cout << "***************** STARTING PREFLIGHT **********************" << std::endl;
   qint32 count = filterCount();
   for(qint32 i = 0; i < count; ++i)
   {
@@ -296,6 +309,7 @@ void PipelineViewWidget::preflightPipeline()
     if (fw)
     {
       fw->setHasPreflightErrors(false);
+      fw->setHasPreflightWarnings(false);
       AbstractFilter::Pointer filter = fw->getFilter();
 
       filter->setVoxelDataContainer(m.get());
@@ -320,9 +334,44 @@ void PipelineViewWidget::preflightPipeline()
           }
         }
       }
+
+      CONVERT_STD_LIST_TO_QLIST(m,Cell,fw)
+      CONVERT_STD_LIST_TO_QLIST(m,Field,fw)
+      CONVERT_STD_LIST_TO_QLIST(m,Ensemble,fw)
+//      {
+//        std::list<std::string> cellList = m->getCellArrayNameList();
+//        QList<QString> list;
+//        for(std::list<std::string>::iterator iter = cellList.begin(); iter != cellList.end(); ++iter)
+//        {
+//          list << QString::fromStdString(*iter);
+//        }
+//        fw->setCellDataArrayNames(list);
+//      }
+//      {
+//        std::list<std::string> cellList = m->getFieldArrayNameList();
+//        QList<QString> list;
+//        for(std::list<std::string>::iterator iter = cellList.begin(); iter != cellList.end(); ++iter)
+//        {
+//          list << QString::fromStdString(*iter);
+//        }
+//        fw->setFieldDataArrayNames(list);
+//      }
+//      {
+//        std::list<std::string> cellList = m->getEnsembleArrayNameList();
+//        QList<QString> list;
+//        for(std::list<std::string>::iterator iter = cellList.begin(); iter != cellList.end(); ++iter)
+//        {
+//          list << QString::fromStdString(*iter);
+//        }
+//        fw->setEnsembleDataArrayNames(list);
+//      }
+      PipelineArraySelectionWidget* ptr = fw->getPipelineArraySelectionWidget();
+      if (NULL != ptr) {
+        fw->getPipelineArraySelectionWidget()->updatePipelineArrayNames(filter.get());
+      }
     }
   }
-
+  std::cout << "***************** ENDING PREFLIGHT **********************" << std::endl;
   errorTableWidget->resizeRowsToContents();
 }
 

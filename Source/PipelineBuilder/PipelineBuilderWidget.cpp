@@ -181,7 +181,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
       w->blockSignals(true);
       w->readOptions(prefs);
       w->blockSignals(false);
-      w->emitParametersChanged();
+      //w->emitParametersChanged();
     }
     prefs.endGroup();
   }

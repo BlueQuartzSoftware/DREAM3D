@@ -40,21 +40,31 @@
 
 #include <QtCore/QTimer>
 #include <QtCore/QResource>
+
+#include <QtGui/QFrame>
+#include <QtGui/QSpinBox>
+#include <QtGui/QLabel>
+#include <QtGui/QCheckBox>
+#include <QtGui/QLineEdit>
+#include <QtGui/QIntValidator>
+#include <QtGui/QDoubleValidator>
+#include <QtGui/QComboBox>
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
 #include <QtGui/QGridLayout>
 #include <QtGui/QPainter>
-
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMouseEvent>
 
 
 #include "QtSupport/QR3DFileCompleter.h"
-
+#include "QtSupport/QFSDropLineEdit.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
+
+#include "PipelineArraySelectionWidget.h"
 
 #define PADDING 5
 #define BORDER 2
@@ -74,7 +84,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
       m_BorderIncrement(16),
       m_IsSelected(false),
       m_HasPreflightErrors(false),
-      m_HasPreflightWarnings(false)
+      m_HasPreflightWarnings(false),
+      m_ArraySelectionTab(NULL)
 {
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
@@ -301,6 +312,21 @@ void QFilterWidget::updateWidgetStyle()
   setStyleSheet(style);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PipelineArraySelectionWidget* QFilterWidget::getPipelineArraySelectionWidget()
+{
+  return m_ArraySelectionTab;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setPipelineArraySelectionWidget(PipelineArraySelectionWidget* w)
+{
+  m_ArraySelectionTab = w;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -319,9 +345,30 @@ void QFilterWidget::setupGui()
 
 
   setTitle(QString::fromStdString(getFilter()->getHumanLabel()));
+#if 0
+  QVBoxLayout* vertLayout_0 = new QVBoxLayout(this);
 
+  QTabWidget* tabWidget = new QTabWidget(this);
+  tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+  // Create a QWidget to hold the Parameters
+  QWidget* parameterTab = new QWidget();
+  parameterTab->setObjectName(QString::fromUtf8("parameterTab"));
+  tabWidget->addTab(parameterTab, "Parameters");
+
+  // Create a QWidget to hold the Array Selection Widget
+  m_ArraySelectionTab = new PipelineArraySelectionWidget();
+  m_ArraySelectionTab->setObjectName(QString::fromUtf8("arrayTab"));
+  tabWidget->addTab(m_ArraySelectionTab, "Array Selection");
+  tabWidget->setCurrentIndex(0);
+
+
+  // Add the TabWidget to the top level Vertical Layout
+  vertLayout_0->addWidget(tabWidget);
+QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
+#else
 
   QVBoxLayout* vertLayout = new QVBoxLayout(this);
+#endif
 
   QFormLayout* frmLayout = new QFormLayout();
   vertLayout->addLayout(frmLayout);
@@ -929,29 +976,65 @@ void QFilterWidget::readOptions(QSettings &prefs)
 {
 
 }
-
 #if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setCellDataArrayNames(std::vector<std::string> arrayNames)
+void QFilterWidget::setCellDataArrayNames(QStringList arrayNames)
 {
-
+//  std::cout << getFilter()->getNameOfClass() << " Possible Cell Data" << std::endl;
+//  QStringList::const_iterator constIterator;
+//  for (constIterator = arrayNames.constBegin(); constIterator != arrayNames.constEnd(); ++constIterator)
+//  {
+//    std::cout << (*constIterator).toLocal8Bit().constData() << std::endl;
+//  }
+  getPipelineArraySelectionWidget()->setPossibleCellArrayNames(arrayNames);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setFieldDataArrayNames(std::vector<std::string> arrayNames)
+void QFilterWidget::setFieldDataArrayNames(QStringList arrayNames)
 {
-
+//  std::cout << getFilter()->getNameOfClass() << " Possible Field Data" << std::endl;
+//  QStringList::const_iterator constIterator;
+//  for (constIterator = arrayNames.constBegin(); constIterator != arrayNames.constEnd(); ++constIterator)
+//  {
+//    std::cout << (*constIterator).toLocal8Bit().constData() << std::endl;
+//  }
+  getPipelineArraySelectionWidget()->setPossibleFieldArrayNames(arrayNames);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setEnsembleDataArrayNames(std::vector<std::string> arrayNames)
+void QFilterWidget::setEnsembleDataArrayNames(QStringList arrayNames)
 {
+//  std::cout << getFilter()->getNameOfClass() << " Possible Ensemble Data" << std::endl;
+//  QStringList::const_iterator constIterator;
+//  for (constIterator = arrayNames.constBegin(); constIterator != arrayNames.constEnd(); ++constIterator)
+//  {
+//    std::cout << (*constIterator).toLocal8Bit().constData() << std::endl;
+//  }
+  getPipelineArraySelectionWidget()->setPossibleEnsembleArrayNames(arrayNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updatePipelineArrayNames(AbstractFilter* filter)
+{
+  typedef std::set<std::string> StringSet_t;
+  StringSet_t cellNameSet = filter->getCreatedCellData();
+  StringSet_t fieldNameset = filter->getCreatedFieldData();
+  StringSet_t ensembleNameSet = filter->getCreatedEnsembleData();
+
+  StringSet_t cellReqNameSet = filter->getRequiredCellData();
+  StringSet_t fieldReqNameSet = filter->getRequiredFieldData();
+  StringSet_t ensembleReqNameSet = filter->getRequiredEnsembleData();
+
+
 
 }
 #endif

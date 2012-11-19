@@ -314,13 +314,13 @@ int INLWriter::writeFile()
         {
           if(symmetry == Ebsd::CrystalStructure::Cubic)
           {
-            EbsdColoring::GenerateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
+            EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
             symmetry = Ebsd::Ang::CubicSymmetry;
 
           }
           else if(symmetry == Ebsd::CrystalStructure::Hexagonal)
           {
-            EbsdColoring::CalculateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
+            EbsdColoring::GenerateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
             symmetry = Ebsd::Ang::HexagonalSymmetry;
           }
           else

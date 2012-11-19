@@ -63,7 +63,7 @@ include_directories(${FilterWidgetsLib_SOURCE_DIR})
 include_directories(${FilterWidgetsLib_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
-
+include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
 
 # --------------------------------------------------------------------
 # Add in ONLY those headers and sources that need to have various Qt related

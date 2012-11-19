@@ -199,13 +199,14 @@ void QReadH5EbsdWidget::setupGui()
   setCheckable(true);
   setIsSelected(false);
 
-
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_H5EbsdFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
            this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
 
   m_QualityMetricTableModel = new QualityMetricTableModel;
+
+  setPipelineArraySelectionWidget(arraySelectionTab);
 }
 
 // -----------------------------------------------------------------------------
