@@ -1071,11 +1071,6 @@ font-size: 11px;
        </item>
       </layout>
      </widget>
-     <widget class="PipelineArraySelectionWidget" name="arraySelectionTab">
-      <attribute name="title">
-       <string>Array Selection</string>
-      </attribute>
-     </widget>
     </widget>
    </item>
   </layout>
@@ -1090,12 +1085,6 @@ font-size: 11px;
    <class>QFilterWidget</class>
    <extends>QGroupBox</extends>
    <header location="global">QFilterWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>PipelineArraySelectionWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">PipelineArraySelectionWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

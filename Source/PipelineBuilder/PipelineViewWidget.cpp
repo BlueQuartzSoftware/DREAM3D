@@ -301,7 +301,6 @@ void PipelineViewWidget::preflightPipeline()
 
 
   // Build up the pipeline
-  std::cout << "***************** STARTING PREFLIGHT **********************" << std::endl;
   qint32 count = filterCount();
   for(qint32 i = 0; i < count; ++i)
   {
@@ -335,43 +334,9 @@ void PipelineViewWidget::preflightPipeline()
         }
       }
 
-      CONVERT_STD_LIST_TO_QLIST(m,Cell,fw)
-      CONVERT_STD_LIST_TO_QLIST(m,Field,fw)
-      CONVERT_STD_LIST_TO_QLIST(m,Ensemble,fw)
-//      {
-//        std::list<std::string> cellList = m->getCellArrayNameList();
-//        QList<QString> list;
-//        for(std::list<std::string>::iterator iter = cellList.begin(); iter != cellList.end(); ++iter)
-//        {
-//          list << QString::fromStdString(*iter);
-//        }
-//        fw->setCellDataArrayNames(list);
-//      }
-//      {
-//        std::list<std::string> cellList = m->getFieldArrayNameList();
-//        QList<QString> list;
-//        for(std::list<std::string>::iterator iter = cellList.begin(); iter != cellList.end(); ++iter)
-//        {
-//          list << QString::fromStdString(*iter);
-//        }
-//        fw->setFieldDataArrayNames(list);
-//      }
-//      {
-//        std::list<std::string> cellList = m->getEnsembleArrayNameList();
-//        QList<QString> list;
-//        for(std::list<std::string>::iterator iter = cellList.begin(); iter != cellList.end(); ++iter)
-//        {
-//          list << QString::fromStdString(*iter);
-//        }
-//        fw->setEnsembleDataArrayNames(list);
-//      }
-      PipelineArraySelectionWidget* ptr = fw->getPipelineArraySelectionWidget();
-      if (NULL != ptr) {
-        fw->getPipelineArraySelectionWidget()->updatePipelineArrayNames(filter.get());
-      }
+
     }
   }
-  std::cout << "***************** ENDING PREFLIGHT **********************" << std::endl;
   errorTableWidget->resizeRowsToContents();
 }
 

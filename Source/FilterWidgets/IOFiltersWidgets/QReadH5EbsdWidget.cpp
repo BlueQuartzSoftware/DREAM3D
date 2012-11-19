@@ -205,8 +205,6 @@ void QReadH5EbsdWidget::setupGui()
            this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
 
   m_QualityMetricTableModel = new QualityMetricTableModel;
-
-  setPipelineArraySelectionWidget(arraySelectionTab);
 }
 
 // -----------------------------------------------------------------------------
