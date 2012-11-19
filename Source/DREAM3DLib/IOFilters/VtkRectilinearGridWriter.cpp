@@ -231,14 +231,24 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if (MXADir::exists(parentPath) == false)
+  // Make sure what we are checking is an actual file name and not a directory
+  if (MXAFileInfo::isDirectory(m_OutputFile) == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+    std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+    if (MXADir::exists(parentPath) == false)
+    {
+      ss.str("");
+      ss <<  "The directory path for the output file does not exist.";
+      addWarningMessage(getHumanLabel(), ss.str(), -1);
+    }
   }
-
+  else
+  {
+      ss.str("");
+      ss <<  "The output file path is a path to an existing directory. Please change the path to point to a file";
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
+      setErrorCondition(-1);
+  }
 
   if(m_WriteGrainIds == true)
   {

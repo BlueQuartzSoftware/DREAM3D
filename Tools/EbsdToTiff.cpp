@@ -197,7 +197,7 @@ int main(int argc, char **argv)
 
   for (int i = 0; i < total; ++i) {
     uint8_t* rgb = rgbArray->GetPointer(i*3);
-    EbsdColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
+    EbsdColoring::GenerateCubicIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
                                   rgb, hkl, degToRads);
   }

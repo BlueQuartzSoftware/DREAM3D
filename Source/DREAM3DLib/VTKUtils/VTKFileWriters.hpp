@@ -352,13 +352,13 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           if(crystruct[phase] == Ebsd::CrystalStructure::Cubic)
           {
-            EbsdColoring::GenerateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
+            EbsdColoring::GenerateCubicIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           &rgba[index], hkl);
           }
           else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)
           {
-            EbsdColoring::CalculateHexIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
+            EbsdColoring::GenerateHexIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
           }
         }
 
@@ -464,7 +464,7 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
         {
           OrientationMath::eulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
           m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
-          EbsdColoring::GenerateRodriguesColor(r1, r2, r3, &rgba[index]);
+          EbsdColoring::GenerateCubicRodriguesColor(r1, r2, r3, &rgba[index]);
           //            EbsdColoring::GenerateRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
         }
         else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)

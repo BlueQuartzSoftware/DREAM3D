@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _EBSDCOLORING_HPP_
-#define _EBSDCOLORING_HPP_
+#ifndef _EbsdColoring_HPP_
+#define _EbsdColoring_HPP_
 
 #include <string>
 
@@ -45,15 +45,17 @@
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 
-namespace Detail
+namespace EbsdColor
 {
-  static const float DegToRads = static_cast<float>(M_PI/180.0f);
-  static const float HalfSqrt2 = sqrt(2.0f) / 2.0f;
-  static const float RadToDegs = static_cast<float>(180.0f/M_PI);
-  static const float PiOver4  = static_cast<float>(M_PI_4);
-  static const float Pi_f = static_cast<float>(M_PI);
-  static const float PiOver12 = static_cast<float>(M_PI/12.0);
-
+  namespace Detail
+  {
+    static const float DegToRads = static_cast<float>(M_PI/180.0f);
+    static const float HalfSqrt2 = sqrt(2.0f) / 2.0f;
+    static const float RadToDegs = static_cast<float>(180.0f/M_PI);
+    static const float PiOver4  = static_cast<float>(M_PI_4);
+    static const float Pi_f = static_cast<float>(M_PI);
+    static const float PiOver12 = static_cast<float>(M_PI/12.0);
+  }
 }
 
 /**
@@ -69,9 +71,9 @@ class EbsdColoring
 {
 
   public:
-   static std::string  EulerAngles() { return std::string("Euler_Angles"); }
+    //static std::string  EulerAngles() { return std::string("Euler_Angles"); }
 
-  /**
+    /**
    * @brief Sorts the 3 values from low to high
    * @param a
    * @param b
@@ -105,7 +107,7 @@ class EbsdColoring
       { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
     }
 
-  /**
+    /**
    * @brief Returns the maximum value of the three values
    * @param red
    * @param green
@@ -157,12 +159,13 @@ class EbsdColoring
      * phi1, Phi, phi2
      * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
      * @param rgb A pointer to store the RGB value into
+     * @param hkl Stores the hkl values
      */
     template<typename T, typename K>
-    static void GenerateIPFColor(T* eulers, K* refDir, unsigned char* rgb, unsigned char* hkl)
+    static void GenerateCubicIPFColor(T* eulers, K* refDir, unsigned char* rgb, unsigned char* hkl)
     {
-      EbsdColoring::GenerateIPFColor<T>(eulers[0], eulers[1], eulers[2],
-                                       refDir[0], refDir[1], refDir[2],rgb, hkl);
+      EbsdColoring::GenerateCubicIPFColor<T>(eulers[0], eulers[1], eulers[2],
+          refDir[0], refDir[1], refDir[2], rgb, hkl);
     }
 
     /**
@@ -175,32 +178,34 @@ class EbsdColoring
      * @param refDir1 The Second component of the Reference direction vector
      * @param refDir2 The third component of the Reference direction vector
      * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
+     * @param hkl Output
+     * @param degToRad Convert the euler angles to radians
      */
     template <typename T, typename K>
-    static void GenerateIPFColor(T phi1, T phi, T phi2,
+    static void GenerateCubicIPFColor(T phi1, T phi, T phi2,
                                  K refDir0, K refDir1, K refDir2,
                                  unsigned char* rgb, unsigned char* hkl, bool degToRad = false)
     {
 
       if (degToRad == true)
       {
-        phi1 = phi1 * Detail::DegToRads;
-        phi = phi * Detail::DegToRads;
-        phi2 = phi2 * Detail::DegToRads;
+        phi1 = phi1 * EbsdColor::Detail::DegToRads;
+        phi = phi * EbsdColor::Detail::DegToRads;
+        phi2 = phi2 * EbsdColor::Detail::DegToRads;
       }
       float g[3][3]; // Rotation Matrix?
       float cd[3];
       float d[3];
 
       // 1) find rotation matrix from Euler angles
-	  OrientationMath::eulertoMat(phi1, phi, phi2, g);
+      OrientationMath::eulertoMat(phi1, phi, phi2, g);
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
-	  float refDirection[3];
-	  refDirection[0] = refDir0;
-	  refDirection[1] = refDir1;
-	  refDirection[2] = refDir2;
-	  MatrixMath::multiply3x3with3x1(g, refDirection, cd);
+      float refDirection[3];
+      refDirection[0] = refDir0;
+      refDirection[1] = refDir1;
+      refDirection[2] = refDir2;
+      MatrixMath::multiply3x3with3x1(g, refDirection, cd);
 
       //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
       cd[0] = fabs(cd[0]);
@@ -216,8 +221,8 @@ class EbsdColoring
       hkl[0] = static_cast<unsigned char> (h * 100);
       hkl[1] = static_cast<unsigned char> (k * 100);
       hkl[2] = static_cast<unsigned char> (l * 100);
-      float theta = (cd[0] * 0) + (cd[1] * -Detail::HalfSqrt2) + (cd[2] * Detail::HalfSqrt2);
-      theta = (Detail::RadToDegs) * acos(theta);
+      float theta = (cd[0] * 0) + (cd[1] * -EbsdColor::Detail::HalfSqrt2) + (cd[2] * EbsdColor::Detail::HalfSqrt2);
+      theta = (EbsdColor::Detail::RadToDegs) * acos(theta);
       float red = (90.0f - theta) / 45.0f;
       d[0] = (cd[1] * 1) - (cd[2] * 0);
       d[1] = (cd[2] * 0) - (cd[0] * 1);
@@ -229,8 +234,8 @@ class EbsdColoring
       d[0] = d[0] / norm;
       d[1] = d[1] / norm;
       d[2] = d[2] / norm;
-      float phi_local = (d[0] * 0) + (d[1] * Detail::HalfSqrt2) + (d[2] * Detail::HalfSqrt2);
-      phi_local = (Detail::RadToDegs) * acos(phi_local);
+      float phi_local = (d[0] * 0) + (d[1] * EbsdColor::Detail::HalfSqrt2) + (d[2] * EbsdColor::Detail::HalfSqrt2);
+      phi_local = (EbsdColor::Detail::RadToDegs) * acos(phi_local);
       float green = (1 - red) * ((35.26f - phi_local) / 35.26f);
       float blue = (1 - red) - green;
       float max = red;
@@ -264,18 +269,18 @@ class EbsdColoring
      * @param rod - Rodrigues Vector (3 component rotation description)
      * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
      */
-    static void GenerateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+    static void GenerateCubicRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
     {
-	    float range = static_cast<float>(2.0*(sqrt(2.0) - 1.0)+0.000001);
-	    float max = range/2.0f;
+      float range = static_cast<float>(2.0*(sqrt(2.0) - 1.0)+0.000001);
+      float max = range/2.0f;
       float red = (r1+max)/range;
       float green = (r2+max)/range;
       float blue = (r3+max)/range;
 
       // Scale values from 0 to 1.0
-//      red = red / max;
-//      green = green / max;
-//      blue = blue / max;
+      //      red = red / max;
+      //      green = green / max;
+      //      blue = blue / max;
 
       // Multiply by 255 to get an R/G/B value
       red = red * 255.0f;
@@ -297,10 +302,10 @@ class EbsdColoring
      * @param rgb A pointer to store the RGB value into
      */
     template<typename T, typename K>
-    static void CalculateHexIPFColor(T* eulers, K* refDir, unsigned char* rgb)
+    static void GenerateHexIPFColor(T* eulers, K* refDir, unsigned char* rgb)
     {
-      EbsdColoring::CalculateHexIPFColor<T>(eulers[0], eulers[1], eulers[2],
-                                       refDir[0], refDir[1], refDir[2],rgb);
+      EbsdColoring::GenerateHexIPFColor<T>(eulers[0], eulers[1], eulers[2],
+          refDir[0], refDir[1], refDir[2],rgb);
     }
 
     /**
@@ -315,10 +320,10 @@ class EbsdColoring
      * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
      */
     template <typename T, typename K>
-    static void CalculateHexIPFColor(T phi1, T phi, T phi2,
-                                 K refDir0, K refDir1, K refDir2,
-                                 unsigned char* rgb)
-	{
+    static void GenerateHexIPFColor(T phi1, T phi, T phi2,
+                                     K refDir0, K refDir1, K refDir2,
+                                     unsigned char* rgb)
+    {
       float qc[5];
       float q1[5];
       float g[3][3];
@@ -330,19 +335,19 @@ class EbsdColoring
 
       OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
 
-	  for (int j = 0; j < 12; j++)
+      for (int j = 0; j < 12; j++)
       {
-//        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
-//        OrientationMath::multiplyQuaternions(q1, q2, qc);
+        //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
+        //        OrientationMath::multiplyQuaternions(q1, q2, qc);
         MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
 
-		OrientationMath::QuattoMat(qc, g);
+        OrientationMath::QuattoMat(qc, g);
 
-		refDirection[0] = refDir0;
-		refDirection[1] = refDir1;
-		refDirection[2] = refDir2;
-		MatrixMath::multiply3x3with3x1(g, refDirection, p);
-		MatrixMath::normalize3x1(p);
+        refDirection[0] = refDir0;
+        refDirection[1] = refDir1;
+        refDirection[2] = refDir2;
+        MatrixMath::multiply3x3with3x1(g, refDirection, p);
+        MatrixMath::normalize3x1(p);
 
         if (p[2] < 0)
         {
@@ -353,22 +358,22 @@ class EbsdColoring
         d[0] = p[0];
         d[1] = p[1];
         d[2] = 0;
-		MatrixMath::normalize3x1(d);
-        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * Detail::DegToRads))
+        MatrixMath::normalize3x1(d);
+        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * EbsdColor::Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
           if (theta > 1) theta = 1;
 
           if (theta < -1) theta = -1;
 
-          theta = (Detail::RadToDegs) * acos(theta);
+          theta = (EbsdColor::Detail::RadToDegs) * acos(theta);
           _rgb[0] = (90.0f - theta) / 90.0f;
           phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
           if (phi_local > 1) phi_local = 1;
 
           if (phi_local < -1) phi_local = -1;
 
-          phi_local = (Detail::RadToDegs) * acos(phi_local);
+          phi_local = (EbsdColor::Detail::RadToDegs) * acos(phi_local);
           _rgb[1] = (1 - _rgb[0]) * ((30.0f - phi_local) / 30.0f);
           _rgb[2] = (1 - _rgb[0]) - _rgb[1];
         }
@@ -403,10 +408,10 @@ class EbsdColoring
      */
     static void GenerateHexRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
     {
-      float range1 = 2.0f*(tanf(Detail::PiOver4));
-      float range2 = 2.0f*(tanf(Detail::PiOver12));
-	    float max1 = range1/2.0f;
-	    float max2 = range2/2.0f;
+      float range1 = 2.0f*(tanf(EbsdColor::Detail::PiOver4));
+      float range2 = 2.0f*(tanf(EbsdColor::Detail::PiOver12));
+      float max1 = range1/2.0f;
+      float max2 = range2/2.0f;
       float red = (r1+max1)/range1;
       float green = (r2+max1)/range1;
       float blue = (r3+max2)/range2;
@@ -440,4 +445,4 @@ class EbsdColoring
 
 
 
-#endif /* _EBSDCOLORING_HPP_ */
+#endif /* _EbsdColoring_HPP_ */

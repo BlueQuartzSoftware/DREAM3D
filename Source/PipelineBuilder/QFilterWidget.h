@@ -36,22 +36,19 @@
 #ifndef _QFILTERWIDGET_H_
 #define _QFILTERWIDGET_H_
 
+#include <QtCore/QStringList>
 #include <QtCore/QSettings>
-#include <QtGui/QFrame>
 #include <QtGui/QGroupBox>
-#include <QtGui/QSpinBox>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QComboBox>
+
+
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "QtSupport/QFSDropLineEdit.h"
 
 #include "PipelineBuilderDLLExport.h"
+
+
+
 
 #if 1
 /**
@@ -79,6 +76,8 @@
 
 // This needs to be defined
 class QMouseEvent;
+class AbstractFilter;
+class PipelineArraySelectionWidget;
 
 /**
  * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
@@ -114,11 +113,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QString  getFilterGroup();
 
-#if 0
-    virtual void setCellDataArrayNames(std::vector<std::string> arrayNames);
-    virtual void setFieldDataArrayNames(std::vector<std::string> arrayNames);
-    virtual void setEnsembleDataArrayNames(std::vector<std::string> arrayNames);
-#endif
+    virtual PipelineArraySelectionWidget* getPipelineArraySelectionWidget();
+    virtual void setPipelineArraySelectionWidget(PipelineArraySelectionWidget* w);
 
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -189,7 +185,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool       m_HasPreflightErrors;
     bool       m_HasPreflightWarnings;
     static QString m_OpenDialogLastDirectory;
-
+    PipelineArraySelectionWidget* m_ArraySelectionTab;
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented

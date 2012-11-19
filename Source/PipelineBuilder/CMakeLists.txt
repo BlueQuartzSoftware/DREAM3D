@@ -22,7 +22,7 @@ ENDIF (WIN32)
 include_directories(${PROJECT_CODE_DIR}/QtSupport
                     ${DREAM3DProj_BINARY_DIR}
                     ${DREAM3DProj_BINARY_DIR}/QtSupport
-                    ${PROJECT_BINARY_DIR} 
+                    ${PROJECT_BINARY_DIR}
                     ${PipelineBuilderLib_SOURCE_DIR}
 )
 
@@ -51,29 +51,32 @@ set(CLASS_NAME "PipelineBuilder")
 set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterWidget.h
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.h
-    ${PROJECT_SOURCE_DIR}/PipelineViewWidget.h  
+    ${PROJECT_SOURCE_DIR}/PipelineViewWidget.h
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
-	${PROJECT_SOURCE_DIR}/AddFavoriteWidget.h
-    )
-    
-set(PipelineBuilderLib_SRCS 
+    ${PROJECT_SOURCE_DIR}/AddFavoriteWidget.h
+    ${PROJECT_SOURCE_DIR}/PipelineArraySelectionWidget.h
+)
+
+set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/QFilterWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineBuilderWidget.cpp
     ${PROJECT_SOURCE_DIR}/PipelineViewWidget.cpp
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
-	${PROJECT_SOURCE_DIR}/AddFavoriteWidget.cpp
-    )
+    ${PROJECT_SOURCE_DIR}/AddFavoriteWidget.cpp
+    ${PROJECT_SOURCE_DIR}/PipelineArraySelectionWidget.cpp
+)
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")
 
 
-# -- Run MOC and UIC on the necessary files   
+# -- Run MOC and UIC on the necessary files
 QT4_ADD_RESOURCES( PipelineBuilderLib_Generated_RC_SRCS ""  )
-    
-QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS 
+
+QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS
             ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui
-			${PROJECT_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
-			)
+            ${PROJECT_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
+            ${PROJECT_SOURCE_DIR}/UI_Files/PipelineArraySelectionWidget.ui
+      )
 
 QT4_WRAP_CPP( PipelineBuilderLib_Generated_MOC_SRCS ${PipelineBuilderLib_HDRS} )
 #set_source_files_properties( ${PipelineBuilderLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -84,7 +87,7 @@ cmp_IDE_SOURCE_PROPERTIES("Generated" "${PipelineBuilderLib_Generated_UI_HDRS};$
 set(PipelineBuilderLib_PROJECT_SRCS
     ${PipelineBuilderLib_SRCS}
     ${PipelineBuilderLib_HDRS}
-    ${PipelineBuilderLib_Generated_MOC_SRCS} 
+    ${PipelineBuilderLib_Generated_MOC_SRCS}
     ${PipelineBuilderLib_Generated_UI_HDRS}
     ${PipelineBuilderLib_Generated_RC_SRCS}
     ${PipelineBuilder_HDRS}
@@ -99,10 +102,10 @@ if (LINUX)
   set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
 endif()
 add_library(${PROJECT_NAME} SHARED ${PipelineBuilderLib_PROJECT_SRCS})
-target_link_libraries(${PROJECT_NAME}                     
+target_link_libraries(${PROJECT_NAME}
                         MXA
                         DREAM3DLib
-                        ${QT_QTCORE_LIBRARY}   
+                        ${QT_QTCORE_LIBRARY}
                         ${QT_QTGUI_LIBRARY}
                         QtSupport
                    )
@@ -118,13 +121,13 @@ endif()
 
 
 if ( NOT APPLE)
-    INSTALL(TARGETS ${PROJECT_NAME}  
+    INSTALL(TARGETS ${PROJECT_NAME}
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}
         LIBRARY DESTINATION ${lib_install_dir}
-        ARCHIVE DESTINATION ${lib_install_dir}       
+        ARCHIVE DESTINATION ${lib_install_dir}
         BUNDLE DESTINATION "."
-    ) 
-endif() 
+    )
+endif()
 
 

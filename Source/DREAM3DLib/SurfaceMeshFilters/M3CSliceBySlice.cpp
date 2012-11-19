@@ -186,7 +186,7 @@ class SMTempFile
 };
 
 
-#if 0
+
 class GrainChecker
 {
   public:
@@ -225,9 +225,9 @@ class GrainChecker
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-    void addData(int numTriangles, int ctid, const std::vector<Patch::Pointer>& cTriangle, Node* cVertex)
+    void addData(int numTriangles, int ctid, StructArray<Triangle>::Pointer cTriangle, Node* cVertex)
     {
-
+#if 0
       int n1, n2, n3;
       int gid;
       int size;
@@ -286,7 +286,7 @@ class GrainChecker
         //
         ++ctid;
       }
-
+#endif
     }
 
 // -----------------------------------------------------------------------------
@@ -320,7 +320,7 @@ class GrainChecker
     GrainChecker(const GrainChecker&); // Copy Constructor Not Implemented
     void operator=(const GrainChecker&); // Operator '=' Not Implemented
 };
-#endif
+
 
 // -----------------------------------------------------------------------------
 //
@@ -347,67 +347,15 @@ M3CSliceBySlice::~M3CSliceBySlice()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::setupFilterParameters()
 {
-
   std::vector<FilterParameter::Pointer> parameters;
-#if 0
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Vtk PolyData Output File");
-     option->setPropertyName("VtkOutputFile");
-     option->setWidgetType(FilterParameter::OutputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write STL Files");
-     option->setPropertyName("WriteSTLFile");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("STL Output Directory");
-     option->setPropertyName("StlOutputDirectory");
-     option->setWidgetType(FilterParameter::OutputFileWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("STL Output Prefix");
-     option->setPropertyName("StlFilePrefix");
-     option->setWidgetType(FilterParameter::StringWidget);
-     option->setValueType("string");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Binary Vtk File");
-     option->setPropertyName("WriteBinaryVTKFiles");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Conformal Mesh");
-     option->setPropertyName("WriteConformalMesh");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
-   #endif
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Delete Temp Files");
-     option->setPropertyName("DeleteTempFiles");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Delete Temp Files");
+    option->setPropertyName("DeleteTempFiles");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
 
   setFilterParameters(parameters);
 }
@@ -418,13 +366,6 @@ void M3CSliceBySlice::setupFilterParameters()
 void M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
-//  writer->writeValue("WriteSTLFile", getWriteSTLFile() );
-//  writer->writeValue("StlOutputDirectory", getStlOutputDirectory() );
-//  writer->writeValue("StlFilePrefix", getStlFilePrefix() );
-//  writer->writeValue("VtkOutputFile", getVtkOutputFile() );
-//  writer->writeValue("WriteBinaryVTKFiles", getWriteBinaryVTKFiles() );
-//  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
-
 }
 
 // -----------------------------------------------------------------------------
@@ -441,28 +382,20 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
   else {
     StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
     StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
- //   StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
- //   StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
+
 
     int8_t* m_SurfaceMeshNodeType;
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
-    sm->setNodes(vertices);
+        sm->setNodes(vertices);
     sm->setTriangles(triangles);
-//    sm->addCellData(DREAM3D::CellData::SurfaceMeshEdges, faceEdges);
-//    sm->addCellData(DREAM3D::CellData::SurfaceMeshInternalEdges, internalEdges);
-
-//    addCreatedCellData(DREAM3D::CellData::SurfaceMeshEdges);
-//    addCreatedCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -500,13 +433,11 @@ void M3CSliceBySlice::execute()
 
 
   std::string nodesFile = MXADir::tempPath() + Detail::NodesFile;
-//  std::cout << nodesFile << std::endl;
   SMTempFile::Pointer nodesTempFile = SMTempFile::New();
   nodesTempFile->setFilePath(nodesFile);
   nodesTempFile->setAutoDelete(this->m_DeleteTempFiles);
 
   std::string trianglesFile = MXADir::tempPath() + Detail::TrianglesFile;
-//  std::cout << trianglesFile << std::endl;
   SMTempFile::Pointer trianglesTempFile = SMTempFile::New();
   trianglesTempFile->setFilePath(trianglesFile);
   trianglesTempFile->setAutoDelete(this->m_DeleteTempFiles);
@@ -520,7 +451,7 @@ void M3CSliceBySlice::execute()
   int nNodes = 0; // number of total Nodes used...
 
 
-  //GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
+  GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
   size_t dims[3];
   float res[3];
@@ -532,7 +463,6 @@ void M3CSliceBySlice::execute()
 
   int wrappedDims[3] = { dims[0], dims[1], dims[2]};
 
-  // Initialize our M3CSliceBySlice Variable
   // Check to see if there is already a layer of bounding negative grain ids around the volume
   bool isWrapped = volumeHasGhostLayer();
   // If the volume is NOT wrapped by a ghost layer of negative voxels then we need to wrap
@@ -554,24 +484,27 @@ void M3CSliceBySlice::execute()
 
   StructArray<Neighbor>::Pointer neighborsPtr = StructArray<Neighbor>::CreateArray(2*NSP+1, "M3CSliceBySlice_Neighbor_Array");
   neighborsPtr->initializeWithZeros();
+
   DataArray<int32_t>::Pointer neighCSiteIdPtr = DataArray<int32_t>::CreateArray(2*NSP+1, "M3CSliceBySlice_Neighbor_CSiteId_Array");
   neighCSiteIdPtr->initializeWithZeros();
+
   StructArray<Face>::Pointer cSquarePtr = StructArray<Face>::CreateArray(3*2*NSP, "M3CSliceBySlice_Face_Array");
   cSquarePtr->initializeWithZeros();
+
   StructArray<Node>::Pointer cVertexPtr = StructArray<Node>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
   cVertexPtr->initializeWithZeros();
+
   DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeId_Array");
   cVertexNodeIdPtr->initializeWithZeros();
+
   DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeKind_Array");
   cVertexNodeTypePtr->initializeWithZeros();
+
   StructArray<Patch>::Pointer  cTrianglePtr = StructArray<Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
   cTrianglePtr->initializeWithZeros();
+
   StructArray<Segment>::Pointer cEdgePtr = StructArray<Segment>::CreateArray(0, "M3CSliceBySlice_Segment_Array");
   cEdgePtr->initializeWithZeros();
-
-  //neigh = new Neighbor[2 * NSP + 1];
-  //cSquare = new Face[3 * 2 * NSP];
-  //cVertex = new Node[2 * 7 * NSP];
 
   // Prime the working voxels (2 layers worth) with -3 values indicating border voxels if the
   // volume does NOT have a ghost layer
@@ -696,117 +629,6 @@ void M3CSliceBySlice::execute()
     }
   }
 
-#if 0
-  if (getCancel() == true)
-  {
-    ss.str("");
-    ss << " Cancelled";
-    notifyWarningMessage(ss.str(), -1);
-    setErrorCondition(-1);
-    trianglesTempFile->setAutoDelete(true);
-    nodesTempFile->setAutoDelete(true);
-    return;
-  }
-  ss.str("");
-  ss << "Marching Cubes Between Layers " << dims[2] - 1 << " and " << dims[2] << " of " << dims[2];
-  notifyProgressValue( (dims[2] * 90 / dims[2]));
-  notifyStatusMessage(ss.str());
-
-  // ---------------------------------------------------------------
-  // Run one more with the top layer being -3
-  ::memcpy(&(voxels[1]), &(voxels[1 + NSP]), NSP * sizeof(int));
-
-  //Make this last layer all border values
-  for (int i = NSP; i < 2 * NSP + 1; ++i)
-  {
-    voxels[i] = -3;
-  }
-
-  int i = dims[2];
-  get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);
-  initialize_nodes(NSP, i, wrappedDims, res, cVertexPtr, voxelsPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
-  initialize_squares(i, NSP, cSquarePtr, neighborsPtr);
-
-  // find Face edges of each square of marching cubes in each layer...
-  nEdge = get_nodes_Edges(NSP, i, wrappedDims, cSquarePtr, voxelsPtr, cEdgePtr, cVertexNodeTypePtr, neighborsPtr);
-  // find triangles and arrange the spins across each triangle...
-  if (nTriangle > 0)
-  {
-    // find triangles and arrange the spins across each triangle...
-    nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeTypePtr, cEdgePtr, cTrianglePtr);
-    arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
-  }
-  // assign new, cumulative Node id...
-    nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeTypePtr);
-  //  std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
-
-//  analyzeWinding();
-//  eMap.clear();
-//  labelTriangleMap.clear();
-
-
-  // std::cout << "nNodes: " << nNodes << std::endl;
-  // Output Nodes and triangles...
-    err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
-  if (err < 0)
-  {
-        ss.str("");
-        ss << "Error writing Nodes file '" << nodesFile << "'";
-        notifyErrorMessage(ss.str(), -1);
-        setErrorCondition(-1);
-        return;
-  }
-
-    err = writeTrianglesFile(i, cTriID, trianglesFile, nTriangle,cTrianglePtr,cVertexNodeIdPtr);
-    if (err < 0)
-    {
-        ss.str("");
-        ss << "Error writing triangles file '" << trianglesFile << "'";
-        notifyErrorMessage(ss.str(), -1);
-        setErrorCondition(-1);
-        return;
-    }
-
-  // Write the last layers of the STL Files
-//  if (m_WriteSTLFile == true)
-//  {
-//    m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
-//    err |= writeSTLFiles(nTriangle, gidToSTLWriter);
-//    for (std::map<int, SMStlWriter::Pointer>::iterator iter = gidToSTLWriter.begin(); iter != gidToSTLWriter.end(); ++iter )
-//    {
-//      err |= (*iter).second->writeNumTrianglesToFile();
-//    }
-//        if (err < 0)
-//    {
-//        ss.str("");
-//        ss << "Error writing STL file";
-//        notifyErrorMessage(ss.str(), -1);
-//        setErrorCondition(-1);
-//        return;
-//    }
-//  }
-
- // m_GrainChecker->analyzeGrains();
-
-  cNodeID = nNodes;
-  cTriID = cTriID + nTriangle;
-
-  //std::cout << "Total Number of Triangles Created: " << cTriID << std::endl;
-
-  if (nTriangle > 0)
-  {
-    cTrianglePtr->Resize(0);
-  }
-
-//  SMVtkPolyDataWriter::Pointer writer = SMVtkPolyDataWriter::New();
-//  writer->setOutputVtkFile(m_VtkOutputFile);
-//  writer->setNodesFile(NodesFile);
-//  writer->setTrianglesFile(TrianglesFile);
-//  writer->setWriteBinaryFile(m_WriteBinaryVTKFiles);
-//  writer->setWriteConformalMesh(m_WriteConformalMesh);
-//  writer->execute();
-//  setErrorCondition(writer->getErrorCondition());
-#endif
   // Clear out all the memory that we have used:
   voxelsPtr = DataArray<int32_t>::NullPointer();
   neighborsPtr = StructArray<Neighbor>::NullPointer();
@@ -896,7 +718,20 @@ void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
   }
 }
 
-
+/**
+ * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
+ * when the object goes out of scope.
+ */
+class ScopedFileMonitor
+{
+  public:
+    ScopedFileMonitor(FILE* f) : m_File(f) {}
+    virtual ~ScopedFileMonitor() { fclose(m_File);}
+  private:
+    FILE* m_File;
+    ScopedFileMonitor(const ScopedFileMonitor&); // Copy Constructor Not Implemented
+    void operator=(const ScopedFileMonitor&); // Operator '=' Not Implemented
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -917,6 +752,7 @@ void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const
     notifyMessage(em);
     return;
   }
+  ScopedFileMonitor nodesMonitor(nodesFile);
 
   // Calculate how many nodes are in the file based on the file size
   fseek(nodesFile, 0, SEEK_END);
@@ -950,6 +786,8 @@ void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const
     notifyMessage(em);
     return;
   }
+
+  ScopedFileMonitor trianglesMonitor(triFile);
   // Calculate how many Triangles are in the file based in the file size
   fseek(triFile, 0, SEEK_END);
   fLength = ftell(triFile);
@@ -994,8 +832,6 @@ void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const
     node.coord[2] = nRecord.z;
     nodeKind[i] = nRecord.nodeKind;
   }
-  fclose(nodesFile);
-
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   sm->setNodes(nodesPtr);
@@ -1030,7 +866,6 @@ void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const
     t.mCubeID = -1;
     t.tIndex = -1;
   }
-  fclose(triFile);
 
   sm->setTriangles(trianglesPtr);
 }
@@ -1829,6 +1664,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
     {
       // Make edge array for each marching cube...
       arrayE = new int[nE];
+      boost::shared_array<int> arrayEPtr(arrayE);
       tindex = 0;
       for (i1 = 0; i1 < 6; i1++)
       {
@@ -1859,7 +1695,6 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         get_caseM_triangles(i, arrayE, nE, arrayFC, nFC, tidIn, &tidOut, BCnode, cEdgePtr, cTrianglePtr);
         tidIn = tidOut;
       }
-      delete[] arrayE;
     }
   }
 
@@ -1928,18 +1763,24 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
   int chaser;
   int grainnameFlag, NodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  int *count;
+  int* burnt = NULL;
+  int* burnt_list = NULL;
+  int* count = NULL;
   int numN, sumN;
   int from;
-  int *loop;
+  int* loop = NULL;
   size_t ctid;
   int front, back;
   int te0, te1, te2, tv0, tcVertex, tv2;
   int numT, cnumT, new_node0;
-  burnt = new int[nedge];
-  burnt_list = new int[nedge];
+
+  typedef boost::shared_array<int> SharedIntArray_t;
+
+  SharedIntArray_t burntPtr(new int[nedge]);
+  burnt = burntPtr.get();
+
+  SharedIntArray_t burnt_list_ptr(new int[nedge]);
+  burnt_list = burnt_list_ptr.get();
 
   Segment* cEdge = cEdgePtr->GetPointer(0);
 
@@ -2034,7 +1875,8 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
       }
     }
   }
-  count = new int[loopID];
+  SharedIntArray_t countPtr(new int[loopID]);
+  count = countPtr.get();
   for (k1 = 1; k1 < loopID; k1++)
   {
     count[k1] = 0;
@@ -2057,7 +1899,8 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
     numN = count[jj];
     sumN = sumN + numN;
     from = sumN - numN;
-    loop = new int[numN];
+    SharedIntArray_t loopPtr(new int[numN]);
+    loop = loopPtr.get();
     for (mm = 0; mm < numN; mm++)
     {
       loop[mm] = burnt_list[from + mm];
@@ -2117,12 +1960,8 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
         }
       }
     }
-    delete[] loop;
   }
   *tout = ctid;
-  delete[] burnt;
-  delete[] burnt_list;
-  delete[] count;
 }
 
 // -----------------------------------------------------------------------------
@@ -2358,7 +2197,6 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
       }
     }
   }
-  delete[] burnt_loop;
 }
 
 // -----------------------------------------------------------------------------
@@ -2380,12 +2218,12 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   int end;
   int from, to;
   int flip;
-  int* burnt;
-  int* burnt_list;
-  int* count;
+  int* burnt = NULL;
+  int* burnt_list = NULL;
+  int* count = NULL;
   std::vector<int> countVec;
   int numN;
-  int* burnt_loop;
+  int* burnt_loop = NULL;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
 
   int index;
@@ -2393,8 +2231,14 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   int front, back;
   int te0, te1, tv0, tcVertex, tv2;
   int numT, cnumT, new_node0;
-  burnt = new int[nedge];
-  burnt_list = new int[nedge];
+
+  typedef boost::shared_array<int> SharedIntArray_t;
+
+  SharedIntArray_t burntPtr(new int[nedge]);
+  burnt = burntPtr.get();
+
+  SharedIntArray_t burnt_list_ptr(new int[nedge]);
+  burnt_list = burnt_list_ptr.get();
 
   Segment* cEdge = cEdgePtr->GetPointer(0);
 
@@ -2418,7 +2262,8 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
     numN = count[j1];
     to = to + numN;
     from = to - numN;
-    burnt_loop = new int[numN];
+    SharedIntArray_t burnt_loop_ptr(new int[numN]);
+    burnt_loop = burnt_loop_ptr.get();
     for (i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
@@ -2539,7 +2384,6 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
           }
         }
       }
-      delete[] burnt_loop;
     }
     else
     {
@@ -2548,8 +2392,6 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
     }
   }
   *tout = ctid;
-  delete[] burnt;
-  delete[] burnt_list;
 }
 
 // -----------------------------------------------------------------------------
@@ -2584,8 +2426,13 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
   int ctid;
   int ts0, ts1;
 
-  burnt = new int[nedge];
-  burnt_list = new int[nedge];
+  typedef boost::shared_array<int> SharedIntArray_t;
+
+  SharedIntArray_t burntPtr(new int[nedge]);
+  burnt = burntPtr.get();
+
+  SharedIntArray_t burnt_list_ptr(new int[nedge]);
+  burnt_list = burnt_list_ptr.get();
 
   Segment* cEdge = cEdgePtr->GetPointer(0);
 
@@ -2604,7 +2451,8 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
     numN = count[j1];
     to = to + numN;
     from = to - numN;
-    burnt_loop = new int[numN];
+    SharedIntArray_t burnt_loop_ptr(new int[numN]);
+    burnt_loop = burnt_loop_ptr.get();
     for (i1 = from; i1 < to; i1++)
     {
       ce = burnt_list[i1];
@@ -2681,7 +2529,6 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
         ADD_TRIANGLE(cTrianglePtr, ctid, ccn, tn0, tn1, ts0, ts1)
         ctid++;
       }
-      delete[] burnt_loop;
     }
     else
     {
@@ -2690,8 +2537,6 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
     }
   }
   *tout = ctid;
-  delete[] burnt;
-  delete[] burnt_list;
 }
 
 // -----------------------------------------------------------------------------
@@ -3117,87 +2962,6 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
 
   return 0;
 }
-
-
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int M3CSliceBySlice::writeSTLFiles(int nTriangle, std::map<int, SMStlWriter::Pointer> &gidToSTLWriter)
-{
-// First loop through All the triangles adding up how many triangles are
-// in each grain and create STL Files for each Grain if needed
-  std::map<int, int> grainIdMap;
-  int g0, g1;
-  int err =0;
-  for (int i = 0; i < nTriangle; ++i)
-  {
-    g0 = cTriangle[i]->nSpin[0];
-    g1 = cTriangle[i]->nSpin[1];
-    if (gidToSTLWriter[g0].get() == NULL)
-    {
-      std::string stlFile;
-      stlFile = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + "STL_Files/";
-      MXADir::mkdir(stlFile, true);
-      stlFile.append(m_StlFilePrefix).append(StringUtils::numToString(g0)).append(".stl");
-      gidToSTLWriter[g0] = SMStlWriter::CreateNewSTLWriter(g0, stlFile);
-    }
-    if (gidToSTLWriter[g1].get() == NULL)
-    {
-      std::string stlFile = m_StlOutputDirectory + MXADir::Separator + m_StlFilePrefix + "STL_Files/";
-      MXADir::mkdir(stlFile, true);
-      stlFile.append(m_StlFilePrefix).append(StringUtils::numToString(g1)).append(".stl");
-      gidToSTLWriter[g1] = SMStlWriter::CreateNewSTLWriter(g1, stlFile);
-    }
-    grainIdMap[cTriangle[i]->nSpin[0]]++;
-    grainIdMap[cTriangle[i]->nSpin[1]]++;
-  }
-
-// Allocate all the new Patch Blocks
-  std::map<int, Patch::ContainerType> gidToPatch;
-  std::map<int, int> gidToCurIdx;
-  for (std::map<int, int>::iterator iter = grainIdMap.begin(); iter != grainIdMap.end(); ++iter)
-  {
-    int gid = (*iter).first;
-    int count = (*iter).second;
-    gidToPatch[gid] = Patch::ContainerType(count);
-    gidToCurIdx[gid] = 0;
-  }
-
-  int idx = 0;
-
-// Loop over all the triangles and copy the Patch Pointers into our new Pointers
-  for (int i = 0; i < nTriangle; ++i)
-  {
-    g0 = cTriangle[i]->nSpin[0];
-    Patch::ContainerType& frontG0 = gidToPatch[g0];
-    idx = gidToCurIdx[g0];
-    frontG0[idx] = cTriangle[i];
-    gidToCurIdx[g0]++;
-
-    g1 = cTriangle[i]->nSpin[1];
-    Patch::ContainerType& frontG1 = gidToPatch[g1];
-    idx = gidToCurIdx[g1];
-    frontG1[idx] = cTriangle[i];
-    gidToCurIdx[g1]++;
-  }
-
-  for (std::map<int, Patch::ContainerType >::iterator iter = gidToPatch.begin(); iter != gidToPatch.end(); ++iter)
-  {
-    int gid = (*iter).first;
-    Patch::ContainerType& cTriangle = (*iter).second;
-    int nTriangle = grainIdMap[gid];
-
-    SMStlWriter::Pointer writer = gidToSTLWriter[gid];
-    if (NULL != writer.get())
-    {
-      err |= writer->writeTriangleBlock(nTriangle, cTriangle, cVertex);
-    }
-  }
-  return err;
-}
-#endif
 
 
 #if 0

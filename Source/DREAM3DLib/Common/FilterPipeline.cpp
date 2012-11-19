@@ -329,6 +329,7 @@ void FilterPipeline::execute()
 
   SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
   sm->addObserver(static_cast<Observer*>(this));
+
   SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
   solid->addObserver(static_cast<Observer*>(this));
 

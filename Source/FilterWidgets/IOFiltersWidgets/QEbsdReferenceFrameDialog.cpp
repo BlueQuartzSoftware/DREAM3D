@@ -205,7 +205,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 
   for (uint32_t i = 0; i < total; ++i) {
     uint8_t* argb = reinterpret_cast<uint8_t*>(rgbArray->GetPointer(i)) + 1;
-    EbsdColoring::GenerateIPFColor(e0[i], e1[i], e2[i],
+    EbsdColoring::GenerateCubicIPFColor(e0[i], e1[i], e2[i],
                                   RefDirection[0], RefDirection[1], RefDirection[2],
                                   argb, hkl, convertDegToRads);
   }

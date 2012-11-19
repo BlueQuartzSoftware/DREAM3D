@@ -166,6 +166,22 @@ void SurfaceMeshToVtk::preflight()
   dataCheck(true, 1, 1, 1);
 }
 
+/**
+ * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
+ * when the object goes out of scope.
+ */
+class ScopedFileMonitor
+{
+  public:
+    ScopedFileMonitor(FILE* f) : m_File(f) {}
+    virtual ~ScopedFileMonitor() { fclose(m_File);}
+  private:
+    FILE* m_File;
+    ScopedFileMonitor(const ScopedFileMonitor&); // Copy Constructor Not Implemented
+    void operator=(const ScopedFileMonitor&); // Operator '=' Not Implemented
+};
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -231,6 +247,8 @@ void SurfaceMeshToVtk::execute()
       setErrorCondition(-18542);
       return;
   }
+  ScopedFileMonitor vtkFileMonitor(vtkFile);
+
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
   if (m_WriteBinaryFile) {
@@ -337,13 +355,9 @@ void SurfaceMeshToVtk::execute()
   err = writePointData(vtkFile);
 
   fprintf(vtkFile, "\n");
-  // Free the memory
-  // Close the input and output files
-  fclose(vtkFile);
 
   setErrorCondition(0);
   notifyStatusMessage("Complete");
-
 }
 
 
