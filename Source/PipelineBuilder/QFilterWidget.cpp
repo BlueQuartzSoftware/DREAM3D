@@ -84,8 +84,7 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
       m_BorderIncrement(16),
       m_IsSelected(false),
       m_HasPreflightErrors(false),
-      m_HasPreflightWarnings(false),
-      m_ArraySelectionTab(NULL)
+      m_HasPreflightWarnings(false)
 {
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
@@ -310,22 +309,6 @@ void QFilterWidget::updateWidgetStyle()
   style.append("\nQGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
 
   setStyleSheet(style);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-PipelineArraySelectionWidget* QFilterWidget::getPipelineArraySelectionWidget()
-{
-  return m_ArraySelectionTab;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::setPipelineArraySelectionWidget(PipelineArraySelectionWidget* w)
-{
-  m_ArraySelectionTab = w;
 }
 
 // -----------------------------------------------------------------------------

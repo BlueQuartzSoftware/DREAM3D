@@ -113,9 +113,6 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QString  getFilterGroup();
 
-    virtual PipelineArraySelectionWidget* getPipelineArraySelectionWidget();
-    virtual void setPipelineArraySelectionWidget(PipelineArraySelectionWidget* w);
-
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
@@ -185,7 +182,6 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool       m_HasPreflightErrors;
     bool       m_HasPreflightWarnings;
     static QString m_OpenDialogLastDirectory;
-    PipelineArraySelectionWidget* m_ArraySelectionTab;
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented
