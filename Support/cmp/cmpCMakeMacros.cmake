@@ -951,7 +951,7 @@ function(cmpVersionStringsFromGit)
             
         endif()
     else()
-       cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
+       cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName})
     endif()
 
 endfunction()
