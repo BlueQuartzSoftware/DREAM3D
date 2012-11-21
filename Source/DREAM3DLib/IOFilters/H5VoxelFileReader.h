@@ -56,7 +56,7 @@
  * @date Dec 21, 2011
  * @version 1.0
  */
- class H5VoxelFileReader : public FileReader
+ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
   {
     public:
       DREAM3D_SHARED_POINTERS(H5VoxelFileReader)

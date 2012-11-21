@@ -55,7 +55,7 @@
  * @date Aug 9, 2012
  * @version 1.0
  */
-class AvizoUniformCoordinateWriter : public AbstractFilter
+class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(AvizoUniformCoordinateWriter);
