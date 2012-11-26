@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3DTools )
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
@@ -120,12 +120,12 @@ if (COMPILE_EBSD_TO_TIFF)
               MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
         ENDIF (NOT TIFF_FOUND)
         INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
-    	# Copy DLL libraries into the correct build location on MSVC platforms
-    	if (HAVE_TIFF_DLL)
-    		CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
-    		CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
-    	endif()
-    
+      # Copy DLL libraries into the correct build location on MSVC platforms
+      if (HAVE_TIFF_DLL)
+        CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
+        CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
+      endif()
+
     COMPILE_TOOL (
         TARGET EbsdToTiff
         SOURCES ${DREAM3DTools_SOURCE_DIR}/EbsdToTiff.cpp
@@ -138,8 +138,8 @@ if (COMPILE_EBSD_TO_TIFF)
         INSTALL_DEST  "${install_dir}"
         LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
     )
-    
-    
+
+
     # Create a Command line tool for the AngReaderTest
     COMPILE_TOOL(
         TARGET BcfDumper
@@ -153,7 +153,7 @@ if (COMPILE_EBSD_TO_TIFF)
         INSTALL_DEST  "${install_dir}"
         LINK_LIBRARIES MXA ${TIFF_LIBRARY}
     )
-    
+
     # create a tool to generate the IPF Triangle
   COMPILE_TOOL(
        TARGET TSLTriangle

@@ -10,7 +10,7 @@
 #--////////////////////////////////////////////////////////////////////////////
 # set project's name
 PROJECT( DREAM3D )
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 
 # ---------- Setup output Directories -------------------------
@@ -42,11 +42,11 @@ IF(WIN32)
  SET(GUI_TYPE WIN32)
 ENDIF(WIN32)
 
-add_definitions(-DDREAM3D_USE_QT 
-                -DSVG_3D_LIBRARY 
+add_definitions(-DDREAM3D_USE_QT
+                -DSVG_3D_LIBRARY
                 -DSURFACE_MESH_LIBRARY
                 -DSMOOTH_MESH_LIBRARY
-                -DVOLUME_MESH_LIBRARY 
+                -DVOLUME_MESH_LIBRARY
                 -DUPDATE_EDGE_TRI_LIBRARY)
 
 include_directories(${PROJECT_CODE_DIR}
@@ -77,7 +77,7 @@ set(DREAM3D_HDRS
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 
-                    
+
 SET( DREAM3D_MOC_HDRS
     ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.h
 )
@@ -89,11 +89,11 @@ SET( DREAM3D_UIS
 cmp_IDE_GENERATED_PROPERTIES("DREAM3D/UI_Files" "${DREAM3D_UIS}" "")
 
 # and finally any resource files
-SET( DREAM3D_RCS 
+SET( DREAM3D_RCS
     ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc
 )
 
-# -- Run MOC and UIC on the necessary files   
+# -- Run MOC and UIC on the necessary files
 QT4_ADD_RESOURCES( DREAM3D_Generated_RC_SRCS ${DREAM3D_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
@@ -108,11 +108,11 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${DREAM3D_Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${DREAM3D_Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
-set(DREAM3D_PROJECT_SRCS 
+set(DREAM3D_PROJECT_SRCS
     ${DREAM3D_SRCS}
     ${DREAM3D_HDRS}
-    ${DREAM3D_Generated_RC_SRCS} 
-    ${DREAM3D_Generated_UI_HDRS} 
+    ${DREAM3D_Generated_RC_SRCS}
+    ${DREAM3D_Generated_UI_HDRS}
     ${DREAM3D_Generated_MOC_SRCS}
 )
 
@@ -148,4 +148,4 @@ BuildQtAppBundle(
     PLUGIN_LIST_FILE ${CMP_PLUGIN_LIST_FILE}
     COMPONENT     Applications
     INSTALL_DEST  ${DEST_DIR}
-)   
+)
