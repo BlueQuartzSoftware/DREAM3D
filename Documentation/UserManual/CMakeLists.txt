@@ -8,7 +8,7 @@
 #
 # -----------------------------------------------------------------------------
 project (UserManual)
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 if (NOT DEFINED PROJECT_RESOURCES_DIR)
 set(PROJECT_RESOURCES_DIR ${PROJECT_SOURCE_DIR}/Resources)
@@ -26,7 +26,7 @@ option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
 if (DREAM3D_GENERATE_RTF STREQUAL "ON")
     set(DOX_GENERATE_RTF "YES")
 endif()
-  
+
 
 set(DOX_GENERATE_HTML "YES")
 option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
@@ -60,15 +60,15 @@ set(DOCUMENTATION_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/UserManual.dox
 )
 
-set(LATEX_EPS_FILES 
+set(LATEX_EPS_FILES
 
 )
 
 if (DOX_GENERATE_LATEX)
     ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_User_Manual"
-                     PROJECT_NAME  "${PROJECT_NAME}_LATEX" 
-                     PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
-                     SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
+                     PROJECT_NAME  "${PROJECT_NAME}_LATEX"
+                     PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}"
+                     SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
                      EPS_FILES "${LATEX_EPS_FILES}"
                      TITLE "${LATEX_TITLE}"
                      AUTHOR "${LATEX_AUTHOR}"
@@ -85,9 +85,9 @@ set(DOCUMENTATION_SOURCE_FILES
 
 if (DOX_GENERATE_HTML)
     ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
-                     PROJECT_NAME  "${PROJECT_NAME}_HTML" 
-                     PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
-                     SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
+                     PROJECT_NAME  "${PROJECT_NAME}_HTML"
+                     PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}"
+                     SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
                      EPS_FILES "${LATEX_EPS_FILES}"
                      TITLE "${LATEX_TITLE}"
                      AUTHOR "${LATEX_AUTHOR}"
@@ -100,9 +100,9 @@ endif()
 
 if (DOX_GENERATE_RTF)
     ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
-                     PROJECT_NAME  "${PROJECT_NAME}_RTF" 
-                     PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}" 
-                     SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" 
+                     PROJECT_NAME  "${PROJECT_NAME}_RTF"
+                     PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}"
+                     SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
                      EPS_FILES "${LATEX_EPS_FILES}"
                      TITLE "${LATEX_TITLE}"
                      AUTHOR "${LATEX_AUTHOR}"
