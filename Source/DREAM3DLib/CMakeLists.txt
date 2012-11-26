@@ -212,7 +212,7 @@ endmacro()
 
 
 # Add in our Filter classes
-include(${DREAM3DLib_SOURCE_DIR}/CustomFilters/SourceList.cmake)
+#include(${DREAM3DLib_SOURCE_DIR}/CustomFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)

@@ -7,8 +7,6 @@
     <file>catalog.css</file>
     <file>index.html</file>
 
-    <!-- ***** CustomFilters ***** -->
-
     <!-- ***** GenericFilters ***** -->
     <file>GenericFilters/FindNeighbors.html</file>
     <file>GenericFilters/FindGrainPhases.html</file>
