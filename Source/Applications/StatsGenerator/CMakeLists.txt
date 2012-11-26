@@ -8,7 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 project(StatsGenerator)
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 # ------------------------------------------------------------------------------
 #  Qt 4 Section
@@ -43,13 +43,13 @@ IF(WIN32)
 ENDIF(WIN32)
 
 add_definitions(-DDREAM3D_USE_QT)
-                
+
 # --------------------------------------------------------------------
 # Generate the License File Headers
 set(PROJECT_PREFIX "StatsGenerator")
 include(${DREAM3DProj_SOURCE_DIR}/License/License.cmake)
-           
-set(StatsGenerator_SRCS 
+
+set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/main.cpp
     ${StatsGenerator_SOURCE_DIR}/SGApplication.cpp
   #  ${StatsGenerator_SOURCE_DIR}/StatsGen.cpp
@@ -68,10 +68,10 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
     )
-set(StatsGenerator_HDRS 
+set(StatsGenerator_HDRS
 #    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
 )
-                   
+
 SET( StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGApplication.h
     ${StatsGenerator_SOURCE_DIR}/StatsGeneratorUI.h
@@ -92,7 +92,7 @@ SET( StatsGenerator_MOC_HDRS
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DELEGATE_SRCS   "" )
-set(StatsGenerator_DELEGATE_HDRS 
+set(StatsGenerator_DELEGATE_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGBetaItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGLogNormalItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.h
@@ -100,8 +100,8 @@ set(StatsGenerator_DELEGATE_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGMDFItemDelegate.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
-    
-set(StatsGenerator_TABLEMODEL_SRCS 
+
+set(StatsGenerator_TABLEMODEL_SRCS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGBetaTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGPowerLawTableModel.cpp
@@ -110,9 +110,9 @@ set(StatsGenerator_TABLEMODEL_SRCS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGMDFTableModel.cpp
     )
 
-set(StatsGenerator_TABLEMODEL_HDRS 
+set(StatsGenerator_TABLEMODEL_HDRS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGAbstractTableModel.h
-    ${StatsGenerator_SOURCE_DIR}/TableModels/SGBetaTableModel.h  
+    ${StatsGenerator_SOURCE_DIR}/TableModels/SGBetaTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGPowerLawTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGLogNormalTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGODFTableModel.h
@@ -180,9 +180,9 @@ QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
 
 # and finally this will run moc:
-QT4_WRAP_CPP( Generated_MOC_SRCS 
-            ${StatsGenerator_MOC_HDRS} 
-            ${StatsGenerator_DELEGATE_HDRS} 
+QT4_WRAP_CPP( Generated_MOC_SRCS
+            ${StatsGenerator_MOC_HDRS}
+            ${StatsGenerator_DELEGATE_HDRS}
             ${StatsGenerator_TABLEMODEL_HDRS}
             ${StatsGenerator_DIALOGS_HDRS} )
 
@@ -192,7 +192,7 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/moc" "${Generated_MOC_SRCS}" "")
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "${Generated_RC_SRCS}")
 
 # -- Finally set the Project Sources to include all the sources
-set(StatsGenerator_PROJECT_SRCS 
+set(StatsGenerator_PROJECT_SRCS
     ${StatsGenerator_SRCS}
     ${StatsGenerator_HDRS}
     ${StatsGenerator_MOC_HDRS}
@@ -204,8 +204,8 @@ set(StatsGenerator_PROJECT_SRCS
     ${StatsGenerator_PRESETS_SRCS}
     ${StatsGenerator_DIALOGS_SRCS}
     ${StatsGenerator_DIALOGS_HDRS}
-    ${Generated_RC_SRCS} 
-    ${Generated_UI_HDRS} 
+    ${Generated_RC_SRCS}
+    ${Generated_UI_HDRS}
     ${Generated_MOC_SRCS}
 )
 
@@ -240,13 +240,13 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES MXA H5Support EbsdLib DREAM3DLib ${QT_LIBRARIES} QtSupport ${QWT_LIBRARIES} 
+    LINK_LIBRARIES MXA H5Support EbsdLib DREAM3DLib ${QT_LIBRARIES} QtSupport ${QWT_LIBRARIES}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}
     COMPONENT     Applications
     INSTALL_DEST  ${DEST_DIR}
-) 
+)
 
 set(${PROJECT_NAME}_HELP_FILES
     ${PROJECT_SOURCE_DIR}/Help/index.html
@@ -262,7 +262,7 @@ set(${PROJECT_NAME}_HELP_FILES
 
 #- This copies all the HTML files into the Build directory so the help
 #- works from the Build Tree
-file(COPY ${${PROJECT_NAME}_HELP_FILES} 
+file(COPY ${${PROJECT_NAME}_HELP_FILES}
     DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PROJECT_NAME}/ )
 
 #- This installs all the help files. Note that we assume a flat directory structure
@@ -270,4 +270,4 @@ file(COPY ${${PROJECT_NAME}_HELP_FILES}
 #- folder and NOT in any subfolders beyond that.
 install(FILES ${${PROJECT_NAME}_HELP_FILES}
         DESTINATION Help/${PROJECT_NAME}
-        COMPONENT Applications )   
+        COMPONENT Applications )
