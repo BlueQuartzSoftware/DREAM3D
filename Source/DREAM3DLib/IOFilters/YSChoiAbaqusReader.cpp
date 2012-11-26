@@ -58,16 +58,19 @@
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
 FileReader(),
 m_InputFile(""),
+m_InputGrainInfoFile(""),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_SurfaceFields(NULL),
 m_Quats(NULL),
+m_AvgQuats(NULL),
 m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
@@ -93,6 +96,14 @@ void YSChoiAbaqusReader::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Input Grain Orientation File");
+    option->setPropertyName("InputGrainInfoFile");
+    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -102,6 +113,7 @@ void YSChoiAbaqusReader::setupFilterParameters()
 void YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("InputGrainInfoFile", getInputGrainInfoFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -123,6 +135,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 1, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -140,11 +153,11 @@ void YSChoiAbaqusReader::execute()
     VoxelDataContainer* m = getVoxelDataContainer();
 
   int xpoints, ypoints, zpoints, totalpoints;
-  int numgrains = 0;
   float resx, resy, resz;
     float ***mat;
     const unsigned int size(1024);
     char buf[size];
+	// Read header from data file to figure out how many points there are
     std::ifstream in(getInputFile().c_str());
     std::string word;
     bool headerdone = false;
@@ -173,18 +186,26 @@ void YSChoiAbaqusReader::execute()
         in >> word;
       }
     }
-  dataCheck(false, totalpoints, 1, 2);
+	// Read header from grian info file to figure out how many grains there are
+    std::ifstream in2(getInputGrainInfoFile().c_str());
+	int numgrains;
+    in2 >> numgrains;
+    in2.getline(buf, size);
+    std::string line = buf;
+    in2 >> word >> word >> word >> word >> word >> word;
+	dataCheck(false, totalpoints, numgrains+1, 2);
+	//Read data file
     int gnum = 0;
     bool onedge = false;
     int col, row, plane;
     float value;
     for (int i = 0; i < totalpoints; i++)
     {
-    mat[i] = new float *[3];
-    for(int j=0;j<3;j++)
-    {
-    mat[i][j] = new float [3];
-    }
+	  mat[i] = new float *[3];
+	  for(int j=0;j<3;j++)
+	  {
+		mat[i][j] = new float [3];
+	  }
       onedge = false;
       in >> gnum;
       col = i % xpoints;
@@ -192,67 +213,77 @@ void YSChoiAbaqusReader::execute()
       plane = i / (xpoints * ypoints);
       if (col == 0 || col == (xpoints - 1) || row == 0 || row == (ypoints - 1) || plane == 0 || plane == (zpoints - 1)) onedge = true;
       m_GrainIds[i] = gnum;
-      if (gnum >= numgrains)
-      {
-        numgrains = gnum + 1;
-      m->resizeFieldDataArrays(numgrains);
-      dataCheck(false, totalpoints, numgrains, 2);
-      }
       m_SurfaceFields[gnum] = onedge;
     }
     for (int iter1 = 0; iter1 < 3; iter1++)
     {
-    for (int iter2 = 0; iter2 < 3; iter2++)
+		for (int iter2 = 0; iter2 < 3; iter2++)
+		{
+		  headerdone = false;
+		  while (headerdone == false)
+		  {
+			  in.getline(buf, size);
+			  std::string line = buf;
+			  in >> word;
+			  if (LOOKUP == word)
+			  {
+				headerdone = true;
+				in >> word;
+			  }
+		  }
+		  for (int i = 0; i < totalpoints; i++)
+		  {
+			  onedge = 0;
+			  in >> value;
+			  mat[i][iter1][iter2] = value;
+		  }
+		}
+    }
+	//Read grain info
+	int numpoints;
+	float q0, q1, q2, q3;
+	m_AvgQuats[0*5+0] = 1;
+	m_AvgQuats[0*5+1] = 0;
+	m_AvgQuats[0*5+2] = 0;
+	m_AvgQuats[0*5+3] = 0;
+	m_AvgQuats[0*5+4] = 0;
+    for (int i = 1; i < numgrains+1; i++)
     {
-      headerdone = false;
-      while (headerdone == false)
-      {
-      in.getline(buf, size);
-      std::string line = buf;
-      in >> word;
-      if (LOOKUP == word)
-      {
-        headerdone = true;
-        in >> word;
-      }
-      }
-      for (int i = 0; i < totalpoints; i++)
-      {
-      onedge = 0;
-      in >> value;
-      mat[i][iter1][iter2] = value;
-      }
-    }
-    }
-  float ea1, ea2, ea3;
-
-  float q[5];
-  float g[3][3];
-  for(int i=0;i<(xpoints*ypoints*zpoints);i++)
-  {
-    for(int j=0;j<3;j++)
-    {
-      for(int k=0;k<3;k++)
-      {
-        g[j][k] = mat[i][j][k];
-      }
-    }
-    MatrixMath::normalize3x3(g);
-    q[0] = 1;
-    q[4] = static_cast<float>( sqrt((1.0+g[0][0]+g[1][1]+g[2][2]))/2 );
-    q[1] = static_cast<float>( (g[1][2]-g[2][1])/(4*q[4]) );
-    q[2] = static_cast<float>( (g[2][0]-g[0][2])/(4*q[4]) );
-    q[3] = static_cast<float>( (g[0][1]-g[1][0])/(4*q[4]) );
-    m_Quats[5*i] = 1;
-    m_Quats[5*i+1] = q[1];
-    m_Quats[5*i+2] = q[2];
-    m_Quats[5*i+3] = q[3];
-    m_Quats[5*i+4] = q[4];
-    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-    m_CellEulerAngles[3*i] = ea1;
-    m_CellEulerAngles[3*i + 1] = ea2;
-    m_CellEulerAngles[3*i + 2] = ea3;
-      delete[] mat[i];
-    }
-    delete[] mat;
+		in2 >> gnum >> numpoints >> q0 >> q1 >> q2 >> q3;
+		m_AvgQuats[i*5+0] = 1;
+		m_AvgQuats[i*5+1] = q1;
+		m_AvgQuats[i*5+2] = q2;
+		m_AvgQuats[i*5+3] = q3;
+		m_AvgQuats[i*5+4] = q0;
+	}
+	float ea1, ea2, ea3;
+	float q[5];
+	float g[3][3];
+	for(int i=0;i<(xpoints*ypoints*zpoints);i++)
+	{
+		for(int j=0;j<3;j++)
+		{
+		  for(int k=0;k<3;k++)
+		  {
+			g[j][k] = mat[i][j][k];
+		  }
+		}
+		MatrixMath::normalize3x3(g);
+		q[0] = 1;
+		q[4] = static_cast<float>( sqrt((1.0+g[0][0]+g[1][1]+g[2][2]))/2 );
+		q[1] = static_cast<float>( (g[1][2]-g[2][1])/(4*q[4]) );
+		q[2] = static_cast<float>( (g[2][0]-g[0][2])/(4*q[4]) );
+		q[3] = static_cast<float>( (g[0][1]-g[1][0])/(4*q[4]) );
+		m_Quats[5*i] = 1;
+		m_Quats[5*i+1] = q[1];
+		m_Quats[5*i+2] = q[2];
+		m_Quats[5*i+3] = q[3];
+		m_Quats[5*i+4] = q[4];
+		OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+		m_CellEulerAngles[3*i] = ea1;
+		m_CellEulerAngles[3*i + 1] = ea2;
+		m_CellEulerAngles[3*i + 2] = ea3;
+		delete[] mat[i];
+	}
+	delete[] mat;
 }

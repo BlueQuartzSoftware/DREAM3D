@@ -113,10 +113,12 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   m_actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
   m_actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionRemoveFavorite);
-  QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::Key_Delete);
+  QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_F);
   m_actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
   connect(m_actionRemoveFavorite, SIGNAL(triggered()),
     this, SLOT( actionRemoveFavorite_triggered() ) );
+
+  menuPipeline->addSeparator();
 
   m_actionClearPipeline = new QAction(m_MenuPipeline);
   m_actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
@@ -179,7 +181,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
       w->blockSignals(true);
       w->readOptions(prefs);
       w->blockSignals(false);
-      w->emitParametersChanged();
+      //w->emitParametersChanged();
     }
     prefs.endGroup();
   }
@@ -190,29 +192,29 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   QString tempPath = tempPathDir.path();
 
   //Get Favorites from Pref File and Update Tree Widget
-    prefs.beginGroup(Detail::FavoritePipelines);
+  prefs.beginGroup(Detail::FavoritePipelines);
 
-    int favoriteCount = prefs.value("count").toInt(&ok);
-    if (false == ok) {
-      favoriteCount = 0;
-    }
+  int favoriteCount = prefs.value("count").toInt(&ok);
+  if (false == ok) {
+    favoriteCount = 0;
+  }
 
-    for(int r = 0; r < favoriteCount; ++r)
-    {
-      QString favNameKey = QString::number(r) + QString("_Favorite_Name");
-      QString favName = prefs.value(favNameKey).toString();
+  for(int r = 0; r < favoriteCount; ++r)
+  {
+    QString favNameKey = QString::number(r) + QString("_Favorite_Name");
+    QString favName = prefs.value(favNameKey).toString();
 
-      QString favFilePath = QString::number(r) + QString("_Favorite_File");
-      QString favPath = prefs.value(favFilePath).toString();
+    QString favFilePath = QString::number(r) + QString("_Favorite_File");
+    QString favPath = prefs.value(favFilePath).toString();
 
-      m_favoritesMap[favName] = favPath;
+    m_favoritesMap[favName] = favPath;
 
-      QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
-      favoriteItem->setText(0, favName);
-      favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
-    }
+    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
+    favoriteItem->setText(0, favName);
+    favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
+  }
 
-    prefs.endGroup();
+  prefs.endGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -426,13 +428,26 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   if ( item->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories();
+    updateFilterGroupList(factories);
   }
   else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
+    updateFilterGroupList(factories);
   }
-
-  updateFilterGroupList(factories);
+  else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::PrebuiltPipelines) == 0)
+  {
+      QString text = item->text(0);
+      QStringList filterList = m_presetMap[text];
+      populateFilterList(filterList);
+  }
+  else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+  {
+      QString favoriteName = item->text(0);
+      QString favoritePath = m_favoritesMap[favoriteName];
+      QStringList filterList = generateFilterListFromFavorite(favoritePath);
+      populateFilterList(filterList);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -447,7 +462,6 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   {
     factories = fm->getFactories();
     updateFilterGroupList(factories);
-
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
   {
@@ -484,6 +498,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 {
   // Clear all the current items from the list
   filterList->clear();
+  filterList->setSortingEnabled(true);
 
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
@@ -1033,10 +1048,12 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionRemoveFavorite_triggered() {
+void PipelineBuilderWidget::actionRemoveFavorite_triggered()
+{
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
-  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0) {
+  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0)
+  {
     QString favoriteName = item->text(0);
     QString filePath = m_favoritesMap[item->text(0)];
     QFileInfo filePathInfo = QFileInfo(filePath);
@@ -1062,7 +1079,79 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::loadFavorites(QString path) {
+void PipelineBuilderWidget::loadFavorites(QString path)
+{
   QSettings prefs(path, QSettings::IniFormat);
   readSettings(prefs, m_PipelineViewWidget);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList PipelineBuilderWidget::generateFilterListFromFavorite(QString path)
+{
+
+  QStringList filterNames;
+  QSettings prefs(path, QSettings::IniFormat);
+
+  prefs.beginGroup("PipelineBuilder");
+  bool ok = false;
+  int filterCount = prefs.value("Number_Filters").toInt(&ok);
+  prefs.endGroup();
+  if (false == ok) {filterCount = 0;}
+  for (int i = 0; i < filterCount; ++i)
+  {
+    QString gName = QString::number(i);
+    prefs.beginGroup(gName);
+    QString filterName = prefs.value("Filter_Name", "").toString();
+    filterNames.push_back(filterName);
+    prefs.endGroup();
+  }
+  return filterNames;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
+{
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
+
+  // Clear all the current items from the list
+  filterList->clear();
+  filterList->setSortingEnabled(false);
+
+  for(int i = 0; i < filterNames.size(); ++i)
+  {
+    QString filterName = filterNames[i];
+    IFilterWidgetFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName.toStdString());
+    if (NULL == wigFactory.get() )
+    {
+      continue;
+    }
+    QString humanName = QString::fromStdString(wigFactory->getFilterHumanLabel());
+    QString iconName(":/");
+    iconName.append( QString::fromStdString(wigFactory->getFilterGroup()));
+    iconName.append("_Icon.png");
+
+    // Validate the icon is in the resource system
+    QFileInfo iconInfo(iconName);
+    if (iconInfo.exists() == false)
+    {
+      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+    }
+
+    QIcon icon(iconName);
+    // Create the QListWidgetItem and add it to the filterList
+    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
+    // Set an "internal" QString that is the name of the filter. We need this value
+    // when the item is clicked in order to retreive the Filter Widget from the
+    // filter widget manager.
+    filterItem->setData( Qt::UserRole, filterName);
+  }
+
+
+}
+
+

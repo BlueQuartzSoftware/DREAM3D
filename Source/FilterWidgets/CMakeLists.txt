@@ -63,7 +63,7 @@ include_directories(${FilterWidgetsLib_SOURCE_DIR})
 include_directories(${FilterWidgetsLib_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
-
+include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
 
 # --------------------------------------------------------------------
 # Add in ONLY those headers and sources that need to have various Qt related
@@ -140,7 +140,7 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/FilterWidgets" "${FilterWidget_GEN_HDRS}" 
 
 # --------------------------------------------------------------------
 # Now add in any other headers or sources
-set (FilterWidget_HDRS
+set(FilterWidget_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/QFilterWidgetFactory.hpp
     ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsLib.h
 )
@@ -150,7 +150,7 @@ set(FilterWidget_SRCS
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets" "${FilterWidget_HDRS}" "${FilterWidget_SRCS}" "0")
 
-set (Project_SRCS
+set(Project_SRCS
         ${QFilterWidget_HDRS}
         ${QFilterWidget_SRCS}
         ${FilterWidget_HDRS}

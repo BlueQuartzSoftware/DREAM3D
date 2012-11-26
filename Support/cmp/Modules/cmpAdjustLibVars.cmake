@@ -10,6 +10,8 @@
 #########################################################################
 
 MACRO (cmp_ADJUST_LIB_VARS basename)
+  #  message(STATUS "${basename}_INCLUDE_DIR: ${${basename}_INCLUDE_DIR}")
+    
   IF (${basename}_INCLUDE_DIR)
 
   # if only the release version was found, set the debug variable also to the release version

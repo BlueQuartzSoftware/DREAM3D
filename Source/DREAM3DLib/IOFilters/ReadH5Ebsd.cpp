@@ -76,6 +76,7 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
@@ -173,9 +174,18 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+  if (NULL == m)
+  {
+    ss.str("");
+    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    setErrorCondition(-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    return;
+  }
 
   if (m_H5EbsdFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
+    ss.str("");
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -256,6 +266,10 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   typedef DataArray<unsigned int> PTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+
+  addCreatedEnsembleData(m_MaterialNamesArrayName);
+  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
+  m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
 
 }
 

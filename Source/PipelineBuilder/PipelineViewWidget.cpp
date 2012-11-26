@@ -55,7 +55,7 @@
 
 #include "FilterWidgetManager.h"
 #include "QFilterPipeline.h"
-
+#include "PipelineArraySelectionWidget.h"
 
 
 
@@ -264,6 +264,18 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
   return w;
 }
 
+
+#define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
+{\
+  std::list<std::string> theList = dataContainer->get##type##ArrayNameList();\
+  QList<QString> list;\
+  for(std::list<std::string>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
+    list << QString::fromStdString(*iter);\
+  }\
+  PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
+  if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
+}\
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -282,6 +294,9 @@ void PipelineViewWidget::preflightPipeline()
 
   // Create the DataContainer object
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+
   std::stringstream ss;
 
 
@@ -293,20 +308,35 @@ void PipelineViewWidget::preflightPipeline()
     if (fw)
     {
       fw->setHasPreflightErrors(false);
+      fw->setHasPreflightWarnings(false);
       AbstractFilter::Pointer filter = fw->getFilter();
 
       filter->setVoxelDataContainer(m.get());
+      filter->setSurfaceMeshDataContainer(sm.get());
+      filter->setSolidMeshDataContainer(solid.get());
+
       filter->preflight();
       int err = filter->getErrorCondition();
       std::vector<PipelineMessage> msgs = filter->getPipelineMessages();
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
-        fw->setHasPreflightErrors(true);
+        for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+        {
+          if ( (*iter).getMessageType() == PipelineMessage::Error)
+          {
+            fw->setHasPreflightErrors(true);
+          }
+          else if ((*iter).getMessageType() == PipelineMessage::Warning)
+          {
+            fw->setHasPreflightWarnings(true);
+          }
+        }
       }
+
+
     }
   }
-
   errorTableWidget->resizeRowsToContents();
 }
 
@@ -317,6 +347,7 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
 {
   if(NULL != errorTableWidget)
   {
+
     int rc = errorTableWidget->rowCount();
 
     for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
@@ -333,8 +364,13 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
 
       QTableWidgetItem* errorCodeWidgetItem = new QTableWidgetItem(QString::number(errorCode));
       errorCodeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-      QColor errColor(255, 191, 193);
+      PipelineMessage& msg = errorStream.at(i);
+      QColor errColor(255, 255, 255);
+      if (msg.getMessageType() == PipelineMessage::Error) {
+        errColor = QColor(255, 191, 193);
+      } else if (msg.getMessageType() == PipelineMessage::Warning) {
+        errColor = QColor(251, 254, 137);
+      }
       QBrush errBrush(errColor);
 
       filterNameWidgetItem->setBackground(errBrush);

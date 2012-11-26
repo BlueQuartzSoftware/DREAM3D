@@ -158,7 +158,7 @@ void FindSlicetoSliceRotations::execute()
   float q2[5];
 //  int numVoxel; // number of voxels in the grain...
 //  int numchecks; // number of voxels in the grain...
-  int good = 0;
+  bool good = false;
 
 
   typedef DataArray<unsigned int> XTalType;

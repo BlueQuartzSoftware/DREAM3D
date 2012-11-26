@@ -50,18 +50,18 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
 </table>
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
-<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellEulerAngles</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>Quats</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>SurfaceFields</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td></td></tr>
+<tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellEulerAngles</td><td>Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z)</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td>Phase Id (int) specifying the phase of the voxel/datapoint</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>GrainIds</td><td>Ids (ints) that specify to which feature/grain each voxel/datapoint belongs.</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>Quats</td><td>Five (5) values (floats) that specify the orientation of the voxel/datapoint in quaternion representation</td><td>The first value is a dummy value, so each voxel/datapoint has quat = {dummy, q1, q2, q3, q4} - where q1, q2, and q3 contain the axis information and q4 contains the angle information of the quaternion</td></tr>
+<tr bgcolor="#E2E2E2"><td>Field</td><td>SurfaceFields</td><td>Boolean flag equal to 1 if the feature/grain touches an outer surface of the sample and equal to 0 if it does not.</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td>Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2)</td><td></td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">

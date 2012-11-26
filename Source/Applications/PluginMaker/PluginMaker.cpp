@@ -248,11 +248,11 @@ void PluginMaker::setupGui()
     connect(hPluginGen, SIGNAL(outputError(const QString &)),
             this, SLOT(generationError(const QString &)));
 
-    PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin 
+    PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin
                                                                                         // CPP and H files in a FilterBundler)
 
     FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc);
-    m_FilterBundles.push_back(fb);
+    // m_FilterBundles.push_back(fb);
 
 
 
@@ -587,7 +587,7 @@ void PluginMaker::on_addFilterBtn_clicked()
       hgen->setNameChangeable(false);
       tempPluginName = hgen->cleanName(m_PluginName->text());
       hgen->setPluginName(tempPluginName);
-  
+
       //m_itemMap[filt2h] = hgen;
 
 
@@ -817,7 +817,7 @@ void PluginMaker::readWindowSettings(QSettings &prefs)
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
-    	std::cout << "Error Restoring the Window Geometry" << std::endl;
+      std::cout << "Error Restoring the Window Geometry" << std::endl;
     }
   }
 
@@ -844,6 +844,9 @@ QString PluginMaker::generateCmakeContents() {
   {
     PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
+
+    std::cout << cppGen->getFileName().toStdString() << std::endl;
+    std::cout << hGen->getFileName().toStdString() << std::endl;
 
     hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
     srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");

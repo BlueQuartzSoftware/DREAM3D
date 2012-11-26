@@ -4,44 +4,52 @@
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
-@section bugs Bugs and Feature Requests
+@section todo_high_priority High Priority
+@li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
+@li Finish writing the INLWriter filter
+
+
+@section todo_low_priority Low Priority
+@li Add splash Screen similar to ParaView where the various entities that have donated
+code or Funding are shown with their logos.
+@li Update/Create a user manual for the stats generator - last parts need pasting
+@li Add menu for displaying help
+@li Combine the threshold_points and DetermineGoodVoxels into a single filter
+@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
+@li Reorganize the .h5ebsd file to include Images
+@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
+
+@section todo_feature Feature Request
 @li Have a button that will close all the pipelines.
-@li Color the header of each pipeline in the pipeline building area.
-@li Have a “Save” / “Save As” option in the “File” toolbar dropdown to save the Pipelines in addition to making it a favorite.
-@li Export into a format that can be read into Avizo Fire for visualisation and/or further analysis.
 @li A filter that finds all the twins in the microstructure and assigns them
 to another phase (phase 3), so that they can be visualised differently to the surrouding
 grains (phase 2) and grains that are untwinned (phase 1).
-@li Add filter to convert hex grid TSL .ang files into square grid .ang files
-@li Add splash Screen similar to ParaView where the various entities that have donated
-code or Funding are shown with their logos.
-@li Fix/Patch the Linux builds for proper RPath values; See http://www.cmake.org/Wiki/CMake_RPATH_handling
+@li Add Kearns Factors for Hexagonal lattice presets.
+@li Add button in each filter widget to pop up the Help for that filter
+
+
+@section todo_documentation Documentation Issues
+@li Add documentation on how to add new filter directly into DREAM3D
+@li Add documentation on how to add new filter group directly into DREAM3D
+
+
+@section bugs Bugs
+
 
 @subsection statsgen StatsGenerator
-@li Update/Create a user manual for the stats generator - last parts need pasting
-@li Add menu for displaying help
-@li Add Kearns Factors for Hexagonal lattice presets.
-
-
-@section roadmap RoadMap (The way Forward)
-
-@li Figure out a better way to compile the PipelineBuilder and FilterWidgets libraries
-@li Combine the threshold_points and DetermineGoodVoxels into a single filter
-@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user
-or by the QualityMetricFilters
-@li Figure out where to load the help from: Internal to the compilation or from the file system.
-@li Reorganize the .h5ebsd file to include Images
-
 
 @section cmu_meshing CMU Surface Meshing
-
-@li Add ability to cancel the Surface Meshing filter
 @li bug in edges file is stopping the use in the smoothing filter
 
 @section mfe_smoothing MFE Smoothing
-
 @li add ability to stop the smoothing
 
+
+@section todo_bruker_support Bruker EBSD System Support
+@li BASE64 decoder
+@li XML Parser for the SEM Image file
+@li Create XML Parsing code for teach file from the Bruker File Archive
+@li Include Expat as part of the DREAM3D Compile
 
 
 */

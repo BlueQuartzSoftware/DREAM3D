@@ -33,11 +33,9 @@
 #ifndef _MatrixMath_H_
 #define _MatrixMath_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /*
@@ -51,16 +49,16 @@
 class DREAM3DLib_EXPORT MatrixMath
 {
   public:
-    MXA_SHARED_POINTERS(MatrixMath)
-    MXA_TYPE_MACRO(MatrixMath)
+    DREAM3D_SHARED_POINTERS(MatrixMath)
+    DREAM3D_TYPE_MACRO(MatrixMath)
 
     virtual ~MatrixMath();
 
     static void multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3]);
     static void multiply3x3with3x1(float g1[3][3], float g2[3], float outMat[3]);
     static void transpose3x3(float g[3][3], float outMat[3][3]);
-	static void normalize3x3(float g[3][3]);
-	static void normalize3x1(float g[3]);
+    static void normalize3x3(float g[3][3]);
+    static void normalize3x1(float g[3]);
 
   protected:
     MatrixMath();

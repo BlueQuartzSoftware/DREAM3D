@@ -155,6 +155,12 @@ class  MXADir
      */
     static MXA_EXPORT bool remove(const std::string &path);
 
+    /**
+     * @brief Returns the path ending with the platform Separator charater to the
+     * platform's temp directory.
+     */
+    static MXA_EXPORT std::string tempPath();
+
   protected:
         MXADir();
 

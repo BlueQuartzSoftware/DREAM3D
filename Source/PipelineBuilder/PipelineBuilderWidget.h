@@ -132,6 +132,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void loadFavorites(QString path);
 
+    QStringList generateFilterListFromFavorite(QString path);
+    void populateFilterList(QStringList filterNames);
+
+
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 

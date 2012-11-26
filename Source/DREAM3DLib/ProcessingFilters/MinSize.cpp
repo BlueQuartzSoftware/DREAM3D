@@ -347,7 +347,6 @@ void MinSize::remove_smallgrains()
       std::stringstream ss;
 //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
 //	  notifyStatusMessage(ss.str());
-
     if(voxcounts[i] >= m_MinAllowedGrainSize )
     {
       m_Active[i] = true;

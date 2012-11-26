@@ -12,10 +12,10 @@ else()
 endif(QT4_FOUND)
 
 
-set (Project_SRCS "")
-set (Project_HDRS "")
+set(Project_SRCS "")
+set(Project_HDRS "")
 
-set (QtSupport_SRCS
+set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DPluginFrame.cpp
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.cpp
@@ -28,7 +28,7 @@ set (QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
     ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
 )
-set (QtSupport_HDRS
+set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.h
     ${QtSupport_SOURCE_DIR}/DREAM3DPluginFrame.h
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.h
@@ -71,7 +71,7 @@ QT4_WRAP_CPP( QtSupport_Generated_MOC_SRCS ${QtSupport_HDRS} )
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_SOURCE_PROPERTIES( "Generated" "${QtSupport_Generated_UI_HDRS}" "${QtSupport_Generated_MOC_SRCS};${QtSupport_Generated_RC_SRCS}" "0")
 
-set (Project_SRCS ${Project_SRCS} 
+set(Project_SRCS ${Project_SRCS} 
         ${QtSupport_SRCS} 
         ${QtSupport_HDRS}
         ${QtSupport_Generated_UI_HDRS}

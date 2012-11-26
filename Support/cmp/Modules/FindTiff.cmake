@@ -15,7 +15,7 @@
 
 # Only set TIFF_INSTALL to the environment variable if it is blank
 if ("${TIFF_INSTALL}" STREQUAL "")
-    SET (TIFF_INSTALL  $ENV{TIFF_INSTALL})
+    set(TIFF_INSTALL  $ENV{TIFF_INSTALL})
 endif()
 
 # Look for the header file.
@@ -23,11 +23,11 @@ SET(TIFF_INCLUDE_SEARCH_DIRS
   ${TIFF_INSTALL}/include
 )
 
-SET (TIFF_LIB_SEARCH_DIRS
+set(TIFF_LIB_SEARCH_DIRS
   ${TIFF_INSTALL}/lib
   )
 
-SET (TIFF_BIN_SEARCH_DIRS
+set(TIFF_BIN_SEARCH_DIRS
   ${TIFF_INSTALL}/bin
 )
 
@@ -38,11 +38,11 @@ FIND_PATH(TIFF_INCLUDE_DIR
 )
 
 IF (WIN32 AND NOT MINGW)
-    SET (TIFF_SEARCH_DEBUG_NAMES "tiffdll_D;libtiff_D")
-    SET (TIFF_SEARCH_RELEASE_NAMES "tiffdll;libtiff")
+    set(TIFF_SEARCH_DEBUG_NAMES "tiffdll_D;libtiff_D")
+    set(TIFF_SEARCH_RELEASE_NAMES "tiffdll;libtiff")
 ELSE (WIN32 AND NOT MINGW)
-    SET (TIFF_SEARCH_DEBUG_NAMES "tiff_debug")
-    SET (TIFF_SEARCH_RELEASE_NAMES "tiff")
+    set(TIFF_SEARCH_DEBUG_NAMES "tiff_debug")
+    set(TIFF_SEARCH_RELEASE_NAMES "tiff")
 ENDIF(WIN32 AND NOT MINGW)
 
 # Look for the library.
@@ -58,9 +58,9 @@ FIND_LIBRARY(TIFF_LIBRARY_RELEASE
   NO_DEFAULT_PATH
   )
 
-SET (TIFF_DUMP_PROG_NAME "tiffdump")
+set(TIFF_DUMP_PROG_NAME "tiffdump")
 IF (WIN32)
-    SET (TIFF_DUMP_PROG_NAME "tiffdump.exe")
+    set(TIFF_DUMP_PROG_NAME "tiffdump.exe")
 ENDIF(WIN32)
 
 FIND_PROGRAM(TIFF_DUMP_PROG
@@ -127,7 +127,7 @@ IF (TIFF_FOUND)
 
   CHECK_SYMBOL_EXISTS(TIFFDLL "tif_config.h" HAVE_TIFF_DLL)
   if (HAVE_TIFF_DLL)
-    SET (TIFF_IS_SHARED 1 CACHE INTERNAL "Tiff Built as DLL or Shared Library")
+    set(TIFF_IS_SHARED 1 CACHE INTERNAL "Tiff Built as DLL or Shared Library")
   endif()
 
   # Restore CMAKE_REQUIRED_INCLUDES and CMAKE_REQUIRED_FLAGS variables

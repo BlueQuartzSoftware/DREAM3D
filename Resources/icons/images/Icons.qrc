@@ -18,6 +18,8 @@
   <file>MaxCutOff_Eqn.png</file>
   <file>MinCutOff_Eqn.png</file>
   <file>filterWidgetBorder.png</file>
+  <file>filterWidgetBorder_Warning.png</file>
+  <file>filterWidgetBorder_Error.png</file>
   <file>open_pipeline.png</file>
   <file>disk_blue.png</file>
   <file>information.png</file>
