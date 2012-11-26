@@ -52,6 +52,7 @@
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/StringDataArray.hpp"
 
 
 /**
@@ -80,6 +81,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(H5EbsdFile)
@@ -94,9 +97,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Read H5Ebsd File"; }
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	/**
+  /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -143,11 +146,13 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         return -1;
       }
 
-      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, DREAM3D::EnsembleData::CrystalStructures);
+      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, m_CrystalStructuresArrayName);
+      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, m_MaterialNamesArrayName);
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
       crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
+      materialNames->SetValue(0, "Invalid Phase");
       if (m_PTypes.get() == NULL || m_PTypes->GetSize() == 0)
       {
         return -1;
@@ -158,9 +163,12 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       {
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
+        materialNames->SetValue(phaseID, phases[i]->getMaterialName());
+
       }
       getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PTypes);
+      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
       getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }

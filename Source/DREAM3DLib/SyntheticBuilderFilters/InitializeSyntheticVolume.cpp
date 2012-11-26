@@ -141,7 +141,7 @@ void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWr
 }
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; setErrorCondition(errCond); }
+if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond); }
 
 // -----------------------------------------------------------------------------
 //

@@ -195,7 +195,7 @@
 
 #define GGVTKW_IPFCOLOR_BIANRY(var, quat)\
 if (r->crystruct[phase] == Ebsd::CrystalStructure::Cubic) {\
-  OIMColoring::GenerateIPFColor(var->euler1,\
+  OIMColoring::GenerateCubicIPFColor(var->euler1,\
                               var->euler2,\
                               var->euler3,\
                               RefDirection[0], RefDirection[1], RefDirection[2],\

@@ -55,6 +55,7 @@ m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
+m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
@@ -64,10 +65,12 @@ m_WriteParentIds(false),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
 m_WriteGoodVoxels(false),
+m_WriteRodriguesGAMColors(false),
 m_WriteGAMs(false),
 m_WriteKAMs(false),
 m_WriteIPFColors(false),
 m_WriteGrainSizes(false),
+m_WriteEulerAngles(false),
 m_WriteBinaryFile(false)
 {
   setupFilterParameters();
@@ -159,11 +162,26 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
+  }  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Rodrigues GAM Colors");
+    option->setPropertyName("WriteRodriguesGAMColors");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Grain Sizes");
     option->setPropertyName("WriteGrainSizes");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Euler Angles");
+    option->setPropertyName("WriteEulerAngles");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -191,7 +209,9 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteGAMs", getWriteGAMs() );
   writer->writeValue("WriteKAMs", getWriteKAMs() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
+  writer->writeValue("WriteRodrgiuesGAMColors", getWriteRodriguesGAMColors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
+  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
 }
 
@@ -209,6 +229,25 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
     ss << "The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
+  }
+
+  // Make sure what we are checking is an actual file name and not a directory
+  if (MXAFileInfo::isDirectory(m_OutputFile) == false)
+  {
+    std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+    if (MXADir::exists(parentPath) == false)
+    {
+      ss.str("");
+      ss <<  "The directory path for the output file does not exist.";
+      addWarningMessage(getHumanLabel(), ss.str(), -1);
+    }
+  }
+  else
+  {
+      ss.str("");
+      ss <<  "The output file path is a path to an existing directory. Please change the path to point to a file";
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
+      setErrorCondition(-1);
   }
 
   if(m_WriteGrainIds == true)
@@ -243,6 +282,17 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
+
+  if(m_WriteRodriguesGAMColors == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceRotations, ss, -305, float, FloatArrayType, voxels, 3)
+  }
+
+  if(m_WriteEulerAngles == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+  }
+
   if(m_WriteGrainSizes == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
@@ -350,6 +400,22 @@ void VtkRectilinearGridWriter::execute()
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
+  if (m_WriteEulerAngles == true)
+  {
+
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelEulerAngleScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+
+  if(m_WriteRodriguesGAMColors == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelRodriguesColorScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
 
   if(m_WriteGrainSizes == true)
   {
@@ -374,7 +440,7 @@ void VtkRectilinearGridWriter::execute()
     setErrorCondition(-1);
   }
 
-  notifyStatusMessage("VtkRectilinearGridWriter Complete");
+  notifyStatusMessage("Complete");
 }
 
 
@@ -408,9 +474,14 @@ int VtkRectilinearGridWriter::write(const std::string &file, VoxelDataContainer*
   size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
+  std::stringstream ss;
+  int index = 0;
   // Now loop on all of our Scalars and write those arrays as CELL_DATA
   for (std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)
   {
+    ss.str("");
+    ss << "Writing Scalar " << index++ << " of " << scalars.size();
+    notifyStatusMessage(ss.str());
     err = (*iter)->writeScalars(f);
     if(err < 0)
     {

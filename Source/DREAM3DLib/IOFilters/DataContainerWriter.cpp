@@ -52,6 +52,26 @@
 typedef std::list<std::string> NameListType;
 
 
+/**
+ * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
+ * is closed when the variable goes out of Scope
+ */
+class HDF5ScopedFileSentinel
+{
+  public:
+    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
+    {}
+    virtual ~HDF5ScopedFileSentinel()
+    {
+       if (m_FileId > 0) {
+        H5Utilities::closeFile(m_FileId);
+      }
+    }
+
+    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
+
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -112,6 +132,13 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1);
   }
 
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if (MXADir::exists(parentPath) == false)
+  {
+    ss.str("");
+    ss <<  "The directory path for the output file does not exist.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
+  }
 
 }
 
@@ -166,8 +193,6 @@ void DataContainerWriter::execute()
       return;
   }
 
-
-
   err = openFile(false); // Do NOT append to any existing file
   if (err < 0)
   {
@@ -177,6 +202,10 @@ void DataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
+
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(0);
+  scopedFileSentinel.setFileId(m_FileId);
 
   // Create the HDF5 Group for the Data Container
   err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
@@ -250,7 +279,10 @@ void DataContainerWriter::execute()
   H5Gclose(pipelineGroupId);
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
-  closeFile();
+//  err = closeFile();
+//  if (err >= 0) {
+//   scopedFileSentinel.setFileId(0);
+//  }
 
   notifyStatusMessage("Complete");
 }
@@ -377,6 +409,9 @@ int DataContainerWriter::writeCellData(hid_t dcGid)
   NameListType names = m->getCellArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
+    ss.str("");
+    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
+    notifyStatusMessage(ss.str());
     IDataArray::Pointer array = m->getCellData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)

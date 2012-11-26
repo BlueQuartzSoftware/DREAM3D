@@ -72,9 +72,9 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual const std::string getHumanLabel() { return "Read Dx File (Grain Ids)"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	virtual void preflight();
+    virtual void preflight();
 
   protected:
     DxReader();
@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
   private:
     int32_t* m_GrainIds;
+
     DxReader(const DxReader&); // Copy Constructor Not Implemented
     void operator=(const DxReader&); // Operator '=' Not Implemented
 };

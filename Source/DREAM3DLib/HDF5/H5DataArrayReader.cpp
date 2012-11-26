@@ -40,6 +40,7 @@
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Common/StringDataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -62,8 +63,8 @@ H5DataArrayReader::~H5DataArrayReader()
 // -----------------------------------------------------------------------------
 template<typename T>
 IDataArray::Pointer readH5Dataset(hid_t locId,
-    const std::string &datasetPath,
-    const std::vector<hsize_t> &dims)
+                                  const std::string &datasetPath,
+                                  const std::vector<hsize_t> &dims)
 {
   herr_t err = -1;
   IDataArray::Pointer ptr;
@@ -87,6 +88,91 @@ IDataArray::Pointer readH5Dataset(hid_t locId,
   }
   return ptr;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const std::string &name, bool preflightOnly)
+{
+  herr_t err = -1;
+  herr_t retErr = 1;
+  hid_t typeId = -1;
+  H5T_class_t attr_type;
+  size_t attr_size;
+  std::string res;
+
+  std::vector<hsize_t> dims; //Reusable for the loop
+  IDataArray::Pointer ptr = IDataArray::NullPointer();
+  //std::cout << "Reading Attribute " << *iter << std::endl;
+  typeId = H5Lite::getDatasetType(gid, name);
+  if (typeId < 0)
+  {
+    return ptr;
+  }
+  err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
+  if(err < 0)
+  {
+    std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
+  }
+  else
+  {
+    std::string classType;
+    err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+    if (err < 0)
+    {
+      return ptr;
+    }
+    int numComp = 1;
+    err = H5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+    if (err < 0)
+    {
+      numComp = 1;
+    }
+    if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
+       || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
+    {
+      if (preflightOnly == false) {
+        IDataArray::Pointer bufferPtr = readH5Dataset<char>(gid, name, dims);
+        const char* buf = reinterpret_cast<char*>(bufferPtr->GetVoidPointer(0));
+        // count the number of 0x00 characters which are the 'null termination' of each string
+
+        size_t size = bufferPtr->GetNumberOfTuples();
+        size_t count = 0;
+        for(size_t i = 0; i < size; ++i)
+        {
+          if(buf[i] == 0)
+          {
+            ++count;
+          }
+        }
+        ptr = StringDataArray::CreateArray(count, name);
+        StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
+        size_t start = 0;
+        size_t index = 0;
+        for(size_t i = 0; i < size; ++i)
+        {
+          if(buf[i] == 0)
+          {
+            std::string str( &(buf[start]) );
+            strArray->SetValue(index, str);
+            ++index;
+            start = i + 1;
+          }
+        }
+
+      }
+      else // We are preflighting only so just create a StringDataArray of lenght 1
+      {
+        ptr = StringDataArray::CreateArray(1, name);
+      }
+    }
+
+  }
+  CloseH5T(typeId, err, retErr);
+  return ptr;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -272,7 +358,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -282,7 +368,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -292,7 +378,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -302,7 +388,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -312,7 +398,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -322,7 +408,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -332,7 +418,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -342,7 +428,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -360,7 +446,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }
@@ -370,7 +456,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
           ptr->SetName(name);
           if(false == preflightOnly)
           {
-			ptr->readH5Data(gid);
+            ptr->readH5Data(gid);
           }
           iDataArray = ptr;
         }

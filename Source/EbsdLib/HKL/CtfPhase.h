@@ -95,6 +95,7 @@ class EbsdLib_EXPORT CtfPhase
      */
     unsigned int determineCrystalStructure();
 
+    std::string getMaterialName();
 
     /**
      * @brief Converts a string to a number

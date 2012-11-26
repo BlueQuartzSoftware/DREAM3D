@@ -1,13 +1,37 @@
+/* ============================================================================
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Jackson nor the names of its contributors may
+ * be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-//
-//  Copyright (c) 2008, mjackson
-//  All rights reserved.
-//  BSD License: http://www.opensource.org/licenses/bsd-license.html
-//
-//  This code was written under United States Air Force Contract number
-//                           FA8650-04-C-5229
-//
-
+ //
+ //  This code was written under United States Air Force Contract number
+ //                           FA8650-07-D-5800
+ //
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _DataArray_h_
 #define _DataArray_h_
 
@@ -86,7 +110,7 @@ class DataArray : public IDataArray
 
      /**
      * @brief Static constructor
-     * @param numTuples The number of elements in the internal array.
+     * @param numTuples The number of tuples in the array.
      * @param numComponents The number of Components in each Tuple
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
@@ -262,6 +286,17 @@ class DataArray : public IDataArray
     }
 
     /**
+     * @brief Sets all the values to value.
+     */
+    void initializeWithValues(T value)
+    {
+      for (size_t i = 0; i < this->Size; i++)
+      {
+        this->Array[i] = value;
+      }
+    }
+
+    /**
      * @brief Sets all the values to zero.
      */
     virtual void initializeWithZeros()
@@ -270,18 +305,7 @@ class DataArray : public IDataArray
       ::memset(this->Array, 0, this->Size * typeSize);
     }
 
-    /**
-     * @brief Sets all the values to value.
-     */
-    void initializeWithValues(T value)
-    {
-		for (size_t i = 0; i < this->Size; i++)
-		{
-			this->Array[i] = value;
-		}
-    }
-
-	/**
+  /**
      * @brief Removes Tuples from the Array
      * @param idxs The indices to remove
      * @return
@@ -638,8 +662,6 @@ class DataArray : public IDataArray
       return "DataArray<UnknownType>";
     }
 
-
-
     /**
      *
      * @param parentId
@@ -647,7 +669,6 @@ class DataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-
       return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 

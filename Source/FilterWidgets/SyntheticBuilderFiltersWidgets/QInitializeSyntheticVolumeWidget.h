@@ -51,6 +51,8 @@
 
 #include "FilterWidgets/ui_QInitializeSyntheticVolumeWidget.h"
 
+class QComboBox;
+
 /*
  *
  */

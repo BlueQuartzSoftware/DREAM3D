@@ -37,15 +37,8 @@
 #ifndef CROP_VOLUME_PIPELINE_H_
 #define CROP_VOLUME_PIPELINE_H_
 
-#include <vector>
-#include <string>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-//#include "DREAM3DLib/Common/IDataArray.h"
-//#include "DREAM3DLib/Common/IDataArray.h"
-//#include "DREAM3DLib/Common/StatsDataArray.h"
-//#include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -57,44 +50,42 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT Crop_Volume_Pipeline : public AbstractFilter
+class DREAM3DLib_EXPORT CropVolumePipeline : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(Crop_Volume_Pipeline)
-    DREAM3D_STATIC_NEW_MACRO(Crop_Volume_Pipeline)
-    DREAM3D_TYPE_MACRO_SUPER(Crop_Volume_Pipeline, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CropVolumePipeline)
+    DREAM3D_STATIC_NEW_MACRO(CropVolumePipeline)
+    DREAM3D_TYPE_MACRO_SUPER(CropVolumePipeline, AbstractFilter)
 
-    virtual ~Crop_Volume_Pipeline();
+    virtual ~CropVolumePipeline();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::CustomFilters;}
-    virtual const std::string getHumanLabel() { return "Megna Filter"; }
+    virtual const std::string getHumanLabel() { return "Crop Volume Filter"; }
 
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void setupFilterParameters();
-	  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	  virtual void execute();
+    virtual void execute();
     virtual void preflight();
-   // virtual void getNumLinesinFile(int &num_lines);
+
     virtual void get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin);
 
-
   protected:
-    Crop_Volume_Pipeline();
+    CropVolumePipeline();
 
 
 
   private:
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    Crop_Volume_Pipeline(const Crop_Volume_Pipeline&); // Copy Constructor Not Implemented
-    void operator=(const Crop_Volume_Pipeline&); // Operator '=' Not Implemented
+    CropVolumePipeline(const CropVolumePipeline&); // Copy Constructor Not Implemented
+    void operator=(const CropVolumePipeline&); // Operator '=' Not Implemented
 };
 
 #endif /* CROP_VOLUME_PIPELINE_H_ */

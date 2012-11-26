@@ -9,14 +9,14 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-SET (DREAM3DLib_ShapeOps_HDRS
+set(DREAM3DLib_ShapeOps_HDRS
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/ShapeOps.h
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/CubeOctohedronOps.h
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/CylinderOps.h
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/EllipsoidOps.h
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/SuperEllipsoidOps.h
 )
-SET (DREAM3DLib_ShapeOps_SRCS
+set(DREAM3DLib_ShapeOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/ShapeOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/CubeOctohedronOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/ShapeOps/CylinderOps.cpp

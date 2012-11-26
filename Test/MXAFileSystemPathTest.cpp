@@ -512,11 +512,21 @@ int FileNameExtensionTest()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestTempDir()
+{
+  std::string tmp = MXADir::tempPath();
+  std::cout << "tmp = " << tmp << std::endl;
+}
+
+// -----------------------------------------------------------------------------
 //  Use Boost unit test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( TestTempDir() );
   DREAM3D_REGISTER_TEST( MakeDirectoriesTest() )
   DREAM3D_REGISTER_TEST( FilesTest() )
   DREAM3D_REGISTER_TEST( FileNameTest() )

@@ -66,10 +66,12 @@ class FilterParameter
       OutputFileWidget,
       OutputPathWidget,
       BooleanWidget,
-      IntConstrainedWidget,
-      DoubleConstrainedWidget,
       ChoiceWidget,
       CustomWidget
+      /* If you add more widget types you need to update the QFilterWidget code to
+       * account for these new types. You also need to update the FilterWidgetCodeGen.cpp
+       * file to generate default code for the new enumeration types
+       */
     };
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
@@ -80,6 +82,7 @@ class FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
+
 
   protected:
     FilterParameter() :

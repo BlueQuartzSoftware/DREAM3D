@@ -322,19 +322,25 @@ int DataContainerReader::gatherData(bool preflight)
 
   if(m_ReadCellData == true)
   {
-    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight);
+    std::vector<std::string> readNames;
+    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
       err |= H5Fclose(fileId);
       setErrorCondition(err);
       return -1;
+    }
+    for(size_t i = 0; i < readNames.size(); ++i)
+    {
+      addCreatedCellData(readNames[i]);
     }
   }
 
   if(m_ReadFieldData == true)
   {
-    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight);
+    std::vector<std::string> readNames;
+    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -342,17 +348,26 @@ int DataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
+    for(size_t i = 0; i < readNames.size(); ++i)
+    {
+      addCreatedFieldData(readNames[i]);
+    }
   }
 
   if(m_ReadEnsembleData == true)
   {
-    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight);
+    std::vector<std::string> readNames;
+    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
       err |= H5Fclose(fileId);
       setErrorCondition(err);
       return -1;
+    }
+    for(size_t i = 0; i < readNames.size(); ++i)
+    {
+      addCreatedEnsembleData(readNames[i]);
     }
   }
 
@@ -366,7 +381,7 @@ int DataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight)
+int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead)
 {
   std::stringstream ss;
   int err = 0;
@@ -383,10 +398,11 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
 
   NameListType names;
   H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-//  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
   std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
+    namesRead.push_back(*iter);
     classType.clear();
     H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
  //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
@@ -395,6 +411,10 @@ int DataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupNam
     if(classType.find("DataArray") == 0)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
+    }
+    else if(classType.compare("StringDataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readStringDataArray(gid, *iter, preflight);
     }
     else if(classType.compare("vector") == 0)
     {

@@ -53,7 +53,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class RegularizeZSpacing : public AbstractFilter
+class DREAM3DLib_EXPORT RegularizeZSpacing : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(RegularizeZSpacing)

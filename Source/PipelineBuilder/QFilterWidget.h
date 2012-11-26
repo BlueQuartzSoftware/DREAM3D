@@ -36,22 +36,19 @@
 #ifndef _QFILTERWIDGET_H_
 #define _QFILTERWIDGET_H_
 
+#include <QtCore/QStringList>
 #include <QtCore/QSettings>
-#include <QtGui/QFrame>
 #include <QtGui/QGroupBox>
-#include <QtGui/QSpinBox>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLineEdit>
-#include <QtGui/QIntValidator>
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QComboBox>
+
+
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "QtSupport/QFSDropLineEdit.h"
 
 #include "PipelineBuilderDLLExport.h"
+
+
+
 
 #if 1
 /**
@@ -68,10 +65,10 @@
 
 #define QFILTERWIDGET_INSTANCE_PROPERTY(m_msgType, prpty)\
   private:\
-      m_msgType   m_##prpty;\
+  m_msgType   m_##prpty;\
   public:\
-    QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty)\
-    QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty)
+  QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty)\
+  QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty)
 
 #endif
 
@@ -79,6 +76,8 @@
 
 // This needs to be defined
 class QMouseEvent;
+class AbstractFilter;
+class PipelineArraySelectionWidget;
 
 /**
  * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
@@ -114,12 +113,6 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual QString  getFilterGroup();
 
-#if 0
-    virtual void setCellDataArrayNames(std::vector<std::string> arrayNames);
-    virtual void setFieldDataArrayNames(std::vector<std::string> arrayNames);
-    virtual void setEnsembleDataArrayNames(std::vector<std::string> arrayNames);
-#endif
-
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
@@ -129,64 +122,66 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
   public slots:
 
-     virtual void updateFilterValues();
-     virtual void updateQLineEditDoubleValue();
-     virtual void updateQLineEditIntValue();
-     virtual void selectInputFile();
-     virtual void selectInputPath();
-     virtual void selectOutputFile();
-     virtual void selectOutputPath();
-     virtual void updateComboBoxValue(int v);
-     virtual void updateQSpinBoxValue(int v);
-     virtual void updateQDoubleSpinBoxValue(double v);
-     virtual void updateQCheckBoxValue(int v);
-     virtual void updateQLineEditStringValue(const QString &v);
+    virtual void updateFilterValues();
+    virtual void updateQLineEditDoubleValue();
+    virtual void updateQLineEditIntValue();
+    virtual void selectInputFile();
+    virtual void selectInputPath();
+    virtual void selectOutputFile();
+    virtual void selectOutputPath();
+    virtual void updateComboBoxValue(int v);
+    virtual void updateQSpinBoxValue(int v);
+    virtual void updateQDoubleSpinBoxValue(double v);
+    virtual void updateQCheckBoxValue(int v);
+    virtual void updateQLineEditStringValue(const QString &v);
 
-     virtual void updateLineEdit(const QString &v);
+    virtual void updateLineEdit(const QString &v);
 
-     virtual void setIsSelected(bool b);
+    virtual void setIsSelected(bool b);
 
 
-     /**
+    /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
       * state
       * @param selected Is the widget selected or not.
       */
-     void changeStyle();
+    void changeStyle();
 
-     /**
+    /**
       *@brief
       */
-     void updateWidgetStyle();
+    void updateWidgetStyle();
 
-     /**
+    /**
       * @brief Slot for a QTime to call to update the border of the wiget in a
       * pulsing fashing
       */
-     void setHasPreflightErrors(bool hasErrors);
+    void setHasPreflightErrors(bool hasErrors);
+
+    void setHasPreflightWarnings(bool hasWarnings);
 
   signals:
     void widgetSelected(QFilterWidget* w);
 
 
   protected:
-     virtual void mousePressEvent( QMouseEvent* event );
-     virtual void mouseReleaseEvent( QMouseEvent* event );
-     virtual void mouseMoveEvent( QMouseEvent* event );
-     virtual QString getFileExtension(std::string propName);
-     virtual QString getFileType(std::string propName);
+    virtual void mousePressEvent( QMouseEvent* event );
+    virtual void mouseReleaseEvent( QMouseEvent* event );
+    virtual void mouseMoveEvent( QMouseEvent* event );
+    virtual QString getFileExtension(std::string propName);
+    virtual QString getFileType(std::string propName);
 
   private:
-     QRect      m_DeleteRect;
-     QPoint     dragStartPosition;
-     QTimer*    m_timer;
-     unsigned char  m_CurrentBorderColorFactor;
-     unsigned char        m_BorderIncrement;
-     QString    m_BorderColorStyle;
-     bool       m_IsSelected;
-     bool       m_HasPreflightErrors;
-     static QString m_OpenDialogLastDirectory;
-
+    QRect      m_DeleteRect;
+    QPoint     dragStartPosition;
+    QTimer*    m_timer;
+    unsigned char  m_CurrentBorderColorFactor;
+    unsigned char        m_BorderIncrement;
+    QString    m_BorderColorStyle;
+    bool       m_IsSelected;
+    bool       m_HasPreflightErrors;
+    bool       m_HasPreflightWarnings;
+    static QString m_OpenDialogLastDirectory;
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented

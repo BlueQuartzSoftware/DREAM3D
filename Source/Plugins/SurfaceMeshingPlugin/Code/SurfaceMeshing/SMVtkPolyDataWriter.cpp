@@ -337,6 +337,7 @@ int SMVtkPolyDataWriter::primeFileToScalarDataLocation(DataContainer* m, const s
 
 void SMVtkPolyDataWriter::execute()
 {
+  static const size_t DATA_COUNT = 9;
   int err = 0;
   std::stringstream s;
   // Open the Nodes file for reading
@@ -384,10 +385,10 @@ void SMVtkPolyDataWriter::execute()
     notifyMessage(em);
     return;
   }
-  // Calculate how many nodes are in the file based in the file size
+  // Calculate how many Triangles are in the file based in the file size
   fseek(triFile, 0, SEEK_END);
   fLength = ftell(triFile);
-  size_t nTriangles = fLength / 24;
+  size_t nTriangles = fLength / (sizeof(int) * DATA_COUNT);
   fseek(triFile, 0, SEEK_SET);
   fLength = ftell(triFile);
   if(0 != fLength)
@@ -467,7 +468,8 @@ void SMVtkPolyDataWriter::execute()
   fclose(nodesFile);
 
   // Write the triangle indices into the vtk File
-  int tData[6];
+
+  int tData[DATA_COUNT];
   int triangleCount = nTriangles;
   if(false == m_WriteConformalMesh)
   {
@@ -478,7 +480,7 @@ void SMVtkPolyDataWriter::execute()
   for (size_t i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
-    nread = fread(tData, sizeof(int), 6, triFile);
+    nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
     if(m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
@@ -570,7 +572,7 @@ void SMVtkPolyDataWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, uint32_t nNodes, bool conformalMesh)
 {
   int err = 0;
   unsigned char nodeData[20];
@@ -579,12 +581,12 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
   size_t nread = 0;
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
+  fprintf(vtkFile, "POINT_DATA %d\n", (int)(nNodes));
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
   std::vector<int> data(nNodes, 0);
-  for (int i = 0; i < nNodes; i++)
+  for (size_t i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     if(nread != 1)
@@ -595,7 +597,7 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
     MXA::Endian::FromSystemToBig::convert<int>(swapped);
     data[i] = swapped;
   }
-  int totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
+  size_t totalWritten = fwrite(&(data.front()), sizeof(int), nNodes, vtkFile);
   fclose(nodesFile);
   if(totalWritten != nNodes)
   {
@@ -607,7 +609,7 @@ int SMVtkPolyDataWriter::writeBinaryPointData(const std::string &NodesFile, FILE
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, uint32_t nNodes, bool conformalMesh)
 {
   int err = 0;
   unsigned char nodeData[20];
@@ -619,10 +621,10 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
 
   FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
+  fprintf(vtkFile, "POINT_DATA %d\n", (int)(nNodes));
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for (int i = 0; i < nNodes; i++)
+  for (size_t i = 0; i < nNodes; i++)
   {
     nread = fread(nodeData, 20, 1, nodesFile); // Read one set of Node Kind from the nodes file
     if(nread != 1)
@@ -640,15 +642,16 @@ int SMVtkPolyDataWriter::writeASCIIPointData(const std::string &NodesFile, FILE*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, uint32_t nTriangles, bool conformalMesh)
 {
+  static const size_t DATA_COUNT = 9;
   int err = 0;
   size_t offset = 1;
   size_t nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
 
-  size_t triangleCount = nTriangles;
+  uint32_t triangleCount = nTriangles;
   if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
@@ -657,27 +660,27 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
   std::vector<int> tri_ids(triangleCount);
   // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", triangleCount);
+  fprintf(vtkFile, "CELL_DATA %u\n", triangleCount);
   fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  int tData[6];
+  int tData[DATA_COUNT];
 
   std::vector<int> cell_data(triangleCount);
-  for (int i = 0; i < nTriangles; i++)
+  for (size_t i = 0; i < nTriangles; i++)
   {
-    nread = fread(tData, sizeof(int), 6, triFile);
-    if(nread != 6)
+    nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
+    if(nread != DATA_COUNT)
     {
       return -1;
     }
     MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
     tri_ids[i * offset] = tData[0];
-    MXA::Endian::FromSystemToBig::convert<int>(tData[4]);
-    cell_data[i * offset] = tData[4];
+    MXA::Endian::FromSystemToBig::convert<int>(tData[7]);
+    cell_data[i * offset] = tData[7];
     if(false == conformalMesh)
     {
-      MXA::Endian::FromSystemToBig::convert<int>(tData[5]);
-      cell_data[i * offset + 1] = tData[5];
+      MXA::Endian::FromSystemToBig::convert<int>(tData[8]);
+      cell_data[i * offset + 1] = tData[8];
       tri_ids[i * offset + 1] = tData[0];
     }
   }
@@ -707,13 +710,14 @@ int SMVtkPolyDataWriter::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, uint32_t nTriangles, bool conformalMesh)
 {
+  static const size_t DATA_COUNT = 9;
   size_t nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
   // Write the GrainId Data to the file
-  int triangleCount = nTriangles;
+  uint32_t triangleCount = nTriangles;
   if(false == conformalMesh)
   {
     triangleCount = nTriangles * 2;
@@ -723,18 +727,18 @@ int SMVtkPolyDataWriter::writeASCIICellData(const std::string &TrianglesFile, FI
   fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
-  int tData[6];
-  for (int i = 0; i < nTriangles; i++)
+  int tData[DATA_COUNT];
+  for (size_t i = 0; i < nTriangles; i++)
   {
-    nread = fread(tData, sizeof(int), 6, triFile);
-    if(nread != 6)
+    nread = fread(tData, sizeof(int), DATA_COUNT, triFile);
+    if(nread != DATA_COUNT)
     {
       break;
     }
-    fprintf(vtkFile, "%d\n", tData[4]);
+    fprintf(vtkFile, "%d\n", tData[7]);
     if(false == conformalMesh)
     {
-      fprintf(vtkFile, "%d\n", tData[5]);
+      fprintf(vtkFile, "%d\n", tData[8]);
     }
   }
   fclose(triFile);

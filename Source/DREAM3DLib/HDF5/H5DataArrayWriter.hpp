@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ABSTRACTARRAYWRITER_H_
-#define ABSTRACTARRAYWRITER_H_
+#ifndef _H5DataArrayWriter_H_
+#define _H5DataArrayWriter_H_
 
 #include <hdf5.h>
 
@@ -58,7 +58,7 @@ class H5DataArrayWriter
   public:
   virtual ~H5DataArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string name, size_t numTuples, int numComp, T* data, const std::string &className)
+  static int writeArray(hid_t gid, const std::string &name, size_t numTuples, int numComp, T* data, const std::string &className)
   {
       int32_t rank = 0;
       if(numComp == 1)
@@ -103,4 +103,4 @@ class H5DataArrayWriter
     void operator=(const H5DataArrayWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* ABSTRACTARRAYWRITER_H_ */
+#endif /* _H5DataArrayWriter_H_ */

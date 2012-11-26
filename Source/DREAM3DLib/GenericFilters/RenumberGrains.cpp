@@ -138,14 +138,12 @@ void RenumberGrains::execute()
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields,0);
 
+  ss.str("");
   ss << " - Generating Active Grain List";
   notifyStatusMessage(ss.str());
   std::vector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
-    std::stringstream ss;
-    // ss << "Renumbering Grains - Identifying Active Grains - " << ((float)i/totalFields)*100 << " Percent Complete";
-    // notifyStatusMessage(ss.str());
     if(m_Active[i] == false)
     {
       RemoveList.push_back(i);
@@ -166,12 +164,13 @@ void RenumberGrains::execute()
     {
       IDataArray::Pointer p = m->getFieldData(*iter);
       ss.str("");
-      ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
-      ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-      //notifyStatusMessage(ss.str());
-      if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) m->removeFieldData(*iter);
-      else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) m->removeFieldData(*iter);
-      else p->EraseTuples(RemoveList);
+      //ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
+      //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
+      ss << "Updating Field Array '" << *iter << "'";
+      notifyStatusMessage(ss.str());
+      if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) { m->removeFieldData(*iter);}
+      else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) {m->removeFieldData(*iter);}
+      else {p->EraseTuples(RemoveList);}
       //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
     }
     m->setNumFieldTuples(m->getNumFieldTuples() - RemoveList.size());
@@ -179,30 +178,17 @@ void RenumberGrains::execute()
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
     // Loop over all the points and correct all the grain names
+    ss.str("");
+    ss << "Renumbering Cell Region Ids";
+    notifyStatusMessage(ss.str());
     for (int i = 0; i < totalPoints; i++)
     {
-      std::stringstream ss;
-      ss << "Renumbering Grains - Updating Cell Grain Ids - " << ((float)i / totalPoints) * 100 << " Percent Complete";
       //  notify(ss.str(), 0, Observable::UpdateProgressMessage);
       if(m_GrainIds[i] > 0)
       {
         m_GrainIds[i] = static_cast<int32_t>( NewNames[m_GrainIds[i]] );
       }
-
     }
-
-#if 0
-    // Find the unique set of grain ids
-    std::set<int32_t> grainIdSet;
-    for (int64_t i = 0; i < totalPoints; ++i)
-    {
-      grainIdSet.insert(m_GrainIds[i]);
-    }
-    for (std::set<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
-    {
-      std::cout << "Grain ID: " << (*iter) << std::endl;
-    }
-#endif
   }
 
   notifyStatusMessage("Complete");

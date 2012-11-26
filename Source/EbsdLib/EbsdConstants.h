@@ -143,6 +143,13 @@ namespace Ebsd
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
   }
 
+  namespace BravaisLattice
+  {
+    const std::string Unknown("Unknown");
+    const std::string Cubic("Cubic");
+    const std::string Hexagonal("Hexagonal");
+  }
+
   enum NumType {
     Int8 = 0,
     UInt8,

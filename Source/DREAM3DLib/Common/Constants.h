@@ -113,9 +113,20 @@ namespace DREAM3D
     const std::string NearestNeighbors("NearestNeighbors");
     const std::string NearestNeighborDistances("NearestNeighborDistances");
     const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
+    const std::string GrainReferenceRotations("GrainReferenceRotations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQuality("ImageQuality");
     const std::string IPFColor("IPFColor");
+
+    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
+    const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
+    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
+    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
+    const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
+    const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
+    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
+    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
+    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
   }
 
   namespace FieldData
@@ -153,39 +164,13 @@ namespace DREAM3D
     const std::string TotalSurfaceAreas("TotalSurfaceAreas");
     const std::string CrystalStructures("CrystalStructures");
     const std::string PhaseTypes("PhaseTypes");
+    const std::string BravaisLattice("BravaisLattice");
     const std::string PrecipitateFractions("PrecipitateFractions");
     const std::string ShapeTypes("ShapeTypes");
     const std::string Statistics("Statistics");
+    const std::string PhaseName("PhaseName");
+    const std::string MaterialName("MaterialName");
   }
-
-#if 0
-  namespace VTK {
-     const std::string GrainIdScalarName("GrainIds");
-     const std::string PhaseIdScalarName("Phases");
-     const std::string EulerAnglesName("EulerAngles");
-     const std::string SurfaceVoxelScalarName("SurfaceVoxels");
-     const std::string NeighborsScalarName("Neighbors");
-     //Quats
-     //AlreadyChecked
-     const std::string GoodVoxelScalarName("GoodVoxels");
-     //NearestNeighbors
-     //NearestNeighborDistances
-     //GrainMisorientations
-     //MisorientationGradients
-     //KernelAverageMisorientations
-     const std::string ImageQualityScalarName("ImageQuality");
-
-
-
-
-     const std::string EuclideanScalarName("Euclidean");
-     const std::string SchmidFactorScalarName("SchmidFactor");
-     const std::string KAMScalarName("KAM");
-     const std::string GAMScalarName("GAM");
-     const std::string LMGScalarName("LMG");
-  }
-
-#endif
 
   namespace HDF5
   {
@@ -407,32 +392,20 @@ namespace DREAM3D
     const std::string VoxelDataName("VoxelData");
   }
 
-
-
-
   /*   Surface Meshing Related   */
   namespace SurfaceMesh
   {
-    const std::string NodesFileBin("nodes.bin");
-    const std::string TrianglesFileBin("triangles.bin");
-    const std::string VisualizationVizFile("Visualization.vtk");
-    const std::string VTKExt("vtk");
-
-#if 0
-    const std::string NodesRawFile("nodes_raw.txt");
-    const std::string NodesFile("nodes.txt");
-    const std::string TrianglesFileIndex("triangles");
-    const std::string TrianglesFile("triangles.txt");
-    const std::string EdgesFileIndex("edges");
-    const std::string EdgesFile("edges.txt");
-
-    const std::string Smooth3DIterationFile("Smooth3D");
-    const std::string NodesSmoothedFile("nodes_smoothed.txt");
-    const std::string STLFile("Mesh.stl");
-#endif
-
+    namespace NodeType
+    {
+      const int8_t Unused = -1;
+      const int8_t Default = 2;
+      const int8_t TriplePoint = 3;
+      const int8_t QuadPoint = 4;
+      const int8_t SurfaceDefault = 12;
+      const int8_t SurfaceTriplePoint = 13;
+      const int8_t SurfaceQuadPoint = 14;
+    }
   }
-
 
   namespace VolumeMeshing {
     /* Volume Meshing Related */
@@ -440,7 +413,7 @@ namespace DREAM3D
     const std::string MeshFile2("volumetric_mesh_v5_2.vtk");
     const std::string ElementQualityFile("element_quality_measures_v5.txt");
     const std::string VoxelsFile("voxels_v5.txt");
-  } // End Namespace Representation
+  }
 }
 
 

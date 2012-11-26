@@ -47,9 +47,11 @@ FileReader(),
 m_Comment("DREAM3D Generated File"),
 m_DatasetType(""),
 m_FileIsBinary(true),
-m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
+m_GrainIdScalarName(DREAM3D::CellData::GrainIds),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_GrainIds(NULL)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -58,6 +60,33 @@ m_GrainIdScalarName(DREAM3D::CellData::GrainIds)
 VtkGrainIdReader::~VtkGrainIdReader()
 {
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VtkGrainIdReader::setupFilterParameters()
+{
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Input Vtk File");
+    option->setPropertyName("InputFile");
+    option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Grain Id Scalar Name");
+    option->setPropertyName("GrainIdScalarName");
+    option->setWidgetType(FilterParameter::StringWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -69,15 +98,29 @@ void VtkGrainIdReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdReader::preflight()
+void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+
+  setErrorCondition(0);
+  std::stringstream ss;
+  VoxelDataContainer* m = getVoxelDataContainer();
+
   if (getInputFile().empty() == true)
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
   }
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VtkGrainIdReader::preflight()
+{
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -149,23 +192,27 @@ int VtkGrainIdReader::readHeader()
 {
 
   int err = 0;
-  if (getInputFile().empty() == true)
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
   {
     std::stringstream ss;
-    ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
 
-  if (NULL == getVoxelDataContainer())
+
+  if (getInputFile().empty() == true)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    setErrorMessage(ss.str());
+    ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
+
 
   std::ifstream instream;
   instream.open(getInputFile().c_str(), std::ios_base::binary);
@@ -173,7 +220,7 @@ int VtkGrainIdReader::readHeader()
   {
     std::stringstream ss;
     ss << "Vtk file could not be opened: " << getInputFile();
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   char buf[kBufferSize];
@@ -197,7 +244,7 @@ int VtkGrainIdReader::readHeader()
     err = -1;
     std::stringstream ss;
     ss << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.";
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return err;
   }
   ::memset(buf, 0, kBufferSize);
@@ -209,7 +256,7 @@ int VtkGrainIdReader::readHeader()
     {
       std::stringstream ss;
       ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
-      setErrorMessage(ss.str());
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return -1;
     }
     std::string dataset(&(text[16]));
@@ -222,18 +269,18 @@ int VtkGrainIdReader::readHeader()
   err = parseSizeT_3V(buf, dims, 0);
   getVoxelDataContainer()->setDimensions(dims);
 
-#if 0
+#if 1
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
   err = parseFloat3V(buf, origin, 0.0f);
-  setOrigin(origin);
+  getVoxelDataContainer()->setOrigin(origin);
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize);// Read Line 7 which is the Scaling values
   float resolution[3];
   err = parseFloat3V(buf, resolution, 1.0f);
-  setResolution(resolution);
+  getVoxelDataContainer()->setResolution(resolution);
 
   ::memset(buf, 0, kBufferSize);
 #endif
@@ -277,12 +324,12 @@ int VtkGrainIdReader::readFile()
   {
     std::stringstream ss;
     ss << logTime() << " vtk file could not be opened: " << filename << std::endl;
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
 
   char buf[kBufferSize];
-  for (int i = 0; i < 5; ++i)
+  for (int i = 0; i < 8; ++i)
   {
     instream.getline(buf, kBufferSize);
   }
@@ -291,7 +338,7 @@ int VtkGrainIdReader::readFile()
   size_t dims[3];
   getVoxelDataContainer()->getDimensions(dims);
 
-
+#if 0
   size_t dim = 0;
   // Now parse the X, coordinates.
  // ::memset(buf, 0, kBufferSize);
@@ -301,7 +348,7 @@ int VtkGrainIdReader::readFile()
   {
     std::stringstream ss;
     ss << "x dimension does not match expected dimension: " << dim << " <--> " << dims[0];
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   float xscale = 1.0f;
@@ -315,7 +362,7 @@ int VtkGrainIdReader::readFile()
   {
     std::stringstream ss;
     ss << "y dimension does not match expected dimension: " << dim << " <--> " << dims[1];
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   float yscale = 1.0f;
@@ -329,7 +376,7 @@ int VtkGrainIdReader::readFile()
   {
     std::stringstream ss;
     ss << "z dimension does not match expected dimension: " << dim << " <--> " << dims[2];
-    setErrorMessage(ss.str());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   float zscale = 1.0f;
@@ -344,7 +391,7 @@ int VtkGrainIdReader::readFile()
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
   getVoxelDataContainer()->setResolution(xscale, yscale, zscale);
-
+#endif
 
   // Now we need to search for the 'GrainID' and
   char text1[kBufferSize];
@@ -353,7 +400,9 @@ int VtkGrainIdReader::readFile()
   ::memset(text2, 0, kBufferSize);
   char text3[kBufferSize];
   ::memset(text3, 0, kBufferSize);
-  int fieldNum = 0;
+  char text4[kBufferSize];
+  ::memset(text4, 0, kBufferSize);
+  //int fieldNum = 0;
   bool needGrainIds = true;
 
   std::string scalarName;
@@ -361,11 +410,11 @@ int VtkGrainIdReader::readFile()
 
   //size_t index = 0;
   //Cell Data is one less in each direction
-  getVoxelDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-  getVoxelDataContainer()->getDimensions(dims);
+//  getVoxelDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
+//  getVoxelDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
-  grainIds->SetName("GrainIds");
+
   readLine(instream, buf, kBufferSize);
 
  // int i = 0;
@@ -375,22 +424,22 @@ int VtkGrainIdReader::readFile()
     ::memset(text1, 0, kBufferSize);
     ::memset(text2, 0, kBufferSize);
     ::memset(text3, 0, kBufferSize);
-    int n = sscanf(buf, "%s %s %s %d", text1, text2, text3, &fieldNum);
+    int n = sscanf(buf, "%s %s %s %s", text1, text2, text3, text4);
     if (n != 4)
     {
       std::stringstream ss;
       ss << "Error reading SCALARS header section of VTK file.";
-      setErrorMessage(ss.str());
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return -1;
     }
-    scalarName = std::string(text2);
-    typeByteSize = parseByteSize(text3);
+    scalarName = std::string(text1);
+    typeByteSize = parseByteSize(text4);
     if (typeByteSize == 0)
     {
       return -1;
     }
 
-    readLine(instream, buf, kBufferSize); // Read Line 11
+   // readLine(instream, buf, kBufferSize); // Read Line 11
 
     // Check to make sure we are reading the correct set of scalars and if we are
     // NOT then read all this particular Scalar Data and try again
