@@ -461,7 +461,7 @@ void ReadH5Ebsd::execute()
     m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
-    Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ang::PhaseData);
+    Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
     iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(DREAM3D::CellData::Phases, iArray);
@@ -497,7 +497,7 @@ void ReadH5Ebsd::execute()
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
 
     phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
-    Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Phase);
+    Int32ArrayType::Pointer iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
     iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     m->addCellData(DREAM3D::CellData::Phases, iArray);
