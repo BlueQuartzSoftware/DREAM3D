@@ -393,7 +393,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
     int8_t* m_SurfaceMeshNodeType;
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
-        sm->setNodes(vertices);
+    sm->setNodes(vertices);
     sm->setTriangles(triangles);
   }
 }

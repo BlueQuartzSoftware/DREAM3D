@@ -29,8 +29,8 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _MMCSURFACEMESHSTRUCTS_H_
-#define _MMCSURFACEMESHSTRUCTS_H_
+#ifndef _SURFACE_MESH_STRUCTS_H_
+#define _SURFACE_MESH_STRUCTS_H_
 
 
 #include <string>
@@ -68,7 +68,7 @@ typedef struct {
 typedef struct {
   int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
   int edgeKind;      // initially marked as 2; for face edges it's always 2...
-  int nSpin[2]; // 0 is to the left of the arrow; 1 is at right...
+  int nSpin[2];      // 0 is to the left of the arrow; 1 is at right...
 } Segment;
 
 /* Used for "inner edge" spin calculations */
@@ -79,7 +79,7 @@ typedef struct {
 } ISegment;
 
 typedef struct {
-  int node_id[3];       // stores three new node id for vertices of the triangles...
+  int node_id[3];    // stores three new node id for vertices of the triangles...
   int e_id[3];       // stores three new edge id for sides of the triangles...
   int nSpin[2];      // neighboring two spins...
   int edgePlace[3];
@@ -120,23 +120,4 @@ namespace SurfaceMesh
   }
 }
 
-
-
-#if 0
-typedef struct {
-    int32_t* point;    // This is the voxel volume
-    int    xnum;
-    int    ynum;
-    int    znum;
-    float xstep;
-    float ystep;
-    float zstep;
-    std::string outputBaseName;
-    std::string nodes_file;
-    std::string edges_file;
-    std::string triangles_file;
-    bool   verbose;
-} MMC_MeshParameters;
-#endif
-
-#endif /* _MMCSURFACEMESHSTRUCTS_H_ */
+#endif /* _SURFACE_MESH_STRUCTS_H_ */
