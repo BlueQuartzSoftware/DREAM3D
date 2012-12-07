@@ -38,22 +38,23 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-
+#include "DREAM3DLib/SurfaceMeshFilters/GenerateMeshConnectivity.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
 AbstractFilter(),
-m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
+//m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
 m_IterationSteps(1),
 m_Lambda(0.01),
 m_SurfacePointLambda(0.0),
 m_TripleLineLambda(0.0),
 m_QuadPointLambda(0.0),
 m_SurfaceTripleLineLambda(0.0),
-m_SurfaceQuadPointLambda(0.0)
-//m_SurfaceMeshNodeType(NULL)
+m_SurfaceQuadPointLambda(0.0),
+m_DoConnectivityFilter(false)
 {
   setupFilterParameters();
 }
@@ -92,7 +93,7 @@ void LaplacianSmoothing::setupFilterParameters()
   }
    {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Points Lambda");
+    parameter->setHumanLabel("Outer Points Lambda");
     parameter->setPropertyName("SurfacePointLambda");
     parameter->setWidgetType(FilterParameter::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
@@ -122,7 +123,7 @@ void LaplacianSmoothing::setupFilterParameters()
   }
     {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Triple Line Lambda");
+    parameter->setHumanLabel("Outer Triple Line Lambda");
     parameter->setPropertyName("SurfaceTripleLineLambda");
     parameter->setWidgetType(FilterParameter::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
@@ -132,7 +133,7 @@ void LaplacianSmoothing::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Quad Points Lambda");
+    parameter->setHumanLabel("Outer Quad Points Lambda");
     parameter->setPropertyName("SurfaceQuadPointLambda");
     parameter->setWidgetType(FilterParameter::DoubleWidget);
     //parameter->setUnits("Zero will Lock them in Place");
@@ -181,17 +182,16 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
     }
-
     if(sm->getNodes().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
-//    else
-//    {
-//      int size = sm->getNodes()->GetNumberOfTuples();
-//      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
-//    }
+
+    if (sm->getCellData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+    {
+        m_DoConnectivityFilter = true;
+    }
   }
 
 }
@@ -232,8 +232,7 @@ void LaplacianSmoothing::execute()
 
   if (err < 0)
   {
-    setErrorCondition(-558);
-    notifyErrorMessage("Error smoothing the surface mesh", -558);
+    notifyErrorMessage("Error smoothing the surface mesh", getErrorCondition());
     return;
   }
 
@@ -292,71 +291,6 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
   return 1;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataArray<int>::Pointer LaplacianSmoothing::generateUniqueEdges()
-{
-
-// this function returns a list of unique edges in the polygon list.  A 2 x M array is returned that lists
-// the unique pairs of vertex points that are paired along an edge.  This is the way that this function
-// opertates in this program.  The time to cacluate the vertex connectivity arrays is long, and not needed
-// for mesh smoothing.
-
-
-  // Get our Reference counted Array of Triangle Structures
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
-  if(NULL == trianglesPtr.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return DataArray<int>::NullPointer();
-  }
-  int ntri = trianglesPtr->GetNumberOfTuples();
-
-
-  // get the triangle definitions - use the pointer to the start of the Struct Array
-  Triangle* triangles = trianglesPtr->GetPointer(0);
-
-
-  // need to make a list of triangle edges
-  // each triangle has three edges, made up of two pairs of vertices
-  std::set<int64_t> uedges;
-
-  struct  { int32_t e0; int32_t e1; } edge;
-  int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge);
-
-  for(int i = 0; i < ntri; ++i)
-  {
-    Triangle& tri = triangles[i];
-    // Edge 0
-    edge.e0 = tri.node_id[0];
-    edge.e1 = tri.node_id[1];
-    uedges.insert(*u64Edge); // Insert our 64 bit value into the set. Only unique values can be in a set so ther will be NO duplicates
-      // Edge 1
-    edge.e0 = tri.node_id[1];
-    edge.e1 = tri.node_id[2];
-    uedges.insert(*u64Edge);
-        // Edge 2
-    edge.e0 = tri.node_id[2];
-    edge.e1 = tri.node_id[0];
-    uedges.insert(*u64Edge);
-  }
-
-  // Now copy the unique Edges out of the set and into an array and return that array
-
-  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(uedges.size(), 2, "Laplacian_Smoothing_Unique_Edges_Array");
-  int i = 0;
-  for(std::set<int64_t>::iterator iter = uedges.begin(); iter != uedges.end(); ++iter)
-  {
-    *u64Edge = *iter;
-    uniqueEdgesArray->SetComponent(i, 0, edge.e0);
-    uniqueEdgesArray->SetComponent(i, 1, edge.e1);
-    ++i;
-  }
-  return uniqueEdgesArray;
-}
-
 
 
 // -----------------------------------------------------------------------------
@@ -395,7 +329,7 @@ int LaplacianSmoothing::smooth()
   if (err < 0)
   {
     setErrorCondition(-557);
-    notifyErrorMessage("Error generating the Lambda Array", -557);
+    notifyErrorMessage("Error generating the Lambda Array", getErrorCondition());
     return err;
   }
   // Get a Pointer to the Lambdas
@@ -403,10 +337,29 @@ int LaplacianSmoothing::smooth()
   float* lambda = lambdas->GetPointer(0);
 
   // Generate the Unique Edges
-  DataArray<int>::Pointer uniqueEdges = generateUniqueEdges();
+  if (m_DoConnectivityFilter == true)
+  {
+    GenerateMeshConnectivity::Pointer conn = GenerateMeshConnectivity::New();
+    conn->setMessagePrefix(getMessagePrefix());
+    conn->setObservers(getObservers());
+    conn->setVoxelDataContainer(getVoxelDataContainer());
+    conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    conn->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    conn->execute();
+    if(conn->getErrorCondition() < 0)
+    {
+      return conn->getErrorCondition();
+    }
+  }
+
+  // Get the unique Edges from the data container
+  IDataArray::Pointer uniqueEdgesPtr = getSurfaceMeshDataContainer()->getCellData(m_SurfaceMeshUniqueEdgesArrayName);
+  DataArray<int>* uniqueEdges = DataArray<int>::SafePointerDownCast(uniqueEdgesPtr.get());
   if (NULL == uniqueEdges)
   {
-    return -1;
+    setErrorCondition(-560);
+    notifyErrorMessage("Error retrieving the Unique Edge List", getErrorCondition());
+    return -560;
   }
   // Get a pointer to the Unique Edges
   int* uedges = uniqueEdges->GetPointer(0);

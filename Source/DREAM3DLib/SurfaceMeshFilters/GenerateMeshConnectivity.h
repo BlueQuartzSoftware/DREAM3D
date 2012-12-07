@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _LaplacianSmoothing_H_
-#define _LaplacianSmoothing_H_
+#ifndef _GenerateMeshConnectivity_H_
+#define _GenerateMeshConnectivity_H_
 
 #include <string>
 
@@ -46,45 +46,30 @@
 
 
 /**
- * @class LaplacianSmoothing LaplacianSmoothing.h SurfaceMesh/Code/SurfaceMeshFilters/LaplacianSmoothing.h
- * @brief This filter performs a Laplacian smoothing operation on a surface mesh. Some of the options allow
- * the user to set specific lambda values for the various types of nodes that the surface meshers generate.
- * @author Michael Jackson (mike.jackson@bluequartz.net)
- * @date   Oct 2012
+ * @class GenerateMeshConnectivity GenerateMeshConnectivity.h /SurfaceMeshFilters/GenerateMeshConnectivity.h
+ * @brief This filter creates a pair of arrays that help to describe the connectivity in a triangle
+ * based surface mesh. The two arrays are:
+ * @li UniqueEdges Array - This is a 2 component array where each component is a vertex id and the pair of
+ * vertex ids make up the Edge Id (64 bit unique value). The index into the array that the pair occurs is
+ * used internally in other referencing arrays but pairs are guaranteed to be unique.
+ * @li TriangleEdges Array - This array is a 3 component array where the values of each component is the index
+ * into the UniqueEdges array. Since each triangle can only have 3 Edges.
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @date  Dec 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateMeshConnectivity : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(LaplacianSmoothing)
-    DREAM3D_STATIC_NEW_MACRO(LaplacianSmoothing)
-    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateMeshConnectivity)
+    DREAM3D_STATIC_NEW_MACRO(GenerateMeshConnectivity)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateMeshConnectivity, AbstractFilter)
 
-    virtual ~LaplacianSmoothing();
-
-    // We need these arrays for this filter to work correctly
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
- //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
-
-
+    virtual ~GenerateMeshConnectivity();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
-    DREAM3D_INSTANCE_PROPERTY(float, Lambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfacePointLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, TripleLineLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, QuadPointLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfaceTripleLineLambda)
-    DREAM3D_INSTANCE_PROPERTY(float, SurfaceQuadPointLambda)
-
-
-    /* This class is designed to be subclassed so that thoes subclasses can add
-     * more functionality such as constrained surface nodes or Triple Lines. We use
-     * this array to assign each vertex a specific Lambda value. Subclasses can set
-     * this array then simply call the 'smooth' protected method to actuall run the
-     * smoothing iterations
-     */
-    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
 
 
     /**
@@ -98,7 +83,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Laplacian Smoothing Filter"; }
+    virtual const std::string getHumanLabel() { return "Generate Mesh Connectivity Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -124,7 +109,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     virtual void preflight();
 
   protected:
-    LaplacianSmoothing();
+    GenerateMeshConnectivity();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -136,26 +121,17 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    /**
-     * @brief This method generates the Lambda array that will be use during the smoothing
-     * @return
-     */
-    virtual int generateLambdaArray(DataArray<int8_t> *nodeTypePtr);
-
-    /**
-     * @brief This method runs the actual Laplacian smoothing algorithm using the Lambda
-     * array to perform the smoothing. Subclasses may have set a more node type specific
-     * lambda array values.
-     * @return
-     */
-    virtual int smooth();
-
   private:
-    bool m_DoConnectivityFilter;
+    int32_t* m_SurfaceMeshUniqueEdges;
+    int32_t* m_SurfaceMeshTriangleEdges;
 
+    /**
+     * @brief generateConnectivity This is the method that actually implements the algorithm.
+     */
+    void generateConnectivity();
 
-    LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented
-    void operator=(const LaplacianSmoothing&); // Operator '=' Not Implemented
+    GenerateMeshConnectivity(const GenerateMeshConnectivity&); // Copy Constructor Not Implemented
+    void operator=(const GenerateMeshConnectivity&); // Operator '=' Not Implemented
 };
 
-#endif /* _LaplacianSmoothing_H_ */
+#endif /* _GenerateMeshConnectivity_H_ */
