@@ -318,9 +318,6 @@ void SurfaceMeshToVtk::execute()
     tData[2] = triangles[j].node_id[1];
     tData[3] = triangles[j].node_id[2];
 
-//    tData[1] = nodes[tn1].newID;
-//    tData[2] = nodes[tn2].newID;
-//    tData[3] = nodes[tn3].newID;
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
@@ -438,8 +435,6 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
   fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-
-
   for(int i = 0; i < nT; ++i)
   {
     Triangle& t = triangles[i]; // Get the current Node
@@ -466,5 +461,39 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
     }
 
   }
+
+
+    // Write the Original Triangle ID Data to the file
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "SCALARS TriangleID int 1\n");
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+  for(int i = 0; i < nT; ++i)
+  {
+    Triangle& t = triangles[i]; // Get the current Node
+
+    if(m_WriteBinaryFile == true)
+    {
+      swapped = t.tIndex;
+      MXA::Endian::FromSystemToBig::convert<int>(swapped);
+      fwrite(&swapped, sizeof(int), 1, vtkFile);
+      if(false == m_WriteConformalMesh)
+      {
+        swapped = t.tIndex;
+        MXA::Endian::FromSystemToBig::convert<int>(swapped);
+        fwrite(&swapped, sizeof(int), 1, vtkFile);
+      }
+    }
+    else
+    {
+      fprintf(vtkFile, "%d\n", t.tIndex);
+      if(false == m_WriteConformalMesh)
+      {
+        fprintf(vtkFile, "%d\n", t.tIndex);
+      }
+    }
+
+  }
+
+
   return err;
 }

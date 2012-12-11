@@ -864,7 +864,8 @@ void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const
     t.e_id[0] = t.e_id[1] = t.e_id[2] = -1;
     t.edgePlace[0] = t.edgePlace[1] = t.edgePlace[2] = -1;
     t.mCubeID = -1;
-    t.tIndex = -1;
+ //   assert(i == tRecord.triId);
+    t.tIndex = i;
   }
 
   sm->setTriangles(trianglesPtr);
