@@ -75,7 +75,7 @@ void SurfaceMeshDataContainer::addCellData(const std::string &name, IDataArray::
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Cell array with different array name than key name" << std::endl;
+    std::cout << "SurfaceMeshDataContainer::Adding Cell array with different array name than key name" << std::endl;
     std::cout << "Key name: " << name << std::endl;
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);

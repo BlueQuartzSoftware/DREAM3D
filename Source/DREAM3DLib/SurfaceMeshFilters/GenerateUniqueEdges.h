@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenerateMeshConnectivity_H_
-#define _GenerateMeshConnectivity_H_
+#ifndef _GenerateUniqueEdges_H_
+#define _GenerateUniqueEdges_H_
 
 #include <string>
 
@@ -46,7 +46,7 @@
 
 
 /**
- * @class GenerateMeshConnectivity GenerateMeshConnectivity.h /SurfaceMeshFilters/GenerateMeshConnectivity.h
+ * @class GenerateUniqueEdges GenerateUniqueEdges.h /SurfaceMeshFilters/GenerateUniqueEdges.h
  * @brief This filter creates a pair of arrays that help to describe the connectivity in a triangle
  * based surface mesh. The two arrays are:
  * @li UniqueEdges Array - This is a 2 component array where each component is a vertex id and the pair of
@@ -58,18 +58,17 @@
  * @date  Dec 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateMeshConnectivity : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateUniqueEdges : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateMeshConnectivity)
-    DREAM3D_STATIC_NEW_MACRO(GenerateMeshConnectivity)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateMeshConnectivity, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateUniqueEdges)
+    DREAM3D_STATIC_NEW_MACRO(GenerateUniqueEdges)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateUniqueEdges, AbstractFilter)
 
-    virtual ~GenerateMeshConnectivity();
+    virtual ~GenerateUniqueEdges();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
 
 
     /**
@@ -83,7 +82,7 @@ class DREAM3DLib_EXPORT GenerateMeshConnectivity : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Mesh Connectivity Filter"; }
+    virtual const std::string getHumanLabel() { return "Generate Unique Edges Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -109,7 +108,7 @@ class DREAM3DLib_EXPORT GenerateMeshConnectivity : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GenerateMeshConnectivity();
+    GenerateUniqueEdges();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -123,15 +122,14 @@ class DREAM3DLib_EXPORT GenerateMeshConnectivity : public AbstractFilter
 
   private:
     int32_t* m_SurfaceMeshUniqueEdges;
-    int32_t* m_SurfaceMeshTriangleEdges;
 
     /**
      * @brief generateConnectivity This is the method that actually implements the algorithm.
      */
     void generateConnectivity();
 
-    GenerateMeshConnectivity(const GenerateMeshConnectivity&); // Copy Constructor Not Implemented
-    void operator=(const GenerateMeshConnectivity&); // Operator '=' Not Implemented
+    GenerateUniqueEdges(const GenerateUniqueEdges&); // Copy Constructor Not Implemented
+    void operator=(const GenerateUniqueEdges&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateMeshConnectivity_H_ */
+#endif /* _GenerateUniqueEdges_H_ */

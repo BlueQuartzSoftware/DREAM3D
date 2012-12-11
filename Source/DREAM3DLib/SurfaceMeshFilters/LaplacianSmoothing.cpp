@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshFilters/GenerateMeshConnectivity.h"
+#include "DREAM3DLib/SurfaceMeshFilters/GenerateUniqueEdges.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -46,9 +46,8 @@
 LaplacianSmoothing::LaplacianSmoothing() :
 AbstractFilter(),
 m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-//m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
 m_IterationSteps(1),
-m_Lambda(0.01),
+m_Lambda(0.1),
 m_SurfacePointLambda(0.0),
 m_TripleLineLambda(0.0),
 m_QuadPointLambda(0.0),
@@ -339,7 +338,7 @@ int LaplacianSmoothing::smooth()
   // Generate the Unique Edges
   if (m_DoConnectivityFilter == true)
   {
-    GenerateMeshConnectivity::Pointer conn = GenerateMeshConnectivity::New();
+    GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
     conn->setMessagePrefix(getMessagePrefix());
     conn->setObservers(getObservers());
     conn->setVoxelDataContainer(getVoxelDataContainer());
