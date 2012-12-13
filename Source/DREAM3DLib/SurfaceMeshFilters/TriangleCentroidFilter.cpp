@@ -33,21 +33,71 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Your License or Copyright Information can go here
+ */
 
-#include "GenerateNodeTriangleConectivity.h"
+#include "TriangleCentroidFilter.h"
 
 
-#include "FindNRingNeighbors.h"
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
+/**
+ * @brief The CalculateCentroidsImpl class
+ */
+class CalculateCentroidsImpl
+{
+    StructArray<Node>::Pointer m_Nodes;
+    StructArray<Triangle>::Pointer m_Triangles;
+    double* m_Centroids;
+
+  public:
+    CalculateCentroidsImpl(StructArray<Node>::Pointer nodes, StructArray<Triangle>::Pointer triangles, double* centroids) :
+      m_Nodes(nodes),
+      m_Triangles(triangles),
+      m_Centroids(centroids)
+    {}
+    virtual ~CalculateCentroidsImpl(){}
+
+    void generate(size_t start, size_t end) const
+    {
+
+      Node* nodes = m_Nodes->GetPointer(0);
+      Triangle* triangles = m_Triangles->GetPointer(0);
+
+      for (size_t i = start; i < end; i++)
+      {
+        m_Centroids[i*3]  = ( nodes[triangles[i].node_id[0]].coord[0] + nodes[triangles[i].node_id[1]].coord[0] + nodes[triangles[i].node_id[2]].coord[0])/3.0;
+        m_Centroids[i*3 + 1] = ( nodes[triangles[i].node_id[0]].coord[1] + nodes[triangles[i].node_id[1]].coord[1] + nodes[triangles[i].node_id[2]].coord[1])/3.0;
+        m_Centroids[i*3 + 2]  = ( nodes[triangles[i].node_id[0]].coord[2] + nodes[triangles[i].node_id[1]].coord[2] + nodes[triangles[i].node_id[2]].coord[2])/3.0;
+      }
+    }
+
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t> &r) const
+    {
+      generate(r.begin(), r.end());
+    }
+#endif
+
+
+};
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
-  AbstractFilter(),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-  m_SurfaceMeshUniqueEdges(NULL),
-  m_SurfaceMeshTriangleEdges(NULL)
+TriangleCentroidFilter::TriangleCentroidFilter() :
+AbstractFilter(),
+m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::CellData::SurfaceMeshTriangleCentroids),
+m_SurfaceMeshTriangleCentroids(NULL)
 {
   setupFilterParameters();
 }
@@ -55,14 +105,14 @@ GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConectivity::~GenerateNodeTriangleConectivity()
+TriangleCentroidFilter::~TriangleCentroidFilter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::setupFilterParameters()
+void TriangleCentroidFilter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
@@ -75,24 +125,15 @@ void GenerateNodeTriangleConectivity::setupFilterParameters()
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }*/
-  /*  For an Integer use this code
-   {
+  /*  For an Integer use this code*/
+  /* {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Triangle ID");
-    parameter->setPropertyName("TriangleId");
+    parameter->setHumanLabel("Max Iterations");
+    parameter->setPropertyName("MaxIterations");
     parameter->setWidgetType(FilterParameter::IntWidget);
     parameter->setValueType("int");
     parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Grain ID");
-    parameter->setPropertyName("RegionId");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-*/
+  }*/
   /*  For a Floating point value use this code*/
   /* {
     FilterParameter::Pointer parameter = FilterParameter::New();
@@ -151,18 +192,17 @@ void GenerateNodeTriangleConectivity::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-/*      writer->writeValue("TriangleId", getTriangleId() );
-      writer->writeValue("RegionId", getTriangleId() );*/
+  /*  writer->writeValue("OutputFile", getOutputFile() ); */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -174,7 +214,7 @@ void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, s
   }
   else
   {
-    // We MUST have Nodes
+      // We MUST have Nodes
     if(sm->getNodes().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -189,19 +229,9 @@ void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, s
     }
     else
     {
-      // This depends on the triangles array already being created
-      int size = sm->getTriangles()->GetNumberOfTuples();
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleCentroids, ss, double, DoubleArrayType, 0, voxels, 3)
     }
 
-    // We do not know the size of the array so we can not use the macro so we just manually call
-    // the needed methods that will propagate these array additions to the pipeline
-    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
-
-    // This is just for tracking what Arrays are being created by this filter. Normally the macro
-    // would do this for us.
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
   }
 }
 
@@ -209,7 +239,7 @@ void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::preflight()
+void TriangleCentroidFilter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -219,91 +249,39 @@ void GenerateNodeTriangleConectivity::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::execute()
+void TriangleCentroidFilter::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
 
-  // Just to double check we have everything.
-  dataCheck(false, 0,0,0);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
-
   /* Place all your code to execute your filter here. */
-  generateConnectivity();
+    StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+
+  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  size_t totalPoints = trianglesPtr->GetNumberOfTuples();
+
+  // Run the data check to allocate the memory for the centroid array
+  dataCheck(false, trianglesPtr->GetNumberOfTuples(), 0, 0);
+
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                    CalculateCentroidsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids), tbb::auto_partitioner());
+
+#else
+  CalculateCentroidsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids);
+  serial.generate(0, totalPoints);
+#endif
 
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::generateConnectivity()
-{
-
-  // this function returns a list of unique edges in the polygon list.  A 2 x M array is returned that lists
-  // the unique pairs of vertex points that are paired along an edge.  This is the way that this function
-  // opertates in this program.  The time to cacluate the vertex connectivity arrays is long, and not needed
-  // for mesh smoothing.
-
-
-  // Get our Reference counted Array of Triangle Structures
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
-  if(NULL == trianglesPtr.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
-  int ntri = trianglesPtr->GetNumberOfTuples();
-
-
-  // get the triangle definitions - use the pointer to the start of the Struct Array
-  Triangle* triangles = trianglesPtr->GetPointer(0);
-
-  for(int i = 0; i < ntri; ++i)
-  {
-    Triangle& tri = triangles[i];
-    m_Node2Triangle[tri.node_id[0]].insert(tri.tIndex);
-    m_Node2Triangle[tri.node_id[1]].insert(tri.tIndex);
-    m_Node2Triangle[tri.node_id[2]].insert(tri.tIndex);
-  }
-
-
-
-  StructArray<NodeTriangleMapping_t>::Pointer nodeTriangleListArray = StructArray<NodeTriangleMapping_t>::CreateArray(m_Node2Triangle.size(), "NodeTriangleListArray");
-  nodeTriangleListArray->initializeWithZeros();
-
-
-#if 0
-  std::stringstream ss;
-  FindNRingNeighbors::Pointer findNRingNeighbors = FindNRingNeighbors::New();
-  findNRingNeighbors->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-  findNRingNeighbors->setTriangleId(m_TriangleId);
-  findNRingNeighbors->setRegionId(m_RegionId);
-
-  for (int i = 1; i < 4; ++i) {
-    findNRingNeighbors->setRing(i);
-    findNRingNeighbors->generate(node2Triangle);
-    ss.str("");
-    ss << "/tmp/" << i << "_RingNeighbors_TID-" << m_TriangleId << "_GID-" << m_RegionId << ".vtk";
-    findNRingNeighbors->writeVTKFile(ss.str());
-  }
-#endif
-
-  return;
-}
-

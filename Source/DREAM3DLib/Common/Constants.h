@@ -129,6 +129,7 @@ namespace DREAM3D
     const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
     const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
     const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
+    const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");
   }
 
   namespace FieldData

@@ -33,9 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Your License or Copyright Information can go here
+ */
 
-#ifndef _GenerateNodeTriangleConectivity_H_
-#define _GenerateNodeTriangleConectivity_H_
+#ifndef _TriangleCentroidFilter_H_
+#define _TriangleCentroidFilter_H_
 
 #include <string>
 
@@ -46,30 +49,26 @@
 
 
 /**
- * @class GenerateNodeTriangleConectivity GenerateNodeTriangleConectivity.h /SurfaceMeshFilters/GenerateNodeTriangleConectivity.h
- * @brief This filter creates a pair of arrays that help to describe the connectivity in a triangle
- * based surface mesh. The two arrays are:
- * @li UniqueEdges Array - This is a 2 component array where each component is a vertex id and the pair of
- * vertex ids make up the Edge Id (64 bit unique value). The index into the array that the pair occurs is
- * used internally in other referencing arrays but pairs are guaranteed to be unique.
- * @li TriangleEdges Array - This array is a 3 component array where the values of each component is the index
- * into the UniqueEdges array. Since each triangle can only have 3 Edges.
+ * @class TriangleCentroidFilter TriangleCentroidFilter.h DREAM3DLib/SurfaceMeshFilters/TriangleCentroidFilter.h
+ * @brief This filter calculates the centroid of each triangle in the surface mesh.
  * @author Michael A. Jackson (BlueQuartz Software)
- * @date  Dec 2012
+ * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
+class DREAM3DLib_EXPORT TriangleCentroidFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateNodeTriangleConectivity)
-    DREAM3D_STATIC_NEW_MACRO(GenerateNodeTriangleConectivity)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateNodeTriangleConectivity, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(TriangleCentroidFilter)
+    DREAM3D_STATIC_NEW_MACRO(TriangleCentroidFilter)
+    DREAM3D_TYPE_MACRO_SUPER(TriangleCentroidFilter, AbstractFilter)
 
-    virtual ~GenerateNodeTriangleConectivity();
+    virtual ~TriangleCentroidFilter();
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleCentroidsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
+    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
 
@@ -84,7 +83,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Node's Triangle List"; }
+    virtual const std::string getHumanLabel() { return "Generate Triangle Centroids"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -110,7 +109,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GenerateNodeTriangleConectivity();
+    TriangleCentroidFilter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -123,18 +122,10 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_SurfaceMeshUniqueEdges;
-    int32_t* m_SurfaceMeshTriangleEdges;
-    NodeTrianglesMap_t m_Node2Triangle;
+    double* m_SurfaceMeshTriangleCentroids;
 
-    /**
-     * @brief generateConnectivity This is the method that actually implements the algorithm.
-     */
-    void generateConnectivity();
-
-
-    GenerateNodeTriangleConectivity(const GenerateNodeTriangleConectivity&); // Copy Constructor Not Implemented
-    void operator=(const GenerateNodeTriangleConectivity&); // Operator '=' Not Implemented
+    TriangleCentroidFilter(const TriangleCentroidFilter&); // Copy Constructor Not Implemented
+    void operator=(const TriangleCentroidFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateNodeTriangleConectivity_H_ */
+#endif /* _TriangleCentroidFilter_H_ */
