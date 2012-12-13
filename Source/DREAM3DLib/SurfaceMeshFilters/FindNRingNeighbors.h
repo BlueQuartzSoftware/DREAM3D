@@ -57,10 +57,7 @@ class FindNRingNeighbors
     virtual ~FindNRingNeighbors();
 
 
-    typedef int32_t NodeId_t;
-    typedef int32_t TriangleId_t;
-    typedef std::map<NodeId_t, std::set<TriangleId_t> > NodeTrianglesMap_t;
-    typedef std::set<TriangleId_t> NRingTriangles_t;
+
 
 
     DREAM3D_INSTANCE_PROPERTY(SurfaceMeshDataContainer*, SurfaceMeshDataContainer)
@@ -81,7 +78,7 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
 
-    NRingTriangles_t& getNRingTriangles();
+    UniqueTriangleIds_t &getNRingTriangles();
 
     /**
      * @brief generate
@@ -102,7 +99,7 @@ class FindNRingNeighbors
       FindNRingNeighbors();
 
   private:
-    NRingTriangles_t  m_NRingTriangles;
+    UniqueTriangleIds_t  m_NRingTriangles;
 
     FindNRingNeighbors(const FindNRingNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNRingNeighbors&); // Operator '=' Not Implemented

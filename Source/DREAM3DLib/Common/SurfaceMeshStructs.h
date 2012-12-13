@@ -34,6 +34,8 @@
 
 
 #include <string>
+#include <set>
+#include <map>
 
 #define num_neigh 26
 
@@ -87,7 +89,19 @@ typedef struct {
   int tIndex;
 } Triangle;
 
-typedef Triangle Patch;
+typedef Triangle Patch; // This is here for compatibility
+
+
+
+typedef int32_t NodeId_t;
+typedef int32_t TriangleId_t;
+typedef std::map<NodeId_t, std::set<TriangleId_t> > NodeTrianglesMap_t;
+typedef std::set<TriangleId_t> UniqueTriangleIds_t;
+
+typedef struct  {
+  size_t count;
+  TriangleId_t* data;
+} NodeTriangleMapping_t;
 
 
 namespace SurfaceMesh

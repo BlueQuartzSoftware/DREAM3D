@@ -84,7 +84,7 @@ FindNRingNeighbors::~FindNRingNeighbors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNRingNeighbors::NRingTriangles_t& FindNRingNeighbors::getNRingTriangles()
+UniqueTriangleIds_t& FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -120,20 +120,20 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
-    std::set<TriangleId_t> lcvTriangles(m_NRingTriangles);
+    UniqueTriangleIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for(NRingTriangles_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for(UniqueTriangleIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
       Triangle& t = triangles[*triIter];
       // For each node, get the triangle ids that the node belongs to
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        NRingTriangles_t& tids = node2Triangle[t.node_id[i]];
+        UniqueTriangleIds_t& tids = node2Triangle[t.node_id[i]];
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
-        for(NRingTriangles_t::iterator iter = tids.begin(); iter != tids.end(); ++iter)
+        for(UniqueTriangleIds_t::iterator iter = tids.begin(); iter != tids.end(); ++iter)
         {
           TriangleId_t triId = *iter;
           if (triangles[triId].nSpin[0] == m_RegionId || triangles[triId].nSpin[1] == m_RegionId)
