@@ -102,8 +102,28 @@ MatchCrystallography::~MatchCrystallography()
 {
 }
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setupFilterParameters()
+{
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Maximum Number of Iterations (Swaps)");
+    option->setPropertyName("MaxIterations");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
+	writer->writeValue("MaxIterations", getMaxIterations() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -474,7 +494,7 @@ void MatchCrystallography::matchCrystallography()
     badtrycount = 0;
     if(m_CrystalStructures[iter] == Ebsd::CrystalStructure::Cubic) numbins = 18 * 18 * 18;
     if(m_CrystalStructures[iter] == Ebsd::CrystalStructure::Hexagonal) numbins = 36 * 36 * 12;
-    while (badtrycount < 10*m_NumFields[iter] && iterations < 1000*m_NumFields[iter])
+    while (badtrycount < (m_MaxIterations/10) && iterations < m_MaxIterations)
     {
       std::stringstream ss;
       ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
