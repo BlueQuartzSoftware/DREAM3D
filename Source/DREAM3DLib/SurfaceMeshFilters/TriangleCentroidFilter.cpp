@@ -115,77 +115,6 @@ TriangleCentroidFilter::~TriangleCentroidFilter()
 void TriangleCentroidFilter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-  /* Place all your option initialization code here */
-  /* For String input use this code */
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("STL Output Prefix");
-    parameter->setPropertyName("StlFilePrefix");
-    parameter->setWidgetType(FilterParameter::StringWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*  For an Integer use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Max Iterations");
-    parameter->setPropertyName("MaxIterations");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }*/
-  /*  For a Floating point value use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Misorientation Tolerance");
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an input file use this code*/
-  /*  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an output file use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Alignment File");
-    parameter->setPropertyName("AlignmentShiftFileName");
-    parameter->setWidgetType(FilterParameter::OutputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For a simple true/false boolean use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Alignment Shift File");
-    parameter->setPropertyName("WriteAlignmentShifts");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }*/
-  /*   For presenting a set of choices to the user use this code*/
-  /* {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Conversion Type");
-    parameter->setPropertyName("ConversionType");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
-    parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
-    parameter->setChoices(choices);
-    parameters.push_back(parameter);
-  }*/
-
-
   setFilterParameters(parameters);
 }
 
@@ -280,11 +209,6 @@ void TriangleCentroidFilter::execute()
   CalculateCentroidsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids);
   serial.generate(0, totalPoints);
 #endif
-
-  for (int i = 0; i < 10; ++i) {
-    std::cout << i << "  Centroid: " << m_SurfaceMeshTriangleCentroids[i*3] << " " << m_SurfaceMeshTriangleCentroids[i*3+ 1] << " " << m_SurfaceMeshTriangleCentroids[i*3+2]<< std::endl;
-  }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
