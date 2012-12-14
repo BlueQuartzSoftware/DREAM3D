@@ -260,10 +260,6 @@ void TriangleNormalFilter::execute()
   serial.generate(0, totalPoints);
 #endif
 
-  for (int i = 0; i < 10; ++i) {
-    std::cout << i << "  Normal: " << m_SurfaceMeshTriangleNormals[i*3] << " " << m_SurfaceMeshTriangleNormals[i*3+ 1] << " " << m_SurfaceMeshTriangleNormals[i*3+2]<< std::endl;
-  }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
