@@ -13,7 +13,7 @@
 
 # set project's name
 PROJECT( DREAM3DLib )
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 set(DREAM3DLib_BUILT_AS_DYNAMIC_LIB)
 IF (BUILD_SHARED_LIBS)
@@ -212,7 +212,7 @@ endmacro()
 
 
 # Add in our Filter classes
-include(${DREAM3DLib_SOURCE_DIR}/CustomFilters/SourceList.cmake)
+#include(${DREAM3DLib_SOURCE_DIR}/CustomFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)

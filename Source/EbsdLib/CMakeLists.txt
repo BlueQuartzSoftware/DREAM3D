@@ -14,8 +14,8 @@
 if(DEFINED DREAM3DProj_BINARY_DIR)
     # set project's name
     PROJECT( EbsdLib )
-    cmake_minimum_required(VERSION 2.8.3)
-    
+    cmake_minimum_required(VERSION 2.8.9)
+
     set(EbsdLib_BUILT_AS_DYNAMIC_LIB)
     IF (BUILD_SHARED_LIBS)
         set(EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
@@ -23,9 +23,9 @@ if(DEFINED DREAM3DProj_BINARY_DIR)
             ADD_DEFINITIONS("-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
         ENDIF (WIN32)
     ENDIF (BUILD_SHARED_LIBS)
-    
+
     set(GENERATE_GIT_VERSION 1)
-    
+
 elseif(DEFINED PVEbsd_BINARY_DIR)
     message(STATUS "EbsdLib Configuring in PVEbsd Plugin")
     set(EbsdLib_SOURCE_DIR ${PVEbsd_SOURCE_DIR}/Code/EbsdLib)
@@ -53,9 +53,9 @@ endif()
 set(PROJECT_PREFIX "Ebsd" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(EbsdLib_INSTALL_FILES 0)
 #-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the 
+# Include the cmp project to perform all the basic configuration tests for the
 # project.
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 set(CMP_HEADER_DIR ${EbsdLib_BINARY_DIR})
 set(CMP_CONFIGURATION_FILE_NAME "EbsdLibConfiguration.h")
 set(CMP_TYPES_FILE_NAME "EbsdLibTypes.h")
@@ -76,10 +76,10 @@ mark_as_advanced(EbsdLib_ENABLE_HDF5)
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
 configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
-               ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})   
+               ${EbsdLib_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
 
 # Setup the Include Directories
-include_directories(${PROJECT_CODE_DIR})         
+include_directories(${PROJECT_CODE_DIR})
 include_directories(${EbsdLib_BINARY_DIR})
 
 #-- Include all the Source Files
@@ -89,7 +89,7 @@ include ( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
 include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
 
 
-set(EbsdLib_SRCS 
+set(EbsdLib_SRCS
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.cpp
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.cpp
     ${EbsdLib_SOURCE_DIR}/EbsdReader.cpp
@@ -112,7 +112,7 @@ cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/" "${EbsdLib_HDRS}" "${EbsdLib_SRCS}" ${PROJ
 set(EbsdLib_PROJECT_SRCS
     ${EbsdLib_SRCS}
     ${EbsdLib_HDRS}
-    ${TSL_SRCS} 
+    ${TSL_SRCS}
     ${TSL_HDRS}
     ${HKL_SRCS}
     ${HKL_HDRS}
@@ -130,25 +130,25 @@ if(DEFINED DREAM3DProj_BINARY_DIR)
     if (EbsdLib_ENABLE_HDF5)
         target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
     endif()
-    
+
     LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
-    
+
     set(install_dir "tools")
     set(lib_install_dir "lib")
     if (WIN32)
         set(install_dir ".")
         set(lib_install_dir "")
     endif()
-    
-    
+
+
     if (BUILD_SHARED_LIBS AND NOT APPLE)
-        INSTALL(TARGETS ${PROJECT_NAME}  
+        INSTALL(TARGETS ${PROJECT_NAME}
             COMPONENT Applications
             RUNTIME DESTINATION ${install_dir}
             LIBRARY DESTINATION ${lib_install_dir}
-            ARCHIVE DESTINATION ${lib_install_dir}       
+            ARCHIVE DESTINATION ${lib_install_dir}
             BUNDLE DESTINATION "."
-        ) 
-    endif() 
+        )
+    endif()
 
 endif(DEFINED DREAM3DProj_BINARY_DIR)

@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 project (DREAM3DProj)
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 include (CMakeParseArguments)
 
@@ -65,7 +65,7 @@ endif()
 # calculate how many commits since the last "tag" was applied to the repository.
 # this basically gives us an always incrementing number for the patch level
 # and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "Develop")
+set(CMP_VERSION_MAJOR "4RC1")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
@@ -76,7 +76,7 @@ set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 set(LIB_TYPE STATIC)
 IF (BUILD_SHARED_LIBS)
-	message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
+  message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
     set(LIB_TYPE SHARED)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
     if (MSVC)
@@ -295,7 +295,7 @@ endfunction()
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-    SurfaceMeshingPlugin
+#    SurfaceMeshingPlugin
 )
 
  # Build the DREAM3D Application
