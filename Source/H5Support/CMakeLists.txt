@@ -13,7 +13,7 @@
 
 # set project's name
 PROJECT( H5Support )
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 2.8.9)
 
 
 set(H5Support_BUILT_AS_DYNAMIC_LIB)
@@ -35,9 +35,9 @@ endif()
 set(PROJECT_PREFIX "H5Support" CACHE STRING "The Prefix to be used for Preprocessor definitions")
 set(H5Support_INSTALL_FILES 0)
 #-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the 
+# Include the cmp project to perform all the basic configuration tests for the
 # project.
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 set(CMP_HEADER_DIR ${H5Support_BINARY_DIR})
 set(CMP_CONFIGURATION_FILE_NAME "H5SupportConfiguration.h")
 set(CMP_TYPES_FILE_NAME "H5SupportTypes.h")
@@ -54,7 +54,7 @@ set(H5Support_SRCS
     ${H5Support_SOURCE_DIR}/H5Lite.cpp
     ${H5Support_SOURCE_DIR}/H5Utilities.cpp
  )
- 
+
 set(H5Support_HDRS
     ${H5Support_SOURCE_DIR}/H5Lite.h
     ${H5Support_SOURCE_DIR}/H5Utilities.h
@@ -72,20 +72,20 @@ set(VERSION_GEN_VER_MAJOR "1")
 set(VERSION_GEN_VER_MINOR "0")
 set(VERSION_GEN_VER_PATCH "0")
 
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in
                ${H5Support_BINARY_DIR}/H5SupportVersion.h  )
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   
+configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in
                ${H5Support_BINARY_DIR}/H5SupportVersion.cpp  )
-               
-configure_file(${H5Support_SOURCE_DIR}/H5SupportConfiguration.h.in
-               ${H5Support_BINARY_DIR}/${CMP_TOP_HEADER_FILE})   
 
-include_directories(${H5Support_SOURCE_DIR}/..)            
+configure_file(${H5Support_SOURCE_DIR}/H5SupportConfiguration.h.in
+               ${H5Support_BINARY_DIR}/${CMP_TOP_HEADER_FILE})
+
+include_directories(${H5Support_SOURCE_DIR}/..)
 include_directories(${H5Support_SOURCE_DIR})
 include_directories(${H5Support_BINARY_DIR})
 
 set(PROJECT_SRCS
-    ${H5Support_SRCS} 
+    ${H5Support_SRCS}
     ${H5Support_HDRS}
     ${H5Support_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
@@ -105,11 +105,11 @@ endif()
 
 
 if (BUILD_SHARED_LIBS AND NOT APPLE)
-    INSTALL(TARGETS ${PROJECT_NAME}  
+    INSTALL(TARGETS ${PROJECT_NAME}
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}
         LIBRARY DESTINATION ${lib_install_dir}
-        ARCHIVE DESTINATION ${lib_install_dir}       
+        ARCHIVE DESTINATION ${lib_install_dir}
         BUNDLE DESTINATION "."
-    ) 
-endif() 
+    )
+endif()
