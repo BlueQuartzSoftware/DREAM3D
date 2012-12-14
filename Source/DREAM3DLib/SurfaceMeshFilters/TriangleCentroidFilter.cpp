@@ -74,9 +74,9 @@ class CalculateCentroidsImpl
 
       for (size_t i = start; i < end; i++)
       {
-        m_Centroids[i*3]  = ( nodes[triangles[i].node_id[0]].coord[0] + nodes[triangles[i].node_id[1]].coord[0] + nodes[triangles[i].node_id[2]].coord[0])/3.0;
-        m_Centroids[i*3 + 1] = ( nodes[triangles[i].node_id[0]].coord[1] + nodes[triangles[i].node_id[1]].coord[1] + nodes[triangles[i].node_id[2]].coord[1])/3.0;
-        m_Centroids[i*3 + 2]  = ( nodes[triangles[i].node_id[0]].coord[2] + nodes[triangles[i].node_id[1]].coord[2] + nodes[triangles[i].node_id[2]].coord[2])/3.0;
+        m_Centroids[i*3]  = (nodes[triangles[i].node_id[0]].coord[0] + nodes[triangles[i].node_id[1]].coord[0] + nodes[triangles[i].node_id[2]].coord[0])/3.0;
+        m_Centroids[i*3 + 1] = (nodes[triangles[i].node_id[0]].coord[1] + nodes[triangles[i].node_id[1]].coord[1] + nodes[triangles[i].node_id[2]].coord[1])/3.0;
+        m_Centroids[i*3 + 2]  = (nodes[triangles[i].node_id[0]].coord[2] + nodes[triangles[i].node_id[1]].coord[2] + nodes[triangles[i].node_id[2]].coord[2])/3.0;
       }
     }
 
@@ -263,8 +263,8 @@ void TriangleCentroidFilter::execute()
   }
   setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
-    StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+
+  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
 
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
@@ -280,6 +280,10 @@ void TriangleCentroidFilter::execute()
   CalculateCentroidsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids);
   serial.generate(0, totalPoints);
 #endif
+
+  for (int i = 0; i < 10; ++i) {
+    std::cout << i << "  Centroid: " << m_SurfaceMeshTriangleCentroids[i*3] << " " << m_SurfaceMeshTriangleCentroids[i*3+ 1] << " " << m_SurfaceMeshTriangleCentroids[i*3+2]<< std::endl;
+  }
 
 
   /* Let the GUI know we are done with this filter */
