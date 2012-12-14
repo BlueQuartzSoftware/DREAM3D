@@ -15,6 +15,8 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} LaplacianSmoothing LaplacianSmoo
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateNodeTriangleConectivity GenerateNodeTriangleConectivity.html "" FALSE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateUniqueEdges GenerateUniqueEdges.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleCentroidFilter TriangleCentroidFilter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleNormalFilter TriangleNormalFilter.html "" TRUE)
+
 
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} MeshFunctions.h)
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} MeshLinearAlgebra.h)
