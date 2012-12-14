@@ -555,6 +555,13 @@ void M3CSliceBySlice::execute()
       ::memcpy( &(voxels[1 + NSP]), fileVoxelLayer, NSP * sizeof(int));
       for(int ii = 0; ii < 2 * NSP + 1; ++ii) { if (voxels[ii] < 0) { voxels[ii] = -3;} } // Ensure all ghost cells are -3
     }
+    else if (i == dims[2] && isWrapped == false)
+    {
+        for (int i = NSP; i < 2 * NSP + 1; ++i)
+        {
+          voxels[i] = -3;
+        }
+    }
     else
     {
       copyBulkSliceIntoWorkingArray(i, wrappedDims, dims, voxels);
@@ -563,13 +570,7 @@ void M3CSliceBySlice::execute()
     // If we are on the last slice then we need both layers to be ghost cells with
     // negative grain ids but ONLY if the voxel volume was NOT originally wrapped in
     // ghost cells
-    if (i == dims[2] && isWrapped == false)
-    {
-        for (int i = NSP; i < 2 * NSP + 1; ++i)
-        {
-          voxels[i] = -3;
-        }
-    }
+
 
     // This starts the actual M3C Algorithm codes
     get_neighbor_list(NSP, NS, wrappedDims, neighborsPtr, neighCSiteIdPtr);
