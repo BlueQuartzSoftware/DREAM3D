@@ -56,23 +56,23 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
 m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
-m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
 m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
 m_WriteGrainIds(false),
 m_WriteParentIds(false),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
 m_WriteImageQualities(false),
-m_WriteSchmidFactors(false),
 m_WriteGoodVoxels(false),
 m_WriteRodriguesGAMColors(false),
 m_WriteGAMs(false),
 m_WriteKAMs(false),
 m_WriteIPFColors(false),
+m_WriteSchmidFactors(false),
 m_WriteGrainSizes(false),
 m_WriteEulerAngles(false),
 m_WriteBinaryFile(false)
@@ -174,7 +174,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
-  }  
+  }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Schmid Factors");
@@ -182,7 +182,7 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
-  }  
+  }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Rodrigues GAM Colors");

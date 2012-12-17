@@ -57,41 +57,41 @@ class StandardizeEulerAnglesImpl
     int* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
-	std::vector<OrientationMath*> m_OrientationOps;
-	OrientationMath::Pointer m_CubicOps;
-	OrientationMath::Pointer m_HexOps;
-	OrientationMath::Pointer m_OrthoOps;
+  std::vector<OrientationMath*> m_OrientationOps;
+  OrientationMath::Pointer m_CubicOps;
+  OrientationMath::Pointer m_HexOps;
+  OrientationMath::Pointer m_OrthoOps;
   public:
     StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs) :
       m_CellEulerAngles(eulers),
-	  m_CellPhases(phases),
-	  m_CrystalStructures(crystructs)
+    m_CellPhases(phases),
+    m_CrystalStructures(crystructs)
     {
-		m_HexOps = HexagonalOps::New();
-		m_OrientationOps.push_back(m_HexOps.get());
-		m_CubicOps = CubicOps::New();
-		m_OrientationOps.push_back(m_CubicOps.get());
-		m_OrthoOps = OrthoRhombicOps::New();
-		m_OrientationOps.push_back(m_OrthoOps.get());
-	}
+    m_HexOps = HexagonalOps::New();
+    m_OrientationOps.push_back(m_HexOps.get());
+    m_CubicOps = CubicOps::New();
+    m_OrientationOps.push_back(m_CubicOps.get());
+    m_OrthoOps = OrthoRhombicOps::New();
+    m_OrientationOps.push_back(m_OrthoOps.get());
+  }
     virtual ~StandardizeEulerAnglesImpl(){}
 
     void convert(size_t start, size_t end) const
     {
-	  float ea1, ea2, ea3;
-	  float q[5];
+    float ea1, ea2, ea3;
+    float q[5];
       for (size_t i = start; i < end; i++)
       {
-		ea1 = m_CellEulerAngles[3*i];
-		ea2 = m_CellEulerAngles[3*i+1];
-		ea3 = m_CellEulerAngles[3*i+2];
-		OrientationMath::eulertoQuat(q, ea1, ea2, ea3);
-		m_OrientationOps[m_CrystalStructures[m_CellPhases[i]]]->getFZQuat(q);
-		OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-		m_CellEulerAngles[3*i] = ea1;
-		m_CellEulerAngles[3*i+1] = ea2;
-		m_CellEulerAngles[3*i+2] = ea3;
-	  }
+    ea1 = m_CellEulerAngles[3*i];
+    ea2 = m_CellEulerAngles[3*i+1];
+    ea3 = m_CellEulerAngles[3*i+2];
+    OrientationMath::eulertoQuat(q, ea1, ea2, ea3);
+    m_OrientationOps[m_CrystalStructures[m_CellPhases[i]]]->getFZQuat(q);
+    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+    m_CellEulerAngles[3*i] = ea1;
+    m_CellEulerAngles[3*i+1] = ea2;
+    m_CellEulerAngles[3*i+2] = ea3;
+    }
     }
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -196,7 +196,7 @@ void StandardizeEulerAngles::execute()
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
 //#if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    StandardizeEulerAnglesImpl(m_CellEulerAngles), tbb::auto_partitioner());
+                    StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures), tbb::auto_partitioner());
 
 #else
   StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures);
