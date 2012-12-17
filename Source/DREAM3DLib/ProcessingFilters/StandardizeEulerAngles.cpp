@@ -194,7 +194,6 @@ void StandardizeEulerAngles::execute()
   }
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
-//#if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures), tbb::auto_partitioner());
 
