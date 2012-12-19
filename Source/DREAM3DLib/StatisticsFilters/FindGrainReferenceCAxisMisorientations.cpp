@@ -181,13 +181,13 @@ void FindGrainReferenceCAxisMisorientations::execute()
   typedef DataArray<unsigned int> XTalType;
   XTalType* crystructPtr
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  unsigned int* crystruct = crystructPtr->GetPointer(0);
+ // unsigned int* crystruct = crystructPtr->GetPointer(0);
 
   float w;
-  float n1, n2, n3;
-  float r1, r2, r3;
-  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  float n1= 0.0f, n2= 0.0f, n3= 0.0f;
+  float r1= 0.0f, r2= 0.0f, r3= 0.0f;
+ // unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+ // unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -221,14 +221,14 @@ void FindGrainReferenceCAxisMisorientations::execute()
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-              q2[0] = m_AvgCAxes[5*m_GrainIds[point]];
-              q2[1] = m_AvgCAxes[5*m_GrainIds[point]+1];
-              q2[2] = m_AvgCAxes[5*m_GrainIds[point]+2];
-              q2[3] = m_AvgCAxes[5*m_GrainIds[point]+3];
-              q2[4] = m_AvgCAxes[5*m_GrainIds[point]+4];
+          q2[0] = m_AvgCAxes[5*m_GrainIds[point]];
+          q2[1] = m_AvgCAxes[5*m_GrainIds[point]+1];
+          q2[2] = m_AvgCAxes[5*m_GrainIds[point]+2];
+          q2[3] = m_AvgCAxes[5*m_GrainIds[point]+3];
+          q2[4] = m_AvgCAxes[5*m_GrainIds[point]+4];
           //w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-		  OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-		  //m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
+          OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+          //m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w *(180.0f/m_pi);
           m_GrainReferenceCAxisMisorientations[point] = w;
           m_GrainReferenceCAxisRotations[3*point] = r1;

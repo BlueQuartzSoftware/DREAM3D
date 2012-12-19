@@ -45,8 +45,8 @@
  * @brief This filter will convert the Euler Angles. Simply enter the conversion
  * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
  * to Degrees use 57.2957785
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 26, 2012
+ * @author Michael A. Groeber (US Air Force Research Laboratory, Materials Branch)
+ * @date Dec 12s, 2012
  * @version 1.0
  */
 class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
