@@ -42,6 +42,7 @@
 #include "MXA/Common/MXAEndian.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -225,7 +226,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
   VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
   DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
 
-  virtual ~VoxelEulerAngleScalarWriter(){}
+      virtual ~VoxelEulerAngleScalarWriter(){}
 
   int writeScalars(FILE* f)
   {
@@ -241,8 +242,10 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
 
-    std::vector<float> buffer(dims[0]);
-    // Lot over each component of the Euler Angles
+    boost::shared_array<float> buffer(new float[dims[0]]);
+
+    //std::vector<float> buffer(dims[0]);
+    // Loop over each component of the Euler Angles
     for (int eIndex = 0; eIndex < 3; ++eIndex)
     {
       std::string name = names[eIndex];
@@ -265,11 +268,19 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
           // We just buffered an dim[0] worth of data, now write it out.
           if (true == m_WriteBinaryFiles)
           {
-            size_t totalWritten = fwrite( &(buffer.front()), sizeof(char), dims[0] * sizeof(float), f);
+            float tmp = 0.0f;
+            // VTK Binary files are written with Big Endian Byte Ordering
+            for(size_t ii = 0; ii < dims[0]; ++ii)
+            {
+              tmp = buffer[ii];
+              MXA::Endian::FromSystemToBig::convert<float>(tmp);
+              buffer[ii] = tmp;
+            }
+            size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
             if (totalWritten != dims[0] * 4)
             {
-              std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
-              fclose( f);
+              std::cout << "Error Writing Binary Data for Euler Angles to file " << std::endl;
+              fclose(f);
               return -1;
             }
           }
@@ -283,10 +294,10 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
     return err;
   }
 
-    private:
-    T* r;
-    VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
+  private:
+  T* r;
+  VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
+  void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
 
 
 };
