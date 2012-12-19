@@ -114,6 +114,8 @@ namespace DREAM3D
     const std::string NearestNeighborDistances("NearestNeighborDistances");
     const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
     const std::string GrainReferenceRotations("GrainReferenceRotations");
+    const std::string GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
+    const std::string GrainReferenceCAxisRotations("GrainReferenceCAxisRotations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQuality("Image Quality");
     const std::string IPFColor("IPFColor");
@@ -152,10 +154,12 @@ namespace DREAM3D
     const std::string AspectRatios("AspectRatios");
     const std::string AxisLengths("AxisLengths");
     const std::string Omega3s("Omega3s");
+    const std::string AvgCAxes("AvgCAxes");
     const std::string AvgQuats("AvgQuats");
     const std::string Poles("Poles");
     const std::string Neighborhoods("Neighborhoods");
     const std::string GrainAvgMisorientations("GrainAvgMisorientations");
+	const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
     const std::string KernelAvgMisorientations("KernelAvgMisorientations");
     const std::string NeighborList("NeighborList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");

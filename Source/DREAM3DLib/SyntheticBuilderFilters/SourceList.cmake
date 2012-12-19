@@ -16,6 +16,7 @@ START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} PackPrimaryPhases PackPrimaryPhases.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MatchCrystallography MatchCrystallography.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} JumbleOrientations JumbleOrientations.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} InsertPrecipitatePhases InsertPrecipitatePhases.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} EstablishMatrixPhase EstablishMatrixPhase.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} InitializeSyntheticVolume 
