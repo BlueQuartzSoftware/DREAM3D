@@ -254,12 +254,6 @@ void GenerateNodeTriangleConectivity::execute()
 void GenerateNodeTriangleConectivity::generateConnectivity()
 {
 
-  // this function returns a list of unique edges in the polygon list.  A 2 x M array is returned that lists
-  // the unique pairs of vertex points that are paired along an edge.  This is the way that this function
-  // opertates in this program.  The time to cacluate the vertex connectivity arrays is long, and not needed
-  // for mesh smoothing.
-
-
   // Get our Reference counted Array of Triangle Structures
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   if(NULL == trianglesPtr.get())

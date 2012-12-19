@@ -1,0 +1,215 @@
+/* ============================================================================
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+#include "CalculateTriangleCurvature.h"
+
+#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "FindNRingNeighbors.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CalculateTriangleCurvature::CalculateTriangleCurvature(int nring, std::vector<int> triangleIds,
+                                                      int grainId,
+                                                      NodeTrianglesMap_t* node2Triangle,
+                                                      SurfaceMeshDataContainer* sm) :
+m_NRing(nring),
+m_TriangleIds(triangleIds),
+m_GrainId(grainId),
+m_SurfaceMeshDataContainer(sm)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+CalculateTriangleCurvature::~CalculateTriangleCurvature()
+{
+
+}
+
+
+/*
+ For i=0, ntri-1 do ...
+    tripatch = get_nring_neighborhood(i, nring)
+    ;(triptych):Array of pointers to the triangles in the nring neighborhood of the i-th triangle. Assume the first pointer is the pointer to the i-th triangle
+    points = triloc[0:2, tripatch]
+    norm = trinorm[0:2, tripatch]
+
+    points -= points[0:2,0] ;center at [0,0,0]
+    np = norm[0:2,0] ; get the normal at the ith triangle
+    ; calculate the projection of an inplane vector
+    vp = Normalize(Cross_Product(np, (points[0:2,1]-points[0:2,0]) ) )
+    ; get the third orthogonal vector
+    up = Cross_product(vp,np)
+    ; this consitutes a rotation matrix to a local coordinate system
+    rot = [[up],[vp],[np]]
+
+    points = matrix_multiply(points, rot)
+    norms = matrix_multiply(norm, rot)
+\end{verbatim}
+
+Now we can fit the points to a quadratic:
+\begin{eqnarray*}
+z = \frac{1}{2}A \* x^2 + Bxy + \frac{1}{2}Cy^2
+\end{eqnarray*}
+
+This is done by implementing a least squares fit to a system of linear equations.
+
+\begin{verbatim}
+    coeff = [0.5*x^2, x*y, 0.5*y^2]
+    val = z
+
+    ABC = LA_LEAST_SQUARES(coeff, val)
+\end{verbatim}
+This is the IDL least squares routine. In my brief googling, it looks like the DGELS routine of the LAPACK/BLAS accomplishes much the same.
+Now solve the eigenvalue problem W = [[A,B],[B,C]]
+
+\begin{verbatim}
+    W = [[A,B],[B,C]]
+    k12 = Eigenql(W, eigenvectors=evect)
+  endfor
+\end{verbatim}
+*/
+
+void subtractVector3d(DataArray<double>::Pointer data, double* v)
+{
+
+  size_t count = data->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
+  {
+    double* ptr = data->GetPointer(i);
+    ptr[0] = ptr[0] - v[0];
+    ptr[1] = ptr[1] - v[1];
+    ptr[2] = ptr[2] - v[2];
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+tbb::task*
+#else
+void
+#endif
+CalculateTriangleCurvature::execute()
+{
+  std::vector<int>::size_type tCount = m_TriangleIds.size();
+  FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
+//  size_t totalTriangles = m_SurfaceMeshDataContainer->getTriangles()->GetNumberOfTuples();
+
+  IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleCentroids);
+  if (NULL == centroidPtr.get())
+  {
+    std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
+    return
+    #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+    NULL
+    #endif
+    ;
+  }
+  DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
+
+  IDataArray::Pointer normalPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleNormals);
+  if (NULL == normalPtr.get())
+  {
+    std::cout << "Triangle Normals are required for this algorithm" << std::endl;
+    return
+    #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+    NULL
+    #endif
+    ;
+  }
+  DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
+
+
+  // For each triangle in the group
+  for(std::vector<int>::size_type i = 0; i < tCount; ++i)
+  {
+
+    nRingNeighborAlg->setTriangleId(m_TriangleIds[i]);
+    nRingNeighborAlg->setRegionId(m_GrainId);
+    nRingNeighborAlg->setRing(3);
+    nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
+    nRingNeighborAlg->generate( *m_NodeTrianglesMap);
+    UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
+
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
+    DataArray<double>::Pointer patchNormals = extractPatchData(triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
+
+    // Translate the patch to the 0,0,0 origin
+    subtractVector3d(patchCentroids, centroids->GetPointer(i));
+    double* np = normals->GetPointer(i);
+
+
+  }
+
+
+
+
+
+
+#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+  return NULL;
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArray<double>::Pointer CalculateTriangleCurvature::extractPatchData(UniqueTriangleIds_t &triPatch,
+                                                                            double* data,
+                                                                            const std::string &name)
+{
+  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), name);
+
+  int i = 0;
+
+  for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+  {
+    int32_t t = *iter;
+    extractedData->SetComponent(i, 0, data[t*3]);
+    extractedData->SetComponent(i, 1, data[t*3 + 1]);
+    extractedData->SetComponent(i, 2, data[t*3 + 2]);
+    ++i;
+  }
+  return extractedData;
+}
+
+
