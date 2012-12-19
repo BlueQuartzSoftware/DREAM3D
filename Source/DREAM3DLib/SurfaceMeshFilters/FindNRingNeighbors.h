@@ -39,14 +39,16 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 
 
-
-
+/**
+ * @class FindNRingNeighbors FindNRingNeighbors.h SurfaceMeshFilters/FindNRingNeighbors.h
+ * @brief Calculates the set of triangles that are "N" rings (based on vertex) from a seed triangle
+ * @author Mike Jackson (BlueQuartz Software)
+ * @date,
+ * @version 1.0
+ */
 class FindNRingNeighbors
 {
   public:
@@ -55,10 +57,6 @@ class FindNRingNeighbors
     DREAM3D_TYPE_MACRO(FindNRingNeighbors)
 
     virtual ~FindNRingNeighbors();
-
-
-
-
 
     DREAM3D_INSTANCE_PROPERTY(SurfaceMeshDataContainer*, SurfaceMeshDataContainer)
 
@@ -74,9 +72,6 @@ class FindNRingNeighbors
      **/
     DREAM3D_INSTANCE_PROPERTY(int, Ring)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
-
 
     UniqueTriangleIds_t &getNRingTriangles();
 
@@ -87,6 +82,10 @@ class FindNRingNeighbors
      * node is a part of.
      */
     void generate(NodeTrianglesMap_t &node2Triangle);
+
+
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
      /**
      * @brief writeVTKFile

@@ -47,8 +47,7 @@
 
 class ConvertEulerAnglesImpl
 {
-    float* m_CellEulerAngles;
-    float  convFactor;
+
   public:
     ConvertEulerAnglesImpl(float* data, float factor) :
       m_CellEulerAngles(data),
@@ -70,7 +69,9 @@ class ConvertEulerAnglesImpl
       convert(r.begin(), r.end());
     }
 #endif
-
+  private:
+     float* m_CellEulerAngles;
+     float  convFactor;
 
 };
 
