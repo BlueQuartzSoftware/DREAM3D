@@ -79,7 +79,12 @@ class StandardizeEulerAnglesImpl
     void convert(size_t start, size_t end) const
     {
 	  float ea1, ea2, ea3;
+	  float w, n1, n2, n3;
 	  float q[5];
+	  float min = 1;
+//	  std::string filename = "Test.txt";
+//	  std::ofstream outFile;
+//	  outFile.open(filename.c_str());
       for (size_t i = start; i < end; i++)
       {
 		ea1 = m_CellEulerAngles[3*i];
@@ -91,6 +96,7 @@ class StandardizeEulerAnglesImpl
 		m_CellEulerAngles[3*i] = ea1;
 		m_CellEulerAngles[3*i+1] = ea2;
 		m_CellEulerAngles[3*i+2] = ea3;
+//		outFile << ea1 << " " << ea2 << " " << ea3 << std::endl;
 	  }
     }
 
