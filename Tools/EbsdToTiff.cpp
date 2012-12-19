@@ -140,9 +140,51 @@ int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image
    return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void grayScaleEulers(float* euler, int width, int height, const std::string & imageFile, const std::string &desc, int orientation)
+{
+
+  int total = width * height;
+
+  float minEuler = 10;
+  float maxEuler = 0;
+
+  for (int i = 0; i < total; ++i)
+  {
+    if (euler[i] < minEuler) { minEuler = euler[i]; }
+    if (euler[i] > maxEuler) { maxEuler = euler[i]; }
+  }
+  float delta = maxEuler - minEuler;
+
+  DataArray<uint8_t>::Pointer rgbArray = DataArray<uint8_t>::CreateArray(total * 3, "Tiff Data");
+  rgbArray->SetNumberOfComponents(3);
+  rgbArray->WritePointer(0, total*3);
+  // Splat 0xFF across all the data
+  ::memset(rgbArray->GetPointer(0), 255, total*3);
+  uint8_t* rgb = rgbArray->GetPointer(0);
+
+  for (int i = 0; i < total; ++i)
+  {
+    rgb[i*3] = static_cast<unsigned char>((euler[i] - minEuler)/(delta) * 255.0);
+    rgb[i*3 + 1] = rgb[i*3];
+    rgb[i*3 + 2] = rgb[i*3];
+  }
+
+  int err = writeColorTiff(imageFile, rgbArray, width, height, desc, orientation);
+  if (err < 0)
+  {
+    std::cout << "Error writing grayscale euler tiff file" << std::endl;
+  }
 
 
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
 
@@ -150,7 +192,7 @@ int main(int argc, char **argv)
   std::string imageFile = argv[2];
   int orientation = atoi(argv[3]);
 
-  std::cout << "Generating IPF Color map [0,-1,0] for EBSD data" << std::endl;
+  std::cout << "Generating IPF Color map for EBSD data" << std::endl;
   std::cout << "  " << ebsdFile << std::endl;
 
   boost::shared_ptr<EbsdReader> ebsdReader(static_cast<EbsdReader*>(NULL));
@@ -180,7 +222,7 @@ int main(int argc, char **argv)
 
   //unsigned char* rgb;
   unsigned char hkl[3] = { 0, 0, 0 };
-  float RefDirection[3] = { 0.0, 0.0, 1.0 };
+  float refDir[3] = { 1.0, 0.0, 1.0 };
 
   int width = ebsdReader->getXDimension();
   int height = ebsdReader->getYDimension();
@@ -190,24 +232,67 @@ int main(int argc, char **argv)
   rgbArray->WritePointer(0, total*3);
   // Splat 0xFF across all the data
   ::memset(rgbArray->GetPointer(0), 255, total*3);
+    float* e0 = NULL;
+  float* e1 = NULL;
+  float* e2 = NULL;
+  if (ext.compare(Ebsd::Ang::FileExt) == 0)
+  {
+    e0 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi1"));
+    e1 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi"));
+    e2 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi2"));
+  }
+  else if (ext.compare(Ebsd::Ctf::FileExt) == 0)
+  {
+    e0 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler1));
+    e1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler2));
+    e2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Euler3));
+  }
 
-  float* e0 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi1"));
-  float* e1 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi"));
-  float* e2 = reinterpret_cast<float*>(ebsdReader->getPointerByName("Phi2"));
-
+  if (NULL == e0 || NULL == e1 || NULL == e2)
+  {
+    std::cout << "One of the Euler Angle Arrays was NULL. " << std::endl;
+    return EXIT_FAILURE;
+  }
   for (int i = 0; i < total; ++i) {
     uint8_t* rgb = rgbArray->GetPointer(i*3);
     EbsdColoring::GenerateCubicIPFColor(e0[i], e1[i], e2[i],
-                                  RefDirection[0], RefDirection[1], RefDirection[2],
+                                  refDir[0], refDir[1], refDir[2],
                                   rgb, hkl, degToRads);
   }
 
-  err = writeColorTiff(imageFile, rgbArray, width, height, "IPF Color Map", orientation);
+
+  std::stringstream ss;
+  ss << "IPF Color Map: Reference Direction: " << refDir[0] << refDir[1] << refDir[2];
+  err = writeColorTiff(imageFile, rgbArray, width, height, ss.str(), orientation);
   if (err < 0)
   {
     std::cout << "Error writing tiff file" << std::endl;
   }
+#if 0
+  {
+    ss.str("");
+    ss << "Euler 0 Scaled from 0 to 255";
+    std::string gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
+    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + std::string("_Euler0.tiff");
+    grayScaleEulers(e0, width, height, gName, ss.str(), orientation);
+  }
 
+{
+    ss.str("");
+    ss << "Euler 1 Scaled from 0 to 255";
+    std::string gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
+    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + std::string("_Euler1.tiff");
+    grayScaleEulers(e1, width, height, gName, ss.str(), orientation);
+  }
+
+  {
+    ss.str("");
+    ss << "Euler 2 Scaled from 0 to 255";
+    std::string gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
+    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + std::string("_Euler2.tiff");
+    grayScaleEulers(e2, width, height, gName, ss.str(), orientation);
+  }
+#endif
   std::cout << "Generation complete" << std::endl;
   return err;
 }
