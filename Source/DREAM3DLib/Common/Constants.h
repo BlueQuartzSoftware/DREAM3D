@@ -96,8 +96,9 @@ namespace DREAM3D
     const std::string SamplingFilters("Sampling");
     const std::string StatisticsFilters("Statistics");
     const std::string CustomFilters("Custom");
-    const std::string SyntheticBuilderFilters("SyntheticBuilder");
-    const std::string SurfaceMeshingFilters("SurfaceMesh");
+    const std::string SyntheticBuilderFilters("Synthetic Building");
+    const std::string SurfaceMeshingFilters("Surface Meshing");
+    const std::string VolumeMeshingFilters("Volume Meshing");
   }
 
   namespace CellData
@@ -131,6 +132,9 @@ namespace DREAM3D
     const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
     const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
     const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
+
+    const std::string VolumeMeshNodes("VolumeMeshNodes");
+    const std::string VolumeMeshTetrahedrons("VolumeMeshTetrahedrons");
   }
 
   namespace FieldData
