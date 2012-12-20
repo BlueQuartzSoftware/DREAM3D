@@ -42,7 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
 #include "UnitTestSupport.hpp"
