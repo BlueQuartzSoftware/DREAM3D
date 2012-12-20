@@ -83,12 +83,12 @@ set(IOFILTER_WIDGET_SRCS
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/IOFiltersWidgets" "${IOFILTER_WIDGET_HDRS}" "${IOFILTER_WIDGET_SRCS}" "0")
 set(SYNTHETIC_WIDGET_HDRS
-    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.h
+    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuildingFiltersWidgets/QInitializeSyntheticVolumeWidget.h
 )
 set(SYNTHETIC_WIDGET_SRCS
-    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
+    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuildingFiltersWidgets/QInitializeSyntheticVolumeWidget.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/SyntheticBuilderFiltersWidgets" "${SYNTHETIC_WIDGET_HDRS}" "${SYNTHETIC_WIDGET_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/SyntheticBuildingFiltersWidgets" "${SYNTHETIC_WIDGET_HDRS}" "${SYNTHETIC_WIDGET_SRCS}" "0")
 set(SAMPLING_WIDGET_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/SamplingFiltersWidgets/QHex2SqrConverterWidget.h
 )
@@ -121,7 +121,7 @@ QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
 QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
-    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuilderFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
+    ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuildingFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/SamplingFiltersWidgets/QHex2SqrConverterWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
