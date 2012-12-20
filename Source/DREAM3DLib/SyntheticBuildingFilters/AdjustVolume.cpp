@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
-#include "DREAM3DLib/SyntheticBuilderFilters/PackPrimaryPhases.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
