@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 
     virtual const std::string getGroupName()
     {
-      return DREAM3D::FilterGroups::SyntheticBuilderFilters;
+      return DREAM3D::FilterGroups::SyntheticBuildingFilters;
     }
     virtual const std::string getHumanLabel()
     {
