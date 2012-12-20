@@ -179,8 +179,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
   float q2[5];
 
   typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
+  //XTalType* crystructPtr
+  //    = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
  // unsigned int* crystruct = crystructPtr->GetPointer(0);
 
   float w;

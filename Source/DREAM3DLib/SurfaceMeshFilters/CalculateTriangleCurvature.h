@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT CalculateTriangleCurvature
     CalculateTriangleCurvature();
 
 
-    DataArray<double>::Pointer extractPatchData(UniqueTriangleIds_t &triPatch,
+    DataArray<double>::Pointer extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
                                                 double* data,
                                                 const std::string &name);
   private:

@@ -145,7 +145,7 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  // VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getXMax() < getXMin())
   {
@@ -227,7 +227,7 @@ void ClearData::execute()
         {
           std::string name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
-		  p->InitializeTuple(index,0);
+      p->InitializeTuple(index,0);
         }
       }
     }

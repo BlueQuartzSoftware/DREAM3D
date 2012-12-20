@@ -37,6 +37,7 @@
 #include "CalculateTriangleCurvature.h"
 
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "FindNRingNeighbors.h"
 
 // -----------------------------------------------------------------------------
@@ -162,20 +163,37 @@ CalculateTriangleCurvature::execute()
   // For each triangle in the group
   for(std::vector<int>::size_type i = 0; i < tCount; ++i)
   {
-
-    nRingNeighborAlg->setTriangleId(m_TriangleIds[i]);
+    int triId = m_TriangleIds[i];
+    nRingNeighborAlg->setTriangleId(triId);
     nRingNeighborAlg->setRegionId(m_GrainId);
     nRingNeighborAlg->setRing(3);
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
 
-    DataArray<double>::Pointer patchCentroids = extractPatchData(triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
-    DataArray<double>::Pointer patchNormals = extractPatchData(triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
+    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
 
     // Translate the patch to the 0,0,0 origin
     subtractVector3d(patchCentroids, centroids->GetPointer(i));
-    double* np = normals->GetPointer(i);
+    double* np = normals->GetPointer(0);
+    double* seedCentroid = centroids->GetPointer(0);
+    double* firstCentroid = centroids->GetPointer(0);
+
+    double temp[3] = {firstCentroid[0] - seedCentroid[0], firstCentroid[1] - seedCentroid[1], firstCentroid[2] - seedCentroid[2]};
+    double vp[3] = {0.0, 0.0, 0.0};
+
+    // Cross Product of np and temp
+    MatrixMath::crossProduct(np, temp, vp);
+    MatrixMath::normalize(vp);
+
+    // get the third orthogonal vector
+    double up[3] = {0.0, 0.0, 0.0};
+    MatrixMath::crossProduct(vp, np, up);
+
+    // this consitutes a rotation matrix to a local coordinate system
+    double rot[3][3] = [[up],[vp],[np]];
+
 
 
   }
@@ -193,13 +211,19 @@ CalculateTriangleCurvature::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleCurvature::extractPatchData(UniqueTriangleIds_t &triPatch,
+DataArray<double>::Pointer CalculateTriangleCurvature::extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
                                                                             double* data,
                                                                             const std::string &name)
 {
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), name);
-
+  // This little chunk makes sure the current seed triangles centroid and normal data appear
+  // first in the returned arrays which makes the next steps a tad easier.
   int i = 0;
+  extractedData->SetComponent(i, 0, data[triId*3]);
+  extractedData->SetComponent(i, 1, data[triId*3 + 1]);
+  extractedData->SetComponent(i, 2, data[triId*3 + 2]);
+  ++i;
+  triPatch.erase(triId);
 
   for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
@@ -209,6 +233,8 @@ DataArray<double>::Pointer CalculateTriangleCurvature::extractPatchData(UniqueTr
     extractedData->SetComponent(i, 2, data[t*3 + 2]);
     ++i;
   }
+  triPatch.insert(triId);
+
   return extractedData;
 }
 

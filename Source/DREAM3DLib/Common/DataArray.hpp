@@ -171,7 +171,7 @@ class DataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    virtual void SetName(const std::string &name)
     {
       m_Name = name;
     }
@@ -180,7 +180,7 @@ class DataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    virtual std::string GetName()
     {
       return m_Name;
     }
@@ -207,7 +207,7 @@ class DataArray : public IDataArray
      * @brief Allocates the memory needed for this class
      * @return 1 on success, -1 on failure
      */
-    int32_t Allocate()
+    virtual int32_t Allocate()
     {
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
@@ -251,7 +251,7 @@ class DataArray : public IDataArray
     * @param number The number of elements to ensure memory allocation
     * @return
     */
-    T* WritePointer(size_t id, size_t number)
+    virtual T* WritePointer(size_t id, size_t number)
     {
         size_t newSize=id+number;
       if ( newSize > this->Size )
@@ -288,7 +288,7 @@ class DataArray : public IDataArray
     /**
      * @brief Sets all the values to value.
      */
-    void initializeWithValues(T value)
+    virtual void initializeWithValues(T value)
     {
       for (size_t i = 0; i < this->Size; i++)
       {
@@ -453,12 +453,12 @@ class DataArray : public IDataArray
     // Description:
     // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
     // this is set before allocation.
-    void SetNumberOfComponents(int nc)
+    virtual void SetNumberOfComponents(int nc)
     {
       if(nc > 0) this->NumberOfComponents = nc;
     }
 
-    int GetNumberOfComponents()
+    virtual int GetNumberOfComponents()
     {
       return this->NumberOfComponents;
     }
@@ -589,6 +589,7 @@ class DataArray : public IDataArray
           out << Array[i*NumberOfComponents + j];
         }
     }
+
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
         out << Array[i*NumberOfComponents + j];
