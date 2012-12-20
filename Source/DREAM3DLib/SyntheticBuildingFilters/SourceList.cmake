@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set (DREAM3D_FILTER_GROUP_NAME SyntheticBuilderFilters)
+set (DREAM3D_FILTER_GROUP_NAME SyntheticBuildingFilters)
 set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
 START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")

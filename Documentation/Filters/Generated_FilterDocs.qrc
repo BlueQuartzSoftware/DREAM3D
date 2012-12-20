@@ -71,8 +71,8 @@
     <file>SamplingFilters/CropVolume.html</file>
     <file>SamplingFilters/Hex2SqrConverter.html</file>
 
-    <!-- ***** SolidMeshFilters ***** -->
-    <file>SolidMeshFilters/QuickSolidMesh.html</file>
+    <!-- ***** SolidMeshingFilters ***** -->
+    <file>SolidMeshingFilters/QuickSolidMesh.html</file>
 
     <!-- ***** StatisticsFilters ***** -->
     <file>StatisticsFilters/FindAvgOrientations.html</file>
@@ -92,21 +92,21 @@
     <file>StatisticsFilters/FindSizes.html</file>
     <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
-    <!-- ***** SurfaceMeshFilters ***** -->
-    <file>SurfaceMeshFilters/QuickSurfaceMesh.html</file>
-    <file>SurfaceMeshFilters/M3CEntireVolume.html</file>
-    <file>SurfaceMeshFilters/M3CSliceBySlice.html</file>
-    <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
-    <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
-    <file>SurfaceMeshFilters/GenerateMeshConnectivity.html</file>
+    <!-- ***** SurfaceMeshingFilters ***** -->
+    <file>SurfaceMeshingFilters/QuickSurfaceMesh.html</file>
+    <file>SurfaceMeshingFilters/M3CEntireVolume.html</file>
+    <file>SurfaceMeshingFilters/M3CSliceBySlice.html</file>
+    <file>SurfaceMeshingFilters/MovingFiniteElementSmoothing.html</file>
+    <file>SurfaceMeshingFilters/LaplacianSmoothing.html</file>
+    <file>SurfaceMeshingFilters/GenerateMeshConnectivity.html</file>
 
-    <!-- ***** SyntheticBuilderFilters ***** -->
-    <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>
-    <file>SyntheticBuilderFilters/MatchCrystallography.html</file>
-    <file>SyntheticBuilderFilters/JumbleOrientations.html</file>
-    <file>SyntheticBuilderFilters/InsertPrecipitatePhases.html</file>
-    <file>SyntheticBuilderFilters/EstablishMatrixPhase.html</file>
-    <file>SyntheticBuilderFilters/InitializeSyntheticVolume.html</file>
-    <file>SyntheticBuilderFilters/InitSynthVol.jpg</file>
+    <!-- ***** SyntheticBuildingFilters ***** -->
+    <file>SyntheticBuildingFilters/PackPrimaryPhases.html</file>
+    <file>SyntheticBuildingFilters/MatchCrystallography.html</file>
+    <file>SyntheticBuildingFilters/JumbleOrientations.html</file>
+    <file>SyntheticBuildingFilters/InsertPrecipitatePhases.html</file>
+    <file>SyntheticBuildingFilters/EstablishMatrixPhase.html</file>
+    <file>SyntheticBuildingFilters/InitializeSyntheticVolume.html</file>
+    <file>SyntheticBuildingFilters/InitSynthVol.jpg</file>
   </qresource>
 </RCC>
