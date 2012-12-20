@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const std::string getHumanLabel() { return "Establish Matrix Phase"; }
 
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

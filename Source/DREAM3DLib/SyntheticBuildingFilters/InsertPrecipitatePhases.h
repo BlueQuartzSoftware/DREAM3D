@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuilderFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterParameters();

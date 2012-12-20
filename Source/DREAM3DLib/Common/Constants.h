@@ -96,7 +96,7 @@ namespace DREAM3D
     const std::string SamplingFilters("Sampling");
     const std::string StatisticsFilters("Statistics");
     const std::string CustomFilters("Custom");
-    const std::string SyntheticBuilderFilters("SyntheticBuilding");
+    const std::string SyntheticBuildingFilters("SyntheticBuilding");
     const std::string SurfaceMeshingFilters("SurfaceMeshing");
     const std::string SolidMeshingFilters("SolidMeshing");
   }
