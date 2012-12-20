@@ -57,7 +57,7 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
-#include "SyntheticBuilderFiltersWidgets/moc_QInitializeSyntheticVolumeWidget.cxx"
+#include "SyntheticBuildingFiltersWidgets/moc_QInitializeSyntheticVolumeWidget.cxx"
 
 
 // -----------------------------------------------------------------------------
