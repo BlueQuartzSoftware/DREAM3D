@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QuickVolumeMesh_H_
-#define QuickVolumeMesh_H_
+#ifndef QuickSolidMesh_H_
+#define QuickSolidMesh_H_
 
 #include <vector>
 #include <string>
@@ -45,25 +45,25 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/VolumeMeshStructs.h"
+#include "DREAM3DLib/Common/SolidMeshStructs.h"
 
 /*
  *
  */
-class DREAM3DLib_EXPORT QuickVolumeMesh : public AbstractFilter
+class DREAM3DLib_EXPORT QuickSolidMesh : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(QuickVolumeMesh)
-     DREAM3D_STATIC_NEW_MACRO(QuickVolumeMesh)
-     DREAM3D_TYPE_MACRO_SUPER(QuickVolumeMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(QuickSolidMesh)
+     DREAM3D_STATIC_NEW_MACRO(QuickSolidMesh)
+     DREAM3D_TYPE_MACRO_SUPER(QuickSolidMesh, AbstractFilter)
 
-     virtual ~QuickVolumeMesh();
+     virtual ~QuickSolidMesh();
 
 	 //------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::VolumeMeshingFilters; }
-     virtual const std::string getHumanLabel() { return "Quick Volume Mesh"; }
+		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
+     virtual const std::string getHumanLabel() { return "Quick Solid Mesh"; }
 
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT QuickVolumeMesh : public AbstractFilter
      virtual void preflight();
 
    protected:
-     QuickVolumeMesh();
+     QuickSolidMesh();
 
    private:
     int32_t* m_GrainIds;
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT QuickVolumeMesh : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    QuickVolumeMesh(const QuickVolumeMesh&); // Copy Constructor Not Implemented
-    void operator=(const QuickVolumeMesh&); // Operator '=' Not Implemented
+    QuickSolidMesh(const QuickSolidMesh&); // Copy Constructor Not Implemented
+    void operator=(const QuickSolidMesh&); // Operator '=' Not Implemented
 
 };
 
-#endif /* QuickVolumeMesh_H_ */
+#endif /* QuickSolidMesh_H_ */

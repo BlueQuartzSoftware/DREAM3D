@@ -96,9 +96,9 @@ namespace DREAM3D
     const std::string SamplingFilters("Sampling");
     const std::string StatisticsFilters("Statistics");
     const std::string CustomFilters("Custom");
-    const std::string SyntheticBuilderFilters("Synthetic Building");
-    const std::string SurfaceMeshingFilters("Surface Meshing");
-    const std::string VolumeMeshingFilters("Volume Meshing");
+    const std::string SyntheticBuilderFilters("SyntheticBuilding");
+    const std::string SurfaceMeshingFilters("SurfaceMeshing");
+    const std::string SolidMeshingFilters("SolidMeshing");
   }
 
   namespace CellData
@@ -133,8 +133,8 @@ namespace DREAM3D
     const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
     const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
 
-    const std::string VolumeMeshNodes("VolumeMeshNodes");
-    const std::string VolumeMeshTetrahedrons("VolumeMeshTetrahedrons");
+    const std::string SolidMeshNodes("SolidMeshNodes");
+    const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
   }
 
   namespace FieldData
@@ -417,10 +417,10 @@ namespace DREAM3D
     }
   }
 
-  namespace VolumeMeshing {
-    /* Volume Meshing Related */
-    const std::string MeshFile("volumetric_mesh_v5_1.vtk");
-    const std::string MeshFile2("volumetric_mesh_v5_2.vtk");
+  namespace SolidMeshing {
+    /* Solid Meshing Related */
+    const std::string MeshFile("solid_mesh_v5_1.vtk");
+    const std::string MeshFile2("solid_mesh_v5_2.vtk");
     const std::string ElementQualityFile("element_quality_measures_v5.txt");
     const std::string VoxelsFile("voxels_v5.txt");
   }

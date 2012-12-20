@@ -55,7 +55,7 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-#include "DREAM3DLib/Common/VolumeMeshStructs.h"
+#include "DREAM3DLib/Common/SolidMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 
 /**
