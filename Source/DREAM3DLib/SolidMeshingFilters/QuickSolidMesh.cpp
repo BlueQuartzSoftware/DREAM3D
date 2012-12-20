@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "QuickVolumeMesh.h"
+#include "QuickSolidMesh.h"
 
 #include <sstream>
 
@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QuickVolumeMesh::QuickVolumeMesh() :
+QuickSolidMesh::QuickSolidMesh() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
@@ -55,17 +55,17 @@ m_GrainIds(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QuickVolumeMesh::~QuickVolumeMesh()
+QuickSolidMesh::~QuickSolidMesh()
 {
 }
 // -----------------------------------------------------------------------------
-void QuickVolumeMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickVolumeMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void QuickSolidMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
 
   setErrorCondition(0);
@@ -82,8 +82,8 @@ void QuickVolumeMesh::dataCheck(bool preflight, size_t voxels, size_t fields, si
   }
   else 
   {
-    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::VolumeMeshNodes);
-    StructArray<Tetrahedron>::Pointer tetrahedrons = StructArray<Tetrahedron>::CreateArray(1, DREAM3D::CellData::VolumeMeshTetrahedrons);
+    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SolidMeshNodes);
+    StructArray<Tetrahedron>::Pointer tetrahedrons = StructArray<Tetrahedron>::CreateArray(1, DREAM3D::CellData::SolidMeshTetrahedrons);
 
     sm->setNodes(vertices);
     sm->setTetrahedrons(tetrahedrons);
@@ -95,7 +95,7 @@ void QuickVolumeMesh::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickVolumeMesh::preflight()
+void QuickSolidMesh::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -103,7 +103,7 @@ void QuickVolumeMesh::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickVolumeMesh::execute()
+void QuickSolidMesh::execute()
 {
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -151,8 +151,8 @@ void QuickVolumeMesh::execute()
   size_t point;
   size_t nodeId1, nodeId2, nodeId3, nodeId4, nodeId5, nodeId6, nodeId7, nodeId8;
 
-  StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(numNodes, DREAM3D::CellData::VolumeMeshNodes);
-  StructArray<Tetrahedron>::Pointer tetrahedrons = StructArray<Tetrahedron>::CreateArray(numTetrahedrons, DREAM3D::CellData::VolumeMeshTetrahedrons);
+  StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(numNodes, DREAM3D::CellData::SolidMeshNodes);
+  StructArray<Tetrahedron>::Pointer tetrahedrons = StructArray<Tetrahedron>::CreateArray(numTetrahedrons, DREAM3D::CellData::SolidMeshTetrahedrons);
   Node* vertex = vertices.get()->GetPointer(0);
   Tetrahedron* tetrahedron = tetrahedrons.get()->GetPointer(0);
 

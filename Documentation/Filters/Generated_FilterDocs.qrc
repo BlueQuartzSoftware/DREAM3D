@@ -71,6 +71,9 @@
     <file>SamplingFilters/CropVolume.html</file>
     <file>SamplingFilters/Hex2SqrConverter.html</file>
 
+    <!-- ***** SolidMeshFilters ***** -->
+    <file>SolidMeshFilters/QuickSolidMesh.html</file>
+
     <!-- ***** StatisticsFilters ***** -->
     <file>StatisticsFilters/FindAvgOrientations.html</file>
     <file>StatisticsFilters/FindAvgCAxes.html</file>
@@ -105,8 +108,5 @@
     <file>SyntheticBuilderFilters/EstablishMatrixPhase.html</file>
     <file>SyntheticBuilderFilters/InitializeSyntheticVolume.html</file>
     <file>SyntheticBuilderFilters/InitSynthVol.jpg</file>
-
-    <!-- ***** VolumeMeshFilters ***** -->
-    <file>VolumeMeshFilters/QuickVolumeMesh.html</file>
   </qresource>
 </RCC>

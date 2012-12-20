@@ -29,8 +29,8 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VOLUME_MESH_STRUCTS_H_
-#define _VOLUME_MESH_STRUCTS_H_
+#ifndef _Solid_MESH_STRUCTS_H_
+#define _Solid_MESH_STRUCTS_H_
 
 
 #include <string>
@@ -45,7 +45,7 @@ typedef struct {
 } Tetrahedron;
 
 
-namespace VolumeMesh
+namespace SolidMesh
 {
   namespace NodesFile
   {
@@ -75,4 +75,4 @@ namespace VolumeMesh
   }
 }
 
-#endif /* _VOLUME_MESH_STRUCTS_H_ */
+#endif /* _Solid_MESH_STRUCTS_H_ */
