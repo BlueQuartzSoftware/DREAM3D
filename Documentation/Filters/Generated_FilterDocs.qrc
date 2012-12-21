@@ -95,6 +95,7 @@
     <file>SurfaceMeshFilters/M3CSliceBySlice.html</file>
     <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
+    <file>SurfaceMeshFilters/GenerateNodeTriangleConectivity.html</file>
     <file>SurfaceMeshFilters/GenerateUniqueEdges.html</file>
     <file>SurfaceMeshFilters/TriangleCentroidFilter.html</file>
     <file>SurfaceMeshFilters/TriangleNormalFilter.html</file>
