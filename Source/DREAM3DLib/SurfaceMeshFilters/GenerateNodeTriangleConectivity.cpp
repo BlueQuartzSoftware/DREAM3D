@@ -37,7 +37,7 @@
 #include "GenerateNodeTriangleConectivity.h"
 
 
-#include "FindNRingNeighbors.h"
+#include "CalculateTriangleCurvature.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -282,20 +282,20 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
   nodeTriangleListArray->initializeWithZeros();
 
 
-#if 0
-  std::stringstream ss;
-  FindNRingNeighbors::Pointer findNRingNeighbors = FindNRingNeighbors::New();
-  findNRingNeighbors->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-  findNRingNeighbors->setTriangleId(m_TriangleId);
-  findNRingNeighbors->setRegionId(m_RegionId);
-
-  for (int i = 1; i < 4; ++i) {
-    findNRingNeighbors->setRing(i);
-    findNRingNeighbors->generate(node2Triangle);
-    ss.str("");
-    ss << "/tmp/" << i << "_RingNeighbors_TID-" << m_TriangleId << "_GID-" << m_RegionId << ".vtk";
-    findNRingNeighbors->writeVTKFile(ss.str());
+#if 1
+  // Test out the Curvature Codes for Grain ID = 10;
+  int targetGrainId = 10;
+  std::vector<int> triangleIds;
+  for(int i = 0; i < ntri; ++i)
+  {
+    Triangle& tri = triangles[i];
+    if (tri.nSpin[0] == targetGrainId || tri.nSpin[1] == targetGrainId)
+    {
+      triangleIds.push_back(i);
+    }
   }
+  CalculateTriangleCurvature curvature(3, triangleIds, targetGrainId, &m_Node2Triangle, getSurfaceMeshDataContainer());
+  curvature.execute();
 #endif
 
   return;

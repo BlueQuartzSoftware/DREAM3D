@@ -50,6 +50,7 @@ CalculateTriangleCurvature::CalculateTriangleCurvature(int nring, std::vector<in
 m_NRing(nring),
 m_TriangleIds(triangleIds),
 m_GrainId(grainId),
+m_NodeTrianglesMap(node2Triangle),
 m_SurfaceMeshDataContainer(sm)
 {
 
@@ -113,7 +114,7 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
   size_t count = data->GetNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    double* ptr = data->GetPointer(i);
+    double* ptr = data->GetPointer(i*3);
     ptr[0] = ptr[0] - v[0];
     ptr[1] = ptr[1] - v[1];
     ptr[2] = ptr[2] - v[2];
@@ -158,27 +159,44 @@ CalculateTriangleCurvature::execute()
     ;
   }
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
-
+  std::stringstream ss;
 
   // For each triangle in the group
   for(std::vector<int>::size_type i = 0; i < tCount; ++i)
   {
     int triId = m_TriangleIds[i];
+    if (triId != 65764) { continue; }
     nRingNeighborAlg->setTriangleId(triId);
     nRingNeighborAlg->setRegionId(m_GrainId);
-    nRingNeighborAlg->setRing(3);
+    nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
+    ss.str("");
+    ss << "/tmp/nring_" << triId << ".vtk";
+    nRingNeighborAlg->writeVTKFile(ss.str());
+
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
 
+    for(int u=0; u < 2; ++u)
+    {
+      std::cout << "Centroid[" << u  << "] =" << patchCentroids->GetComponent(u, 0) << ", " <<patchCentroids->GetComponent(u, 1) << ", " << patchCentroids->GetComponent(u, 2) << std::endl;
+    }
+
     // Translate the patch to the 0,0,0 origin
-    subtractVector3d(patchCentroids, centroids->GetPointer(i));
-    double* np = normals->GetPointer(0);
-    double* seedCentroid = centroids->GetPointer(0);
-    double* firstCentroid = centroids->GetPointer(0);
+    double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
+    subtractVector3d(patchCentroids, sub);
+    for(int u=0; u < 2; ++u)
+    {
+      std::cout << "Centroid[" << u  << "] =" << patchCentroids->GetComponent(u, 0) << ", " <<patchCentroids->GetComponent(u, 1) << ", " << patchCentroids->GetComponent(u, 2) << std::endl;
+    }
+
+    double np[3] = {patchNormals->GetComponent(0,0), patchNormals->GetComponent(0,1), patchNormals->GetComponent(0, 2) };
+
+    double seedCentroid[3] = {patchCentroids->GetComponent(0,0), patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2) };
+    double firstCentroid[3] = {patchCentroids->GetComponent(1,0), patchCentroids->GetComponent(1,1), patchCentroids->GetComponent(1,2) };
 
     double temp[3] = {firstCentroid[0] - seedCentroid[0], firstCentroid[1] - seedCentroid[1], firstCentroid[2] - seedCentroid[2]};
     double vp[3] = {0.0, 0.0, 0.0};
@@ -191,17 +209,38 @@ CalculateTriangleCurvature::execute()
     double up[3] = {0.0, 0.0, 0.0};
     MatrixMath::crossProduct(vp, np, up);
 
+    MatrixMath::crossProduct(np,up, vp);
+
     // this consitutes a rotation matrix to a local coordinate system
-    double rot[3][3] = [[up],[vp],[np]];
+#if 1
+    double rot[3][3] = {{up[0], up[1], up[2]},
+                        {vp[0], vp[1], vp[2]},
+                        {np[0], np[1], np[2]} };
+#else
+    double rot[3][3] = {{up[0], vp[0], np[0]},
+                        {up[1], vp[1], np[1]},
+                        {up[2], vp[2], np[2]} };
+#endif
+    // Transform all
+    double out[3];
+    for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
+    {
+      ::memcpy(out, patchCentroids->GetPointer(m*3), 3*sizeof(double));
+      MatrixMath::multiply3x3with3x1(rot, patchCentroids->GetPointer(m*3), out);
+      ::memcpy(patchCentroids->GetPointer(m*3), out, 3*sizeof(double));
 
+      ::memcpy(out, patchNormals->GetPointer(m*3), 3*sizeof(double));
+      MatrixMath::multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
+      ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
+    }
 
+    for(int u=0; u < 2; ++u)
+    {
+      std::cout << "Centroid[" << u  << "] =" << patchCentroids->GetComponent(u, 0) << ", " <<patchCentroids->GetComponent(u, 1) << ", " << patchCentroids->GetComponent(u, 2) << std::endl;
+      std::cout << "Normal[" << u  << "] =" << patchNormals->GetComponent(u, 0) << ", " <<patchNormals->GetComponent(u, 1) << ", " << patchNormals->GetComponent(u, 2) << std::endl;
+    }
 
   }
-
-
-
-
-
 
 #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
   return NULL;
@@ -215,7 +254,8 @@ DataArray<double>::Pointer CalculateTriangleCurvature::extractPatchData(int triI
                                                                             double* data,
                                                                             const std::string &name)
 {
-  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), name);
+  DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size() * 3, name);
+  extractedData->SetNumberOfComponents(3);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.
   int i = 0;
