@@ -37,6 +37,7 @@
     <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
     <file>IOFilters/SurfaceMeshToStl.html</file>
     <file>IOFilters/SurfaceMeshToVtk.html</file>
+    <file>IOFilters/SolidMeshToVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
 
@@ -73,6 +74,7 @@
 
     <!-- ***** SolidMeshingFilters ***** -->
     <file>SolidMeshingFilters/QuickSolidMesh.html</file>
+    <file>SolidMeshingFilters/DecimateSolidMesh.html</file>
 
     <!-- ***** StatisticsFilters ***** -->
     <file>StatisticsFilters/FindAvgOrientations.html</file>
