@@ -59,9 +59,6 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 
      virtual ~DecimateSolidMesh();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-
     DREAM3D_INSTANCE_PROPERTY(int, GoalElementNumber)
 
 		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
@@ -77,8 +74,9 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
      DecimateSolidMesh();
 
    private:
-    int32_t* m_GrainIds;
+	std::vector<int> newNodeIds;
 
+	int updateNodesandTets(int currentTet, int killedNode, int newNode);
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

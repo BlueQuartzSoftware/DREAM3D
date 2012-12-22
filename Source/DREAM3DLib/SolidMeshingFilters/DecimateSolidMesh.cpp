@@ -46,11 +46,9 @@
 // -----------------------------------------------------------------------------
 DecimateSolidMesh::DecimateSolidMesh() :
 AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GoalElementNumber(0),
-m_GrainIds(NULL)
+m_GoalElementNumber(0)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -128,12 +126,10 @@ void DecimateSolidMesh::execute()
     return;
   }
 
-
-   StructArray<Node>& nodes = *(sm->getNodes());
-   int numNodes = nodes.GetNumberOfTuples();
-
-   StructArray<Tetrahedron>& tetrahedrons = *(sm->getTetrahedrons());
-   int numTets = tetrahedrons.GetNumberOfTuples();
+  StructArray<Node>& nodes = *(sm->getNodes());
+  StructArray<Tetrahedron>& tetrahedrons = *(sm->getTetrahedrons());
+  int numNodes = nodes.GetNumberOfTuples();
+  int numTets = tetrahedrons.GetNumberOfTuples();
 
   int gnum;
   size_t nodeId1, nodeId2, nodeId3, nodeId4;
@@ -180,15 +176,17 @@ void DecimateSolidMesh::execute()
   int tetsLeft = 1;
   int ED1, ED2, ED3, ED4;
   int minED = 1000000;
+  int currentED = 0;
   int maxGlobalED = 0;
   while(tetsLeft > 0)
   {
 	  tetsLeft = 0;
+	  currentED++;
 	  for(size_t k = 0; k < numTets; k++)
 	  {
 		  if(tetDone[k] == false)
 		  {
-			  minED = -1;
+			  minED = 100000000;
 			  nodeId1 = tetrahedrons[k].node_id[0];
 			  nodeId2 = tetrahedrons[k].node_id[1];
 			  nodeId3 = tetrahedrons[k].node_id[2];
@@ -198,171 +196,137 @@ void DecimateSolidMesh::execute()
 			  ED3 = nodeEuclideanDistances[nodeId3];
 			  ED4 = nodeEuclideanDistances[nodeId4];
 			  if(ED1 == -1 || ED2 == -1 || ED3 == -1 || ED4 == -1) tetsLeft++;
-			  if(ED1 != -1) minED = ED1;
-			  if(ED2 != -1 && ED2 < minED) minED = ED2;
-			  if(ED3 != -1 && ED3 < minED) minED = ED3;
-			  if(ED4 != -1 && ED4 < minED) minED = ED4;
-			  if (minED != -1)
+			  if(ED1 == (currentED-1) || ED2 == (currentED-1) || ED3 == (currentED-1) || ED4 == (currentED-1))
 			  {
-				  if(ED1 == -1 || ED1 > minED) nodeEuclideanDistances[nodeId1] = minED+1;
-				  if(ED2 == -1 || ED2 > minED) nodeEuclideanDistances[nodeId2] = minED+1;
-				  if(ED3 == -1 || ED3 > minED) nodeEuclideanDistances[nodeId3] = minED+1;
-				  if(ED4 == -1 || ED4 > minED) nodeEuclideanDistances[nodeId4] = minED+1;
+				  if(ED1 == -1) nodeEuclideanDistances[nodeId1] = currentED;
+				  if(ED2 == -1) nodeEuclideanDistances[nodeId2] = currentED;
+				  if(ED3 == -1) nodeEuclideanDistances[nodeId3] = currentED;
+				  if(ED4 == -1) nodeEuclideanDistances[nodeId4] = currentED;
 				  tetDone[k] = true;
-				  if((minED+1) > maxGlobalED) maxGlobalED = minED+1;
 			  }
 		  }
 	  }
+	  maxGlobalED = currentED;
   }
   tetDone.clear();
 
   //Decimate Mesh
-  std::vector<bool> tetKilled(numTets,false);
-  std::vector<bool> nodeKilled(numNodes,false);
-  std::vector<int> newNodeIds(numNodes,-1);
-  tetsLeft = numTets;
   ED1, ED2, ED3, ED4;
   int removeED = maxGlobalED;
   int secondLargestED = 0;
   int point;
   int otherPoint;
-  while(tetsLeft > m_GoalElementNumber && removeED > 1)
+  while(numTets > m_GoalElementNumber && removeED > 1)
   {
-	  tetsLeft = 0;
 	  for(size_t k = 0; k < numTets; k++)
 	  {
-		  if(tetKilled[k] == false)
-		  {
-			  nodeId1 = tetrahedrons[k].node_id[0];
-			  nodeId2 = tetrahedrons[k].node_id[1];
-			  nodeId3 = tetrahedrons[k].node_id[2];
-			  nodeId4 = tetrahedrons[k].node_id[3];
-			  if(nodeKilled[nodeId1] == true)
-			  {
-				  if(newNodeIds[nodeId1] == nodeId2 || newNodeIds[nodeId1] == nodeId3 || newNodeIds[nodeId1] == nodeId4) tetKilled[k] = true;
-				  else 
-				  {
-					while(newNodeIds[tetrahedrons[k].node_id[0]] != -1)
-					{
-						tetrahedrons[k].node_id[0] = newNodeIds[tetrahedrons[k].node_id[0]];
-					}
-				  }
-			  }
-			  if(nodeKilled[nodeId2] == true)
-			  {
-				  if(newNodeIds[nodeId3] == nodeId1 || newNodeIds[nodeId2] == nodeId3 || newNodeIds[nodeId2] == nodeId4) tetKilled[k] = true;
-				  else 
-				  {
-					while(newNodeIds[tetrahedrons[k].node_id[1]] != -1)
-					{
-						tetrahedrons[k].node_id[1] = newNodeIds[tetrahedrons[k].node_id[1]];
-					}
-				  }
-			  }
-			  if(nodeKilled[nodeId3] == true)
-			  {
-				  if(newNodeIds[nodeId3] == nodeId1 || newNodeIds[nodeId3] == nodeId2 || newNodeIds[nodeId3] == nodeId4) tetKilled[k] = true;
-				  else 
-				  {
-					while(newNodeIds[tetrahedrons[k].node_id[2]] != -1)
-					{
-						tetrahedrons[k].node_id[2] = newNodeIds[tetrahedrons[k].node_id[2]];
-					}
-				  }
-			  }
-			  if(nodeKilled[nodeId4] == true)
-			  {
-				  if(newNodeIds[nodeId4] == nodeId1 || newNodeIds[nodeId4] == nodeId2 || newNodeIds[nodeId4] == nodeId3) tetKilled[k] = true;
-				  else 
-				  {
-					while(newNodeIds[tetrahedrons[k].node_id[3]] != -1)
-					{
-						tetrahedrons[k].node_id[3] = newNodeIds[tetrahedrons[k].node_id[3]];
-					}
-				  }
-			  }
-			  if(tetKilled[k] == false)
-			  {
-				  ED1 = nodeEuclideanDistances[nodeId1];
-				  ED2 = nodeEuclideanDistances[nodeId2];
-				  ED3 = nodeEuclideanDistances[nodeId3];
-				  ED4 = nodeEuclideanDistances[nodeId4];
-				  if(ED1 >= removeED)
-				  {
-					  point = nodeId1;
-					  secondLargestED = ED2;
-					  otherPoint = nodeId2;
-					  if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
-					  if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
-				  }
-				  else if(ED2 >= removeED)
-				  {
-					  point = nodeId2;
-					  secondLargestED = ED1;
-					  otherPoint = nodeId1;
-					  if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
-					  if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
-				  }
-				  else if(ED3 >= removeED)
-				  {
-					  point = nodeId3;
-					  secondLargestED = ED1;
-					  otherPoint = nodeId1;
-					  if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
-					  if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
-				  }
-				  else if(ED4 >= removeED)
-				  {
-					  point = nodeId4;
-					  secondLargestED = ED1;
-					  otherPoint = nodeId1;
-					  if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
-					  if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
-				  }
-				  nodeKilled[point] = true;
-				  newNodeIds[point] = otherPoint;
-				  tetKilled[k] = true;
-			  }
-		  }
-		  if(tetKilled[k] == false) tetsLeft++;
+			nodeId1 = tetrahedrons[k].node_id[0];
+			nodeId2 = tetrahedrons[k].node_id[1];
+			nodeId3 = tetrahedrons[k].node_id[2];
+			nodeId4 = tetrahedrons[k].node_id[3];
+			ED1 = nodeEuclideanDistances[nodeId1];
+			ED2 = nodeEuclideanDistances[nodeId2];
+			ED3 = nodeEuclideanDistances[nodeId3];
+			ED4 = nodeEuclideanDistances[nodeId4];
+			if(ED1 >= removeED)
+			{
+				point = nodeId1;
+				secondLargestED = ED2;
+				otherPoint = nodeId2;
+				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
+				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
+				k = updateNodesandTets(k, point, otherPoint);
+			}
+			else if(ED2 >= removeED)
+			{
+				point = nodeId2;
+				secondLargestED = ED1;
+				otherPoint = nodeId1;
+				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
+				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
+				k = updateNodesandTets(k, point, otherPoint);
+			}
+			else if(ED3 >= removeED)
+			{
+				point = nodeId3;
+				secondLargestED = ED1;
+				otherPoint = nodeId1;
+				if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
+				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
+				k = updateNodesandTets(k, point, otherPoint);
+			}
+			else if(ED4 >= removeED)
+			{
+				point = nodeId4;
+				secondLargestED = ED1;
+				otherPoint = nodeId1;
+				if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
+				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
+				k = updateNodesandTets(k, point, otherPoint);
+			}
+			numTets = tetrahedrons.GetNumberOfTuples();
+			StructArray<Node>& nodes = *(sm->getNodes());
+			StructArray<Tetrahedron>& tetrahedrons = *(sm->getTetrahedrons());
+			numNodes = nodes.GetNumberOfTuples();
+			numTets = tetrahedrons.GetNumberOfTuples();
 	  }
 	  removeED = removeED-1;
   }
-  tetKilled.clear();
 
+  notifyStatusMessage("Complete");
+}
+
+int DecimateSolidMesh::updateNodesandTets(int currentTet, int killedNode, int newNode)
+{
+  SolidMeshDataContainer* sm = getSolidMeshDataContainer();
+  StructArray<Node>& nodes = *(sm->getNodes());
+  StructArray<Tetrahedron>& tetrahedrons = *(sm->getTetrahedrons());
+  int numNodes = nodes.GetNumberOfTuples();
+  int numTets = tetrahedrons.GetNumberOfTuples();
+	
+  size_t nodeId1, nodeId2, nodeId3, nodeId4;
+  int counter = 0;
   int nodeCount = 0;
+  newNodeIds.resize(numNodes, -1);  
   for(size_t i=0;i<numNodes;i++)
   {
-	if(nodeKilled[i] == false)
-	{
+	  if(i != killedNode)
+	  {
 		nodes.CopyTuple(i, nodeCount);
+		newNodeIds[i] = nodeCount;
 		nodeCount++;
-	}
+	  }
   }
   nodes.Resize(nodeCount);
 
   int tetCount = 0;
-  bool good = false;
   for(size_t i=0;i<numTets;i++)
   {
-	if(tetKilled[i] == false)
+	nodeId1 = tetrahedrons[i].node_id[0];
+	nodeId2 = tetrahedrons[i].node_id[1];
+	nodeId3 = tetrahedrons[i].node_id[2];
+	nodeId4 = tetrahedrons[i].node_id[3];
+	if((nodeId1 != killedNode && nodeId2 != killedNode && nodeId3 != killedNode && nodeId4 != killedNode) || (nodeId1 != newNode && nodeId2 != newNode && nodeId3 != newNode && nodeId4 != newNode))
 	{
+		if(nodeId1 == killedNode) tetrahedrons[i].node_id[0] = newNodeIds[newNode];
+		else tetrahedrons[i].node_id[0] = newNodeIds[nodeId1];
+		if(nodeId2 == killedNode) tetrahedrons[i].node_id[1] = newNodeIds[newNode];
+		else tetrahedrons[i].node_id[1] = newNodeIds[nodeId2];
+		if(nodeId3 == killedNode) tetrahedrons[i].node_id[2] = newNodeIds[newNode];
+		else tetrahedrons[i].node_id[2] = newNodeIds[nodeId3];
+		if(nodeId4 == killedNode) tetrahedrons[i].node_id[3] = newNodeIds[newNode];
+		else tetrahedrons[i].node_id[3] = newNodeIds[nodeId4];
 		tetrahedrons.CopyTuple(i, tetCount);
-	    nodeId1 = tetrahedrons[tetCount].node_id[0];
-		good = false;
-		while(good == false)
-		{
-
-		}
-	    nodeId2 = tetrahedrons[tetCount].node_id[1];
-	    nodeId3 = tetrahedrons[tetCount].node_id[2];
-	    nodeId4 = tetrahedrons[tetCount].node_id[3];
 		tetCount++;
+	}
+	else
+	{
+		if(i < currentTet) counter++;
 	}
   }
   tetrahedrons.Resize(tetCount);
 
-  notifyStatusMessage("Complete");
+  return (currentTet - counter);
 }
 
 
