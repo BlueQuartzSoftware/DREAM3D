@@ -34,16 +34,21 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "CalculateTriangleCurvature.h"
+#include "CalculateTriangleGroupCurvatures.h"
 
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "FindNRingNeighbors.h"
 
+
+#if __APPLE__
+#include <Accelerate/Accelerate.h>
+#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateTriangleCurvature::CalculateTriangleCurvature(int nring, std::vector<int> triangleIds,
+CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring, std::vector<int> triangleIds,
                                                       int grainId,
                                                       NodeTrianglesMap_t* node2Triangle,
                                                       SurfaceMeshDataContainer* sm) :
@@ -59,7 +64,7 @@ m_SurfaceMeshDataContainer(sm)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateTriangleCurvature::~CalculateTriangleCurvature()
+CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures()
 {
 
 }
@@ -130,7 +135,7 @@ tbb::task*
 #else
 void
 #endif
-CalculateTriangleCurvature::execute()
+CalculateTriangleGroupCurvatures::execute()
 {
   std::vector<int>::size_type tCount = m_TriangleIds.size();
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
@@ -165,33 +170,23 @@ CalculateTriangleCurvature::execute()
   for(std::vector<int>::size_type i = 0; i < tCount; ++i)
   {
     int triId = m_TriangleIds[i];
-    if (triId != 65764) { continue; }
     nRingNeighborAlg->setTriangleId(triId);
     nRingNeighborAlg->setRegionId(m_GrainId);
     nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
-    ss.str("");
-    ss << "/tmp/nring_" << triId << ".vtk";
-    nRingNeighborAlg->writeVTKFile(ss.str());
+  //  ss.str("");
+  //  ss << "/tmp/nring_" << triId << ".vtk";
+ //   nRingNeighborAlg->writeVTKFile(ss.str());
 
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
 
-    for(int u=0; u < 2; ++u)
-    {
-      std::cout << "Centroid[" << u  << "] =" << patchCentroids->GetComponent(u, 0) << ", " <<patchCentroids->GetComponent(u, 1) << ", " << patchCentroids->GetComponent(u, 2) << std::endl;
-    }
-
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
     subtractVector3d(patchCentroids, sub);
-    for(int u=0; u < 2; ++u)
-    {
-      std::cout << "Centroid[" << u  << "] =" << patchCentroids->GetComponent(u, 0) << ", " <<patchCentroids->GetComponent(u, 1) << ", " << patchCentroids->GetComponent(u, 2) << std::endl;
-    }
 
     double np[3] = {patchNormals->GetComponent(0,0), patchNormals->GetComponent(0,1), patchNormals->GetComponent(0, 2) };
 
@@ -212,15 +207,11 @@ CalculateTriangleCurvature::execute()
     MatrixMath::crossProduct(np,up, vp);
 
     // this consitutes a rotation matrix to a local coordinate system
-#if 1
+
     double rot[3][3] = {{up[0], up[1], up[2]},
                         {vp[0], vp[1], vp[2]},
                         {np[0], np[1], np[2]} };
-#else
-    double rot[3][3] = {{up[0], vp[0], np[0]},
-                        {up[1], vp[1], np[1]},
-                        {up[2], vp[2], np[2]} };
-#endif
+
     // Transform all
     double out[3];
     for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
@@ -234,12 +225,38 @@ CalculateTriangleCurvature::execute()
       ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
     }
 
-    for(int u=0; u < 2; ++u)
+    double* pc = patchCentroids->GetPointer(0);
+
+    DataArray<double>::Pointer bPtr = DataArray<double>::CreateArray(patchCentroids->GetNumberOfTuples() , "DGELS B Matrix");
+    double* B = bPtr->GetPointer(0);
+    DataArray<double>::Pointer aPtr = DataArray<double>::CreateArray(patchCentroids->GetNumberOfTuples() * 3, "DGELS A Matrix");
+    double* A = aPtr->GetPointer(0);
+    int N = 3;
+    int M = patchCentroids->GetNumberOfTuples();
+    int LDA = M;
+    int NRHS = 1;
+    int info = 0;
+    int LWORK = N + M;
+    char TRANS = 'N';
+    DataArray<double>::Pointer workPtr = DataArray<double>::CreateArray(LWORK, 1, "DGELS WORK Array");
+    double* WORK = workPtr->GetPointer(0);
+
+
+    for(int m = 0; m < LDA; ++m)
     {
-      std::cout << "Centroid[" << u  << "] =" << patchCentroids->GetComponent(u, 0) << ", " <<patchCentroids->GetComponent(u, 1) << ", " << patchCentroids->GetComponent(u, 2) << std::endl;
-      std::cout << "Normal[" << u  << "] =" << patchNormals->GetComponent(u, 0) << ", " <<patchNormals->GetComponent(u, 1) << ", " << patchNormals->GetComponent(u, 2) << std::endl;
+      A[m] = 0.5 * pc[m*3] * pc[m*3];  // 1/2 x^2
+      A[m+LDA] = pc[m*3] * pc[m*3 + 1]; // x*y
+      A[m+(2*LDA)] = 0.5 * pc[m*3 + 1] * pc[m*3 + 1];  // 1/2 y^2
+      B[m] = pc[m*3+2]; // The Z Values
     }
 
+    dgels_(&TRANS, &M, &N, &NRHS, A, &M, B, &M, WORK, &LWORK, &info);
+    std::cout << "LEAST SQUARES For Triangle ID " << triId << ": " << B[0] << " " << B[1] << " " << B[2] << std::endl;
+    patchNormals = DataArray<double>::NullPointer();
+    patchCentroids = DataArray<double>::NullPointer();
+    bPtr = DataArray<double>::NullPointer();
+    aPtr = DataArray<double>::NullPointer();
+    workPtr = DataArray<double>::NullPointer();
   }
 
 #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
@@ -250,7 +267,7 @@ CalculateTriangleCurvature::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleCurvature::extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
+DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
                                                                             double* data,
                                                                             const std::string &name)
 {

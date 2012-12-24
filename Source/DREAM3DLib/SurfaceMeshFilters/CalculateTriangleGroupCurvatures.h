@@ -37,8 +37,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _CalculateTriangleCurvature_H_
-#define _CalculateTriangleCurvature_H_
+#ifndef _CalculateTriangleGroupCurvatures_H_
+#define _CalculateTriangleGroupCurvatures_H_
 
 #include <string>
 
@@ -60,25 +60,25 @@ class SurfaceMeshDataContainer;
 
 
 /**
- * @class CalculateTriangleCurvature CalculateTriangleCurvature.h /SurfaceMeshFilters/CalculateTriangleCurvature.h
+ * @class CalculateTriangleGroupCurvatures CalculateTriangleGroupCurvatures.h /SurfaceMeshFilters/CalculateTriangleGroupCurvatures.h
  * @brief Calculates the Curvature at a particular triangle
  * @author Mike Jackson (BlueQuartz Software)s
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CalculateTriangleCurvature
+class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
 #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
 : public tbb::task
 #endif
 {
   public:
-    CalculateTriangleCurvature(int nring,
+    CalculateTriangleGroupCurvatures(int nring,
                                 std::vector<int> triangleIds,
                                 int grainId,
                                 NodeTrianglesMap_t* node2Triangle,
                                 SurfaceMeshDataContainer* sm);
 
-    virtual ~CalculateTriangleCurvature();
+    virtual ~CalculateTriangleGroupCurvatures();
 
 #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
     tbb::task*
@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT CalculateTriangleCurvature
     execute();
 
   protected:
-    CalculateTriangleCurvature();
+    CalculateTriangleGroupCurvatures();
 
 
     DataArray<double>::Pointer extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT CalculateTriangleCurvature
 
 };
 
-#endif /* _CalculateTriangleCurvature_H_ */
+#endif /* _CalculateTriangleGroupCurvatures_H_ */
 
 
 /*
@@ -112,45 +112,43 @@ class DREAM3DLib_EXPORT CalculateTriangleCurvature
  *
 std::string indent("  ");
 
-#if defined (OpenMBIR_USE_PARALLEL_ALGORITHMS)
+#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
   tbb::task_scheduler_init init;
   //   int m_NumThreads = init.default_num_threads();
 #else
   //   int m_NumThreads = 1;
 #endif
 
-  notify("Starting Forward Projection", 10, Observable::UpdateProgressValueAndMessage);
   START_TIMER;
   // This next section looks crazy with all the #if's but this makes sure we are
   // running the exact same code whether in parallel or serial.
 
-#if OpenMBIR_USE_PARALLEL_ALGORITHMS
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_group* g = new tbb::task_group;
   if(getVerbose())
   {
     std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
-    std::cout << "Forward Projection Running in Parallel." << std::endl;
+    std::cout << "CalculateTriangleGroupCurvatures Running in Parallel." << std::endl;
   }
 #else
   if(getVerbose())
   {
-    std::cout << "Forward Projection Running in Serial." << std::endl;
+    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
   }
 #endif
   // Queue up a thread for each z layer of the Geometry. The threads will only be
   // run as hardware resources open up so this will not just fire up a gazillion
   // threads.
-  for (uint16_t t = 0; t < geometry->N_z; t++)
+  for (uint16_t t = 0; t < numberOfFaces; t++)
   {
-#if OpenMBIR_USE_PARALLEL_ALGORITHMS
-    g->run(ForwardProject(sinogram.get(), geometry.get(), tempCol, voxelLineResponse, yEstimate, this, t, this));
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+    g->run(CalculateTriangleGroupCurvatures(....));
 #else
-    ForwardProject fp(sinogram.get(), geometry.get(), tempCol, voxelLineResponse, yEstimate, NuisanceParams.get(), t, this);
-    //fp.setObservers(getObservers());
+    CalculateTriangleGroupCurvatures fp(....);
     fp();
 #endif
   }
-#if OpenMBIR_USE_PARALLEL_ALGORITHMS
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
   g->wait(); // Wait for all the threads to complete before moving on.
   delete g;
 #endif

@@ -37,7 +37,7 @@
 #include "GenerateNodeTriangleConectivity.h"
 
 
-#include "CalculateTriangleCurvature.h"
+#include "CalculateTriangleGroupCurvatures.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -294,7 +294,7 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
       triangleIds.push_back(i);
     }
   }
-  CalculateTriangleCurvature curvature(3, triangleIds, targetGrainId, &m_Node2Triangle, getSurfaceMeshDataContainer());
+  CalculateTriangleGroupCurvatures curvature(3, triangleIds, targetGrainId, &m_Node2Triangle, getSurfaceMeshDataContainer());
   curvature.execute();
 #endif
 
