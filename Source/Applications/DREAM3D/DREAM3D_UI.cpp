@@ -595,7 +595,7 @@ void DREAM3D_UI::loadPlugins()
     QFileInfo fi(path);
     QString fileName = fi.fileName();
     QObject *plugin = loader.instance();
-      std::cout << "plugin Pointer: " << plugin << std::endl;
+    std::cout << "plugin Pointer: " << plugin << std::endl;
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
       //populateMenus(plugin);
