@@ -129,9 +129,9 @@ ELSE(VXL_FOUND)
 ENDIF(VXL_FOUND)
 endif()
 
-if(APPLE)
-find_library(LAPACK_LIB Accelerate)
-endif(APPLE)
+#if(APPLE)
+#find_library(LAPACK_LIB Accelerate)
+#endif(APPLE)
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks

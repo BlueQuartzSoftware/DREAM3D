@@ -6,7 +6,7 @@
 #
 # User can set the EIGEN_INSTALL environment variable to help find the installation
 
-set(EIGEN_DEBUG 0)
+set(EIGEN_DEBUG 1)
 
 
 if ("${EIGEN_INSTALL}" STREQUAL "")
@@ -15,12 +15,12 @@ endif()
 
 
 SET(EIGEN_INCLUDE_SEARCH_DIRS
-  ${EIGEN_INSTALL}/include/eigen3/Eigen
+  ${EIGEN_INSTALL}/include/eigen3
 )
 
-FIND_PATH(EIGEN_INCLUDE_DIR 
-  NAMES Eigen
-  PATHS ${EIGEN_INCLUDE_SEARCH_DIRS} 
+FIND_PATH(EIGEN_INCLUDE_DIR
+  NAMES Eigen/Eigen
+  PATHS ${EIGEN_INCLUDE_SEARCH_DIRS}
   NO_DEFAULT_PATH
 )
 

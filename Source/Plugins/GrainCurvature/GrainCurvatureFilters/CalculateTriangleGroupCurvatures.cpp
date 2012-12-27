@@ -36,27 +36,33 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
+#include <Eigen/Dense>
+
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
-#include "FindNRingNeighbors.h"
+#include "DREAM3DLib/SurfaceMeshFilters/FindNRingNeighbors.h"
 
-
+#if DREAM3D_USE_LAPACK
 #if __APPLE__
 #include <Accelerate/Accelerate.h>
 #endif
+#endif
+
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring, std::vector<int> triangleIds,
-                                                      int grainId,
-                                                      NodeTrianglesMap_t* node2Triangle,
-                                                      SurfaceMeshDataContainer* sm) :
-m_NRing(nring),
-m_TriangleIds(triangleIds),
-m_GrainId(grainId),
-m_NodeTrianglesMap(node2Triangle),
-m_SurfaceMeshDataContainer(sm)
+                                                                   int grainId,
+                                                                   NodeTrianglesMap_t* node2Triangle,
+                                                                   SurfaceMeshDataContainer* sm) :
+  m_NRing(nring),
+  m_TriangleIds(triangleIds),
+  m_GrainId(grainId),
+  m_NodeTrianglesMap(node2Triangle),
+  m_SurfaceMeshDataContainer(sm)
 {
 
 }
@@ -139,7 +145,7 @@ CalculateTriangleGroupCurvatures::execute()
 {
   std::vector<int>::size_type tCount = m_TriangleIds.size();
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
-//  size_t totalTriangles = m_SurfaceMeshDataContainer->getTriangles()->GetNumberOfTuples();
+  //  size_t totalTriangles = m_SurfaceMeshDataContainer->getTriangles()->GetNumberOfTuples();
 
   IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleCentroids);
   if (NULL == centroidPtr.get())
@@ -147,9 +153,9 @@ CalculateTriangleGroupCurvatures::execute()
     std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
     return
     #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-    NULL
+        NULL
     #endif
-    ;
+        ;
   }
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
 
@@ -159,9 +165,9 @@ CalculateTriangleGroupCurvatures::execute()
     std::cout << "Triangle Normals are required for this algorithm" << std::endl;
     return
     #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-    NULL
+        NULL
     #endif
-    ;
+        ;
   }
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
   std::stringstream ss;
@@ -175,9 +181,9 @@ CalculateTriangleGroupCurvatures::execute()
     nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
-  //  ss.str("");
-  //  ss << "/tmp/nring_" << triId << ".vtk";
- //   nRingNeighborAlg->writeVTKFile(ss.str());
+    //  ss.str("");
+    //  ss << "/tmp/nring_" << triId << ".vtk";
+    //   nRingNeighborAlg->writeVTKFile(ss.str());
 
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
 
@@ -227,6 +233,8 @@ CalculateTriangleGroupCurvatures::execute()
 
     double* pc = patchCentroids->GetPointer(0);
 
+
+#if DREAM3D_USE_LAPACK
     DataArray<double>::Pointer bPtr = DataArray<double>::CreateArray(patchCentroids->GetNumberOfTuples() , "DGELS B Matrix");
     double* B = bPtr->GetPointer(0);
     DataArray<double>::Pointer aPtr = DataArray<double>::CreateArray(patchCentroids->GetNumberOfTuples() * 3, "DGELS A Matrix");
@@ -252,13 +260,30 @@ CalculateTriangleGroupCurvatures::execute()
 
     dgels_(&TRANS, &M, &N, &NRHS, A, &M, B, &M, WORK, &LWORK, &info);
     std::cout << "LEAST SQUARES For Triangle ID " << triId << ": " << B[0] << " " << B[1] << " " << B[2] << std::endl;
-    patchNormals = DataArray<double>::NullPointer();
-    patchCentroids = DataArray<double>::NullPointer();
-    bPtr = DataArray<double>::NullPointer();
-    aPtr = DataArray<double>::NullPointer();
-    workPtr = DataArray<double>::NullPointer();
-  }
+#endif
 
+
+    int N = 3;
+    int M = patchCentroids->GetNumberOfTuples();
+    int LDA = M;
+
+    Eigen::MatrixXf A(LDA, 3);
+    Eigen::VectorXf b(LDA);
+
+    for(int m = 0; m < LDA; ++m)
+    {
+      A(m*N) = 0.5 * pc[m*N] * pc[m*N];  // 1/2 x^2
+      A(m*N + 1) = pc[m*N] * pc[m*N + 1]; // x*y
+      A(m*N + 2) = 0.5 * pc[m*N + 1] * pc[m*N + 1];  // 1/2 y^2
+      b[m] = pc[m*N+2]; // The Z Values
+    }
+
+//    std::cout << "Here is the matrix A:\n" << A << std::endl;
+//    std::cout << "Here is the vector b:\n" << B << std::endl;
+    std::cout << "The least-squares solution is:\n" << A.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b) << std::endl;
+
+
+  } // End Loop over this triangle
 #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
   return NULL;
 #endif
@@ -268,8 +293,8 @@ CalculateTriangleGroupCurvatures::execute()
 //
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
-                                                                            double* data,
-                                                                            const std::string &name)
+                                                                              double* data,
+                                                                              const std::string &name)
 {
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size() * 3, name);
   extractedData->SetNumberOfComponents(3);
