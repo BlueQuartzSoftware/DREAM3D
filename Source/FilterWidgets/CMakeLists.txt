@@ -47,7 +47,7 @@ configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
                 ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
 add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
-target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib ${LAPACK} )
+target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
 
 
 # Now run the code to generate the header files which will over write the place

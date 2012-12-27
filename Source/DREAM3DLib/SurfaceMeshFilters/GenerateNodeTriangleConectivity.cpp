@@ -37,8 +37,6 @@
 #include "GenerateNodeTriangleConectivity.h"
 
 
-#include "CalculateTriangleGroupCurvatures.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -251,6 +249,14 @@ void GenerateNodeTriangleConectivity::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+NodeTrianglesMap_t& GenerateNodeTriangleConectivity::getNode2TriangleMap()
+{
+  return m_Node2Triangle;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateNodeTriangleConectivity::generateConnectivity()
 {
 
@@ -277,12 +283,12 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
   }
 
 
-
+#if 0
   StructArray<NodeTriangleMapping_t>::Pointer nodeTriangleListArray = StructArray<NodeTriangleMapping_t>::CreateArray(m_Node2Triangle.size(), "NodeTriangleListArray");
   nodeTriangleListArray->initializeWithZeros();
 
 
-#if 1
+
   // Test out the Curvature Codes for Grain ID = 10;
   int targetGrainId = 10;
   std::vector<int> triangleIds;

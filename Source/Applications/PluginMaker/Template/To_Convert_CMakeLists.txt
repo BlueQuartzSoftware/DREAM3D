@@ -7,16 +7,6 @@ project(GrainCurvaturePlugin)
 set(PLUGIN_NAME GrainCurvaturePlugin)
 
 # --------------------------------------------------------------------
-# This plugin needs the Eigen library for Least Squares fit and Eigen
-# value/vector calculations.
-Find_Package(Eigen REQUIRED)
-if (NOT EIGEN_FOUND)
-  message(FATAL_ERROR "Eigen is required for the Grain Curvature plugin to work")
-endif()
-
-include_directories( ${EIGEN_INCLUDE_DIRS} )
-
-# --------------------------------------------------------------------
 # Look for Qt 4 as we need it for the plugin GUI to be generated
 if(NOT QT4_FOUND)
     message(FATAL_ERROR "Qt 4 is Needed for this GrainCurvaturePlugin.")
@@ -198,8 +188,8 @@ file(READ ${GrainCurvatureWidget_GEN_SRCS_File} GrainCurvatureWidget_GEN_SRCS)
 
 # Remove the temp files that we no longer need
 file(REMOVE ${CodeGeneratorFile})
-file(REMOVE ${GrainCurvatureWidget_GEN_HDRS_File})
-file(REMOVE ${GrainCurvatureWidget_GEN_SRCS_File})
+#file(REMOVE ${GrainCurvatureWidget_GEN_HDRS_File})
+#file(REMOVE ${GrainCurvatureWidget_GEN_SRCS_File})
 
 
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
@@ -222,9 +212,9 @@ target_link_libraries(GrainCurvatureWidgetCodeGen MXA EbsdLib DREAM3DLib)
 # holder files that were generated from above
 add_custom_command(TARGET GrainCurvatureWidgetCodeGen POST_BUILD
                     COMMAND $<TARGET_FILE:GrainCurvatureWidgetCodeGen> )
-# ******************************************************************************
-
-
+# ******************************************************************************                    
+                    
+                                         
 add_definitions(-DDREAM3D_USE_QT)
 if (MSVC)   # Do not generate manifests for the plugins - caused issues loading plugins
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /MANIFEST:NO")

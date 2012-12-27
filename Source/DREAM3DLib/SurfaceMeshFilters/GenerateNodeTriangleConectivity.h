@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
 
-
+    NodeTrianglesMap_t& getNode2TriangleMap();
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

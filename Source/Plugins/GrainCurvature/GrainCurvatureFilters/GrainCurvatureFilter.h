@@ -29,10 +29,10 @@ class GrainCurvatureFilter : public AbstractFilter
 
     virtual ~GrainCurvatureFilter();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to
-    * DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    * DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    */
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
+
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 
     /**
@@ -85,6 +85,9 @@ class GrainCurvatureFilter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    int32_t* m_SurfaceMeshUniqueEdges;
+    int32_t* m_SurfaceMeshTriangleEdges;
+
 
     GrainCurvatureFilter(const GrainCurvatureFilter&); // Copy Constructor Not Implemented
     void operator=(const GrainCurvatureFilter&); // Operator '=' Not Implemented

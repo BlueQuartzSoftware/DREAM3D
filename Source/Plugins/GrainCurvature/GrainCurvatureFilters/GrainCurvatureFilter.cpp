@@ -6,12 +6,21 @@
 
 
 
+#include "DREAM3DLib/SurfaceMeshFilters/GenerateNodeTriangleConectivity.h"
+
+
+#include "CalculateTriangleGroupCurvatures.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GrainCurvatureFilter::GrainCurvatureFilter() :
-AbstractFilter()
+AbstractFilter(),
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
+  m_SurfaceMeshUniqueEdges(NULL),
+  m_SurfaceMeshTriangleEdges(NULL)
 {
   setupFilterParameters();
 }
@@ -119,21 +128,44 @@ void GrainCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter*
 void GrainCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
+  std::stringstream ss;
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if(NULL == sm)
   {
-    ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
-    setErrorCondition(-1);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
-  */
+  else
+  {
+    // We MUST have Nodes
+    if(sm->getNodes().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+      setErrorCondition(-384);
+    }
 
+    // We MUST have Triangles defined also.
+    if(sm->getTriangles().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+      setErrorCondition(-384);
+    }
+    else
+    {
+      // This depends on the triangles array already being created
+      int size = sm->getTriangles()->GetNumberOfTuples();
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
+    }
 
+    // We do not know the size of the array so we can not use the macro so we just manually call
+    // the needed methods that will propagate these array additions to the pipeline
+    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+
+    // This is just for tracking what Arrays are being created by this filter. Normally the macro
+    // would do this for us.
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
+  }
 }
 
 
@@ -152,19 +184,63 @@ void GrainCurvatureFilter::preflight()
 // -----------------------------------------------------------------------------
 void GrainCurvatureFilter::execute()
 {
-  int err = 0;
+ int err = 0;
+  std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
+  // Just to double check we have everything.
+  dataCheck(false, 0,0,0);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
+  // Make sure the Triangle Connectivity is created
+  GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
+  connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  connectivity->setMessagePrefix(getMessagePrefix());
+  connectivity->execute();
+
+  NodeTrianglesMap_t& node2Triangle = connectivity->getNode2TriangleMap();
+  // Now calculate the curvature.
+
+  // Get our Reference counted Array of Triangle Structures
+  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  if(NULL == trianglesPtr.get())
+  {
+    setErrorCondition(-556);
+    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
+    return;
+  }
+  int ntri = trianglesPtr->GetNumberOfTuples();
+
+
+  // get the triangle definitions - use the pointer to the start of the Struct Array
+  Triangle* triangles = trianglesPtr->GetPointer(0);
+
+  // Test out the Curvature Codes for Grain ID = 10;
+  int targetGrainId = 10;
+  std::vector<int> triangleIds;
+  for(int i = 0; i < ntri; ++i)
+  {
+    Triangle& tri = triangles[i];
+    if (tri.nSpin[0] == targetGrainId || tri.nSpin[1] == targetGrainId)
+    {
+      triangleIds.push_back(i);
+    }
+  }
+  CalculateTriangleGroupCurvatures curvature(3, triangleIds, targetGrainId, &node2Triangle, getSurfaceMeshDataContainer());
+  curvature.execute();
+
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
