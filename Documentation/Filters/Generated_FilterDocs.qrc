@@ -99,6 +99,8 @@
     <file>SurfaceMeshFilters/GenerateUniqueEdges.html</file>
     <file>SurfaceMeshFilters/TriangleCentroidFilter.html</file>
     <file>SurfaceMeshFilters/TriangleNormalFilter.html</file>
+    <file>SurfaceMeshFilters/GrainFaceFilter.html</file>
+    <file>SurfaceMeshFilters/GrainCurvatureFilter.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
     <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>

@@ -42,7 +42,10 @@
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshFilters/FindNRingNeighbors.h"
 
-#if DREAM3D_USE_LAPACK
+
+
+#if GRAINCURVATURE_USE_LAPACK
+
 #if __APPLE__
 #include <Accelerate/Accelerate.h>
 #endif
@@ -218,7 +221,7 @@ CalculateTriangleGroupCurvatures::execute()
                         {vp[0], vp[1], vp[2]},
                         {np[0], np[1], np[2]} };
 
-    // Transform all
+    // Transform all centroids to new coordinate system
     double out[3];
     for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
     {
@@ -231,57 +234,42 @@ CalculateTriangleGroupCurvatures::execute()
       ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
     }
 
-    double* pc = patchCentroids->GetPointer(0);
-
-
-#if DREAM3D_USE_LAPACK
-    DataArray<double>::Pointer bPtr = DataArray<double>::CreateArray(patchCentroids->GetNumberOfTuples() , "DGELS B Matrix");
-    double* B = bPtr->GetPointer(0);
-    DataArray<double>::Pointer aPtr = DataArray<double>::CreateArray(patchCentroids->GetNumberOfTuples() * 3, "DGELS A Matrix");
-    double* A = aPtr->GetPointer(0);
-    int N = 3;
-    int M = patchCentroids->GetNumberOfTuples();
-    int LDA = M;
-    int NRHS = 1;
-    int info = 0;
-    int LWORK = N + M;
-    char TRANS = 'N';
-    DataArray<double>::Pointer workPtr = DataArray<double>::CreateArray(LWORK, 1, "DGELS WORK Array");
-    double* WORK = workPtr->GetPointer(0);
-
-
-    for(int m = 0; m < LDA; ++m)
     {
-      A[m] = 0.5 * pc[m*3] * pc[m*3];  // 1/2 x^2
-      A[m+LDA] = pc[m*3] * pc[m*3 + 1]; // x*y
-      A[m+(2*LDA)] = 0.5 * pc[m*3 + 1] * pc[m*3 + 1];  // 1/2 y^2
-      B[m] = pc[m*3+2]; // The Z Values
+      // Solve the Least Squares fit for f(x,y) = 0.5 * A * x^2 + Bxy + 0.5*C*y^2 where
+      // we are solving for the A, B & C constants.
+      int cols = 3;
+      int rows = patchCentroids->GetNumberOfTuples();
+      Eigen::MatrixXd A(rows, cols);
+      Eigen::VectorXd b(rows);
+      double x, y, z;
+      for(int m = 0; m < rows; ++m)
+      {
+        x = patchCentroids->GetComponent(m, 0);
+        y = patchCentroids->GetComponent(m, 1);
+        z = patchCentroids->GetComponent(m, 2);
+
+        A(m) = 0.5 * x * x;  // 1/2 x^2
+        A(m + rows) = x * y; // x*y
+        A(m + rows*2) = 0.5 * y * y;  // 1/2 y^2
+        b[m] = z; // The Z Values
+      }
+      Eigen::Vector3d sln1 = A.colPivHouseholderQr().solve(b);
+//      std::cout << "The solution is:\n" << sln1 << std::endl;
+      // Now that we have the A, B & C constants we can solve the Eigen value/vector problem
+      // to get the principal curvatures and pricipal directions.
+      Eigen::Matrix2d M;
+      M << sln1(0), sln1(1), sln1(1), sln1(2);
+      Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> eig(M);
+      Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::RealVectorType eValues = eig.eigenvalues();
+      Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::MatrixType eVectors = eig.eigenvectors();
+
+      double gaussianCurvature = eValues(0) + eValues(1);
+      double meanCurvature = gaussianCurvature/2.0;
+
+//      std::cout << "Eigen Values: " << eValues << std::endl;
+//      std::cout << "Eigen Vectors: " << eVectors << std::endl;
+
     }
-
-    dgels_(&TRANS, &M, &N, &NRHS, A, &M, B, &M, WORK, &LWORK, &info);
-    std::cout << "LEAST SQUARES For Triangle ID " << triId << ": " << B[0] << " " << B[1] << " " << B[2] << std::endl;
-#endif
-
-
-    int N = 3;
-    int M = patchCentroids->GetNumberOfTuples();
-    int LDA = M;
-
-    Eigen::MatrixXf A(LDA, 3);
-    Eigen::VectorXf b(LDA);
-
-    for(int m = 0; m < LDA; ++m)
-    {
-      A(m*N) = 0.5 * pc[m*N] * pc[m*N];  // 1/2 x^2
-      A(m*N + 1) = pc[m*N] * pc[m*N + 1]; // x*y
-      A(m*N + 2) = 0.5 * pc[m*N + 1] * pc[m*N + 1];  // 1/2 y^2
-      b[m] = pc[m*N+2]; // The Z Values
-    }
-
-//    std::cout << "Here is the matrix A:\n" << A << std::endl;
-//    std::cout << "Here is the vector b:\n" << B << std::endl;
-    std::cout << "The least-squares solution is:\n" << A.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(b) << std::endl;
-
 
   } // End Loop over this triangle
 #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)

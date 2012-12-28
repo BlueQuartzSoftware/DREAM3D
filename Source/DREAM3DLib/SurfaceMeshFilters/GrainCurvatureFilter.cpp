@@ -1,13 +1,46 @@
-/*
- * Your License or Copyright Information can go here
- */
+/* ============================================================================
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "GrainCurvatureFilter.h"
 
 
 
 #include "DREAM3DLib/SurfaceMeshFilters/GenerateNodeTriangleConectivity.h"
-
+#include "DREAM3DLib/SurfaceMeshFilters/TriangleCentroidFilter.h"
+#include "DREAM3DLib/SurfaceMeshFilters/TriangleNormalFilter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 
@@ -203,14 +236,41 @@ void GrainCurvatureFilter::execute()
     return;
   }
 
+  // We need to make sure we have up to date values for the Triangle Centroids and Triangle Normals
+  // so we are going to recalculate them all just in case they are stale
+  TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
+  centroidFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  centroidFilter->setMessagePrefix(getMessagePrefix());
+  centroidFilter->execute();
+  if (centroidFilter->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the triangle centroids", -801);
+    return;
+  }
+
+  TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
+  normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  normalsFilter->setMessagePrefix(getMessagePrefix());
+  normalsFilter->execute();
+  if (normalsFilter->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the triangle normals", -801);
+    return;
+  }
+
+
   // Make sure the Triangle Connectivity is created
   GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
   connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
   connectivity->setMessagePrefix(getMessagePrefix());
   connectivity->execute();
-
+  if (connectivity->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the Mesh Connectivity", -800);
+    return;
+  }
   NodeTrianglesMap_t& node2Triangle = connectivity->getNode2TriangleMap();
-  // Now calculate the curvature.
+
 
   // Get our Reference counted Array of Triangle Structures
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
@@ -226,8 +286,17 @@ void GrainCurvatureFilter::execute()
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
 
+
+  // We need a filter to group triangles by grain face. Each Grain Face can belong to 2 different grains
+
+
+// *********************** This next section should be task parallelized using TBB::task() ****************************
   // Test out the Curvature Codes for Grain ID = 10;
   int targetGrainId = 10;
+  ss.str("");
+  ss << "Finding all Triangles for Grain " << targetGrainId;
+  notifyStatusMessage(ss.str());
+
   std::vector<int> triangleIds;
   for(int i = 0; i < ntri; ++i)
   {
@@ -237,9 +306,14 @@ void GrainCurvatureFilter::execute()
       triangleIds.push_back(i);
     }
   }
+
+
+  ss.str("");
+  ss << "Calculating Curvature for Grain " << targetGrainId;
+  notifyStatusMessage(ss.str());
   CalculateTriangleGroupCurvatures curvature(3, triangleIds, targetGrainId, &node2Triangle, getSurfaceMeshDataContainer());
   curvature.execute();
-
+// *********************** END END END END END END  ********************************************************************
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

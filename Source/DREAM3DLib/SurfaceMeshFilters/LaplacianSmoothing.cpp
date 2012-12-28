@@ -245,6 +245,7 @@ void LaplacianSmoothing::execute()
 // -----------------------------------------------------------------------------
 int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
 {
+  notifyStatusMessage("Generating Lambda values");
   StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
   if(NULL == nodesPtr.get())
   {
@@ -410,10 +411,6 @@ int LaplacianSmoothing::smooth()
         ll = lambda[i];
         Node& node = vsm[i];
         node.coord[j] += ll*dlta;
-//        if (node.coord[j] > 1000.0)
-//        {
-//          std::cout << "Here: " << node.coord[j] << std::endl;
-//        }
         delta[in0] = 0.0; //reset for next iteration
       }
       ncon[i] = 0;//reset for next iteration

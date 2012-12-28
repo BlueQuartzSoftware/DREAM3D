@@ -3,11 +3,8 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource>
-    <file>document.css</file>
-    <file>catalog.css</file>
-    <file>index.html</file>
 
     <!-- ***** GrainCurvatureFilters ***** -->
-    <file>GrainCurvatureFilters/GrainCurvatureFilter.html</file>
+    <file>SurfaceMeshFilters/GrainCurvatureFilter.html</file>
   </qresource>
 </RCC>

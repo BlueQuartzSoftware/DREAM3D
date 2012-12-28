@@ -129,10 +129,6 @@ ELSE(VXL_FOUND)
 ENDIF(VXL_FOUND)
 endif()
 
-#if(APPLE)
-#find_library(LAPACK_LIB Accelerate)
-#endif(APPLE)
-
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
@@ -153,6 +149,15 @@ if (DREAM3D_USE_MULTITHREADED_ALGOS)
     set(DREAM3D_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
+# --------------------------------------------------------------------
+# DREAM3D needs the Eigen library for Least Squares fit and Eigen
+# value/vector calculations.
+Find_Package(Eigen REQUIRED)
+if(NOT EIGEN_FOUND)
+  message(WARNING "The Eigen Library is required for some algorithms. The Eigen Library could not be located so these algorithms will be disabled.")
+else()
+  include_directories( ${EIGEN_INCLUDE_DIRS} )
+endif()
 
 # We do NOT want to install any of the headers
 set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")

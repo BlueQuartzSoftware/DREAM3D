@@ -169,7 +169,7 @@ void GenerateUniqueEdges::generateConnectivity()
 // opertates in this program.  The time to cacluate the vertex connectivity arrays is long, and not needed
 // for mesh smoothing.
 
-
+  notifyStatusMessage("Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   if(NULL == trianglesPtr.get())
@@ -232,6 +232,8 @@ void GenerateUniqueEdges::generateConnectivity()
     }
   }
 
+
+  notifyStatusMessage("Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_map.size(), 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
@@ -247,7 +249,7 @@ void GenerateUniqueEdges::generateConnectivity()
   // Finally push both the arrays into the Data Container for the pipeline
   getSurfaceMeshDataContainer()->addCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArrayPtr);
 
-
+  notifyStatusMessage("Complete");
   return;
 }
 

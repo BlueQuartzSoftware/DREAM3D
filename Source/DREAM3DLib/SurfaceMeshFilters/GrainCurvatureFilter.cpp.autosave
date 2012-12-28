@@ -34,14 +34,22 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GenerateNodeTriangleConectivity.h"
+#include "GrainCurvatureFilter.h"
+
+
+
+#include "DREAM3DLib/SurfaceMeshFilters/GenerateNodeTriangleConectivity.h"
+#include "DREAM3DLib/SurfaceMeshFilters/TriangleCentroidFilter.h"
+#include "DREAM3DLib/SurfaceMeshFilters/TriangleNormalFilter.h"
+
+#include "CalculateTriangleGroupCurvatures.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
-  AbstractFilter(),
+GrainCurvatureFilter::GrainCurvatureFilter() :
+AbstractFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
   m_SurfaceMeshUniqueEdges(NULL),
@@ -53,114 +61,33 @@ GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConectivity::~GenerateNodeTriangleConectivity()
+GrainCurvatureFilter::~GrainCurvatureFilter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::setupFilterParameters()
+void GrainCurvatureFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
-  /* Place all your option initialization code here */
-  /* For String input use this code */
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("STL Output Prefix");
-    parameter->setPropertyName("StlFilePrefix");
-    parameter->setWidgetType(FilterParameter::StringWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*  For an Integer use this code
-   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Triangle ID");
-    parameter->setPropertyName("TriangleId");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Grain ID");
-    parameter->setPropertyName("RegionId");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-*/
-  /*  For a Floating point value use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Misorientation Tolerance");
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an input file use this code*/
-  /*  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an output file use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Alignment File");
-    parameter->setPropertyName("AlignmentShiftFileName");
-    parameter->setWidgetType(FilterParameter::OutputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For a simple true/false boolean use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Alignment Shift File");
-    parameter->setPropertyName("WriteAlignmentShifts");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }*/
-  /*   For presenting a set of choices to the user use this code*/
-  /* {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Conversion Type");
-    parameter->setPropertyName("ConversionType");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
-    parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
-    parameter->setChoices(choices);
-    parameters.push_back(parameter);
-  }*/
-
-
-  setFilterParameters(parameters);
+  std::vector<FilterParameter::Pointer> options;
+  setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GrainCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-/*      writer->writeValue("TriangleId", getTriangleId() );
-      writer->writeValue("RegionId", getTriangleId() );*/
+  /*  writer->writeValue("OutputFile", getOutputFile() ); */
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GrainCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -207,7 +134,7 @@ void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::preflight()
+void GrainCurvatureFilter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -217,9 +144,9 @@ void GenerateNodeTriangleConectivity::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::execute()
+void GrainCurvatureFilter::execute()
 {
-  int err = 0;
+ int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
@@ -238,28 +165,41 @@ void GenerateNodeTriangleConectivity::execute()
     return;
   }
 
-  notifyStatusMessage("Starting");
+  // We need to make sure we have up to date values for the Triangle Centroids and Triangle Normals
+  // so we are going to recalculate them all just in case they are stale
+  TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
+  centroidFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  centroidFilter->setMessagePrefix(getMessagePrefix());
+  centroidFilter->execute();
+  if (centroidFilter->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the triangle centroids", -801);
+    return;
+  }
 
-  // Generate the connectivity data
-  generateConnectivity();
+  TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
+  normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  normalsFilter->setMessagePrefix(getMessagePrefix());
+  normalsFilter->execute();
+  if (normalsFilter->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the triangle normals", -801);
+    return;
+  }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-NodeTrianglesMap_t& GenerateNodeTriangleConectivity::getNode2TriangleMap()
-{
-  return m_Node2Triangle;
-}
+  // Make sure the Triangle Connectivity is created
+  GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
+  connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  connectivity->setMessagePrefix(getMessagePrefix());
+  connectivity->execute();
+  if (connectivity->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the Mesh Connectivity", -800);
+    return;
+  }
+  NodeTrianglesMap_t& node2Triangle = connectivity->getNode2TriangleMap();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::generateConnectivity()
-{
 
   // Get our Reference counted Array of Triangle Structures
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
@@ -275,13 +215,35 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
 
+
+  // We need a filter to group triangles by grain face. Each Grain Face can belong to 2 different grains
+
+
+// *********************** This next section should be task parallelized using TBB::task() ****************************
+  // Test out the Curvature Codes for Grain ID = 10;
+  int targetGrainId = 10;
+  ss.str("");
+  ss << "Finding all Triangles for Grain " << targetGrainId;
+  notifyStatusMessage(ss.str());
+
+  std::vector<int> triangleIds;
   for(int i = 0; i < ntri; ++i)
   {
     Triangle& tri = triangles[i];
-    m_Node2Triangle[tri.node_id[0]].insert(tri.tIndex);
-    m_Node2Triangle[tri.node_id[1]].insert(tri.tIndex);
-    m_Node2Triangle[tri.node_id[2]].insert(tri.tIndex);
+    if (tri.nSpin[0] == targetGrainId || tri.nSpin[1] == targetGrainId)
+    {
+      triangleIds.push_back(i);
+    }
   }
-  return;
-}
 
+
+  ss.str("");
+  ss << "Calculating Curvature for Grain " << targetGrainId;
+  notifyStatusMessage(ss.str());
+  CalculateTriangleGroupCurvatures curvature(3, triangleIds, targetGrainId, &node2Triangle, getSurfaceMeshDataContainer());
+  curvature.execute();
+// *********************** END END END END END END  ********************************************************************
+
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage("Complete");
+}
