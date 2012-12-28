@@ -6,7 +6,7 @@
 #
 # User can set the EIGEN_INSTALL environment variable to help find the installation
 
-set(EIGEN_DEBUG 1)
+set(EIGEN_DEBUG 0)
 
 
 if ("${EIGEN_INSTALL}" STREQUAL "")

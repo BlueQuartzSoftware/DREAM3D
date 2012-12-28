@@ -183,15 +183,15 @@ void TriangleCentroidFilter::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
-
+  notifyStatusMessage("Starting");
 
   StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
 
