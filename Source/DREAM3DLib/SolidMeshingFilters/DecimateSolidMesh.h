@@ -75,6 +75,9 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 
    private:
 	std::vector<int> newNodeIds;
+	std::vector<bool> tetDone;
+	std::vector<int> nodeGrainIds;
+	std::vector<int> nodeEuclideanDistances;
 
 	int updateNodesandTets(int currentTet, int killedNode, int newNode);
 
