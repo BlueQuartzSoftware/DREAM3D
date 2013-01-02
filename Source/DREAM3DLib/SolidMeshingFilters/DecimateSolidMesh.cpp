@@ -135,11 +135,12 @@ void DecimateSolidMesh::execute()
   size_t nodeId1, nodeId2, nodeId3, nodeId4;
 
   //Locate Boundary Nodes
-  std::vector<int> nodeGrainIds(numNodes,-1);
-  std::vector<int> nodeEuclideanDistances(numNodes,-1);
+  nodeGrainIds.resize(numNodes,-1);
+  nodeEuclideanDistances.resize(numNodes,-1);
   for(size_t k = 0; k < numTets; k++)
   {
 	  gnum = tetrahedrons[k].nSpin;
+	  float x = nodes[k].coord[0];
 	  nodeId1 = tetrahedrons[k].node_id[0];
 	  nodeId2 = tetrahedrons[k].node_id[1];
 	  nodeId3 = tetrahedrons[k].node_id[2];
@@ -172,10 +173,9 @@ void DecimateSolidMesh::execute()
   nodeGrainIds.clear();
 
   //Determine Node Euclidean Distance Map
-  std::vector<bool> tetDone(numTets,false);
+  tetDone.resize(numTets,false);
   int tetsLeft = 1;
   int ED1, ED2, ED3, ED4;
-  int minED = 1000000;
   int currentED = 0;
   int maxGlobalED = 0;
   while(tetsLeft > 0)
@@ -186,7 +186,6 @@ void DecimateSolidMesh::execute()
 	  {
 		  if(tetDone[k] == false)
 		  {
-			  minED = 100000000;
 			  nodeId1 = tetrahedrons[k].node_id[0];
 			  nodeId2 = tetrahedrons[k].node_id[1];
 			  nodeId3 = tetrahedrons[k].node_id[2];
@@ -231,37 +230,37 @@ void DecimateSolidMesh::execute()
 			if(ED1 >= removeED)
 			{
 				point = nodeId1;
-				secondLargestED = ED2;
+//				secondLargestED = ED2;
 				otherPoint = nodeId2;
-				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
-				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
+//				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
+//				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
 				k = updateNodesandTets(k, point, otherPoint);
 			}
 			else if(ED2 >= removeED)
 			{
 				point = nodeId2;
-				secondLargestED = ED1;
-				otherPoint = nodeId1;
-				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
-				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
+//				secondLargestED = ED1;
+				otherPoint = nodeId3;
+//				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
+//				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
 				k = updateNodesandTets(k, point, otherPoint);
 			}
 			else if(ED3 >= removeED)
 			{
 				point = nodeId3;
-				secondLargestED = ED1;
-				otherPoint = nodeId1;
-				if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
-				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
+//				secondLargestED = ED1;
+				otherPoint = nodeId4;
+//				if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
+//				if(ED4 > secondLargestED) secondLargestED = ED4, otherPoint = nodeId4;
 				k = updateNodesandTets(k, point, otherPoint);
 			}
 			else if(ED4 >= removeED)
 			{
 				point = nodeId4;
-				secondLargestED = ED1;
+//				secondLargestED = ED1;
 				otherPoint = nodeId1;
-				if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
-				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
+//				if(ED2 > secondLargestED) secondLargestED = ED2, otherPoint = nodeId2;
+//				if(ED3 > secondLargestED) secondLargestED = ED3, otherPoint = nodeId3;
 				k = updateNodesandTets(k, point, otherPoint);
 			}
 			numTets = tetrahedrons.GetNumberOfTuples();
@@ -294,10 +293,12 @@ int DecimateSolidMesh::updateNodesandTets(int currentTet, int killedNode, int ne
 	  {
 		nodes.CopyTuple(i, nodeCount);
 		newNodeIds[i] = nodeCount;
+		nodeEuclideanDistances[nodeCount] = nodeEuclideanDistances[i];
 		nodeCount++;
 	  }
   }
   nodes.Resize(nodeCount);
+  nodeEuclideanDistances.resize(nodeCount);
 
   int tetCount = 0;
   for(size_t i=0;i<numTets;i++)
@@ -321,7 +322,7 @@ int DecimateSolidMesh::updateNodesandTets(int currentTet, int killedNode, int ne
 	}
 	else
 	{
-		if(i < currentTet) counter++;
+		if(i <= currentTet) counter++;
 	}
   }
   tetrahedrons.Resize(tetCount);
