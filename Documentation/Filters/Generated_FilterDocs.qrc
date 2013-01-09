@@ -98,6 +98,7 @@
     <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
     <file>SurfaceMeshFilters/GenerateNodeTriangleConectivity.html</file>
+    <file>SurfaceMeshFilters/TriangleNormalFilter.html</file>
     <file>SurfaceMeshFilters/SharedGrainFaceFilter.html</file>
     <file>SurfaceMeshFilters/GrainFaceCurvatureFilter.html</file>
 

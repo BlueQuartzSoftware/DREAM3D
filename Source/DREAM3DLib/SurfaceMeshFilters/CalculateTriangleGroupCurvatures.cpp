@@ -163,12 +163,12 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
 
-
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     assert(triPatch.size() > 0);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
+#if 0
     double* normTuple = NULL;
     // Set all the Normals to be consistent
     for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
@@ -183,7 +183,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
         normTuple[2] = normTuple[2]*-1.0;
       }
     }
-
+#endif
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
@@ -268,7 +268,46 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
   m_ParentFilter->tbbTaskProgress();
 }
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractNormals(int triId, UniqueTriangleIds_t &triPatch,
+                                                                              double* globalTriangleNormals,
+                                                                              const std::string &name) const
+{
 
+  StructArray<Triangle>::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getTriangles();
+  Triangle* triangles = trianglesPtr->GetPointer(0);
+
+  int g0 = triangles[triId].nSpin[0];
+  int g1 = triangles[triId].nSpin[1];
+
+
+  DataArray<double>::Pointer normals = DataArray<double>::CreateArray(triPatch.size() * 3, name);
+  normals->SetNumberOfComponents(3);
+  // This little chunk makes sure the current seed triangles centroid and normal data appear
+  // first in the returned arrays which makes the next steps a tad easier.
+  int i = 0;
+  normals->SetComponent(i, 0, globalTriangleNormals[triId*3]);
+  normals->SetComponent(i, 1, globalTriangleNormals[triId*3 + 1]);
+  normals->SetComponent(i, 2, globalTriangleNormals[triId*3 + 2]);
+  ++i;
+  triPatch.erase(triId);
+
+  for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+  {
+    int32_t t = *iter;
+    normals->SetComponent(i, 0, globalTriangleNormals[t*3]);
+    normals->SetComponent(i, 1, globalTriangleNormals[t*3 + 1]);
+    normals->SetComponent(i, 2, globalTriangleNormals[t*3 + 2]);
+    ++i;
+  }
+  triPatch.insert(triId);
+
+  return normals;
+}
+#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
