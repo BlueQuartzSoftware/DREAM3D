@@ -54,6 +54,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/SolidMeshStructs.h"
+#include "DREAM3DLib/Common/StructArray.hpp"
 
 /**
  * @class SolidMeshDataContainer SolidMeshDataContainer.h DREAM3DLib/Common/SolidMeshDataContainer.h
@@ -79,7 +82,11 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
-    /**
+
+    DREAM3D_INSTANCE_PROPERTY(StructArray<Node>::Pointer, Nodes)
+    DREAM3D_INSTANCE_PROPERTY(StructArray<Tetrahedron>::Pointer, Tetrahedrons)
+
+	/**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data

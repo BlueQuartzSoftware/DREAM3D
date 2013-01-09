@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MATCHCRYSTALLOGRAPHY_H_
-#define MATCHCRYSTALLOGRAPHY_H_
+#ifndef JumbleOrientations_H_
+#define JumbleOrientations_H_
 
 #include <string>
 #include <numeric>
@@ -48,30 +48,26 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
- * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
+ * @class JumbleOrientations JumbleOrientations.h DREAM3DLib/SyntheticBuilderFilters/JumbleOrientations.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
+class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MatchCrystallography)
-    DREAM3D_STATIC_NEW_MACRO(MatchCrystallography)
-    DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(JumbleOrientations)
+    DREAM3D_STATIC_NEW_MACRO(JumbleOrientations)
+    DREAM3D_TYPE_MACRO_SUPER(JumbleOrientations, AbstractFilter)
 
 
-    virtual ~MatchCrystallography();
+    virtual ~JumbleOrientations();
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -79,21 +75,11 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
 
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
-
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+    DREAM3D_INSTANCE_PROPERTY(int, Iterations)
 
     virtual const std::string getGroupName()
     {
@@ -101,9 +87,10 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     }
     virtual const std::string getHumanLabel()
     {
-      return "Match Crystallography";
+      return "Jumble Orientations";
     }
 
+    virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
@@ -114,63 +101,22 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     virtual void preflight();
 
   protected:
-    MatchCrystallography();
-
-    void initializeArrays();
-
-    void determine_volumes();
-    void assign_eulers();
-    void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
-    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
-    void matchCrystallography();
-    void measure_misorientations();
+    JumbleOrientations();
 
   private:
-
     // Cell Data
     int32_t* m_GrainIds;
     float*   m_CellEulerAngles;
 
     // Field Data
-    bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
-    float* m_Volumes;
     float* m_FieldEulerAngles;
     float* m_AvgQuats;
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
-
-    //Ensemble Data
-    float* m_TotalSurfaceAreas;
-    unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
-	int32_t* m_NumFields;
-	StatsDataArray* m_StatsDataArray;
-
-    // All other private instance variables
-	  float mdfchange;
-	  float odfchange;
-
-    std::vector<float> unbiasedvol;
-
-
-    std::vector<FloatArrayType::Pointer> actualodf;
-    std::vector<FloatArrayType::Pointer> simodf;
-    std::vector<FloatArrayType::Pointer> actualmdf;
-	std::vector<FloatArrayType::Pointer> simmdf;
-
-
-	std::vector<std::vector<float> > misorientationlists;
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    MatchCrystallography(const MatchCrystallography&); // Copy Constructor Not Implemented
-    void operator=(const MatchCrystallography&); // Operator '=' Not Implemented
+    JumbleOrientations(const JumbleOrientations&); // Copy Constructor Not Implemented
+    void operator=(const JumbleOrientations&); // Operator '=' Not Implemented
 };
 
-#endif /* MATCHCRYSTALLOGRAPHY_H_ */
+#endif /* JumbleOrientations_H_ */
