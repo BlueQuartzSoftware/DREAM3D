@@ -280,3 +280,13 @@ void AbstractFilter::clearErrorMessages() {
     iter = m_PipelineMessages.erase(iter);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::tbbTaskProgress()
+{
+
+}
+
+

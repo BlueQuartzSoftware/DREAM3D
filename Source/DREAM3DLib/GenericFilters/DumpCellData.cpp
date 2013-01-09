@@ -33,11 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
 
-#include "GrainFaceFilter.h"
+#include "DumpCellData.h"
 
 
 
@@ -45,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainFaceFilter::GrainFaceFilter() :
+DumpCellData::DumpCellData() :
   AbstractFilter()
 {
   setupFilterParameters();
@@ -54,14 +51,14 @@ GrainFaceFilter::GrainFaceFilter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainFaceFilter::~GrainFaceFilter()
+DumpCellData::~DumpCellData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::setupFilterParameters()
+void DumpCellData::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
@@ -70,7 +67,7 @@ void GrainFaceFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void DumpCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
@@ -80,44 +77,16 @@ void GrainFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void DumpCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if(NULL == sm)
-  {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-384);
-  }
-  else
-  {
-      // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
-    else
-    {
-
-    }
-
-  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::preflight()
+void DumpCellData::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -127,22 +96,22 @@ void GrainFaceFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::execute()
+void DumpCellData::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
-  notifyStatusMessage("Starting");
 
-  /* Place all your code to execute your filter here. */
+  m->removeCellData(DREAM3D::CellData::EulerAngles);
+  m->removeCellData(DREAM3D::CellData::Phases);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

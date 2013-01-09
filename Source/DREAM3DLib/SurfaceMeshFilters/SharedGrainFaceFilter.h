@@ -33,8 +33,10 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef GrainCurvatureFilter_H_
-#define GrainCurvatureFilter_H_
+
+
+#ifndef _GrainFaceFilter_H_
+#define _GrainFaceFilter_H_
 
 #include <string>
 
@@ -45,26 +47,28 @@
 
 
 /**
- * @class GrainCurvatureFilter GrainCurvatureFilter.h GrainCurvature/Code/GrainCurvatureFilters/GrainCurvatureFilter.h
- * @brief
- * @author
- * @date
+ * @class SharedGrainFaceFilter SharedGrainFaceFilter.h DREAM3DLib/SurfaceMeshingFilters/SharedGrainFaceFilter.h
+ * @brief This filter groups triangles together in a way where each group would define a grain face where the group
+ * of triangles share a common grain id or region id.
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @date Dec 28, 2012
  * @version 1.0
  */
-class GrainCurvatureFilter : public AbstractFilter
+class DREAM3DLib_EXPORT SharedGrainFaceFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainCurvatureFilter);
-    DREAM3D_STATIC_NEW_MACRO(GrainCurvatureFilter);
-    DREAM3D_TYPE_MACRO_SUPER(GrainCurvatureFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(SharedGrainFaceFilter)
+    DREAM3D_STATIC_NEW_MACRO(SharedGrainFaceFilter)
+    DREAM3D_TYPE_MACRO_SUPER(SharedGrainFaceFilter, AbstractFilter)
 
-    virtual ~GrainCurvatureFilter();
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
+    virtual ~SharedGrainFaceFilter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    typedef std::vector<int> TriangleIds_t;
+    typedef std::map<int32_t, TriangleIds_t> SharedGrainFaces_t;
 
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshGrainFaceIdArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -77,7 +81,7 @@ class GrainCurvatureFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Grain Curvature Filter"; }
+    virtual const std::string getHumanLabel() { return "Shared Grain Face Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -91,7 +95,7 @@ class GrainCurvatureFilter : public AbstractFilter
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-   /**
+    /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -102,8 +106,11 @@ class GrainCurvatureFilter : public AbstractFilter
     */
     virtual void preflight();
 
+
+    SharedGrainFaces_t& getSharedGrainFaces();
+
   protected:
-    GrainCurvatureFilter();
+    SharedGrainFaceFilter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -116,12 +123,10 @@ class GrainCurvatureFilter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_SurfaceMeshUniqueEdges;
-    int32_t* m_SurfaceMeshTriangleEdges;
+    SharedGrainFaces_t m_SharedGrainFaces;
 
-
-    GrainCurvatureFilter(const GrainCurvatureFilter&); // Copy Constructor Not Implemented
-    void operator=(const GrainCurvatureFilter&); // Operator '=' Not Implemented
+    SharedGrainFaceFilter(const SharedGrainFaceFilter&); // Copy Constructor Not Implemented
+    void operator=(const SharedGrainFaceFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* GrainCurvatureFilter_H_ */
+#endif /* _GrainFaceFilter_H_ */

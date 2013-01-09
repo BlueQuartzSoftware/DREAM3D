@@ -36,6 +36,13 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#include <tbb/task.h>
+#endif
+
+
 #include <Eigen/Dense>
 
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
@@ -43,29 +50,23 @@
 #include "DREAM3DLib/SurfaceMeshFilters/FindNRingNeighbors.h"
 
 
-
-#if GRAINCURVATURE_USE_LAPACK
-
-#if __APPLE__
-#include <Accelerate/Accelerate.h>
-#endif
-#endif
-
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring, std::vector<int> triangleIds,
-                                                                   int grainId,
+CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
+                                                                   std::vector<int> triangleIds,
                                                                    NodeTrianglesMap_t* node2Triangle,
-                                                                   SurfaceMeshDataContainer* sm) :
+                                                                   DoubleArrayType::Pointer principleCurvature1,
+                                                                   DoubleArrayType::Pointer principleCurvature2,
+                                                                   SurfaceMeshDataContainer* sm,
+                                                                   AbstractFilter* parent):
   m_NRing(nring),
   m_TriangleIds(triangleIds),
-  m_GrainId(grainId),
   m_NodeTrianglesMap(node2Triangle),
-  m_SurfaceMeshDataContainer(sm)
+  m_PrincipleCurvature1(principleCurvature1),
+  m_PrincipleCurvature2(principleCurvature2),
+  m_SurfaceMeshDataContainer(sm),
+  m_ParentFilter(parent)
 {
 
 }
@@ -78,50 +79,9 @@ CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures()
 
 }
 
-
-/*
- For i=0, ntri-1 do ...
-    tripatch = get_nring_neighborhood(i, nring)
-    ;(triptych):Array of pointers to the triangles in the nring neighborhood of the i-th triangle. Assume the first pointer is the pointer to the i-th triangle
-    points = triloc[0:2, tripatch]
-    norm = trinorm[0:2, tripatch]
-
-    points -= points[0:2,0] ;center at [0,0,0]
-    np = norm[0:2,0] ; get the normal at the ith triangle
-    ; calculate the projection of an inplane vector
-    vp = Normalize(Cross_Product(np, (points[0:2,1]-points[0:2,0]) ) )
-    ; get the third orthogonal vector
-    up = Cross_product(vp,np)
-    ; this consitutes a rotation matrix to a local coordinate system
-    rot = [[up],[vp],[np]]
-
-    points = matrix_multiply(points, rot)
-    norms = matrix_multiply(norm, rot)
-\end{verbatim}
-
-Now we can fit the points to a quadratic:
-\begin{eqnarray*}
-z = \frac{1}{2}A \* x^2 + Bxy + \frac{1}{2}Cy^2
-\end{eqnarray*}
-
-This is done by implementing a least squares fit to a system of linear equations.
-
-\begin{verbatim}
-    coeff = [0.5*x^2, x*y, 0.5*y^2]
-    val = z
-
-    ABC = LA_LEAST_SQUARES(coeff, val)
-\end{verbatim}
-This is the IDL least squares routine. In my brief googling, it looks like the DGELS routine of the LAPACK/BLAS accomplishes much the same.
-Now solve the eigenvalue problem W = [[A,B],[B,C]]
-
-\begin{verbatim}
-    W = [[A,B],[B,C]]
-    k12 = Eigenql(W, eigenvectors=evect)
-  endfor
-\end{verbatim}
-*/
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void subtractVector3d(DataArray<double>::Pointer data, double* v)
 {
 
@@ -139,14 +99,13 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-tbb::task*
-#else
-void
-#endif
-CalculateTriangleGroupCurvatures::execute()
+void CalculateTriangleGroupCurvatures::operator()() const
 {
-  std::vector<int>::size_type tCount = m_TriangleIds.size();
+
+
+  StructArray<Triangle>::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getTriangles();
+  Triangle* triangles = trianglesPtr->GetPointer(0);
+
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
   //  size_t totalTriangles = m_SurfaceMeshDataContainer->getTriangles()->GetNumberOfTuples();
 
@@ -154,11 +113,7 @@ CalculateTriangleGroupCurvatures::execute()
   if (NULL == centroidPtr.get())
   {
     std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
-    return
-    #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-        NULL
-    #endif
-        ;
+    return;
   }
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
 
@@ -166,32 +121,69 @@ CalculateTriangleGroupCurvatures::execute()
   if (NULL == normalPtr.get())
   {
     std::cout << "Triangle Normals are required for this algorithm" << std::endl;
-    return
-    #if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-        NULL
-    #endif
-        ;
+    return;
   }
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
-  std::stringstream ss;
 
+#if 0
+  IDataArray::Pointer grainFaceIdPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshGrainFaceId);
+  if (NULL == grainFaceIdPtr.get())
+  {
+    std::cout << "Triangle Grain Face Ids are required for this algorithm" << std::endl;
+    return;
+  }
+  DataArray<int32_t>* grainFaceIds = DataArray<int32_t>::SafePointerDownCast(grainFaceIdPtr.get());
+#endif
+
+  Triangle& tri = triangles[m_TriangleIds[0]];
+  int grain0 = 0;
+  int grain1 = 0;
+  if (tri.nSpin[0] < tri.nSpin[1])
+  {
+    grain0 = tri.nSpin[0];
+    grain1 = tri.nSpin[1];
+  }
+  else
+  {
+    grain0 = tri.nSpin[1];
+    grain1 = tri.nSpin[0];
+  }
+
+
+  std::stringstream ss;
+  std::vector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
   for(std::vector<int>::size_type i = 0; i < tCount; ++i)
   {
     int triId = m_TriangleIds[i];
     nRingNeighborAlg->setTriangleId(triId);
-    nRingNeighborAlg->setRegionId(m_GrainId);
+    nRingNeighborAlg->setRegionId0(grain0);
+    nRingNeighborAlg->setRegionId1(grain1);
     nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
-    //  ss.str("");
-    //  ss << "/tmp/nring_" << triId << ".vtk";
-    //   nRingNeighborAlg->writeVTKFile(ss.str());
+
 
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
+    assert(triPatch.size() > 0);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
+    double* normTuple = NULL;
+    // Set all the Normals to be consistent
+    for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+    {
+      int32_t t = *iter;
+      Triangle& tt = triangles[t];
+      if (tt.nSpin[0] != grain0)
+      {
+        normTuple = patchNormals->GetPointer(i * 3);
+        normTuple[0] = normTuple[0]*-1.0;
+        normTuple[1] = normTuple[1]*-1.0;
+        normTuple[2] = normTuple[2]*-1.0;
+      }
+    }
+
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
@@ -206,22 +198,21 @@ CalculateTriangleGroupCurvatures::execute()
     double vp[3] = {0.0, 0.0, 0.0};
 
     // Cross Product of np and temp
+    MatrixMath::normalizeVector(np);
     MatrixMath::crossProduct(np, temp, vp);
-    MatrixMath::normalize(vp);
+    MatrixMath::normalizeVector(vp);
 
     // get the third orthogonal vector
     double up[3] = {0.0, 0.0, 0.0};
     MatrixMath::crossProduct(vp, np, up);
 
-    MatrixMath::crossProduct(np,up, vp);
-
-    // this consitutes a rotation matrix to a local coordinate system
+   // this constitutes a rotation matrix to a local coordinate system
 
     double rot[3][3] = {{up[0], up[1], up[2]},
                         {vp[0], vp[1], vp[2]},
                         {np[0], np[1], np[2]} };
 
-    // Transform all centroids to new coordinate system
+    // Transform all centroids and normals to new coordinate system
     double out[3];
     for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
     {
@@ -254,7 +245,6 @@ CalculateTriangleGroupCurvatures::execute()
         b[m] = z; // The Z Values
       }
       Eigen::Vector3d sln1 = A.colPivHouseholderQr().solve(b);
-//      std::cout << "The solution is:\n" << sln1 << std::endl;
       // Now that we have the A, B & C constants we can solve the Eigen value/vector problem
       // to get the principal curvatures and pricipal directions.
       Eigen::Matrix2d M;
@@ -263,8 +253,11 @@ CalculateTriangleGroupCurvatures::execute()
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::RealVectorType eValues = eig.eigenvalues();
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::MatrixType eVectors = eig.eigenvectors();
 
-      double gaussianCurvature = eValues(0) + eValues(1);
-      double meanCurvature = gaussianCurvature/2.0;
+      double gaussianCurvature = eValues(0);// Kappa 1
+      double meanCurvature = eValues(1); //kappa 2
+
+      m_PrincipleCurvature1->SetValue(triId, meanCurvature);
+      m_PrincipleCurvature2->SetValue(triId, gaussianCurvature);
 
 //      std::cout << "Eigen Values: " << eValues << std::endl;
 //      std::cout << "Eigen Vectors: " << eVectors << std::endl;
@@ -272,9 +265,8 @@ CalculateTriangleGroupCurvatures::execute()
     }
 
   } // End Loop over this triangle
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-  return NULL;
-#endif
+
+  m_ParentFilter->tbbTaskProgress();
 }
 
 // -----------------------------------------------------------------------------
@@ -282,7 +274,7 @@ CalculateTriangleGroupCurvatures::execute()
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
                                                                               double* data,
-                                                                              const std::string &name)
+                                                                              const std::string &name) const
 {
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size() * 3, name);
   extractedData->SetNumberOfComponents(3);

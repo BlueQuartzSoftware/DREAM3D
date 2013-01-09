@@ -24,3 +24,5 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains FindBoundi
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" FALSE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DetermineGoodVoxels DetermineGoodVoxels.html "" FALSE)
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DumpCellData DumpCellData.html "" TRUE)

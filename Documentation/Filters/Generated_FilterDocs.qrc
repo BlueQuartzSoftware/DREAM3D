@@ -15,6 +15,7 @@
     <file>GenericFilters/FindGrainCentroids.html</file>
     <file>GenericFilters/FindSurfaceGrains.html</file>
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
+    <file>GenericFilters/DumpCellData.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -39,6 +40,7 @@
     <file>IOFilters/SurfaceMeshToVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
+    <file>IOFilters/GoldfeatherReader.html</file>
 
     <!-- ***** ProcessingFilters ***** -->
     <file>ProcessingFilters/MinNeighbors.html</file>
@@ -96,11 +98,8 @@
     <file>SurfaceMeshFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshFilters/LaplacianSmoothing.html</file>
     <file>SurfaceMeshFilters/GenerateNodeTriangleConectivity.html</file>
-    <file>SurfaceMeshFilters/GenerateUniqueEdges.html</file>
-    <file>SurfaceMeshFilters/TriangleCentroidFilter.html</file>
-    <file>SurfaceMeshFilters/TriangleNormalFilter.html</file>
-    <file>SurfaceMeshFilters/GrainFaceFilter.html</file>
-    <file>SurfaceMeshFilters/GrainCurvatureFilter.html</file>
+    <file>SurfaceMeshFilters/SharedGrainFaceFilter.html</file>
+    <file>SurfaceMeshFilters/GrainFaceCurvatureFilter.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
     <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>

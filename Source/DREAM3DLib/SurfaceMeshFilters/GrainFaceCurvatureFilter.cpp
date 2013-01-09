@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GrainCurvatureFilter.h"
+#include "GrainFaceCurvatureFilter.h"
 
 
 
@@ -43,17 +43,28 @@
 #include "DREAM3DLib/SurfaceMeshFilters/TriangleNormalFilter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
+#include "SharedGrainFaceFilter.h"
 
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#include <tbb/task.h>
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainCurvatureFilter::GrainCurvatureFilter() :
+GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
 AbstractFilter(),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-  m_SurfaceMeshUniqueEdges(NULL),
-  m_SurfaceMeshTriangleEdges(NULL)
+m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
+m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
+m_SurfaceMeshMeanCurvaturesArrayName(DREAM3D::CellData::SurfaceMeshMeanCurvatures),
+m_SurfaceMeshGaussianCurvaturesArrayName(DREAM3D::CellData::SurfaceMeshGaussianCurvatures),
+m_NRing(3),
+m_SurfaceMeshUniqueEdges(NULL),
+m_SurfaceMeshTriangleEdges(NULL),
+m_TotalGrainFaces(0),
+m_CompletedGrainFaces(0)
 {
   setupFilterParameters();
 }
@@ -61,104 +72,43 @@ AbstractFilter(),
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainCurvatureFilter::~GrainCurvatureFilter()
+GrainFaceCurvatureFilter::~GrainFaceCurvatureFilter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainCurvatureFilter::setupFilterParameters()
+void GrainFaceCurvatureFilter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
-  /* Place all your option initialization code here */
-   /* For String input use this code */
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("STL Output Prefix");
-    option->setPropertyName("StlFilePrefix");
-    option->setWidgetType(FilterParameter::StringWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }*/
-   /*  For an Integer use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Max Iterations");
-    option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
-  }*/
-   /*  For a Floating point value use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }*/
-  /*   For an input file use this code*/
- /*  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }*/
-  /*   For an output file use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Alignment File");
-    option->setPropertyName("AlignmentShiftFileName");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }*/
-  /*   For a simple true/false boolean use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Alignment Shift File");
-    option->setPropertyName("WriteAlignmentShifts");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
-  }*/
-  /*   For presenting a set of choices to the user use this code*/
-  /* {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Conversion Type");
-    option->setPropertyName("ConversionType");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
-    option->setChoices(choices);
-    options.push_back(option);
-  }*/
-
-
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Neighborhood Ring Count");
+    parameter->setPropertyName("NRing");
+    parameter->setWidgetType(FilterParameter::IntWidget);
+    //parameter->setUnits("Zero will Lock them in Place");
+    parameter->setValueType("int");
+    parameter->setCastableValueType("int");
+    options.push_back(parameter);
+  }
   setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("NRing", getNRing() );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -198,6 +148,15 @@ void GrainCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t field
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.
     addCreatedCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
+
+
+    DoubleArrayType::Pointer meanCurvatures = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshMeanCurvatures);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures, meanCurvatures);
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures);
+
+    DoubleArrayType::Pointer gaussianCurvatures = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures, gaussianCurvatures);
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
   }
 }
 
@@ -205,7 +164,7 @@ void GrainCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainCurvatureFilter::preflight()
+void GrainFaceCurvatureFilter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -215,9 +174,9 @@ void GrainCurvatureFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainCurvatureFilter::execute()
+void GrainFaceCurvatureFilter::execute()
 {
- int err = 0;
+  int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
@@ -240,6 +199,7 @@ void GrainCurvatureFilter::execute()
   // so we are going to recalculate them all just in case they are stale
   TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
   centroidFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  centroidFilter->setObservers(getObservers());
   centroidFilter->setMessagePrefix(getMessagePrefix());
   centroidFilter->execute();
   if (centroidFilter->getErrorCondition() < 0)
@@ -248,20 +208,22 @@ void GrainCurvatureFilter::execute()
     return;
   }
 
+  // Calculate the Triangle Normals
   TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
   normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  normalsFilter->setObservers(getObservers());
   normalsFilter->setMessagePrefix(getMessagePrefix());
   normalsFilter->execute();
   if (normalsFilter->getErrorCondition() < 0)
   {
-    notifyErrorMessage("Error Generating the triangle normals", -801);
+    notifyErrorMessage("Error Generating the triangle normals", -802);
     return;
   }
-
 
   // Make sure the Triangle Connectivity is created
   GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
   connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  connectivity->setObservers(getObservers());
   connectivity->setMessagePrefix(getMessagePrefix());
   connectivity->execute();
   if (connectivity->getErrorCondition() < 0)
@@ -280,41 +242,96 @@ void GrainCurvatureFilter::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
     return;
   }
-  int ntri = trianglesPtr->GetNumberOfTuples();
 
-
-  // get the triangle definitions - use the pointer to the start of the Struct Array
-  Triangle* triangles = trianglesPtr->GetPointer(0);
-
-
-  // We need a filter to group triangles by grain face. Each Grain Face can belong to 2 different grains
-
-
-// *********************** This next section should be task parallelized using TBB::task() ****************************
-  // Test out the Curvature Codes for Grain ID = 10;
-  int targetGrainId = 10;
-  ss.str("");
-  ss << "Finding all Triangles for Grain " << targetGrainId;
-  notifyStatusMessage(ss.str());
-
-  std::vector<int> triangleIds;
-  for(int i = 0; i < ntri; ++i)
+  // Group the Triangles by common neighboring grain face. This means that each group of triangles
+  // each share the same set of Grain Ids. Since each triangle can only have 2 Grain Ids
+  SharedGrainFaceFilter::Pointer sharedGrainFacesFilter = SharedGrainFaceFilter::New();
+  sharedGrainFacesFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  sharedGrainFacesFilter->setObservers(getObservers());
+  sharedGrainFacesFilter->setMessagePrefix(getMessagePrefix());
+  sharedGrainFacesFilter->execute();
+  if (sharedGrainFacesFilter->getErrorCondition() < 0)
   {
-    Triangle& tri = triangles[i];
-    if (tri.nSpin[0] == targetGrainId || tri.nSpin[1] == targetGrainId)
-    {
-      triangleIds.push_back(i);
-    }
+    notifyErrorMessage("Error Generating the Shared Grain Faces", -803);
+    return;
   }
 
+  SharedGrainFaceFilter::SharedGrainFaces_t& sharedGrainFaces = sharedGrainFacesFilter->getSharedGrainFaces();
 
-  ss.str("");
-  ss << "Calculating Curvature for Grain " << targetGrainId;
-  notifyStatusMessage(ss.str());
-  CalculateTriangleGroupCurvatures curvature(3, triangleIds, targetGrainId, &node2Triangle, getSurfaceMeshDataContainer());
-  curvature.execute();
-// *********************** END END END END END END  ********************************************************************
+  DoubleArrayType::Pointer principalCurvature1 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshPrincipalCurvature1);
+  principalCurvature1->initializeWithZeros();
+  DoubleArrayType::Pointer principalCurvature2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
+  principalCurvature2->initializeWithZeros();
+
+  // *********************** This next section should be task parallelized using TBB::task() ****************************
+  typedef SharedGrainFaceFilter::SharedGrainFaces_t::iterator SharedGrainFaceIterator_t;
+
+  int index = 0;
+  m_TotalGrainFaces = sharedGrainFaces.size();
+  m_CompletedGrainFaces = 0;
+
+#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+  tbb::task_scheduler_init init;
+#else
+  //   int m_NumThreads = 1;
+#endif
+
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_group* g = new tbb::task_group;
+  if(true)
+  {
+    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
+    std::cout << "GrainFaceCurvatureFilter Running in Parallel." << std::endl;
+  }
+#else
+  if(getVerbose())
+  {
+    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
+  }
+#endif
+  for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
+  {
+    SharedGrainFaceFilter::TriangleIds_t& triangleIds = (*iter).second;
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+    g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, &node2Triangle,
+                                            principalCurvature1, principalCurvature2,
+                                            getSurfaceMeshDataContainer(), this ) );
+#else
+
+
+
+    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, &node2Triangle,
+                                               meanCurvatures, gaussianCurvatures,
+                                               getSurfaceMeshDataContainer(), this));
+    curvature();
+#endif
+    index++;
+  }
+  // *********************** END END END END END END  ********************************************************************
+
+#if DREAM3D_USE_PARALLEL_ALGORITHMS
+  g->wait(); // Wait for all the threads to complete before moving on.
+  delete g;
+#endif
+
+  getSurfaceMeshDataContainer()->addCellData(principalCurvature1->GetName(), principalCurvature1);
+  getSurfaceMeshDataContainer()->addCellData(principalCurvature2->GetName(), principalCurvature2);
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+void GrainFaceCurvatureFilter::tbbTaskProgress()
+{
+  m_CompletedGrainFaces++;
+  std::stringstream ss;
+  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" << std::endl;
+  notifyStatusMessage(ss.str());
+}
+
+#endif

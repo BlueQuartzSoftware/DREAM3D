@@ -227,7 +227,7 @@ void ClearData::execute()
         {
           std::string name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
-      p->InitializeTuple(index,0);
+          p->InitializeTuple(index,0);
         }
       }
     }

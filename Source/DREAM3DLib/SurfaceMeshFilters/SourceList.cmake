@@ -13,10 +13,10 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} M3CSliceBySlice M3CSliceBySlice.
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MovingFiniteElementSmoothing MovingFiniteElementSmoothing.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} LaplacianSmoothing LaplacianSmoothing.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateNodeTriangleConectivity GenerateNodeTriangleConectivity.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateUniqueEdges GenerateUniqueEdges.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleCentroidFilter TriangleCentroidFilter.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleNormalFilter TriangleNormalFilter.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GrainFaceFilter GrainFaceFilter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateUniqueEdges GenerateUniqueEdges.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleCentroidFilter TriangleCentroidFilter.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleNormalFilter TriangleNormalFilter.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SharedGrainFaceFilter SharedGrainFaceFilter.html "" TRUE)
 
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} MeshFunctions.h)
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} MeshLinearAlgebra.h)
@@ -25,7 +25,7 @@ ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} FindNRingNeighbors.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3D_FILTER_GROUP_NAME} FindNRingNeighbors.cpp)
 
 if(EIGEN_FOUND)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GrainCurvatureFilter GrainCurvatureFilter.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GrainFaceCurvatureFilter GrainFaceCurvatureFilter.html "" TRUE)
 
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} CalculateTriangleGroupCurvatures.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3D_FILTER_GROUP_NAME} CalculateTriangleGroupCurvatures.cpp)

@@ -65,7 +65,8 @@ namespace Detail {
 FindNRingNeighbors::FindNRingNeighbors() :
 m_SurfaceMeshDataContainer(NULL),
   m_TriangleId(-1),
-  m_RegionId(0),
+  m_RegionId0(0),
+  m_RegionId1(0),
   m_Ring(2),
   m_WriteBinaryFile(false),
   m_WriteConformalMesh(true)
@@ -79,6 +80,15 @@ m_SurfaceMeshDataContainer(NULL),
 FindNRingNeighbors::~FindNRingNeighbors()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setRegionIds(int g, int r)
+{
+  m_RegionId0 = g;
+  m_RegionId1 = r;
 }
 
 // -----------------------------------------------------------------------------
@@ -105,10 +115,14 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
   Triangle& tri = triangles[m_TriangleId];
   // Add our seed triangle
 
+
+  bool check0 = tri.nSpin[0] == m_RegionId0 && tri.nSpin[1] == m_RegionId1;
+  bool check1 = tri.nSpin[1] == m_RegionId0 && tri.nSpin[0] == m_RegionId1;
+
 #if 1
-  if (tri.nSpin[0] != m_RegionId && tri.nSpin[1] != m_RegionId)
+  if ( check0 == false && check1 == false)
   {
-    std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId << std::endl;
+    std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
     std::cout << "Region Ids are: " << triangles[m_TriangleId].nSpin[0] << " & " << triangles[m_TriangleId].nSpin[1] << std::endl;
     return;
   }
@@ -135,8 +149,9 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for(UniqueTriangleIds_t::iterator iter = tids.begin(); iter != tids.end(); ++iter)
         {
-          TriangleId_t triId = *iter;
-          if (triangles[triId].nSpin[0] == m_RegionId || triangles[triId].nSpin[1] == m_RegionId)
+          check0 = tri.nSpin[0] == m_RegionId0 && tri.nSpin[1] == m_RegionId1;
+          check1 = tri.nSpin[1] == m_RegionId0 && tri.nSpin[0] == m_RegionId1;
+          if (check0 == true || check1 == true)
           {
             m_NRingTriangles.insert(*iter);
           }
@@ -144,6 +159,13 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
       }
     }
   }
+
+//  if (m_TriangleId == 0 || m_TriangleId == 2500)
+//  {
+//    std::stringstream ss;
+//    ss << "/tmp/" << m_Ring << "_NRing_TriangleId_" << m_TriangleId << ".vtk";
+//    writeVTKFile(ss.str());
+//  }
 }
 
 
