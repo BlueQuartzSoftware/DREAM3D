@@ -106,7 +106,7 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
 {
   assert(m_SurfaceMeshDataContainer != NULL);
 
-  // Write the triangle indices into the vtk File
+
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   Triangle* triangles = trianglesPtr->GetPointer(0);
 

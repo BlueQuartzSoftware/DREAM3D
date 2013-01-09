@@ -1831,7 +1831,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
             {
               grainnameFlag = 0;
             }
-            // checking if neighor egde is contiguous...
+            // checking if neighbor egde is contiguous...
             if ((cnode2 == nnode1) && (cnode1 != nnode2))
             {
               NodeFlag = 1;

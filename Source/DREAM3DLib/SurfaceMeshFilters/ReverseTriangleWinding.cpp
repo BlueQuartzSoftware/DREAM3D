@@ -33,14 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
 
-#include "TriangleNormalFilter.h"
+#include "ReverseTriangleWinding.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -52,19 +47,16 @@
  * @brief The CalculateNormalsImpl class is the actual code that does the computation and can be called either
  * from serial code or from Parallelized code (using TBB).
  */
-class CalculateNormalsImpl
+class ReverseWindingImpl
 {
-    StructArray<Node>::Pointer m_Nodes;
     StructArray<Triangle>::Pointer m_Triangles;
     double* m_Normals;
 
   public:
-    CalculateNormalsImpl(StructArray<Node>::Pointer nodes, StructArray<Triangle>::Pointer triangles, double* normals) :
-      m_Nodes(nodes),
-      m_Triangles(triangles),
-      m_Normals(normals)
+    ReverseWindingImpl(StructArray<Triangle>::Pointer triangles) :
+      m_Triangles(triangles)
     {}
-    virtual ~CalculateNormalsImpl(){}
+    virtual ~ReverseWindingImpl(){}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -73,56 +65,16 @@ class CalculateNormalsImpl
      */
     void generate(size_t start, size_t end) const
     {
-      Node* nodes = m_Nodes->GetPointer(0);
       Triangle* triangles = m_Triangles->GetPointer(0);
-      double vert0[3];
-      double vert1[3];
-      double vert2[3];
-      double u[3];
-      double w[3];
-//      double normal[3];
-//      double length;
 
       for (size_t i = start; i < end; i++)
       {
-        // Get the true indices of the 3 nodes
+        // Swap the indices
         int nId0 = triangles[i].node_id[0];
-        int nId1 = triangles[i].node_id[1];
         int nId2 = triangles[i].node_id[2];
 
-        vert0[0] = static_cast<float>(nodes[nId0].coord[0]);
-        vert0[1] = static_cast<float>(nodes[nId0].coord[1]);
-        vert0[2] = static_cast<float>(nodes[nId0].coord[2]);
-
-        vert1[0] = static_cast<float>(nodes[nId1].coord[0]);
-        vert1[1] = static_cast<float>(nodes[nId1].coord[1]);
-        vert1[2] = static_cast<float>(nodes[nId1].coord[2]);
-
-        vert2[0] = static_cast<float>(nodes[nId2].coord[0]);
-        vert2[1] = static_cast<float>(nodes[nId2].coord[1]);
-        vert2[2] = static_cast<float>(nodes[nId2].coord[2]);
-
-        //
-        // Compute the normal
-        u[0] = vert1[0] - vert0[0];
-        u[1] = vert1[1] - vert0[1];
-        u[2] = vert1[2] - vert0[2];
-
-        w[0] = vert2[0] - vert0[0];
-        w[1] = vert2[1] - vert0[1];
-        w[2] = vert2[2] - vert0[2];
-
-        MatrixMath::crossProduct(u, w, m_Normals+i*3);
-        MatrixMath::normalizeVector(m_Normals+i*3);
-
-//        normal[0] = u[1] * w[2] - u[2] * w[1];
-//        normal[1] = u[2] * w[0] - u[0] * w[2];
-//        normal[2] = u[0] * w[1] - u[1] * w[0];
-
-//        length = sqrt(normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]);
-//        m_Normals[i*3] = normal[0];// / length;
-//        m_Normals[i*3+1] = normal[1];// / length;
-//        m_Normals[i*3+2] = normal[2];// / length;
+        triangles[i].node_id[0] = nId2;
+        triangles[i].node_id[2] = nId0;
       }
     }
 
@@ -142,13 +94,12 @@ class CalculateNormalsImpl
 
 
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleNormalFilter::TriangleNormalFilter() :
-AbstractFilter(),
-m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::CellData::SurfaceMeshTriangleNormals),
-m_SurfaceMeshTriangleNormals(NULL)
+ReverseTriangleWinding::ReverseTriangleWinding() :
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -156,23 +107,94 @@ m_SurfaceMeshTriangleNormals(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleNormalFilter::~TriangleNormalFilter()
+ReverseTriangleWinding::~ReverseTriangleWinding()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleNormalFilter::setupFilterParameters()
+void ReverseTriangleWinding::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+  /* Place all your option initialization code here */
+  /* For String input use this code */
+  /* {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("STL Output Prefix");
+    parameter->setPropertyName("StlFilePrefix");
+    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setValueType("string");
+    parameters.push_back(parameter);
+  }*/
+  /*  For an Integer use this code*/
+  /* {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Max Iterations");
+    parameter->setPropertyName("MaxIterations");
+    parameter->setWidgetType(FilterParameter::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }*/
+  /*  For a Floating point value use this code*/
+  /* {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Misorientation Tolerance");
+    parameter->setPropertyName("MisorientationTolerance");
+    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
+  }*/
+  /*   For an input file use this code*/
+  /*  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input File");
+    parameter->setPropertyName("InputFile");
+    parameter->setWidgetType(FilterParameter::InputFileWidget);
+    parameter->setValueType("string");
+    parameters.push_back(parameter);
+  }*/
+  /*   For an output file use this code*/
+  /* {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Alignment File");
+    parameter->setPropertyName("AlignmentShiftFileName");
+    parameter->setWidgetType(FilterParameter::OutputFileWidget);
+    parameter->setValueType("string");
+    parameters.push_back(parameter);
+  }*/
+  /*   For a simple true/false boolean use this code*/
+  /* {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Write Alignment Shift File");
+    parameter->setPropertyName("WriteAlignmentShifts");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }*/
+  /*   For presenting a set of choices to the user use this code*/
+  /* {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Conversion Type");
+    parameter->setPropertyName("ConversionType");
+    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Degrees To Radians");
+    choices.push_back("Radians To Degrees");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }*/
+
+
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
@@ -182,7 +204,7 @@ void TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -190,7 +212,7 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-383);
+    setErrorCondition(-384);
   }
   else
   {
@@ -204,21 +226,19 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
     // We MUST have Triangles defined also.
     if(sm->getTriangles().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
-      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+      setErrorCondition(-384);
     }
-    else
-    {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleNormals, ss, double, DoubleArrayType, 0, voxels, 3)
-    }
+
   }
+
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleNormalFilter::preflight()
+void ReverseTriangleWinding::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -228,7 +248,7 @@ void TriangleNormalFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleNormalFilter::execute()
+void ReverseTriangleWinding::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -243,8 +263,6 @@ void TriangleNormalFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
-
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
@@ -253,10 +271,10 @@ void TriangleNormalFilter::execute()
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    CalculateNormalsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
+                    ReverseWindingImpl(trianglesPtr), tbb::auto_partitioner());
 
 #else
-  CalculateNormalsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals);
+  ReverseWindingImpl serial(trianglesPtr);
   serial.generate(0, totalPoints);
 #endif
 

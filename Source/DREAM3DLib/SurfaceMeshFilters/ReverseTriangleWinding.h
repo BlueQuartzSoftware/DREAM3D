@@ -33,8 +33,10 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef GrainFaceCurvatureFilter_H_
-#define GrainFaceCurvatureFilter_H_
+
+
+#ifndef _ReverseTriangleWinding_H_
+#define _ReverseTriangleWinding_H_
 
 #include <string>
 
@@ -45,28 +47,26 @@
 
 
 /**
- * @class GrainFaceCurvatureFilter GrainFaceCurvatureFilter.h GrainCurvature/Code/GrainFaceCurvatureFilters/GrainFaceCurvatureFilter.h
- * @brief
- * @author
- * @date
+ * @class ReverseTriangleWinding ReverseTriangleWinding.h DREAM3DLib/SurfaceMeshFilters/ReverseTriangleWinding.h
+ * @brief This filter reverses the triangle winding for a surface mesh
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @date Jan 10, 2013
  * @version 1.0
  */
-class GrainFaceCurvatureFilter : public AbstractFilter
+class DREAM3DLib_EXPORT ReverseTriangleWinding : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainFaceCurvatureFilter)
-    DREAM3D_STATIC_NEW_MACRO(GrainFaceCurvatureFilter)
-    DREAM3D_TYPE_MACRO_SUPER(GrainFaceCurvatureFilter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ReverseTriangleWinding)
+    DREAM3D_STATIC_NEW_MACRO(ReverseTriangleWinding)
+    DREAM3D_TYPE_MACRO_SUPER(ReverseTriangleWinding, AbstractFilter)
 
-    virtual ~GrainFaceCurvatureFilter();
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
+    virtual ~ReverseTriangleWinding();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, NRing)
+    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -79,7 +79,7 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Grain Curvature Filter"; }
+    virtual const std::string getHumanLabel() { return "Reverse Triangle Winding Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -93,7 +93,7 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-   /**
+    /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -104,11 +104,8 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     */
     virtual void preflight();
 
-
-    virtual void tbbTaskProgress();
-
   protected:
-    GrainFaceCurvatureFilter();
+    ReverseTriangleWinding();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -121,14 +118,9 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_SurfaceMeshUniqueEdges;
-    int32_t* m_SurfaceMeshTriangleEdges;
-    int32_t  m_TotalGrainFaces;
-    int32_t  m_CompletedGrainFaces;
 
-
-    GrainFaceCurvatureFilter(const GrainFaceCurvatureFilter&); // Copy Constructor Not Implemented
-    void operator=(const GrainFaceCurvatureFilter&); // Operator '=' Not Implemented
+    ReverseTriangleWinding(const ReverseTriangleWinding&); // Copy Constructor Not Implemented
+    void operator=(const ReverseTriangleWinding&); // Operator '=' Not Implemented
 };
 
-#endif /* GrainFaceCurvatureFilter_H_ */
+#endif /* _ReverseTriangleWinding_H_ */

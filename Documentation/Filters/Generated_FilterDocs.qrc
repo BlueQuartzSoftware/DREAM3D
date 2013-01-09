@@ -38,6 +38,7 @@
     <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
     <file>IOFilters/SurfaceMeshToStl.html</file>
     <file>IOFilters/SurfaceMeshToVtk.html</file>
+    <file>IOFilters/VtkGrainIdReader.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
     <file>IOFilters/GoldfeatherReader.html</file>
@@ -100,6 +101,8 @@
     <file>SurfaceMeshFilters/GenerateNodeTriangleConectivity.html</file>
     <file>SurfaceMeshFilters/TriangleNormalFilter.html</file>
     <file>SurfaceMeshFilters/SharedGrainFaceFilter.html</file>
+    <file>SurfaceMeshFilters/ReverseTriangleWinding.html</file>
+    <file>SurfaceMeshFilters/VerifyTriangleWinding.html</file>
     <file>SurfaceMeshFilters/GrainFaceCurvatureFilter.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
