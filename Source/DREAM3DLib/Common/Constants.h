@@ -133,6 +133,12 @@ namespace DREAM3D
     const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
     const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");
     const std::string SurfaceMeshTriangleNormals("SurfaceMeshTriangleNormals");
+    const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
+    const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
+    const std::string SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
+    const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
+    const std::string SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
+    const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
   }
 
   namespace FieldData
@@ -159,7 +165,7 @@ namespace DREAM3D
     const std::string Poles("Poles");
     const std::string Neighborhoods("Neighborhoods");
     const std::string GrainAvgMisorientations("GrainAvgMisorientations");
-	const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
+  const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
     const std::string KernelAvgMisorientations("KernelAvgMisorientations");
     const std::string NeighborList("NeighborList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");

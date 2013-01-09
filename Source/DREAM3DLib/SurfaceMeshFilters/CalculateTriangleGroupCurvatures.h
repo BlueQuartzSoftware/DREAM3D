@@ -33,17 +33,11 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
 
 #ifndef _CalculateTriangleGroupCurvatures_H_
 #define _CalculateTriangleGroupCurvatures_H_
 
 #include <string>
-
-
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -51,12 +45,6 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 class SurfaceMeshDataContainer;
-
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/task_scheduler_init.h>
-#include <tbb/task_group.h>
-#include <tbb/task.h>
-#endif
 
 
 /**
@@ -67,25 +55,19 @@ class SurfaceMeshDataContainer;
  * @version 1.0
  */
 class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-: public tbb::task
-#endif
 {
   public:
     CalculateTriangleGroupCurvatures(int nring,
                                 std::vector<int> triangleIds,
-                                int grainId,
                                 NodeTrianglesMap_t* node2Triangle,
-                                SurfaceMeshDataContainer* sm);
+                                DoubleArrayType::Pointer principleCurvature1,
+                                DoubleArrayType::Pointer principleCurvature2,
+                                SurfaceMeshDataContainer* sm,
+                                AbstractFilter* parent);
 
     virtual ~CalculateTriangleGroupCurvatures();
 
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-    tbb::task*
-#else
-    void
-#endif
-    execute();
+    void operator()() const;
 
   protected:
     CalculateTriangleGroupCurvatures();
@@ -93,68 +75,17 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
 
     DataArray<double>::Pointer extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
                                                 double* data,
-                                                const std::string &name);
+                                                const std::string &name) const;
   private:
     int m_NRing;
     std::vector<int> m_TriangleIds;
-    int m_GrainId;
     NodeTrianglesMap_t* m_NodeTrianglesMap;
+    DoubleArrayType::Pointer m_PrincipleCurvature1;
+    DoubleArrayType::Pointer m_PrincipleCurvature2;
     SurfaceMeshDataContainer* m_SurfaceMeshDataContainer;
-
+    AbstractFilter* m_ParentFilter;
 };
 
 #endif /* _CalculateTriangleGroupCurvatures_H_ */
 
 
-/*
- *
- ** If you want to call this from a TBB Task Group the following is a possibility
- *
-std::string indent("  ");
-
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
-  tbb::task_scheduler_init init;
-  //   int m_NumThreads = init.default_num_threads();
-#else
-  //   int m_NumThreads = 1;
-#endif
-
-  START_TIMER;
-  // This next section looks crazy with all the #if's but this makes sure we are
-  // running the exact same code whether in parallel or serial.
-
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::task_group* g = new tbb::task_group;
-  if(getVerbose())
-  {
-    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
-    std::cout << "CalculateTriangleGroupCurvatures Running in Parallel." << std::endl;
-  }
-#else
-  if(getVerbose())
-  {
-    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
-  }
-#endif
-  // Queue up a thread for each z layer of the Geometry. The threads will only be
-  // run as hardware resources open up so this will not just fire up a gazillion
-  // threads.
-  for (uint16_t t = 0; t < numberOfFaces; t++)
-  {
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
-    g->run(CalculateTriangleGroupCurvatures(....));
-#else
-    CalculateTriangleGroupCurvatures fp(....);
-    fp();
-#endif
-  }
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
-  g->wait(); // Wait for all the threads to complete before moving on.
-  delete g;
-#endif
-
-  STOP_TIMER;
-  PRINT_TIME("Forward Project Time");
-
-
-  */

@@ -99,6 +99,12 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     void clearErrorMessages();
 
+    /**
+     * @brief tbbTaskProgress If your filter spawns threads for parallelization you can use this callback to try and
+     * keep progress for your parallel threads.
+     */
+    virtual void tbbTaskProgress();
+
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
 

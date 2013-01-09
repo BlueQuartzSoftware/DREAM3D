@@ -65,7 +65,14 @@ class FindNRingNeighbors
     /**
      * @brief This sets the region id (Grain Id) that we are interested in.
      */
-    DREAM3D_INSTANCE_PROPERTY(int, RegionId)
+    DREAM3D_INSTANCE_PROPERTY(int, RegionId0)
+
+    /**
+     * @brief This sets the region id (Grain Id) that we are interested in.
+     */
+    DREAM3D_INSTANCE_PROPERTY(int, RegionId1)
+
+    void setRegionIds(int g, int r);
 
     /**
      * @brief This is the number of rings to find

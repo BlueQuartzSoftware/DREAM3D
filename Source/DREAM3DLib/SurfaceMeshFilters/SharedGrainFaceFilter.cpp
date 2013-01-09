@@ -33,11 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
 
-#include "GrainFaceFilter.h"
+
+#include "SharedGrainFaceFilter.h"
 
 
 
@@ -45,8 +43,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainFaceFilter::GrainFaceFilter() :
-  AbstractFilter()
+SharedGrainFaceFilter::SharedGrainFaceFilter() :
+  AbstractFilter(),
+  m_SurfaceMeshGrainFaceIdArrayName(DREAM3D::CellData::SurfaceMeshGrainFaceId)
 {
   setupFilterParameters();
 }
@@ -54,14 +53,14 @@ GrainFaceFilter::GrainFaceFilter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GrainFaceFilter::~GrainFaceFilter()
+SharedGrainFaceFilter::~SharedGrainFaceFilter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::setupFilterParameters()
+void SharedGrainFaceFilter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
@@ -70,7 +69,7 @@ void GrainFaceFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SharedGrainFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
@@ -80,7 +79,7 @@ void GrainFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -92,7 +91,7 @@ void GrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fields, si
   }
   else
   {
-      // We MUST have Nodes
+    // We MUST have Nodes
     if(sm->getNodes().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -110,6 +109,11 @@ void GrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
     }
 
+    // List any arrays that are created during this filter
+    Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshGrainFaceId);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshGrainFaceId, grainFaceId);
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshGrainFaceId);
+
   }
 }
 
@@ -117,7 +121,7 @@ void GrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::preflight()
+void SharedGrainFaceFilter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -127,7 +131,7 @@ void GrainFaceFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceFilter::execute()
+void SharedGrainFaceFilter::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -144,6 +148,98 @@ void GrainFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
+  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  Triangle* triangles = trianglesPtr->GetPointer(0);
+  size_t totalPoints = trianglesPtr->GetNumberOfTuples();
+
+
+  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshGrainFaceId);
+  grainFaceId->initializeWithZeros();
+
+
+  std::map<uint64_t, int> faceSizeMap;
+  std::map<uint64_t, int32_t> faceIdMap; // This maps a unique 64 bit integer to an increasing 32 bit integer
+  uint32_t index = 0;
+  struct { int g; int r; } faceId;
+  uint64_t* faceId_64 = reinterpret_cast<uint64_t*>(&faceId);
+
+  // Loop through all the Triangles and figure out how many triangles we have in each one.
+  for(size_t t = 0; t < totalPoints; ++t)
+  {
+    Triangle& tri = triangles[t];
+    if (tri.nSpin[0] < tri.nSpin[1])
+    {
+      faceId.g = tri.nSpin[0];
+      faceId.r = tri.nSpin[1];
+    }
+    else
+    {
+      faceId.g = tri.nSpin[1];
+      faceId.r = tri.nSpin[0];
+    }
+
+    std::map<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);
+    if(iter==faceSizeMap.end())
+    {
+      faceSizeMap[*faceId_64] = 1;
+      faceIdMap[*faceId_64] = index;
+      grainFaceId->SetValue(t, index);
+      ++index;
+    }
+    else
+    {
+      faceSizeMap[*faceId_64]++;
+      grainFaceId->SetValue(t, faceIdMap[*faceId_64]);
+    }
+  }
+
+
+  SharedGrainFaces_t faces;
+
+  // Allocate all the vectors that we need
+  for(std::map<uint64_t, int>::iterator iter = faceSizeMap.begin(); iter != faceSizeMap.end(); ++iter)
+  {
+    TriangleIds_t v;
+    v.reserve((*iter).second);
+    index = faceIdMap[(*iter).first];
+    faces[index] = v;
+  }
+
+
+  // Loop through all the Triangles and assign each one to a unique Grain Face Id.
+  for(size_t t = 0; t < totalPoints; ++t)
+  {
+  #if 0
+    Triangle& tri = triangles[t];
+    if (tri.nSpin[0] < tri.nSpin[1])
+    {
+      faceId.g = tri.nSpin[0];
+      faceId.r = tri.nSpin[1];
+    }
+    else
+    {
+      faceId.g = tri.nSpin[1];
+      faceId.r = tri.nSpin[0];
+    }
+    index = faceIdMap[*faceId_64];
+    #else
+    index = grainFaceId->GetValue(t);
+    #endif
+    faces[index].push_back(t);
+  }
+
+  m_SharedGrainFaces = faces;
+
+  getSurfaceMeshDataContainer()->addCellData(DREAM3D::CellData::SurfaceMeshGrainFaceId, grainFaceId);
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SharedGrainFaceFilter::SharedGrainFaces_t &SharedGrainFaceFilter::getSharedGrainFaces()
+{
+  return m_SharedGrainFaces;
 }

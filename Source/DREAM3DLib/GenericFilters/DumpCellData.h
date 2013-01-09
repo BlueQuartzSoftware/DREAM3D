@@ -33,12 +33,9 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
 
-#ifndef _GrainFaceFilter_H_
-#define _GrainFaceFilter_H_
+#ifndef _DumpCellData_H_
+#define _DumpCellData_H_
 
 #include <string>
 
@@ -49,20 +46,20 @@
 
 
 /**
- * @class GrainFaceFilter GrainFaceFilter.h DREAM3DLib/SurfaceMeshingFilters/GrainFaceFilter.h
- * @brief This filter groups triangles together in a way where each group would define a grain face
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 28, 2012
+ * @class DumpCellData DumpCellData.h /FilterCategoryFilters/DumpCellData.h
+ * @brief
+ * @author
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GrainFaceFilter : public AbstractFilter
+class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainFaceFilter)
-    DREAM3D_STATIC_NEW_MACRO(GrainFaceFilter)
-    DREAM3D_TYPE_MACRO_SUPER(GrainFaceFilter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(DumpCellData);
+    DREAM3D_STATIC_NEW_MACRO(DumpCellData);
+    DREAM3D_TYPE_MACRO_SUPER(DumpCellData, AbstractFilter);
 
-    virtual ~GrainFaceFilter();
+    virtual ~DumpCellData();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     // DREAM3D_INSTANCE_PROPERTY(float, XRes)
@@ -75,13 +72,13 @@ class DREAM3DLib_EXPORT GrainFaceFilter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "GrainFaceFilter Filter"; }
+    virtual const std::string getHumanLabel() { return "Drop Euler/Phase Data Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -107,7 +104,7 @@ class DREAM3DLib_EXPORT GrainFaceFilter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GrainFaceFilter();
+    DumpCellData();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -121,8 +118,8 @@ class DREAM3DLib_EXPORT GrainFaceFilter : public AbstractFilter
 
   private:
 
-    GrainFaceFilter(const GrainFaceFilter&); // Copy Constructor Not Implemented
-    void operator=(const GrainFaceFilter&); // Operator '=' Not Implemented
+    DumpCellData(const DumpCellData&); // Copy Constructor Not Implemented
+    void operator=(const DumpCellData&); // Operator '=' Not Implemented
 };
 
-#endif /* _GrainFaceFilter_H_ */
+#endif /* _DumpCellData_H_ */

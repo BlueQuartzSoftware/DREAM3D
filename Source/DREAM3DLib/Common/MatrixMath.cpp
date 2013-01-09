@@ -90,10 +90,10 @@ void MatrixMath::crossProduct(double a[3], double b[3], double c[3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatrixMath::normalize(double g[3])
+void MatrixMath::normalizeVector(double g[3])
 {
   double denom;
-  denom = (g[0]+g[1]+g[2])/3.0;
+  denom = sqrt(((g[0]*g[0])+(g[1]*g[1])+(g[2]*g[2])));
   g[0] = g[0]/denom;
   g[1] = g[1]/denom;
   g[2] = g[2]/denom;
