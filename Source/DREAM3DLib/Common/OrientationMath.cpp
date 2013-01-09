@@ -230,7 +230,7 @@ void OrientationMath::_calcQuatNearestOrigin(const float quatsym[24][5], int num
   {
     //OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
 	  MULT_QUAT(qr, quatsym[i], qc);
-    dist = qc[1]*qc[1]+qc[2]*qc[2]+qc[3]*qc[3];
+    dist = 1-fabs(qc[4]);
     if(dist < smallestdist)
     {
       smallestdist = dist;

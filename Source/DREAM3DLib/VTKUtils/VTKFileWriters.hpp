@@ -42,6 +42,7 @@
 #include "MXA/Common/MXAEndian.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -210,11 +211,13 @@ class name : public VtkScalarWriter\
 VtkSCALARWRITER_CLASS_DEF(VoxelParentIdScalarWriter, r, Cell, DREAM3D::CellData::ParentIds, DREAM3D::CellData::ParentIds, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelPhaseIdScalarWriter, r, Cell, DREAM3D::CellData::Phases, DREAM3D::CellData::Phases, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelBCScalarWriter, r, Cell, Ebsd::Ctf::BC, Ebsd::Ctf::BC, Int32ArrayType, int, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelIQScalarWriter, r, Cell, Ebsd::Ang::ImageQuality, Ebsd::Ang::ImageQuality, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Cell, DREAM3D::CellData::GoodVoxels, DREAM3D::CellData::GoodVoxels, BoolArrayType, char, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKAMScalarWriter, r, Cell, DREAM3D::CellData::KernelAverageMisorientations, DREAM3D::CellData::KernelAverageMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGAMScalarWriter, r, Cell, DREAM3D::CellData::GrainReferenceMisorientations, DREAM3D::CellData::GrainReferenceMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelSurfaceVoxelScalarWriter, r, Cell, DREAM3D::CellData::SurfaceVoxels, DREAM3D::CellData::SurfaceVoxels, Int8ArrayType, char, "%d ")
 VtkSCALARWRITER_CLASS_DEF_FIELD(FieldSizeScalarWriter, r, Field, DREAM3D::FieldData::EquivalentDiameters, DREAM3D::FieldData::EquivalentDiameters, FloatArrayType, float, "%f ")
+VtkSCALARWRITER_CLASS_DEF_FIELD(SchmidFactorScalarWriter, r, Field, DREAM3D::FieldData::Schmids, DREAM3D::FieldData::Schmids, FloatArrayType, float, "%f ")
 
 template<typename T>
 class VoxelEulerAngleScalarWriter : public VtkScalarWriter
@@ -223,7 +226,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
   VoxelEulerAngleScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
   DREAM3D_TYPE_MACRO_SUPER(VoxelEulerAngleScalarWriter<T>, VtkScalarWriter)\
 
-  virtual ~VoxelEulerAngleScalarWriter(){}
+      virtual ~VoxelEulerAngleScalarWriter(){}
 
   int writeScalars(FILE* f)
   {
@@ -239,8 +242,10 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
 
-    std::vector<float> buffer(dims[0]);
-    // Lot over each component of the Euler Angles
+    boost::shared_array<float> buffer(new float[dims[0]]);
+
+    //std::vector<float> buffer(dims[0]);
+    // Loop over each component of the Euler Angles
     for (int eIndex = 0; eIndex < 3; ++eIndex)
     {
       std::string name = names[eIndex];
@@ -263,11 +268,19 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
           // We just buffered an dim[0] worth of data, now write it out.
           if (true == m_WriteBinaryFiles)
           {
-            size_t totalWritten = fwrite( &(buffer.front()), sizeof(char), dims[0] * sizeof(float), f);
+            float tmp = 0.0f;
+            // VTK Binary files are written with Big Endian Byte Ordering
+            for(size_t ii = 0; ii < dims[0]; ++ii)
+            {
+              tmp = buffer[ii];
+              MXA::Endian::FromSystemToBig::convert<float>(tmp);
+              buffer[ii] = tmp;
+            }
+            size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
             if (totalWritten != dims[0] * 4)
             {
-              std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
-              fclose( f);
+              std::cout << "Error Writing Binary Data for Euler Angles to file " << std::endl;
+              fclose(f);
               return -1;
             }
           }
@@ -281,10 +294,10 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
     return err;
   }
 
-    private:
-    T* r;
-    VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
+  private:
+  T* r;
+  VoxelEulerAngleScalarWriter(const VoxelEulerAngleScalarWriter&); // Copy Constructor Not Implemented
+  void operator=(const VoxelEulerAngleScalarWriter&); // Operator '=' Not Implemented
 
 
 };

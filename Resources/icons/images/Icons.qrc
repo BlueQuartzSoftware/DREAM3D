@@ -30,9 +30,10 @@
   <file>Processing_Icon.png</file>
   <file>Reconstruction_Icon.png</file>
   <file>Sampling_Icon.png</file>
+  <file>SolidMeshing_Icon.png</file>
   <file>Statistics_Icon.png</file>
-  <file>SurfaceMesh_Icon.png</file>
-  <file>SyntheticBuilder_Icon.png</file>
+  <file>SurfaceMeshing_Icon.png</file>
+  <file>SyntheticBuilding_Icon.png</file>
   <file>debug_error.png</file>
   <file>help2.png</file>
   <file>signpost.png</file>

@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshFilters/GenerateMeshConnectivity.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/GenerateMeshConnectivity.h"
 
 // -----------------------------------------------------------------------------
 //

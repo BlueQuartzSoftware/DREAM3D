@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/SurfaceMeshFilters/MeshLinearAlgebra.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
 /**
  * @brief

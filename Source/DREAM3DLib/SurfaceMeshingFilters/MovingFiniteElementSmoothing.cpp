@@ -58,8 +58,8 @@
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/SurfaceMeshFilters/MeshFunctions.h"
-#include "DREAM3DLib/SurfaceMeshFilters/MeshLinearAlgebra.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshFunctions.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
 #define ENABLE_MFE_SMOOTHING_RESTART_FILE 0
 
