@@ -43,6 +43,8 @@
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 
+#define BUF_SIZE 1024
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -177,6 +179,33 @@ int  PhReader::readFile()
   int ny = 0;
   int nz = 0;
 
+#if 1
+  FILE* f = fopen(getInputFile().c_str(), "r");
+  if(f == NULL)
+  {
+    setErrorCondition(-1);
+    notifyErrorMessage("Error opening input file", getErrorCondition());
+    return getErrorCondition();
+  }
+
+  // Read Line #1 which has the dimensions
+  fscanf(f, "%d %d %d\n", &nx, &ny, &nz);
+  char buf[BUF_SIZE];
+  // Read Line #2 and dump it
+  fgets(buf, BUF_SIZE, f);
+  // Read Line #3 and dump it
+  fgets(buf, BUF_SIZE, f);
+
+  size_t total = nx * ny * nz;
+  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(total, DREAM3D::CellData::GrainIds);
+  int32_t* grainIds = m_GrainIdData->GetPointer(0);
+  for(size_t n = 0; n < total; ++n)
+  {
+    fscanf(f, "%d", grainIds+n);
+  }
+  fclose(f);
+
+#else
   std::ifstream inFile;
   inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
@@ -211,31 +240,27 @@ int  PhReader::readFile()
   //The most simple thing todo is to read the entire dataset into one
   //long vector and then read that vector to assign values to the grid
   size_t index = 0;
-  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(nx * ny * nz, DREAM3D::CellData::GrainIds);
+  size_t total = nx * ny * nz;
+  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(total, DREAM3D::CellData::GrainIds);
 
   while (getline(inFile, line, '\n') != NULL)
   {
     tokens.clear();
     error = 0;
     tokenize(line, tokens, delimeters);
-    //        cout << line << endl;
-    //        for(int i=0; i < tokens.size(); i++ )
-    //              cout << setw(6) << tokens[i];
-    //        cout << endl;
-
     for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
     {
       error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
       m_GrainIdData->SetValue(index, spin);
       ++index;
+      if (index == total)
+      {
+        break;
+      }
     }
-    //        if(error != 20)
-    //              {
-    //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
-    //              }
   }
 
-  if(index != static_cast<size_t>(nz * ny * nx))
+  if(index != static_cast<size_t>(total))
   {
     std::stringstream ss;
     ss << "ERROR: data size does not match header dimensions. ";
@@ -246,14 +271,17 @@ int  PhReader::readFile()
     inFile.close();
   }
 
+  tokens.clear();
+  inFile.close();
+#endif
+
   // Read the data and stick it in the data Container
   getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
   getVoxelDataContainer()->setDimensions(nx, ny, nz);
   getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
   getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
 
-  tokens.clear();
-  inFile.close();
+
 
   notifyStatusMessage("Complete");
   return 0;
