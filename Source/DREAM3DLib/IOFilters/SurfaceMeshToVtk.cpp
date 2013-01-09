@@ -712,6 +712,6 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
                                                                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshTriangleNormals,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
+                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, "NORMALS", vtkFile, nT);
   return err;
 }

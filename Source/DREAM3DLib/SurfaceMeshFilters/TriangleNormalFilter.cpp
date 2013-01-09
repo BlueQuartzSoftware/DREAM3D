@@ -121,7 +121,6 @@ class CalculateNormalsImpl
         m_Normals[i*3] = normal[0] / length;
         m_Normals[i*3+1] = normal[1] / length;
         m_Normals[i*3+2] = normal[2] / length;
-
       }
     }
 
