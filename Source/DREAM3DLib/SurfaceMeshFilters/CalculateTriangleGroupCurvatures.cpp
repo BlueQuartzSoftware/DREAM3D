@@ -164,7 +164,11 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->generate( *m_NodeTrianglesMap);
 
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
-    assert(triPatch.size() > 0);
+//    if (triPatch.size() == 1)
+//    {
+//       nRingNeighborAlg->generate( *m_NodeTrianglesMap);
+//    }
+    assert(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));

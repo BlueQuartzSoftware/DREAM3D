@@ -33,8 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef GrainFaceCurvatureFilter_H_
-#define GrainFaceCurvatureFilter_H_
+/*
+ * Your License or Copyright Information can go here
+ */
+
+#ifndef _VerifyTriangleWinding_H_
+#define _VerifyTriangleWinding_H_
 
 #include <string>
 
@@ -45,28 +49,28 @@
 
 
 /**
- * @class GrainFaceCurvatureFilter GrainFaceCurvatureFilter.h GrainCurvature/Code/GrainFaceCurvatureFilters/GrainFaceCurvatureFilter.h
+ * @class VerifyTriangleWinding VerifyTriangleWinding.h /SurfaceMeshFilters/VerifyTriangleWinding.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class GrainFaceCurvatureFilter : public AbstractFilter
+class DREAM3DLib_EXPORT VerifyTriangleWinding : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GrainFaceCurvatureFilter)
-    DREAM3D_STATIC_NEW_MACRO(GrainFaceCurvatureFilter)
-    DREAM3D_TYPE_MACRO_SUPER(GrainFaceCurvatureFilter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VerifyTriangleWinding);
+    DREAM3D_STATIC_NEW_MACRO(VerifyTriangleWinding);
+    DREAM3D_TYPE_MACRO_SUPER(VerifyTriangleWinding, AbstractFilter);
 
-    virtual ~GrainFaceCurvatureFilter();
+    virtual ~VerifyTriangleWinding();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, NRing)
+    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -79,7 +83,7 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Grain Curvature Filter"; }
+    virtual const std::string getHumanLabel() { return "Verify Triangle Winding"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -93,7 +97,7 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-   /**
+    /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -104,11 +108,8 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     */
     virtual void preflight();
 
-
-    virtual void tbbTaskProgress();
-
   protected:
-    GrainFaceCurvatureFilter();
+    VerifyTriangleWinding();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -121,14 +122,11 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_SurfaceMeshUniqueEdges;
-    int32_t* m_SurfaceMeshTriangleEdges;
-    int32_t  m_TotalGrainFaces;
-    int32_t  m_CompletedGrainFaces;
+    bool m_DoUniqueEdgesFilter;
+    bool m_DoNodeTriangleConnectivityFilter;
 
-
-    GrainFaceCurvatureFilter(const GrainFaceCurvatureFilter&); // Copy Constructor Not Implemented
-    void operator=(const GrainFaceCurvatureFilter&); // Operator '=' Not Implemented
+    VerifyTriangleWinding(const VerifyTriangleWinding&); // Copy Constructor Not Implemented
+    void operator=(const VerifyTriangleWinding&); // Operator '=' Not Implemented
 };
 
-#endif /* GrainFaceCurvatureFilter_H_ */
+#endif /* _VerifyTriangleWinding_H_ */

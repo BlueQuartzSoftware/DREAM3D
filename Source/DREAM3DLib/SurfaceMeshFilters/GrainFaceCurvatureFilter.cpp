@@ -58,8 +58,8 @@ GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
 AbstractFilter(),
 m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
 m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-m_SurfaceMeshMeanCurvaturesArrayName(DREAM3D::CellData::SurfaceMeshMeanCurvatures),
-m_SurfaceMeshGaussianCurvaturesArrayName(DREAM3D::CellData::SurfaceMeshGaussianCurvatures),
+m_PrincipalCurvature1ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1),
+m_PrincipalCurvature2ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2),
 m_NRing(3),
 m_SurfaceMeshUniqueEdges(NULL),
 m_SurfaceMeshTriangleEdges(NULL),
@@ -150,13 +150,13 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
     addCreatedCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
 
 
-    DoubleArrayType::Pointer meanCurvatures = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshMeanCurvatures);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures, meanCurvatures);
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures);
+    DoubleArrayType::Pointer meanCurvatures = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshPrincipalCurvature1);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1, meanCurvatures);
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1);
 
-    DoubleArrayType::Pointer gaussianCurvatures = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures, gaussianCurvatures);
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
+    DoubleArrayType::Pointer gaussianCurvatures = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
+    sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2, gaussianCurvatures);
+    addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
   }
 }
 

@@ -176,15 +176,18 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
   }
   else
   {
-    if(sm->getTriangles().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
+      // We MUST have Nodes
     if(sm->getNodes().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
+    }
+
+    // We MUST have Triangles defined also.
+    if(sm->getTriangles().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
+      setErrorCondition(-385);
     }
 
     if (sm->getCellData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
@@ -352,6 +355,7 @@ int LaplacianSmoothing::smooth()
     }
   }
 
+  notifyStatusMessage("Starting to Smooth Vertices");
   // Get the unique Edges from the data container
   IDataArray::Pointer uniqueEdgesPtr = getSurfaceMeshDataContainer()->getCellData(m_SurfaceMeshUniqueEdgesArrayName);
   DataArray<int>* uniqueEdges = DataArray<int>::SafePointerDownCast(uniqueEdgesPtr.get());
