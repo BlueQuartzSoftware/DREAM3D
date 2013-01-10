@@ -174,12 +174,10 @@ int  PhReader::readFile()
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
 
-  int error, spin; /* dummy variables */
   int nx = 0;
   int ny = 0;
   int nz = 0;
 
-#if 1
   FILE* f = fopen(getInputFile().c_str(), "r");
   if(f == NULL)
   {
@@ -205,75 +203,13 @@ int  PhReader::readFile()
   }
   fclose(f);
 
-#else
-  std::ifstream inFile;
-  inFile.open(getInputFile().c_str(), std::ios_base::binary);
-  if(!inFile)
+  int minGrainId = 0x80000000;
+  int maxGrainId = 0;
+  for(size_t n = 0; n < total; ++n)
   {
-    std::stringstream ss;
-    ss << "Failed to open: " << getInputFile();
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    return -1;
+    if (grainIds[n] < minGrainId) { minGrainId = grainIds[n]; }
+    if (grainIds[n] > maxGrainId) { maxGrainId = grainIds[n]; }
   }
-
-  getline(inFile, line, '\n');
-  tokenize(line, tokens, delimeters);
-
-  // Process the header information from the PH file.
-  error = 0;
-  error += sscanf(tokens[0].c_str(), "%d", &nx);
-  error += sscanf(tokens[1].c_str(), "%d", &ny);
-  error += sscanf(tokens[2].c_str(), "%d", &nz);
-  tokens.clear();
-
-  //  cout << "INFO: PH file grid size: " << nx << "\t" << ny << "\t" << nz << endl;;
-
-  // Get the remaining two lines of the header and ignore
-  getline(inFile, line, '\n');
-  getline(inFile, line, '\n');
-
-  //The PH file has a unique format of 20 entries on each line. I have
-  //now idea who initiated this insanity but I am about to propetuate
-  //it.
-  //
-  //The most simple thing todo is to read the entire dataset into one
-  //long vector and then read that vector to assign values to the grid
-  size_t index = 0;
-  size_t total = nx * ny * nz;
-  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(total, DREAM3D::CellData::GrainIds);
-
-  while (getline(inFile, line, '\n') != NULL)
-  {
-    tokens.clear();
-    error = 0;
-    tokenize(line, tokens, delimeters);
-    for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
-    {
-      error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
-      m_GrainIdData->SetValue(index, spin);
-      ++index;
-      if (index == total)
-      {
-        break;
-      }
-    }
-  }
-
-  if(index != static_cast<size_t>(total))
-  {
-    std::stringstream ss;
-    ss << "ERROR: data size does not match header dimensions. ";
-    ss << "\t" << index << "\t" << nz * nx * ny;
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), 1);
-    return -1;
-    inFile.close();
-  }
-
-  tokens.clear();
-  inFile.close();
-#endif
 
   // Read the data and stick it in the data Container
   getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
