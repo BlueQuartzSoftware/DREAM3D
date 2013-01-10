@@ -172,10 +172,6 @@ int  PhReader::readFile()
     return -1;
   }
 
-  std::string line;
-  std::string delimeters(", ;\t"); /* delimeters to split the data */
-  std::vector<std::string> tokens; /* vector to store the split data */
-
   int nx = 0;
   int ny = 0;
   int nz = 0;
@@ -206,11 +202,6 @@ int  PhReader::readFile()
   {
     if (fscanf(f, "%d", grainIds+n) == 0)
     {
-//      std::cout << "File Pos: " << ftell(f) << std::endl;
-//       fpos_t pos;
-//      std::cout << "Fgetpos: " << fgetpos(f, &pos) << std::endl;
-//      ::memset(buf, 0, BUF_SIZE);
-//      fgets(buf, BUF_SIZE, f);
       fclose(f);
       setErrorCondition(-1);
       notifyErrorMessage("Error reading Ph data", getErrorCondition());
@@ -219,21 +210,11 @@ int  PhReader::readFile()
   }
   fclose(f);
 
-//  int minGrainId = 0x80000000;
-//  int maxGrainId = 0;
-//  for(size_t n = 0; n < total; ++n)
-//  {
-//    if (grainIds[n] < minGrainId) { minGrainId = grainIds[n]; }
-//    if (grainIds[n] > maxGrainId) { maxGrainId = grainIds[n]; }
-//  }
-
   // Read the data and stick it in the data Container
   getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
   getVoxelDataContainer()->setDimensions(nx, ny, nz);
   getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
   getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
-
-
 
   notifyStatusMessage("Complete");
   return 0;
