@@ -70,6 +70,14 @@ add_executable(FilterPipelineTest FilterPipelineTest.cpp )
 target_link_libraries(FilterPipelineTest DREAM3DLib)
 add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest)
 
+# --------------------------------------------------------------------------
+# ManagedPointerArrayTest
+# --------------------------------------------------------------------------
+add_executable(ManagedPointerArrayTest ManagedPointerArrayTest.cpp )
+target_link_libraries(ManagedPointerArrayTest DREAM3DLib)
+add_test(ManagedPointerArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ManagedPointerArrayTest)
+
+
 
 # --------------------------------------------------------------------------
 # MXAFileSystemPathTest

@@ -82,11 +82,9 @@ typedef struct {
 
 typedef struct {
   int node_id[3];    // stores three new node id for vertices of the triangles...
-  int e_id[3];       // stores three new edge id for sides of the triangles...
+  uint64_t e_id[3];       // stores three new edge id for sides of the triangles...
   int nSpin[2];      // two spins...
   int edgePlace[3];
-  int mCubeID;       // marching cube id = site id at corner 0 of the marching cube..
-  int tIndex;
 } Triangle;
 
 typedef Triangle Patch; // This is here for compatibility
@@ -95,8 +93,9 @@ typedef Triangle Patch; // This is here for compatibility
 
 typedef int32_t NodeId_t;
 typedef int32_t TriangleId_t;
-typedef std::map<NodeId_t, std::set<TriangleId_t> > NodeTrianglesMap_t;
 typedef std::set<TriangleId_t> UniqueTriangleIds_t;
+typedef std::map<NodeId_t, UniqueTriangleIds_t > NodeTrianglesMap_t;
+
 
 typedef struct  {
   size_t count;

@@ -34,56 +34,51 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CalculateTriangleGroupCurvatures_H_
-#define _CalculateTriangleGroupCurvatures_H_
+#ifndef _TriangleOps_H_
+#define _TriangleOps_H_
 
-#include <string>
+#include <vector>
+#include <set>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+
+#include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/SurfaceMeshFilters/util/Vector3.h"
+
 
 class SurfaceMeshDataContainer;
 
 
-/**
- * @class CalculateTriangleGroupCurvatures CalculateTriangleGroupCurvatures.h /SurfaceMeshFilters/CalculateTriangleGroupCurvatures.h
- * @brief Calculates the Curvature at a particular triangle
- * @author Mike Jackson (BlueQuartz Software)s
- * @date
- * @version 1.0
- */
-class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
+class TriangleOps
 {
   public:
-    CalculateTriangleGroupCurvatures(int nring,
-                                std::vector<int> triangleIds,
-                                DoubleArrayType::Pointer principleCurvature1,
-                                DoubleArrayType::Pointer principleCurvature2,
-                                SurfaceMeshDataContainer* sm,
-                                AbstractFilter* parent);
+    virtual ~TriangleOps();
 
-    virtual ~CalculateTriangleGroupCurvatures();
+    static int getLabelIndex(Triangle& t, int label);
 
-    void operator()() const;
+    static std::vector<int> getNodeIndices(Triangle& t, int label);
+
+    static void flipWinding(Triangle& triangle);
+
+    static VectorType computeNormal(Node& n0, Node& n1, Node& n2);
+
+    static std::set<int32_t> generateUniqueLabels(StructArray<Triangle>::Pointer trianglesPtr);
+
+    static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* m, StructArray<Triangle>::Pointer trianglesPtr,
+                                                        int32_t triangleIndex,
+                                                        int32_t label);
+    static bool verifyWinding(Triangle& source, Triangle& tri, int32_t label);
+
+
+    static void getWindingIndices4(Triangle &triangle, int ids[4], int32_t label);
 
   protected:
-    CalculateTriangleGroupCurvatures();
+    TriangleOps();
 
-
-    DataArray<double>::Pointer extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
-                                                double* data,
-                                                const std::string &name) const;
   private:
-    int m_NRing;
-    std::vector<int> m_TriangleIds;
-    DoubleArrayType::Pointer m_PrincipleCurvature1;
-    DoubleArrayType::Pointer m_PrincipleCurvature2;
-    SurfaceMeshDataContainer* m_SurfaceMeshDataContainer;
-    AbstractFilter* m_ParentFilter;
+    TriangleOps(const TriangleOps&); // Copy Constructor Not Implemented
+    void operator=(const TriangleOps&); // Operator '=' Not Implemented
+
 };
 
-#endif /* _CalculateTriangleGroupCurvatures_H_ */
-
-
+#endif /* _TriangleOps_H_ */

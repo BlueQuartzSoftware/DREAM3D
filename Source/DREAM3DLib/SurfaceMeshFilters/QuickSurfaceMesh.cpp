@@ -484,7 +484,7 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
         triangle[triangleCount].nSpin[0] = m_GrainIds[point];
         triangle[triangleCount].nSpin[1] = -1;
-        triangle[triangleCount].tIndex = triangleCount;
+
         triangleCount++;
 
         triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
@@ -492,7 +492,7 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
         triangle[triangleCount].nSpin[0] = m_GrainIds[point];
         triangle[triangleCount].nSpin[1] = -1;
-        triangle[triangleCount].tIndex = triangleCount;
+
         triangleCount++;
       }
       if(j == 0)
@@ -522,7 +522,7 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
         triangle[triangleCount].nSpin[0] = m_GrainIds[point];
         triangle[triangleCount].nSpin[1] = -1;
-        triangle[triangleCount].tIndex = triangleCount;
+
         triangleCount++;
 
         triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
@@ -530,7 +530,7 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].node_id[2] = m_NodeIds[nodeId4];
         triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
         triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-        triangle[triangleCount].tIndex = triangleCount;
+
         triangleCount++;
       }
       if(k == 0)
@@ -560,7 +560,7 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
         triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
         triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-        triangle[triangleCount].tIndex = triangleCount;
+
         triangleCount++;
 
         triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
@@ -568,7 +568,7 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
         triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
         triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-        triangle[triangleCount].tIndex = triangleCount;
+
         triangleCount++;
       }
       if(i == (xP-1) || j == (yP-1) || k == (zP-1))
@@ -600,7 +600,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId1];
           triangle[triangleCount].nSpin[0] = m_GrainIds[point];
           triangle[triangleCount].nSpin[1] = -1;
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
 
           triangle[triangleCount].node_id[0] = m_NodeIds[nodeId3];
@@ -608,7 +608,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
           triangle[triangleCount].nSpin[0] = m_GrainIds[point];
           triangle[triangleCount].nSpin[1] = -1;
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
         }
         if(j == (yP-1))
@@ -638,7 +638,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId1];
           triangle[triangleCount].nSpin[0] = m_GrainIds[point];
           triangle[triangleCount].nSpin[1] = -1;
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
 
           triangle[triangleCount].node_id[0] = m_NodeIds[nodeId3];
@@ -646,7 +646,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
           triangle[triangleCount].nSpin[0] = m_GrainIds[point];
           triangle[triangleCount].nSpin[1] = -1;
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
         }
         if(k == (zP-1))
@@ -676,7 +676,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId1];
           triangle[triangleCount].nSpin[0] = m_GrainIds[point];
           triangle[triangleCount].nSpin[1] = -1;
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
 
           triangle[triangleCount].node_id[0] = m_NodeIds[nodeId4];
@@ -684,7 +684,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
           triangle[triangleCount].nSpin[0] = m_GrainIds[point];
           triangle[triangleCount].nSpin[1] = -1;
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
         }
       }
@@ -717,7 +717,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
           triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
           triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
 
           triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
@@ -725,7 +725,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
           triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
           triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
         }
         if(m_GrainIds[point] != m_GrainIds[neigh2])
@@ -755,7 +755,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
           triangle[triangleCount].nSpin[0] = m_GrainIds[neigh2];
           triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
 
           triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
@@ -763,7 +763,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
           triangle[triangleCount].nSpin[0] = m_GrainIds[neigh2];
           triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
         }
         if(m_GrainIds[point] != m_GrainIds[neigh3])
@@ -793,7 +793,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
           triangle[triangleCount].nSpin[0] = m_GrainIds[neigh3];
           triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
 
           triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
@@ -801,7 +801,7 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].node_id[2] = m_NodeIds[nodeId4];
           triangle[triangleCount].nSpin[0] = m_GrainIds[neigh3];
           triangle[triangleCount].nSpin[1] = m_GrainIds[point];
-          triangle[triangleCount].tIndex = triangleCount;
+
           triangleCount++;
         }
       }

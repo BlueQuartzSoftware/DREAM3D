@@ -231,7 +231,7 @@ void GrainFaceCurvatureFilter::execute()
     notifyErrorMessage("Error Generating the Mesh Connectivity", -800);
     return;
   }
-  NodeTrianglesMap_t& node2Triangle = connectivity->getNode2TriangleMap();
+  //NodeTrianglesMap_t& node2Triangle = connectivity->getNode2TriangleMap();
 
 
   // Get our Reference counted Array of Triangle Structures
@@ -293,14 +293,14 @@ void GrainFaceCurvatureFilter::execute()
   {
     SharedGrainFaceFilter::TriangleIds_t& triangleIds = (*iter).second;
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
-    g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, &node2Triangle,
+    g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds,
                                             principalCurvature1, principalCurvature2,
                                             getSurfaceMeshDataContainer(), this ) );
 #else
 
 
 
-    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, &node2Triangle,
+    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds,
                                                meanCurvatures, gaussianCurvatures,
                                                getSurfaceMeshDataContainer(), this));
     curvature();

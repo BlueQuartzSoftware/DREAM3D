@@ -139,6 +139,8 @@ namespace DREAM3D
     const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
     const std::string SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
     const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
+    const std::string SurfaceMeshNodeTriangles("SurfaceMeshNodeTriangles");
+    const std::string SurfaceMeshEdgeTriangles("SurfaceMeshEdgeTriangles");
   }
 
   namespace FieldData

@@ -154,9 +154,9 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
 
     writer->writeValue("IterationSteps", getIterationSteps());
     writer->writeValue("Lambda", getLambda() );
-    writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
     writer->writeValue("TripleLineLambda", getTripleLineLambda());
     writer->writeValue("QuadPointLambda", getQuadPointLambda());
+    writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
     writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
     writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
 }
