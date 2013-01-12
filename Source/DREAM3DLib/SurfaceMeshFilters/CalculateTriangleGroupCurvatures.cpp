@@ -55,14 +55,12 @@
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
                                                                    std::vector<int> triangleIds,
-                                                                   NodeTrianglesMap_t* node2Triangle,
                                                                    DoubleArrayType::Pointer principleCurvature1,
                                                                    DoubleArrayType::Pointer principleCurvature2,
                                                                    SurfaceMeshDataContainer* sm,
                                                                    AbstractFilter* parent):
   m_NRing(nring),
   m_TriangleIds(triangleIds),
-  m_NodeTrianglesMap(node2Triangle),
   m_PrincipleCurvature1(principleCurvature1),
   m_PrincipleCurvature2(principleCurvature2),
   m_SurfaceMeshDataContainer(sm),
@@ -161,13 +159,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setRegionId1(grain1);
     nRingNeighborAlg->setRing(m_NRing);
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
-    nRingNeighborAlg->generate( *m_NodeTrianglesMap);
+    nRingNeighborAlg->generate();
 
     UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
-//    if (triPatch.size() == 1)
-//    {
-//       nRingNeighborAlg->generate( *m_NodeTrianglesMap);
-//    }
     assert(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));

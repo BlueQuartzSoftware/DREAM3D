@@ -39,6 +39,10 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
+#include "DREAM3DLib/Common/ManagedPointerArray.hpp"
+
+
+
 namespace Detail {
   /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -102,18 +106,25 @@ UniqueTriangleIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
+void FindNRingNeighbors::generate()
 {
   assert(m_SurfaceMeshDataContainer != NULL);
 
+  // Clear out any previous triangles
+  m_NRingTriangles.clear();
 
   StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   Triangle* triangles = trianglesPtr->GetPointer(0);
 
-  // Clear out any previous triangles
-  m_NRingTriangles.clear();
+  IDataArray::Pointer node2TrianglePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeTriangles);
+  if (node2TrianglePtr.get() == NULL)
+  {
+    return;
+  }
+  ManagedPointerArray<int>* node2Triangle = ManagedPointerArray<int>::SafePointerDownCast(node2TrianglePtr.get());
+
+
   Triangle& tri = triangles[m_TriangleId];
-  // Add our seed triangle
 
 
   bool check0 = tri.nSpin[0] == m_RegionId0 && tri.nSpin[1] == m_RegionId1;
@@ -128,6 +139,8 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
   }
 #endif
 
+
+  // Add our seed triangle
   m_NRingTriangles.insert(m_TriangleId);
 
   for (int ring = 0; ring < m_Ring; ++ring)
@@ -144,16 +157,17 @@ void FindNRingNeighbors::generate(NodeTrianglesMap_t &node2Triangle)
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        UniqueTriangleIds_t& tids = node2Triangle[t.node_id[i]];
+        ManagedPointerArray<int>::Data_t* tids = node2Triangle->GetPointer(t.node_id[i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
-        for(UniqueTriangleIds_t::iterator iter = tids.begin(); iter != tids.end(); ++iter)
+        for(size_t t = 0; t < tids->count; ++t)
         {
-          check0 = tri.nSpin[0] == m_RegionId0 && tri.nSpin[1] == m_RegionId1;
-          check1 = tri.nSpin[1] == m_RegionId0 && tri.nSpin[0] == m_RegionId1;
+          int tid = tids->data[t];
+          check0 = triangles[tid].nSpin[0] == m_RegionId0 && triangles[tid].nSpin[1] == m_RegionId1;
+          check1 = triangles[tid].nSpin[1] == m_RegionId0 && triangles[tid].nSpin[0] == m_RegionId1;
           if (check0 == true || check1 == true)
           {
-            m_NRingTriangles.insert(*iter);
+            m_NRingTriangles.insert(static_cast<int>(tid) );
           }
         }
       }

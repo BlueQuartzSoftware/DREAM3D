@@ -58,19 +58,22 @@
 class DREAM3DLib_EXPORT VerifyTriangleWinding : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VerifyTriangleWinding);
-    DREAM3D_STATIC_NEW_MACRO(VerifyTriangleWinding);
-    DREAM3D_TYPE_MACRO_SUPER(VerifyTriangleWinding, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(VerifyTriangleWinding)
+    DREAM3D_STATIC_NEW_MACRO(VerifyTriangleWinding)
+    DREAM3D_TYPE_MACRO_SUPER(VerifyTriangleWinding, AbstractFilter)
 
     virtual ~VerifyTriangleWinding();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTrianglesArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     // DREAM3D_INSTANCE_PROPERTY(float, XRes)
     // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
+    typedef std::map<int, std::set<int> >                      LabelTriangleMapType;
+    typedef std::vector<int32_t>                               TriangleListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -120,6 +123,9 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void findCommonEdge(Triangle& seed, Triangle& target);
+    void getLabelTriangleMap(LabelTriangleMapType &trianglesToLabelMap);
+    int debugPrintConnectivity();
 
   private:
     bool m_DoUniqueEdgesFilter;

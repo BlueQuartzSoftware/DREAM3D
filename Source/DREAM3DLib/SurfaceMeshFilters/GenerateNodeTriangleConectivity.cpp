@@ -36,6 +36,7 @@
 
 #include "GenerateNodeTriangleConectivity.h"
 
+#include "DREAM3DLib/Common/ManagedPointerArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -44,7 +45,7 @@ GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
   AbstractFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-  m_SurfaceMeshUniqueEdges(NULL),
+//  m_SurfaceMeshUniqueEdges(NULL),
   m_SurfaceMeshTriangleEdges(NULL)
 {
   setupFilterParameters();
@@ -63,85 +64,6 @@ GenerateNodeTriangleConectivity::~GenerateNodeTriangleConectivity()
 void GenerateNodeTriangleConectivity::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-  /* Place all your option initialization code here */
-  /* For String input use this code */
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("STL Output Prefix");
-    parameter->setPropertyName("StlFilePrefix");
-    parameter->setWidgetType(FilterParameter::StringWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*  For an Integer use this code
-   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Triangle ID");
-    parameter->setPropertyName("TriangleId");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Grain ID");
-    parameter->setPropertyName("RegionId");
-    parameter->setWidgetType(FilterParameter::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-*/
-  /*  For a Floating point value use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Misorientation Tolerance");
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an input file use this code*/
-  /*  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For an output file use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Alignment File");
-    parameter->setPropertyName("AlignmentShiftFileName");
-    parameter->setWidgetType(FilterParameter::OutputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }*/
-  /*   For a simple true/false boolean use this code*/
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Alignment Shift File");
-    parameter->setPropertyName("WriteAlignmentShifts");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }*/
-  /*   For presenting a set of choices to the user use this code*/
-  /* {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
-    parameter->setHumanLabel("Conversion Type");
-    parameter->setPropertyName("ConversionType");
-    parameter->setWidgetType(FilterParameter::ChoiceWidget);
-    parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
-    parameter->setChoices(choices);
-    parameters.push_back(parameter);
-  }*/
-
 
   setFilterParameters(parameters);
 }
@@ -247,6 +169,7 @@ void GenerateNodeTriangleConectivity::execute()
   notifyStatusMessage("Complete");
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -254,6 +177,7 @@ NodeTrianglesMap_t& GenerateNodeTriangleConectivity::getNode2TriangleMap()
 {
   return m_Node2Triangle;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -270,18 +194,41 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
     return;
   }
   int ntri = trianglesPtr->GetNumberOfTuples();
-
+  NodeTrianglesMap_t m_Node2Triangle;
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
-
+  // Generate the map of node_id -> Triangles that include that node_id value
   for(int i = 0; i < ntri; ++i)
   {
     Triangle& tri = triangles[i];
-    m_Node2Triangle[tri.node_id[0]].insert(tri.tIndex);
-    m_Node2Triangle[tri.node_id[1]].insert(tri.tIndex);
-    m_Node2Triangle[tri.node_id[2]].insert(tri.tIndex);
+    m_Node2Triangle[tri.node_id[0]].insert(i);
+    m_Node2Triangle[tri.node_id[1]].insert(i);
+    m_Node2Triangle[tri.node_id[2]].insert(i);
   }
+
+  ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), DREAM3D::CellData::SurfaceMeshNodeTriangles);
+  // Loop over each entry in the map
+  for(NodeTrianglesMap_t::iterator iter = m_Node2Triangle.begin(); iter != m_Node2Triangle.end(); ++iter)
+  {
+    int nodeId = (*iter).first;
+    ManagedPointerArray<int>::Data_t& entry = *(nodeTriangleArray->GetPointer(nodeId));
+    UniqueTriangleIds_t& triangles = (*iter).second;
+    // Allocate enough memory to hold the list of triangles
+    entry.count = triangles.size();
+    if (entry.count > 0)
+    {
+      entry.data = (int*)(malloc(sizeof(int) * entry.count));
+      int index = 0;
+      for(UniqueTriangleIds_t::iterator tIter = triangles.begin(); tIter != triangles.end(); ++tIter)
+      {
+        entry.data[index++] = *tIter; // Copy the value from the triangle Ids set into the ManagedPointer
+      }
+   //   m_Node2Triangle.erase(iter); // Erase this data as we build up the actual array.
+    }
+  }
+
+  getSurfaceMeshDataContainer()->addCellData(nodeTriangleArray->GetName(), nodeTriangleArray);
   return;
 }
 

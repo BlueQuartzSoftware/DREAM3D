@@ -355,15 +355,18 @@ int M3CEntireVolume::createMesh()
   triangles->initializeWithZeros();
   sm->setTriangles(triangles);
   Triangle* triangle = triangles.get()->GetPointer(0);
+  Int32ArrayType::Pointer mCubeIDPtr = Int32ArrayType::CreateArray(nTriangle, "Cube Id");
+  mCubeIDPtr->initializeWithZeros();
+  int32_t* mCubeID = mCubeIDPtr->GetPointer(0);
 
   notifyStatusMessage("\nFinding triangles...");
-  get_triangles(voxCoords, triangle, square, vertex, fedge, neigh, NS, NSP, fileDim[0]);
+  get_triangles(voxCoords, triangle, mCubeID, square, vertex, fedge, neigh, NS, NSP, fileDim[0]);
 
   notifyStatusMessage("\nupdating triagle sides as face edges...\n");
-  update_triangle_sides_with_fedge(triangle, fedge, square, nTriangle, fileDim[0], NSP);
+  update_triangle_sides_with_fedge(triangle, mCubeID, fedge, square, nTriangle, fileDim[0], NSP);
 
   notifyStatusMessage("\nCounting the number of inner edges including duplicates...\n");
-  tnIEdge = get_number_unique_inner_edges(triangle, nTriangle);
+  tnIEdge = get_number_unique_inner_edges(triangle, mCubeID, nTriangle);
   //printf("\ttotal number of unique inner edges = %d\n", tnIEdge);
   // memory allocation for inner edges...
 //  iedge = (isegment *)malloc(tnIEdge * sizeof(isegment));
@@ -372,7 +375,7 @@ int M3CEntireVolume::createMesh()
   ISegment* iedge = internalEdges.get()->GetPointer(0);
 
   notifyStatusMessage("\nFinidng unique inner edges and updating triagle sides as inner edges...\n");
-  get_unique_inner_edges(triangle, iedge, nTriangle, nFEdge);
+  get_unique_inner_edges(triangle, mCubeID, iedge, nTriangle, nFEdge);
 
   notifyStatusMessage("\nupdating node and edge kinds...\n");
   update_node_edge_kind(vertex, fedge, iedge, triangle, nTriangle, nFEdge);
@@ -2669,6 +2672,7 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::get_triangles(VoxelCoord* p,
                                            Triangle* t,
+                                           int* mCubeID,
                                            Face* sq,
                                            Node* v,
                                            Segment* e,
@@ -2802,20 +2806,20 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
       if(nFC == 0)
       { // when there's no face center
         //printf("%5d ", tidIn);
-        get_case0_triangles(t, arrayFE, v, e, nFE, tidIn, &tidOut, coord1, coord2, i);
+        get_case0_triangles(t, mCubeID, arrayFE, v, e, nFE, tidIn, &tidOut, coord1, coord2, i);
         tidIn = tidOut;
         //printf("%5d\n", tidIn);
       }
       else if(nFC == 2)
       {
         //printf("%5d ", tidIn);
-        get_case2_triangles(t, arrayFE, v, e, nFE, arrayFC, nFC, tidIn, &tidOut, coord1, coord2, i);
+        get_case2_triangles(t, mCubeID, arrayFE, v, e, nFE, arrayFC, nFC, tidIn, &tidOut, coord1, coord2, i);
         tidIn = tidOut;
         //printf("%5d\n", tidIn);
       }
       else if(nFC > 2 && nFC <= 6)
       {
-        get_caseM_triangles(t, arrayFE, v, e, nFE, arrayFC, nFC, tidIn, &tidOut, bodyCtr, coord1, coord2, i);
+        get_caseM_triangles(t, mCubeID, arrayFE, v, e, nFE, arrayFC, nFC, tidIn, &tidOut, bodyCtr, coord1, coord2, i);
         tidIn = tidOut;
       }
       else
@@ -2839,6 +2843,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_case0_triangles(Triangle* t1,
+                                            int* mCubeID,
                                                   int *afe,
                                                   Node* v1,
                                                   Segment* e1,
@@ -3068,7 +3073,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
       // update spins...
       t1[ctid].nSpin[0] = e1[te0].nSpin[0];
       t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-      t1[ctid].mCubeID = tmcid;
+      mCubeID[ctid] = tmcid;
       ctid++;
 
     }
@@ -3105,7 +3110,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
       // update spins...
       t1[ctid].nSpin[0] = e1[te0].nSpin[0];
       t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-      t1[ctid].mCubeID = tmcid;
+      mCubeID[ctid] = tmcid;
       new_node0 = tv2;
       new_node1 = tv1;
 
@@ -3143,7 +3148,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
           // update spins...
           t1[ctid].nSpin[0] = e1[ce].nSpin[0];
           t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-          t1[ctid].mCubeID = tmcid;
+          mCubeID[ctid] = tmcid;
           new_node0 = tv1;
           cnumT++;
           ctid++;
@@ -3177,7 +3182,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
           // update spins...
           t1[ctid].nSpin[0] = e1[ce].nSpin[0];
           t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-          t1[ctid].mCubeID = tmcid;
+          mCubeID[ctid] = tmcid;
           new_node0 = tv0;
           cnumT++;
           ctid++;
@@ -3206,7 +3211,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::get_case2_triangles(Triangle* t1,
+void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
                                                   int *afe, Node* v1,
                                                   Segment* e1,
                                                   int nfedge, int *afc, int nfctr,
@@ -3533,7 +3538,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = e1[te0].nSpin[0];
         t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         ctid++;
 
       }
@@ -3570,7 +3575,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = e1[te0].nSpin[0];
         t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         new_node0 = tv2;
         new_node1 = tv1;
 
@@ -3608,7 +3613,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
             // update spins...
             t1[ctid].nSpin[0] = e1[ce].nSpin[0];
             t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-            t1[ctid].mCubeID = tmcid;
+            mCubeID[ctid] = tmcid;
             new_node0 = tv1;
             cnumT++;
             ctid++;
@@ -3642,7 +3647,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
             // update spins...
             t1[ctid].nSpin[0] = e1[ce].nSpin[0];
             t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-            t1[ctid].mCubeID = tmcid;
+            mCubeID[ctid] = tmcid;
             new_node0 = tv0;
             cnumT++;
             ctid++;
@@ -3736,7 +3741,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = e1[te0].nSpin[0];
         t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         ctid++;
 
       }
@@ -3773,7 +3778,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = e1[te0].nSpin[0];
         t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         new_node0 = tv2;
         new_node1 = tv1;
 
@@ -3811,7 +3816,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
             // update spins...
             t1[ctid].nSpin[0] = e1[ce].nSpin[0];
             t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-            t1[ctid].mCubeID = tmcid;
+            mCubeID[ctid] = tmcid;
             new_node0 = tv1;
             cnumT++;
             ctid++;
@@ -3845,7 +3850,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
             // update spins...
             t1[ctid].nSpin[0] = e1[ce].nSpin[0];
             t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-            t1[ctid].mCubeID = tmcid;
+            mCubeID[ctid] = tmcid;
             new_node0 = tv0;
             cnumT++;
             ctid++;
@@ -3876,10 +3881,12 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
+                                            int* mCubeID,
                                                   int *afe,
                                                   Node* v1,
                                                   Segment* e1,
-                                                  int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid)
+                                                  int nfedge, int *afc, int nfctr, int tin,
+                                                  int *tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid)
 {
   int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
   int loopID;
@@ -4196,7 +4203,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = ts0;
         t1[ctid].nSpin[1] = ts1;
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         ctid++;
       }
 
@@ -4279,7 +4286,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = e1[te0].nSpin[0];
         t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         ctid++;
 
       }
@@ -4316,7 +4323,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
         // update spins...
         t1[ctid].nSpin[0] = e1[te0].nSpin[0];
         t1[ctid].nSpin[1] = e1[te0].nSpin[1];
-        t1[ctid].mCubeID = tmcid;
+        mCubeID[ctid] = tmcid;
         new_node0 = tv2;
         new_node1 = tv1;
 
@@ -4354,7 +4361,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
             // update spins...
             t1[ctid].nSpin[0] = e1[ce].nSpin[0];
             t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-            t1[ctid].mCubeID = tmcid;
+            mCubeID[ctid] = tmcid;
             new_node0 = tv1;
             cnumT++;
             ctid++;
@@ -4388,7 +4395,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
             // update spins...
             t1[ctid].nSpin[0] = e1[ce].nSpin[0];
             t1[ctid].nSpin[1] = e1[ce].nSpin[1];
-            t1[ctid].mCubeID = tmcid;
+            mCubeID[ctid] = tmcid;
             new_node0 = tv0;
             cnumT++;
             ctid++;
@@ -4498,6 +4505,7 @@ void M3CEntireVolume::find_edgePlace(double tvcrd1[3],
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::update_triangle_sides_with_fedge(Triangle* t,
+                                                       int* mCubeID,
                                                                Segment* e,
                                                                Face* sq,
                                                                int nT,
@@ -4518,7 +4526,7 @@ void M3CEntireVolume::update_triangle_sides_with_fedge(Triangle* t,
   for (i = 0; i < nT; i++)
   {
 
-    ii = t[i].mCubeID;
+    ii = mCubeID[i];
 
     if(ii != prevMCID)
     {
@@ -4581,7 +4589,7 @@ void M3CEntireVolume::update_triangle_sides_with_fedge(Triangle* t,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int nT)
+int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int* mCubeID, int nT)
 {
   std::stringstream ss;
   int i, j, k, kk, m, mm;
@@ -4611,14 +4619,14 @@ int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int nT)
   do
   {
       //printf("triangle %5d    ", i);
-      cmcID = t[i].mCubeID;
+      cmcID = mCubeID[i];
       if(i == (numT - 1))
       {
         nmcID = -1;
       }
       else
       {
-        nmcID = t[i + 1].mCubeID;
+        nmcID = mCubeID[i + 1];
       }// Let's get out when it hits the last triangle...
     //printf("cmcID = %10d, nmcID = %10d, index = %10d\n", cmcID, nmcID, index);
 
@@ -4699,6 +4707,7 @@ int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int nT)
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
+                                              int* mCubeID,
                                                      ISegment* ie,
                                                      int nT, int nfedge)
 {
@@ -4733,14 +4742,14 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
   do
   {
       //printf("triangle %5d    ", i);
-      cmcID = t[i].mCubeID;
+      cmcID = mCubeID[i];
       if(i == (numT - 1))
       {
         nmcID = -1;
       }
       else
       {
-        nmcID = t[i + 1].mCubeID;
+        nmcID = mCubeID[i + 1];
       }// Let's get out when it hits the last triangle...
 
     for (j = 0; j < 3; j++)

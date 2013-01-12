@@ -88,7 +88,7 @@ class FindNRingNeighbors
      * "value" for each key is a std::set that is the set of triangle ids that that particular
      * node is a part of.
      */
-    void generate(NodeTrianglesMap_t &node2Triangle);
+    void generate();
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)

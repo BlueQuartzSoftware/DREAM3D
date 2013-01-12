@@ -249,7 +249,7 @@ void GoldfeatherReader::execute()
     triangles[t].node_id[0] = x;
     triangles[t].node_id[1] = y;
     triangles[t].node_id[2] = z;
-    triangles[t].tIndex = t;
+  //  triangles[t].tIndex = t;
     triangles[t].nSpin[0] = 0;
     triangles[t].nSpin[1] = 1;
     triNormals[t*3+0] = n0;

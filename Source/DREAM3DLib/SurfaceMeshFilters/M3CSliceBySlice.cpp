@@ -864,9 +864,6 @@ void M3CSliceBySlice::readNodesTriangles(const std::string &nodesFileName, const
     t.nSpin[1] = tRecord.label_1;
     t.e_id[0] = t.e_id[1] = t.e_id[2] = -1;
     t.edgePlace[0] = t.edgePlace[1] = t.edgePlace[2] = -1;
-    t.mCubeID = -1;
- //   assert(i == tRecord.triId);
-    t.tIndex = i;
   }
 
   sm->setTriangles(trianglesPtr);
@@ -1727,7 +1724,7 @@ cTriangle[ctid].node_id[1] = n1;\
 cTriangle[ctid].node_id[2] = n2;\
 cTriangle[ctid].nSpin[0] = label0;\
 cTriangle[ctid].nSpin[1] = label1;\
-cTriangle[ctid].tIndex = ctid;
+/*cTriangle[ctid].tIndex = ctid;*/
 
   #if 0
   SharedEdge::Pointer e0 = SharedEdge::New(cTriangle[ctid].node_id[0], cTriangle[ctid].node_id[1]);\

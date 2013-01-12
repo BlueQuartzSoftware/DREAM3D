@@ -190,7 +190,7 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     int  get_number_case2_triangles (int *afe, Node* v1, Segment* fedge, int nfedge, int *afc, int nfctr);
     int  get_number_caseM_triangles (int *afe, Node* v, Segment* e1, int nfedge, int *afc, int nfctr);
     int  get_triangles (VoxelCoord* p,
-                        Triangle* t,
+                        Triangle* t, int *mCubeID,
                         Face* sq,
                         Node* v,
                         Segment* e,
@@ -198,17 +198,17 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
                         int ns,
                         int nsp,
                         int xDim);
-    void get_case0_triangles (Triangle* t1, int *afe, Node* v1, Segment* e1,
+    void get_case0_triangles (Triangle* t1, int *mCubeID, int *afe, Node* v1, Segment* e1,
             int nfedge, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
-    void get_case2_triangles (Triangle* triangles1, int *afe, Node* v1, Segment* fedge,
+    void get_case2_triangles (Triangle* triangles1, int *mCubeID, int *afe, Node* v1, Segment* fedge,
             int nfedge, int *afc, int nfctr, int tin, int *tout, double tcrd1[3], double tcrd2[3], int mcid);
-    void get_caseM_triangles (Triangle* triangles1, int *afe, Node* v1, Segment* fedge,
+    void get_caseM_triangles (Triangle* triangles1, int *mCubeID, int *afe, Node* v1, Segment* fedge,
             int nfedge, int *afc, int nfctr, int tin, int *tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid);
     void find_edgePlace(double tvcrd1[3], double tvcrd2[3], double tvcrd3[3], int tw[3],
             double xh, double xl, double yh, double yl, double zh, double zl);
-    int get_number_unique_inner_edges(Triangle* triangles, int nT);
-    void get_unique_inner_edges(Triangle* t, ISegment* ie, int nT, int nfedge);
-    void update_triangle_sides_with_fedge(Triangle* t,
+    int get_number_unique_inner_edges(Triangle* triangles, int *mCubeID, int nT);
+    void get_unique_inner_edges(Triangle* t, int* mCubeID, ISegment* ie, int nT, int nfedge);
+    void update_triangle_sides_with_fedge(Triangle* t, int *mCubeID,
                                                                Segment* e,
                                                                Face* sq,
                                                                int nT,
