@@ -66,6 +66,23 @@ const static float m_pi = static_cast<float>(M_PI);
   static const float unit112_1 = 1.0/sqrtf(6.0);
   static const float unit112_2 = 2.0/sqrtf(6.0);
 
+  float sampleSymm[4][3][3] = {{{1, 0, 0},
+								{0, 1, 0},
+								{0, 0, 1}},
+
+								{{1, 0, 0},
+								{0, -1, 0},
+								{0, 0, -1}},
+
+								{{-1, 0, 0},
+								{0, 1, 0},
+								{0, 0, -1}},
+
+								{{-1, 0, 0},
+								{0, -1, 0},
+								{0, 0, 1}}};
+
+
   float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
                     {-unit111, -unit112_1, unit110},
                     {unit111, -unit112_2, 0}},
@@ -112,7 +129,7 @@ const static float m_pi = static_cast<float>(M_PI);
 
                     {{-unit111, unit112_2, 0},
                     {unit111, unit112_1, unit110},
-                    {unit111, unit112_1, -unit110}}};
+					{unit111, unit112_1, -unit110}}};
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -294,7 +311,7 @@ void MergeColonies::execute()
  notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
-//  m_RandomizeParentIds = false;
+  //m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
     int64_t totalPoints = m->getTotalPoints();
@@ -337,6 +354,7 @@ void MergeColonies::execute()
     }
 
     // Now adjust all the Grain Id values for each Voxel
+
     for(int64_t i = 0; i < totalPoints; ++i)
     {
        m_ParentIds[i] = pid[ m_ParentIds[i] ];
@@ -385,7 +403,7 @@ void MergeColonies::merge_colonies()
         int size = int(neighborlist[firstgrain].size());
         for (int l = 0; l < size; l++)
         {
-          int colony = 0;
+		  int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
@@ -402,6 +420,7 @@ void MergeColonies::merge_colonies()
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
+
             if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
             {
                 w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
@@ -419,16 +438,16 @@ void MergeColonies::merge_colonies()
                 float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
                 if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
                 float angdiff2 = fabs(w-90.00f);
-                float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
+                float axisdiff2 = acosf(fabs(n1)*0.9958f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
                 if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
                 float angdiff3 = fabs(w-60.00f);
                 float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
                 if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
                 float angdiff4 = fabs(w-60.83f);
-                float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
+                float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0905f+fabs(n3)*0.1570f);
                 if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
                 float angdiff5 = fabs(w-63.26f);
-                float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
+                float axisdiff5 = acosf(fabs(n1)*0.9549f+fabs(n2)*0.0000f+fabs(n3)*0.2969f);
                 if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
                 if (colony == 1)
                 {
@@ -482,18 +501,8 @@ void MergeColonies::characterize_colonies()
 
 int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
 {
-
-/*  float ea1 = 0.0*m_pi/180.0f;
-  float ea2 = 0.0*m_pi/180.0f;
-  float ea3 = 0.0*m_pi/180.0f;
-  OrientationMath::eulertoQuat(betaQuat, ea1, ea2, ea3);
-
-  ea1 = 0.0*m_pi/180.0f;
-  ea2 = 45.0*m_pi/180.0f;
-  ea3 = 54.73*m_pi/180.0f;
-  OrientationMath::eulertoQuat(alphaQuat, ea1, ea2, ea3);*/
-
-  float w = 0.0;
+  float dP = 0.0;
+  float angle = 0.0;
   float radToDeg = 180.0f/m_pi;
 
   float gBeta[3][3];
@@ -511,12 +520,46 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   MatrixMath::transpose3x3(gAlpha, gAlphaT);
 
   float mat[3][3];
+  float a[3];
+  float b[3];
   for(int i=0;i<12;i++)
   {
     MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
-    w = OrientationMath::matrixMisorientation(mat, gAlphaT);
-    if((w*radToDeg) < m_AngleTolerance) return 1;
-    else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
+	a[0] = mat[0][2];
+	a[1] = mat[1][2];
+	a[2] = mat[2][2];
+	b[0] = gAlphaT[0][2];
+	b[1] = gAlphaT[1][2];
+	b[2] = gAlphaT[2][2];
+	dP = MatrixMath::dotProduct(a, b);
+	angle = acos(dP);
+	if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
+	{
+		a[0] = mat[0][0];
+		a[1] = mat[1][0];
+		a[2] = mat[2][0];
+		b[0] = gAlphaT[0][0];
+		b[1] = gAlphaT[1][0];
+		b[2] = gAlphaT[2][0];
+		dP = MatrixMath::dotProduct(a, b);
+		angle = acos(dP);
+		if((angle*radToDeg) < m_AngleTolerance) return 1;
+		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+		b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
+		b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
+		b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
+		dP = MatrixMath::dotProduct(a, b);
+		angle = acos(dP);
+		if((angle*radToDeg) < m_AngleTolerance) return 1;
+		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+		b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
+		b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
+		b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
+		dP = MatrixMath::dotProduct(a, b);
+		angle = acos(dP);
+		if((angle*radToDeg) < m_AngleTolerance) return 1;
+		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+	}
   }
 
   return 0;

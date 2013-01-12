@@ -37,6 +37,7 @@
 #include "FindAvgCAxes.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
@@ -49,14 +50,12 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
-m_FieldEulerAngles(NULL),
 m_Quats(NULL),
-m_AvgQuats(NULL)
+m_AvgCAxes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -100,8 +99,7 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, float, FloatArrayType, 0, fields, 3)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -138,17 +136,22 @@ void FindAvgCAxes::execute()
 
   size_t numgrains = m->getNumFieldTuples();
   int phase;
-  float voxquat[5];
-  float curavgquat[5];
+  float q1[5];
+  float g1[3][3];
+  float g1t[3][3];
+ // float n1, n2, n3;
+  unsigned int phase1, phase2;
+  float caxis[3] = {0,0,1};
+  float c1[3];
 
+  std::vector<int> counter;
+  counter.resize(numgrains,0);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	  m_AvgQuats[5*i] = 0.0;
-	  m_AvgQuats[5*i+1] = 0.0;
-	  m_AvgQuats[5*i+2] = 0.0;
-	  m_AvgQuats[5*i+3] = 0.0;
-	  m_AvgQuats[5*i+4] = 0.0;
+	  m_AvgCAxes[3*i] = 0.0;
+	  m_AvgCAxes[3*i+1] = 0.0;
+	  m_AvgCAxes[3*i+2] = 0.0;
   }
 //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
@@ -157,57 +160,40 @@ void FindAvgCAxes::execute()
     {
 
       phase = m_CellPhases[i];
-      voxquat[0] = m_Quats[i*5 + 0];
-      voxquat[1] = m_Quats[i*5 + 1];
-      voxquat[2] = m_Quats[i*5 + 2];
-      voxquat[3] = m_Quats[i*5 + 3];
-      voxquat[4] = m_Quats[i*5 + 4];
-      curavgquat[0] = 1;
-      curavgquat[1] = m_AvgQuats[5*m_GrainIds[i]+1]/m_AvgQuats[5*m_GrainIds[i]];
-      curavgquat[2] = m_AvgQuats[5*m_GrainIds[i]+2]/m_AvgQuats[5*m_GrainIds[i]];
-      curavgquat[3] = m_AvgQuats[5*m_GrainIds[i]+3]/m_AvgQuats[5*m_GrainIds[i]];
-      curavgquat[4] = m_AvgQuats[5*m_GrainIds[i]+4]/m_AvgQuats[5*m_GrainIds[i]];
-	  if(m_AvgQuats[5*m_GrainIds[i]] == 0)
-	  {
-		  curavgquat[0] = 1;
-		  curavgquat[1] = 0;
-		  curavgquat[2] = 0;
-		  curavgquat[3] = 0;
-		  curavgquat[4] = 1;
-	  }
-	  m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
-      for (int k = 0; k < 5; k++)
-      {
-        m_AvgQuats[5*m_GrainIds[i]+k] = m_AvgQuats[5*m_GrainIds[i]+k] + voxquat[k];
-      }
+      q1[0] = m_Quats[i*5 + 0];
+      q1[1] = m_Quats[i*5 + 1];
+      q1[2] = m_Quats[i*5 + 2];
+      q1[3] = m_Quats[i*5 + 3];
+      q1[4] = m_Quats[i*5 + 4];
+
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matricies so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::transpose3x3(g1, g1t);
+      MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the magnitude is 1
+      MatrixMath::normalize3x1(c1);
+	  
+	  counter[m_GrainIds[i]]++;
+	  m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
+	  m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
+	  m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
     }
   }
-  float q[5];
-  float ea1, ea2, ea3;
   for (size_t i = 1; i < numgrains; i++)
   {
-	  if(m_AvgQuats[5*i] == 0)
+	  if(counter[i] == 0)
 	  {
-		  m_AvgQuats[5*i] = 1;
-	      m_AvgQuats[5*i+1] = 0;
-	      m_AvgQuats[5*i+2] = 0;
-	      m_AvgQuats[5*i+3] = 0;
-	      m_AvgQuats[5*i+4] = 1;
+		m_AvgCAxes[3*i] = 0;
+		m_AvgCAxes[3*i+1] = 0;
+		m_AvgCAxes[3*i+2] = 1;
 	  }
-      q[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
-      q[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
-      q[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
-      q[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
-	  OrientationMath::normalizeQuat(q);
-	  OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-	  m_FieldEulerAngles[3*i] = ea1;
-      m_FieldEulerAngles[3*i+1] = ea2;
-      m_FieldEulerAngles[3*i+2] = ea3;
-      m_AvgQuats[5*i+1] = q[1];
-      m_AvgQuats[5*i+2] = q[2];
-      m_AvgQuats[5*i+3] = q[3];
-      m_AvgQuats[5*i+4] = q[4];
-	  m_AvgQuats[5*i] = 1;
+	  else
+	  {
+		m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
+		m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
+		m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
+	  }
   }
 
  notifyStatusMessage("Completed");

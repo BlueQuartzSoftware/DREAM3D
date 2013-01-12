@@ -72,13 +72,12 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Average Orientations"; }
+    virtual const std::string getHumanLabel() { return "Find Average C-Axis Orientations"; }
 
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
@@ -99,9 +98,8 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
 
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
-    float* m_FieldEulerAngles;
     float* m_Quats;
-    float* m_AvgQuats;
+    float* m_AvgCAxes;
 
 	unsigned int* m_CrystalStructures;
 

@@ -73,7 +73,6 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 	//------ Created Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisRotationsArrayName)
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
 	//------ Created Field Data
@@ -104,7 +103,6 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     float* m_GrainReferenceCAxisMisorientations;
-    float* m_GrainReferenceCAxisRotations;
     float* m_AvgCAxes;
     float* m_GrainAvgCAxisMisorientations;
     float* m_Quats;

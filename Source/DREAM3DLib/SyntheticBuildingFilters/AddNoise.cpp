@@ -34,76 +34,55 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindCellQuats.h"
+#include "AddNoise.h"
 
-#include <sstream>
+#include <map>
+
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
-const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindCellQuats::FindCellQuats() :
-  AbstractFilter(),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CellPhases(NULL),
-  m_Quats(NULL),
-  m_CellEulerAngles(NULL),
-  m_CrystalStructures(NULL)
+AddNoise::AddNoise() :
+AbstractFilter(),
+m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+m_GBEuclideanDistances(NULL)
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(m_HexOps.get());
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(m_CubicOps.get());
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(m_OrthoOps.get());
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindCellQuats::~FindCellQuats()
+AddNoise::~AddNoise()
 {
 }
 // -----------------------------------------------------------------------------
-void FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AddNoise::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AddNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
-
-      typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-
+  // Cell Data
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindCellQuats::preflight()
+void AddNoise::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -111,56 +90,68 @@ void FindCellQuats::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindCellQuats::execute()
+void AddNoise::execute()
 {
-  setErrorCondition(0);
+  int err = 0;
+  setErrorCondition(err);
+  DREAM3D_RANDOMNG_NEW()
   VoxelDataContainer* m = getVoxelDataContainer();
+
   if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  float qr[5];
-  int phase = -1;
-  for (int i = 0; i < totalPoints; i++)
-  {
-    phase = m_CellPhases[i];
-	if(phase == 2) m_CellEulerAngles[3*i+2] = m_CellEulerAngles[3*i+2] + (30.0*m_pi/180.0);
-    OrientationMath::eulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
-    OrientationMath::normalizeQuat(qr);
-    if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
-    {
-      qr[1] = 0.0;
-      qr[2] = 0.0;
-      qr[3] = 0.0;
-      qr[4] = 1.0;
-    }
-    else
-    {
-      m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-      OrientationMath::normalizeQuat(qr);
-    }
+  add_noise();
 
-    m_Quats[i*5 + 0] = 1.0f;
-    m_Quats[i*5 + 1] = qr[1];
-    m_Quats[i*5 + 2] = qr[2];
-    m_Quats[i*5 + 3] = qr[3];
-    m_Quats[i*5 + 4] = qr[4];
-  }
-
-  notifyStatusMessage("Complete");
+  // If there is an error set this to something negative and also set a message
+ notifyStatusMessage("AddNoises Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  AddNoise::add_noise()
+{
+ notifyStatusMessage("Adding Noise");
+  DREAM3D_RANDOMNG_NEW()
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+
+  int count1 = 0;
+  int count2 = 0;
+  float random = 0.0;
+  int64_t totalPoints = m->getTotalPoints();
+  for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
+  {
+	  if(m_GBEuclideanDistances[3*i] < 1)
+	  {
+		count1++;
+		random = static_cast<float>( rg.genrand_res53() );
+		if(random < 0.1)
+		{
+		  count2++;
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+			p->InitializeTuple(i,0); 
+          }
+		}
+	  }
+  }
+}
 

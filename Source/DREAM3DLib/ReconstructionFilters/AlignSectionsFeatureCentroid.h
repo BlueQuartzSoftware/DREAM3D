@@ -68,11 +68,14 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    DREAM3D_INSTANCE_PROPERTY(int, ReferenceSlice)
+    DREAM3D_INSTANCE_PROPERTY(bool, UseReferenceSlice)
+
+	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const std::string getHumanLabel() { return "Align Sections (Feature Centroid)"; }
 
     virtual void setupFilterParameters();
-//    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
