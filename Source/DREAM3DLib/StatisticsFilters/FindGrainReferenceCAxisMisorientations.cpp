@@ -40,6 +40,7 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
@@ -57,12 +58,11 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
-m_GrainReferenceCAxisRotationsArrayName(DREAM3D::CellData::GrainReferenceCAxisRotations),
 m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
+m_GrainAvgCAxisMisorientationsArrayName(DREAM3D::FieldData::GrainAvgCAxisMisorientations),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_GrainReferenceCAxisMisorientations(NULL),
-m_GrainReferenceCAxisRotations(NULL),
 m_AvgCAxes(NULL),
 m_GrainAvgCAxisMisorientations(NULL),
 m_Quats(NULL)
@@ -114,7 +114,6 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisRotations, ss, float, FloatArrayType, 0, voxels, 3)
 
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, err, -303, float, FloatArrayType, fields, 3)
   if(err == -303)
@@ -207,7 +206,17 @@ void FindGrainReferenceCAxisMisorientations::execute()
   DimType xPoints = static_cast<DimType>(udims[0]);
   DimType yPoints = static_cast<DimType>(udims[1]);
   DimType zPoints = static_cast<DimType>(udims[2]);
+
   DimType point;
+
+  float g1[3][3];
+  float g1t[3][3];
+ // float n1, n2, n3;
+  unsigned int phase1, phase2;
+  float caxis[3] = {0,0,1};
+  float c1[3];
+  float AvgCAxis[3];
+
   for (DimType col = 0; col < xPoints; col++)
   {
     for (DimType row = 0; row < yPoints; row++)
@@ -217,23 +226,33 @@ void FindGrainReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
+		  q1[0] = 1;
           q1[1] = m_Quats[point*5 + 1];
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-          q2[0] = m_AvgCAxes[5*m_GrainIds[point]];
-          q2[1] = m_AvgCAxes[5*m_GrainIds[point]+1];
-          q2[2] = m_AvgCAxes[5*m_GrainIds[point]+2];
-          q2[3] = m_AvgCAxes[5*m_GrainIds[point]+3];
-          q2[4] = m_AvgCAxes[5*m_GrainIds[point]+4];
-          //w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-          //m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-          w = w *(180.0f/m_pi);
+	      OrientationMath::QuattoMat(q1, g1);
+	      //transpose the g matricies so when caxis is multiplied by it
+	      //it will give the sample direction that the caxis is along
+	      MatrixMath::transpose3x3(g1, g1t);
+	      MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+	      //normalize so that the magnitude is 1
+	      MatrixMath::normalize3x1(c1);
+
+          AvgCAxis[0] = m_AvgCAxes[3*m_GrainIds[point]];
+          AvgCAxis[1] = m_AvgCAxes[3*m_GrainIds[point]+1];
+          AvgCAxis[2] = m_AvgCAxes[3*m_GrainIds[point]+2];
+	      //normalize so that the magnitude is 1
+	      MatrixMath::normalize3x1(AvgCAxis);
+
+	      w = ((c1[0]*AvgCAxis[0])+(c1[1]*AvgCAxis[1])+(c1[2]*AvgCAxis[2]));
+		  if(w < -1) w = -1;
+		  if(w > 1) w = 1;
+	      w = acosf(w);
+		  w = w *(180.0f/m_pi);
+		  if(w > 90.0) w = 180.0-w;
+
           m_GrainReferenceCAxisMisorientations[point] = w;
-          m_GrainReferenceCAxisRotations[3*point] = r1;
-          m_GrainReferenceCAxisRotations[3*point+1] = r2;
-          m_GrainReferenceCAxisRotations[3*point+2] = r3;
           avgmiso[m_GrainIds[point]][0]++;
           avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;
         }

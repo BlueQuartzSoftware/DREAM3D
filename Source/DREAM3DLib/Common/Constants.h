@@ -112,14 +112,18 @@ namespace DREAM3D
     const std::string Quats("Quats");
     const std::string GoodVoxels("GoodVoxels");
     const std::string NearestNeighbors("NearestNeighbors");
-    const std::string NearestNeighborDistances("NearestNeighborDistances");
+    const std::string GBEuclideanDistances("GBEuclideanDistances");
+    const std::string TJEuclideanDistances("TJEuclideanDistances");
+    const std::string QPEuclideanDistances("QPEuclideanDistances");
     const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
     const std::string GrainReferenceRotations("GrainReferenceRotations");
     const std::string GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
-    const std::string GrainReferenceCAxisRotations("GrainReferenceCAxisRotations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
+    const std::string ImageQualityNoSpace("ImageQuality");
     const std::string ImageQuality("Image Quality");
-    const std::string IPFColor("IPFColor");
+    const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
+    const std::string ConfidenceIndex("Confidence Index");
+	const std::string IPFColor("IPFColor");
 
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");

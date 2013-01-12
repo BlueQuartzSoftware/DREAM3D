@@ -48,6 +48,7 @@
     <file>ProcessingFilters/PerPhaseMinSize.html</file>
     <file>ProcessingFilters/FillBadData.html</file>
     <file>ProcessingFilters/OpenCloseBadData.html</file>
+    <file>ProcessingFilters/OpenCloseCoordinationNumber.html</file>
     <file>ProcessingFilters/ConvertEulerAngles.html</file>
     <file>ProcessingFilters/StandardizeEulerAngles.html</file>
     <file>ProcessingFilters/RotateEulerRefFrame.html</file>
@@ -108,6 +109,7 @@
     <file>SyntheticBuildingFilters/JumbleOrientations.html</file>
     <file>SyntheticBuildingFilters/InsertPrecipitatePhases.html</file>
     <file>SyntheticBuildingFilters/EstablishMatrixPhase.html</file>
+    <file>SyntheticBuildingFilters/AddNoise.html</file>
     <file>SyntheticBuildingFilters/InitializeSyntheticVolume.html</file>
     <file>SyntheticBuildingFilters/InitSynthVol.jpg</file>
   </qresource>

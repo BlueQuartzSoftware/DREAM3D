@@ -83,7 +83,9 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborDistancesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
@@ -128,7 +130,9 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     float* m_GrainAvgMisorientations;
     int32_t* m_Poles;
     float* m_Schmids;
-    float* m_NearestNeighborDistances;
+    float* m_GBEuclideanDistances;
+    float* m_TJEuclideanDistances;
+    float* m_QPEuclideanDistances;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

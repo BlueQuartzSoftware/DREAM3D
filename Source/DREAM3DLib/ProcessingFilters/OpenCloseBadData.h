@@ -91,7 +91,6 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 
 
   private:
-    bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
     int32_t* m_GrainIds;

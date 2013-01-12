@@ -56,8 +56,13 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_BCArrayName(Ebsd::Ctf::BC),
 m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
+m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
+m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
 m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
+m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
@@ -66,11 +71,16 @@ m_WriteGrainIds(false),
 m_WriteParentIds(false),
 m_WritePhaseIds(false),
 m_WriteBandContrasts(false),
+m_WriteConfidenceIndicies(false),
 m_WriteImageQualities(false),
 m_WriteGoodVoxels(false),
+m_WriteGBEuclideanDistanceMap(false),
+m_WriteTJEuclideanDistanceMap(false),
+m_WriteQPEuclideanDistanceMap(false),
 m_WriteRodriguesGAMColors(false),
-m_WriteGAMs(false),
-m_WriteKAMs(false),
+m_WriteGrainReferenceMisorientations(false),
+m_WriteGrainReferenceCAxisMisorientations(false),
+m_WriteKernelAverageMisorientations(false),
 m_WriteIPFColors(false),
 m_WriteSchmidFactors(false),
 m_WriteGrainSizes(false),
@@ -145,16 +155,32 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write KAM Value");
-    option->setPropertyName("WriteKAMs");
+    option->setHumanLabel("Write ConfidenceIndicies");
+    option->setPropertyName("WriteConfidenceIndicies");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write GAM Values");
-    option->setPropertyName("WriteGAMs");
+    option->setHumanLabel("Write Kernel Average Misorientation Value");
+    option->setPropertyName("WriteKernelAverageMisorientations");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Grain Reference Misorientation Values");
+    option->setPropertyName("WriteGrainReferenceMisorientations");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Grain Reference CAxis Misorientation Values");
+    option->setPropertyName("WriteGrainReferenceCAxisMisorientations");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -179,6 +205,30 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Schmid Factors");
     option->setPropertyName("WriteSchmidFactors");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write GB Euclidean Distance Map");
+    option->setPropertyName("WriteGBEuclideanDistanceMap");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write TJ Euclidean Distance Map");
+    option->setPropertyName("WriteTJEuclideanDistanceMap");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write QP Euclidean Distance Map");
+    option->setPropertyName("WriteQPEuclideanDistanceMap");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -227,9 +277,14 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WritePhaseIds", getWritePhaseIds() );
   writer->writeValue("WriteBandContrasts", getWriteBandContrasts() );
   writer->writeValue("WriteImageQualities", getWriteImageQualities() );
+  writer->writeValue("WriteConfidenceIndicies", getWriteConfidenceIndicies() );
   writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
-  writer->writeValue("WriteGAMs", getWriteGAMs() );
-  writer->writeValue("WriteKAMs", getWriteKAMs() );
+  writer->writeValue("WriteGBEuclideanDistanceMap", getWriteGBEuclideanDistanceMap() );
+  writer->writeValue("WriteTJEuclideanDistanceMap", getWriteTJEuclideanDistanceMap() );
+  writer->writeValue("WriteQPEuclideanDistanceMap", getWriteQPEuclideanDistanceMap() );
+  writer->writeValue("WriteGrainReferenceMisorientations", getWriteGrainReferenceMisorientations() );
+  writer->writeValue("WriteGrainReferenceCAxisMisorientations", getWriteGrainReferenceCAxisMisorientations() );
+  writer->writeValue("WriteKernelAverageMisorientations", getWriteKernelAverageMisorientations() );
   writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteSchmidFactors", getWriteSchmidFactors() );
   writer->writeValue("WriteRodrgiuesGAMColors", getWriteRodriguesGAMColors() );
@@ -288,17 +343,25 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
   }
-  if(m_WriteKAMs == true)
+  if(m_WriteKernelAverageMisorientations == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
-  if(m_WriteGAMs == true)
+  if(m_WriteGrainReferenceMisorientations == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
+  }
+  if(m_WriteGrainReferenceCAxisMisorientations == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteBandContrasts == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1)
+  }
+  if(m_WriteConfidenceIndicies == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -304, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteImageQualities == true)
   {
@@ -307,6 +370,18 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_WriteIPFColors == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+  }
+  if(m_WriteGBEuclideanDistanceMap == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
+  }
+  if(m_WriteTJEuclideanDistanceMap == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
+  }
+  if(m_WriteQPEuclideanDistanceMap == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteSchmidFactors == true)
   {
@@ -382,6 +457,27 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
+  if (m_WriteGBEuclideanDistanceMap == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGBEDMScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteTJEuclideanDistanceMap == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelTJEDMScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteQPEuclideanDistanceMap == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelQPEDMScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
   if (m_WriteParentIds == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelParentIdScalarWriter<VoxelDataContainer>(m));
@@ -410,6 +506,13 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
+  if(m_WriteConfidenceIndicies == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelCIScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
   if (m_WriteGoodVoxels == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<VoxelDataContainer>(m));
@@ -417,16 +520,23 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
-  if (m_WriteKAMs == true)
+  if (m_WriteKernelAverageMisorientations == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelKAMScalarWriter<VoxelDataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelKernelAverageMisorientationScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
 
-  if (m_WriteGAMs == true)
+  if (m_WriteGrainReferenceMisorientations == true)
   {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGAMScalarWriter<VoxelDataContainer>(m));
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainReferenceMisorientationScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteGrainReferenceCAxisMisorientations == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainReferenceCAxisMisorientationScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
