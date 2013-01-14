@@ -20,6 +20,7 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ClearData ClearData.html "" TRUE
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} PerPhaseMinSize PerPhaseMinSize.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FillBadData FillBadData.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} OpenCloseBadData OpenCloseBadData.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} OpenCloseCoordinationNumber OpenCloseCoordinationNumber.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ConvertEulerAngles ConvertEulerAngles.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles StandardizeEulerAngles.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame RotateEulerRefFrame.html "" TRUE)

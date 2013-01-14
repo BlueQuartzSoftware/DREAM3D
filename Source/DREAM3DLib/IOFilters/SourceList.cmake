@@ -34,10 +34,11 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ReadH5Ebsd ReadH5Ebsd.html "" TR
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToNodesTrianglesEdges SurfaceMeshToNodesTrianglesEdges.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToStl SurfaceMeshToStl.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToVtk SurfaceMeshToVtk.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader VtkGrainIdReader.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkRectilinearGridWriter VtkRectilinearGridWriter.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} YSChoiAbaqusReader YSChoiAbaqusReader.html "" TRUE)
 
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader VtkGrainIdReader.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GoldfeatherReader GoldfeatherReader.html "" TRUE)
 
 
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SolidMeshToVtk SolidMeshToVtk.html "" TRUE)

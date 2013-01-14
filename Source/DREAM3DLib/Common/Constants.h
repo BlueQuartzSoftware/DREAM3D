@@ -96,8 +96,9 @@ namespace DREAM3D
     const std::string SamplingFilters("Sampling");
     const std::string StatisticsFilters("Statistics");
     const std::string CustomFilters("Custom");
-    const std::string SyntheticBuilderFilters("SyntheticBuilder");
-    const std::string SurfaceMeshingFilters("SurfaceMesh");
+    const std::string SyntheticBuildingFilters("SyntheticBuilding");
+    const std::string SurfaceMeshingFilters("SurfaceMeshing");
+    const std::string SolidMeshingFilters("SolidMeshing");
   }
 
   namespace CellData
@@ -111,14 +112,18 @@ namespace DREAM3D
     const std::string Quats("Quats");
     const std::string GoodVoxels("GoodVoxels");
     const std::string NearestNeighbors("NearestNeighbors");
-    const std::string NearestNeighborDistances("NearestNeighborDistances");
+    const std::string GBEuclideanDistances("GBEuclideanDistances");
+    const std::string TJEuclideanDistances("TJEuclideanDistances");
+    const std::string QPEuclideanDistances("QPEuclideanDistances");
     const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
     const std::string GrainReferenceRotations("GrainReferenceRotations");
     const std::string GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
-    const std::string GrainReferenceCAxisRotations("GrainReferenceCAxisRotations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
+    const std::string ImageQualityNoSpace("ImageQuality");
     const std::string ImageQuality("Image Quality");
-    const std::string IPFColor("IPFColor");
+    const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
+    const std::string ConfidenceIndex("Confidence Index");
+	const std::string IPFColor("IPFColor");
 
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
@@ -141,6 +146,11 @@ namespace DREAM3D
     const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
     const std::string SurfaceMeshNodeTriangles("SurfaceMeshNodeTriangles");
     const std::string SurfaceMeshEdgeTriangles("SurfaceMeshEdgeTriangles");
+
+
+    const std::string SolidMeshNodes("SolidMeshNodes");
+    const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
+
   }
 
   namespace FieldData
@@ -423,10 +433,10 @@ namespace DREAM3D
     }
   }
 
-  namespace VolumeMeshing {
-    /* Volume Meshing Related */
-    const std::string MeshFile("volumetric_mesh_v5_1.vtk");
-    const std::string MeshFile2("volumetric_mesh_v5_2.vtk");
+  namespace SolidMeshing {
+    /* Solid Meshing Related */
+    const std::string MeshFile("solid_mesh_v5_1.vtk");
+    const std::string MeshFile2("solid_mesh_v5_2.vtk");
     const std::string ElementQualityFile("element_quality_measures_v5.txt");
     const std::string VoxelsFile("voxels_v5.txt");
   }

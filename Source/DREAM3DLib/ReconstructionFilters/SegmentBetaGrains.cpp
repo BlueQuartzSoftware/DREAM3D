@@ -278,6 +278,7 @@ void SegmentBetaGrains::execute()
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
+  m_AxisTolerance = m_AxisTolerance*m_pi/180.0f;
   for(int64_t i=0;i<totalPoints;i++)
   {
     m_GrainIds[i] = 0;
@@ -395,8 +396,6 @@ bool SegmentBetaGrains::determineGrouping(int referencepoint, int neighborpoint,
   unsigned int phase1, phase2;
   int colony = 0;
 
-  m_AxisTolerance = m_AxisTolerance*m_pi/180.0f;
-
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
@@ -413,17 +412,17 @@ bool SegmentBetaGrains::determineGrouping(int referencepoint, int neighborpoint,
     q2[3] = m_Quats[neighborpoint*5 + 3];
     q2[4] = m_Quats[neighborpoint*5 + 4];
 
-			float degToRad = m_pi/180.0;
-			float ea1 = 187.0*degToRad;
-			float ea2 = 26.0*degToRad;
-			float ea3 = 164.0*degToRad;
-			OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
-			ea1 = 10.0*degToRad;
-			ea2 = 35.0*degToRad;
-			ea3 = 17.0*degToRad;
-			OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
-			phase1 = 0;
-			phase2 = 0;
+			//float degToRad = m_pi/180.0;
+			//float ea1 = 309.0*degToRad;
+			//float ea2 = 42.0*degToRad;
+			//float ea3 = 74.0*degToRad;
+			//OrientationMath::eulertoQuat(q1, ea1, ea2, ea3);
+			//ea1 = 28.0*degToRad;
+			//ea2 = 35.0*degToRad;
+			//ea3 = 334.0*degToRad;
+			//OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+			//phase1 = 0;
+			//phase2 = 1;
 
 //	  if (phase1 == phase2 && m_GoodVoxels[referencepoint] == true && m_GoodVoxels[neighborpoint] == true) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
@@ -440,21 +439,21 @@ bool SegmentBetaGrains::determineGrouping(int referencepoint, int neighborpoint,
 			m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
 			OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 			w = w * (180.0f/m_pi);
-			float angdiff1 = fabs(w-10.53f);
-			float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
-			if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
-			float angdiff2 = fabs(w-90.00f);
-			float axisdiff2 = acosf(fabs(n1)*0.9957f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
-			if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
-			float angdiff3 = fabs(w-60.00f);
-			float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
-			if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
-			float angdiff4 = fabs(w-60.83f);
-			float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0917f+fabs(n3)*0.1570f);
-			if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
-			float angdiff5 = fabs(w-63.26f);
-			float axisdiff5 = acosf(fabs(n1)*0.9534f+fabs(n2)*0.0000f+fabs(n3)*0.3017f);
-			if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
+            float angdiff1 = fabs(w-10.53f);
+            float axisdiff1 = acosf(fabs(n1)*0.0000f+fabs(n2)*0.0000f+fabs(n3)*1.0000f);
+            if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) colony = 1;
+            float angdiff2 = fabs(w-90.00f);
+            float axisdiff2 = acosf(fabs(n1)*0.9958f+fabs(n2)*0.0917f+fabs(n3)*0.0000f);
+            if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) colony = 1;
+            float angdiff3 = fabs(w-60.00f);
+            float axisdiff3 = acosf(fabs(n1)*1.0000f+fabs(n2)*0.0000f+fabs(n3)*0.0000f);
+            if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) colony = 1;
+            float angdiff4 = fabs(w-60.83f);
+            float axisdiff4 = acosf(fabs(n1)*0.9834f+fabs(n2)*0.0905f+fabs(n3)*0.1570f);
+            if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) colony = 1;
+            float angdiff5 = fabs(w-63.26f);
+            float axisdiff5 = acosf(fabs(n1)*0.9549f+fabs(n2)*0.0000f+fabs(n3)*0.2969f);
+            if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
 			if (colony == 1)
 			{
 				group = true;
@@ -520,7 +519,7 @@ int SegmentBetaGrains::check_for_burgers(float betaQuat[5], float alphaQuat[5])
     MatrixMath::multiply3x3with3x3(gBetaT, burgersCrystalDirections[i], mat);
     w = OrientationMath::matrixMisorientation(mat, gAlphaT);
     if((w*radToDeg) < m_AngleTolerance) return 1;
-    else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
+//    else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
   }
 
   return 0;

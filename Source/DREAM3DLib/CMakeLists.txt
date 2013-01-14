@@ -219,8 +219,8 @@ include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SamplingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/SourceList.cmake)
-include(${DREAM3DLib_SOURCE_DIR}/SurfaceMeshFilters/SourceList.cmake)
-include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuilderFilters/SourceList.cmake)
+include(${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SourceList.cmake)
+include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
 
 #-----------------------------------------------------
 # Close up all the files that we just generated

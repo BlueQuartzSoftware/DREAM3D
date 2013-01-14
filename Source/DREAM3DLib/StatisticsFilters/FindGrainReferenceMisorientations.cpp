@@ -56,7 +56,7 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_NearestNeighborDistancesArrayName(DREAM3D::CellData::NearestNeighborDistances),
+m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
@@ -64,7 +64,7 @@ m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
 m_ReferenceOrientation(0),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
-m_NearestNeighborDistances(NULL),
+m_GBEuclideanDistances(NULL),
 m_GrainReferenceMisorientations(NULL),
 m_GrainReferenceRotations(NULL),
 m_AvgQuats(NULL),
@@ -160,17 +160,20 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   }
   else if(m_ReferenceOrientation == 1)
   {
-      TEST_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, err, -301, float, FloatArrayType, voxels, 3)
+      TEST_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, err, -301, float, FloatArrayType, voxels, 1)
       if(err == -301)
       {
         setErrorCondition(0);
         FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
         find_euclideandistmap->setObservers(this->getObservers());
         find_euclideandistmap->setVoxelDataContainer(getVoxelDataContainer());
+		find_euclideandistmap->setGBMap(true);
+		find_euclideandistmap->setTJMap(true);
+		find_euclideandistmap->setQPMap(true);
         if(preflight == true) find_euclideandistmap->preflight();
         if(preflight == false) find_euclideandistmap->execute();
       }
-      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -301, float, FloatArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -301, float, FloatArrayType, voxels, 1)
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
@@ -259,7 +262,7 @@ void FindGrainReferenceMisorientations::execute()
       for (int64_t i = 0; i < totalPoints; i++)
       {
         gnum = m_GrainIds[i];
-        dist = m_NearestNeighborDistances[i];
+        dist = m_GBEuclideanDistances[i];
         if(dist > m_CenterDists[gnum])
         {
             m_CenterDists[gnum] = dist;
