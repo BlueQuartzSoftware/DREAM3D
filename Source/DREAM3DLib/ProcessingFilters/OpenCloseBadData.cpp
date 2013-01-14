@@ -59,7 +59,6 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_Direction(0),
 m_NumIterations(1),
-m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
@@ -109,6 +108,7 @@ void OpenCloseBadData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
+  writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
 }
 
@@ -177,10 +177,6 @@ void OpenCloseBadData::execute()
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
   m_Neighbors = neighborsPtr->GetPointer(0);
   neighborsPtr->initializeWithValues(-1);
-
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
-  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
-  alreadCheckedPtr->initializeWithZeros();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

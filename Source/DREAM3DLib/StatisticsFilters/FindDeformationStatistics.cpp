@@ -51,7 +51,9 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-m_NearestNeighborDistancesArrayName(DREAM3D::CellData::NearestNeighborDistances),
+m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
 m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
@@ -69,7 +71,9 @@ m_AvgQuats(NULL),
 m_GrainAvgMisorientations(NULL),
 m_Poles(NULL),
 m_Schmids(NULL),
-m_NearestNeighborDistances(NULL)
+m_GBEuclideanDistances(NULL),
+m_TJEuclideanDistances(NULL),
+m_QPEuclideanDistances(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -134,7 +138,9 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1)
@@ -282,9 +288,9 @@ void FindDeformationStatistics::execute()
     {
       km = m_KernelAverageMisorientations[i];
       gam = m_GrainReferenceMisorientations[i];
-      gbdist = m_NearestNeighborDistances[i * 3 + 0];
-      tjdist = m_NearestNeighborDistances[i * 3 + 1];
-      qpdist = m_NearestNeighborDistances[i * 3 + 2];
+      gbdist = m_GBEuclideanDistances[i];
+      tjdist = m_TJEuclideanDistances[i];
+      qpdist = m_QPEuclideanDistances[i];
       nearestneighbor = m_NearestNeighbors[i * 3 + 0];
       gname2 = m_GrainIds[nearestneighbor];
       sf = m_Schmids[gname];
@@ -350,7 +356,7 @@ void FindDeformationStatistics::execute()
       kmvqp[qpbin][1] = kmvqp[qpbin][1] + km;
       gamvqp[qpbin][0]++;
       gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
-      distance = int(m_NearestNeighborDistances[i * 3 + 0]);
+      distance = int(m_GBEuclideanDistances[i]);
       if(distance > 9) distance = 9;
       if(distance <= 5)
       {

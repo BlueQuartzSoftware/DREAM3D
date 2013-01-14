@@ -37,11 +37,15 @@
 
 #include "PhReader.h"
 
+#include <stdio.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/DataArray.hpp"
+
+#define BUF_SIZE 1024
 
 // -----------------------------------------------------------------------------
 //
@@ -168,92 +172,49 @@ int  PhReader::readFile()
     return -1;
   }
 
-  std::string line;
-  std::string delimeters(", ;\t"); /* delimeters to split the data */
-  std::vector<std::string> tokens; /* vector to store the split data */
-
-  int error, spin; /* dummy variables */
   int nx = 0;
   int ny = 0;
   int nz = 0;
 
-  std::ifstream inFile;
-  inFile.open(getInputFile().c_str(), std::ios_base::binary);
-  if(!inFile)
+  FILE* f = fopen(getInputFile().c_str(), "r");
+  if(f == NULL)
   {
-    std::stringstream ss;
-    ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    return -1;
+    notifyErrorMessage("Error opening input file", getErrorCondition());
+    return getErrorCondition();
   }
 
-  getline(inFile, line, '\n');
-  tokenize(line, tokens, delimeters);
+  // Read Line #1 which has the dimensions
+  fscanf(f, "%d %d %d\n", &nx, &ny, &nz);
+  char buf[BUF_SIZE];
+  // Read Line #2 and dump it
+  ::memset(buf, 0, BUF_SIZE);
+  fgets(buf, BUF_SIZE, f);
+  // Read Line #3 and dump it
+  ::memset(buf, 0, BUF_SIZE);
+  fgets(buf, BUF_SIZE, f);
 
-  // Process the header information from the PH file.
-  error = 0;
-  error += sscanf(tokens[0].c_str(), "%d", &nx);
-  error += sscanf(tokens[1].c_str(), "%d", &ny);
-  error += sscanf(tokens[2].c_str(), "%d", &nz);
-  tokens.clear();
-
-  //  cout << "INFO: PH file grid size: " << nx << "\t" << ny << "\t" << nz << endl;;
-
-  // Get the remaining two lines of the header and ignore
-  getline(inFile, line, '\n');
-  getline(inFile, line, '\n');
-
-  //The PH file has a unique format of 20 entries on each line. I have
-  //now idea who initiated this insanity but I am about to propetuate
-  //it.
-  //
-  //The most simple thing todo is to read the entire dataset into one
-  //long vector and then read that vector to assign values to the grid
-  size_t index = 0;
-  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(nx * ny * nz, DREAM3D::CellData::GrainIds);
-
-  while (getline(inFile, line, '\n') != NULL)
+  size_t total = nx * ny * nz;
+  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(total, DREAM3D::CellData::GrainIds);
+  m_GrainIdData->initializeWithValues(-1);
+  int32_t* grainIds = m_GrainIdData->GetPointer(0);
+  for(size_t n = 0; n < total; ++n)
   {
-    tokens.clear();
-    error = 0;
-    tokenize(line, tokens, delimeters);
-    //        cout << line << endl;
-    //        for(int i=0; i < tokens.size(); i++ )
-    //              cout << setw(6) << tokens[i];
-    //        cout << endl;
-
-    for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+    if (fscanf(f, "%d", grainIds+n) == 0)
     {
-      error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
-      m_GrainIdData->SetValue(index, spin);
-      ++index;
+      fclose(f);
+      setErrorCondition(-1);
+      notifyErrorMessage("Error reading Ph data", getErrorCondition());
+      return -1;
     }
-    //        if(error != 20)
-    //              {
-    //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
-    //              }
   }
-
-  if(index != static_cast<size_t>(nz * ny * nx))
-  {
-    std::stringstream ss;
-    ss << "ERROR: data size does not match header dimensions. ";
-    ss << "\t" << index << "\t" << nz * nx * ny;
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), 1);
-    return -1;
-    inFile.close();
-  }
+  fclose(f);
 
   // Read the data and stick it in the data Container
   getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
   getVoxelDataContainer()->setDimensions(nx, ny, nz);
   getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
   getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
-
-  tokens.clear();
-  inFile.close();
 
   notifyStatusMessage("Complete");
   return 0;
