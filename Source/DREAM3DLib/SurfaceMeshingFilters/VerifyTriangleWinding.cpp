@@ -410,7 +410,7 @@ void VerifyTriangleWinding::getLabelTriangleMap(LabelTriangleMapType &trianglesT
 int VerifyTriangleWinding::debugPrintConnectivity()
 {
   int err = 0;
-  std::cout << "--------------------------------------------------------------" << std::endl;
+//  std::cout << "--------------------------------------------------------------" << std::endl;
   //  TriangleListType& masterTriangleList = *(mesh->triangles());  // Create a reference variable for better syntax
   //  NodeVector&       masterNodeList = *(mesh->nodes());
   Mesh::Pointer mesh = Mesh::New();

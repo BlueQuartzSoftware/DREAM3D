@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StandardizeEulerAngles.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -101,7 +101,7 @@ class StandardizeEulerAnglesImpl
 	  }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t> &r) const
     {
       convert(r.begin(), r.end());
@@ -200,7 +200,7 @@ void StandardizeEulerAngles::execute()
     return;
   }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures), tbb::auto_partitioner());
 

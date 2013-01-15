@@ -117,10 +117,8 @@ void FindNRingNeighbors::generate()
   Triangle* triangles = trianglesPtr->GetPointer(0);
 
   IDataArray::Pointer node2TrianglePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeTriangles);
-  if (node2TrianglePtr.get() == NULL)
-  {
-    return;
-  }
+  assert(node2TrianglePtr.get() != NULL);
+
   ManagedPointerArray<int>* node2Triangle = ManagedPointerArray<int>::SafePointerDownCast(node2TrianglePtr.get());
 
 
@@ -174,12 +172,7 @@ void FindNRingNeighbors::generate()
     }
   }
 
-//  if (m_TriangleId == 0 || m_TriangleId == 2500)
-//  {
-//    std::stringstream ss;
-//    ss << "/tmp/" << m_Ring << "_NRing_TriangleId_" << m_TriangleId << ".vtk";
-//    writeVTKFile(ss.str());
-//  }
+
 }
 
 

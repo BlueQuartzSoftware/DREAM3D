@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -117,7 +117,7 @@ class CalculateNormalsImpl
       }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     /**
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
@@ -242,7 +242,7 @@ void TriangleNormalFilter::execute()
   // Run the data check to allocate the memory for the centroid array
   dataCheck(false, trianglesPtr->GetNumberOfTuples(), 0, 0);
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     CalculateNormalsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
 

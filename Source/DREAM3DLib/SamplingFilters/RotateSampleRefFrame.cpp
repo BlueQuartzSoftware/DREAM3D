@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RotateSampleRefFrame.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
@@ -108,7 +108,7 @@ class RotateSampleRefFrameImpl
       }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range3d<size_t, size_t, size_t> &r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
@@ -361,7 +361,7 @@ void RotateSampleRefFrame::execute()
   DataArray<size_t>::Pointer newIndiciesPtr = DataArray<size_t>::CreateArray(totalPoints, 1, "RotateSampleRef_NewIndicies");
   size_t* newindicies = newIndiciesPtr->GetPointer(0);
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
                     RotateSampleRefFrameImpl(newIndiciesPtr, &params), tbb::auto_partitioner());
 

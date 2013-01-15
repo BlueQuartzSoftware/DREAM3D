@@ -36,7 +36,7 @@
 
 #include "ReverseTriangleWinding.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -78,7 +78,7 @@ class ReverseWindingImpl
       }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     /**
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
@@ -269,7 +269,7 @@ void ReverseTriangleWinding::execute()
   // Run the data check to allocate the memory for the centroid array
   dataCheck(false, trianglesPtr->GetNumberOfTuples(), 0, 0);
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     ReverseWindingImpl(trianglesPtr), tbb::auto_partitioner());
 

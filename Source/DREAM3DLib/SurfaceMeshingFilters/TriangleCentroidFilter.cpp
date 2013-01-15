@@ -40,7 +40,7 @@
 #include "TriangleCentroidFilter.h"
 
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -80,7 +80,7 @@ class CalculateCentroidsImpl
       }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t> &r) const
     {
       generate(r.begin(), r.end());
@@ -201,7 +201,7 @@ void TriangleCentroidFilter::execute()
   // Run the data check to allocate the memory for the centroid array
   dataCheck(false, trianglesPtr->GetNumberOfTuples(), 0, 0);
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     CalculateCentroidsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids), tbb::auto_partitioner());
 
