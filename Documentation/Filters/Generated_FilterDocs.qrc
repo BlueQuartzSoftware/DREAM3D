@@ -109,7 +109,8 @@
     <file>SyntheticBuildingFilters/JumbleOrientations.html</file>
     <file>SyntheticBuildingFilters/InsertPrecipitatePhases.html</file>
     <file>SyntheticBuildingFilters/EstablishMatrixPhase.html</file>
-    <file>SyntheticBuildingFilters/AddNoise.html</file>
+    <file>SyntheticBuildingFilters/AddBadData.html</file>
+    <file>SyntheticBuildingFilters/AddOrientationNoise.html</file>
     <file>SyntheticBuildingFilters/InitializeSyntheticVolume.html</file>
     <file>SyntheticBuildingFilters/InitSynthVol.jpg</file>
   </qresource>
