@@ -45,7 +45,7 @@
 #include "CalculateTriangleGroupCurvatures.h"
 #include "SharedGrainFaceFilter.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #include <tbb/task.h>
@@ -55,18 +55,19 @@
 //
 // -----------------------------------------------------------------------------
 GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
-AbstractFilter(),
-m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-m_PrincipalCurvature1ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1),
-m_PrincipalCurvature2ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2),
-m_NRing(3),
-m_ComputeMeanCurvature(false),
-m_ComputeGaussianCurvature(false),
-m_SurfaceMeshUniqueEdges(NULL),
-m_SurfaceMeshTriangleEdges(NULL),
-m_TotalGrainFaces(0),
-m_CompletedGrainFaces(0)
+  AbstractFilter(),
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
+  m_PrincipalCurvature1ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1),
+  m_PrincipalCurvature2ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2),
+  m_NRing(3),
+  m_ComputePrincipalDirectionVectors(true),
+  m_ComputeMeanCurvature(false),
+  m_ComputeGaussianCurvature(false),
+  m_SurfaceMeshUniqueEdges(NULL),
+  m_SurfaceMeshTriangleEdges(NULL),
+  m_TotalGrainFaces(0),
+  m_CompletedGrainFaces(0)
 {
   setupFilterParameters();
 }
@@ -94,7 +95,15 @@ void GrainFaceCurvatureFilter::setupFilterParameters()
     parameter->setCastableValueType("int");
     options.push_back(parameter);
   }
-    {
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Compute Principal Direction Vectors");
+    option->setPropertyName("ComputePrincipalDirectionVectors");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Compute Gaussian Curvature");
     option->setPropertyName("ComputeGaussianCurvature");
@@ -102,7 +111,7 @@ void GrainFaceCurvatureFilter::setupFilterParameters()
     option->setValueType("bool");
     options.push_back(option);
   }
-    {
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Compute Mean Curvature");
     option->setPropertyName("ComputeMeanCurvature");
@@ -121,6 +130,7 @@ void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWri
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("NRing", getNRing() );
+  writer->writeValue("ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors());
   writer->writeValue("ComputeGaussianCurvature", getComputeGaussianCurvature() );
   writer->writeValue("ComputeMeanCurvature", getComputeMeanCurvature() );
 }
@@ -192,6 +202,16 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
       addCreatedCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures);
     }
 
+    if (m_ComputePrincipalDirectionVectors == true)
+    {
+      DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
+      sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection1, prinDir1);
+      addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
+
+      DoubleArrayType::Pointer prinDir2 = DoubleArrayType::CreateArray(1, 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
+      sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection2, prinDir2);
+      addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
+    }
 
   }
 }
@@ -256,18 +276,18 @@ void GrainFaceCurvatureFilter::execute()
     return;
   }
 
-  // Make sure the Triangle Connectivity is created
-//  GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
-//  connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-//  connectivity->setObservers(getObservers());
-//  connectivity->setMessagePrefix(getMessagePrefix());
-//  connectivity->execute();
-//  if (connectivity->getErrorCondition() < 0)
-//  {
-//    notifyErrorMessage("Error Generating the Mesh Connectivity", -800);
-//    return;
-//  }
-  //NodeTrianglesMap_t& node2Triangle = connectivity->getNode2TriangleMap();
+  //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
+  // assert if the data is NOT in the SurfaceMesh Data Container
+  GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
+  connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  connectivity->setObservers(getObservers());
+  connectivity->setMessagePrefix(getMessagePrefix());
+  connectivity->execute();
+  if (connectivity->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the Mesh Connectivity", -800);
+    return;
+  }
 
 
   // Get our Reference counted Array of Triangle Structures
@@ -299,6 +319,12 @@ void GrainFaceCurvatureFilter::execute()
   DoubleArrayType::Pointer principalCurvature2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
   principalCurvature2->initializeWithZeros();
 
+  DoubleArrayType::Pointer principalDirection1 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
+  principalDirection1->initializeWithZeros();
+
+  DoubleArrayType::Pointer principalDirection2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
+  principalDirection2->initializeWithZeros();
+
   DoubleArrayType::Pointer gaussianCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
@@ -306,7 +332,7 @@ void GrainFaceCurvatureFilter::execute()
     gaussianCurvature->initializeWithZeros();
   }
 
-   DoubleArrayType::Pointer meanCurvature;
+  DoubleArrayType::Pointer meanCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
     meanCurvature = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshMeanCurvatures);
@@ -320,13 +346,14 @@ void GrainFaceCurvatureFilter::execute()
   m_TotalGrainFaces = sharedGrainFaces.size();
   m_CompletedGrainFaces = 0;
 
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
 #else
   //   int m_NumThreads = 1;
 #endif
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_group* g = new tbb::task_group;
   if(true)
   {
@@ -342,9 +369,10 @@ void GrainFaceCurvatureFilter::execute()
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {
     SharedGrainFaceFilter::TriangleIds_t& triangleIds = (*iter).second;
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds,
                                             principalCurvature1, principalCurvature2,
+                                            principalDirection1, principalDirection2,
                                             gaussianCurvature, meanCurvature,
                                             getSurfaceMeshDataContainer(), this ) );
 #else
@@ -352,22 +380,26 @@ void GrainFaceCurvatureFilter::execute()
 
 
     CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds,
-                                            principalCurvature1, principalCurvature2,
-                                            gaussianCurvature, meanCurvature,
-                                            getSurfaceMeshDataContainer(), this );
+                                               principalCurvature1, principalCurvature2,
+                                             principalDirection1, principalDirection2,
+                                              gaussianCurvature, meanCurvature,
+                                               getSurfaceMeshDataContainer(), this );
     curvature();
 #endif
     index++;
   }
   // *********************** END END END END END END  ********************************************************************
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   g->wait(); // Wait for all the threads to complete before moving on.
   delete g;
 #endif
 
   getSurfaceMeshDataContainer()->addCellData(principalCurvature1->GetName(), principalCurvature1);
   getSurfaceMeshDataContainer()->addCellData(principalCurvature2->GetName(), principalCurvature2);
+  getSurfaceMeshDataContainer()->addCellData(principalDirection1->GetName(), principalDirection1);
+  getSurfaceMeshDataContainer()->addCellData(principalDirection2->GetName(), principalDirection2);
+
   if (m_ComputeGaussianCurvature == true)
   {
     getSurfaceMeshDataContainer()->addCellData(gaussianCurvature->GetName(), gaussianCurvature);
@@ -384,7 +416,7 @@ void GrainFaceCurvatureFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 void GrainFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedGrainFaces++;
