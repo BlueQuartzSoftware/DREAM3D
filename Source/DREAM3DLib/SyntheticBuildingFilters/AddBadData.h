@@ -34,75 +34,65 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDEUCLIDEANDISTMAP_H_
-#define FINDEUCLIDEANDISTMAP_H_
+#ifndef AddBadData_H_
+#define AddBadData_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
+
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
+
 /**
- * @class FindEuclideanDistMap FindEuclideanDistMap.h DREAM3DLib/GenericFilters/FindEuclideanDistMap.h
+ * @class AddBadDatas AddBadDatas.h DREAM3DLib/SyntheticBuilderFilters/AddBadDatas.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
+class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindEuclideanDistMap)
-    DREAM3D_STATIC_NEW_MACRO(FindEuclideanDistMap)
-    DREAM3D_TYPE_MACRO_SUPER(FindEuclideanDistMap, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AddBadData)
+    DREAM3D_STATIC_NEW_MACRO(AddBadData)
+    DREAM3D_TYPE_MACRO_SUPER(AddBadData, AbstractFilter)
 
-    virtual ~FindEuclideanDistMap();
+    virtual ~AddBadData();
 
 	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Euclidean Distance Map"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const std::string getHumanLabel() { return "Add Bad Data"; }
 
-    virtual void setupFilterParameters();
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
+
     virtual void execute();
     virtual void preflight();
 
-
-
-
   protected:
-    FindEuclideanDistMap();
+    AddBadData();
 
-    void find_euclideandistmap();
+    void add_noise();
 
   private:
-    int32_t* m_GrainIds;
-    int32_t* m_NearestNeighbors;
     float* m_GBEuclideanDistances;
-    float* m_TJEuclideanDistances;
-    float* m_QPEuclideanDistances;
 
-	  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
-    FindEuclideanDistMap(const FindEuclideanDistMap&); // Copy Constructor Not Implemented
-    void operator=(const FindEuclideanDistMap&); // Operator '=' Not Implemented
+    AddBadData(const AddBadData&); // Copy Constructor Not Implemented
+    void operator=(const AddBadData&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDEUCLIDEANDISTMAP_H_ */
+#endif /* AddBadData_H_ */
