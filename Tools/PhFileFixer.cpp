@@ -56,7 +56,6 @@ int main(int argc, char** argv)
     // We have a buffer. lets make all unprintables into spaces
     int i = 0;
     int spaceCount = 0;
-    bool needSpace = false;
     while( i < BUF_SIZE) // While the character is NOT a new line charater
     {
       if (buf[i] > 47 && buf[i] < 58)
