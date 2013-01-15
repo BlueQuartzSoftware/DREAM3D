@@ -45,6 +45,11 @@ set(FILTER_INCLUDE_PREFIX "DREAM3DLib")
 file(MAKE_DIRECTORY ${FilterWidgetsLib_BINARY_DIR}/Temp)
 configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
                 ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
+if(MSVC)
+  set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.h PROPERTIES COMPILE_FLAGS /bigobj)
+  set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp PROPERTIES COMPILE_FLAGS /bigobj)
+endif()
+
 add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
 target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
