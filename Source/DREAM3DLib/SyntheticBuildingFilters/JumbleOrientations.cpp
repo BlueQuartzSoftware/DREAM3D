@@ -97,7 +97,7 @@ void JumbleOrientations::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-	writer->writeValue("Iterations", getIterations() );
+  writer->writeValue("Iterations", getIterations() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -162,7 +162,7 @@ void JumbleOrientations::execute()
 
 
   m_Iterations = 1;
-  for(size_t i=0;i<m_Iterations;i++)
+  for(int i=0;i<m_Iterations;i++)
   {
     // Generate all the numbers up front
     const int rangeMin = 1;
@@ -181,7 +181,7 @@ void JumbleOrientations::execute()
     size_t r;
     float temp1, temp2, temp3;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< totalFields; i++) {
+    for (int i=1; i< totalFields; i++) {
         r = numberGenerator(); // Random remaining position.
         if (r >= totalFields) {
           continue;
@@ -207,14 +207,14 @@ void JumbleOrientations::execute()
      m_CellEulerAngles[3*i+2] = m_FieldEulerAngles[3*(m_GrainIds[i])+2];
   }
   float q[5];
-  for (size_t i=1; i< totalFields; i++)
+  for (int i=1; i< totalFields; i++)
   {
-	  OrientationMath::eulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);	
-	  m_AvgQuats[5*i] = q[0];
-	  m_AvgQuats[5*i+1] = q[1];
-	  m_AvgQuats[5*i+2] = q[2];
-	  m_AvgQuats[5*i+3] = q[3];
-	  m_AvgQuats[5*i+4] = q[4];
+    OrientationMath::eulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
+    m_AvgQuats[5*i] = q[0];
+    m_AvgQuats[5*i+1] = q[1];
+    m_AvgQuats[5*i+2] = q[2];
+    m_AvgQuats[5*i+3] = q[3];
+    m_AvgQuats[5*i+4] = q[4];
   }
 
   // If there is an error set this to something negative and also set a message
