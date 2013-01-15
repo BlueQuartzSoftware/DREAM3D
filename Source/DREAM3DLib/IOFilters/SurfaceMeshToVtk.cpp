@@ -296,7 +296,7 @@ void SurfaceMeshToVtk::execute()
     triangleCount = nT * 2;
   }
   // Write the POLYGONS
-  fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
+  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int j = 0; j < nT; j++)
   {
   //  Triangle& t = triangles[j];
@@ -333,8 +333,9 @@ void SurfaceMeshToVtk::execute()
   }
 
 
-  // Write the CELL_DATA section
+  // Write the POINT_DATA section
   err = writePointData(vtkFile);
+  // Write the CELL_DATA section
   err = writeCellData(vtkFile);
 
 
@@ -361,7 +362,7 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "SCALARS %s %s\n", dataName.c_str(), dataType.c_str());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     for(int i = 0; i < nT; ++i)
     {
@@ -371,21 +372,14 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
         swapped = static_cast<T>(m[i]);
         MXA::Endian::FromSystemToBig::convert<T>(swapped);
         fwrite(&swapped, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
-        {
-          fwrite(&swapped, sizeof(T), 1, vtkFile);
-        }
       }
       else
       {
         ss.str("");
         ss << m[i] << " ";
-        if(false == writeConformalMesh)
-        {
-          ss << m[i] << " ";
-        }
         fprintf(vtkFile, "%s ", ss.str().c_str());
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
+        //if (i%50 == 0)
+        { fprintf(vtkFile, "\n"); }
       }
 
     }
@@ -423,23 +417,14 @@ void writePointVectorData(DataContainer* dc, const std::string &dataName, const 
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
-        {
-          fwrite(&s0, sizeof(T), 1, vtkFile);
-          fwrite(&s1, sizeof(T), 1, vtkFile);
-          fwrite(&s1, sizeof(T), 1, vtkFile);
-        }
       }
       else
       {
         ss.str("");
-        ss << m[i] << " ";
-        if(false == writeConformalMesh)
-        {
-          ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2];
-        }
+        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         fprintf(vtkFile, "%s ", ss.str().c_str());
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
+        //if (i%50 == 0)
+         { fprintf(vtkFile, "\n"); }
       }
 
     }
@@ -458,19 +443,22 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
     return -1;
   }
 
+
   // Write the Node Type Data to the file
   StructArray<Node>& nodes = *(getSurfaceMeshDataContainer()->getNodes());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
-  int swapped;
+ // int swapped;
   for (int i = 0; i < numNodes; i++)
   {
-  //  Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0) { ++nNodes; }
   }
+  // This is the section header
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
-  fprintf(vtkFile, "SCALARS Node_Type int 1\n");
+
+
+  fprintf(vtkFile, "SCALARS Node_Type char 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
   for(int i = 0; i < numNodes; ++i)
@@ -479,36 +467,38 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
     {
       if(m_WriteBinaryFile == true)
       {
-        swapped = m_SurfaceMeshNodeType[i];
-        MXA::Endian::FromSystemToBig::convert<int>(swapped);
-        fwrite(&swapped, sizeof(int), 1, vtkFile);
+       // swapped = m_SurfaceMeshNodeType[i];
+       // MXA::Endian::FromSystemToBig::convert<int>(swapped);
+        fwrite(m_SurfaceMeshNodeType + i, sizeof(char), 1, vtkFile);
       }
       else
       {
-        fprintf(vtkFile, "%d\n", m_SurfaceMeshNodeType[i]);
+        fprintf(vtkFile, "%d ", m_SurfaceMeshNodeType[i]);
       }
     }
   }
 
-
-// This is from the Goldfeather Paper
-  writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshNodeNormals,
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
-
 #if 1
-// This is from the Goldfeather Paper
-  writePointScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Curvature_1",
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
-// This is from the Goldfeather Paper
-  writePointScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Curvature_2",
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
 // This is from the Goldfeather Paper
   writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Direction_1",
                                                           "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
   // This is from the Goldfeather Paper
   writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Direction_2",
                                                           "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+
+                                                          // This is from the Goldfeather Paper
+  writePointScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Curvature_1",
+                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
+
+// This is from the Goldfeather Paper
+  writePointScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Curvature_2",
+                                                         "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
 #endif
+
+// This is from the Goldfeather Paper
+  writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshNodeNormals,
+                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+
 
   return err;
 }
@@ -588,24 +578,24 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
         MXA::Endian::FromSystemToBig::convert<T>(s2);
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
-        fwrite(&s1, sizeof(T), 1, vtkFile);
+        fwrite(&s2, sizeof(T), 1, vtkFile);
         if(false == writeConformalMesh)
         {
           fwrite(&s0, sizeof(T), 1, vtkFile);
           fwrite(&s1, sizeof(T), 1, vtkFile);
-          fwrite(&s1, sizeof(T), 1, vtkFile);
+          fwrite(&s2, sizeof(T), 1, vtkFile);
         }
       }
       else
       {
         ss.str("");
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << m[i] << " ";
+        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         if(false == writeConformalMesh)
         {
           ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         }
         fprintf(vtkFile, "%s ", ss.str().c_str());
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
+        if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
   }
@@ -658,10 +648,10 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
       else
       {
         ss.str("");
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2];
+        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         if(false == writeConformalMesh)
         {
-          ss << -1.0*m[i*3+0] << " " << -1.0*m[i*3+1] << " " << -1.0*m[i*3+2];
+          ss << -1.0*m[i*3+0] << " " << -1.0*m[i*3+1] << " " << -1.0*m[i*3+2] << " ";
         }
         fprintf(vtkFile, "%s ", ss.str().c_str());
         if (i%50 == 0) { fprintf(vtkFile, "\n"); }
@@ -729,7 +719,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
   }
 
-#if 1
+#if 0
   // Write the Original Triangle ID Data to the file
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "SCALARS TriangleID int 1\n");
@@ -766,6 +756,18 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
                                                                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalCurvature2,
+                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+
+  writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalDirection1,
+                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
+
+  writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalDirection2,
+                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
+
+  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshGaussianCurvatures,
+                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+
+  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshMeanCurvatures,
                                                                              "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
 
   writeCellNormalData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshTriangleNormals,
