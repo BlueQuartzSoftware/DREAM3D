@@ -103,6 +103,7 @@
     <file>SurfaceMeshFilters/SharedGrainFaceFilter.html</file>
     <file>SurfaceMeshFilters/ReverseTriangleWinding.html</file>
     <file>SurfaceMeshFilters/VerifyTriangleWinding.html</file>
+    <file>SurfaceMeshFilters/GrainFaceCurvatureFilter.html</file>
 
     <!-- ***** SyntheticBuilderFilters ***** -->
     <file>SyntheticBuilderFilters/PackPrimaryPhases.html</file>

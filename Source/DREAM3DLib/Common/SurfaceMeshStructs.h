@@ -37,6 +37,7 @@
 #include <set>
 #include <map>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #define num_neigh 26
 
 #if 0
