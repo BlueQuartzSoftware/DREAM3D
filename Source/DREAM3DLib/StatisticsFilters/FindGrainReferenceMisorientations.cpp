@@ -167,9 +167,6 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
         FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
         find_euclideandistmap->setObservers(this->getObservers());
         find_euclideandistmap->setVoxelDataContainer(getVoxelDataContainer());
-		find_euclideandistmap->setGBMap(true);
-		find_euclideandistmap->setTJMap(true);
-		find_euclideandistmap->setQPMap(true);
         if(preflight == true) find_euclideandistmap->preflight();
         if(preflight == false) find_euclideandistmap->execute();
       }

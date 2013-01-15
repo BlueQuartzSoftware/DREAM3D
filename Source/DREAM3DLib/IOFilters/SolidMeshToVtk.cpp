@@ -238,8 +238,8 @@ void SolidMeshToVtk::execute()
 
         }
     }
-    else 
-	{
+    else
+  {
         fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
     }
   }
@@ -323,7 +323,6 @@ int SolidMeshToVtk::writePointData(FILE* vtkFile)
   StructArray<Node>& nodes = *(getSolidMeshDataContainer()->getNodes());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
-  int swapped;
 
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
