@@ -19,7 +19,8 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MatchCrystallography MatchCrysta
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} JumbleOrientations JumbleOrientations.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} InsertPrecipitatePhases InsertPrecipitatePhases.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} EstablishMatrixPhase EstablishMatrixPhase.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AddNoise AddNoise.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AddBadData AddBadData.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} AddOrientationNoise AddOrientationNoise.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} InitializeSyntheticVolume 
                                                 InitializeSyntheticVolume.html 
                                                 "InitSynthVol.jpg" 

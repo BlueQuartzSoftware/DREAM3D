@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AddNoise_H_
-#define AddNoise_H_
+#ifndef AddOrientationNoise_H_
+#define AddOrientationNoise_H_
 
 #include <string>
 #include <vector>
@@ -51,27 +51,30 @@
 
 
 /**
- * @class AddNoises AddNoises.h DREAM3DLib/SyntheticBuilderFilters/AddNoises.h
+ * @class AddOrientationNoises AddOrientationNoises.h DREAM3DLib/SyntheticBuilderFilters/AddOrientationNoises.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AddNoise : public AbstractFilter
+class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AddNoise)
-    DREAM3D_STATIC_NEW_MACRO(AddNoise)
-    DREAM3D_TYPE_MACRO_SUPER(AddNoise, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AddOrientationNoise)
+    DREAM3D_STATIC_NEW_MACRO(AddOrientationNoise)
+    DREAM3D_TYPE_MACRO_SUPER(AddOrientationNoise, AbstractFilter)
 
-    virtual ~AddNoise();
+    virtual ~AddOrientationNoise();
 
 	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getHumanLabel() { return "Add Noise"; }
+    DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
 
+	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const std::string getHumanLabel() { return "Add Orientation Noise"; }
+
+	virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
@@ -82,20 +85,17 @@ class DREAM3DLib_EXPORT AddNoise : public AbstractFilter
     virtual void preflight();
 
   protected:
-    AddNoise();
+    AddOrientationNoise();
 
-    void add_noise();
-
-    std::vector<int> matrixphases;
-    std::vector<float> matrixphasefractions;
+    void add_orientation_noise();
 
   private:
-    float* m_GBEuclideanDistances;
+    float* m_CellEulerAngles;
 
 	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    AddNoise(const AddNoise&); // Copy Constructor Not Implemented
-    void operator=(const AddNoise&); // Operator '=' Not Implemented
+    AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
+    void operator=(const AddOrientationNoise&); // Operator '=' Not Implemented
 };
 
-#endif /* AddNoise_H_ */
+#endif /* AddOrientationNoise_H_ */

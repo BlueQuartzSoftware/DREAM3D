@@ -15,7 +15,10 @@
     <file>GenericFilters/FindGrainCentroids.html</file>
     <file>GenericFilters/FindSurfaceGrains.html</file>
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
+<<<<<<< HEAD
     <file>GenericFilters/DumpCellData.html</file>
+=======
+>>>>>>> develop
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -38,11 +41,17 @@
     <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
     <file>IOFilters/SurfaceMeshToStl.html</file>
     <file>IOFilters/SurfaceMeshToVtk.html</file>
+<<<<<<< HEAD
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
     <file>IOFilters/VtkGrainIdReader.html</file>
     <file>IOFilters/GoldfeatherReader.html</file>
     <file>IOFilters/SolidMeshToVtk.html</file>
+=======
+    <file>IOFilters/SolidMeshToVtk.html</file>
+    <file>IOFilters/VtkRectilinearGridWriter.html</file>
+    <file>IOFilters/YSChoiAbaqusReader.html</file>
+>>>>>>> develop
 
     <!-- ***** ProcessingFilters ***** -->
     <file>ProcessingFilters/MinNeighbors.html</file>
@@ -76,6 +85,13 @@
     <file>SamplingFilters/CropVolume.html</file>
     <file>SamplingFilters/Hex2SqrConverter.html</file>
 
+<<<<<<< HEAD
+=======
+    <!-- ***** SolidMeshingFilters ***** -->
+    <file>SolidMeshingFilters/QuickSolidMesh.html</file>
+    <file>SolidMeshingFilters/DecimateSolidMesh.html</file>
+
+>>>>>>> develop
     <!-- ***** StatisticsFilters ***** -->
     <file>StatisticsFilters/FindAvgOrientations.html</file>
     <file>StatisticsFilters/FindAvgCAxes.html</file>
@@ -100,12 +116,16 @@
     <file>SurfaceMeshingFilters/M3CSliceBySlice.html</file>
     <file>SurfaceMeshingFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshingFilters/LaplacianSmoothing.html</file>
+<<<<<<< HEAD
     <file>SurfaceMeshingFilters/GenerateNodeTriangleConectivity.html</file>
     <file>SurfaceMeshingFilters/TriangleNormalFilter.html</file>
     <file>SurfaceMeshingFilters/SharedGrainFaceFilter.html</file>
     <file>SurfaceMeshingFilters/ReverseTriangleWinding.html</file>
     <file>SurfaceMeshingFilters/VerifyTriangleWinding.html</file>
     <file>SurfaceMeshingFilters/GrainFaceCurvatureFilter.html</file>
+=======
+    <file>SurfaceMeshingFilters/GenerateMeshConnectivity.html</file>
+>>>>>>> develop
 
     <!-- ***** SyntheticBuildingFilters ***** -->
     <file>SyntheticBuildingFilters/PackPrimaryPhases.html</file>
@@ -113,7 +133,12 @@
     <file>SyntheticBuildingFilters/JumbleOrientations.html</file>
     <file>SyntheticBuildingFilters/InsertPrecipitatePhases.html</file>
     <file>SyntheticBuildingFilters/EstablishMatrixPhase.html</file>
+<<<<<<< HEAD
     <file>SyntheticBuildingFilters/AddNoise.html</file>
+=======
+    <file>SyntheticBuildingFilters/AddBadData.html</file>
+    <file>SyntheticBuildingFilters/AddOrientationNoise.html</file>
+>>>>>>> develop
     <file>SyntheticBuildingFilters/InitializeSyntheticVolume.html</file>
     <file>SyntheticBuildingFilters/InitSynthVol.jpg</file>
   </qresource>

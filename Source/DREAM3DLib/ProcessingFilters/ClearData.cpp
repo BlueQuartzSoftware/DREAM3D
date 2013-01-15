@@ -145,7 +145,6 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 {
   setErrorCondition(0);
   std::stringstream ss;
-  // VoxelDataContainer* m = getVoxelDataContainer();
 
   if (getXMax() < getXMin())
   {

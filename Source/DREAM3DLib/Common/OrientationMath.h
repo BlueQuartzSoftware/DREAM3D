@@ -83,6 +83,7 @@ class DREAM3DLib_EXPORT OrientationMath
 
     static void axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
+    static void axisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);
     static void HomochorictoRod(float &r1, float &r2, float &r3);
     static void RodtoHomochoric(float &r1, float &r2, float &r3);
     static void RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3);

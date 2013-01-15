@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AddNoise.h"
+#include "AddOrientationNoise.h"
 
 #include <map>
 
@@ -43,46 +43,68 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AddNoise::AddNoise() :
+AddOrientationNoise::AddOrientationNoise() :
 AbstractFilter(),
-m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-m_GBEuclideanDistances(NULL)
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_CellEulerAngles(NULL)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AddNoise::~AddNoise()
-{
-}
-// -----------------------------------------------------------------------------
-void AddNoise::writeFilterParameters(AbstractFilterParametersWriter* writer)
+AddOrientationNoise::~AddOrientationNoise()
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AddOrientationNoise::setupFilterParameters()
+{
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Magnitude of Orientation Noise");
+    option->setPropertyName("Magnitude");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer)
+{
+  writer->writeValue("Magnitude", getMagnitude() );
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddNoise::preflight()
+void AddOrientationNoise::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -90,7 +112,7 @@ void AddNoise::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddNoise::execute()
+void AddOrientationNoise::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -113,45 +135,46 @@ void AddNoise::execute()
     return;
   }
 
-  add_noise();
+  add_orientation_noise();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("AddNoises Completed");
+ notifyStatusMessage("AddOrientationNoises Completed");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  AddNoise::add_noise()
+void  AddOrientationNoise::add_orientation_noise()
 {
- notifyStatusMessage("Adding Noise");
+ notifyStatusMessage("Adding Orientation Noise");
   DREAM3D_RANDOMNG_NEW()
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-
-  int count1 = 0;
-  int count2 = 0;
-  float random = 0.0;
+  //float ea1, ea2, ea3;
+  float g[3][3];
+  float newg[3][3];
+  float rot[3][3];
+  float w, n1, n2, n3;
   int64_t totalPoints = m->getTotalPoints();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
-	  if(m_GBEuclideanDistances[3*i] < 1)
-	  {
-		count1++;
-		random = static_cast<float>( rg.genrand_res53() );
-		if(random < 0.1)
-		{
-		  count2++;
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-			p->InitializeTuple(i,0); 
-          }
-		}
-	  }
+    float ea1 = m_CellEulerAngles[3*i+0];
+    float ea2 = m_CellEulerAngles[3*i+1];
+    float ea3 = m_CellEulerAngles[3*i+2];
+    OrientationMath::eulertoMat(ea1, ea2, ea3, g);
+    n1 = static_cast<float>( rg.genrand_res53() );
+    n2 = static_cast<float>( rg.genrand_res53() );
+    n3 = static_cast<float>( rg.genrand_res53() );
+    w = static_cast<float>( rg.genrand_res53() );
+    w = 2.0*(w-0.5);
+    w = (m_Magnitude*w);
+    OrientationMath::axisAngletoMat(w, n1, n2, n3, rot);
+    MatrixMath::multiply3x3with3x3(g, rot, newg);
+    OrientationMath::mattoEuler(newg, ea1, ea2, ea3);
+    m_CellEulerAngles[3*i+0] = ea1;
+    m_CellEulerAngles[3*i+1] = ea2;
+    m_CellEulerAngles[3*i+2] = ea3;
   }
 }
 

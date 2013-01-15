@@ -318,7 +318,6 @@ void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n
   r3 = n3 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
 }
 
-
 void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
   float denom;
@@ -335,6 +334,31 @@ void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, floa
   r3 = n3 * const1;
 }
 
+void OrientationMath::axisAngletoMat(float w, float n1, float n2, float n3, float g[3][3])
+{
+  float c, s, t, denom;
+
+  c = cosf(w);
+  s = sinf(w);
+  t = 1-c;
+
+  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+  denom = sqrt(denom);
+  n1 = n1 / denom;
+  n2 = n2 / denom;
+  n3 = n3 / denom;
+  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+
+  g[0][0] = t*n1*n1+c;
+  g[0][1] = t*n1*n2-n3*s;
+  g[0][2] = t*n1*n3+n2*s;
+  g[1][0] = t*n1*n2+n3*s;
+  g[1][1] = t*n2*n2+c;
+  g[1][2] = t*n2*n3-n1*s;
+  g[2][0] = t*n1*n3-n2*s;
+  g[2][1] = t*n2*n3+n1*s;
+  g[2][2] = t*n3*n3+c;
+}
 
 void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
 {
