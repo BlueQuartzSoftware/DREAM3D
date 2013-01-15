@@ -140,7 +140,7 @@ void FindAvgCAxes::execute()
   float g1[3][3];
   float g1t[3][3];
  // float n1, n2, n3;
-  unsigned int phase1, phase2;
+//  unsigned int phase1, phase2;
   float caxis[3] = {0,0,1};
   float c1[3];
 
@@ -149,9 +149,9 @@ void FindAvgCAxes::execute()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-	  m_AvgCAxes[3*i] = 0.0;
-	  m_AvgCAxes[3*i+1] = 0.0;
-	  m_AvgCAxes[3*i+2] = 0.0;
+    m_AvgCAxes[3*i] = 0.0;
+    m_AvgCAxes[3*i+1] = 0.0;
+    m_AvgCAxes[3*i+2] = 0.0;
   }
 //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
@@ -173,27 +173,27 @@ void FindAvgCAxes::execute()
       MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
       MatrixMath::normalize3x1(c1);
-	  
-	  counter[m_GrainIds[i]]++;
-	  m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
-	  m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
-	  m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
+
+    counter[m_GrainIds[i]]++;
+    m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
+    m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
+    m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
     }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-	  if(counter[i] == 0)
-	  {
-		m_AvgCAxes[3*i] = 0;
-		m_AvgCAxes[3*i+1] = 0;
-		m_AvgCAxes[3*i+2] = 1;
-	  }
-	  else
-	  {
-		m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
-		m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
-		m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
-	  }
+    if(counter[i] == 0)
+    {
+    m_AvgCAxes[3*i] = 0;
+    m_AvgCAxes[3*i+1] = 0;
+    m_AvgCAxes[3*i+2] = 1;
+    }
+    else
+    {
+    m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
+    m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
+    m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
+    }
   }
 
  notifyStatusMessage("Completed");

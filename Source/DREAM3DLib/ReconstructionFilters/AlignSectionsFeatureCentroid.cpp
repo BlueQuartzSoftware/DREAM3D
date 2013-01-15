@@ -232,20 +232,20 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
   xCentroid[iter] = xCentroid[iter]/float(count);
   yCentroid[iter] = yCentroid[iter]/float(count);
   }
-  int refSlice;
+  //int refSlice;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-	slice = static_cast<int>( (dims[2] - 1) - iter );
-	if(m_UseReferenceSlice == true) 
-	{
-		xshifts[iter] = int((xCentroid[iter]-xCentroid[m_ReferenceSlice])/xRes);
-		yshifts[iter] = int((yCentroid[iter]-yCentroid[m_ReferenceSlice])/yRes);
-	}
-	else
-	{
-		xshifts[iter] = xshifts[iter-1] + int((xCentroid[iter]-xCentroid[iter-1])/xRes);
-		yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
-	}
+  slice = static_cast<int>( (dims[2] - 1) - iter );
+  if(m_UseReferenceSlice == true)
+  {
+    xshifts[iter] = int((xCentroid[iter]-xCentroid[m_ReferenceSlice])/xRes);
+    yshifts[iter] = int((yCentroid[iter]-yCentroid[m_ReferenceSlice])/yRes);
+  }
+  else
+  {
+    xshifts[iter] = xshifts[iter-1] + int((xCentroid[iter]-xCentroid[iter-1])/xRes);
+    yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
+  }
     if (getWriteAlignmentShifts() == true) {
       outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << endl;
     }

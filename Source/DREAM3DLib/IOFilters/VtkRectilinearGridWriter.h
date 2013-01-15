@@ -78,10 +78,10 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(ImageQualityArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ImageQualityArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceRotationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WritePhaseIds)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBandContrasts)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConfidenceIndicies)
-	DREAM3D_INSTANCE_PROPERTY(bool, WriteImageQualities)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteImageQualities)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteRodriguesGAMColors)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainReferenceMisorientations)
@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     int32_t* m_CellPhases;
     int32_t* m_BC;
     float* m_ImageQuality;
-	float* m_ConfidenceIndex;
+  float* m_ConfidenceIndex;
     bool*    m_GoodVoxels;
     float*   m_CellEulerAngles;
     float*   m_GBEuclideanDistances;

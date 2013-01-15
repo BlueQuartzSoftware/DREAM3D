@@ -175,16 +175,15 @@ void FindGrainReferenceCAxisMisorientations::execute()
   }
 
   float q1[5];
-  float q2[5];
+  //float q2[5];
 
   typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
+  //XTalType* crystructPtr = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
  // unsigned int* crystruct = crystructPtr->GetPointer(0);
 
   float w;
-  float n1= 0.0f, n2= 0.0f, n3= 0.0f;
-  float r1= 0.0f, r2= 0.0f, r3= 0.0f;
+//  float n1= 0.0f, n2= 0.0f, n3= 0.0f;
+//  float r1= 0.0f, r2= 0.0f, r3= 0.0f;
  // unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
  // unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0,0,0};
@@ -212,7 +211,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
   float g1[3][3];
   float g1t[3][3];
  // float n1, n2, n3;
-  unsigned int phase1, phase2;
+// unsigned int phase1, phase2;
   float caxis[3] = {0,0,1};
   float c1[3];
   float AvgCAxis[3];
@@ -226,31 +225,31 @@ void FindGrainReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
-		  q1[0] = 1;
+      q1[0] = 1;
           q1[1] = m_Quats[point*5 + 1];
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-	      OrientationMath::QuattoMat(q1, g1);
-	      //transpose the g matricies so when caxis is multiplied by it
-	      //it will give the sample direction that the caxis is along
-	      MatrixMath::transpose3x3(g1, g1t);
-	      MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
-	      //normalize so that the magnitude is 1
-	      MatrixMath::normalize3x1(c1);
+        OrientationMath::QuattoMat(q1, g1);
+        //transpose the g matricies so when caxis is multiplied by it
+        //it will give the sample direction that the caxis is along
+        MatrixMath::transpose3x3(g1, g1t);
+        MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+        //normalize so that the magnitude is 1
+        MatrixMath::normalize3x1(c1);
 
           AvgCAxis[0] = m_AvgCAxes[3*m_GrainIds[point]];
           AvgCAxis[1] = m_AvgCAxes[3*m_GrainIds[point]+1];
           AvgCAxis[2] = m_AvgCAxes[3*m_GrainIds[point]+2];
-	      //normalize so that the magnitude is 1
-	      MatrixMath::normalize3x1(AvgCAxis);
+        //normalize so that the magnitude is 1
+        MatrixMath::normalize3x1(AvgCAxis);
 
-	      w = ((c1[0]*AvgCAxis[0])+(c1[1]*AvgCAxis[1])+(c1[2]*AvgCAxis[2]));
-		  if(w < -1) w = -1;
-		  if(w > 1) w = 1;
-	      w = acosf(w);
-		  w = w *(180.0f/m_pi);
-		  if(w > 90.0) w = 180.0-w;
+        w = ((c1[0]*AvgCAxis[0])+(c1[1]*AvgCAxis[1])+(c1[2]*AvgCAxis[2]));
+      if(w < -1) w = -1;
+      if(w > 1) w = 1;
+        w = acosf(w);
+      w = w *(180.0f/m_pi);
+      if(w > 90.0) w = 180.0-w;
 
           m_GrainReferenceCAxisMisorientations[point] = w;
           avgmiso[m_GrainIds[point]][0]++;
