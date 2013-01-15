@@ -64,11 +64,13 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
-
+    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection1ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection2ArrayName)
 
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, NRing)
+    DREAM3D_INSTANCE_PROPERTY(bool, ComputePrincipalDirectionVectors)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeMeanCurvature)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeGaussianCurvature)
 
@@ -83,7 +85,7 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Grain Curvature Filter"; }
+    virtual const std::string getHumanLabel() { return "Grain Face Curvature Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -108,7 +110,7 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     */
     virtual void preflight();
 
-#if defined (DREAM3D_USE_PARALLEL_ALGORITHMS)
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     virtual void tbbTaskProgress();
 #endif
 

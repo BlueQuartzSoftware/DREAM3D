@@ -36,7 +36,7 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #include <tbb/task.h>
@@ -57,6 +57,8 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
                                                                    std::vector<int> triangleIds,
                                                                    DoubleArrayType::Pointer principleCurvature1,
                                                                    DoubleArrayType::Pointer principleCurvature2,
+                                                                   DoubleArrayType::Pointer principleDirection1,
+                                                                   DoubleArrayType::Pointer principleDirection2,
                                                                    DoubleArrayType::Pointer gaussianCurvature,
                                                                    DoubleArrayType::Pointer meanCurvature,
                                                                    SurfaceMeshDataContainer* sm,
@@ -65,6 +67,8 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
   m_TriangleIds(triangleIds),
   m_PrincipleCurvature1(principleCurvature1),
   m_PrincipleCurvature2(principleCurvature2),
+  m_PrincipleDirection1(principleDirection1),
+  m_PrincipleDirection2(principleDirection2),
   m_GaussianCurvature(gaussianCurvature),
   m_MeanCurvature(meanCurvature),
   m_SurfaceMeshDataContainer(sm),
@@ -172,22 +176,6 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
-#if 0
-    double* normTuple = NULL;
-    // Set all the Normals to be consistent
-    for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
-    {
-      int32_t t = *iter;
-      Triangle& tt = triangles[t];
-      if (tt.nSpin[0] != grain0)
-      {
-        normTuple = patchNormals->GetPointer(i * 3);
-        normTuple[0] = normTuple[0]*-1.0;
-        normTuple[1] = normTuple[1]*-1.0;
-        normTuple[2] = normTuple[2]*-1.0;
-      }
-    }
-#endif
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
@@ -210,7 +198,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     double up[3] = {0.0, 0.0, 0.0};
     MatrixMath::crossProduct(vp, np, up);
 
-   // this constitutes a rotation matrix to a local coordinate system
+    // this constitutes a rotation matrix to a local coordinate system
 
     double rot[3][3] = {{up[0], up[1], up[2]},
                         {vp[0], vp[1], vp[2]},
@@ -271,55 +259,30 @@ void CalculateTriangleGroupCurvatures::operator()() const
         m_MeanCurvature->SetValue(triId, (kappa1+kappa2)/2.0);
       }
 
-//      std::cout << "Eigen Values: " << eValues << std::endl;
-//      std::cout << "Eigen Vectors: " << eVectors << std::endl;
+      // Extract out the principal direction vectors
+      // First take the transpose of the rotation matrix
+      double rot_T[3][3] = {{up[0], vp[0], np[0]},
+                            {up[1], vp[1], np[1]},
+                            {up[2], vp[2], np[2]} };
 
+      double direction[3] = {eVectors(0), eVectors(2), 0.0};
+      double* dirOut = m_PrincipleDirection1->GetPointer(triId * 3);
+      MatrixMath::multiply3x3with3x1(rot_T, direction, dirOut);
+
+      direction[0] = eVectors(1); direction[1] = eVectors(3); direction[2] = 0.0;
+      dirOut = m_PrincipleDirection2->GetPointer(triId * 3);
+      MatrixMath::multiply3x3with3x1(rot_T, direction, dirOut);
+
+          //      std::cout << "Eigen Values: " << eValues << std::endl;
+          //      std::cout << "Eigen Vectors: " << eVectors << std::endl;
+          //
     }
 
   } // End Loop over this triangle
 
   m_ParentFilter->tbbTaskProgress();
 }
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractNormals(int triId, UniqueTriangleIds_t &triPatch,
-                                                                              double* globalTriangleNormals,
-                                                                              const std::string &name) const
-{
 
-  StructArray<Triangle>::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getTriangles();
-  Triangle* triangles = trianglesPtr->GetPointer(0);
-
-  int g0 = triangles[triId].nSpin[0];
-  int g1 = triangles[triId].nSpin[1];
-
-
-  DataArray<double>::Pointer normals = DataArray<double>::CreateArray(triPatch.size() * 3, name);
-  normals->SetNumberOfComponents(3);
-  // This little chunk makes sure the current seed triangles centroid and normal data appear
-  // first in the returned arrays which makes the next steps a tad easier.
-  int i = 0;
-  normals->SetComponent(i, 0, globalTriangleNormals[triId*3]);
-  normals->SetComponent(i, 1, globalTriangleNormals[triId*3 + 1]);
-  normals->SetComponent(i, 2, globalTriangleNormals[triId*3 + 2]);
-  ++i;
-  triPatch.erase(triId);
-
-  for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
-  {
-    int32_t t = *iter;
-    normals->SetComponent(i, 0, globalTriangleNormals[t*3]);
-    normals->SetComponent(i, 1, globalTriangleNormals[t*3 + 1]);
-    normals->SetComponent(i, 2, globalTriangleNormals[t*3 + 2]);
-    ++i;
-  }
-  triPatch.insert(triId);
-
-  return normals;
-}
-#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
