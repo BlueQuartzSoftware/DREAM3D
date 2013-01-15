@@ -42,11 +42,11 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <!-- Do NOT write documentation below this line -->
-This filter attempts to align consecutive serial sections by determining the position that closest aligns the centroid(s) of previously 
-defined "regions".  The "regions" are defined by a binary/boolean array where the voxels/datapoints have been flagged by another filter.  
-Typically, during reading of the data, each voxel/datapoint is subject to a "Quality Metric" (or threshold) that defines if the voxel/datapoint 
-is "good".  This threshold can be used to define areas of each slice that are bad, either due to actual features in the microstructure or 
-external references inserted by the user/experimentalist.  If these "regions" of "bad" voxels/datapoints are believed to be consistent through 
+This filter attempts to align consecutive serial sections by determining the position that closest aligns the centroid(s) of previously
+defined "regions".  The "regions" are defined by a binary/boolean array where the voxels/datapoints have been flagged by another filter.
+Typically, during reading of the data, each voxel/datapoint is subject to a "Quality Metric" (or threshold) that defines if the voxel/datapoint
+is "good".  This threshold can be used to define areas of each slice that are bad, either due to actual features in the microstructure or
+external references inserted by the user/experimentalist.  If these "regions" of "bad" voxels/datapoints are believed to be consistent through
 sections, then this filter will preserve that by aligning those "regions" on top of one another on consecutive sections.<br />
 The algorithm of this filter is as follows:<br />
 <br />
@@ -54,7 +54,7 @@ The algorithm of this filter is as follows:<br />
 2) Determine the full voxel/datapoint shifts that place centroids of consecutive sections as close as possible.<br />
 *Note that this is algorithm cannot get caught in a local minima*<br />
 <br />
-  
+
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -74,10 +74,10 @@ The algorithm of this filter is as follows:<br />
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-Copyright [INSERT YOUR NAME HERE]<br />
-Contact Info:[INSERT EMAIL ADDRESS HERE]<br />
-Version: 1.0.0<br />
-License: See the License.txt file that came with DREAM3D.<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
 </p>
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
 <div>  <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>  </div>
