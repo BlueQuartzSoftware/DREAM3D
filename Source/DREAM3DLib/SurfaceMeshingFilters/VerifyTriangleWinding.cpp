@@ -57,7 +57,7 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Plane.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConectivity.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConnectivity.h"
 #include "DREAM3DLib/Common/ManagedPointerArray.hpp"
 
 
@@ -171,7 +171,7 @@ class LabelVisitorInfo
 
       if (m_Relabeled == true)
       {
-        std::cout << "    Reverting Label " << m_NewLabel << " To " << m_Label << std::endl;
+      //  std::cout << "    Reverting Label " << m_NewLabel << " To " << m_Label << std::endl;
         for (std::set<int32_t>::iterator triIter = m_OriginalTriangleList.begin(); triIter != m_OriginalTriangleList.end(); ++triIter )
         {
           Triangle& t = masterTriangleList[*triIter];
@@ -319,7 +319,9 @@ void VerifyTriangleWinding::execute()
   if (m_DoUniqueEdgesFilter == true)
   {
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    conn->setMessagePrefix(getMessagePrefix());
+    ss.str("");
+    ss << getMessagePrefix() << "|->Generating Unique Edge Ids |->";
+    conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
     conn->setVoxelDataContainer(getVoxelDataContainer());
     conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
@@ -333,20 +335,16 @@ void VerifyTriangleWinding::execute()
     }
   }
 
-  // Get the edges array where each index of the array has a unique Vertex Id pair. The index of the array
-  // is the same value as in the Struct Trianlge.e_id[]
-  //  IDataArray::Pointer edgeConnPtr = m->getCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
-  //  Int32ArrayType* uniqueEdgeList = Int32ArrayType::SafePointerDownCast(edgeConnPtr.get());
-  IDataArray::Pointer edgeTrianglePtr = m->getCellData(DREAM3D::CellData::SurfaceMeshEdgeTriangles);
-  ManagedPointerArray<int>* edgeTriangles = ManagedPointerArray<int>::SafePointerDownCast(edgeTrianglePtr.get());
+  if (getCancel() == true) { return; }
 
-#if 1
   notifyStatusMessage("Generating Triangle List for each Node");
   // Generate the Node2Triangle Connectivity
   if (m_DoNodeTriangleConnectivityFilter == true)
   {
-    GenerateNodeTriangleConectivity::Pointer conn = GenerateNodeTriangleConectivity::New();
-    conn->setMessagePrefix(getMessagePrefix());
+    GenerateNodeTriangleConnectivity::Pointer conn = GenerateNodeTriangleConnectivity::New();
+    ss.str("");
+    ss << getMessagePrefix() << "|->Generating Triangle List for each Node |->";
+    conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
     conn->setVoxelDataContainer(getVoxelDataContainer());
     conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
@@ -359,24 +357,16 @@ void VerifyTriangleWinding::execute()
       return;
     }
   }
-  // Get the array that has the each Node's triangle list
-  IDataArray::Pointer nodeTrianglePtr = m->getCellData(DREAM3D::CellData::SurfaceMeshNodeTriangles);
-  ManagedPointerArray<int>* nodeTriangles = ManagedPointerArray<int>::SafePointerDownCast(nodeTrianglePtr.get());
-#endif
 
-  debugPrintConnectivity();
+  if (getCancel() == true) { return; }
+
+  notifyStatusMessage("Generating Connectivity Complete. Starting Analysis");
+  // Execute the actual verification step.
+  verifyTriangleWinding();
 
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VerifyTriangleWinding::findCommonEdge(Triangle& seed, Triangle& target)
-{
-
 }
 
 // -----------------------------------------------------------------------------
@@ -407,7 +397,7 @@ void VerifyTriangleWinding::getLabelTriangleMap(LabelTriangleMapType &trianglesT
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VerifyTriangleWinding::debugPrintConnectivity()
+int VerifyTriangleWinding::verifyTriangleWinding()
 {
   int err = 0;
 //  std::cout << "--------------------------------------------------------------" << std::endl;
@@ -433,7 +423,6 @@ int VerifyTriangleWinding::debugPrintConnectivity()
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
     return getErrorCondition();
   }
-  int numNodes = masterNodeListPtr->GetNumberOfTuples();
   StructArray<Node>& masterNodeList = *(masterNodeListPtr.get());
 
   int min = 268435457;
@@ -451,12 +440,8 @@ int VerifyTriangleWinding::debugPrintConnectivity()
   mesh->setMaxLabel(max);
   mesh->setMinLabel(min);
 
-
-
   //  std::cout << "Max int32_t: " << mesh->getMaxint32_t() << std::endl;
   //  std::cout << "Min int32_t: " << mesh->getMinint32_t() << std::endl;
-
-  bool firstTime = true;
 
   // Get a grouping of triangles by grain ID
   LabelTriangleMapType trianglesToLabelMap;
@@ -477,19 +462,7 @@ int VerifyTriangleWinding::debugPrintConnectivity()
   // Get the first triangle in the list
   Triangle& triangle = triangles[triIndex];
   int32_t currentLabel = 0;
-
-  //  if (inputs->addBoundBox == true)
-  //  {
-  //    currentLabel = t->nSpin[0];
-  //    if (inputs->boundBoxValue == currentLabel)
-  //    {
-  //      currentLabel = t->nSpin[1];
-  //    }
-  //  }
-  //  else
-  {
-    currentLabel = triangle.nSpin[0];
-  }
+  currentLabel = triangle.nSpin[0];
 
   LabelVisitorInfo::Pointer ldo = LabelVisitorInfo::New(currentLabel, triIndex);
   labelObjectsToVisit.push_back(ldo);
@@ -497,9 +470,7 @@ int VerifyTriangleWinding::debugPrintConnectivity()
   labelsToVisitSet.insert(currentLabel);
 
 
-  /* Make sure the winding is correct on the first triangle of the first label
-   * that will be checked.
-   */
+  /* Make sure the winding is correct on the first triangle of the first label that will be checked. */
   VectorType P(-1000.0, -1000.0, -1000.0);
 
   std::vector<int> tNodes = TriangleOps::getNodeIndices(triangle, currentLabel);
@@ -522,18 +493,17 @@ int VerifyTriangleWinding::debugPrintConnectivity()
   // Start looping on all the int32_t values
   while (labelObjectsToVisit.empty() == false)
   {
-
-    std::map<int32_t, size_t> neighborlabels;
-
+    if (getCancel() == true) { return -1; }
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
       ss.str("");
-      ss << "Verifying Winding " << (progressIndex/total * 100.0f) << " Complete";
+      ss << static_cast<int>(progressIndex/total * 100.0f) << "% Complete";
       notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
     ++progressIndex;
     //std::cout << "Total: "<< total << "    "<< "progressIndex: " << progressIndex << std::endl;
+    std::map<int32_t, size_t> neighborlabels;
 
     curLdo = labelObjectsToVisit.front();
     labelObjectsToVisit.pop_front();

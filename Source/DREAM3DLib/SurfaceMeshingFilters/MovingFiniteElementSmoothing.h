@@ -33,10 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
-
 #ifndef _MovingFiniteElementSmoothing_H_
 #define _MovingFiniteElementSmoothing_H_
 

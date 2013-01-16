@@ -123,9 +123,19 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void findCommonEdge(Triangle& seed, Triangle& target);
+
+    /**
+     * @brief This method generates a mapping between a "Label" (Grain Id) and the set of triangles that belong to that
+     * lable value.
+     * @param trianglesToLabelMap
+     */
     void getLabelTriangleMap(LabelTriangleMapType &trianglesToLabelMap);
-    int debugPrintConnectivity();
+
+    /**
+     * @brief This method verifies the winding of all the triangles and makes them consistent
+     * @return
+     */
+    int verifyTriangleWinding();
 
   private:
     bool m_DoUniqueEdgesFilter;

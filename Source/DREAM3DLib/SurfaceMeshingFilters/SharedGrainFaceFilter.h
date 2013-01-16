@@ -33,8 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _GrainFaceFilter_H_
 #define _GrainFaceFilter_H_
 
@@ -49,7 +47,7 @@
 /**
  * @class SharedGrainFaceFilter SharedGrainFaceFilter.h DREAM3DLib/SurfaceMeshingFilters/SharedGrainFaceFilter.h
  * @brief This filter groups triangles together in a way where each group would define a grain face where the group
- * of triangles share a common grain id or region id.
+ * of triangles share a common pair of grain ids or region ids.
  * @author Michael A. Jackson (BlueQuartz Software)
  * @date Dec 28, 2012
  * @version 1.0

@@ -530,7 +530,7 @@ void M3CSliceBySlice::execute()
   {
     ss.str("");
     ss << " Layers " << i << " and " << i + 1 << " of " << sliceCount;
-    notifyProgressValue((i * 90 / sliceCount));
+   // notifyProgressValue((i * 90 / sliceCount));
     notifyStatusMessage(ss.str());
 
     if (getCancel() == true)
@@ -1619,7 +1619,8 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
         tgrainname2 = voxels[tsite2];
         arraygrainname[j] = tgrainname1;
         arraygrainname[j + 4] = tgrainname2;
-        if (tgrainname1 < 0 || tgrainname2 < 0) nkFlag++;
+        if (tgrainname1 < 0 || tgrainname2 < 0)
+        {nkFlag++;}
       }
       nds = 0; // number of different spins in each marching cube...
       nburnt = 0; // so nds = NodeKind of body center position...
@@ -1647,10 +1648,18 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
       if (nkFlag > 0)
       {
         nodeType[BCnode] = nds;
+        if (nds > 4 && nds < 12)
+        {
+          nodeType[BCnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+        }
       }
       else
       {
         nodeType[BCnode] = nds;
+        if (nds > 4 && nds < 12)
+        {
+          nodeType[BCnode] = DREAM3D::SurfaceMesh::NodeType::QuadPoint;
+        }
       }
     }
     // Checking the number of edges for loops in the cube...

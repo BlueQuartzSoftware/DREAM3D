@@ -36,10 +36,19 @@
 
 #include "LaplacianSmoothing.h"
 
+
+#include <stdio.h>
+#include <sstream>
+
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
+#include "MXA/Common/MXAEndian.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
-
 
 
 // -----------------------------------------------------------------------------
@@ -262,9 +271,10 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
   int8_t* nodeType = nodeTypePtr->GetPointer(0);
 
   DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "Laplacian_Smoothing_Lambda_Array");
+  lambdas->initializeWithZeros();
+
   for(int i = 0; i < numNodes; ++i)
   {
-
     switch(nodeType[i])
     {
       case DREAM3D::SurfaceMesh::NodeType::Unused:
@@ -340,12 +350,15 @@ int LaplacianSmoothing::smooth()
   // Get a Pointer to the Lambdas
   DataArray<float>::Pointer lambdas = getLambdaArray();
   float* lambda = lambdas->GetPointer(0);
+  std::stringstream ss;
 
   // Generate the Unique Edges
   if (m_DoConnectivityFilter == true)
   {
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    conn->setMessagePrefix(getMessagePrefix());
+    ss.str("");
+    ss << getMessagePrefix() << "|->Generating Unique Edge Ids |->";
+    conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
     conn->setVoxelDataContainer(getVoxelDataContainer());
     conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
@@ -356,6 +369,7 @@ int LaplacianSmoothing::smooth()
       return conn->getErrorCondition();
     }
   }
+  if (getCancel() == true) { return -1; }
 
   notifyStatusMessage("Starting to Smooth Vertices");
   // Get the unique Edges from the data container
@@ -380,11 +394,15 @@ int LaplacianSmoothing::smooth()
   deltaArray->initializeWithZeros();
   double* delta = deltaArray->GetPointer(0);
 
-  std::stringstream ss;
+
   double dlta = 0.0;
 
+//  char buf[8];
+//  ::memset(buf, 0, 8);
+//int8_t* nodeType = nodeTypePtr->GetPointer(0);
   for (int q=0; q<m_IterationSteps; q++)
   {
+    if (getCancel() == true) { return -1; }
     ss.str("");
     ss << "Iteration " << q;
     notifyStatusMessage(ss.str());
@@ -399,6 +417,10 @@ int LaplacianSmoothing::smooth()
         assert( 3*in1+j < nvert*3);
         assert( 3*in2+j < nvert*3);
         dlta = vsm[in2].coord[j] - vsm[in1].coord[j];
+//        if (dlta == 0xFFFFFA0000000)
+//        {
+//          std::cout << "NAN found." << std::endl;
+//        }
         delta[3*in1+j] += dlta;
         delta[3*in2+j] += -1.0*dlta;
       }
@@ -410,21 +432,205 @@ int LaplacianSmoothing::smooth()
     float ll = 0.0f;
     for (int i=0; i < nvert; i++)
     {
+
+//          if (nodeType[i] != 2 && nodeType[i] != 3 && nodeType[i] != 4
+//              && nodeType[i] != 12 && nodeType[i] != 13 && nodeType[i] != 14)
+//              {
+//                assert(true);
+//              }
+
+//       if ((int)(nodeType[i]) == 5 )
+//       {
+//         std::cout << "Bad Node Type" << std::endl;
+//        assert(true);
+//       }
       for (int j = 0; j < 3; j++)
       {
         int in0 = 3*i+j;
         dlta = delta[in0] / ncon[i];
+
         ll = lambda[i];
         Node& node = vsm[i];
         node.coord[j] += ll*dlta;
+//        ::memset(buf, 0, 8);
+//        snprintf(buf, 8, "%f", node.coord[j]);
+//        if (strcmp("nan", buf) == 0)
+//        {
+//          std::cout << "first nan encountered." << std::endl;
+//          std::cout << "Node ID = " << i << std::endl;
+//          std::cout << "Node Type: " << (int)(nodeType[i]) << std::endl;
+//          std::cout << "Lambda for Node: " << lambda[i] << std::endl;
+//        }
+
         delta[in0] = 0.0; //reset for next iteration
       }
       ncon[i] = 0;//reset for next iteration
     }
 
+#if OUTPUT_DEBUG_VTK_FILES
+    std::stringstream testFile;
+    testFile << "/tmp/Laplacian_" << q << ".vtk";
+    writeVTKFile(testFile.str());
+#endif
+
   }
 
   return 1;
 }
+
+
+#if OUTPUT_DEBUG_VTK_FILES
+namespace Detail {
+  /**
+ * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
+ * when the object goes out of scope.
+ */
+  class ScopedFileMonitor
+  {
+    public:
+      ScopedFileMonitor(FILE* f) : m_File(f) {}
+      virtual ~ScopedFileMonitor() { fclose(m_File);}
+    private:
+      FILE* m_File;
+      ScopedFileMonitor(const ScopedFileMonitor&); // Copy Constructor Not Implemented
+      void operator=(const ScopedFileMonitor&); // Operator '=' Not Implemented
+  };
+
+}
+
+
+
+// -----------------------------------------------------------------------------
+// This is just here for some debugging issues.
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
+{
+
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  /* Place all your code to execute your filter here. */
+  StructArray<Node>::Pointer nodesPtr = m->getNodes();
+  StructArray<Node>& nodes = *(nodesPtr);
+  int nNodes = nodes.GetNumberOfTuples();
+  bool m_WriteBinaryFile = true;
+  bool m_WriteConformalMesh = true;
+  std::stringstream ss;
+
+
+  FILE* vtkFile = NULL;
+  vtkFile = fopen(outputVtkFile.c_str(), "wb");
+  if (NULL == vtkFile)
+  {
+    ss.str("");
+    ss << "Error creating file '" << outputVtkFile << "'";
+    return;
+  }
+  Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);
+
+  fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
+  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
+  if (m_WriteBinaryFile) {
+    fprintf(vtkFile, "BINARY\n");
+  }
+  else {
+    fprintf(vtkFile, "ASCII\n");
+  }
+  fprintf(vtkFile, "DATASET POLYDATA\n");
+
+
+  fprintf(vtkFile, "POINTS %d float\n", nNodes);
+  float pos[3] = {0.0f, 0.0f, 0.0f};
+
+  size_t totalWritten = 0;
+  // Write the POINTS data (Vertex)
+  for (int i = 0; i < nNodes; i++)
+  {
+    Node& n = nodes[i]; // Get the current Node
+    //  if (m_SurfaceMeshNodeType[i] > 0)
+    {
+      pos[0] = static_cast<float>(n.coord[0]);
+      pos[1] = static_cast<float>(n.coord[1]);
+      pos[2] = static_cast<float>(n.coord[2]);
+      if (m_WriteBinaryFile == true)
+      {
+        MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
+        totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
+        if (totalWritten != sizeof(float) * 3)
+        {
+
+        }
+      }
+      else {
+        fprintf(vtkFile, "%4.4f %4.4f %4.4f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
+      }
+    }
+  }
+
+  // Write the triangle indices into the vtk File
+  StructArray<Triangle>& triangles = *(m->getTriangles());
+  int triangleCount = 0;
+  int end = triangles.GetNumberOfTuples();
+  for(int i = 0; i < end; ++i)
+  {
+    Triangle* tri = triangles.GetPointer(i);
+    if (tri->nSpin[0] == 227 || tri->nSpin[1] == 227)
+    {
+      ++triangleCount;
+    }
+  }
+
+
+  int tData[4];
+  // Write the CELLS Data
+  //  int start = 3094380;
+  //  int end = 3094450;
+  //  int triangleCount = end - start;
+  std::cout << "---------------------------------------------------------------------------" << std::endl;
+  std::cout << outputVtkFile << std::endl;
+  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
+  for (int tid = 0; tid < end; ++tid)
+  {
+    Triangle* tri = triangles.GetPointer(tid);
+    if (tri->nSpin[0] == 227 || tri->nSpin[1] == 227)
+    {
+      tData[1] = triangles[tid].node_id[0];
+      tData[2] = triangles[tid].node_id[1];
+      tData[3] = triangles[tid].node_id[2];
+//      std::cout << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  << std::endl;
+//      std::cout << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  << std::endl;
+//      std::cout << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  << std::endl;
+      if (m_WriteBinaryFile == true)
+      {
+        tData[0] = 3; // Push on the total number of entries for this entry
+        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+        MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+        MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+        MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+        fwrite(tData, sizeof(int), 4, vtkFile);
+        //      if (false == m_WriteConformalMesh)
+        //      {
+        //        tData[0] = tData[1];
+        //        tData[1] = tData[3];
+        //        tData[3] = tData[0];
+        //        tData[0] = 3;
+        //        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+        //        fwrite(tData, sizeof(int), 4, vtkFile);
+        //      }
+      }
+      else
+      {
+        fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
+        //      if (false == m_WriteConformalMesh)
+        //      {
+        //        fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
+        //      }
+      }
+    }
+  }
+
+  fprintf(vtkFile, "\n");
+}
+#endif
 
 

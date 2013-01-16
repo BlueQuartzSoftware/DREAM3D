@@ -44,6 +44,8 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#define OUTPUT_DEBUG_VTK_FILES 0
+
 
 /**
  * @class LaplacianSmoothing LaplacianSmoothing.h SurfaceMesh/Code/SurfaceMeshFilters/LaplacianSmoothing.h
@@ -152,6 +154,10 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
 
   private:
     bool m_DoConnectivityFilter;
+
+#if OUTPUT_DEBUG_VTK_FILES
+    void writeVTKFile(const std::string &outputVtkFile);
+#endif
 
 
     LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented

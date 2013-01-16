@@ -39,6 +39,8 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <p class="pBody">
+ This filter groups triangles together using the criteria that each triangle has the same pair of Grain Id values. A new
+ array is created to store this information.
 </p>
 
 <!-- Do NOT write documentation below this line -->
@@ -51,12 +53,16 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Triangle List</td><td>Core Property of the Surface Mesh Data Container</td><td>The List of triangles in the Surface Mesh</td></tr>
+<tr bgcolor="#E2E2E2"><td>Node List</td><td>Core Property of the Surface Mesh Data Container</td><td>The shared list of nodes that make up the mesh</td></tr>
 </table>
 
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>int</td><td>SurfaceMeshGrainFaceId</td><td>The length of the array is the number of triangles.</td></tr>
+
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
