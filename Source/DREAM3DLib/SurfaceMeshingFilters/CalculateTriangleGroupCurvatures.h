@@ -49,9 +49,10 @@ class SurfaceMeshDataContainer;
 
 /**
  * @class CalculateTriangleGroupCurvatures CalculateTriangleGroupCurvatures.h /SurfaceMeshFilters/CalculateTriangleGroupCurvatures.h
- * @brief Calculates the Curvature at a particular triangle
+ * @brief Calculates the curvature values for a group of triangles where each triangle in the group will have the 2 Principal Curvature
+ * values computed and optionally the 2 Principal Directions and optionally the Mean and Gaussian Curvature computed.
  * @author Mike Jackson (BlueQuartz Software)s
- * @date
+ * @date Dec 2012.
  * @version 1.0
  */
 class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
@@ -75,7 +76,14 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
   protected:
     CalculateTriangleGroupCurvatures();
 
-
+    /**
+     * @brief This method extracts out the needed data values from the global arrays.
+     * @param triId The seed triangle id
+     * @param triPatch The group of triangles being used
+     * @param data The data to extract from
+     * @param name The name of the data array being used.
+     * @return
+     */
     DataArray<double>::Pointer extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
                                                 double* data,
                                                 const std::string &name) const;

@@ -33,14 +33,14 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
-
 #include "TriangleNormalFilter.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
+
+#include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -75,45 +75,13 @@ class CalculateNormalsImpl
     {
       Node* nodes = m_Nodes->GetPointer(0);
       Triangle* triangles = m_Triangles->GetPointer(0);
-      double vert0[3];
-      double vert1[3];
-      double vert2[3];
-      double u[3];
-      double w[3];
-//      double normal[3];
-//      double length;
-
       for (size_t i = start; i < end; i++)
       {
         // Get the true indices of the 3 nodes
-        int nId0 = triangles[i].node_id[0];
-        int nId1 = triangles[i].node_id[1];
-        int nId2 = triangles[i].node_id[2];
-
-        vert0[0] = static_cast<float>(nodes[nId0].coord[0]);
-        vert0[1] = static_cast<float>(nodes[nId0].coord[1]);
-        vert0[2] = static_cast<float>(nodes[nId0].coord[2]);
-
-        vert1[0] = static_cast<float>(nodes[nId1].coord[0]);
-        vert1[1] = static_cast<float>(nodes[nId1].coord[1]);
-        vert1[2] = static_cast<float>(nodes[nId1].coord[2]);
-
-        vert2[0] = static_cast<float>(nodes[nId2].coord[0]);
-        vert2[1] = static_cast<float>(nodes[nId2].coord[1]);
-        vert2[2] = static_cast<float>(nodes[nId2].coord[2]);
-
-        //
-        // Compute the normal
-        u[0] = vert1[0] - vert0[0];
-        u[1] = vert1[1] - vert0[1];
-        u[2] = vert1[2] - vert0[2];
-
-        w[0] = vert2[0] - vert0[0];
-        w[1] = vert2[1] - vert0[1];
-        w[2] = vert2[2] - vert0[2];
-
-        MatrixMath::crossProduct(u, w, m_Normals+i*3);
-        MatrixMath::normalizeVector(m_Normals+i*3);
+        VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].node_id[0]], nodes[triangles[i].node_id[1]], nodes[triangles[i].node_id[2]]);
+        m_Normals[i*3+0] = normal.x;
+        m_Normals[i*3+1] = normal.y;
+        m_Normals[i*3+2] = normal.z;
       }
     }
 

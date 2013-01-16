@@ -33,8 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #ifndef _ReverseTriangleWinding_H_
 #define _ReverseTriangleWinding_H_
 

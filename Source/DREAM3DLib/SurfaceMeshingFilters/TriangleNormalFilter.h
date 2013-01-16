@@ -33,10 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
-
 #ifndef _TriangleNormalFilter_H_
 #define _TriangleNormalFilter_H_
 
@@ -50,9 +46,11 @@
 
 /**
  * @class TriangleNormalFilter TriangleNormalFilter.h /SurfaceMeshFilters/TriangleNormalFilter.h
- * @brief
- * @author
- * @date
+ * @brief This filter calculates the normal of each triangle in the surface mesh. The calculated normals have been
+ * normalized themselves. This filter is parallelized using the Threading Building Blocks library and will attempt to
+ * use the optimal number of processors to do the computation.
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @date Dec 12, 2012
  * @version 1.0
  */
 class DREAM3DLib_EXPORT TriangleNormalFilter : public AbstractFilter
@@ -67,10 +65,6 @@ class DREAM3DLib_EXPORT TriangleNormalFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

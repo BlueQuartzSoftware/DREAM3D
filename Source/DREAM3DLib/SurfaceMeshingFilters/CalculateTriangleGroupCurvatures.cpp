@@ -107,8 +107,6 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
 // -----------------------------------------------------------------------------
 void CalculateTriangleGroupCurvatures::operator()() const
 {
-
-
   StructArray<Triangle>::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getTriangles();
   Triangle* triangles = trianglesPtr->GetPointer(0);
 
@@ -157,12 +155,14 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
   bool computeGaussian = (m_GaussianCurvature.get() != NULL);
   bool computeMean = (m_MeanCurvature.get() != NULL);
+  bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
   std::stringstream ss;
   std::vector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
   for(std::vector<int>::size_type i = 0; i < tCount; ++i)
   {
+    if (m_ParentFilter->getCancel() == true) { return; }
     int triId = m_TriangleIds[i];
     nRingNeighborAlg->setTriangleId(triId);
     nRingNeighborAlg->setRegionId0(grain0);
@@ -215,6 +215,15 @@ void CalculateTriangleGroupCurvatures::operator()() const
       ::memcpy(out, patchNormals->GetPointer(m*3), 3*sizeof(double));
       MatrixMath::multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
       ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
+
+//      if (m == 0)
+//      {
+//        std::cout << "Centroid[0]: " << patchCentroids->GetComponent(0, 0) << ", " << patchCentroids->GetComponent(0, 1) << ", "
+//        << patchCentroids->GetComponent(0, 2) << std::endl;
+
+//        std::cout << "Normal[0]: " << patchNormals->GetComponent(0, 0) << ", " << patchNormals->GetComponent(0, 1) << ", "
+//        << patchNormals->GetComponent(0, 2) << std::endl;
+//      }
     }
 
     {
@@ -245,8 +254,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::RealVectorType eValues = eig.eigenvalues();
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::MatrixType eVectors = eig.eigenvectors();
 
-      double kappa1 = eValues(0);// Kappa 1
-      double kappa2 = eValues(1); //kappa 2
+      // These are reversed so the data matches the reference data from the Goldfeather Paper
+      double kappa2 = eValues(0);// Kappa 2
+      double kappa1 = eValues(1); //kappa 1
 
       m_PrincipleCurvature1->SetValue(triId, kappa1);
       m_PrincipleCurvature2->SetValue(triId, kappa2);
@@ -259,23 +269,36 @@ void CalculateTriangleGroupCurvatures::operator()() const
         m_MeanCurvature->SetValue(triId, (kappa1+kappa2)/2.0);
       }
 
-      // Extract out the principal direction vectors
-      // First take the transpose of the rotation matrix
-      double rot_T[3][3] = {{up[0], vp[0], np[0]},
-                            {up[1], vp[1], np[1]},
-                            {up[2], vp[2], np[2]} };
+      if (computeDirection == true)
+      {
+        Eigen::Matrix3d e_rot_T;
+        e_rot_T.row(0) = Eigen::Vector3d(up[0], vp[0], np[0]);
+        e_rot_T.row(1) = Eigen::Vector3d(up[1], vp[1], np[1]);
+        e_rot_T.row(2) = Eigen::Vector3d(up[2], vp[2], np[2]);
 
-      double direction[3] = {eVectors(0), eVectors(2), 0.0};
-      double* dirOut = m_PrincipleDirection1->GetPointer(triId * 3);
-      MatrixMath::multiply3x3with3x1(rot_T, direction, dirOut);
+//        std::cout << "EigenVectors\n  " << eVectors << std::endl;
+//        double determinant = e_rot_T.determinant();
+//        std::cout << "determinant of transpose of Rotation matrix: " << determinant << std::endl;
+//        std::cout << "Transpose of Rot: " << e_rot_T.transpose() << std::endl;
+//        std::cout << "Inverse of Rot: " << e_rot_T.inverse() << std::endl;
 
-      direction[0] = eVectors(1); direction[1] = eVectors(3); direction[2] = 0.0;
-      dirOut = m_PrincipleDirection2->GetPointer(triId * 3);
-      MatrixMath::multiply3x3with3x1(rot_T, direction, dirOut);
+        // Rotate our principal directions back into the original coordinate system
+        Eigen::Vector3d dir1 ( eVectors.col(0)(0),  eVectors.col(0)(1), 0.0 );
+   //     std::cout << "dir1:\n" << dir1 << std::endl;
+        dir1 = e_rot_T * dir1;
+   //     std::cout << "dir1:\n" << dir1 << std::endl;
+        ::memcpy(m_PrincipleDirection1->GetPointer(triId * 3), dir1.data(), 3*sizeof(double) );
 
-          //      std::cout << "Eigen Values: " << eValues << std::endl;
-          //      std::cout << "Eigen Vectors: " << eVectors << std::endl;
-          //
+
+
+        Eigen::Vector3d dir2 ( eVectors.col(1)(0),  eVectors.col(1)(1), 0.0 );
+    //    std::cout << "dir2:\n" << dir2 << std::endl;
+        dir2 = e_rot_T * dir2;
+    //    std::cout << "dir2:\n" << dir2 << std::endl;
+        ::memcpy(m_PrincipleDirection2->GetPointer(triId * 3), dir2.data(), 3*sizeof(double) );
+
+
+      }
     }
 
   } // End Loop over this triangle

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenerateNodeTriangleConectivity_H_
-#define _GenerateNodeTriangleConectivity_H_
+#ifndef _GenerateNodeTriangleConnectivity_H_
+#define _GenerateNodeTriangleConnectivity_H_
 
 #include <string>
 
@@ -46,7 +46,7 @@
 
 
 /**
- * @class GenerateNodeTriangleConectivity GenerateNodeTriangleConectivity.h /SurfaceMeshFilters/GenerateNodeTriangleConectivity.h
+ * @class GenerateNodeTriangleConnectivity GenerateNodeTriangleConnectivity.h /SurfaceMeshFilters/GenerateNodeTriangleConnectivity.h
  * @brief This filter creates a pair of arrays that help to describe the connectivity in a triangle
  * based surface mesh. The two arrays are:
  * @li UniqueEdges Array - This is a 2 component array where each component is a vertex id and the pair of
@@ -58,14 +58,14 @@
  * @date  Dec 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateNodeTriangleConnectivity : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateNodeTriangleConectivity)
-    DREAM3D_STATIC_NEW_MACRO(GenerateNodeTriangleConectivity)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateNodeTriangleConectivity, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateNodeTriangleConnectivity)
+    DREAM3D_STATIC_NEW_MACRO(GenerateNodeTriangleConnectivity)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateNodeTriangleConnectivity, AbstractFilter)
 
-    virtual ~GenerateNodeTriangleConectivity();
+    virtual ~GenerateNodeTriangleConnectivity();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GenerateNodeTriangleConectivity();
+    GenerateNodeTriangleConnectivity();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -133,8 +133,8 @@ class DREAM3DLib_EXPORT GenerateNodeTriangleConectivity : public AbstractFilter
     void generateConnectivity();
 
 
-    GenerateNodeTriangleConectivity(const GenerateNodeTriangleConectivity&); // Copy Constructor Not Implemented
-    void operator=(const GenerateNodeTriangleConectivity&); // Operator '=' Not Implemented
+    GenerateNodeTriangleConnectivity(const GenerateNodeTriangleConnectivity&); // Copy Constructor Not Implemented
+    void operator=(const GenerateNodeTriangleConnectivity&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateNodeTriangleConectivity_H_ */
+#endif /* _GenerateNodeTriangleConnectivity_H_ */

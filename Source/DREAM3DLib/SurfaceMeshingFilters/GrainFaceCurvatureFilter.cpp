@@ -38,7 +38,7 @@
 
 
 
-#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConectivity.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConnectivity.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/TriangleCentroidFilter.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/TriangleNormalFilter.h"
 
@@ -278,7 +278,7 @@ void GrainFaceCurvatureFilter::execute()
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  GenerateNodeTriangleConectivity::Pointer connectivity = GenerateNodeTriangleConectivity::New();
+  GenerateNodeTriangleConnectivity::Pointer connectivity = GenerateNodeTriangleConnectivity::New();
   connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
   connectivity->setObservers(getObservers());
   connectivity->setMessagePrefix(getMessagePrefix());
@@ -319,11 +319,16 @@ void GrainFaceCurvatureFilter::execute()
   DoubleArrayType::Pointer principalCurvature2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
   principalCurvature2->initializeWithZeros();
 
-  DoubleArrayType::Pointer principalDirection1 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
-  principalDirection1->initializeWithZeros();
+  DoubleArrayType::Pointer principalDirection1;
+  DoubleArrayType::Pointer principalDirection2;
+  if (m_ComputePrincipalDirectionVectors == true)
+  {
+    principalDirection1 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
+    principalDirection1->initializeWithZeros();
 
-  DoubleArrayType::Pointer principalDirection2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
-  principalDirection2->initializeWithZeros();
+    principalDirection2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
+    principalDirection2->initializeWithZeros();
+  }
 
   DoubleArrayType::Pointer gaussianCurvature;
   if (m_ComputeGaussianCurvature == true)
@@ -381,8 +386,8 @@ void GrainFaceCurvatureFilter::execute()
 
     CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds,
                                                principalCurvature1, principalCurvature2,
-                                             principalDirection1, principalDirection2,
-                                              gaussianCurvature, meanCurvature,
+                                               principalDirection1, principalDirection2,
+                                               gaussianCurvature, meanCurvature,
                                                getSurfaceMeshDataContainer(), this );
     curvature();
 #endif
@@ -397,8 +402,11 @@ void GrainFaceCurvatureFilter::execute()
 
   getSurfaceMeshDataContainer()->addCellData(principalCurvature1->GetName(), principalCurvature1);
   getSurfaceMeshDataContainer()->addCellData(principalCurvature2->GetName(), principalCurvature2);
-  getSurfaceMeshDataContainer()->addCellData(principalDirection1->GetName(), principalDirection1);
-  getSurfaceMeshDataContainer()->addCellData(principalDirection2->GetName(), principalDirection2);
+  if (m_ComputePrincipalDirectionVectors == true)
+  {
+    getSurfaceMeshDataContainer()->addCellData(principalDirection1->GetName(), principalDirection1);
+    getSurfaceMeshDataContainer()->addCellData(principalDirection2->GetName(), principalDirection2);
+  }
 
   if (m_ComputeGaussianCurvature == true)
   {

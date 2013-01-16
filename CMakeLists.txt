@@ -139,6 +139,7 @@ Find_Package(Eigen REQUIRED)
 if(NOT EIGEN_FOUND)
   message(WARNING "The Eigen Library is required for some algorithms. The Eigen Library could not be located so these algorithms will be disabled.")
 else()
+  message(STATUS "Found Eigen Library")
   include_directories( ${EIGEN_INCLUDE_DIRS} )
 endif()
 

@@ -34,18 +34,18 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GenerateNodeTriangleConectivity.h"
+#include "GenerateNodeTriangleConnectivity.h"
 
 #include "DREAM3DLib/Common/ManagedPointerArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
+GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity() :
   AbstractFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
-//  m_SurfaceMeshUniqueEdges(NULL),
+  //  m_SurfaceMeshUniqueEdges(NULL),
   m_SurfaceMeshTriangleEdges(NULL)
 {
   setupFilterParameters();
@@ -54,14 +54,14 @@ GenerateNodeTriangleConectivity::GenerateNodeTriangleConectivity() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateNodeTriangleConectivity::~GenerateNodeTriangleConectivity()
+GenerateNodeTriangleConnectivity::~GenerateNodeTriangleConnectivity()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::setupFilterParameters()
+void GenerateNodeTriangleConnectivity::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
 
@@ -71,18 +71,18 @@ void GenerateNodeTriangleConectivity::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GenerateNodeTriangleConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-/*      writer->writeValue("TriangleId", getTriangleId() );
+  /*      writer->writeValue("TriangleId", getTriangleId() );
       writer->writeValue("RegionId", getTriangleId() );*/
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -129,7 +129,7 @@ void GenerateNodeTriangleConectivity::dataCheck(bool preflight, size_t voxels, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::preflight()
+void GenerateNodeTriangleConnectivity::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -139,7 +139,7 @@ void GenerateNodeTriangleConectivity::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::execute()
+void GenerateNodeTriangleConnectivity::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -173,7 +173,7 @@ void GenerateNodeTriangleConectivity::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodeTrianglesMap_t& GenerateNodeTriangleConectivity::getNode2TriangleMap()
+NodeTrianglesMap_t& GenerateNodeTriangleConnectivity::getNode2TriangleMap()
 {
   return m_Node2Triangle;
 }
@@ -182,7 +182,7 @@ NodeTrianglesMap_t& GenerateNodeTriangleConectivity::getNode2TriangleMap()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateNodeTriangleConectivity::generateConnectivity()
+void GenerateNodeTriangleConnectivity::generateConnectivity()
 {
 
   // Get our Reference counted Array of Triangle Structures
@@ -195,7 +195,7 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
   }
   int ntri = trianglesPtr->GetNumberOfTuples();
   NodeTrianglesMap_t m_Node2Triangle;
-
+  notifyStatusMessage("Creating the Mapping of Triangles to Node");
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
   // Generate the map of node_id -> Triangles that include that node_id value
@@ -206,11 +206,28 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
     m_Node2Triangle[tri.node_id[1]].insert(i);
     m_Node2Triangle[tri.node_id[2]].insert(i);
   }
+  if (getCancel() == true) { return; }
 
   ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), DREAM3D::CellData::SurfaceMeshNodeTriangles);
+
+  float progIndex = 0.0;
+  float curPercent = 0.0;
+  float total = static_cast<float>(m_Node2Triangle.size());
+  std::stringstream ss;
+
   // Loop over each entry in the map
   for(NodeTrianglesMap_t::iterator iter = m_Node2Triangle.begin(); iter != m_Node2Triangle.end(); ++iter)
   {
+    if ( progIndex/total * 100.0f > (curPercent) )
+    {
+      ss.str("");
+      ss << (progIndex/total * 100.0f) << "% Complete";
+      notifyStatusMessage(ss.str());
+      curPercent += 5.0f;
+    }
+    progIndex++;
+    if (getCancel() == true) { return; }
+
     int nodeId = (*iter).first;
     ManagedPointerArray<int>::Data_t& entry = *(nodeTriangleArray->GetPointer(nodeId));
     UniqueTriangleIds_t& triangles = (*iter).second;
@@ -224,7 +241,6 @@ void GenerateNodeTriangleConectivity::generateConnectivity()
       {
         entry.data[index++] = *tIter; // Copy the value from the triangle Ids set into the ManagedPointer
       }
-   //   m_Node2Triangle.erase(iter); // Erase this data as we build up the actual array.
     }
   }
 

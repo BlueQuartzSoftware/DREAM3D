@@ -199,8 +199,21 @@ void GenerateUniqueEdges::generateConnectivity()
 
   typedef std::map<int64_t, int>::iterator EdgesIdMapIterator_t;
 
+  float curPercent = 0.0;
+  std::stringstream ss;
+
+
   for(int i = 0; i < ntri; ++i)
   {
+    if ( static_cast<float>(i)/static_cast<float>(ntri) * 100.0f > (curPercent) )
+    {
+      ss.str("");
+      ss << "Stage 1/2: " << (static_cast<float>(i)/static_cast<float>(ntri) * 100.0f) << "% Complete";
+      notifyStatusMessage(ss.str());
+      curPercent += 5.0f;
+    }
+    if (getCancel() == true) { return; }
+
     Triangle& tri = triangles[i];
     // Edge 0
     edge.v0 = tri.node_id[0];
@@ -266,9 +279,24 @@ void GenerateUniqueEdges::generateConnectivity()
 
   ManagedPointerArray<int>::Pointer edgeTriangleArray = ManagedPointerArray<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::CellData::SurfaceMeshEdgeTriangles);
 
+  float progIndex = 0.0;
+  curPercent = 0.0;
+  float total = static_cast<float>(uedges_id_map.size());
+
 
   for(std::map<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
   {
+
+    if ( progIndex/total * 100.0f > (curPercent) )
+    {
+      ss.str("");
+      ss << "Stage 2/2: " << (progIndex/total * 100.0f) << "% Complete";
+      notifyStatusMessage(ss.str());
+      curPercent += 5.0f;
+    }
+    progIndex++;
+    if (getCancel() == true) { return; }
+
     *u64Edge = iter->first;
     index = iter->second;
     m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
