@@ -189,7 +189,14 @@ void OrientationMath::_calcNearestQuat(const float quatsym[24][5], int numsym, f
   {
 //	OrientationMath::multiplyQuaternions(q2, quatsym[i], qc);
   MULT_QUAT(q2, quatsym[i], qc);
-    dist = static_cast<float>( 2.0*(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3])) );
+  if(qc[4] < 0)
+  {
+    qc[1] = -qc[1];
+    qc[2] = -qc[2];
+    qc[3] = -qc[3];
+    qc[4] = -qc[4];
+  }
+    dist = static_cast<float>(1-(qc[4]*q1[4]+qc[1]*q1[1]+qc[2]*q1[2]+qc[3]*q1[3]));
     if(dist < smallestdist)
     {
       smallestdist = dist;
@@ -230,7 +237,7 @@ void OrientationMath::_calcQuatNearestOrigin(const float quatsym[24][5], int num
   {
     //OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
 	  MULT_QUAT(qr, quatsym[i], qc);
-    dist = 1-fabs(qc[4]);
+    dist = 1-(qc[4]*qc[4]);
     if(dist < smallestdist)
     {
       smallestdist = dist;
