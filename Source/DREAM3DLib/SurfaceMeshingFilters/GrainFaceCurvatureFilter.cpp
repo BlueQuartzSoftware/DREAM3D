@@ -265,15 +265,18 @@ void GrainFaceCurvatureFilter::execute()
   }
 
   // Calculate the Triangle Normals
-  TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
-  normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-  normalsFilter->setObservers(getObservers());
-  normalsFilter->setMessagePrefix(getMessagePrefix());
-  normalsFilter->execute();
-  if (normalsFilter->getErrorCondition() < 0)
+  if (getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshTriangleNormals).get() == NULL)
   {
-    notifyErrorMessage("Error Generating the triangle normals", -802);
-    return;
+    TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
+    normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    normalsFilter->setObservers(getObservers());
+    normalsFilter->setMessagePrefix(getMessagePrefix());
+    normalsFilter->execute();
+    if (normalsFilter->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Generating the triangle normals", -802);
+      return;
+    }
   }
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will

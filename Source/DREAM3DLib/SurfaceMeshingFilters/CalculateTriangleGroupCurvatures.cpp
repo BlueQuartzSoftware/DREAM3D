@@ -199,13 +199,11 @@ void CalculateTriangleGroupCurvatures::operator()() const
     MatrixMath::crossProduct(vp, np, up);
 
     // this constitutes a rotation matrix to a local coordinate system
-
     double rot[3][3] = {{up[0], up[1], up[2]},
                         {vp[0], vp[1], vp[2]},
                         {np[0], np[1], np[2]} };
 
     // Transform all centroids and normals to new coordinate system
-    double out[3];
     for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
     {
       ::memcpy(out, patchCentroids->GetPointer(m*3), 3*sizeof(double));
@@ -216,17 +214,38 @@ void CalculateTriangleGroupCurvatures::operator()() const
       MatrixMath::multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
       ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
 
-      // We rotate the normals now but we dont use them yet.
-
-//      if (m == 0)
-//      {
-//        std::cout << "Centroid[0]: " << patchCentroids->GetComponent(0, 0) << ", " << patchCentroids->GetComponent(0, 1) << ", "
-//        << patchCentroids->GetComponent(0, 2) << std::endl;
-
-//        std::cout << "Normal[0]: " << patchNormals->GetComponent(0, 0) << ", " << patchNormals->GetComponent(0, 1) << ", "
-//        << patchNormals->GetComponent(0, 2) << std::endl;
-//      }
+      // We rotate the normals now but we dont use them yet. If we start using part 3 of Goldfeathers paper then we
+      // will need the normals.
     }
+
+#if 0
+    if (triId == 1837)
+    {
+      std::cout << "# vtk DataFile Version 2.0" << std::endl;
+      std::cout << "Rotated Patch" << std::endl;
+      std::cout << "ASCII" << std::endl;
+      std::cout << "DATASET POLYDATA" << std::endl;
+      std::cout << "POINTS " <<  patchCentroids->GetNumberOfTuples() << " float" << std::endl;
+      for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
+      {
+        std::cout << patchCentroids->GetComponent(m, 0) << " " << patchCentroids->GetComponent(m, 1) << " " << patchCentroids->GetComponent(m, 2) << std::endl;
+      }
+      std::cout << "\nPOINT_DATA " << patchCentroids->GetNumberOfTuples() << std::endl;
+
+      std::cout << "VECTORS patch_normals float" << std::endl;
+      for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
+      {
+        std::cout << patchNormals->GetComponent(m, 0) << " " << patchNormals->GetComponent(m, 1) << " " << patchNormals->GetComponent(m, 2) << std::endl;
+      }
+      std::cout << "SCALARS triangle_id int 1" << std::endl;
+      std::cout << "LOOKUP_TABLE default" << std::endl;
+      for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
+      {
+        std::cout << m << std::endl;
+      }
+    }
+#endif
+
 
     {
       // Solve the Least Squares fit for f(x,y) = 0.5 * A * x^2 + Bxy + 0.5*C*y^2 where
@@ -257,12 +276,13 @@ void CalculateTriangleGroupCurvatures::operator()() const
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::MatrixType eVectors = eig.eigenvectors();
 
       // These are reversed so the data matches the reference data from the Goldfeather Paper
-      double kappa2 = eValues(0);// Kappa 2
-      double kappa1 = eValues(1); //kappa 1
-
-
+      // Kappa1 >= Kappa2
+      double kappa1 = eValues(0) * -1;// Kappa 1
+      double kappa2 = eValues(1) * -1; //kappa 2
+      assert(kappa1 >= kappa2);
       m_PrincipleCurvature1->SetValue(triId, kappa1);
       m_PrincipleCurvature2->SetValue(triId, kappa2);
+
       if (computeGaussian == true)
       {
         m_GaussianCurvature->SetValue(triId, kappa1*kappa2);
@@ -279,29 +299,14 @@ void CalculateTriangleGroupCurvatures::operator()() const
         e_rot_T.row(1) = Eigen::Vector3d(up[1], vp[1], np[1]);
         e_rot_T.row(2) = Eigen::Vector3d(up[2], vp[2], np[2]);
 
-
-//        std::cout << "EigenVectors\n  " << eVectors << std::endl;
-//        double determinant = e_rot_T.determinant();
-//        std::cout << "determinant of transpose of Rotation matrix: " << determinant << std::endl;
-//        std::cout << "Transpose of Rot: " << e_rot_T.transpose() << std::endl;
-//        std::cout << "Inverse of Rot: " << e_rot_T.inverse() << std::endl;
-
         // Rotate our principal directions back into the original coordinate system
         Eigen::Vector3d dir1 ( eVectors.col(0)(0),  eVectors.col(0)(1), 0.0 );
-   //     std::cout << "dir1:\n" << dir1 << std::endl;
         dir1 = e_rot_T * dir1;
-   //     std::cout << "dir1:\n" << dir1 << std::endl;
-        ::memcpy(m_PrincipleDirection2->GetPointer(triId * 3), dir1.data(), 3*sizeof(double) );
-
-
+        ::memcpy(m_PrincipleDirection1->GetPointer(triId * 3), dir1.data(), 3*sizeof(double) );
 
         Eigen::Vector3d dir2 ( eVectors.col(1)(0),  eVectors.col(1)(1), 0.0 );
-    //    std::cout << "dir2:\n" << dir2 << std::endl;
         dir2 = e_rot_T * dir2;
-    //    std::cout << "dir2:\n" << dir2 << std::endl;
-        ::memcpy(m_PrincipleDirection1->GetPointer(triId * 3), dir2.data(), 3*sizeof(double) );
-
-
+        ::memcpy(m_PrincipleDirection2->GetPointer(triId * 3), dir2.data(), 3*sizeof(double) );
       }
     }
 
