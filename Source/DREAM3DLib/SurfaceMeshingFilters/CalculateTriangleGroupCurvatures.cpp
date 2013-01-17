@@ -216,6 +216,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
       MatrixMath::multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
       ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
 
+      // We rotate the normals now but we dont use them yet.
+
 //      if (m == 0)
 //      {
 //        std::cout << "Centroid[0]: " << patchCentroids->GetComponent(0, 0) << ", " << patchCentroids->GetComponent(0, 1) << ", "
@@ -258,6 +260,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
       double kappa2 = eValues(0);// Kappa 2
       double kappa1 = eValues(1); //kappa 1
 
+
       m_PrincipleCurvature1->SetValue(triId, kappa1);
       m_PrincipleCurvature2->SetValue(triId, kappa2);
       if (computeGaussian == true)
@@ -276,6 +279,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
         e_rot_T.row(1) = Eigen::Vector3d(up[1], vp[1], np[1]);
         e_rot_T.row(2) = Eigen::Vector3d(up[2], vp[2], np[2]);
 
+
 //        std::cout << "EigenVectors\n  " << eVectors << std::endl;
 //        double determinant = e_rot_T.determinant();
 //        std::cout << "determinant of transpose of Rotation matrix: " << determinant << std::endl;
@@ -287,7 +291,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
    //     std::cout << "dir1:\n" << dir1 << std::endl;
         dir1 = e_rot_T * dir1;
    //     std::cout << "dir1:\n" << dir1 << std::endl;
-        ::memcpy(m_PrincipleDirection1->GetPointer(triId * 3), dir1.data(), 3*sizeof(double) );
+        ::memcpy(m_PrincipleDirection2->GetPointer(triId * 3), dir1.data(), 3*sizeof(double) );
 
 
 
@@ -295,7 +299,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     //    std::cout << "dir2:\n" << dir2 << std::endl;
         dir2 = e_rot_T * dir2;
     //    std::cout << "dir2:\n" << dir2 << std::endl;
-        ::memcpy(m_PrincipleDirection2->GetPointer(triId * 3), dir2.data(), 3*sizeof(double) );
+        ::memcpy(m_PrincipleDirection1->GetPointer(triId * 3), dir2.data(), 3*sizeof(double) );
 
 
       }

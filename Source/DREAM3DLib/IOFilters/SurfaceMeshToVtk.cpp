@@ -253,7 +253,7 @@ void SurfaceMeshToVtk::execute()
   }
 
 
-  fprintf(vtkFile, "POINTS %d double\n", numberWrittenNodes);
+  fprintf(vtkFile, "POINTS %d float\n", numberWrittenNodes);
 
   float pos[3] = {0.0f, 0.0f, 0.0f};
 
