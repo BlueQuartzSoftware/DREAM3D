@@ -240,7 +240,7 @@ void GoldfeatherReader::execute()
   trianglesPtr->initializeWithZeros();
   Triangle* triangles = trianglesPtr->GetPointer(0);
 
-  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, DREAM3D::CellData::SurfaceMeshTriangleNormals);
+  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, "Goldfeather_Triangle_Normals");
   double* triNormals = triNormalsPtr->GetPointer(0);
 
   for(int t = 0; t < nTriangles; ++t)
