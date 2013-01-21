@@ -212,7 +212,14 @@ target_link_libraries(TextureTest DREAM3DLib)
 #target_link_libraries(DxTest DREAM3DLib)
 
 # --------
-add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
+add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp
+                                ${DREAM3DTest_SOURCE_DIR}/support/CellLinks.hpp
+                                ${DREAM3DTest_SOURCE_DIR}/support/TriangleNeighbors.hpp
+                                ${DREAM3DTest_SOURCE_DIR}/support/NodesTriangleReader.h
+                                ${DREAM3DTest_SOURCE_DIR}/support/NodesTriangleReader.cpp
+                                ${DREAM3DTest_SOURCE_DIR}/support/ScopedFilePointer.hpp
+                                ${DREAM3DTest_SOURCE_DIR}/support/SurfaceMeshDataStructures.h
+                                ${DREAM3DTest_SOURCE_DIR}/support/TriangleOps.hpp)
 target_link_libraries(SurfaceMeshTest MXA)
 
 # --------
