@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Drop Euler/Phase Data Filter"; }
+    virtual const std::string getHumanLabel() { return "Drop All Cell Arrays Except Grain IDs"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

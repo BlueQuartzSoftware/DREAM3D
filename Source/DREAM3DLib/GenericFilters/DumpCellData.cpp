@@ -110,8 +110,15 @@ void DumpCellData::execute()
   }
   setErrorCondition(0);
 
-  m->removeCellData(DREAM3D::CellData::EulerAngles);
-  m->removeCellData(DREAM3D::CellData::Phases);
+
+ std::list<std::string> nameList =  m->getCellArrayNameList();
+ for(std::list<std::string>::iterator iter = nameList.begin(); iter != nameList.end(); ++iter)
+ {
+  if ( (*iter).compare(DREAM3D::CellData::GrainIds) != 0)
+  {
+    m->removeCellData(*iter);
+  }
+ }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
