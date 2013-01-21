@@ -213,7 +213,7 @@ target_link_libraries(TextureTest DREAM3DLib)
 
 # --------
 add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
-target_link_libraries(SurfaceMeshTest DREAM3DLib)
+target_link_libraries(SurfaceMeshTest MXA)
 
 # --------
 add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)
