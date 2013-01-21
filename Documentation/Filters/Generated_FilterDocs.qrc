@@ -16,6 +16,7 @@
     <file>GenericFilters/FindSurfaceGrains.html</file>
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
     <file>GenericFilters/DumpCellData.html</file>
+    <file>GenericFilters/CopyCellData.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
