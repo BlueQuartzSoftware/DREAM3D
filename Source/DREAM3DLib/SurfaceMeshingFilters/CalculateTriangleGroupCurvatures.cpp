@@ -202,7 +202,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     double rot[3][3] = {{up[0], up[1], up[2]},
                         {vp[0], vp[1], vp[2]},
                         {np[0], np[1], np[2]} };
-
+    double out[3];
     // Transform all centroids and normals to new coordinate system
     for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
     {

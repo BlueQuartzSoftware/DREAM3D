@@ -189,7 +189,7 @@ void SegmentGrains::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("SegmentGrains Completed");
+ notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ void SegmentGrains::execute()
 // -----------------------------------------------------------------------------
 int SegmentGrains::getSeed(size_t gnum)
 {
-	return -1;
+  return -1;
 }
 
 // -----------------------------------------------------------------------------
@@ -205,5 +205,5 @@ int SegmentGrains::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 bool SegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
 {
-	return false;
+  return false;
 }
