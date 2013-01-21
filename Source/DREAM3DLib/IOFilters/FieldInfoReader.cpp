@@ -209,3 +209,4 @@ int  FieldInfoReader::readFile()
   notifyStatusMessage("Complete");
   return 0;
 }
+
