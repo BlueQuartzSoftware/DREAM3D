@@ -139,8 +139,8 @@ void FindSizes::find_sizes()
   float diameter;
   size_t numgrains = m->getNumFieldTuples();
 
-  DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains, "GrainCounts");
-  float* graincounts = m_GrainCounts->GetPointer(0);
+  DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");
+  double* graincounts = m_GrainCounts->GetPointer(0);
 
   // Initialize every element to 0.0
   for (size_t i = 0; i < numgrains * 1; i++)
@@ -153,7 +153,7 @@ void FindSizes::find_sizes()
     graincounts[gnum]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = static_cast<float>( (4.0/3.0)*m_pi );
+  float vol_term = static_cast<double>( (4.0/3.0)*m_pi );
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
@@ -163,6 +163,7 @@ void FindSizes::find_sizes()
     m_EquivalentDiameters[i] = diameter;
   }
 }
+
 void FindSizes::find_sizes2D()
 {
   VoxelDataContainer* m = getVoxelDataContainer();

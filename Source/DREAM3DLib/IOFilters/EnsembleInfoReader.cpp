@@ -164,6 +164,10 @@ int  EnsembleInfoReader::readFile()
   typedef DataArray<unsigned int> PTypeArrayType;
   XTalStructArrayType::Pointer m_XTalStructData = XTalStructArrayType::CreateArray(numphases+1, DREAM3D::EnsembleData::CrystalStructures);
   PTypeArrayType::Pointer m_PhaseTypeData = PTypeArrayType::CreateArray(numphases+1, DREAM3D::EnsembleData::PhaseTypes);
+  //Initialize the arrays with the "Unknown" value
+  m_XTalStructData->initializeWithValues(999);
+  m_PhaseTypeData->initializeWithValues(999);
+
   for(int i=0;i<numphases;i++)
   {
     inFile >> pnum >> crystruct >> ptype;

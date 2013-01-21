@@ -199,11 +199,14 @@ void EBSDSegmentGrains::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFieldDataArrays(1);
+  // This runs a subfilter 
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
+  // Tell the user we are starting the filter
+  notifyStatusMessage("Starting");
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
