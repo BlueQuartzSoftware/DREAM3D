@@ -36,14 +36,16 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <p class="pBody">IO</p>
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
-<p>
 <!-- Write all your documentation here -->
+
+<p class="pBody">
 This filter reads information about the features/grains that are in the sample. The
  basic format of the file is the number of features/grains on the first line of the file followed by
  columnar formatted data listing: Grain Id, PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.<br />
  *If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine. Feature/Grain Ids
  start from zero (0) and Phase Ids start from one (1).<br/>
-<p>
+</p>
+<p class="pBody">
 For example if you have a file with 123 grains and 2 phases then the file would be similar to the following: </p>
 <pre>
 123<br />
@@ -54,6 +56,7 @@ For example if you have a file with 123 grains and 2 phases then the file would 
 122 2 1.0  1.1  0.03<br />
 </pre>
 
+<b>Note the arrays that are being created</b> Any existing arrays will be OVER WRITTEN with incoming data.
 <!-- Do NOT write documentation below this line -->
 </p>
 
