@@ -174,7 +174,11 @@ int  FieldInfoReader::readFile()
   inFile >> numgrains;
   FloatArrayType::Pointer m_FieldEulerData = FloatArrayType::CreateArray(3*(numgrains+1), DREAM3D::FieldData::EulerAngles);
   m_FieldEulerData->SetNumberOfComponents(3);
+  m_FieldEulerData->initializeWithZeros();
+
+  // Create and initialize the Field Phase Array with a default value of the "Unkown Phase Type"
   Int32ArrayType::Pointer m_FieldPhaseData = Int32ArrayType::CreateArray(numgrains+1, DREAM3D::FieldData::Phases);
+  m_FieldPhaseData->initializeWithValues(999);
   for(int i=0;i<numgrains;i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
@@ -189,6 +193,7 @@ int  FieldInfoReader::readFile()
 
   FloatArrayType::Pointer m_CellEulerData = FloatArrayType::CreateArray(3*totalPoints, DREAM3D::FieldData::EulerAngles);
   m_CellEulerData->SetNumberOfComponents(3);
+  m_CellEulerData->initializeWithZeros();
   Int32ArrayType::Pointer m_CellPhaseData = Int32ArrayType::CreateArray(totalPoints, DREAM3D::FieldData::Phases);
   for(int i=0;i<totalPoints;i++)
   {
