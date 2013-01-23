@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GlobAlphaArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(BCArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ImageQualityArrayName)
@@ -98,6 +99,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConfidenceIndicies)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteImageQualities)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoodVoxels)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteGlobAlpha)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteRodriguesGAMColors)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainReferenceMisorientations)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGrainReferenceCAxisMisorientations)
@@ -137,6 +139,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     int32_t* m_ParentIds;
     int32_t* m_CellPhases;
     int32_t* m_BC;
+    int32_t* m_GlobAlpha;
     float* m_ImageQuality;
   float* m_ConfidenceIndex;
     bool*    m_GoodVoxels;

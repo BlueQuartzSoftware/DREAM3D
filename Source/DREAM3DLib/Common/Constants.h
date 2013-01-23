@@ -124,6 +124,7 @@ namespace DREAM3D
     const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
     const std::string ConfidenceIndex("Confidence Index");
 	const std::string IPFColor("IPFColor");
+	const std::string GlobAlpha("GlobAlpha");
 
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
