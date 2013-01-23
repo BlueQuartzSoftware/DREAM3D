@@ -44,10 +44,10 @@ Vector3<T>::Vector3(double x_, double y_, double z_)
 {}
 
 template<typename T>
-Vector3<T>::Vector3(Node& node)
-: x(static_cast<T>(node.coord[0])),
-y(static_cast<T>(node.coord[1])),
-z(static_cast<T>(node.coord[2]))
+Vector3<T>::Vector3(SurfaceMesh::DataStructures::Vert_t& node)
+: x(static_cast<T>(node.pos[0])),
+y(static_cast<T>(node.pos[1])),
+z(static_cast<T>(node.pos[2]))
 {}
 
 //################## PUBLIC OPERATORS ##################//
@@ -124,9 +124,9 @@ double Vector3<T>::dot(Vector3& rhs)
 }
 
 template <typename T>
-double Vector3<T>::dot(Node& rhs)
+double Vector3<T>::dot(SurfaceMesh::DataStructures::Vert_t &rhs)
 {
-  return x*rhs.coord[0] + y*rhs.coord[1] + z*rhs.coord[2];
+  return x*rhs.pos[0] + y*rhs.pos[1] + z*rhs.pos[2];
 }
 
 

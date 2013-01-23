@@ -43,7 +43,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshStructs.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StructArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/ManagedPointerArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ManagedArrayOfArrays.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VariableArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PrimaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PrecipitateStatsData.h
@@ -56,6 +56,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
 #  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.h
 )
 

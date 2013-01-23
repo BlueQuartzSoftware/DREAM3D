@@ -34,8 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DumpCellData_H_
-#define _DumpCellData_H_
+/*
+ * Your License or Copyright Information can go here
+ */
+
+#ifndef _BinaryNodesTrianglesReader_H_
+#define _BinaryNodesTrianglesReader_H_
 
 #include <string>
 
@@ -46,27 +50,26 @@
 
 
 /**
- * @class DumpCellData DumpCellData.h /FilterCategoryFilters/DumpCellData.h
+ * @class BinaryNodesTrianglesReader BinaryNodesTrianglesReader.h /SurfaceMeshingFilters/BinaryNodesTrianglesReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
+class DREAM3DLib_EXPORT BinaryNodesTrianglesReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DumpCellData);
-    DREAM3D_STATIC_NEW_MACRO(DumpCellData);
-    DREAM3D_TYPE_MACRO_SUPER(DumpCellData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(BinaryNodesTrianglesReader)
+    DREAM3D_STATIC_NEW_MACRO(BinaryNodesTrianglesReader)
+    DREAM3D_TYPE_MACRO_SUPER(BinaryNodesTrianglesReader, AbstractFilter)
 
-    virtual ~DumpCellData();
+    virtual ~BinaryNodesTrianglesReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(bool, DropAllData)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
 
 
 
@@ -75,13 +78,13 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Delete Cell Data"; }
+    virtual const std::string getHumanLabel() { return "Read Binary Nodes & Triangles Files"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -107,7 +110,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     virtual void preflight();
 
   protected:
-    DumpCellData();
+    BinaryNodesTrianglesReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -119,10 +122,12 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+
+    int read();
   private:
 
-    DumpCellData(const DumpCellData&); // Copy Constructor Not Implemented
-    void operator=(const DumpCellData&); // Operator '=' Not Implemented
+    BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&); // Copy Constructor Not Implemented
+    void operator=(const BinaryNodesTrianglesReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _DumpCellData_H_ */
+#endif /* _BinaryNodesTrianglesReader_H_ */

@@ -43,7 +43,9 @@
 //
 // -----------------------------------------------------------------------------
 DumpCellData::DumpCellData() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_DropAllData(false)
 {
   setupFilterParameters();
 }
@@ -61,6 +63,15 @@ DumpCellData::~DumpCellData()
 void DumpCellData::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Drop ALL Cell Data");
+    parameter->setPropertyName("DropAllData");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+
   setFilterParameters(parameters);
 }
 
@@ -71,7 +82,7 @@ void DumpCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("DropAllData", getDropAllData() );
 }
 
 // -----------------------------------------------------------------------------
@@ -111,14 +122,18 @@ void DumpCellData::execute()
   setErrorCondition(0);
 
 
- std::list<std::string> nameList =  m->getCellArrayNameList();
- for(std::list<std::string>::iterator iter = nameList.begin(); iter != nameList.end(); ++iter)
- {
-  if ( (*iter).compare(DREAM3D::CellData::GrainIds) != 0)
+  std::list<std::string> nameList =  m->getCellArrayNameList();
+  for(std::list<std::string>::iterator iter = nameList.begin(); iter != nameList.end(); ++iter)
   {
-    m->removeCellData(*iter);
+    if ( (*iter).compare(m_GrainIdsArrayName) != 0)
+    {
+      m->removeCellData(*iter);
+    }
   }
- }
+  if (m_DropAllData == true)
+  {
+    m->removeCellData(m_GrainIdsArrayName);
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

@@ -92,14 +92,14 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
   else
   {
     // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
@@ -148,8 +148,8 @@ void SharedGrainFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
-  Triangle* triangles = trianglesPtr->GetPointer(0);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
 
@@ -166,16 +166,16 @@ void SharedGrainFaceFilter::execute()
   // Loop through all the Triangles and figure out how many triangles we have in each one.
   for(size_t t = 0; t < totalPoints; ++t)
   {
-    Triangle& tri = triangles[t];
-    if (tri.nSpin[0] < tri.nSpin[1])
+    SurfaceMesh::DataStructures::Face_t& tri = triangles[t];
+    if (tri.labels[0] < tri.labels[1])
     {
-      faceId.g = tri.nSpin[0];
-      faceId.r = tri.nSpin[1];
+      faceId.g = tri.labels[0];
+      faceId.r = tri.labels[1];
     }
     else
     {
-      faceId.g = tri.nSpin[1];
-      faceId.r = tri.nSpin[0];
+      faceId.g = tri.labels[1];
+      faceId.r = tri.labels[0];
     }
 
     std::map<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);

@@ -91,14 +91,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
    */
-    void addCellData(const std::string &name, IDataArray::Pointer data);
+    virtual void addCellData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getCellData(const std::string &name);
+    virtual IDataArray::Pointer getCellData(const std::string &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -106,25 +106,25 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    IDataArray::Pointer removeCellData(const std::string &name);
+    virtual IDataArray::Pointer removeCellData(const std::string &name);
 
     /**
      * @brief Removes all the Cell Arrays
      */
-    void clearCellData();
+    virtual void clearCellData();
 
     /**
     * @brief Returns a list that contains the names of all the arrays currently stored in the
     * Cell (Formerly Cell) group
     * @return
     */
-    std::list<std::string> getCellArrayNameList();
+    virtual std::list<std::string> getCellArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Cell group
     * @return
     */
-    int getNumCellArrays();
+    virtual int getNumCellArrays();
 
     /**
     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
@@ -139,14 +139,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    virtual void addFieldData(const std::string &name, IDataArray::Pointer data);
 
     /**
     * @brief Returns the array for a given named array or the equivelant to a
     * null pointer if the name does not exist.
     * @param name The name of the data array
     */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    virtual IDataArray::Pointer getFieldData(const std::string &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -154,25 +154,25 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    virtual IDataArray::Pointer removeFieldData(const std::string &name);
 
     /**
      * @brief Removes all the Field Arrays
      */
-    void clearFieldData();
+    virtual void clearFieldData();
 
     /**
     * @brief Returns a list that contains the names of all the arrays currently stored in the
     * Field (Formerly Grain) group
     * @return
     */
-    std::list<std::string> getFieldArrayNameList();
+    virtual std::list<std::string> getFieldArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Field group
     * @return
     */
-    int getNumFieldArrays();
+    virtual int getNumFieldArrays();
 
     /**
     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
@@ -185,21 +185,21 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @brief Resizes all of the Field Arrays to have 'size' tuples
     * @param size The number of tuples that each DataArray should contain.
     */
-    void resizeFieldDataArrays(size_t size);
+    virtual void resizeFieldDataArrays(size_t size);
 
     /**
     * @brief Adds/overwrites the data for a named array
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    virtual void addEnsembleData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    virtual IDataArray::Pointer getEnsembleData(const std::string &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -207,16 +207,16 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    virtual IDataArray::Pointer removeEnsembleData(const std::string &name);
 
     /**
      * @brief Removes all the ensemble data
      */
-    void clearEnsembleData();
+    virtual void clearEnsembleData();
 
-    std::list<std::string> getEnsembleArrayNameList();
+    virtual std::list<std::string> getEnsembleArrayNameList();
 
-    int getNumEnsembleArrays();
+    virtual int getNumEnsembleArrays();
 
     DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
 
@@ -236,7 +236,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
 // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Resolution)
 
-	  float getXRes() { return m_Resolution[0];}
+    float getXRes() { return m_Resolution[0];}
     float getYRes() { return m_Resolution[1];}
     float getZRes() { return m_Resolution[2];}
 

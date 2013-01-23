@@ -39,28 +39,9 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "DREAM3DLib/Common/ManagedPointerArray.hpp"
-
-
-
-namespace Detail {
-  /**
- * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
- * when the object goes out of scope.
- */
-  class ScopedFileMonitor
-  {
-    public:
-      ScopedFileMonitor(FILE* f) : m_File(f) {}
-      virtual ~ScopedFileMonitor() { fclose(m_File);}
-    private:
-      FILE* m_File;
-      ScopedFileMonitor(const ScopedFileMonitor&); // Copy Constructor Not Implemented
-      void operator=(const ScopedFileMonitor&); // Operator '=' Not Implemented
-  };
-
-}
-
+#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
 
 
 // -----------------------------------------------------------------------------
@@ -98,7 +79,7 @@ void FindNRingNeighbors::setRegionIds(int g, int r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UniqueTriangleIds_t& FindNRingNeighbors::getNRingTriangles()
+SurfaceMesh::DataStructures::UniqueTriangleIds_t& FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -109,30 +90,35 @@ UniqueTriangleIds_t& FindNRingNeighbors::getNRingTriangles()
 void FindNRingNeighbors::generate()
 {
   assert(m_SurfaceMeshDataContainer != NULL);
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
   // Clear out any previous triangles
   m_NRingTriangles.clear();
 
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
-  Triangle* triangles = trianglesPtr->GetPointer(0);
+  // Get the Triangle List from the Data Container
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
 
-  IDataArray::Pointer node2TrianglePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeTriangles);
-  assert(node2TrianglePtr.get() != NULL);
+  // Make sure we have the proper connectivity built
+  MeshVertLinks::Pointer node2TrianglePtr =sm->getMeshVertLinks();
+  if (node2TrianglePtr.get() == NULL)
+  {
+    sm->buildMeshVertLinks();
+    node2TrianglePtr =sm->getMeshVertLinks();
+  }
 
-  ManagedPointerArray<int>* node2Triangle = ManagedPointerArray<int>::SafePointerDownCast(node2TrianglePtr.get());
+  // Get a reference to our seed triangle
+  SurfaceMesh::DataStructures::Face_t& tri = triangles[m_TriangleId];
 
-
-  Triangle& tri = triangles[m_TriangleId];
-
-
-  bool check0 = tri.nSpin[0] == m_RegionId0 && tri.nSpin[1] == m_RegionId1;
-  bool check1 = tri.nSpin[1] == m_RegionId0 && tri.nSpin[0] == m_RegionId1;
+  // Figure out these boolean values for a sanity check
+  bool check0 = tri.labels[0] == m_RegionId0 && tri.labels[1] == m_RegionId1;
+  bool check1 = tri.labels[1] == m_RegionId0 && tri.labels[0] == m_RegionId1;
 
 #if 1
   if ( check0 == false && check1 == false)
   {
     std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
-    std::cout << "Region Ids are: " << triangles[m_TriangleId].nSpin[0] << " & " << triangles[m_TriangleId].nSpin[1] << std::endl;
+    std::cout << "Region Ids are: " << triangles[m_TriangleId].labels[0] << " & " << triangles[m_TriangleId].labels[1] << std::endl;
     return;
   }
 #endif
@@ -145,24 +131,25 @@ void FindNRingNeighbors::generate()
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
-    UniqueTriangleIds_t lcvTriangles(m_NRingTriangles);
+    SurfaceMesh::DataStructures::UniqueTriangleIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for(UniqueTriangleIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for(SurfaceMesh::DataStructures::UniqueTriangleIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
-      Triangle& t = triangles[*triIter];
+      SurfaceMesh::DataStructures::Face_t& t = triangles[*triIter];
       // For each node, get the triangle ids that the node belongs to
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        ManagedPointerArray<int>::Data_t* tids = node2Triangle->GetPointer(t.node_id[i]);
+        uint16_t tCount = node2TrianglePtr->getNumberOfTriangles(t.verts[i]);
+        int32_t* data = node2TrianglePtr->getTriangleListPointer(t.verts[i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
-        for(size_t t = 0; t < tids->count; ++t)
+        for(uint16_t t = 0; t < tCount; ++t)
         {
-          int tid = tids->data[t];
-          check0 = triangles[tid].nSpin[0] == m_RegionId0 && triangles[tid].nSpin[1] == m_RegionId1;
-          check1 = triangles[tid].nSpin[1] == m_RegionId0 && triangles[tid].nSpin[0] == m_RegionId1;
+          int tid = data[t];
+          check0 = triangles[tid].labels[0] == m_RegionId0 && triangles[tid].labels[1] == m_RegionId1;
+          check1 = triangles[tid].labels[1] == m_RegionId0 && triangles[tid].labels[0] == m_RegionId1;
           if (check0 == true || check1 == true)
           {
             m_NRingTriangles.insert(static_cast<int>(tid) );
@@ -172,6 +159,12 @@ void FindNRingNeighbors::generate()
     }
   }
 
+//  if (m_TriangleId == 1000)
+//  {
+//    std::stringstream ss;
+//    ss << "/tmp/" << m_Ring << "_RingNeighborhood.vtk";
+//    writeVTKFile(ss.str());
+//  }
 
 }
 
@@ -184,8 +177,8 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
 
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<Node>::Pointer nodesPtr = m->getNodes();
-  StructArray<Node>& nodes = *(nodesPtr);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   std::stringstream ss;
@@ -199,7 +192,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
     ss << "Error creating file '" << outputVtkFile << "'";
     return;
   }
-  Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);
+  ScopedFileMonitor vtkFileMonitor(vtkFile);
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
@@ -219,12 +212,12 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    Node& n = nodes[i]; // Get the current Node
+    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
     //  if (m_SurfaceMeshNodeType[i] > 0)
     {
-      pos[0] = static_cast<float>(n.coord[0]);
-      pos[1] = static_cast<float>(n.coord[1]);
-      pos[2] = static_cast<float>(n.coord[2]);
+      pos[0] = static_cast<float>(n.pos[0]);
+      pos[1] = static_cast<float>(n.pos[1]);
+      pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
         MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
@@ -243,7 +236,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<Triangle>& triangles = *(m->getTriangles());
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = m_NRingTriangles.size();
@@ -255,12 +248,12 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   }
   // Write the CELLS Data
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (std::set<TriangleId_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
+  for (std::set<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
   {
-    TriangleId_t tid = *iter;
-    tData[1] = triangles[tid].node_id[0];
-    tData[2] = triangles[tid].node_id[1];
-    tData[3] = triangles[tid].node_id[2];
+    int32_t tid = *iter;
+    tData[1] = triangles[tid].verts[0];
+    tData[2] = triangles[tid].verts[1];
+    tData[3] = triangles[tid].verts[2];
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry

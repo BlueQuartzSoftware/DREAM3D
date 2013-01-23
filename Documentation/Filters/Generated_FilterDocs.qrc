@@ -16,7 +16,6 @@
     <file>GenericFilters/FindSurfaceGrains.html</file>
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
     <file>GenericFilters/DumpCellData.html</file>
-    <file>GenericFilters/CopyCellData.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -96,16 +95,14 @@
     <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
     <!-- ***** SurfaceMeshingFilters ***** -->
-    <file>SurfaceMeshingFilters/GenerateNodeTriangleConnectivity.html</file>
+    <file>SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html</file>
     <file>SurfaceMeshingFilters/LaplacianSmoothing.html</file>
-    <file>SurfaceMeshingFilters/M3CEntireVolume.html</file>
     <file>SurfaceMeshingFilters/M3CSliceBySlice.html</file>
     <file>SurfaceMeshingFilters/MovingFiniteElementSmoothing.html</file>
     <file>SurfaceMeshingFilters/QuickSurfaceMesh.html</file>
     <file>SurfaceMeshingFilters/ReverseTriangleWinding.html</file>
     <file>SurfaceMeshingFilters/SharedGrainFaceFilter.html</file>
     <file>SurfaceMeshingFilters/TriangleNormalFilter.html</file>
-    <file>SurfaceMeshingFilters/VerifyTriangleWinding.html</file>
     <file>SurfaceMeshingFilters/GrainFaceCurvatureFilter.html</file>
 
     <!-- ***** SyntheticBuildingFilters ***** -->

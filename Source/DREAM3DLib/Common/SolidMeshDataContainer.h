@@ -83,10 +83,10 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
 
-    DREAM3D_INSTANCE_PROPERTY(StructArray<Node>::Pointer, Nodes)
+    DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer, Vertices)
     DREAM3D_INSTANCE_PROPERTY(StructArray<Tetrahedron>::Pointer, Tetrahedrons)
 
-	/**
+  /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data

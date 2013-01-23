@@ -127,13 +127,13 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
   }
   else
   {
-    if (sm->getTriangles().get() == NULL)
+    if (sm->getFaces().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
         setErrorCondition(-384);
     }
 
-    if (sm->getNodes().get() == NULL)
+    if (sm->getVertices().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
         setErrorCondition(-384);
@@ -186,8 +186,8 @@ void SurfaceMeshToVtk::execute()
   setErrorCondition(0);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<Node>::Pointer nodesPtr = m->getNodes();
-  StructArray<Node>& nodes = *(nodesPtr);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Make sure we have a node type array or create a default one.
@@ -261,12 +261,12 @@ void SurfaceMeshToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    Node& n = nodes[i]; // Get the current Node
+    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
-      pos[0] = static_cast<float>(n.coord[0]);
-      pos[1] = static_cast<float>(n.coord[1]);
-      pos[2] = static_cast<float>(n.coord[2]);
+      pos[0] = static_cast<float>(n.pos[0]);
+      pos[1] = static_cast<float>(n.pos[1]);
+      pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
         MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
@@ -285,7 +285,7 @@ void SurfaceMeshToVtk::execute()
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<Triangle>& triangles = *(m->getTriangles());
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = triangles.GetNumberOfTuples();
@@ -300,9 +300,9 @@ void SurfaceMeshToVtk::execute()
   for (int j = 0; j < nT; j++)
   {
   //  Triangle& t = triangles[j];
-    tData[1] = triangles[j].node_id[0];
-    tData[2] = triangles[j].node_id[1];
-    tData[3] = triangles[j].node_id[2];
+    tData[1] = triangles[j].verts[0];
+    tData[2] = triangles[j].verts[1];
+    tData[3] = triangles[j].verts[2];
 
     if (m_WriteBinaryFile == true)
     {
@@ -445,7 +445,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 
 
   // Write the Node Type Data to the file
-  StructArray<Node>& nodes = *(getSurfaceMeshDataContainer()->getNodes());
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(getSurfaceMeshDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
  // int swapped;
@@ -674,7 +674,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
 
   // Write the triangle region ids
-  StructArray<Triangle>& triangles = *(getSurfaceMeshDataContainer()->getTriangles());
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
 
   int nT = triangles.GetNumberOfTuples();
   int triangleCount = nT;
@@ -694,26 +694,26 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for(int i = 0; i < nT; ++i)
   {
-    Triangle& t = triangles[i]; // Get the current Node
+    SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
 
     if(m_WriteBinaryFile == true)
     {
-      swapped = t.nSpin[0];
+      swapped = t.labels[0];
       MXA::Endian::FromSystemToBig::convert<int>(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
       if(false == m_WriteConformalMesh)
       {
-        swapped = t.nSpin[1];
+        swapped = t.labels[1];
         MXA::Endian::FromSystemToBig::convert<int>(swapped);
         fwrite(&swapped, sizeof(int), 1, vtkFile);
       }
     }
     else
     {
-      fprintf(vtkFile, "%d\n", t.nSpin[0]);
+      fprintf(vtkFile, "%d\n", t.labels[0]);
       if(false == m_WriteConformalMesh)
       {
-        fprintf(vtkFile, "%d\n", t.nSpin[1]);
+        fprintf(vtkFile, "%d\n", t.labels[1]);
       }
     }
 

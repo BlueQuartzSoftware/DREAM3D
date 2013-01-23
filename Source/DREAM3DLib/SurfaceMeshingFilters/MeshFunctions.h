@@ -54,9 +54,9 @@ class NodeFunctions
 
     static T Distance(Node& n0, Node& n1)
     {
-      T a = n0.coord[0] - n1.coord[0];
-      T b = n0.coord[1] - n1.coord[1];
-      T c = n0.coord[2] - n1.coord[2];
+      T a = n0.pos[0] - n1.pos[0];
+      T b = n0.pos[1] - n1.pos[1];
+      T c = n0.pos[2] - n1.pos[2];
       return sqrt(a * a + b * b + c * c);
     }
 
@@ -82,10 +82,10 @@ class EdgeFunctions
     public:
     virtual ~EdgeFunctions(){}
 
-    static T Length(typename StructArray<Node>::Pointer nodes, Segment* e)
+    static T Length(typename StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes, SurfaceMesh::DataStructures::Edge_t* e)
     {
-      int nid0 = e->node_id[0];
-      int nid1 = e->node_id[1];
+      int nid0 = e->verts[0];
+      int nid1 = e->verts[1];
       return NodeFunctions<Node, T>::Distance( *(nodes->GetPointer(nid0)), *(nodes->GetPointer(nid1)) );
     }
 
@@ -108,12 +108,12 @@ class TriangleFunctions
     static T area(Node &n0, Node &n1, Node &n2)
     {
       double a[3], b[3], c[3];
-      a[0] = n1.coord[0] - n0.coord[0];
-      a[1] = n1.coord[1] - n0.coord[1];
-      a[2] = n1.coord[2] - n0.coord[2];
-      b[0] = n2.coord[0] - n0.coord[0];
-      b[1] = n2.coord[1] - n0.coord[1];
-      b[2] = n2.coord[2] - n0.coord[2];
+      a[0] = n1.pos[0] - n0.pos[0];
+      a[1] = n1.pos[1] - n0.pos[1];
+      a[2] = n1.pos[2] - n0.pos[2];
+      b[0] = n2.pos[0] - n0.pos[0];
+      b[1] = n2.pos[1] - n0.pos[1];
+      b[2] = n2.pos[2] - n0.pos[2];
       c[0] = a[1] * b[2] - a[2] * b[1];
       c[1] = a[2] * b[0] - a[0] * b[2];
       c[2] = a[0] * b[1] - a[1] * b[0];
@@ -138,9 +138,9 @@ class TriangleFunctions
     {
      //  a points from p0 to p1; b is p0 to p2;  c points p1 to p2
       T a[3], b[3], c[3], min, w1, w2, w3;
-      a[0] = n1.coord[0] - n0.coord[0];
-      a[1] = n1.coord[1] - n0.coord[1];
-      a[2] = n1.coord[2] - n0.coord[2];
+      a[0] = n1.pos[0] - n0.pos[0];
+      a[1] = n1.pos[1] - n0.pos[1];
+      a[2] = n1.pos[2] - n0.pos[2];
       T norm = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
       if(norm > 0.0)
       {
@@ -150,9 +150,9 @@ class TriangleFunctions
         a[2] *= rnorm;
       }
       //  std::cout << "MinDIhedral, a: " << a[0] <<" " << a[1] <<" " << a[2] << std::endl ;
-      b[0] = n2.coord[0] - n0.coord[0];
-      b[1] = n2.coord[1] - n0.coord[1];
-      b[2] = n2.coord[2] - n0.coord[2];
+      b[0] = n2.pos[0] - n0.pos[0];
+      b[1] = n2.pos[1] - n0.pos[1];
+      b[2] = n2.pos[2] - n0.pos[2];
       norm = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
       if(norm > 0.0)
       {
@@ -162,9 +162,9 @@ class TriangleFunctions
         b[2] *= rnorm;
       }
       //  std::cout << "MinDIhedral, b: " << b[0] <<" " << b[1] <<" " << b[2] << std::endl ;
-      c[0] = n2.coord[0] - n1.coord[0];
-      c[1] = n2.coord[1] - n1.coord[1];
-      c[2] = n2.coord[2] - n1.coord[2];
+      c[0] = n2.pos[0] - n1.pos[0];
+      c[1] = n2.pos[1] - n1.pos[1];
+      c[2] = n2.pos[2] - n1.pos[2];
       norm = sqrt(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]);
       if(norm > 0.0)
       {
@@ -212,12 +212,12 @@ class TriangleFunctions
       MFE::Vector<T> n(3);
       T a[3], b[3];
 
-      a[0] = n1.coord[0] - n0.coord[0];
-      a[1] = n1.coord[1] - n0.coord[1];
-      a[2] = n1.coord[2] - n0.coord[2];
-      b[0] = n2.coord[0] - n0.coord[0];
-      b[1] = n2.coord[1] - n0.coord[1];
-      b[2] = n2.coord[2] - n0.coord[2];
+      a[0] = n1.pos[0] - n0.pos[0];
+      a[1] = n1.pos[1] - n0.pos[1];
+      a[2] = n1.pos[2] - n0.pos[2];
+      b[0] = n2.pos[0] - n0.pos[0];
+      b[1] = n2.pos[1] - n0.pos[1];
+      b[2] = n2.pos[2] - n0.pos[2];
       n[0] = a[1] * b[2] - a[2] * b[1];
       n[1] = a[2] * b[0] - a[0] * b[2];
       n[2] = a[0] * b[1] - a[1] * b[0];

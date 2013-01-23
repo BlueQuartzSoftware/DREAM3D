@@ -50,12 +50,12 @@
  */
 class CalculateCentroidsImpl
 {
-    StructArray<Node>::Pointer m_Nodes;
-    StructArray<Triangle>::Pointer m_Triangles;
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer m_Nodes;
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer m_Triangles;
     double* m_Centroids;
 
   public:
-    CalculateCentroidsImpl(StructArray<Node>::Pointer nodes, StructArray<Triangle>::Pointer triangles, double* centroids) :
+    CalculateCentroidsImpl(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes, StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles, double* centroids) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Centroids(centroids)
@@ -65,14 +65,14 @@ class CalculateCentroidsImpl
     void generate(size_t start, size_t end) const
     {
 
-      Node* nodes = m_Nodes->GetPointer(0);
-      Triangle* triangles = m_Triangles->GetPointer(0);
+      SurfaceMesh::DataStructures::Vert_t* nodes = m_Nodes->GetPointer(0);
+      SurfaceMesh::DataStructures::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
-        m_Centroids[i*3]  = (nodes[triangles[i].node_id[0]].coord[0] + nodes[triangles[i].node_id[1]].coord[0] + nodes[triangles[i].node_id[2]].coord[0])/3.0;
-        m_Centroids[i*3 + 1] = (nodes[triangles[i].node_id[0]].coord[1] + nodes[triangles[i].node_id[1]].coord[1] + nodes[triangles[i].node_id[2]].coord[1])/3.0;
-        m_Centroids[i*3 + 2]  = (nodes[triangles[i].node_id[0]].coord[2] + nodes[triangles[i].node_id[1]].coord[2] + nodes[triangles[i].node_id[2]].coord[2])/3.0;
+        m_Centroids[i*3]  = (nodes[triangles[i].verts[0]].pos[0] + nodes[triangles[i].verts[1]].pos[0] + nodes[triangles[i].verts[2]].pos[0])/3.0;
+        m_Centroids[i*3 + 1] = (nodes[triangles[i].verts[0]].pos[1] + nodes[triangles[i].verts[1]].pos[1] + nodes[triangles[i].verts[2]].pos[1])/3.0;
+        m_Centroids[i*3 + 2]  = (nodes[triangles[i].verts[0]].pos[2] + nodes[triangles[i].verts[1]].pos[2] + nodes[triangles[i].verts[2]].pos[2])/3.0;
       }
     }
 
@@ -140,14 +140,14 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fie
   else
   {
       // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
@@ -189,9 +189,9 @@ void TriangleCentroidFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

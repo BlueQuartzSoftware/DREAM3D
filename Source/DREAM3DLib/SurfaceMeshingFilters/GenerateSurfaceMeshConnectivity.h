@@ -37,8 +37,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _CopyCellData_H_
-#define _CopyCellData_H_
+#ifndef _GenerateSurfaceMeshConnectivity_H_
+#define _GenerateSurfaceMeshConnectivity_H_
 
 #include <string>
 
@@ -49,32 +49,24 @@
 
 
 /**
- * @class CopyCellData CopyCellData.h DREAM3DLib/GenericFilters/CopyCellData.h
- * @brief This filter will simply copy the grain Ids to the Phase Ids Array. In the future we should allow the user
- * to select which is the source and which is the destination.
- * @author Mike Jackson
- * @date Jan 21, 2013
+ * @class GenerateSurfaceMeshConnectivity GenerateSurfaceMeshConnectivity.h DREAM3DLib/SurfaceMeshing/GenerateSurfaceMeshConnectivity.h
+ * @brief
+ * @author
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CopyCellData : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(CopyCellData);
-    DREAM3D_STATIC_NEW_MACRO(CopyCellData);
-    DREAM3D_TYPE_MACRO_SUPER(CopyCellData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenerateSurfaceMeshConnectivity)
+    DREAM3D_STATIC_NEW_MACRO(GenerateSurfaceMeshConnectivity)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateSurfaceMeshConnectivity, AbstractFilter)
 
-    virtual ~CopyCellData();
-
-
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    virtual ~GenerateSurfaceMeshConnectivity();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-
+     DREAM3D_INSTANCE_PROPERTY(bool, GenerateVertexTriangleLists)
+     DREAM3D_INSTANCE_PROPERTY(bool, GenerateTriangleNeighbors)
 
 
     /**
@@ -82,13 +74,13 @@ class DREAM3DLib_EXPORT CopyCellData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Copy Grain Ids to Phase Ids Filter"; }
+    virtual const std::string getHumanLabel() { return "Generate Surface Mesh Connectivity"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -114,7 +106,7 @@ class DREAM3DLib_EXPORT CopyCellData : public AbstractFilter
     virtual void preflight();
 
   protected:
-    CopyCellData();
+    GenerateSurfaceMeshConnectivity();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -127,11 +119,9 @@ class DREAM3DLib_EXPORT CopyCellData : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_GrainIds;
-    int32_t* m_CellPhases;
 
-    CopyCellData(const CopyCellData&); // Copy Constructor Not Implemented
-    void operator=(const CopyCellData&); // Operator '=' Not Implemented
+    GenerateSurfaceMeshConnectivity(const GenerateSurfaceMeshConnectivity&); // Copy Constructor Not Implemented
+    void operator=(const GenerateSurfaceMeshConnectivity&); // Operator '=' Not Implemented
 };
 
-#endif /* _CopyCellData_H_ */
+#endif /* _GenerateSurfaceMeshConnectivity_H_ */

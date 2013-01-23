@@ -112,8 +112,8 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
       setErrorCondition(-384);
   }
   else {
-    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-    StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
@@ -304,7 +304,7 @@ int M3CEntireVolume::createMesh()
   neighbors->initializeWithZeros();
   StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3*NS, DREAM3D::CellData::SurfaceMeshFaces);
   squares->initializeWithZeros();
-  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
 
   DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodeType);
@@ -351,7 +351,7 @@ int M3CEntireVolume::createMesh()
 
   // memory allocation for triangle...
 //  triangle = (patch *)malloc(nTriangle * sizeof(patch));
-  StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(nTriangle, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangle, DREAM3D::CellData::SurfaceMeshTriangles);
   triangles->initializeWithZeros();
   sm->setTriangles(triangles);
   Triangle* triangle = triangles.get()->GetPointer(0);
@@ -393,7 +393,7 @@ int M3CEntireVolume::createMesh()
   notifyStatusMessage(ss.str());
 
   // Create new shortend arrays for the Triangles and the Nodes and NodeKind
-  StructArray<Node>::Pointer nodes = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
   nodes->initializeWithZeros();
   DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodeType);
 
@@ -418,9 +418,9 @@ int M3CEntireVolume::createMesh()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Pointer new_ids_for_nodes,
                                                                  DataArray<int8_t>::Pointer nodeKindPtr,
-                                                                StructArray<Node>::Pointer shortNodes,
-                                                                StructArray<Node>::Pointer vertices,
-                                                                StructArray<Triangle>::Pointer triangles,
+                                                                StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer shortNodes,
+                                                                StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices,
+                                                                StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles,
                                                                 StructArray<Segment>::Pointer faceEdges,
                                                                 StructArray<ISegment>::Pointer internalEdges,
                                                                 int maxGrainId)

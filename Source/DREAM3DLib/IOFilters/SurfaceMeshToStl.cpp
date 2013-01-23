@@ -114,12 +114,12 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
       setErrorCondition(-384);
   }
   else {
-    if (sm->getTriangles().get() == NULL)
+    if (sm->getFaces().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
         setErrorCondition(-384);
     }
-    if (sm->getNodes().get() == NULL)
+    if (sm->getVertices().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
         setErrorCondition(-384);
@@ -172,10 +172,10 @@ void SurfaceMeshToStl::execute()
       return;
   }
 
-  StructArray<Node>::Pointer nodesPtr = sm->getNodes();
-  Node* nodes = nodesPtr->GetPointer(0);
-  StructArray<Triangle>::Pointer trianglePtr = sm->getTriangles();
-  Triangle* triangles = trianglePtr->GetPointer(0);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = sm->getVertices();
+  SurfaceMesh::DataStructures::Vert_t* nodes = nodesPtr->GetPointer(0);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglePtr = sm->getFaces();
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglePtr->GetPointer(0);
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
@@ -184,8 +184,8 @@ void SurfaceMeshToStl::execute()
   {
     // Read from the Input Triangles Temp File
 
-    uniqueSpins.insert(triangles[i].nSpin[0]);
-    uniqueSpins.insert(triangles[i].nSpin[1]);
+    uniqueSpins.insert(triangles[i].labels[0]);
+    uniqueSpins.insert(triangles[i].labels[1]);
   }
 
 //  std::map<int, int> nodeIdToIndex;
@@ -230,19 +230,19 @@ void SurfaceMeshToStl::execute()
     {
       char winding = 2; // 2 = Do NOT write this triangle
       // Get the true indices of the 3 nodes
-      int nId0 = triangles[t].node_id[0];
-      int nId1 = triangles[t].node_id[1];
-      int nId2 = triangles[t].node_id[2];
+      int nId0 = triangles[t].verts[0];
+      int nId1 = triangles[t].verts[1];
+      int nId2 = triangles[t].verts[2];
 
-      vert1[0] = static_cast<float>(nodes[nId0].coord[0]);
-      vert1[1] = static_cast<float>(nodes[nId0].coord[1]);
-      vert1[2] = static_cast<float>(nodes[nId0].coord[2]);
+      vert1[0] = static_cast<float>(nodes[nId0].pos[0]);
+      vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
+      vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (triangles[t].nSpin[0] == spin)
+      if (triangles[t].labels[0] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (triangles[t].nSpin[1] == spin)
+      else if (triangles[t].labels[1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
@@ -255,13 +255,13 @@ void SurfaceMeshToStl::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1].coord[0]);
-      vert2[1] = static_cast<float>(nodes[nId1].coord[1]);
-      vert2[2] = static_cast<float>(nodes[nId1].coord[2]);
+      vert2[0] = static_cast<float>(nodes[nId1].pos[0]);
+      vert2[1] = static_cast<float>(nodes[nId1].pos[1]);
+      vert2[2] = static_cast<float>(nodes[nId1].pos[2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2].coord[0]);
-      vert3[1] = static_cast<float>(nodes[nId2].coord[1]);
-      vert3[2] = static_cast<float>(nodes[nId2].coord[2]);
+      vert3[0] = static_cast<float>(nodes[nId2].pos[0]);
+      vert3[1] = static_cast<float>(nodes[nId2].pos[1]);
+      vert3[2] = static_cast<float>(nodes[nId2].pos[2]);
 
       //
       // Compute the normal

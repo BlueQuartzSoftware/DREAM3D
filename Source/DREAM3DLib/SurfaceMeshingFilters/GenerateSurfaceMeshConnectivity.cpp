@@ -33,7 +33,11 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "CopyCellData.h"
+/*
+ * Your License or Copyright Information can go here
+ */
+
+#include "GenerateSurfaceMeshConnectivity.h"
 
 
 
@@ -41,12 +45,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CopyCellData::CopyCellData() :
+GenerateSurfaceMeshConnectivity::GenerateSurfaceMeshConnectivity() :
   AbstractFilter(),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_GrainIds(NULL),
-  m_CellPhases(NULL)
+  m_GenerateVertexTriangleLists(true),
+  m_GenerateTriangleNeighbors(true)
 {
   setupFilterParameters();
 }
@@ -54,16 +56,35 @@ CopyCellData::CopyCellData() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CopyCellData::~CopyCellData()
+GenerateSurfaceMeshConnectivity::~GenerateSurfaceMeshConnectivity()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyCellData::setupFilterParameters()
+void GenerateSurfaceMeshConnectivity::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+  /* Place all your option initialization code here */
+
+  /*   For a simple true/false boolean use this code*/
+   {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Genereate Per Vertex Triangle List");
+    parameter->setPropertyName("GenerateVertexTriangleLists");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+   {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Genereate Triangle Neighbors List");
+    parameter->setPropertyName("GenerateTriangleNeighbors");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
 
   setFilterParameters(parameters);
 }
@@ -71,32 +92,50 @@ void CopyCellData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+   writer->writeValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists() );
+   writer->writeValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors() );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
+  }
+  else
+  {
+    // We MUST have Nodes
+    if(sm->getVertices().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+      setErrorCondition(-384);
+    }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-
+    // We MUST have Triangles defined also.
+    if(sm->getFaces().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
+      setErrorCondition(-385);
+    }
+  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyCellData::preflight()
+void GenerateSurfaceMeshConnectivity::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -106,7 +145,7 @@ void CopyCellData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyCellData::execute()
+void GenerateSurfaceMeshConnectivity::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -119,18 +158,21 @@ void CopyCellData::execute()
     return;
   }
   setErrorCondition(0);
-
-  /* Place all your code to execute your filter here. */
-  int64_t totalPoints = m->getTotalPoints();
-  m->resizeFieldDataArrays(1);
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)
   {
     return;
   }
-
-  // raw copy the data from the Grain Ids to the Cell Phase ids. In the future both arrays will be user selectable.
-  ::memcpy(m_CellPhases, m_GrainIds, totalPoints * sizeof(int32_t));
+  // We need the vertex->Triangle Lists to build the Triangle Neighbor lists so if either
+  // of those are true then build the vertex->triangle lists
+  if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
+  {
+    getSurfaceMeshDataContainer()->buildMeshVertLinks();
+  }
+  if (m_GenerateTriangleNeighbors == true)
+  {
+    getSurfaceMeshDataContainer()->buildMeshTriangleNeighborLists();
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

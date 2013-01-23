@@ -41,6 +41,7 @@
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
 
+#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
@@ -220,7 +221,7 @@ void NodesTrianglesToStl::execute()
     addErrorMessage(em);
     return;
   }
-
+  ScopedFileMonitor nodesFilePtr(nodesFile);
   //  how many nodes are in the file
   int nNodes = 0;
   fscanf(nodesFile, "%d", &nNodes);
@@ -239,6 +240,7 @@ void NodesTrianglesToStl::execute()
     addErrorMessage(em);
     return;
   }
+  ScopedFileMonitor triFilePtr(triFile);
   // how many triangles are in the file
   int nTriangles = 0;
   fscanf(triFile, "%d", &nTriangles);
@@ -254,8 +256,8 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   std::map<int, int> nodeIdToIndex;
-  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
-  Node* nodes = nodesPtr->GetPointer(0);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  SurfaceMesh::DataStructures::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::CellData::SurfaceMeshNodeType);
 //  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
@@ -269,11 +271,10 @@ void NodesTrianglesToStl::execute()
     }
     nodeIdToIndex[nodeId] = i;
    // nodeKindArray[nodeId] = nodeKind;
-    nodes[nodeId].coord[0] = pos[0];
-    nodes[nodeId].coord[1] = pos[1];
-    nodes[nodeId].coord[2] = pos[2];
+    nodes[nodeId].pos[0] = pos[0];
+    nodes[nodeId].pos[1] = pos[1];
+    nodes[nodeId].pos[2] = pos[2];
   }
-  fclose(nodesFile);
 
   // column 1 = triangle id, starts from zero
   // column 2 to 4 = node1, node2 and node3 of individual triangles
@@ -281,8 +282,8 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  StructArray<Triangle>::Pointer trianglePtr = StructArray<Triangle>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
-  Triangle* triangles = trianglePtr->GetPointer(0);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglePtr = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglePtr->GetPointer(0);
 
   // Store all the unique Spins
   std::set<int> uniqueSpins;
@@ -290,15 +291,15 @@ void NodesTrianglesToStl::execute()
   {
     // Read from the Input Triangles Temp File
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
-    triangles[i].node_id[0] = tData[1];
-    triangles[i].node_id[1] = tData[2];
-    triangles[i].node_id[2] = tData[3];
-    triangles[i].nSpin[0] = tData[7];
-    triangles[i].nSpin[1] = tData[8];
+    triangles[i].verts[0] = tData[1];
+    triangles[i].verts[1] = tData[2];
+    triangles[i].verts[2] = tData[3];
+    triangles[i].labels[0] = tData[7];
+    triangles[i].labels[1] = tData[8];
     uniqueSpins.insert(tData[7]);
     uniqueSpins.insert(tData[8]);
   }
-  fclose(triFile);
+
 
   unsigned char data[50];
   float* normal = (float*)data;
@@ -324,6 +325,7 @@ void NodesTrianglesToStl::execute()
     ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
     std::string filename = ss.str();
     FILE* f = fopen(filename.c_str(), "wb");
+    ScopedFileMonitor fPtr(f);
 
     ss.str("");
     ss << "Writing STL for Grain Id " << spin;
@@ -340,19 +342,19 @@ void NodesTrianglesToStl::execute()
     {
       char winding = 2; // 2 = Do NOT write this triangle
       // Get the true indices of the 3 nodes
-      int nId0 = nodeIdToIndex[triangles[t].node_id[0]];
-      int nId1 = nodeIdToIndex[triangles[t].node_id[1]];
-      int nId2 = nodeIdToIndex[triangles[t].node_id[2]];
+      int nId0 = nodeIdToIndex[triangles[t].verts[0]];
+      int nId1 = nodeIdToIndex[triangles[t].verts[1]];
+      int nId2 = nodeIdToIndex[triangles[t].verts[2]];
 
-      vert1[0] = static_cast<float>(nodes[nId0].coord[0]);
-      vert1[1] = static_cast<float>(nodes[nId0].coord[1]);
-      vert1[2] = static_cast<float>(nodes[nId0].coord[2]);
+      vert1[0] = static_cast<float>(nodes[nId0].pos[0]);
+      vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
+      vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (triangles[t].nSpin[0] == spin)
+      if (triangles[t].labels[0] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (triangles[t].nSpin[1] == spin)
+      else if (triangles[t].labels[1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices
@@ -365,13 +367,13 @@ void NodesTrianglesToStl::execute()
         continue; // We do not match either spin so move to the next triangle
       }
 
-      vert2[0] = static_cast<float>(nodes[nId1].coord[0]);
-      vert2[1] = static_cast<float>(nodes[nId1].coord[1]);
-      vert2[2] = static_cast<float>(nodes[nId1].coord[2]);
+      vert2[0] = static_cast<float>(nodes[nId1].pos[0]);
+      vert2[1] = static_cast<float>(nodes[nId1].pos[1]);
+      vert2[2] = static_cast<float>(nodes[nId1].pos[2]);
 
-      vert3[0] = static_cast<float>(nodes[nId2].coord[0]);
-      vert3[1] = static_cast<float>(nodes[nId2].coord[1]);
-      vert3[2] = static_cast<float>(nodes[nId2].coord[2]);
+      vert3[0] = static_cast<float>(nodes[nId2].pos[0]);
+      vert3[1] = static_cast<float>(nodes[nId2].pos[1]);
+      vert3[2] = static_cast<float>(nodes[nId2].pos[2]);
 
       //
       // Compute the normal
@@ -401,7 +403,6 @@ void NodesTrianglesToStl::execute()
       }
       triCount++;
     }
-    fclose(f);
     err = writeNumTrianglesToFile(filename, triCount);
   }
 

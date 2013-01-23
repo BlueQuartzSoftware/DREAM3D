@@ -44,7 +44,7 @@ Plane::Plane(VectorType& normal, VectorType& x)
   ensure_invariant();
 }
 
-Plane::Plane(VectorType& normal, Node& x) :
+Plane::Plane(VectorType& normal, SurfaceMesh::DataStructures::Vert_t& x) :
 m_normal(normal),
 m_center(x),
 m_d(normal.dot(x))

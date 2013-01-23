@@ -59,6 +59,8 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshTriangleNeighbors.hpp"
 
 
 /**
@@ -85,8 +87,15 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(StructArray<Node>::Pointer, Nodes)
-    DREAM3D_INSTANCE_PROPERTY(StructArray<Triangle>::Pointer, Triangles)
+    DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer, Faces)
+
+    void buildMeshVertLinks();
+    void buildMeshTriangleNeighborLists();
+
+    MeshVertLinks::Pointer getMeshVertLinks();
+    MeshTriangleNeighbors::Pointer getMeshTriangleNeighborLists();
+
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -229,6 +238,9 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      std::map<std::string, IDataArray::Pointer> m_CellData;
      std::map<std::string, IDataArray::Pointer> m_FieldData;
      std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+
+     MeshVertLinks::Pointer m_MeshVertLinks;
+     MeshTriangleNeighbors::Pointer m_TriangleNeighbors;
 
      SurfaceMeshDataContainer(const SurfaceMeshDataContainer&);
      void operator =(const SurfaceMeshDataContainer&);

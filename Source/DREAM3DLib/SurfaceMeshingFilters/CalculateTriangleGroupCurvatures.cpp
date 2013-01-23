@@ -107,12 +107,15 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
 // -----------------------------------------------------------------------------
 void CalculateTriangleGroupCurvatures::operator()() const
 {
-  StructArray<Triangle>::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getTriangles();
-  Triangle* triangles = trianglesPtr->GetPointer(0);
 
+  // Get the Triangles Array
+  SurfaceMesh::DataStructures::FaceList_t::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getFaces();
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
+
+  // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
-  //  size_t totalTriangles = m_SurfaceMeshDataContainer->getTriangles()->GetNumberOfTuples();
 
+  // Make Sure we have triangle centroids calculated
   IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleCentroids);
   if (NULL == centroidPtr.get())
   {
@@ -121,6 +124,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   }
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
 
+  // Make sure we have triangle normals calculated
   IDataArray::Pointer normalPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleNormals);
   if (NULL == normalPtr.get())
   {
@@ -129,28 +133,19 @@ void CalculateTriangleGroupCurvatures::operator()() const
   }
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
 
-#if 0
-  IDataArray::Pointer grainFaceIdPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshGrainFaceId);
-  if (NULL == grainFaceIdPtr.get())
-  {
-    std::cout << "Triangle Grain Face Ids are required for this algorithm" << std::endl;
-    return;
-  }
-  DataArray<int32_t>* grainFaceIds = DataArray<int32_t>::SafePointerDownCast(grainFaceIdPtr.get());
-#endif
 
-  Triangle& tri = triangles[m_TriangleIds[0]];
+  SurfaceMesh::DataStructures::Face_t& tri = triangles[m_TriangleIds[0]];
   int grain0 = 0;
   int grain1 = 0;
-  if (tri.nSpin[0] < tri.nSpin[1])
+  if (tri.labels[0] < tri.labels[1])
   {
-    grain0 = tri.nSpin[0];
-    grain1 = tri.nSpin[1];
+    grain0 = tri.labels[0];
+    grain1 = tri.labels[1];
   }
   else
   {
-    grain0 = tri.nSpin[1];
-    grain1 = tri.nSpin[0];
+    grain0 = tri.labels[1];
+    grain1 = tri.labels[0];
   }
 
   bool computeGaussian = (m_GaussianCurvature.get() != NULL);
@@ -171,7 +166,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
     nRingNeighborAlg->generate();
 
-    UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
+    SurfaceMesh::DataStructures::UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     assert(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
@@ -318,7 +313,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, UniqueTriangleIds_t &triPatch,
+DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, SurfaceMesh::DataStructures::UniqueTriangleIds_t &triPatch,
                                                                               double* data,
                                                                               const std::string &name) const
 {

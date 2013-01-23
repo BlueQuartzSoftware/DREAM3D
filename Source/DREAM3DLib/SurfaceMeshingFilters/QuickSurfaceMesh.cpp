@@ -82,11 +82,11 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
   }
   else
   {
-    StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-    StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
 
-    sm->setNodes(vertices);
-    sm->setTriangles(triangles);
+    sm->setVertices(vertices);
+    sm->setFaces(triangles);
   }
 }
 
@@ -439,10 +439,10 @@ void QuickSurfaceMesh::execute()
     }
   }
 
-  StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(nodeCount, DREAM3D::CellData::SurfaceMeshNodes);
-  StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(triangleCount, DREAM3D::CellData::SurfaceMeshTriangles);
-  Node* vertex = vertices.get()->GetPointer(0);
-  Triangle* triangle = triangles.get()->GetPointer(0);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nodeCount, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(triangleCount, DREAM3D::CellData::SurfaceMeshTriangles);
+  SurfaceMesh::DataStructures::Vert_t* vertex = vertices.get()->GetPointer(0);
+  SurfaceMesh::DataStructures::Face_t* triangle = triangles.get()->GetPointer(0);
 
   triangleCount = 0;
 
@@ -460,114 +460,114 @@ void QuickSurfaceMesh::execute()
       if(i == 0)
       {
         nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId2]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId2]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId3]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
         nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId4]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-        triangle[triangleCount].node_id[0] = m_NodeIds[nodeId1];
-        triangle[triangleCount].node_id[1] = m_NodeIds[nodeId2];
-        triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-        triangle[triangleCount].nSpin[1] = -1;
+        triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+        triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+        triangle[triangleCount].labels[0] = m_GrainIds[point];
+        triangle[triangleCount].labels[1] = -1;
 
         triangleCount++;
 
-        triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-        triangle[triangleCount].node_id[1] = m_NodeIds[nodeId4];
-        triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-        triangle[triangleCount].nSpin[1] = -1;
+        triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+        triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+        triangle[triangleCount].labels[0] = m_GrainIds[point];
+        triangle[triangleCount].labels[1] = -1;
 
         triangleCount++;
       }
       if(j == 0)
       {
         nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId2]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId2]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId3]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
         nodeId4 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId4]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId4]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-        triangle[triangleCount].node_id[0] = m_NodeIds[nodeId1];
-        triangle[triangleCount].node_id[1] = m_NodeIds[nodeId3];
-        triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
-        triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-        triangle[triangleCount].nSpin[1] = -1;
+        triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+        triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+        triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+        triangle[triangleCount].labels[0] = m_GrainIds[point];
+        triangle[triangleCount].labels[1] = -1;
 
         triangleCount++;
 
-        triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-        triangle[triangleCount].node_id[1] = m_NodeIds[nodeId3];
-        triangle[triangleCount].node_id[2] = m_NodeIds[nodeId4];
-        triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
-        triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+        triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+        triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+        triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
+        triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
+        triangle[triangleCount].labels[1] = m_GrainIds[point];
 
         triangleCount++;
       }
       if(k == 0)
       {
         nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId2]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId2]].coord[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId3 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].coord[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId3]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId3]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[2] = (k*zRes) - (zRes/2.0);
 
         nodeId4 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId4]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId4]].coord[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[2] = (k*zRes) - (zRes/2.0);
 
-        triangle[triangleCount].node_id[0] = m_NodeIds[nodeId1];
-        triangle[triangleCount].node_id[1] = m_NodeIds[nodeId2];
-        triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
-        triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+        triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+        triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+        triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
+        triangle[triangleCount].labels[1] = m_GrainIds[point];
 
         triangleCount++;
 
-        triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-        triangle[triangleCount].node_id[1] = m_NodeIds[nodeId4];
-        triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
-        triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+        triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+        triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+        triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
+        triangle[triangleCount].labels[1] = m_GrainIds[point];
 
         triangleCount++;
       }
@@ -576,114 +576,114 @@ void QuickSurfaceMesh::execute()
         if(i == (xP-1))
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId2]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId4]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId1];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-          triangle[triangleCount].nSpin[1] = -1;
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
+          triangle[triangleCount].labels[0] = m_GrainIds[point];
+          triangle[triangleCount].labels[1] = -1;
 
           triangleCount++;
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-          triangle[triangleCount].nSpin[1] = -1;
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+          triangle[triangleCount].labels[0] = m_GrainIds[point];
+          triangle[triangleCount].labels[1] = -1;
 
           triangleCount++;
         }
         if(j == (yP-1))
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId1];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-          triangle[triangleCount].nSpin[1] = -1;
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
+          triangle[triangleCount].labels[0] = m_GrainIds[point];
+          triangle[triangleCount].labels[1] = -1;
 
           triangleCount++;
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-          triangle[triangleCount].nSpin[1] = -1;
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+          triangle[triangleCount].labels[0] = m_GrainIds[point];
+          triangle[triangleCount].labels[1] = -1;
 
           triangleCount++;
         }
         if(k == (zP-1))
         {
           nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId1];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-          triangle[triangleCount].nSpin[1] = -1;
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
+          triangle[triangleCount].labels[0] = m_GrainIds[point];
+          triangle[triangleCount].labels[1] = -1;
 
           triangleCount++;
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId4];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[point];
-          triangle[triangleCount].nSpin[1] = -1;
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId4];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+          triangle[triangleCount].labels[0] = m_GrainIds[point];
+          triangle[triangleCount].labels[1] = -1;
 
           triangleCount++;
         }
@@ -693,114 +693,114 @@ void QuickSurfaceMesh::execute()
         if(m_GrainIds[point] != m_GrainIds[neigh1])
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId2]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId4]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
-          triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+          triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
+          triangle[triangleCount].labels[1] = m_GrainIds[point];
 
           triangleCount++;
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[neigh1];
-          triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+          triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
+          triangle[triangleCount].labels[1] = m_GrainIds[point];
 
           triangleCount++;
         }
         if(m_GrainIds[point] != m_GrainIds[neigh2])
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[neigh2];
-          triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+          triangle[triangleCount].labels[0] = m_GrainIds[neigh2];
+          triangle[triangleCount].labels[1] = m_GrainIds[point];
 
           triangleCount++;
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[neigh2];
-          triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+          triangle[triangleCount].labels[0] = m_GrainIds[neigh2];
+          triangle[triangleCount].labels[1] = m_GrainIds[point];
 
           triangleCount++;
         }
         if(m_GrainIds[point] != m_GrainIds[neigh3])
         {
           nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].coord[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].coord[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].coord[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[neigh3];
-          triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+          triangle[triangleCount].labels[0] = m_GrainIds[neigh3];
+          triangle[triangleCount].labels[1] = m_GrainIds[point];
 
           triangleCount++;
 
-          triangle[triangleCount].node_id[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].node_id[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].node_id[2] = m_NodeIds[nodeId4];
-          triangle[triangleCount].nSpin[0] = m_GrainIds[neigh3];
-          triangle[triangleCount].nSpin[1] = m_GrainIds[point];
+          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+          triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
+          triangle[triangleCount].labels[0] = m_GrainIds[neigh3];
+          triangle[triangleCount].labels[1] = m_GrainIds[point];
 
           triangleCount++;
         }
@@ -809,8 +809,8 @@ void QuickSurfaceMesh::execute()
     }
   }
 
-  sm->setTriangles(triangles);
-  sm->setNodes(vertices);
+  sm->setFaces(triangles);
+  sm->setVertices(vertices);
 
   notifyStatusMessage("Complete");
 }

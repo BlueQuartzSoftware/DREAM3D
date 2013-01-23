@@ -1,7 +1,7 @@
 #include "TriangleOps.h"
 
 #include "DREAM3DLib/Common/MatrixMath.h"
-#include "DREAM3DLib/Common/ManagedPointerArray.hpp"
+#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 
 // -----------------------------------------------------------------------------
@@ -19,70 +19,30 @@ TriangleOps::~TriangleOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer* m,
-                                                        StructArray<Triangle>::Pointer trianglesPtr,
-                                                        int32_t triangleIndex,
-                                                        int32_t label)
-{
-  IDataArray::Pointer edgeTrianglePtr = m->getCellData(DREAM3D::CellData::SurfaceMeshEdgeTriangles);
-  ManagedPointerArray<int>* edgeTriangles = ManagedPointerArray<int>::SafePointerDownCast(edgeTrianglePtr.get());
-
-
-  std::vector<int32_t> adjacentTris;
-
-  StructArray<Triangle>& triangles = *(trianglesPtr.get());
-  Triangle& triangle = triangles[triangleIndex];
-  // Iterate over the 3 Edges of the triangle
-  for (int i = 0; i < 3; ++i)
-  {
-    // Get the index of the edge data from the triangle
-    int32_t edge_id = triangle.e_id[i];
-    // Now lookup the number of triangles for that particular edge
-    ManagedPointerArray<int32_t>::Data_t* edgeTriangleData = edgeTriangles->GetPointer(edge_id);
-    for(size_t t = 0; t < edgeTriangleData->count; ++t)
-    {
-      Triangle& tri = triangles[edgeTriangleData->data[t]];
-      if ( (tri.nSpin[0] == label || tri.nSpin[1] == label)  && (edgeTriangleData->data[t] != triangleIndex) )
-      {
-        //  std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
-        adjacentTris.push_back(edgeTriangleData->data[t]);
-      }
-    }
-
-
-
-  }
-
-  return adjacentTris;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(Triangle& triangle, int ids[4], int32_t label)
+void TriangleOps::getWindingIndices4(SurfaceMesh::DataStructures::Face_t& triangle, int ids[4], int32_t label)
 {
   int idx = TriangleOps::getLabelIndex(triangle, label);
 
   if (idx == 1)
   {
-    ids[0] = triangle.node_id[2];
-    ids[1] = triangle.node_id[1];
-    ids[2] = triangle.node_id[0];
-    ids[3] = triangle.node_id[2];
+    ids[0] = triangle.verts[2];
+    ids[1] = triangle.verts[1];
+    ids[2] = triangle.verts[0];
+    ids[3] = triangle.verts[2];
   }
   else
   {
-    ids[0] = triangle.node_id[0];
-    ids[1] = triangle.node_id[1];
-    ids[2] = triangle.node_id[2];
-    ids[3] = triangle.node_id[0];
+    ids[0] = triangle.verts[0];
+    ids[1] = triangle.verts[1];
+    ids[2] = triangle.verts[2];
+    ids[3] = triangle.verts[0];
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(Triangle& source, Triangle& tri, int32_t label)
+bool TriangleOps::verifyWinding(SurfaceMesh::DataStructures::Face_t &source, SurfaceMesh::DataStructures::Face_t &tri, int32_t label)
 {
   int ids[4];
   int nids[4];
@@ -125,31 +85,31 @@ bool TriangleOps::verifyWinding(Triangle& source, Triangle& tri, int32_t label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleOps::getLabelIndex(Triangle& t, int label)
+int TriangleOps::getLabelIndex(SurfaceMesh::DataStructures::Face_t &t, int label)
 {
-  if (label == t.nSpin[0]) return 0;
-  if (label == t.nSpin[1]) return 1;
+  if (label == t.labels[0]) return 0;
+  if (label == t.labels[1]) return 1;
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> TriangleOps::getNodeIndices(Triangle& t, int label)
+std::vector<int> TriangleOps::getNodeIndices(SurfaceMesh::DataStructures::Face_t &t, int label)
 {
   std::vector<int > tNodes(3);
   int idx = TriangleOps::getLabelIndex(t, label);
   if (idx == 1)
   {
-    tNodes[0] = t.node_id[2];
-    tNodes[1] = t.node_id[1];
-    tNodes[2] = t.node_id[0];
+    tNodes[0] = t.verts[2];
+    tNodes[1] = t.verts[1];
+    tNodes[2] = t.verts[0];
   }
   else
   {
-    tNodes[0] = t.node_id[0];
-    tNodes[1] = t.node_id[1];
-    tNodes[2] = t.node_id[2];
+    tNodes[0] = t.verts[0];
+    tNodes[1] = t.verts[1];
+    tNodes[2] = t.verts[2];
   }
   return tNodes;
 }
@@ -157,17 +117,17 @@ std::vector<int> TriangleOps::getNodeIndices(Triangle& t, int label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::flipWinding(Triangle& t)
+void TriangleOps::flipWinding(SurfaceMesh::DataStructures::Face_t &t)
 {
-  int tmp = t.node_id[0];
-  t.node_id[0] = t.node_id[2];
-  t.node_id[2] = tmp;
+  int tmp = t.verts[0];
+  t.verts[0] = t.verts[2];
+  t.verts[2] = tmp;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorType TriangleOps::computeNormal(Node& n0, Node& n1, Node& n2)
+VectorType TriangleOps::computeNormal(SurfaceMesh::DataStructures::Vert_t& n0, SurfaceMesh::DataStructures::Vert_t& n1, SurfaceMesh::DataStructures::Vert_t& n2)
 {
   double vert0[3];
   double vert1[3];
@@ -176,17 +136,17 @@ VectorType TriangleOps::computeNormal(Node& n0, Node& n1, Node& n2)
   double w[3];
   double normal[3];
 
-  vert0[0] = static_cast<float>(n0.coord[0]);
-  vert0[1] = static_cast<float>(n0.coord[1]);
-  vert0[2] = static_cast<float>(n0.coord[2]);
+  vert0[0] = static_cast<float>(n0.pos[0]);
+  vert0[1] = static_cast<float>(n0.pos[1]);
+  vert0[2] = static_cast<float>(n0.pos[2]);
 
-  vert1[0] = static_cast<float>(n1.coord[0]);
-  vert1[1] = static_cast<float>(n1.coord[1]);
-  vert1[2] = static_cast<float>(n1.coord[2]);
+  vert1[0] = static_cast<float>(n1.pos[0]);
+  vert1[1] = static_cast<float>(n1.pos[1]);
+  vert1[2] = static_cast<float>(n1.pos[2]);
 
-  vert2[0] = static_cast<float>(n2.coord[0]);
-  vert2[1] = static_cast<float>(n2.coord[1]);
-  vert2[2] = static_cast<float>(n2.coord[2]);
+  vert2[0] = static_cast<float>(n2.pos[0]);
+  vert2[1] = static_cast<float>(n2.pos[1]);
+  vert2[2] = static_cast<float>(n2.pos[2]);
 
   //
   // Compute the normal
@@ -207,15 +167,15 @@ VectorType TriangleOps::computeNormal(Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<int32_t> TriangleOps::generateUniqueLabels(StructArray<Triangle>::Pointer trianglesPtr)
+std::set<int32_t> TriangleOps::generateUniqueLabels(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr)
 {
   std::set<int32_t> uniqueLabels;
-  Triangle* tris = trianglesPtr->GetPointer(0);
+  SurfaceMesh::DataStructures::Face_t* tris = trianglesPtr->GetPointer(0);
 
   for (size_t i =0; i < trianglesPtr->GetNumberOfTuples(); ++i)
   {
-    uniqueLabels.insert(tris[i].nSpin[0]);
-    uniqueLabels.insert(tris[i].nSpin[1]);
+    uniqueLabels.insert(tris[i].labels[0]);
+    uniqueLabels.insert(tris[i].labels[1]);
   }
   return uniqueLabels;
 }

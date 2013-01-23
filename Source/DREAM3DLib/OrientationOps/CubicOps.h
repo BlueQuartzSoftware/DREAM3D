@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationMath
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
 
   protected:
     float _calcMisoQuat(const float quatsym[24][5], int numsym,
@@ -84,5 +84,14 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationMath
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
     void operator=(const CubicOps&); // Operator '=' Not Implemented
 };
+
+/**
+ *
+ *
+ *
+
+
+   */
+
 
 #endif /* CUBICOPS_H_ */
