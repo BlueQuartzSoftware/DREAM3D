@@ -338,7 +338,8 @@ void FilterPipeline::execute()
   std::stringstream ss;
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
-  START_CLOCK()
+  DEFINE_CLOCK;
+  START_CLOCK;
   PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
@@ -380,12 +381,9 @@ void FilterPipeline::execute()
     {
       break;
     }
-
-    if(DREAM3D_BENCHMARKS)
-    {
-      std::cout << (*iter)->getNameOfClass() << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
-      millis = MXA::getMilliSeconds();
-    }
+    ss.str("");
+     ss << (*iter)->getNameOfClass() << " Filter Complete";
+    END_CLOCK(ss.str());
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);

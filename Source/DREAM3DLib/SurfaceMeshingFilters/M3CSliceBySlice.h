@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param neighborCSiteIdPtr
      */
     void get_neighbor_list(int NSP, int NS, int wrappedDims[],
-                            StructArray<Neighbor>::Pointer neighborsPtr,
+                            StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr,
                             DataArray<int32_t>::Pointer neighborCSiteIdPtr);
 
     /**
@@ -150,7 +150,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeTypePtr
      */
     void initialize_nodes(int NSP, int zID, int *wrappedDims, float* res,
-                          StructArray<Node>::Pointer cVertexPtr,
+                          StructArray<SurfaceMesh::M3C::Node>::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                           DataArray<int8_t>::Pointer cVertexNodeTypePtr );
@@ -163,8 +163,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param neighborsPtr
      */
     void initialize_squares(int zID, int NSP,
-                            StructArray<Face>::Pointer cSquarePtr,
-                            StructArray<Neighbor>::Pointer neighborsPtr);
+                            StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr,
+                            StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
 
     /**
@@ -180,11 +180,11 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @return
      */
     size_t get_nodes_Edges(int NSP, int zID, int *wrappedDims,
-                           StructArray<Face>::Pointer cSquarePtr,
+                           StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr,
                            DataArray<int32_t>::Pointer voxelsPtr,
-                           StructArray<Segment>::Pointer cEdgePtr,
+                           StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
                            DataArray<int8_t>::Pointer cVertexNodeTypePtr,
-                           StructArray<Neighbor>::Pointer neighborsPtr);
+                           StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
     /**
      * @brief get_triangles
      * @param NSP
@@ -197,11 +197,11 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @return
      */
     int get_triangles(int NSP, int* wrappedDims,
-                      StructArray<Face>::Pointer cSquarePtr,
+                      StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr,
                       DataArray<int32_t>::Pointer voxelsPtr,
                       DataArray<int8_t>::Pointer cVertexNodeTypePtr,
-                      StructArray<Segment>::Pointer cEdgePtr,
-                      StructArray<Patch>::Pointer cTrianglePtr);
+                      StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+                      StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
 
     /**
      * @brief arrange_grainnames
@@ -216,10 +216,10 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param neighborsPtr
      */
     void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, float *res,
-                            StructArray<Patch>::Pointer cTrianglePtr,
-                            StructArray<Node>::Pointer cVertexPtr,
+                            StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
+                            StructArray<SurfaceMesh::M3C::Node>::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
-                            StructArray<Neighbor>::Pointer neighborsPtr);
+                            StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
     /**
      * @brief find_xcoord
@@ -258,7 +258,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     int treat_anomaly(int tNSt[4], int zID1,
                                     DataArray<int32_t>::Pointer voxelsPtr,
-                                    StructArray<Neighbor>::Pointer neighborsPtr);
+                                    StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
     /**
      * @brief get_nodes
@@ -289,24 +289,24 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
     void get_case0_triangles(int site, int *ae, int nedge,
                                           int tin, int* tout,
-                                          StructArray<Segment>::Pointer cEdgePtr,
-                                          StructArray<Patch>::Pointer cTrianglePtr);
+                                          StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+                                          StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
     void get_case2_triangles(int site, int *ae, int nedge, int *afc,
                                           int nfctr, int tin, int *tout,
-                                          StructArray<Segment>::Pointer cEdgePtr,
-                                          StructArray<Patch>::Pointer cTrianglePtr);
+                                          StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+                                          StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
     void get_caseM_triangles(int site, int *afe, int nfedge, int *afc, int nfctr,
                              int tin, int *tout, int ccn,
-                             StructArray<Segment>::Pointer cEdgePtr,
-                             StructArray<Patch>::Pointer cTrianglePtr);
+                             StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
 
     void get_case_triangles_helper(int nedge, int* burnt, int* burnt_list, int &loopID, int *ae,
-                                  StructArray<Segment>::Pointer cEdgePtr, std::vector<int> &countVec);
+                                  StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr, std::vector<int> &countVec);
 
     void get_case_triangles_helper_2(int* burnt_loop, int* burnt_list,
                                                 int from, int to, int numN, int &ctid,
-                                                StructArray<Segment>::Pointer cEdgePtr,
-                                                StructArray<Patch>::Pointer cTrianglePtr);
+                                                StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr,
+                                                StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
 
 
     /**
@@ -346,7 +346,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
                                     const std::string &nodesFile,
-                                    StructArray<Node>::Pointer cVertexPtr,
+                                    StructArray<SurfaceMesh::M3C::Node>::Pointer cVertexPtr,
                                     DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                                     DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 
@@ -362,14 +362,9 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     int writeTrianglesFile(int zID, int ctid,
                            const std::string &trianglesFile, int nt,
-                           StructArray<Patch>::Pointer cTrianglePtr,
+                           StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                            DataArray<int32_t>::Pointer cVertexNodeIdPtr);
-    /**
-     * @brief readNodesTriangles
-     * @param nodesFile
-     * @param trianglesFile
-     */
-    void readNodesTriangles(const std::string &nodesFile, const std::string &trianglesFile);
+
 
     /**
      * @brief volumeHasGhostLayer
@@ -378,9 +373,9 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     bool volumeHasGhostLayer();
     void copyBulkSliceIntoWorkingArray(int i, int *wrappedDims, size_t *dims, int32_t *voxels);
     void update_node_edge_kind(int nT,
-                               StructArray<Patch>::Pointer cTrianglePtr,
+                               StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                                DataArray<int8_t>::Pointer cVertexNodeTypePtr,
-                               StructArray<Segment>::Pointer cEdgePtr);
+                               StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr);
 
     // The next two methods are for analyzing the winding
     // void analyzeWinding();

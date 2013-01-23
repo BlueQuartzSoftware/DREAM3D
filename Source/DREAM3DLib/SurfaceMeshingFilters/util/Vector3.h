@@ -20,7 +20,7 @@ struct Vector3
   //##################RUCTORS ##################//
   Vector3();
   Vector3(double x_, double y_, double z_);
-  Vector3(Node& node);
+  Vector3(SurfaceMesh::DataStructures::Vert_t& node);
 
   //################## PUBLIC OPERATORS ##################//
   Vector3& operator+=(Vector3& rhs);
@@ -34,7 +34,7 @@ struct Vector3
   double distance(Vector3& rhs);
   double distance_squared(Vector3& rhs);
   double dot(Vector3& rhs);
-  double dot(Node& rhs);
+  double dot(SurfaceMesh::DataStructures::Vert_t& rhs);
   double length();
   double length_squared();
   Vector3& negate();

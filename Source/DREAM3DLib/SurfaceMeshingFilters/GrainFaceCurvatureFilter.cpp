@@ -38,7 +38,7 @@
 
 
 
-#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConnectivity.h"
+//#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConnectivity.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/TriangleCentroidFilter.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/TriangleNormalFilter.h"
 
@@ -151,14 +151,14 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
   else
   {
     // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
@@ -166,7 +166,7 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
     else
     {
       // This depends on the triangles array already being created
-      int size = sm->getTriangles()->GetNumberOfTuples();
+      int size = sm->getFaces()->GetNumberOfTuples();
       CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
     }
 
@@ -251,6 +251,16 @@ void GrainFaceCurvatureFilter::execute()
     return;
   }
 
+  // Get our Reference counted Array of Triangle Structures
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  if(NULL == trianglesPtr.get())
+  {
+    setErrorCondition(-556);
+    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
+    return;
+  }
+
+
   // We need to make sure we have up to date values for the Triangle Centroids and Triangle Normals
   // so we are going to recalculate them all just in case they are stale
   TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
@@ -281,26 +291,20 @@ void GrainFaceCurvatureFilter::execute()
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  GenerateNodeTriangleConnectivity::Pointer connectivity = GenerateNodeTriangleConnectivity::New();
-  connectivity->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-  connectivity->setObservers(getObservers());
-  connectivity->setMessagePrefix(getMessagePrefix());
-  connectivity->execute();
-  if (connectivity->getErrorCondition() < 0)
+  MeshVertLinks::Pointer vertLinks = getSurfaceMeshDataContainer()->getMeshVertLinks();
+  if (NULL == vertLinks.get())
   {
-    notifyErrorMessage("Error Generating the Mesh Connectivity", -800);
-    return;
+    getSurfaceMeshDataContainer()->buildMeshVertLinks();
   }
 
 
-  // Get our Reference counted Array of Triangle Structures
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
-  if(NULL == trianglesPtr.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
+//  MeshTriangleNeighbors::Pointer triangleNeighbors = getSurfaceMeshDataContainer()->getMeshTriangleNeighborLists();
+//  if (NULL == triangleNeighbors.get())
+//  {
+//    getSurfaceMeshDataContainer()->buildMeshTriangleNeighborLists();
+//  }
+
+
 
   // Group the Triangles by common neighboring grain face. This means that each group of triangles
   // each share the same set of Grain Ids. Since each triangle can only have 2 Grain Ids
@@ -363,16 +367,16 @@ void GrainFaceCurvatureFilter::execute()
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_group* g = new tbb::task_group;
-  if(true)
-  {
-    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
-    std::cout << "GrainFaceCurvatureFilter Running in Parallel." << std::endl;
-  }
+//  if(true)
+//  {
+//    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
+//    std::cout << "GrainFaceCurvatureFilter Running in Parallel." << std::endl;
+//  }
 #else
   //if()
-  {
-    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
-  }
+//  {
+//    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
+//  }
 #endif
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {

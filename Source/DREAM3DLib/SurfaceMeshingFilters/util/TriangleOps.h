@@ -54,23 +54,24 @@ class TriangleOps
   public:
     virtual ~TriangleOps();
 
-    static int getLabelIndex(Triangle& t, int label);
+    static int getLabelIndex(SurfaceMesh::DataStructures::Face_t& t, int label);
 
-    static std::vector<int> getNodeIndices(Triangle& t, int label);
+    static std::vector<int> getNodeIndices(SurfaceMesh::DataStructures::Face_t& t, int label);
 
-    static void flipWinding(Triangle& triangle);
+    static void flipWinding(SurfaceMesh::DataStructures::Face_t& triangle);
 
-    static VectorType computeNormal(Node& n0, Node& n1, Node& n2);
+    static VectorType computeNormal(SurfaceMesh::DataStructures::Vert_t& n0, SurfaceMesh::DataStructures::Vert_t& n1, SurfaceMesh::DataStructures::Vert_t& n2);
 
-    static std::set<int32_t> generateUniqueLabels(StructArray<Triangle>::Pointer trianglesPtr);
+    static std::set<int32_t> generateUniqueLabels(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr);
 
-    static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* m, StructArray<Triangle>::Pointer trianglesPtr,
-                                                        int32_t triangleIndex,
-                                                        int32_t label);
-    static bool verifyWinding(Triangle& source, Triangle& tri, int32_t label);
+//    static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* sm,
+//                                                        int32_t triangleIndex,
+//                                                        int32_t label);
+
+    static bool verifyWinding(SurfaceMesh::DataStructures::Face_t& source, SurfaceMesh::DataStructures::Face_t& tri, int32_t label);
 
 
-    static void getWindingIndices4(Triangle &triangle, int ids[4], int32_t label);
+    static void getWindingIndices4(SurfaceMesh::DataStructures::Face_t &triangle, int ids[4], int32_t label);
 
   protected:
     TriangleOps();

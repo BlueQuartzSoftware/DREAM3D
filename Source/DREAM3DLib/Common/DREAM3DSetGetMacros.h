@@ -372,18 +372,6 @@ void set##name##Pointer(type* f)\
     std::string f = m_InputDirectory + MXADir::Separator + n;\
     f = MXADir::toNativeSeparators(f);
 
-#define DREAM3D_BENCHMARKS 0
-
-#if DREAM3D_BENCHMARKS
-#define START_CLOCK()\
-  unsigned long long int millis;\
-  millis = MXA::getMilliSeconds();
-#else
-#define START_CLOCK() unsigned long long int millis = 0;\
-  millis = 0;
-#endif
-
-
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
               updatePipelineMessage(#Message);\
@@ -404,6 +392,29 @@ void set##name##Pointer(type* f)\
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
     std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#define DREAM3D_BENCHMARKS 1
+
+#if DREAM3D_BENCHMARKS
+#include "MXA/Common/LogTime.h"
+
+#define DEFINE_CLOCK unsigned long long int millis;
+
+#define START_CLOCK millis = MXA::getMilliSeconds();
+
+#define END_CLOCK(message)\
+  std::cout << message << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+
+
+#else
+#define DEFINE_CLOCK
+#define START_CLOCK
+#define END_CLOCK
+#endif
 
 
 

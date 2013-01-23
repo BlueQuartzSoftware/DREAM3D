@@ -126,7 +126,14 @@ class DREAM3DLib_EXPORT GenerateUniqueEdges : public AbstractFilter
     /**
      * @brief generateConnectivity This is the method that actually implements the algorithm.
      */
-    void generateConnectivity();
+    void generateUniqueEdgeIds();
+
+    /**
+     * @brief This method generates both the UniqueEdgeId list and a list of triangles that share each edge id. This
+     * method is known to consume LARGE amounts of memory and probably should not be used unless you really need this
+     * type of information.
+     */
+    void generateEdgeTriangleConnectivity();
 
     GenerateUniqueEdges(const GenerateUniqueEdges&); // Copy Constructor Not Implemented
     void operator=(const GenerateUniqueEdges&); // Operator '=' Not Implemented

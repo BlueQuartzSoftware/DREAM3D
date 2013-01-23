@@ -116,13 +116,11 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(-387);
   }
 
-  StructArray<Node>::Pointer vertices = StructArray<Node>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-  StructArray<Triangle>::Pointer triangles = StructArray<Triangle>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
 
-  sm->setNodes(vertices);
-  sm->setTriangles(triangles);
-
-
+  sm->setVertices(vertices);
+  sm->setFaces(triangles);
 }
 
 
@@ -170,9 +168,9 @@ void GoldfeatherReader::execute()
   dataCheck(false, nNodes, 1, 1);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
-  StructArray<Node>::Pointer nodesPtr = StructArray<Node>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
-  Node* nodes = nodesPtr->GetPointer(0);
+  SurfaceMesh::DataStructures::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::CellData::SurfaceMeshNodeNormals);
@@ -194,9 +192,9 @@ void GoldfeatherReader::execute()
   for(int n = 0; n < nNodes; ++n)
   {
     fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
-    nodes[n].coord[0] = x;
-    nodes[n].coord[1] = y;
-    nodes[n].coord[2] = z;
+    nodes[n].pos[0] = x;
+    nodes[n].pos[1] = y;
+    nodes[n].pos[2] = z;
     normals[n*3+0] = n0;
     normals[n*3+1] = n1;
     normals[n*3+2] = n2;
@@ -215,7 +213,7 @@ void GoldfeatherReader::execute()
 
   }
 
-  m->setNodes(nodesPtr);
+  m->setVertices(nodesPtr);
   m->addCellData(normalsPtr->GetName(), normalsPtr);
   m->addCellData(pcurv1Ptr->GetName(), pcurv1Ptr);
   m->addCellData(pcurv2Ptr->GetName(), pcurv2Ptr);
@@ -236,28 +234,28 @@ void GoldfeatherReader::execute()
 
 
 
-  StructArray<Triangle>::Pointer trianglesPtr = StructArray<Triangle>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
   trianglesPtr->initializeWithZeros();
-  Triangle* triangles = trianglesPtr->GetPointer(0);
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
 
-  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, "Goldfeather_Triangle_Normals");
+  DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, "Goldfeather_SurfaceMesh::DataStructures::Face_t_Normals");
   double* triNormals = triNormalsPtr->GetPointer(0);
 
   for(int t = 0; t < nTriangles; ++t)
   {
     fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
-    triangles[t].node_id[0] = x;
-    triangles[t].node_id[1] = y;
-    triangles[t].node_id[2] = z;
+    triangles[t].verts[0] = x;
+    triangles[t].verts[1] = y;
+    triangles[t].verts[2] = z;
   //  triangles[t].tIndex = t;
-    triangles[t].nSpin[0] = 0;
-    triangles[t].nSpin[1] = 1;
+    triangles[t].labels[0] = 0;
+    triangles[t].labels[1] = 1;
     triNormals[t*3+0] = n0;
     triNormals[t*3+1] = n1;
     triNormals[t*3+2] = n2;
   }
 
-  m->setTriangles(trianglesPtr);
+  m->setFaces(trianglesPtr);
   m->addCellData(triNormalsPtr->GetName(), triNormalsPtr);
 
   /* Let the GUI know we are done with this filter */

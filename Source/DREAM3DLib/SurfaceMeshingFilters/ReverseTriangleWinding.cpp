@@ -49,11 +49,11 @@
  */
 class ReverseWindingImpl
 {
-    StructArray<Triangle>::Pointer m_Triangles;
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer m_Triangles;
     double* m_Normals;
 
   public:
-    ReverseWindingImpl(StructArray<Triangle>::Pointer triangles) :
+    ReverseWindingImpl(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles) :
       m_Triangles(triangles)
     {}
     virtual ~ReverseWindingImpl(){}
@@ -65,16 +65,16 @@ class ReverseWindingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      Triangle* triangles = m_Triangles->GetPointer(0);
+      SurfaceMesh::DataStructures::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
         // Swap the indices
-        int nId0 = triangles[i].node_id[0];
-        int nId2 = triangles[i].node_id[2];
+        int nId0 = triangles[i].verts[0];
+        int nId2 = triangles[i].verts[2];
 
-        triangles[i].node_id[0] = nId2;
-        triangles[i].node_id[2] = nId0;
+        triangles[i].verts[0] = nId2;
+        triangles[i].verts[2] = nId0;
       }
     }
 
@@ -217,14 +217,14 @@ void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fie
   else
   {
       // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
@@ -263,7 +263,7 @@ void ReverseTriangleWinding::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

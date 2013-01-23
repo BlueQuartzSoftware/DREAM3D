@@ -133,7 +133,7 @@ class LabelVisitorInfo
  * @param masterVisited
  * @return
  */
-    Pointer relabelTriangles(Mesh::Pointer mesh, StructArray<Triangle>::Pointer masterTriangleListPtr, const std::vector<bool> &masterVisited)
+    Pointer relabelTriangles(Mesh::Pointer mesh, StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer masterTriangleListPtr, const std::vector<bool> &masterVisited)
     {
       size_t triangleIndex = *(m_Triangles.begin());
       int32_t newLabel = mesh->getMaxLabel() + 1;
@@ -165,7 +165,7 @@ class LabelVisitorInfo
      *
      * @param mesh
      */
-    void revertTriangleLabels(StructArray<Triangle>::Pointer masterTriangleListPtr)
+    void revertTriangleLabels(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer masterTriangleListPtr)
     {
       Triangle* masterTriangleList = masterTriangleListPtr->GetPointer(0);
 
@@ -260,14 +260,14 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
   else
   {
     // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
       setErrorCondition(-385);
@@ -374,7 +374,7 @@ void VerifyTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::getLabelTriangleMap(LabelTriangleMapType &trianglesToLabelMap)
 {
-  StructArray<Triangle>::Pointer masterTriangleList = getSurfaceMeshDataContainer()->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer masterTriangleList = getSurfaceMeshDataContainer()->getTriangles();
   if(NULL == masterTriangleList.get())
   {
     setErrorCondition(-556);
@@ -406,7 +406,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   Mesh::Pointer mesh = Mesh::New();
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  StructArray<Triangle>::Pointer masterTriangleList = getSurfaceMeshDataContainer()->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer masterTriangleList = getSurfaceMeshDataContainer()->getTriangles();
   if(NULL == masterTriangleList.get())
   {
     setErrorCondition(-556);
@@ -416,14 +416,14 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   int numTriangles = masterTriangleList->GetNumberOfTuples();
   Triangle* triangles = masterTriangleList->GetPointer(0);
 
-  StructArray<Node>::Pointer masterNodeListPtr = getSurfaceMeshDataContainer()->getNodes();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer masterNodeListPtr = getSurfaceMeshDataContainer()->getNodes();
   if(NULL == masterNodeListPtr.get())
   {
     setErrorCondition(-555);
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
     return getErrorCondition();
   }
-  StructArray<Node>& masterNodeList = *(masterNodeListPtr.get());
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& masterNodeList = *(masterNodeListPtr.get());
 
   int min = 268435457;
   int max = -268435457;

@@ -95,14 +95,14 @@ void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, 
   else
   {
     // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
@@ -110,7 +110,7 @@ void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, 
     else
     {
       // This depends on the triangles array already being created
-      int size = sm->getTriangles()->GetNumberOfTuples();
+      int size = sm->getFaces()->GetNumberOfTuples();
       CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
     }
 
@@ -186,7 +186,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
 {
 
   // Get our Reference counted Array of Triangle Structures
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);

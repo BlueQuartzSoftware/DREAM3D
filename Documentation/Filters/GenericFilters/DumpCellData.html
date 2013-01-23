@@ -39,8 +39,14 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <p class="pBody">
-This filter will delete the Euler Angle and Phase arrays from memory. This is typically used when memory usage is too
-high for a pipeline.
+This filter will drop <b>ALL</b> Cell Data that is NOT the Grain Ids Array. There is an option to drop this array also.
+This filter can be useful for surface meshing operations to remove extra arrays from memory, thus freeing up memory to
+construct and analyze the mesh. A typical pipeline involves reading the voxel volume into memory, running this filter but
+keep the Grain Ids, mesh the volume, then run this filter again to dummp the grain ids array (Assuming they are no longer
+needed).
+
+ <b>IMPORTANT NOTE</b>Any arrays dropped will NOT be written to any file after this filter. This makes the pipeline completely
+ forget those arrays ever existed.
 </p>
 
 <!-- Do NOT write documentation below this line -->
@@ -48,6 +54,11 @@ high for a pipeline.
 
 <!-- A TABLE OF Parameters FOR YOUR FILTER -->
 <a name="wp3"> </a><h2 class="pHeading2">Options</h2>
+<table border="0" cellpadding="4" cellspacing="1">
+<tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
+<tr bgcolor="#E2E2E2">
+<td>Output File</td><td>Output File</td></tr>
+</table>
 
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>

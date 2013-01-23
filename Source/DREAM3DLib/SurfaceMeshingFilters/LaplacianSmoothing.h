@@ -145,12 +145,16 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     virtual int generateLambdaArray(DataArray<int8_t> *nodeTypePtr);
 
     /**
-     * @brief This method runs the actual Laplacian smoothing algorithm using the Lambda
-     * array to perform the smoothing. Subclasses may have set a more node type specific
-     * lambda array values.
+     * @brief This version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
      * @return
      */
-    virtual int smooth();
+    virtual int edgeBasedSmoothing();
+
+    /**
+     * @brief vertexBasedSmoothing Uses the Vertex->Triangle connectivity information for its algorithm
+     * @return
+     */
+    virtual int vertexBasedSmoothing();
 
   private:
     bool m_DoConnectivityFilter;

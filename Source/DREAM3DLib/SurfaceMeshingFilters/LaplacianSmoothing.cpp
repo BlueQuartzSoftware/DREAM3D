@@ -40,31 +40,128 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#endif
+
+
+/**
+ * @brief The LaplacianSmoothingImpl class is the actual code that does the computation and can be called either
+ * from serial code or from Parallelized code (using TBB).
+ */
+class LaplacianSmoothingImpl
+{
+    SurfaceMesh::DataStructures::VertListPointer_t m_vertsPtr;
+    SurfaceMesh::DataStructures::VertList_t::Pointer m_newPositions;
+    MeshVertLinks::Pointer m_meshVertLinks;
+    SurfaceMesh::DataStructures::FaceList_t::Pointer m_facesPtr;
+    DataArray<float>::Pointer m_lambdasPtr;
+
+  public:
+    LaplacianSmoothingImpl(SurfaceMesh::DataStructures::VertListPointer_t vertsPtr,
+                           SurfaceMesh::DataStructures::VertList_t::Pointer newPositions,
+                           MeshVertLinks::Pointer meshVertLinks,
+                           SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr,
+                           DataArray<float>::Pointer lambdasPtr) :
+      m_vertsPtr(vertsPtr),
+      m_newPositions(newPositions),
+      m_meshVertLinks(meshVertLinks),
+      m_facesPtr(facesPtr),
+      m_lambdasPtr(lambdasPtr)
+    {}
+
+    virtual ~LaplacianSmoothingImpl(){}
+
+    /**
+     * @brief generate Generates the Normals for the triangles
+     * @param start The starting SurfaceMesh::DataStructures::Face_t Index
+     * @param end The ending SurfaceMesh::DataStructures::Face_t Index
+     */
+    void generate(size_t start, size_t end) const
+    {
+      SurfaceMesh::DataStructures::Vert_t* vertices = m_vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+      SurfaceMesh::DataStructures::Face_t* faces = m_facesPtr->GetPointer(0);
+      SurfaceMesh::DataStructures::Vert_t* newPositions = m_newPositions->GetPointer(0);
+
+      float* lambdas = m_lambdasPtr->GetPointer(0);
+
+
+      for(size_t v = start; v < end; ++v)
+      {
+        SurfaceMesh::DataStructures::Vert_t& currentVert = vertices[v];
+        SurfaceMesh::DataStructures::Vert_t& newVert = newPositions[v];
+        // Initialize the "newPosition" with the current position
+        newVert.pos[0] = currentVert.pos[0];
+        newVert.pos[1] = currentVert.pos[1];
+        newVert.pos[2] = currentVert.pos[2];
+        // Get the Triangles for this vertex
+        MeshVertLinks::TriangleList& list = m_meshVertLinks->getTriangleList(v);
+        std::set<int32_t> neighbours;
+        // Create the unique List of Vertices that are directly connected to this vertex (vert)
+        for(int32_t t = 0; t < list.ncells; ++t )
+        {
+          neighbours.insert(faces[list.cells[t]].verts[0]);
+          neighbours.insert(faces[list.cells[t]].verts[1]);
+          neighbours.insert(faces[list.cells[t]].verts[2]);
+        }
+        neighbours.erase(v); // Remove the current vertex id from the list as we don't need it
+
+        SurfaceMesh::DataStructures::Float_t konst1 = lambdas[v]/neighbours.size();
+
+        // Now that we have our connectivity iterate over the vertices generating a new position
+        for(std::set<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
+        {
+          SurfaceMesh::DataStructures::Vert_t& vert = vertices[*iter];
+
+          newVert.pos[0] += konst1 * (vert.pos[0] - currentVert.pos[0]);
+          newVert.pos[1] += konst1 * (vert.pos[1] - currentVert.pos[1]);
+          newVert.pos[2] += konst1 * (vert.pos[2] - currentVert.pos[2]);
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    /**
+     * @brief operator () This is called from the TBB stye of code
+     * @param r The range to compute the values
+     */
+    void operator()(const tbb::blocked_range<size_t> &r) const
+    {
+      generate(r.begin(), r.end());
+    }
+#endif
+};
+
+
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
-AbstractFilter(),
-m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-m_IterationSteps(1),
-m_Lambda(0.1),
-m_SurfacePointLambda(0.0),
-m_TripleLineLambda(0.0),
-m_QuadPointLambda(0.0),
-m_SurfaceTripleLineLambda(0.0),
-m_SurfaceQuadPointLambda(0.0),
-m_DoConnectivityFilter(false)
+  AbstractFilter(),
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
+  m_IterationSteps(1),
+  m_Lambda(0.1),
+  m_SurfacePointLambda(0.0),
+  m_TripleLineLambda(0.0),
+  m_QuadPointLambda(0.0),
+  m_SurfaceTripleLineLambda(0.0),
+  m_SurfaceQuadPointLambda(0.0),
+  m_DoConnectivityFilter(false)
 {
   setupFilterParameters();
 }
@@ -83,7 +180,7 @@ void LaplacianSmoothing::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
-     {
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Iteration Steps");
     option->setPropertyName("IterationSteps");
@@ -97,16 +194,6 @@ void LaplacianSmoothing::setupFilterParameters()
     parameter->setPropertyName("Lambda");
     parameter->setWidgetType(FilterParameter::DoubleWidget);
     //parameter->setUnits("Bulk Nodes");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
-   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Outer Points Lambda");
-    parameter->setPropertyName("SurfacePointLambda");
-    parameter->setWidgetType(FilterParameter::DoubleWidget);
-    //parameter->setUnits("Zero will Lock them in Place");
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
     parameters.push_back(parameter);
@@ -131,7 +218,18 @@ void LaplacianSmoothing::setupFilterParameters()
     parameter->setCastableValueType("double");
     parameters.push_back(parameter);
   }
-    {
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Outer Points Lambda");
+    parameter->setPropertyName("SurfacePointLambda");
+    parameter->setWidgetType(FilterParameter::DoubleWidget);
+    //parameter->setUnits("Zero will Lock them in Place");
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameters.push_back(parameter);
+  }
+
+  {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Outer Triple Line Lambda");
     parameter->setPropertyName("SurfaceTripleLineLambda");
@@ -163,13 +261,13 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
-    writer->writeValue("IterationSteps", getIterationSteps());
-    writer->writeValue("Lambda", getLambda() );
-    writer->writeValue("TripleLineLambda", getTripleLineLambda());
-    writer->writeValue("QuadPointLambda", getQuadPointLambda());
-    writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
-    writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
-    writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
+  writer->writeValue("IterationSteps", getIterationSteps());
+  writer->writeValue("Lambda", getLambda() );
+  writer->writeValue("TripleLineLambda", getTripleLineLambda());
+  writer->writeValue("QuadPointLambda", getQuadPointLambda());
+  writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
+  writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
+  writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
 }
 
 // -----------------------------------------------------------------------------
@@ -187,15 +285,15 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
   }
   else
   {
-      // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    // We MUST have Nodes
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
       setErrorCondition(-385);
@@ -203,7 +301,7 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
 
     if (sm->getCellData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
     {
-        m_DoConnectivityFilter = true;
+      m_DoConnectivityFilter = true;
     }
   }
 
@@ -236,12 +334,11 @@ void LaplacianSmoothing::execute()
   }
 
   setErrorCondition(0);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
-  StructArray<Node>::Pointer vertexPtr = m->getNodes();
-  StructArray<Triangle>::Pointer trianglesPtr = m->getTriangles();
+
+
 
   /* Place all your code to execute your filter here. */
-  err = smooth();
+  err = edgeBasedSmoothing();
 
   if (err < 0)
   {
@@ -260,7 +357,7 @@ void LaplacianSmoothing::execute()
 int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
 {
   notifyStatusMessage("Generating Lambda values");
-  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
   if(NULL == nodesPtr.get())
   {
     setErrorCondition(-555);
@@ -306,20 +403,17 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
   return 1;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LaplacianSmoothing::smooth()
+int LaplacianSmoothing::edgeBasedSmoothing()
 {
   int err = 0;
 
-
-  // Convert the 32 bit float Nodes into 64 bit floating point nodes.
-  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+  //
+  SurfaceMesh::DataStructures::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
   int nvert = nodesPtr->GetNumberOfTuples();
-  Node* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  SurfaceMesh::DataStructures::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -339,7 +433,7 @@ int LaplacianSmoothing::smooth()
     nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
   }
 
-  // Generate the Lambdas possible using a subclasses implementation of the method
+  // Generate the Lambda Array
   err = generateLambdaArray(nodeTypePtr);
   if (err < 0)
   {
@@ -347,14 +441,15 @@ int LaplacianSmoothing::smooth()
     notifyErrorMessage("Error generating the Lambda Array", getErrorCondition());
     return err;
   }
-  // Get a Pointer to the Lambdas
+  // Get a Pointer to the Lambda array for conveneince
   DataArray<float>::Pointer lambdas = getLambdaArray();
   float* lambda = lambdas->GetPointer(0);
   std::stringstream ss;
 
-  // Generate the Unique Edges
+  //  Generate the Unique Edges
   if (m_DoConnectivityFilter == true)
   {
+    // There was no Edge connectivity before this filter so delete it when we are done with it
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
     ss.str("");
     ss << getMessagePrefix() << "|->Generating Unique Edge Ids |->";
@@ -373,6 +468,7 @@ int LaplacianSmoothing::smooth()
 
   notifyStatusMessage("Starting to Smooth Vertices");
   // Get the unique Edges from the data container
+
   IDataArray::Pointer uniqueEdgesPtr = getSurfaceMeshDataContainer()->getCellData(m_SurfaceMeshUniqueEdgesArrayName);
   DataArray<int>* uniqueEdges = DataArray<int>::SafePointerDownCast(uniqueEdgesPtr.get());
   if (NULL == uniqueEdges)
@@ -396,11 +492,7 @@ int LaplacianSmoothing::smooth()
 
 
   double dlta = 0.0;
-
-//  char buf[8];
-//  ::memset(buf, 0, 8);
-//int8_t* nodeType = nodeTypePtr->GetPointer(0);
-  for (int q=0; q<m_IterationSteps; q++)
+  for (int q = 0; q < m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
     ss.str("");
@@ -416,11 +508,7 @@ int LaplacianSmoothing::smooth()
       {
         assert( 3*in1+j < nvert*3);
         assert( 3*in2+j < nvert*3);
-        dlta = vsm[in2].coord[j] - vsm[in1].coord[j];
-//        if (dlta == 0xFFFFFA0000000)
-//        {
-//          std::cout << "NAN found." << std::endl;
-//        }
+        dlta = vsm[in2].pos[j] - vsm[in1].pos[j];
         delta[3*in1+j] += dlta;
         delta[3*in2+j] += -1.0*dlta;
       }
@@ -432,36 +520,14 @@ int LaplacianSmoothing::smooth()
     float ll = 0.0f;
     for (int i=0; i < nvert; i++)
     {
-
-//          if (nodeType[i] != 2 && nodeType[i] != 3 && nodeType[i] != 4
-//              && nodeType[i] != 12 && nodeType[i] != 13 && nodeType[i] != 14)
-//              {
-//                assert(true);
-//              }
-
-//       if ((int)(nodeType[i]) == 5 )
-//       {
-//         std::cout << "Bad Node Type" << std::endl;
-//        assert(true);
-//       }
       for (int j = 0; j < 3; j++)
       {
         int in0 = 3*i+j;
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];
-        Node& node = vsm[i];
-        node.coord[j] += ll*dlta;
-//        ::memset(buf, 0, 8);
-//        snprintf(buf, 8, "%f", node.coord[j]);
-//        if (strcmp("nan", buf) == 0)
-//        {
-//          std::cout << "first nan encountered." << std::endl;
-//          std::cout << "Node ID = " << i << std::endl;
-//          std::cout << "Node Type: " << (int)(nodeType[i]) << std::endl;
-//          std::cout << "Lambda for Node: " << lambda[i] << std::endl;
-//        }
-
+        SurfaceMesh::DataStructures::Vert_t& node = vsm[i];
+        node.pos[j] += ll*dlta;
         delta[in0] = 0.0; //reset for next iteration
       }
       ncon[i] = 0;//reset for next iteration
@@ -472,11 +538,118 @@ int LaplacianSmoothing::smooth()
     testFile << "/tmp/Laplacian_" << q << ".vtk";
     writeVTKFile(testFile.str());
 #endif
-
   }
 
+
+  // This filter had to generate the edge connectivity data so delete it when we are done with it.
+  if (m_DoConnectivityFilter == true)
+  {
+    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removeCellData(m_SurfaceMeshUniqueEdgesArrayName);
+  }
+
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int LaplacianSmoothing::vertexBasedSmoothing()
+{
+  int err = 0;
+
+
+  // Convert the 32 bit float Nodes into 64 bit floating point nodes.
+  SurfaceMesh::DataStructures::VertListPointer_t vertsPtr = getSurfaceMeshDataContainer()->getVertices();
+  int numVerts = vertsPtr->GetNumberOfTuples();
+  //  SurfaceMesh::DataStructures::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+
+  //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
+  // assert if the data is NOT in the SurfaceMesh Data Container
+  MeshVertLinks::Pointer meshVertLinks = getSurfaceMeshDataContainer()->getMeshVertLinks();
+  if (NULL == meshVertLinks.get())
+  {
+    getSurfaceMeshDataContainer()->buildMeshVertLinks();
+  }
+
+
+  SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr = getSurfaceMeshDataContainer()->getFaces();
+  //  SurfaceMesh::DataStructures::Face_t* faces = facesPtr->GetPointer(0);
+
+  DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
+  DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
+
+  if (NULL == iNodeTypePtr.get() )
+  {
+    // The node type array does not exist so create one with the default node type populated
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(vertsPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
+    nodeTypePtr = nodeTypeSharedPtr.get();
+  }
+  else
+  {
+    // The node type array does exist so use that one.
+    nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
+  }
+
+  // Generate the Lambdas possible using a subclasses implementation of the method
+  err = generateLambdaArray(nodeTypePtr);
+  if (err < 0)
+  {
+    setErrorCondition(-557);
+    notifyErrorMessage("Error generating the Lambda Array", getErrorCondition());
+    return err;
+  }
+
+
+  notifyStatusMessage("Starting to Smooth Vertices");
+
+
+  // Get a Pointer to the Lambdas
+  DataArray<float>::Pointer lambdasPtr = getLambdaArray();
+
+  // We need an array to store the new positions
+  SurfaceMesh::DataStructures::VertList_t::Pointer newPositionsPtr = SurfaceMesh::DataStructures::VertList_t::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
+  newPositionsPtr->initializeWithZeros();
+
+  DEFINE_CLOCK;
+  std::stringstream ss;
+  for (int q=0; q<m_IterationSteps; q++)
+  {
+    if (getCancel() == true) { return -1; }
+    ss.str("");
+    ss << "Iteration " << q;
+    notifyStatusMessage(ss.str());
+    START_CLOCK;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numVerts),
+                      LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
+
+#else
+    LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr);
+    serial.generate(0, numVerts);
+#endif
+
+    // SERIAL ONLY
+    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(SurfaceMesh::DataStructures::Vert_t) * vertsPtr->GetNumberOfTuples());
+    // -----------
+    END_CLOCK("Laplacian Iteration complete");
+
+#if OUTPUT_DEBUG_VTK_FILES
+    std::stringstream testFile;
+    testFile << "/tmp/Laplacian_" << q << ".vtk";
+    writeVTKFile(testFile.str());
+#endif
+  }
   return 1;
 }
+
+
+
+
+
+
 
 
 #if OUTPUT_DEBUG_VTK_FILES
@@ -508,8 +681,8 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<Node>::Pointer nodesPtr = m->getNodes();
-  StructArray<Node>& nodes = *(nodesPtr);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
   bool m_WriteConformalMesh = true;
@@ -544,12 +717,12 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    Node& n = nodes[i]; // Get the current Node
+    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
     //  if (m_SurfaceMeshNodeType[i] > 0)
     {
-      pos[0] = static_cast<float>(n.coord[0]);
-      pos[1] = static_cast<float>(n.coord[1]);
-      pos[2] = static_cast<float>(n.coord[2]);
+      pos[0] = static_cast<float>(n.pos[0]);
+      pos[1] = static_cast<float>(n.pos[1]);
+      pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
         MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
@@ -568,13 +741,14 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<Triangle>& triangles = *(m->getTriangles());
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
   int triangleCount = 0;
   int end = triangles.GetNumberOfTuples();
+  int grainInterest = 25;
   for(int i = 0; i < end; ++i)
   {
-    Triangle* tri = triangles.GetPointer(i);
-    if (tri->nSpin[0] == 227 || tri->nSpin[1] == 227)
+    SurfaceMesh::DataStructures::Face_t* tri = triangles.GetPointer(i);
+    if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
     {
       ++triangleCount;
     }
@@ -591,15 +765,15 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
-    Triangle* tri = triangles.GetPointer(tid);
-    if (tri->nSpin[0] == 227 || tri->nSpin[1] == 227)
+    SurfaceMesh::DataStructures::Face_t* tri = triangles.GetPointer(tid);
+    if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
     {
-      tData[1] = triangles[tid].node_id[0];
-      tData[2] = triangles[tid].node_id[1];
-      tData[3] = triangles[tid].node_id[2];
-//      std::cout << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  << std::endl;
-//      std::cout << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  << std::endl;
-//      std::cout << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  << std::endl;
+      tData[1] = triangles[tid].verts[0];
+      tData[2] = triangles[tid].verts[1];
+      tData[3] = triangles[tid].verts[2];
+      //      std::cout << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  << std::endl;
+      //      std::cout << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  << std::endl;
+      //      std::cout << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  << std::endl;
       if (m_WriteBinaryFile == true)
       {
         tData[0] = 3; // Push on the total number of entries for this entry
@@ -631,6 +805,5 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 
   fprintf(vtkFile, "\n");
 }
+
 #endif
-
-

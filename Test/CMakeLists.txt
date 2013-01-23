@@ -13,6 +13,10 @@ project(DREAM3DTest)
 
 set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
 
+# --------
+add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
+
+
 # --------------------------------------------------------------------------
 macro (ConvertPathToHeaderCompatible INPUT)
     IF (WIN32)
@@ -212,15 +216,8 @@ target_link_libraries(TextureTest DREAM3DLib)
 #target_link_libraries(DxTest DREAM3DLib)
 
 # --------
-add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp
-                                ${DREAM3DTest_SOURCE_DIR}/support/CellLinks.hpp
-                                ${DREAM3DTest_SOURCE_DIR}/support/TriangleNeighbors.hpp
-                                ${DREAM3DTest_SOURCE_DIR}/support/NodesTriangleReader.h
-                                ${DREAM3DTest_SOURCE_DIR}/support/NodesTriangleReader.cpp
-                                ${DREAM3DTest_SOURCE_DIR}/support/ScopedFilePointer.hpp
-                                ${DREAM3DTest_SOURCE_DIR}/support/SurfaceMeshDataStructures.h
-                                ${DREAM3DTest_SOURCE_DIR}/support/TriangleOps.hpp)
-target_link_libraries(SurfaceMeshTest MXA)
+add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
+target_link_libraries(SurfaceMeshTest DREAM3DLib)
 
 # --------
 add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)

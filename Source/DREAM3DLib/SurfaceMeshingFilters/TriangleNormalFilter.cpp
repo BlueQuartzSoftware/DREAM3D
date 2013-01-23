@@ -54,12 +54,12 @@
  */
 class CalculateNormalsImpl
 {
-    StructArray<Node>::Pointer m_Nodes;
-    StructArray<Triangle>::Pointer m_Triangles;
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer m_Nodes;
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer m_Triangles;
     double* m_Normals;
 
   public:
-    CalculateNormalsImpl(StructArray<Node>::Pointer nodes, StructArray<Triangle>::Pointer triangles, double* normals) :
+    CalculateNormalsImpl(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes, StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles, double* normals) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Normals(normals)
@@ -68,17 +68,17 @@ class CalculateNormalsImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting Triangle Index
-     * @param end The ending Triangle Index
+     * @param start The starting SurfaceMesh::DataStructures::Face_t Index
+     * @param end The ending SurfaceMesh::DataStructures::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
-      Node* nodes = m_Nodes->GetPointer(0);
-      Triangle* triangles = m_Triangles->GetPointer(0);
+      SurfaceMesh::DataStructures::Vert_t* nodes = m_Nodes->GetPointer(0);
+      SurfaceMesh::DataStructures::Face_t* triangles = m_Triangles->GetPointer(0);
       for (size_t i = start; i < end; i++)
       {
         // Get the true indices of the 3 nodes
-        VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].node_id[0]], nodes[triangles[i].node_id[1]], nodes[triangles[i].node_id[2]]);
+        VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);
         m_Normals[i*3+0] = normal.x;
         m_Normals[i*3+1] = normal.y;
         m_Normals[i*3+2] = normal.z;
@@ -154,14 +154,14 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
   else
   {
       // We MUST have Nodes
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
 
     // We MUST have Triangles defined also.
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
       setErrorCondition(-385);
@@ -202,9 +202,9 @@ void TriangleNormalFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  StructArray<Node>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getNodes();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
-  StructArray<Triangle>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

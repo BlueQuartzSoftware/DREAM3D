@@ -1,51 +1,77 @@
-#ifndef _TriangleNeighbors_hpp_H_
-#define _TriangleNeighbors_hpp_H_
+/* ============================================================================
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _MeshTriangleNeighbors_hpp_H_
+#define _MeshTriangleNeighbors_hpp_H_
 
 #include <string>
 #include <vector>
 
 #include <boost/shared_array.hpp>
 
-#include "SurfaceMeshDataStructures.h"
+//-- DREAM3D Includes
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
 
 /**
- * @brief The TriangleNeighbors class contains arrays of Triangles for each Node in the mesh. This allows quick query to the node
+ * @brief The MeshTriangleNeighbors class contains arrays of Triangles for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
-class TriangleNeighbors
+class MeshTriangleNeighbors
 {
   public:
 
+    DREAM3D_SHARED_POINTERS(MeshTriangleNeighbors)
+    DREAM3D_STATIC_NEW_MACRO(MeshTriangleNeighbors)
+    DREAM3D_TYPE_MACRO(MeshTriangleNeighbors)
+
     class Link {
       public:
-        unsigned short ncells;
-        int* cells;
+      unsigned short ncells;
+      int* cells;
     };
 
 
-    //----------------------------------------------------------------------------
-    void Allocate(size_t sz, size_t ext=1000)
-    {
-      static TriangleNeighbors::Link linkInit = {0,NULL};
 
-      this->Size = sz;
-      if ( this->Array != NULL )
-      {
-        delete [] this->Array;
-      }
-      this->Array = new TriangleNeighbors::Link[sz];
-      this->Extend = ext;
-      this->MaxId = -1;
-
-      for (size_t i=0; i < sz; i++)
-      {
-        this->Array[i] = linkInit;
-      }
-    }
-
-    TriangleNeighbors():Array(NULL),Size(0),MaxId(-1),Extend(1000) {}
-
-    ~TriangleNeighbors()
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    ~MeshTriangleNeighbors()
     {
       if ( this->Array == NULL )
       {
@@ -63,18 +89,8 @@ class TriangleNeighbors
       delete [] this->Array;
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void IncrementLinkCount(size_t ptId)
-    {
-      this->Array[ptId].ncells++;
-    }
-
-
-
     //----------------------------------------------------------------------------
-    inline void InsertCellReference(size_t ptId,
+    inline void insertCellReference(size_t ptId,
                                     unsigned short pos,
                                     size_t cellId)
     {
@@ -82,29 +98,32 @@ class TriangleNeighbors
     }
     // Description:
     // Get a link structure given a point id.
-    Link& GetLink(size_t ptId) {
+    Link& getLink(size_t ptId) {
       return this->Array[ptId];
     }
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    unsigned short GetNcells(size_t ptId) {
+    unsigned short getNcells(size_t ptId) {
       return this->Array[ptId].ncells;
     }
     // Description:
     // Return a list of cell ids using the point.
-    int* GetCells(size_t ptId) {
+    int* getCells(size_t ptId) {
       return this->Array[ptId].cells;
     }
-
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateNeighborLists(NodeList_t &nodes, TriangleList_t &triangles, CellLinks &cellLinks)
+    void generateNeighborLists(SurfaceMesh::DataStructures::VertListPointer_t nodes,
+                               SurfaceMesh::DataStructures::FaceListPointer_t triangles,
+                               MeshVertLinks::Pointer cellLinks)
     {
 
-      size_t nTriangles = triangles.size();
+      size_t nTriangles = triangles->GetNumberOfTuples();
+
+      allocate(triangles->GetNumberOfTuples());
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
       boost::shared_array<bool> visitedPtr(new bool[nTriangles]);
@@ -124,24 +143,24 @@ class TriangleNeighbors
       for(size_t t = 0; t < nTriangles; ++t)
       {
         //   std::cout << "Analyzing Triangle " << t << std::endl;
-        SurfaceMesh::Triangle_t& seedTriangle = triangles[t];
+        SurfaceMesh::DataStructures::Face_t& seedTriangle = *(triangles->GetPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
           //   std::cout << " vert " << v << std::endl;
-          int nTris = cellLinks.GetNcells(seedTriangle.verts[v]);
-          int* vertIdxs = cellLinks.GetCells(seedTriangle.verts[v]);
+          int nTris = cellLinks->getNumberOfTriangles(seedTriangle.verts[v]);
+          int* vertIdxs = cellLinks->getTriangleListPointer(seedTriangle.verts[v]);
 
           for(int vt = 0; vt < nTris; ++vt)
           {
-            if (vertIdxs[vt] == t) { continue; } // This is the same triangle as our "source" triangle
+            if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
             //      std::cout << "   Comparing Triangle " << vertIdxs[vt] << std::endl;
-            SurfaceMesh::Triangle_t& vertTri = triangles[vertIdxs[vt]];
+            SurfaceMesh::DataStructures::Face_t& vertTri = *(triangles->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
             // then there is a real problem with the mesh and the program is going to assert.
-
+            // Unrolled the loop to shave about 25% of time off the outer loop.
             int seedTriVert0 = seedTriangle.verts[0];
             int seedTriVert1 = seedTriangle.verts[1];
             int seedTriVert2 = seedTriangle.verts[2];
@@ -149,13 +168,6 @@ class TriangleNeighbors
             int trgtTriVert1 = vertTri.verts[1];
             int trgtTriVert2 = vertTri.verts[2];
 
-//            for(int e = 0; e < 3; ++e)
-//            {
-//              if (seedTriangle.verts[e] == vertTri.verts[0] || seedTriangle.verts[e] == vertTri.verts[1] || seedTriangle.verts[e] == vertTri.verts[2]  )
-//              {
-//                vCount++;
-//              }
-//            }
             if (seedTriVert0 == trgtTriVert0 || seedTriVert0 == trgtTriVert1 || seedTriVert0 == trgtTriVert2  )
             {
               vCount++;
@@ -209,6 +221,11 @@ class TriangleNeighbors
 
     }
 
+  protected:
+    MeshTriangleNeighbors():Array(NULL),Size(0),MaxId(-1),Extend(1000) {}
+
+
+
   private:
     Link* Array;   // pointer to data
     size_t Size;
@@ -216,60 +233,47 @@ class TriangleNeighbors
     size_t Extend;
 
     //----------------------------------------------------------------------------
-    // Allocate memory for the list of lists of cell ids.
-    void AllocateLinks(size_t n)
+    void allocate(size_t sz, size_t ext=1000)
     {
-      for (size_t i=0; i < n; i++)
+      static MeshTriangleNeighbors::Link linkInit = {0,NULL};
+
+      this->Size = sz;
+      if ( this->Array != NULL )
       {
-        this->Array[i].cells = new int[this->Array[i].ncells];
+        delete [] this->Array;
+      }
+      this->Array = new MeshTriangleNeighbors::Link[sz];
+      this->Extend = ext;
+      this->MaxId = -1;
+
+      for (size_t i=0; i < sz; i++)
+      {
+        this->Array[i] = linkInit;
       }
     }
 
 
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void incrementLinkCount(size_t ptId)
+    {
+      this->Array[ptId].ncells++;
+    }
+
+
+    //----------------------------------------------------------------------------
+    // Allocate memory for the list of lists of cell ids.
+    void allocateLinks(size_t n)
+    {
+     // size_t memory_used = 0;
+      for (size_t i=0; i < n; i++)
+      {
+        this->Array[i].cells = new int[this->Array[i].ncells];
+     //   memory_used= memory_used + (10 + sizeof(int)*this->Array[i].ncells);
+      }
+    //  std::cout << "MeshVertLinks Memory Used: " << memory_used << std::endl;
+    }
 };
 
-#if 0
-
-NodeList_t::size_type numPts = nodes.size();
-TriangleList_t::size_type numCells = triangles.size();
-
-TriangleList_t::size_type cellId;
-unsigned short* linkLoc;
-
-// fill out lists with number of references to cells
-typedef boost::shared_array<unsigned short> SharedShortArray_t;
-SharedShortArray_t linkLocPtr(new unsigned short[numPts]);
-linkLoc = linkLocPtr.get();
-
-memset(linkLoc, 0, numPts*sizeof(unsigned short));
-
-
-NodeList_t::size_type pts[3];
-TriangleList_t::size_type npts = 3; // ALWAYS 3 points for a triangle
-
-//vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
-// traverse data to determine number of uses of each point
-for (cellId=0; cellId < numCells; cellId++)
-{
-  GetCellPoints(triangles, cellId, npts, pts);
-  for (TriangleList_t::size_type j=0; j < npts; j++)
-  {
-    this->IncrementLinkCount(pts[j]);
-  }
-}
-
-// now allocate storage for the links
-this->AllocateLinks(numPts);
-this->MaxId = numPts - 1;
-
-for (cellId=0; cellId < numCells; cellId++)
-{
-  GetCellPoints(triangles, cellId, npts, pts);
-  for (TriangleList_t::size_type j=0; j < npts; j++)
-  {
-    this->InsertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
-  }
-}
-#endif
-
-#endif /* _TriangleNeighbors_hpp_H_ */
+#endif /* _MeshTriangleNeighbors_hpp_H_ */

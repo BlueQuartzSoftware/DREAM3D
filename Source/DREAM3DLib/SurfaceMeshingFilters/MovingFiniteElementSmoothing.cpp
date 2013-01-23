@@ -115,9 +115,9 @@ template<typename Node, typename T>
 void LineCurvatureDirection(pvector& v, Node& n0, Node& n1, Node& n2)
 //  returns vector along which curvature points at node n1
 {
-  v.coefft[0] = (2. * n1.coord[0]) - n2.coord[0] - n0.coord[0];
-  v.coefft[1] = (2. * n1.coord[1]) - n2.coord[1] - n0.coord[1];
-  v.coefft[2] = (2. * n1.coord[2]) - n2.coord[2] - n0.coord[2];
+  v.coefft[0] = (2. * n1.pos[0]) - n2.pos[0] - n0.pos[0];
+  v.coefft[1] = (2. * n1.pos[1]) - n2.pos[1] - n0.pos[1];
+  v.coefft[2] = (2. * n1.pos[2]) - n2.pos[2] - n0.pos[2];
   return;
 }
 
@@ -129,12 +129,12 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 //  returns angle approx. to curvature at node n1
 {
   T v1[3], v2[3];
-  v1[0] = n0.coord[0] - n1.coord[0];
-  v1[1] = n0.coord[1] - n1.coord[1];
-  v1[2] = n0.coord[2] - n1.coord[2];
-  v2[0] = n1.coord[0] - n2.coord[0];
-  v2[1] = n1.coord[1] - n2.coord[1];
-  v2[2] = n1.coord[2] - n2.coord[2];
+  v1[0] = n0.pos[0] - n1.pos[0];
+  v1[1] = n0.pos[1] - n1.pos[1];
+  v1[2] = n0.pos[2] - n1.pos[2];
+  v2[0] = n1.pos[0] - n2.pos[0];
+  v2[1] = n1.pos[1] - n2.pos[1];
+  v2[2] = n1.pos[2] - n2.pos[2];
   T d1 = NodeFunctions<Node, T>::Distance(n0, n1);
   T d2 = NodeFunctions<Node, T>::Distance(n1, n2);
   T product = sqrt((v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2]) / d1 / d2);
@@ -244,13 +244,13 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
   }
   else
   {
-    if(sm->getTriangles().get() == NULL)
+    if(sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
     }
 
-    if(sm->getNodes().get() == NULL)
+    if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
@@ -259,7 +259,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     if (getErrorCondition() >= 0)
     {
       // Check for Node Type Array
-      int size = sm->getNodes()->GetNumberOfTuples();
+      int size = sm->getVertices()->GetNumberOfTuples();
       GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
     }
 
@@ -311,7 +311,7 @@ void MovingFiniteElementSmoothing::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
-  StructArray<Node>::Pointer floatNodesPtr = m->getNodes();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer floatNodesPtr = m->getVertices();
   if(NULL == floatNodesPtr.get())
   {
     setErrorCondition(-555);
@@ -319,7 +319,7 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-  StructArray<Triangle>::Pointer trianglesPtr = m->getTriangles();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = m->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -329,25 +329,25 @@ void MovingFiniteElementSmoothing::execute()
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
-  Node* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  SurfaceMesh::DataStructures::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  Triangle* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
   int numberNodes = floatNodesPtr->GetNumberOfTuples();
   int ntri = trianglesPtr->GetNumberOfTuples();
 
 
-  StructArray<Node>::Pointer nodesDPtr = StructArray<Node>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesDPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  Node* nodes = nodesDPtr->GetPointer(0);
+  SurfaceMesh::DataStructures::Vert_t* nodes = nodesDPtr->GetPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
   {
-    nodes[n].coord[0] = nodesF[n].coord[0];
-    nodes[n].coord[1] = nodesF[n].coord[1];
-    nodes[n].coord[2] = nodesF[n].coord[2];
+    nodes[n].pos[0] = nodesF[n].pos[0];
+    nodes[n].pos[1] = nodesF[n].pos[1];
+    nodes[n].pos[2] = nodesF[n].pos[2];
   }
 
   bool isVerbose = true;
@@ -407,15 +407,21 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-
+  #if 1
+  #warning Smoothing Triple Lines are NOT working because the code needs updated.
+  if(m_SmoothTripleLines == true)
+  {
+    m_SmoothTripleLines= false;
+  }
+  #else
 
   if(m_SmoothTripleLines == true)
   {
-    StructArray<Segment> *edgesStructArray = StructArray<Segment>::SafePointerDownCast(edgesDataArray.get());
-    Segment* edges = edgesStructArray->GetPointer(0);
+    StructArray<SurfaceMesh::DataStructures::Edge_t> *edgesStructArray = StructArray<SurfaceMesh::DataStructures::Edge_t>::SafePointerDownCast(edgesDataArray.get());
+    SurfaceMesh::DataStructures::Edge_t* edges = edgesStructArray->GetPointer(0);
 
-    StructArray<ISegment> *internalEdgesStructArray = StructArray<ISegment>::SafePointerDownCast(iEdgesDataArray.get());
-    ISegment* iEdges = internalEdgesStructArray->GetPointer(0);
+    StructArray<SurfaceMesh::DataStructures::Edge_t> *internalEdgesStructArray = StructArray<SurfaceMesh::DataStructures::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
+    SurfaceMesh::DataStructures::Edge_t* iEdges = internalEdgesStructArray->GetPointer(0);
 
     //  Read the edges, if we are going to smooth them explicitly
 #if 0
@@ -446,14 +452,14 @@ void MovingFiniteElementSmoothing::execute()
       if(i < edgeCount) // Grab from the 'Segment' array
       {
         ekind = edges[i].edgeKind;
-        nid[0] = edges[i].node_id[0];
-        nid[1] = edges[i].node_id[1];
+        nid[0] = edges[i].verts[0];
+        nid[1] = edges[i].verts[1];
       }
       else // Grab from the 'ISegment' Array
       {
         ekind = iEdges[i - edgeCount].edgeKind;
-        nid[0] = edges[i - edgeCount].node_id[0];
-        nid[1] = edges[i - edgeCount].node_id[1];
+        nid[0] = edges[i - edgeCount].verts[0];
+        nid[1] = edges[i - edgeCount].verts[1];
       }
 
       //input3 >> junk >> nid[0] >> nid[1] >> ekind >> spin1 >> spin2 >> spin3 >> spin4;
@@ -525,6 +531,7 @@ void MovingFiniteElementSmoothing::execute()
      }
      }  */
   }
+#endif
 
   if(getCancel() == true)
   {
@@ -622,13 +629,13 @@ void MovingFiniteElementSmoothing::execute()
   {
     for (int j = 0; j < 3; j++)
     {
-      if(nodes[i].coord[j] < min[j])
+      if(nodes[i].pos[j] < min[j])
       {
-        min[j] = nodes[i].coord[j];
+        min[j] = nodes[i].pos[j];
       }
-      if(nodes[i].coord[j] > max[j])
+      if(nodes[i].pos[j] > max[j])
       {
-        max[j] = nodes[i].coord[j];
+        max[j] = nodes[i].pos[j];
       }
     }
   }
@@ -682,18 +689,18 @@ void MovingFiniteElementSmoothing::execute()
     nodeConstraint[r] = 0;
     if(m_NodeConstraints == true)
     { // only do this if we want the constraint on surfaces
-      if(fabs(nodes[r].coord[0] - max[0]) < tolerance || fabs(nodes[r].coord[0] - min[0]) < tolerance) nodeConstraint[r] += 1;
-      if(fabs(nodes[r].coord[1] - max[1]) < tolerance || fabs(nodes[r].coord[1] - min[1]) < tolerance) nodeConstraint[r] += 2;
-      if(fabs(nodes[r].coord[2] - max[2]) < tolerance || fabs(nodes[r].coord[2] - min[2]) < tolerance) nodeConstraint[r] += 4;
+      if(fabs(nodes[r].pos[0] - max[0]) < tolerance || fabs(nodes[r].pos[0] - min[0]) < tolerance) nodeConstraint[r] += 1;
+      if(fabs(nodes[r].pos[1] - max[1]) < tolerance || fabs(nodes[r].pos[1] - min[1]) < tolerance) nodeConstraint[r] += 2;
+      if(fabs(nodes[r].pos[2] - max[2]) < tolerance || fabs(nodes[r].pos[2] - min[2]) < tolerance) nodeConstraint[r] += 4;
       // debug
       if(m_SurfaceMeshNodeType[r] > 10 && nodeConstraint[r] == 0)
       {
         if(isVerbose)
         {
-          std::cout << "ID " << r << " Coords: " << nodes[r].coord[0] << " " << nodes[r].coord[1] << " " << nodes[r].coord[2] << std::endl;
-          std::cout << " Coord. Diffs. for X: " << fabs(nodes[r].coord[0] - max[0]) << " " << fabs(nodes[r].coord[0] - min[0]) << std::endl;
-          std::cout << " Coord. Diffs. for Y: " << fabs(nodes[r].coord[1] - max[1]) << " " << fabs(nodes[r].coord[1] - min[1]) << std::endl;
-          std::cout << " Coord. Diffs. for Z: " << fabs(nodes[r].coord[2] - max[2]) << " " << fabs(nodes[r].coord[2] - min[2]) << std::endl;
+          std::cout << "ID " << r << " Coords: " << nodes[r].pos[0] << " " << nodes[r].pos[1] << " " << nodes[r].pos[2] << std::endl;
+          std::cout << " Coord. Diffs. for X: " << fabs(nodes[r].pos[0] - max[0]) << " " << fabs(nodes[r].pos[0] - min[0]) << std::endl;
+          std::cout << " Coord. Diffs. for Y: " << fabs(nodes[r].pos[1] - max[1]) << " " << fabs(nodes[r].pos[1] - min[1]) << std::endl;
+          std::cout << " Coord. Diffs. for Z: " << fabs(nodes[r].pos[2] - max[2]) << " " << fabs(nodes[r].pos[2] - min[2]) << std::endl;
           std::cout << "Type, Constraint: " << m_SurfaceMeshNodeType[r] << " " << nodeConstraint[r] << std::endl;
           std::cout << "Check whether there is a problem with applying constraints ... " << std::endl;
         }
@@ -747,11 +754,11 @@ void MovingFiniteElementSmoothing::execute()
     // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
     {
-      Triangle& rtri = triangles[t];
+      SurfaceMesh::DataStructures::Face_t& rtri = triangles[t];
       MFE::Vector<double> n(3);
-      n = TriangleFunctions<Node, double>::normal(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
-      A = TriangleFunctions<Node, double>::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
-      Q = TriangleFunctions<Node, double>::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], A); //  current quality
+      n = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
+      A = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
+      Q = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], A); //  current quality
       if(Q > 100.) {
         if(isVerbose)
         {
@@ -761,7 +768,7 @@ void MovingFiniteElementSmoothing::execute()
       Q_sum += Q;
       if(Q > Q_max) { Q_max = Q; }
 
-      Dihedral = TriangleFunctions<Node, double>::MinDihedral(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]);
+      Dihedral = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::MinDihedral(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       // debug
       //      std::cout << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI << std::endl;
       Dihedral_sum += Dihedral;
@@ -770,32 +777,32 @@ void MovingFiniteElementSmoothing::execute()
 
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
-        int i = rtri.node_id[n0];
-        Node& node_i = nodes[i];
+        int i = rtri.verts[n0];
+        SurfaceMesh::DataStructures::Vert_t& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            LDistance = NodeFunctions<Node, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<Node, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
+            LDistance = NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
           }
-          node_i.coord[j] += small;
-          double Anew = TriangleFunctions<Node, double>::area(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]]); //  current Area
-          double Qnew = TriangleFunctions<Node, double>::circularity(nodes[rtri.node_id[0]], nodes[rtri.node_id[1]], nodes[rtri.node_id[2]], Anew);
+          node_i.pos[j] += small;
+          double Anew = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
+          double Qnew = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], Anew);
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            deltaLDistance = NodeFunctions<Node, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<Node, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i])
+            deltaLDistance = NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i])
                 - LDistance; // change in line length
             F[3 * i + j] -= TJ_scale * deltaLDistance;
           }
-          node_i.coord[j] -= small;
+          node_i.pos[j] -= small;
           double arg = (A_scale * (Anew - A) + Q_scale * (Qnew - Q) * A) / small;
           F[3 * i + j] -= arg;
         }
         for (int n1 = 0; n1 < 3; n1++)
         { //  for each of 3 nodes
-          int h = rtri.node_id[n1];
+          int h = rtri.verts[n1];
           for (int k = 0; k < 3; k++)
           {
             for (int j = 0; j < 3; j++)
@@ -945,11 +952,11 @@ void MovingFiniteElementSmoothing::execute()
 
         if(fabs(dt * x[3 * r + s]) > 1.0)
         {
-          nodes[r].coord[s] += 0.0;
+          nodes[r].pos[s] += 0.0;
         }
         else if(fabs(dt * x[3 * r + s]) < 1.0)
         {
-          nodes[r].coord[s] += bc_dt * x[3 * r + s];
+          nodes[r].pos[s] += bc_dt * x[3 * r + s];
         }
         //		velocityfile  << std::scientific << std::setw(4)
         //			  << std::setprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
@@ -974,16 +981,16 @@ void MovingFiniteElementSmoothing::execute()
       inpfile << nnod << " " << ntri << " 2 2 0" << std::endl; //  now that we have NODE properties
       for (int i = 0; i < nnod; i++)
       {
-        inpfile << i << " " << nodes[i].coord[0] << " " << nodes[i].coord[1] << " " << nodes[i].coord[2] << std::endl;
+        inpfile << i << " " << nodes[i].pos[0] << " " << nodes[i].pos[1] << " " << nodes[i].pos[2] << std::endl;
       }
 
       for (int i = 0; i < ntri; i++)
       {
         //		inpfile<<i<<" "<<triangles[i].region1>>triangles[i].region2<<" tri ";
         inpfile << i << " 0 tri ";
-        inpfile << triangles[i].node_id[0] << " ";
-        inpfile << triangles[i].node_id[1] << " ";
-        inpfile << triangles[i].node_id[2] << std::endl;
+        inpfile << triangles[i].verts[0] << " ";
+        inpfile << triangles[i].verts[1] << " ";
+        inpfile << triangles[i].verts[2] << std::endl;
         //inpfile<<triangles[i].region1<<" ";
         //inpfile<<triangles[i].region2<<std::endl;
       }
@@ -1023,8 +1030,8 @@ void MovingFiniteElementSmoothing::execute()
   inpfile << nnod << std::endl;
   for (int i = 0; i < nnod; i++)
   {
-    inpfile << std::setw(6) << std::fixed << "\t" << i << "\t" << nodes[i].nodeKind << "\t" << nodes[i].coord[0] << "\t" << nodes[i].coord[1] << "\t"
-        << nodes[i].coord[2] << std::endl;
+    inpfile << std::setw(6) << std::fixed << "\t" << i << "\t" << nodes[i].nodeKind << "\t" << nodes[i].pos[0] << "\t" << nodes[i].pos[1] << "\t"
+        << nodes[i].pos[2] << std::endl;
   }
   inpfile.close();
 #endif
@@ -1039,9 +1046,9 @@ void MovingFiniteElementSmoothing::execute()
   // Copy the nodes from the 64 bit floating point to the 32 bit floating point
   for(int n = 0; n < numberNodes; ++n)
   {
-    nodesF[n].coord[0] = nodes[n].coord[0];
-    nodesF[n].coord[1] = nodes[n].coord[1];
-    nodesF[n].coord[2] = nodes[n].coord[2];
+    nodesF[n].pos[0] = nodes[n].pos[0];
+    nodesF[n].pos[1] = nodes[n].pos[1];
+    nodesF[n].pos[2] = nodes[n].pos[2];
   }
 
 

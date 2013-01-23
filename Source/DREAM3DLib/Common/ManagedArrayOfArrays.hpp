@@ -33,8 +33,8 @@
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ManagedPointerArray_H_
-#define _ManagedPointerArray_H_
+#ifndef _ManagedArrayOfArrays_H_
+#define _ManagedArrayOfArrays_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -42,11 +42,11 @@
 
 
 template<typename T>
-class ManagedPointerArray : public IDataArray
+class ManagedArrayOfArrays : public IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(ManagedPointerArray<T> )
-    DREAM3D_TYPE_MACRO_SUPER(ManagedPointerArray<T>, IDataArray)
+    DREAM3D_SHARED_POINTERS(ManagedArrayOfArrays<T> )
+    DREAM3D_TYPE_MACRO_SUPER(ManagedArrayOfArrays<T>, IDataArray)
 
     typedef struct {
       size_t count;
@@ -57,7 +57,7 @@ class ManagedPointerArray : public IDataArray
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of ManagedPointerArrayTemplate<T>
+     * @return Boost::Shared_Ptr wrapping an instance of ManagedArrayOfArraysTemplate<T>
      */
     static Pointer CreateArray(size_t numElements, const std::string &name)
     {
@@ -65,11 +65,11 @@ class ManagedPointerArray : public IDataArray
       {
         return NullPointer();
       }
-      ManagedPointerArray<T>* d = new ManagedPointerArray<T> (numElements, true);
+      ManagedArrayOfArrays<T>* d = new ManagedArrayOfArrays<T> (numElements, true);
       if (d->Allocate() < 0)
       { // Could not allocate enough memory, reset the pointer to null and return
         delete d;
-        return ManagedPointerArray<T>::NullPointer();
+        return ManagedArrayOfArrays<T>::NullPointer();
       }
       d->SetName(name);
       Pointer ptr(d);
@@ -85,7 +85,7 @@ class ManagedPointerArray : public IDataArray
      */
     virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
     {
-      IDataArray::Pointer p = ManagedPointerArray<T>::CreateArray(numElements, name);
+      IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
     }
 
@@ -93,9 +93,9 @@ class ManagedPointerArray : public IDataArray
     /**
      * @brief Destructor
      */
-    virtual ~ManagedPointerArray()
+    virtual ~ManagedArrayOfArrays()
     {
-      //std::cout << "~ManagedPointerArrayTemplate '" << m_Name << "'" << std::endl;
+      //std::cout << "~ManagedArrayOfArraysTemplate '" << m_Name << "'" << std::endl;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -503,7 +503,7 @@ class ManagedPointerArray : public IDataArray
     {
       assert(false);
       return -1;
-      //   return H5ManagedPointerArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      //   return H5ManagedArrayOfArraysWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**
@@ -517,7 +517,7 @@ class ManagedPointerArray : public IDataArray
       int err = -1;
 
       //      this->Resize(0);
-      //      IManagedPointerArray::Pointer p = H5ManagedPointerArrayReader::readIManagedPointerArray(parentId, GetName());
+      //      IManagedArrayOfArrays::Pointer p = H5ManagedArrayOfArraysReader::readIManagedArrayOfArrays(parentId, GetName());
       //      if (p.get() == NULL)
       //      {
       //        return -1;
@@ -548,7 +548,7 @@ class ManagedPointerArray : public IDataArray
      * @param numElements The number of elements in the internal array.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
-    ManagedPointerArray(size_t numElements, bool ownsData = true) :
+    ManagedArrayOfArrays(size_t numElements, bool ownsData = true) :
       Array(NULL),
       Size(numElements),
       _ownsData(ownsData)
@@ -699,11 +699,11 @@ class ManagedPointerArray : public IDataArray
     std::string m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
-    ManagedPointerArray(const ManagedPointerArray&); //Not Implemented
-    void operator=(const ManagedPointerArray&); //Not Implemented
+    ManagedArrayOfArrays(const ManagedArrayOfArrays&); //Not Implemented
+    void operator=(const ManagedArrayOfArrays&); //Not Implemented
 
 
 };
 
 
-#endif /* _ManagedPointerArray_H_ */
+#endif /* _ManagedArrayOfArrays_H_ */
