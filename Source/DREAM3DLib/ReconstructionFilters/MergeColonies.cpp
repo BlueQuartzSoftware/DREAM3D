@@ -125,7 +125,9 @@ const static float m_pi = static_cast<float>(M_PI);
 MergeColonies::MergeColonies() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -133,7 +135,9 @@ m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
 m_RandomizeParentIds(true),
+m_IdentifyGlobAlpha(false),
 m_GrainIds(NULL),
+m_CellPhases(NULL),
 m_ParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
@@ -184,7 +188,14 @@ void MergeColonies::setupFilterParameters()
     option->setUnits("Degrees");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Identify Glob Alpha");
+    option->setPropertyName("IdentifyGlobAlpha");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -195,6 +206,7 @@ void MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
+  writer->writeValue("IdentifyGlobAlpha", getIdentifyGlobAlpha() );
 }
 
 // -----------------------------------------------------------------------------
@@ -209,7 +221,12 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  if(m_IdentifyGlobAlpha == true)
+  {
+	  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  }
 
   // Field Data
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
@@ -342,6 +359,11 @@ void MergeColonies::execute()
     {
        m_ParentIds[i] = pid[ m_ParentIds[i] ];
     }
+  }
+
+  if(m_IdentifyGlobAlpha == true)
+  {
+	identify_globAlpha();
   }
 
  notifyStatusMessage("Completed");
@@ -546,4 +568,25 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   }
 
   return 0;
+}
+
+void MergeColonies::identify_globAlpha()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  int64_t totalPoints = m->getTotalPoints();
+  std::vector<int> betaSize(numParents,0);
+  std::vector<int> totalSize(numParents,0);
+  for (size_t i = 0; i < totalPoints; i++)
+  {
+	int pnum = m_ParentIds[i];
+	totalSize[pnum]++;
+	if(m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::Cubic) betaSize[pnum]++;
+  }
+  for (size_t i = 0; i < totalPoints; i++)
+  {
+	  int pnum = m_ParentIds[i];
+	  float ratio = float(betaSize[pnum])/float(totalSize[pnum]);
+	  if(ratio > 0.0) m_GlobAlpha[i] = 0;
+	  else m_GlobAlpha[i] = 1;
+  }
 }

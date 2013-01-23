@@ -291,8 +291,7 @@ void FindDeformationStatistics::execute()
       gbdist = m_GBEuclideanDistances[i];
       tjdist = m_TJEuclideanDistances[i];
       qpdist = m_QPEuclideanDistances[i];
-      nearestneighbor = m_NearestNeighbors[i * 3 + 0];
-      gname2 = m_GrainIds[nearestneighbor];
+      gname2 = m_NearestNeighbors[i * 3 + 0];
       sf = m_Schmids[gname];
       sf2 = m_Schmids[gname2];
       sfmm = sf / sf2;
@@ -358,7 +357,7 @@ void FindDeformationStatistics::execute()
       gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
       distance = int(m_GBEuclideanDistances[i]);
       if(distance > 9) distance = 9;
-      if(distance <= 5)
+      if(distance <= 3)
       {
         kmvsf[sfbin][0]++;
         kmvsf[sfbin][1] = kmvsf[sfbin][1] + km;

@@ -239,7 +239,7 @@ void FillBadData::execute()
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = 0;
-					m_CellPhases[currentvlist[k]] = 0;
+//					m_CellPhases[currentvlist[k]] = 0;
 				}
 				m_FieldPhases[0] = 0;
 			}
@@ -248,7 +248,7 @@ void FillBadData::execute()
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = -1;
-					m_CellPhases[currentvlist[k]] = 0;
+//					m_CellPhases[currentvlist[k]] = 0;
 				}
 			}
 			currentvlist.clear();

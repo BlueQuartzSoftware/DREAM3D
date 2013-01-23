@@ -52,6 +52,7 @@
     <file>ProcessingFilters/ConvertEulerAngles.html</file>
     <file>ProcessingFilters/StandardizeEulerAngles.html</file>
     <file>ProcessingFilters/RotateEulerRefFrame.html</file>
+    <file>ProcessingFilters/IdentifySample.html</file>
 
     <!-- ***** ReconstructionFilters ***** -->
     <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
