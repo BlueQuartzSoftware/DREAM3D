@@ -208,7 +208,7 @@ class LabelVisitorInfo
 //
 // -----------------------------------------------------------------------------
 VerifyTriangleWinding::VerifyTriangleWinding() :
-  AbstractFilter(),
+  SurfaceMeshFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeTrianglesArrayName(DREAM3D::CellData::SurfaceMeshNodeTriangles),
   m_DoUniqueEdgesFilter(false),
@@ -273,7 +273,7 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
       setErrorCondition(-385);
     }
 
-    if (sm->getCellData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+    if (sm->getPointData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
     {
       m_DoUniqueEdgesFilter = true;
     }
@@ -358,7 +358,8 @@ void VerifyTriangleWinding::execute()
   // Clean up any arrays that were designated as temp
   if (m_DoUniqueEdgesFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removeCellData(m_SurfaceMeshUniqueEdgesArrayName);
+    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removePointData(m_SurfaceMeshUniqueEdgesArrayName);
+    assert(removedConnectviity.get() != NULL);
   }
   if (clearMeshVertLinks == true)
   {

@@ -41,8 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
  * @class SharedGrainFaceFilter SharedGrainFaceFilter.h DREAM3DLib/SurfaceMeshingFilters/SharedGrainFaceFilter.h
@@ -52,12 +51,12 @@
  * @date Dec 28, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SharedGrainFaceFilter : public AbstractFilter
+class DREAM3DLib_EXPORT SharedGrainFaceFilter : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(SharedGrainFaceFilter)
     DREAM3D_STATIC_NEW_MACRO(SharedGrainFaceFilter)
-    DREAM3D_TYPE_MACRO_SUPER(SharedGrainFaceFilter, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(SharedGrainFaceFilter, SurfaceMeshFilter)
 
     virtual ~SharedGrainFaceFilter();
 

@@ -148,7 +148,7 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 //
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
-AbstractFilter(),
+SurfaceMeshFilter(),
 m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
 m_IterationSteps(1),
 m_NodeConstraints(true),
@@ -260,13 +260,13 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     {
       // Check for Node Type Array
       int size = sm->getVertices()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, PointData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
     }
 
 
     if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
     {
-      IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
+      IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
       if(edges.get() == NULL)
       {
         addErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", -385);
@@ -398,14 +398,7 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-  IDataArray::Pointer edgesDataArray = m->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
-  IDataArray::Pointer iEdgesDataArray = m->getCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
-  if((edgesDataArray.get() == NULL || iEdgesDataArray.get() == NULL) && m_SmoothTripleLines == true)
-  {
-    setErrorCondition(-596);
-    notifyErrorMessage("Either the Edges or Internal Edges array was NULL which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
-    return;
-  }
+
 
   #if 1
   #warning Smoothing Triple Lines are NOT working because the code needs updated.
@@ -417,6 +410,15 @@ void MovingFiniteElementSmoothing::execute()
 
   if(m_SmoothTripleLines == true)
   {
+    IDataArray::Pointer edgesDataArray = m->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
+    IDataArray::Pointer iEdgesDataArray = m->getPointData(DREAM3D::CellData::SurfaceMeshInternalEdges);
+    if((edgesDataArray.get() == NULL || iEdgesDataArray.get() == NULL) && m_SmoothTripleLines == true)
+    {
+      setErrorCondition(-596);
+      notifyErrorMessage("Either the Edges or Internal Edges array was NULL which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.", -556);
+      return;
+    }
+
     StructArray<SurfaceMesh::DataStructures::Edge_t> *edgesStructArray = StructArray<SurfaceMesh::DataStructures::Edge_t>::SafePointerDownCast(edgesDataArray.get());
     SurfaceMesh::DataStructures::Edge_t* edges = edgesStructArray->GetPointer(0);
 

@@ -106,45 +106,6 @@
   }\
 }
 
-/*#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
-    CREATE_NON_PREREQ_DATA_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, true, initValue, size, NumComp)
-
-
-#define CREATE_NON_PREREQ_DATA_NO_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, size, NumComp)\
-    CREATE_NON_PREREQ_DATA_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, false, 0, size, NumComp)
-
-#define CREATE_NON_PREREQ_DATA_INIT(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initializeArray, initValue, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){setErrorCondition(10000);\
-  ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array/" << std::endl; }\
-  std::string _s(#Name); addCreated##DType(_s);\
-  int preFlightError = getErrorCondition();\
-  std::string errorMsg = getErrorMessage();\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, this);\
-  if (NULL ==  m_##Name ) {\
-    setErrorCondition(preFlightError); setErrorMessage(errorMsg);\
-    ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
-    if (NULL == p.get()) {\
-      ss << "Filter " << getNameOfClass() << " attempted to create array '" << \
-      m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
-      setErrorCondition(-500);\
-    } else {\
-      p->initializeWithValues(initValue);\
-      p->SetNumberOfComponents(NumComp);\
-      p->SetName(m_##Name##ArrayName);\
-      dc->add##DType(m_##Name##ArrayName, p);\
-      m_##Name = p->GetPointer(0);\
-    }\
-  } else if (initializeArray) {\
-    IDataArray::Pointer ptr = dc->get##DType(m_##Name##ArrayName);\
-    ArrayType* p = ArrayType::SafeObjectDownCast<IDataArray*, ArrayType*>(ptr.get());\
-    p->initializeWithValues(initValue);\
-  }\
-}*/
-
-
-/**
- *
- */
 
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\

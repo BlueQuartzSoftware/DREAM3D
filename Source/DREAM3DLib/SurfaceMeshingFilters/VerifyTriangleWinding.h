@@ -33,9 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
 
 #ifndef _VerifyTriangleWinding_H_
 #define _VerifyTriangleWinding_H_
@@ -45,8 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
  * @class VerifyTriangleWinding VerifyTriangleWinding.h /SurfaceMeshFilters/VerifyTriangleWinding.h
@@ -55,12 +51,12 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VerifyTriangleWinding : public AbstractFilter
+class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(VerifyTriangleWinding)
     DREAM3D_STATIC_NEW_MACRO(VerifyTriangleWinding)
-    DREAM3D_TYPE_MACRO_SUPER(VerifyTriangleWinding, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(VerifyTriangleWinding, SurfaceMeshFilter)
 
     virtual ~VerifyTriangleWinding();
 

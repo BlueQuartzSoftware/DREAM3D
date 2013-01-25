@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,54 +33,51 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QuickSurfaceMesh_H_
-#define QuickSurfaceMesh_H_
 
-#include <vector>
+
+#ifndef _SurfaceMeshFilter_H_
+#define _SurfaceMeshFilter_H_
+
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/AbstractFilter.h"
 
-/*
- *
+
+/**
+ * @class SurfaceMeshFilter SurfaceMeshFilter.h /FilterCategoryFilters/SurfaceMeshFilter.h
+ * @brief
+ * @author
+ * @date
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(QuickSurfaceMesh)
-     DREAM3D_STATIC_NEW_MACRO(QuickSurfaceMesh)
-     DREAM3D_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SurfaceMeshFilter)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshFilter)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
 
-     virtual ~QuickSurfaceMesh();
+    virtual ~SurfaceMeshFilter();
 
-   //------ Required Cell Data
-  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    void addRequiredPointData(const std::string &name);
+    void addRequiredFaceData(const std::string &name);
+    void addRequiredEdgeData(const std::string &name);
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-     virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
-
-  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-
-  virtual void execute();
-     virtual void preflight();
-
-   protected:
-     QuickSurfaceMesh();
-
-   private:
-    int32_t* m_GrainIds;
+    void addCreatedPointData(const std::string &name);
+    void addCreatedFaceData(const std::string &name);
+    void addCreatedEdgeData(const std::string &name);
 
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+  protected:
+    SurfaceMeshFilter();
 
-    QuickSurfaceMesh(const QuickSurfaceMesh&); // Copy Constructor Not Implemented
-    void operator=(const QuickSurfaceMesh&); // Operator '=' Not Implemented
+  private:
 
+    SurfaceMeshFilter(const SurfaceMeshFilter&); // Copy Constructor Not Implemented
+    void operator=(const SurfaceMeshFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* QuickSurfaceMesh_H_ */
+#endif /* _SurfaceMeshFilter_H_ */

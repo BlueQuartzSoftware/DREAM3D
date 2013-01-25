@@ -42,8 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
  * @class GenerateUniqueEdges GenerateUniqueEdges.h /SurfaceMeshFilters/GenerateUniqueEdges.h
@@ -58,12 +57,12 @@
  * @date  Dec 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateUniqueEdges : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateUniqueEdges : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(GenerateUniqueEdges)
     DREAM3D_STATIC_NEW_MACRO(GenerateUniqueEdges)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateUniqueEdges, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateUniqueEdges, SurfaceMeshFilter)
 
     virtual ~GenerateUniqueEdges();
 

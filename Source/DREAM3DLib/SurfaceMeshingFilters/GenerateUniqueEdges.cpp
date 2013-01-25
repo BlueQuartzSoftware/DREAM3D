@@ -54,7 +54,7 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 //
 // -----------------------------------------------------------------------------
 GenerateUniqueEdges::GenerateUniqueEdges() :
-AbstractFilter(),
+SurfaceMeshFilter(),
 m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
 m_SurfaceMeshUniqueEdges(NULL)
 {
@@ -120,7 +120,7 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
     DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+    sm->addPointData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.
@@ -229,7 +229,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
     surfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
     ++index;
   }
-  sm->addCellData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  sm->addPointData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
 }
 
 
@@ -390,8 +390,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  getSurfaceMeshDataContainer()->addCellData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
-  getSurfaceMeshDataContainer()->addCellData(edgeTriangleArray->GetName(), edgeTriangleArray);
+  getSurfaceMeshDataContainer()->addPointData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  getSurfaceMeshDataContainer()->addPointData(edgeTriangleArray->GetName(), edgeTriangleArray);
 
   notifyStatusMessage("Complete");
   return;

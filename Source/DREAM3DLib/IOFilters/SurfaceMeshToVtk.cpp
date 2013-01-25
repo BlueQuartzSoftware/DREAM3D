@@ -193,7 +193,7 @@ void SurfaceMeshToVtk::execute()
   // Make sure we have a node type array or create a default one.
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::CellData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
@@ -358,7 +358,7 @@ template<typename DataContainer, typename T>
 void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
-  IDataArray::Pointer data = dc->getCellData(dataName);
+  IDataArray::Pointer data = dc->getPointData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
@@ -396,7 +396,7 @@ void writePointVectorData(DataContainer* dc, const std::string &dataName, const 
                                 bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
                                 FILE* vtkFile, int nT)
 {
-  IDataArray::Pointer data = dc->getCellData(dataName);
+  IDataArray::Pointer data = dc->getPointData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
@@ -513,7 +513,7 @@ void writeCellScalarData(DataContainer* dc, const std::string &dataName, const s
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   // Write the Grain Face ID Data to the file
-  IDataArray::Pointer data = dc->getCellData(dataName);
+  IDataArray::Pointer data = dc->getFaceData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
@@ -558,7 +558,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
                                 bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
                                 FILE* vtkFile, int nT)
 {
-  IDataArray::Pointer data = dc->getCellData(dataName);
+  IDataArray::Pointer data = dc->getFaceData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
@@ -611,7 +611,7 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
                                 bool writeBinaryData, bool writeConformalMesh,
                                 FILE* vtkFile, int nT)
 {
-  IDataArray::Pointer data = dc->getCellData(dataName);
+  IDataArray::Pointer data = dc->getFaceData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {

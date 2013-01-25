@@ -42,7 +42,8 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+
 
 #define OUTPUT_DEBUG_VTK_FILES 0
 
@@ -55,12 +56,12 @@
  * @date   Oct 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
+class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(LaplacianSmoothing)
     DREAM3D_STATIC_NEW_MACRO(LaplacianSmoothing)
-    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
 
     virtual ~LaplacianSmoothing();
 

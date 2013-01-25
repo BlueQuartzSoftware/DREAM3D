@@ -392,9 +392,9 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
 
     int8_t* m_SurfaceMeshNodeType;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, PointData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
-        sm->setVertices(vertices);
+    sm->setVertices(vertices);
     sm->setFaces(triangles);
   }
 }
@@ -679,6 +679,15 @@ void M3CSliceBySlice::execute()
 
   notifyStatusMessage("Surface Meshing Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::addCreatedPointData(const std::string &name)
+{
+  addCreatedCellData(name);
+}
+
 
 // -----------------------------------------------------------------------------
 //
