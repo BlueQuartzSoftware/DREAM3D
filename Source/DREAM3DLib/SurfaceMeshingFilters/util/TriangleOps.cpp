@@ -3,7 +3,9 @@
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshTriangleNeighbors.hpp"
 
+namespace SM = SurfaceMesh::DataStructures;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -15,6 +17,55 @@ TriangleOps::TriangleOps()
 // -----------------------------------------------------------------------------4
 TriangleOps::~TriangleOps()
 {}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer* sm,
+                                                        int32_t triangleIndex,
+                                                        int32_t label)
+{
+  std::vector<int32_t> adjacentTris;
+  // Get the master list of triangles for the mesh
+  SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr = sm->getFaces();
+  SurfaceMesh::DataStructures::Face_t* faces = facesPtr->GetPointer(0);
+
+  // Get the Triangle Neighbor Structure
+  MeshTriangleNeighbors::Pointer triNeighbors = sm->getMeshTriangleNeighborLists();
+
+  // For the specific triangle that was passed, get its neighbor list
+  uint16_t count = triNeighbors->getNumberOfTriangles(triangleIndex);
+  int32_t* nList = triNeighbors->getNeighborListPointer(triangleIndex);
+
+  if (count < 3)
+  {
+    std::cout << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3." << std::endl;
+    assert(false);
+  }
+  else if (count == 3) // This triangle only has 3 neighbors so we are assuming all three have the same label set.
+  {
+    for (uint16_t n = 0; n < count; ++n)
+    {
+      adjacentTris.push_back(nList[n]);
+    }
+  }
+  else
+  {
+    // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
+    for (uint16_t n = 0; n < count; ++n)
+    {
+      SM::Face_t& t = faces[nList[n]];
+      if ( (t.labels[0] == label || t.labels[1] == label)  && (nList[n] != triangleIndex) )
+      {
+        //  std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
+        adjacentTris.push_back(nList[n]);
+        // ++index;
+      }
+    }
+  }
+  return adjacentTris;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -49,11 +100,11 @@ bool TriangleOps::verifyWinding(SurfaceMesh::DataStructures::Face_t &source, Sur
   bool flipped = false;
   TriangleOps::getWindingIndices4(source, ids, label);
   TriangleOps::getWindingIndices4(tri, nids, label);
-//  int idx = 0;
+  //  int idx = 0;
   // There are 2 indices that are shared between the two triangles
   // Find them
   int i0, i1;
-//  bool flip = false;
+  //  bool flip = false;
   bool done = false;
   for (int i = 0; i < 3; ++i)
   {
@@ -69,7 +120,7 @@ bool TriangleOps::verifyWinding(SurfaceMesh::DataStructures::Face_t &source, Sur
       }
       else if (i0 == nids[j] && i1 == nids[j + 1])
       {
-        //std::cout << "!!!!!! Winding Bad " << std::endl;
+     //   std::cout << "!!!!!! Winding Bad " << std::endl;
         done = true;
         TriangleOps::flipWinding(tri);
         flipped = true;

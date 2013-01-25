@@ -137,6 +137,15 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public AbstractFilter
      */
     int verifyTriangleWinding();
 
+    /**
+     * @brief VerifyTriangleWinding::getSeedTriangle
+     * @param label
+     * @param triangleIndices
+     * @return
+     */
+    int32_t getSeedTriangle(int32_t label, std::set<int32_t> &triangleIndices);
+
+
   private:
     bool m_DoUniqueEdgesFilter;
     bool m_DoNodeTriangleConnectivityFilter;

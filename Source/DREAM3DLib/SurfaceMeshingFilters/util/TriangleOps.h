@@ -64,9 +64,9 @@ class TriangleOps
 
     static std::set<int32_t> generateUniqueLabels(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr);
 
-//    static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* sm,
-//                                                        int32_t triangleIndex,
-//                                                        int32_t label);
+    static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* sm,
+                                                        int32_t triangleIndex,
+                                                        int32_t label);
 
     static bool verifyWinding(SurfaceMesh::DataStructures::Face_t& source, SurfaceMesh::DataStructures::Face_t& tri, int32_t label);
 

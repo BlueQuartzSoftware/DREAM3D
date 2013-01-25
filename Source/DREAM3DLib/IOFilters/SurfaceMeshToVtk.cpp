@@ -258,6 +258,7 @@ void SurfaceMeshToVtk::execute()
   float pos[3] = {0.0f, 0.0f, 0.0f};
 
   size_t totalWritten = 0;
+
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
@@ -267,6 +268,7 @@ void SurfaceMeshToVtk::execute()
       pos[0] = static_cast<float>(n.pos[0]);
       pos[1] = static_cast<float>(n.pos[1]);
       pos[2] = static_cast<float>(n.pos[2]);
+
       if (m_WriteBinaryFile == true)
       {
         MXA::Endian::FromSystemToBig::convert<float>(pos[0]);

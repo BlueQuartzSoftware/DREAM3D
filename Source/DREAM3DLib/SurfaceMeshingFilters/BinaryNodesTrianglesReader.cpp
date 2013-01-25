@@ -44,10 +44,6 @@
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-/*
- * Your License or Copyright Information can go here
- */
-
 #include "BinaryNodesTrianglesReader.h"
 
 // -----------------------------------------------------------------------------
@@ -263,6 +259,7 @@ int BinaryNodesTrianglesReader::read()
   notifyStatusMessage(s.str());
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
+
   for (size_t i = 0; i < nNodes; i++)
   {
 
@@ -277,8 +274,6 @@ int BinaryNodesTrianglesReader::read()
     node.pos[2] = nRecord.z;
     nodeType[nRecord.nodeId] = nRecord.nodeKind;
   }
-
-
 
   s.str("");
   s << "Reading Triangles file into Memory";
@@ -311,6 +306,9 @@ int BinaryNodesTrianglesReader::read()
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
   sm->addCellData(nodeTypePtr->GetName(), nodeTypePtr);
+
+
+
 
 
   // The ScopedFileMonitor classes will take care of closing the files

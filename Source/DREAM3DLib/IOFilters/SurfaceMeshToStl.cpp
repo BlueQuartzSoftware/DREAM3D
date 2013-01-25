@@ -182,13 +182,9 @@ void SurfaceMeshToStl::execute()
   std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    // Read from the Input Triangles Temp File
-
     uniqueSpins.insert(triangles[i].labels[0]);
     uniqueSpins.insert(triangles[i].labels[1]);
   }
-
-//  std::map<int, int> nodeIdToIndex;
 
   unsigned char data[50];
   float* normal = (float*)data;
