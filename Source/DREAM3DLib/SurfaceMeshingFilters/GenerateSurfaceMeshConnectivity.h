@@ -43,8 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
  * @class GenerateSurfaceMeshConnectivity GenerateSurfaceMeshConnectivity.h DREAM3DLib/SurfaceMeshing/GenerateSurfaceMeshConnectivity.h
@@ -53,12 +52,12 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(GenerateSurfaceMeshConnectivity)
     DREAM3D_STATIC_NEW_MACRO(GenerateSurfaceMeshConnectivity)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateSurfaceMeshConnectivity, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateSurfaceMeshConnectivity, SurfaceMeshFilter)
 
     virtual ~GenerateSurfaceMeshConnectivity();
 

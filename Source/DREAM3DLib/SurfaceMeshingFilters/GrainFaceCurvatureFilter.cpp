@@ -55,7 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
-  AbstractFilter(),
+  SurfaceMeshFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
   m_PrincipalCurvature1ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1),
@@ -170,13 +170,13 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
     {
       // This depends on the triangles array already being created
       int size = sm->getFaces()->GetNumberOfTuples();
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
     }
 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
     DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+    sm->addPointData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.
@@ -184,35 +184,35 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
 
 
     DoubleArrayType::Pointer principalCurv1 = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshPrincipalCurvature1);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1, principalCurv1);
+    sm->addPointData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1, principalCurv1);
     addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1);
 
     DoubleArrayType::Pointer principalCurv2 = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
-    sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2, principalCurv2);
+    sm->addPointData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2, principalCurv2);
     addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2);
 
     if (m_ComputeGaussianCurvature == true)
     {
       DoubleArrayType::Pointer gaussianCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
-      sm->addCellData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures, gaussianCurv);
+      sm->addPointData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures, gaussianCurv);
       addCreatedCellData(DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
     }
 
     if (m_ComputeMeanCurvature == true)
     {
       DoubleArrayType::Pointer meanCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshMeanCurvatures);
-      sm->addCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures, meanCurv);
+      sm->addPointData(DREAM3D::CellData::SurfaceMeshMeanCurvatures, meanCurv);
       addCreatedCellData(DREAM3D::CellData::SurfaceMeshMeanCurvatures);
     }
 
     if (m_ComputePrincipalDirectionVectors == true)
     {
       DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
-      sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection1, prinDir1);
+      sm->addPointData(DREAM3D::CellData::SurfaceMeshPrincipalDirection1, prinDir1);
       addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection1);
 
       DoubleArrayType::Pointer prinDir2 = DoubleArrayType::CreateArray(1, 3, DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
-      sm->addCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection2, prinDir2);
+      sm->addPointData(DREAM3D::CellData::SurfaceMeshPrincipalDirection2, prinDir2);
       addCreatedCellData(DREAM3D::CellData::SurfaceMeshPrincipalDirection2);
     }
 
@@ -280,7 +280,7 @@ void GrainFaceCurvatureFilter::execute()
 
   // Calculate/update the Triangle Normals
   bool clearTriangleNormals = false;
-  if (getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshTriangleNormals).get() == NULL)
+  if (getSurfaceMeshDataContainer()->getPointData(DREAM3D::CellData::SurfaceMeshTriangleNormals).get() == NULL)
   {
     clearTriangleNormals = true;
   }
@@ -412,30 +412,30 @@ void GrainFaceCurvatureFilter::execute()
   delete g;
 #endif
 
-  getSurfaceMeshDataContainer()->addCellData(principalCurvature1->GetName(), principalCurvature1);
-  getSurfaceMeshDataContainer()->addCellData(principalCurvature2->GetName(), principalCurvature2);
+  getSurfaceMeshDataContainer()->addPointData(principalCurvature1->GetName(), principalCurvature1);
+  getSurfaceMeshDataContainer()->addPointData(principalCurvature2->GetName(), principalCurvature2);
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    getSurfaceMeshDataContainer()->addCellData(principalDirection1->GetName(), principalDirection1);
-    getSurfaceMeshDataContainer()->addCellData(principalDirection2->GetName(), principalDirection2);
+    getSurfaceMeshDataContainer()->addPointData(principalDirection1->GetName(), principalDirection1);
+    getSurfaceMeshDataContainer()->addPointData(principalDirection2->GetName(), principalDirection2);
   }
 
   if (m_ComputeGaussianCurvature == true)
   {
-    getSurfaceMeshDataContainer()->addCellData(gaussianCurvature->GetName(), gaussianCurvature);
+    getSurfaceMeshDataContainer()->addPointData(gaussianCurvature->GetName(), gaussianCurvature);
   }
   if (m_ComputeMeanCurvature == true)
   {
-    getSurfaceMeshDataContainer()->addCellData(meanCurvature->GetName(), meanCurvature);
+    getSurfaceMeshDataContainer()->addPointData(meanCurvature->GetName(), meanCurvature);
   }
 
   // Now clear up some temp arrays that were created for this filter
   if (clearTriangleNormals == true)
   {
-    getSurfaceMeshDataContainer()->removeCellData(getSurfaceMeshTriangleNormalsArrayName());
+    getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshTriangleNormalsArrayName());
   }
-  getSurfaceMeshDataContainer()->removeCellData(getSurfaceMeshTriangleCentroidsArrayName() );
-  getSurfaceMeshDataContainer()->removeCellData(getSurfaceMeshGrainFaceIdArrayName() );
+  getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshTriangleCentroidsArrayName() );
+  getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshGrainFaceIdArrayName() );
   if (clearMeshVertLinks == true)
   {
     getSurfaceMeshDataContainer()->removeMeshVertLinks();

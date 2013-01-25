@@ -91,7 +91,7 @@ class CalculateCentroidsImpl
 //
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter() :
-AbstractFilter(),
+SurfaceMeshFilter(),
 m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::CellData::SurfaceMeshTriangleCentroids),
 m_SurfaceMeshTriangleCentroids(NULL)
 {
@@ -154,7 +154,7 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fie
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleCentroids, ss, double, DoubleArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleCentroids, ss, double, DoubleArrayType, 0, voxels, 3)
     }
 
   }

@@ -45,7 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 GenerateSurfaceMeshConnectivity::GenerateSurfaceMeshConnectivity() :
-  AbstractFilter(),
+  SurfaceMeshFilter(),
   m_GenerateVertexTriangleLists(true),
   m_GenerateTriangleNeighbors(true),
   m_GenerateEdgeIdList(false)

@@ -99,7 +99,7 @@ class ReverseWindingImpl
 //
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
-  AbstractFilter()
+  SurfaceMeshFilter()
 {
   setupFilterParameters();
 }

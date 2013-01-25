@@ -50,7 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
-  AbstractFilter()
+  SurfaceMeshFilter()
 {
   setupFilterParameters();
 }
@@ -305,7 +305,7 @@ int BinaryNodesTrianglesReader::read()
 
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
-  sm->addCellData(nodeTypePtr->GetName(), nodeTypePtr);
+  sm->addPointData(nodeTypePtr->GetName(), nodeTypePtr);
 
 
 

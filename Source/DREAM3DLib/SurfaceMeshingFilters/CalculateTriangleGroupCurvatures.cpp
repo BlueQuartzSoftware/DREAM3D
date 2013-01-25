@@ -116,7 +116,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
 
   // Make Sure we have triangle centroids calculated
-  IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleCentroids);
+  IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::CellData::SurfaceMeshTriangleCentroids);
   if (NULL == centroidPtr.get())
   {
     std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
@@ -125,7 +125,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
 
   // Make sure we have triangle normals calculated
-  IDataArray::Pointer normalPtr = m_SurfaceMeshDataContainer->getCellData(DREAM3D::CellData::SurfaceMeshTriangleNormals);
+  IDataArray::Pointer normalPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::CellData::SurfaceMeshTriangleNormals);
   if (NULL == normalPtr.get())
   {
     std::cout << "Triangle Normals are required for this algorithm" << std::endl;

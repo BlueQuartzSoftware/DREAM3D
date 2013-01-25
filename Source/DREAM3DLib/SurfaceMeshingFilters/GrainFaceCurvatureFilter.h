@@ -41,8 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
  * @class GrainFaceCurvatureFilter GrainFaceCurvatureFilter.h GrainCurvature/Code/GrainFaceCurvatureFilters/GrainFaceCurvatureFilter.h
@@ -51,12 +50,12 @@
  * @date
  * @version 1.0
  */
-class GrainFaceCurvatureFilter : public AbstractFilter
+class GrainFaceCurvatureFilter : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(GrainFaceCurvatureFilter)
     DREAM3D_STATIC_NEW_MACRO(GrainFaceCurvatureFilter)
-    DREAM3D_TYPE_MACRO_SUPER(GrainFaceCurvatureFilter, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(GrainFaceCurvatureFilter, SurfaceMeshFilter)
 
     virtual ~GrainFaceCurvatureFilter();
 

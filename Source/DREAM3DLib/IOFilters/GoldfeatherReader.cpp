@@ -214,11 +214,11 @@ void GoldfeatherReader::execute()
   }
 
   m->setVertices(nodesPtr);
-  m->addCellData(normalsPtr->GetName(), normalsPtr);
-  m->addCellData(pcurv1Ptr->GetName(), pcurv1Ptr);
-  m->addCellData(pcurv2Ptr->GetName(), pcurv2Ptr);
-  m->addCellData(pDirection1Ptr->GetName(), pDirection1Ptr);
-  m->addCellData(pDirection2Ptr->GetName(), pDirection2Ptr);
+  m->addPointData(normalsPtr->GetName(), normalsPtr);
+  m->addPointData(pcurv1Ptr->GetName(), pcurv1Ptr);
+  m->addPointData(pcurv2Ptr->GetName(), pcurv2Ptr);
+  m->addPointData(pDirection1Ptr->GetName(), pDirection1Ptr);
+  m->addPointData(pDirection2Ptr->GetName(), pDirection2Ptr);
 
   int nTriangles = 0;
   err = fscanf(f, "%d\n", &nTriangles);
@@ -256,7 +256,7 @@ void GoldfeatherReader::execute()
   }
 
   m->setFaces(trianglesPtr);
-  m->addCellData(triNormalsPtr->GetName(), triNormalsPtr);
+  m->addPointData(triNormalsPtr->GetName(), triNormalsPtr);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

@@ -120,7 +120,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-
+    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
+    virtual void addCreatedPointData(const std::string &name);
     void execute();
 
   protected:

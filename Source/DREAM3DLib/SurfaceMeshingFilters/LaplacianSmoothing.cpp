@@ -152,7 +152,7 @@ class LaplacianSmoothingImpl
 //
 // -----------------------------------------------------------------------------
 LaplacianSmoothing::LaplacianSmoothing() :
-  AbstractFilter(),
+  SurfaceMeshFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
   m_IterationSteps(1),
   m_Lambda(0.1),
@@ -299,7 +299,7 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
       setErrorCondition(-385);
     }
 
-    if (sm->getCellData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+    if (sm->getPointData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
     {
       m_DoConnectivityFilter = true;
     }
@@ -418,7 +418,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::CellData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
@@ -469,7 +469,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   notifyStatusMessage("Starting to Smooth Vertices");
   // Get the unique Edges from the data container
 
-  IDataArray::Pointer uniqueEdgesPtr = getSurfaceMeshDataContainer()->getCellData(m_SurfaceMeshUniqueEdgesArrayName);
+  IDataArray::Pointer uniqueEdgesPtr = getSurfaceMeshDataContainer()->getPointData(m_SurfaceMeshUniqueEdgesArrayName);
   DataArray<int>* uniqueEdges = DataArray<int>::SafePointerDownCast(uniqueEdgesPtr.get());
   if (NULL == uniqueEdges)
   {
@@ -544,7 +544,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   // This filter had to generate the edge connectivity data so delete it when we are done with it.
   if (m_DoConnectivityFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removeCellData(m_SurfaceMeshUniqueEdgesArrayName);
+    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removePointData(m_SurfaceMeshUniqueEdgesArrayName);
+    assert(removedConnectviity.get() != NULL);
   }
 
   return err;
@@ -578,7 +579,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::CellData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
