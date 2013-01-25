@@ -60,7 +60,7 @@ class MeshTriangleNeighbors
     DREAM3D_STATIC_NEW_MACRO(MeshTriangleNeighbors)
     DREAM3D_TYPE_MACRO(MeshTriangleNeighbors)
 
-    class Link {
+    class NeighborList {
       public:
       unsigned short ncells;
       int* cells;
@@ -71,7 +71,7 @@ class MeshTriangleNeighbors
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    ~MeshTriangleNeighbors()
+    virtual ~MeshTriangleNeighbors()
     {
       if ( this->Array == NULL )
       {
@@ -98,18 +98,18 @@ class MeshTriangleNeighbors
     }
     // Description:
     // Get a link structure given a point id.
-    Link& getLink(size_t ptId) {
+    NeighborList& getNeighborList(size_t ptId) {
       return this->Array[ptId];
     }
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    unsigned short getNcells(size_t ptId) {
+    unsigned short getNumberOfTriangles(size_t ptId) {
       return this->Array[ptId].ncells;
     }
     // Description:
     // Return a list of cell ids using the point.
-    int* getCells(size_t ptId) {
+    int* getNeighborListPointer(size_t ptId) {
       return this->Array[ptId].cells;
     }
 
@@ -212,12 +212,12 @@ class MeshTriangleNeighbors
         ::memcpy(this->Array[t].cells, &(loop_neighbors[0]), sizeof(int) * this->Array[t].ncells);
       }
 
-      size_t memory_used = 0;
-      for(size_t t = 0; t < nTriangles; ++t)
-      {
-        memory_used= memory_used + (10 + sizeof(int)*this->Array[t].ncells);
-      }
-      std::cout << "Triangle Neighbors Memory Used: " << memory_used << std::endl;
+//      size_t memory_used = 0;
+//      for(size_t t = 0; t < nTriangles; ++t)
+//      {
+//        memory_used= memory_used + (10 + sizeof(int)*this->Array[t].ncells);
+//      }
+//      std::cout << "Triangle Neighbors Memory Used: " << memory_used << std::endl;
 
     }
 
@@ -227,7 +227,7 @@ class MeshTriangleNeighbors
 
 
   private:
-    Link* Array;   // pointer to data
+    NeighborList* Array;   // pointer to data
     size_t Size;
     size_t MaxId;
     size_t Extend;
@@ -235,14 +235,14 @@ class MeshTriangleNeighbors
     //----------------------------------------------------------------------------
     void allocate(size_t sz, size_t ext=1000)
     {
-      static MeshTriangleNeighbors::Link linkInit = {0,NULL};
+      static MeshTriangleNeighbors::NeighborList linkInit = {0,NULL};
 
       this->Size = sz;
       if ( this->Array != NULL )
       {
         delete [] this->Array;
       }
-      this->Array = new MeshTriangleNeighbors::Link[sz];
+      this->Array = new MeshTriangleNeighbors::NeighborList[sz];
       this->Extend = ext;
       this->MaxId = -1;
 

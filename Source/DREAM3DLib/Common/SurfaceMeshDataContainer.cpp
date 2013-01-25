@@ -79,6 +79,14 @@ void SurfaceMeshDataContainer::buildMeshVertLinks()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::removeMeshVertLinks()
+{
+  m_MeshVertLinks = MeshVertLinks::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshDataContainer::buildMeshTriangleNeighborLists()
 {
   bool deleteMeshVertLinks = false;
@@ -93,6 +101,14 @@ void SurfaceMeshDataContainer::buildMeshTriangleNeighborLists()
   {
     m_MeshVertLinks = MeshVertLinks::NullPointer();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::removeMeshTriangleNeighborLists()
+{
+  m_TriangleNeighbors = MeshTriangleNeighbors::NullPointer();
 }
 
 // -----------------------------------------------------------------------------

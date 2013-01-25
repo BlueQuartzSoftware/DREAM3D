@@ -33,12 +33,11 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
+
 
 #include "GenerateSurfaceMeshConnectivity.h"
 
+#include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
 
 
 
@@ -48,7 +47,8 @@
 GenerateSurfaceMeshConnectivity::GenerateSurfaceMeshConnectivity() :
   AbstractFilter(),
   m_GenerateVertexTriangleLists(true),
-  m_GenerateTriangleNeighbors(true)
+  m_GenerateTriangleNeighbors(true),
+  m_GenerateEdgeIdList(false)
 {
   setupFilterParameters();
 }
@@ -69,18 +69,26 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
   /* Place all your option initialization code here */
 
   /*   For a simple true/false boolean use this code*/
-   {
+  {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Genereate Per Vertex Triangle List");
+    parameter->setHumanLabel("Generate Per Vertex Triangle List");
     parameter->setPropertyName("GenerateVertexTriangleLists");
     parameter->setWidgetType(FilterParameter::BooleanWidget);
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
-   {
+  {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Genereate Triangle Neighbors List");
+    parameter->setHumanLabel("Generate Triangle Neighbors List");
     parameter->setPropertyName("GenerateTriangleNeighbors");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Generate Edge Id List");
+    parameter->setPropertyName("GenerateEdgeIdList");
     parameter->setWidgetType(FilterParameter::BooleanWidget);
     parameter->setValueType("bool");
     parameters.push_back(parameter);
@@ -96,8 +104,10 @@ void GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParame
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-   writer->writeValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists() );
-   writer->writeValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors() );
+  writer->writeValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists() );
+  writer->writeValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors() );
+  writer->writeValue("GenerateEdgeIdList", getGenerateEdgeIdList() );
+
 }
 
 // -----------------------------------------------------------------------------
@@ -167,11 +177,32 @@ void GenerateSurfaceMeshConnectivity::execute()
   // of those are true then build the vertex->triangle lists
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
+    notifyStatusMessage("Generating Vertex Triangle List");
     getSurfaceMeshDataContainer()->buildMeshVertLinks();
   }
   if (m_GenerateTriangleNeighbors == true)
   {
+    notifyStatusMessage("Generating Triangle Neighbors List");
     getSurfaceMeshDataContainer()->buildMeshTriangleNeighborLists();
+  }
+
+  if (m_GenerateEdgeIdList == true)
+  {
+    // There was no Edge connectivity before this filter so delete it when we are done with it
+    GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
+    ss.str("");
+    ss << getMessagePrefix() << " |->Generating Unique Edge Ids |->";
+    conn->setMessagePrefix(ss.str());
+    conn->setObservers(getObservers());
+    conn->setVoxelDataContainer(getVoxelDataContainer());
+    conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    conn->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    conn->execute();
+    if(conn->getErrorCondition() < 0)
+    {
+      setErrorCondition(conn->getErrorCondition());
+      return;
+    }
   }
 
   /* Let the GUI know we are done with this filter */

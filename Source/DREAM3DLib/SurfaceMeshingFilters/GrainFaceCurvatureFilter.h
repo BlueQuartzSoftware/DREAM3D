@@ -66,6 +66,9 @@ class GrainFaceCurvatureFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection2ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleCentroidsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshGrainFaceIdArrayName)
 
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */

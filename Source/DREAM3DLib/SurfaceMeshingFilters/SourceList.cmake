@@ -18,7 +18,7 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ReverseTriangleWinding ReverseTr
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SharedGrainFaceFilter SharedGrainFaceFilter.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleCentroidFilter TriangleCentroidFilter.html "" FALSE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} TriangleNormalFilter TriangleNormalFilter.html "" TRUE)
-#ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VerifyTriangleWinding VerifyTriangleWinding.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VerifyTriangleWinding VerifyTriangleWinding.html "" TRUE)
 
 
 ADD_DREAM3D_SUPPORT_HEADER(${DREAM3D_FILTER_GROUP_NAME} MeshTriangleNeighbors.hpp)

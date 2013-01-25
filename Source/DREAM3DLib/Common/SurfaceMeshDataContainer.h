@@ -91,7 +91,9 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer, Faces)
 
     void buildMeshVertLinks();
+    void removeMeshVertLinks();
     void buildMeshTriangleNeighborLists();
+    void removeMeshTriangleNeighborLists();
 
     MeshVertLinks::Pointer getMeshVertLinks();
     MeshTriangleNeighbors::Pointer getMeshTriangleNeighborLists();

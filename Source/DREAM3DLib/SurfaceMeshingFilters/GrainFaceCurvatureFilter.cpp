@@ -60,6 +60,9 @@ GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
   m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::CellData::SurfaceMeshTriangleEdges),
   m_PrincipalCurvature1ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature1),
   m_PrincipalCurvature2ArrayName(DREAM3D::CellData::SurfaceMeshPrincipalCurvature2),
+  m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::CellData::SurfaceMeshTriangleNormals),
+  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::CellData::SurfaceMeshTriangleCentroids),
+  m_SurfaceMeshGrainFaceIdArrayName(DREAM3D::CellData::SurfaceMeshGrainFaceId),
   m_NRing(3),
   m_ComputePrincipalDirectionVectors(true),
   m_ComputeMeanCurvature(false),
@@ -264,6 +267,7 @@ void GrainFaceCurvatureFilter::execute()
   // We need to make sure we have up to date values for the Triangle Centroids and Triangle Normals
   // so we are going to recalculate them all just in case they are stale
   TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
+  centroidFilter->setSurfaceMeshTriangleCentroidsArrayName(getSurfaceMeshTriangleCentroidsArrayName());
   centroidFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
   centroidFilter->setObservers(getObservers());
   centroidFilter->setMessagePrefix(getMessagePrefix());
@@ -274,41 +278,38 @@ void GrainFaceCurvatureFilter::execute()
     return;
   }
 
-  // Calculate the Triangle Normals
+  // Calculate/update the Triangle Normals
+  bool clearTriangleNormals = false;
   if (getSurfaceMeshDataContainer()->getCellData(DREAM3D::CellData::SurfaceMeshTriangleNormals).get() == NULL)
   {
-    TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
-    normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-    normalsFilter->setObservers(getObservers());
-    normalsFilter->setMessagePrefix(getMessagePrefix());
-    normalsFilter->execute();
-    if (normalsFilter->getErrorCondition() < 0)
-    {
-      notifyErrorMessage("Error Generating the triangle normals", -802);
-      return;
-    }
+    clearTriangleNormals = true;
+  }
+  TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
+  normalsFilter->setSurfaceMeshTriangleNormalsArrayName(getSurfaceMeshTriangleNormalsArrayName());
+  normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  normalsFilter->setObservers(getObservers());
+  normalsFilter->setMessagePrefix(getMessagePrefix());
+  normalsFilter->execute();
+  if (normalsFilter->getErrorCondition() < 0)
+  {
+    notifyErrorMessage("Error Generating the triangle normals", -802);
+    return;
   }
 
-  //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
+  // Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
+  bool clearMeshVertLinks = false;
   MeshVertLinks::Pointer vertLinks = getSurfaceMeshDataContainer()->getMeshVertLinks();
   if (NULL == vertLinks.get())
   {
+    clearMeshVertLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
     getSurfaceMeshDataContainer()->buildMeshVertLinks();
   }
-
-
-//  MeshTriangleNeighbors::Pointer triangleNeighbors = getSurfaceMeshDataContainer()->getMeshTriangleNeighborLists();
-//  if (NULL == triangleNeighbors.get())
-//  {
-//    getSurfaceMeshDataContainer()->buildMeshTriangleNeighborLists();
-//  }
-
-
 
   // Group the Triangles by common neighboring grain face. This means that each group of triangles
   // each share the same set of Grain Ids. Since each triangle can only have 2 Grain Ids
   SharedGrainFaceFilter::Pointer sharedGrainFacesFilter = SharedGrainFaceFilter::New();
+  sharedGrainFacesFilter->setSurfaceMeshGrainFaceIdArrayName(getSurfaceMeshGrainFaceIdArrayName());
   sharedGrainFacesFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
   sharedGrainFacesFilter->setObservers(getObservers());
   sharedGrainFacesFilter->setMessagePrefix(getMessagePrefix());
@@ -337,13 +338,14 @@ void GrainFaceCurvatureFilter::execute()
     principalDirection2->initializeWithZeros();
   }
 
+  // Check if the user wants to calculate the Gaussian Curvature
   DoubleArrayType::Pointer gaussianCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
     gaussianCurvature = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshGaussianCurvatures);
     gaussianCurvature->initializeWithZeros();
   }
-
+  // Check if the user wants to calculate the Mean Curvature
   DoubleArrayType::Pointer meanCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
@@ -351,8 +353,8 @@ void GrainFaceCurvatureFilter::execute()
     meanCurvature->initializeWithZeros();
   }
 
-  // *********************** This next section should be task parallelized using TBB::task() ****************************
-  typedef SharedGrainFaceFilter::SharedGrainFaces_t::iterator SharedGrainFaceIterator_t;
+
+
 
   int index = 0;
   m_TotalGrainFaces = sharedGrainFaces.size();
@@ -378,6 +380,9 @@ void GrainFaceCurvatureFilter::execute()
 //    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
 //  }
 #endif
+  // typedef here for conveneince
+  typedef SharedGrainFaceFilter::SharedGrainFaces_t::iterator SharedGrainFaceIterator_t;
+
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {
     SharedGrainFaceFilter::TriangleIds_t& triangleIds = (*iter).second;
@@ -424,6 +429,17 @@ void GrainFaceCurvatureFilter::execute()
     getSurfaceMeshDataContainer()->addCellData(meanCurvature->GetName(), meanCurvature);
   }
 
+  // Now clear up some temp arrays that were created for this filter
+  if (clearTriangleNormals == true)
+  {
+    getSurfaceMeshDataContainer()->removeCellData(getSurfaceMeshTriangleNormalsArrayName());
+  }
+  getSurfaceMeshDataContainer()->removeCellData(getSurfaceMeshTriangleCentroidsArrayName() );
+  getSurfaceMeshDataContainer()->removeCellData(getSurfaceMeshGrainFaceIdArrayName() );
+  if (clearMeshVertLinks == true)
+  {
+    getSurfaceMeshDataContainer()->removeMeshVertLinks();
+  }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

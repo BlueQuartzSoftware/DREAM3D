@@ -33,9 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
+
 
 #ifndef _GenerateSurfaceMeshConnectivity_H_
 #define _GenerateSurfaceMeshConnectivity_H_
@@ -67,7 +65,7 @@ class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
      DREAM3D_INSTANCE_PROPERTY(bool, GenerateVertexTriangleLists)
      DREAM3D_INSTANCE_PROPERTY(bool, GenerateTriangleNeighbors)
-
+     DREAM3D_INSTANCE_PROPERTY(bool, GenerateEdgeIdList)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -239,6 +239,29 @@ void CropVolume::execute()
     return;
   }
 
+  std::stringstream ss;
+  // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
+  if (dims[0] <= m_XMax)
+  {
+    ss << "A Maximum value of " << m_XMax << " has been entered for the Max X which is larger than the input volume X Dimension of " << dims[0]
+      << " This may lead to junk data being filled into the extra space.";
+    notifyWarningMessage(ss.str(), -950);
+  }
+  if (dims[1] <= m_YMax)
+  {
+    ss.str("");
+    ss << "A Maximum value of " << m_YMax << " has been entered for the Max Y which is larger than the input volume Y Dimension of " << dims[1]
+      << " This may lead to junk data being filled into the extra space.";
+    notifyWarningMessage(ss.str(), -950);
+  }
+  if (dims[2] <= m_ZMax)
+  {
+    ss.str("");
+    ss << "A Maximum value of " << m_ZMax << " has been entered for the Max Z which is larger than the input volume Z Dimension of " << dims[2]
+      << " This may lead to junk data being filled into the extra space.";
+    notifyWarningMessage(ss.str(), -950);
+  }
+
   int m_XP = ( (m_XMax - m_XMin)+1 );
   int m_YP = ( (m_YMax - m_YMin)+1 );
   int m_ZP = ( (m_ZMax - m_ZMin)+1 );

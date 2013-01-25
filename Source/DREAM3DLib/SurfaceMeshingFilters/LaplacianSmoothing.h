@@ -66,9 +66,6 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
 
     // We need these arrays for this filter to work correctly
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
- //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
-
-
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)

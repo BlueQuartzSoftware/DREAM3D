@@ -183,7 +183,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
   SurfaceMesh::DataStructures::Face_t* faces = trianglesPtr->GetPointer(0);
 
-
+  notifyStatusMessage("Stage 1 of 2");
   struct  { int32_t v0; int32_t v1; } edge;
   int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
 
@@ -217,15 +217,16 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   }
 
+  notifyStatusMessage("Stage 1 of 2");
  // std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-  int32_t* m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
+  int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
   int index = 0;
   for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
   {
     *u64Edge = *iter;
-    m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
-    m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
+    surfaceMeshUniqueEdges[index*2] = edge.v0;
+    surfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
     ++index;
   }
   sm->addCellData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
