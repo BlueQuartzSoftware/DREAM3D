@@ -50,6 +50,8 @@ namespace SurfaceMesh
   namespace DataStructures
   {
     typedef float Float_t;
+
+
     typedef struct
     {
         Float_t pos[3];
@@ -74,14 +76,12 @@ namespace SurfaceMesh
     typedef VertList_t::Pointer VertListPointer_t;
     typedef FaceList_t::Pointer FaceListPointer_t;
 
-//    typedef int32_t NodeId_t;
-//    typedef int32_t TriangleId_t;
     typedef std::set<int32_t> UniqueTriangleIds_t;
     typedef std::map<int32_t, UniqueTriangleIds_t > NodeTrianglesMap_t;
 
 
     typedef struct  {
-        size_t count;
+        uint16_t count;
         int32_t* data;
     } NodeTriangleMapping_t;
   }
@@ -97,7 +97,7 @@ namespace SurfaceMesh
   namespace M3C
   {
     typedef struct {
-        float coord[3];
+        SurfaceMesh::DataStructures::Float_t coord[3];
     } VoxelCoord;
 
     typedef struct {
@@ -111,11 +111,6 @@ namespace SurfaceMesh
         int FCnode;        // face center node...if not, it's -1...
         int effect;        // 0 if the square is useless; 1 is good...
     } Face;
-
-    typedef struct {
-        double coord[3];
-    } Node;
-
 
     typedef struct {
         int node_id[2];    // the segment heads from node_id[0] to node_id[1]...
@@ -154,9 +149,9 @@ namespace SurfaceMesh
     {
         int nodeId;
         int nodeKind;
-        float x;
-        float y;
-        float z;
+        SurfaceMesh::DataStructures::Float_t x;
+        SurfaceMesh::DataStructures::Float_t y;
+        SurfaceMesh::DataStructures::Float_t z;
     } NodesFileRecord_t;
     const int ByteCount = sizeof(NodesFileRecord_t);
   }

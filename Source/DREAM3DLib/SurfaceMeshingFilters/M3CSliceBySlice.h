@@ -149,8 +149,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param cVertexNodeTypePtr
      */
-    void initialize_nodes(int NSP, int zID, int *wrappedDims, float* res,
-                          StructArray<SurfaceMesh::M3C::Node>::Pointer cVertexPtr,
+    void initialize_nodes(int NSP, int zID, int *wrappedDims, SurfaceMesh::DataStructures::Float_t* res,
+                          SurfaceMesh::DataStructures::VertList_t::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                           DataArray<int8_t>::Pointer cVertexNodeTypePtr );
@@ -215,9 +215,9 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param neighborsPtr
      */
-    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, float *res,
+    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, SurfaceMesh::DataStructures::Float_t *res,
                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                            StructArray<SurfaceMesh::M3C::Node>::Pointer cVertexPtr,
+                            SurfaceMesh::DataStructures::VertList_t::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
                             StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
@@ -227,7 +227,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param xRes
      * @return
      */
-    float find_xcoord(int index, int xDim, float xRes);
+    SurfaceMesh::DataStructures::Float_t find_xcoord(int index, int xDim, SurfaceMesh::DataStructures::Float_t xRes);
 
     /**
      * @brief find_ycoord
@@ -237,7 +237,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param yRes
      * @return
      */
-    float find_ycoord(int index, int xDim, int yDim, float yRes);
+    SurfaceMesh::DataStructures::Float_t find_ycoord(int index, int xDim, int yDim, SurfaceMesh::DataStructures::Float_t yRes);
 
     /**
      * @brief find_zcoord
@@ -246,7 +246,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param zRes
      * @return
      */
-    float find_zcoord(int index, int xDim, int yDim, float zRes);
+    SurfaceMesh::DataStructures::Float_t find_zcoord(int index, int xDim, int yDim, SurfaceMesh::DataStructures::Float_t zRes);
 
     /**
      * @brief treat_anomaly
@@ -257,8 +257,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @return
      */
     int treat_anomaly(int tNSt[4], int zID1,
-                                    DataArray<int32_t>::Pointer voxelsPtr,
-                                    StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
+                      DataArray<int32_t>::Pointer voxelsPtr,
+                      StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
     /**
      * @brief get_nodes
@@ -345,10 +345,10 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @return
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
-                                    const std::string &nodesFile,
-                                    StructArray<SurfaceMesh::M3C::Node>::Pointer cVertexPtr,
-                                    DataArray<int32_t>::Pointer cVertexNodeIdPtr,
-                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr);
+                        const std::string &nodesFile,
+                        SurfaceMesh::DataStructures::VertList_t::Pointer cVertexPtr,
+                        DataArray<int32_t>::Pointer cVertexNodeIdPtr,
+                        DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 
     /**
      * @brief writeTrianglesFile
@@ -363,7 +363,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     int writeTrianglesFile(int zID, int ctid,
                            const std::string &trianglesFile, int nt,
                            StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                           DataArray<int32_t>::Pointer cVertexNodeIdPtr);
+                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
+                           int32_t grainIdZeroMappingValue);
 
 
     /**
@@ -377,6 +378,10 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                                DataArray<int8_t>::Pointer cVertexNodeTypePtr,
                                StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr);
 
+
+    int32_t volumeHasGrainValuesOfZero();
+    void renumberVoxelGrainIds(int32_t gid);
+
     // The next two methods are for analyzing the winding
     // void analyzeWinding();
     // std::vector<int> findAdjacentTriangles(Triangle *triangle, int label);
@@ -384,14 +389,6 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     int numgrains;
-
-
-//    typedef std::map<uint64_t, meshing::SharedEdge::Pointer> EdgeMapType;
-//    typedef int Label;
-//    typedef std::map<Label, int> LabelTriangleMapType;
-
-//    EdgeMapType eMap;
-//    LabelTriangleMapType labelTriangleMap;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
