@@ -590,3 +590,34 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
     if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
 }
 
+void HexagonalOps::getSlipMisalignment(int ss1, int ss2, float q1[5], float q2[5], float &mPrime)
+{
+  float g1[3][3];
+  float g2[3][3];
+  float h1, k1, l1, u1, v1, w1;
+  float h2, k2, l2, u2, v2, w2;
+  float denomhkl1, denomhkl2, denomuvw1, denomuvw2;
+  float planemisalignment, directionmisalignment;
+  QuattoMat(q1, g1);
+  QuattoMat(q2, g2);
+  // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
+/*  h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
+  k1 = CubicSlipSystems[ss1][0]*g1[0][1]+CubicSlipSystems[ss1][1]*g1[1][1]+CubicSlipSystems[ss1][2]*g1[2][1];
+  l1 = CubicSlipSystems[ss1][0]*g1[0][2]+CubicSlipSystems[ss1][1]*g1[1][2]+CubicSlipSystems[ss1][2]*g1[2][2];
+  u1 = CubicSlipSystems[ss1][3]*g1[0][0]+CubicSlipSystems[ss1][4]*g1[1][0]+CubicSlipSystems[ss1][5]*g1[2][0];
+  v1 = CubicSlipSystems[ss1][3]*g1[0][1]+CubicSlipSystems[ss1][4]*g1[1][1]+CubicSlipSystems[ss1][5]*g1[2][1];
+  w1 = CubicSlipSystems[ss1][3]*g1[0][2]+CubicSlipSystems[ss1][4]*g1[1][2]+CubicSlipSystems[ss1][5]*g1[2][2];
+  denomhkl1 = sqrtf((h1*h1+k1*k1+l1*l1));
+  denomuvw1 = sqrtf((u1*u1+v1*v1+w1*w1));
+  h2 = CubicSlipSystems[ss2][0]*g2[0][0]+CubicSlipSystems[ss2][1]*g2[1][0]+CubicSlipSystems[ss2][2]*g2[2][0];
+  k2 = CubicSlipSystems[ss2][0]*g2[0][1]+CubicSlipSystems[ss2][1]*g2[1][1]+CubicSlipSystems[ss2][2]*g2[2][1];
+  l2 = CubicSlipSystems[ss2][0]*g2[0][2]+CubicSlipSystems[ss2][1]*g2[1][2]+CubicSlipSystems[ss2][2]*g2[2][2];
+  u2 = CubicSlipSystems[ss2][3]*g2[0][0]+CubicSlipSystems[ss2][4]*g2[1][0]+CubicSlipSystems[ss2][5]*g2[2][0];
+  v2 = CubicSlipSystems[ss2][3]*g2[0][1]+CubicSlipSystems[ss2][4]*g2[1][1]+CubicSlipSystems[ss2][5]*g2[2][1];
+  w2 = CubicSlipSystems[ss2][3]*g2[0][2]+CubicSlipSystems[ss2][4]*g2[1][2]+CubicSlipSystems[ss2][5]*g2[2][2];
+*/  denomhkl2 = sqrtf((h2*h2+k2*k2+l2*l2));
+  denomuvw2 = sqrtf((u2*u2+v2*v2+w2*w2));
+  planemisalignment = fabs((h1*h2+k1*k2+l1*l2)/(denomhkl1*denomhkl2));
+  directionmisalignment = fabs((u1*u2+v1*v2+w1*w2)/(denomuvw1*denomuvw2));
+  mPrime = planemisalignment*directionmisalignment;
+}

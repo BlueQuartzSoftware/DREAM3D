@@ -82,6 +82,7 @@
     <file>StatisticsFilters/FindAvgOrientations.html</file>
     <file>StatisticsFilters/FindAvgCAxes.html</file>
     <file>StatisticsFilters/FindAxisODF.html</file>
+    <file>StatisticsFilters/FindBoundaryStrengths.html</file>
     <file>StatisticsFilters/FindDeformationStatistics.html</file>
     <file>StatisticsFilters/FindEuclideanDistMap.html</file>
     <file>StatisticsFilters/FindGrainReferenceMisorientations.html</file>
