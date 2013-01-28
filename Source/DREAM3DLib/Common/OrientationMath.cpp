@@ -67,19 +67,6 @@
 	const static float SinOfZero = sinf(0.0f);
 	const static float CosOfZero = cosf(0.0f);
 
-  static const float CubicSlipSystems[12][6] = {{1.0f,1.0f,1.0f,0.0f,1.0f,-1.0f},
-												{1.0f,1.0f,1.0f,1.0f,0.0f,-1.0f},
-												{1.0f,1.0f,1.0f,1.0f,-1.0f,0.0f},
-												{1.0f,1.0f,-1.0f,1.0f,-1.0f,0.0f},
-												{1.0f,1.0f,-1.0f,1.0f,0.0f,1.0f},
-												{1.0f,1.0f,-1.0f,0.0f,1.0f,1.0f},
-												{1.0f,-1.0f,1.0f,1.0f,1.0f,0.0f},
-												{1.0f,-1.0f,1.0f,0.0f,1.0f,1.0f},
-												{1.0f,-1.0f,1.0f,1.0f,0.0f,-1.0f},
-												{-1.0f,1.0f,1.0f,1.0f,1.0f,0.0f},
-												{-1.0f,1.0f,1.0f,1.0f,0.0f,1.0f},
-												{-1.0f,1.0f,1.0f,0.0f,1.0f,-1.0f}};
-
 
 // -----------------------------------------------------------------------------
 //
@@ -607,42 +594,4 @@ void OrientationMath::changeAxisReferenceFrame(float q[5], float &n1, float &n2,
   n1 = nNew[0];
   n2 = nNew[1];
   n3 = nNew[2];
-}
-
-void OrientationMath::getSlipMisalignment(int ss1, float q1[5], float q2[5], float &ssap)
-{
-  float g1[3][3];
-  float g2[3][3];
-  float maxssap = 0.0f;
-  float h1, k1, l1, u1, v1, w1;
-  float h2, k2, l2, u2, v2, w2;
-  float denomhkl1, denomhkl2, denomuvw1, denomuvw2;
-  float planemisalignment, directionmisalignment;
-  QuattoMat(q1, g1);
-  QuattoMat(q2, g2);
-  // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
-  h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
-  k1 = CubicSlipSystems[ss1][0]*g1[0][1]+CubicSlipSystems[ss1][1]*g1[1][1]+CubicSlipSystems[ss1][2]*g1[2][1];
-  l1 = CubicSlipSystems[ss1][0]*g1[0][2]+CubicSlipSystems[ss1][1]*g1[1][2]+CubicSlipSystems[ss1][2]*g1[2][2];
-  u1 = CubicSlipSystems[ss1][3]*g1[0][0]+CubicSlipSystems[ss1][4]*g1[1][0]+CubicSlipSystems[ss1][5]*g1[2][0];
-  v1 = CubicSlipSystems[ss1][3]*g1[0][1]+CubicSlipSystems[ss1][4]*g1[1][1]+CubicSlipSystems[ss1][5]*g1[2][1];
-  w1 = CubicSlipSystems[ss1][3]*g1[0][2]+CubicSlipSystems[ss1][4]*g1[1][2]+CubicSlipSystems[ss1][5]*g1[2][2];
-  denomhkl1 = sqrtf((h1*h1+k1*k1+l1*l1));
-  denomuvw1 = sqrtf((u1*u1+v1*v1+w1*w1));
-  for(int i=0;i<12;i++)
-  {
-    h2 = CubicSlipSystems[i][0]*g2[0][0]+CubicSlipSystems[i][1]*g2[1][0]+CubicSlipSystems[i][2]*g2[2][0];
-    k2 = CubicSlipSystems[i][0]*g2[0][1]+CubicSlipSystems[i][1]*g2[1][1]+CubicSlipSystems[i][2]*g2[2][1];
-    l2 = CubicSlipSystems[i][0]*g2[0][2]+CubicSlipSystems[i][1]*g2[1][2]+CubicSlipSystems[i][2]*g2[2][2];
-    u2 = CubicSlipSystems[i][3]*g2[0][0]+CubicSlipSystems[i][4]*g2[1][0]+CubicSlipSystems[i][5]*g2[2][0];
-    v2 = CubicSlipSystems[i][3]*g2[0][1]+CubicSlipSystems[i][4]*g2[1][1]+CubicSlipSystems[i][5]*g2[2][1];
-    w2 = CubicSlipSystems[i][3]*g2[0][2]+CubicSlipSystems[i][4]*g2[1][2]+CubicSlipSystems[i][5]*g2[2][2];
-    denomhkl2 = sqrtf((h2*h2+k2*k2+l2*l2));
-    denomuvw2 = sqrtf((u2*u2+v2*v2+w2*w2));
-    planemisalignment = fabs((h1*h2+k1*k2+l1*l2)/(denomhkl1*denomhkl2));
-    directionmisalignment = fabs((u1*u2+v1*v2+w1*w2)/(denomuvw1*denomuvw2));
-    ssap = planemisalignment*directionmisalignment;
-    if(ssap > maxssap) maxssap = ssap;
-  }
-  ssap = maxssap;
 }

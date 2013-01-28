@@ -88,6 +88,7 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
+    virtual void getSlipMisalignment(int ss1, int ss2, float q1[5], float q2[5], float &mPrime);
 
   protected:
     float _calcMisoQuat(const float quatsym[24][5], int numsym,

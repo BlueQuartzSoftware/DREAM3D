@@ -260,7 +260,7 @@ void FindGrainReferenceMisorientations::execute()
       {
         gnum = m_GrainIds[i];
         dist = m_GBEuclideanDistances[i];
-        if(dist > m_CenterDists[gnum])
+        if(dist >= m_CenterDists[gnum])
         {
             m_CenterDists[gnum] = dist;
             m_Centers[gnum] = i;
@@ -281,6 +281,10 @@ void FindGrainReferenceMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
+		  if(m_GrainIds[point] == 1)
+		  {
+			  int stop = 0;
+		  }
           q1[1] = m_Quats[point*5 + 1];
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
