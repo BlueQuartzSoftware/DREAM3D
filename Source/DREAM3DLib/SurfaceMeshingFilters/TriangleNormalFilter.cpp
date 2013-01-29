@@ -58,7 +58,9 @@ class CalculateNormalsImpl
     double* m_Normals;
 
   public:
-    CalculateNormalsImpl(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes, StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles, double* normals) :
+    CalculateNormalsImpl(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes,
+                                      StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles,
+                                      double* normals) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Normals(normals)
@@ -105,7 +107,7 @@ class CalculateNormalsImpl
 // -----------------------------------------------------------------------------
 TriangleNormalFilter::TriangleNormalFilter() :
 SurfaceMeshFilter(),
-m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::CellData::SurfaceMeshTriangleNormals),
+m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleNormals),
 m_SurfaceMeshTriangleNormals(NULL)
 {
   setupFilterParameters();

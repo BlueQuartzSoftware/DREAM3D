@@ -61,7 +61,7 @@ void RemoveTestFiles()
 void TestStructArray()
 {
 
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(10, DREAM3D::CellData::SurfaceMeshNodes);
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(10, DREAM3D::PointData::SurfaceMeshNodes);
     size_t size = nodes->GetNumberOfTuples();
     int typeSize = nodes->GetTypeSize();
     DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(SurfaceMesh::DataStructures::Vert_t));

@@ -55,7 +55,7 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 // -----------------------------------------------------------------------------
 GenerateUniqueEdges::GenerateUniqueEdges() :
 SurfaceMeshFilter(),
-m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
+m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
 m_SurfaceMeshUniqueEdges(NULL)
 {
   setupFilterParameters();
@@ -119,12 +119,12 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
-    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
-    sm->addPointData(DREAM3D::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, m_SurfaceMeshUniqueEdgesArrayName);
+    sm->addEdgeData(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshUniqueEdges);
+    addCreatedEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
   }
 }
 
@@ -219,7 +219,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   notifyStatusMessage("Stage 1 of 2");
  // std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
-  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
+  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
   int index = 0;
   for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
@@ -229,7 +229,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
     surfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
     ++index;
   }
-  sm->addPointData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  sm->addEdgeData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
 }
 
 
@@ -346,10 +346,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage("Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
-  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_map.size(), 2, DREAM3D::CellData::SurfaceMeshUniqueEdges);
+  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_map.size(), 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
   m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
 
-  ManagedArrayOfArrays<int>::Pointer edgeTriangleArray = ManagedArrayOfArrays<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::CellData::SurfaceMeshEdgeTriangles);
+  ManagedArrayOfArrays<int>::Pointer edgeTriangleArray = ManagedArrayOfArrays<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::EdgeData::SurfaceMeshEdgeTriangles);
 
   float progIndex = 0.0;
   curPercent = 0.0;

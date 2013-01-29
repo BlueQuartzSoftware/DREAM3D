@@ -38,6 +38,7 @@
     <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
     <file>IOFilters/SurfaceMeshToStl.html</file>
     <file>IOFilters/SurfaceMeshToVtk.html</file>
+    <file>IOFilters/SurfaceMeshToNonconformalVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
     <file>IOFilters/VtkGrainIdReader.html</file>

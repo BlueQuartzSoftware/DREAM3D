@@ -82,8 +82,8 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
   }
   else
   {
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodes);
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangles);
 
     sm->setVertices(vertices);
     sm->setFaces(triangles);
@@ -439,8 +439,8 @@ void QuickSurfaceMesh::execute()
     }
   }
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nodeCount, DREAM3D::CellData::SurfaceMeshNodes);
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(triangleCount, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nodeCount, DREAM3D::PointData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshTriangles);
   SurfaceMesh::DataStructures::Vert_t* vertex = vertices.get()->GetPointer(0);
   SurfaceMesh::DataStructures::Face_t* triangle = triangles.get()->GetPointer(0);
 

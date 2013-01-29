@@ -329,7 +329,7 @@ class GrainChecker
 M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::PointData::SurfaceMeshNodeType),
   m_DeleteTempFiles(true),
   m_GrainIds(NULL)
 {
@@ -387,8 +387,8 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
     setErrorCondition(-384);
   }
   else {
-    SurfaceMesh::DataStructures::VertList_t::Pointer vertices = SurfaceMesh::DataStructures::VertList_t::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+    SurfaceMesh::DataStructures::VertList_t::Pointer vertices = SurfaceMesh::DataStructures::VertList_t::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodes);
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangles);
 
 
     int8_t* m_SurfaceMeshNodeType;
@@ -1679,21 +1679,22 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
 {\
   size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
   if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
-  Detail::triangleResizeCount++; \
-  if (Detail::triangleResizeCount == 10) { \
-  Detail::triangleResizeCount = 0;\
-  Detail::triangleResize *= 10;\
+    Detail::triangleResizeCount++; \
+    if (Detail::triangleResizeCount == 10) { \
+      Detail::triangleResizeCount = 0;\
+      Detail::triangleResize *= 10;\
+    }\
+    cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
+   /* std::cout << "Resized Triangle Array to " << current_##cTrianglePtr##_size + Detail::triangleResize << std::endl;*/\
   }\
-  cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
-  }\
-  }\
-  StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
-  cTriangle[ctid].node_id[0] = n0;\
-  cTriangle[ctid].node_id[1] = n1;\
-  cTriangle[ctid].node_id[2] = n2;\
-  cTriangle[ctid].nSpin[0] = label0;\
-  cTriangle[ctid].nSpin[1] = label1;\
-  /*cTriangle[ctid].tIndex = ctid;*/
+}\
+StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
+cTriangle[ctid].node_id[0] = n0;\
+cTriangle[ctid].node_id[1] = n1;\
+cTriangle[ctid].node_id[2] = n2;\
+cTriangle[ctid].nSpin[0] = label0;\
+cTriangle[ctid].nSpin[1] = label1;\
+   /*cTriangle[ctid].tIndex = ctid;*/
 
 #if 0
 SharedEdge::Pointer e0 = SharedEdge::New(cTriangle[ctid].node_id[0], cTriangle[ctid].node_id[1]);\
@@ -2893,7 +2894,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
     n1 = cTriangle[i].node_id[0];
     n2 = cTriangle[i].node_id[1];
     n3 = cTriangle[i].node_id[2];
-#if (WRITE_BINARY_TEMP_FILES == 1)
+
     record.nodeId_0 = nodeID[n1];
     record.nodeId_1 = nodeID[n2];
     record.nodeId_2 = nodeID[n3];
@@ -2907,25 +2908,15 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
       std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
       return -1;
     }
-#else
+    if (cTriangle[i].nSpin[0] == -1 || cTriangle[i].nSpin[1] == -1)
+    {
+      std::cout << "Writing -1 Grain ID for Triangle " << record.triId << std::endl;
+    }
 
-    fprintf(f, "%d    %d    %d    %d    %llu    %llu    %llu    %d    %d\n", data[0], cVertex[n1].NodeID,cVertex[n2].NodeID,cVertex[n3].NodeID,
-        cTriangle[i]->edges[0]->getId(), cTriangle[i]->edges[1]->getId(), cTriangle[i]->edges[2]->getId(),
-        cTriangle[i]->nSpin[0], cTriangle[i]->nSpin[1]);
-#endif
-    //    fprintf(f, "%d %d %d %d %d %d\n", newID, n1, n2, n3, s1, s2);
     record.triId = record.triId + 1;
   }
-  // Go to beginning of file and update the number of triangles
-  //fseek(f, 0, SEEK_SET);
   fclose(f);
 
-#if (WRITE_BINARY_TEMP_FILES == 0)
-  f = fopen(trianglesFile.c_str(), "rb+");
-  std::cout << "data[0]: " << data[0] << std::endl;
-  fprintf(f, "%012d\n", data[0]);
-  fclose(f);
-#endif
 
   return 0;
 }

@@ -149,7 +149,7 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
 SurfaceMeshFilter(),
-m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+m_SurfaceMeshNodeTypeArrayName(DREAM3D::PointData::SurfaceMeshNodeType),
 m_IterationSteps(1),
 m_NodeConstraints(true),
 m_ConstrainSurfaceNodes(true),
@@ -266,7 +266,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
 
     if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
     {
-      IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
+      IDataArray::Pointer edges = sm->getPointData(DREAM3D::EdgeData::SurfaceMeshEdges);
       if(edges.get() == NULL)
       {
         addErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", -385);

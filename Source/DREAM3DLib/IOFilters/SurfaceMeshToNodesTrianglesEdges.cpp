@@ -157,11 +157,11 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
       setErrorCondition(-385);
     }
 #endif
-    IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::CellData::SurfaceMeshNodeType);
+    IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
     if (nodeKinds.get() == NULL)
     {
       setErrorCondition(-559);
-      notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::CellData::SurfaceMeshNodeType Array", -387);
+      notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::PointData::SurfaceMeshNodeType Array", -387);
       return;
     }
   }
@@ -198,7 +198,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = sm->getVertices();
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = sm->getFaces();
-  IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::CellData::SurfaceMeshNodeType);
+  IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
 
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);

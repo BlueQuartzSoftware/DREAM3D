@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SurfaceMeshToVtk.h"
+#include "SurfaceMeshToNonconformalVtk.h"
 
 
 #include "MXA/Common/MXAEndian.h"
@@ -44,12 +44,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshToVtk::SurfaceMeshToVtk() :
-AbstractFilter(),
-//m_SurfaceMeshNodeTypeArrayName(DREAM3D::PointData::SurfaceMeshNodeType),
-m_WriteBinaryFile(false),
-m_WriteConformalMesh(true),
-m_SurfaceMeshNodeType(NULL)
+SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk() :
+  AbstractFilter(),
+  m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -57,58 +54,48 @@ m_SurfaceMeshNodeType(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshToVtk::~SurfaceMeshToVtk()
+SurfaceMeshToNonconformalVtk::~SurfaceMeshToNonconformalVtk()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::setupFilterParameters()
+void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
-{
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Output Vtk File");
-     option->setPropertyName("OutputVtkFile");
-     option->setWidgetType(FilterParameter::OutputFileWidget);
-     option->setValueType("string");
-     options.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Binary Vtk File");
-     option->setPropertyName("WriteBinaryFile");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     options.push_back(option);
-   }
-//   {
-//     FilterParameter::Pointer option = FilterParameter::New();
-//     option->setHumanLabel("Write Conformal Mesh");
-//     option->setPropertyName("WriteConformalMesh");
-//     option->setWidgetType(FilterParameter::BooleanWidget);
-//     option->setValueType("bool");
-//     options.push_back(option);
-//   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output Vtk File");
+    option->setPropertyName("OutputVtkFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Binary Vtk File");
+    option->setPropertyName("WriteBinaryFile");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
   setFilterParameters(options);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
-  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -122,21 +109,21 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
   else
   {
     if (sm->getFaces().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-        setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+      setErrorCondition(-384);
     }
 
     if (sm->getVertices().get() == NULL)
     {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-        setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+      setErrorCondition(-384);
     }
   }
 }
@@ -145,7 +132,7 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::preflight()
+void SurfaceMeshToNonconformalVtk::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -171,7 +158,7 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::execute()
+void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -185,7 +172,7 @@ void SurfaceMeshToVtk::execute()
 
   setErrorCondition(0);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
-  /* Place all your code to execute your filter here. */
+
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
   StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
@@ -207,33 +194,36 @@ void SurfaceMeshToVtk::execute()
     // The node type array does exist so use that one.
     nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
   }
-  m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
+  int8_t* m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-      ss.str("");
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    ss.str("");
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
 
-// Open the output VTK File for writing
+  // Open the output VTK File for writing
   FILE* vtkFile = NULL;
   vtkFile = fopen(getOutputVtkFile().c_str(), "wb");
   if (NULL == vtkFile)
   {
-      ss.str("");
-      ss << "Error creating file '" << getOutputVtkFile() << "'";
-      notifyErrorMessage(ss.str(), -18542);
-      setErrorCondition(-18542);
-      return;
+    ss.str("");
+    ss << "Error creating file '" << getOutputVtkFile() << "'";
+    notifyErrorMessage(ss.str(), -18542);
+    setErrorCondition(-18542);
+    return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
+
+  notifyStatusMessage("Writing Vertex Data ....");
+
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
@@ -248,10 +238,10 @@ void SurfaceMeshToVtk::execute()
   int numberWrittenNodes = 0;
   for (int i = 0; i < nNodes; i++)
   {
-  //  Node& n = nodes[i]; // Get the current Node
+    //  Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenNodes; }
+    else { std::cout << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << std::endl;}
   }
-
 
   fprintf(vtkFile, "POINTS %d float\n", numberWrittenNodes);
 
@@ -275,10 +265,6 @@ void SurfaceMeshToVtk::execute()
         MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
         MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
-        if (totalWritten != sizeof(float) * 3)
-        {
-
-        }
       }
       else {
         fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
@@ -286,59 +272,113 @@ void SurfaceMeshToVtk::execute()
     }
   }
 
+
   // Write the triangle indices into the vtk File
+  notifyStatusMessage("Writing Faces ....");
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
-  int nT = triangles.GetNumberOfTuples();
-  int triangleCount = nT;
-//  int tn1, tn2, tn3;
-  if (false == m_WriteConformalMesh)
-  {
-    triangleCount = nT * 2;
-  }
-  // Write the POLYGONS
-  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (int j = 0; j < nT; j++)
-  {
-  //  Triangle& t = triangles[j];
-    tData[1] = triangles[j].verts[0];
-    tData[2] = triangles[j].verts[1];
-    tData[3] = triangles[j].verts[2];
 
-    if (m_WriteBinaryFile == true)
+  int triangleCount = triangles.GetNumberOfTuples();
+
+  // Store all the unique Spins
+  std::map<int32_t, int32_t> grainTriangleCount;
+  for (int i = 0; i < triangleCount; i++)
+  {
+    if (grainTriangleCount.find(triangles[i].labels[0]) == grainTriangleCount.end())
     {
-      tData[0] = 3; // Push on the total number of entries for this entry
-      MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-      MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-      MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-      MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
-      fwrite(tData, sizeof(int), 4, vtkFile);
-      if (false == m_WriteConformalMesh)
-      {
-        tData[0] = tData[1];
-        tData[1] = tData[3];
-        tData[3] = tData[0];
-        tData[0] = 3;
-        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-        fwrite(tData, sizeof(int), 4, vtkFile);
-      }
+      grainTriangleCount[triangles[i].labels[0]] = 1;
     }
     else
     {
-      fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
-      if (false == m_WriteConformalMesh)
-      {
-        fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
-      }
+      grainTriangleCount[triangles[i].labels[0]]++;
     }
+    if (grainTriangleCount.find(triangles[i].labels[1]) == grainTriangleCount.end())
+    {
+      grainTriangleCount[triangles[i].labels[1]] = 1;
+    }
+    else
+    {
+      grainTriangleCount[triangles[i].labels[1]]++;
+    }
+  }
+
+  triangleCount = triangles.GetNumberOfTuples();
+  // Write the POLYGONS
+  fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount*2, (triangleCount*2*4));
+
+  size_t totalCells = 0;
+  // Loop over all the grains
+  for(std::map<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  {
+    totalCells += (*grainIter).second;
+  }
+  assert(totalCells == triangleCount * 2);
+
+
+  // Loop over all the grains
+  for(std::map<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  {
+    int32_t gid = (*grainIter).first; // The current Grain Id
+    int32_t numTriToWrite = (*grainIter).second; // The number of triangles for this grain
+    uint8_t doWrite = 0;
+
+    // Loop over all the triangles looking for the current grain id
+    // this is probably sub-optimal as if we have 1000 grains we are going to loop 1000 times but this will use the
+    // least amount of memory. We could run a filter to group the triangles by grain but then we would need an
+    // additional amount of memory equal to 3X the memory used for the triangle list because every triangle will be listed
+    // twice. We could get some slightly better performance if we buffered 4K worth of data then wrote out that data
+    // in one chunk versus what we are doing here.
+    for (int j = 0; j < triangleCount; j++)
+    {
+      doWrite = 0;
+
+      if (triangles[j].labels[0] == gid ) { doWrite = 1; }
+      else if (triangles[j].labels[1] == gid) { doWrite = 2; } // We need to flip the winding of the triangle
+      if (doWrite == 0) { continue; } // Labels in the triangle did match the current grain id.
+
+      if (doWrite == 1)
+      {
+        tData[0] = 3; // Push on the total number of entries for this entry
+        tData[1] = triangles[j].verts[0];
+        tData[2] = triangles[j].verts[1];
+        tData[3] = triangles[j].verts[2];
+      }
+      else
+      {
+        tData[0] = 3; // Push on the total number of entries for this entry
+        tData[1] = triangles[j].verts[2];
+        tData[2] = triangles[j].verts[1];
+        tData[3] = triangles[j].verts[0];
+      }
+      if (m_WriteBinaryFile == true)
+      {
+
+        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+        MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+        MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+        MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+        fwrite(tData, sizeof(int), 4, vtkFile);
+      }
+      else
+      {
+        fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
+      }
+      numTriToWrite--;
+    }
+    if (numTriToWrite != 0)
+    {
+      std::cout << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << (*grainIter).second << std::endl;
+    }
+
   }
 
 
   // Write the POINT_DATA section
   err = writePointData(vtkFile);
+
   // Write the CELL_DATA section
-  err = writeCellData(vtkFile);
+  err = writeCellData(vtkFile, grainTriangleCount);
 
 
   fprintf(vtkFile, "\n");
@@ -356,7 +396,7 @@ void SurfaceMeshToVtk::execute()
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
 void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
+                          bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getPointData(dataName);
   std::stringstream ss;
@@ -393,8 +433,8 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
 void writePointVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
-                                FILE* vtkFile, int nT)
+                          bool writeBinaryData, const std::string &vtkAttributeType,
+                          FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getPointData(dataName);
   std::stringstream ss;
@@ -426,7 +466,7 @@ void writePointVectorData(DataContainer* dc, const std::string &dataName, const 
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         fprintf(vtkFile, "%s ", ss.str().c_str());
         //if (i%50 == 0)
-         { fprintf(vtkFile, "\n"); }
+        { fprintf(vtkFile, "\n"); }
       }
 
     }
@@ -437,7 +477,7 @@ void writePointVectorData(DataContainer* dc, const std::string &dataName, const 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
+int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 {
   int err = 0;
   if (NULL == vtkFile)
@@ -445,15 +485,37 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
     return -1;
   }
 
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
-  // Write the Node Type Data to the file
+  // Make sure we have a node type array or create a default one.
+  DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
+  DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+
+  if (NULL == iNodeTypePtr.get() )
+  {
+    // The node type array does not exist so create one with the default node type populated
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::PointData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
+    nodeTypePtr = nodeTypeSharedPtr.get();
+  }
+  else
+  {
+    // The node type array does exist so use that one.
+    nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
+  }
+  int8_t* m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
+
+
+  //Get the Number of Vertex points in the mesh with a valid node type
   StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(getSurfaceMeshDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
- // int swapped;
+  // int swapped;
   for (int i = 0; i < numNodes; i++)
   {
     if (m_SurfaceMeshNodeType[i] > 0) { ++nNodes; }
+    else { std::cout << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << std::endl;}
   }
   // This is the section header
   fprintf(vtkFile, "\n");
@@ -469,8 +531,8 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
     {
       if(m_WriteBinaryFile == true)
       {
-       // swapped = m_SurfaceMeshNodeType[i];
-       // MXA::Endian::FromSystemToBig::convert<int>(swapped);
+        // swapped = m_SurfaceMeshNodeType[i];
+        // MXA::Endian::FromSystemToBig::convert<int>(swapped);
         fwrite(m_SurfaceMeshNodeType + i, sizeof(char), 1, vtkFile);
       }
       else
@@ -481,25 +543,25 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   }
 
 #if 1
-// This is from the Goldfeather Paper
+  // This is from the Goldfeather Paper
   writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Direction_1",
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+                                                         "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
   // This is from the Goldfeather Paper
   writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Direction_2",
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+                                                         "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
-                                                          // This is from the Goldfeather Paper
+  // This is from the Goldfeather Paper
   writePointScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Curvature_1",
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
+                                                         "double", m_WriteBinaryFile, vtkFile, numNodes);
 
-// This is from the Goldfeather Paper
+  // This is from the Goldfeather Paper
   writePointScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Principal_Curvature_2",
-                                                         "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, numNodes);
+                                                         "double", m_WriteBinaryFile, vtkFile, numNodes);
 #endif
 
-// This is from the Goldfeather Paper
+  // This is from the Goldfeather Paper
   writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::PointData::SurfaceMeshNodeNormals,
-                                                          "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, numNodes);
+                                                         "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
 
   return err;
@@ -508,45 +570,61 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename DataContainer, typename T>
-void writeCellScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
+template<typename SurfaceMeshDataContainer, typename T>
+void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataName, const std::string &dataType,
+                         bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
-  // Write the Grain Face ID Data to the file
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
+
+  int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
+    int32_t totalCellsWritten = 0;
+
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.c_str(), dataType.c_str());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
-    for(int i = 0; i < nT; ++i)
+    // Loop over all the grains
+    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
-      T swapped = 0x00;
-      if(writeBinaryData == true)
+      int32_t gid = (*grainIter).first; // The current Grain Id
+      size_t size = (*grainIter).second; // The number of triangles for this grain id
+      std::vector<T> buffer(size, 0);
+      totalCellsWritten += size;
+      size_t index = 0;
+
+      for (int j = 0; j < triangleCount; j++)
       {
-        swapped = static_cast<T>(m[i]);
-        MXA::Endian::FromSystemToBig::convert<T>(swapped);
-        fwrite(&swapped, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
+        if (triangles[j].labels[0] != gid && triangles[j].labels[1] != gid) { continue; }
+        // Get the data
+        T s0 = static_cast<T>(m[j]);
+
+
+        // Write the values to the buffer after an Endian swap.
+        if(writeBinaryData == true)
         {
-          fwrite(&swapped, sizeof(T), 1, vtkFile);
+          MXA::Endian::FromSystemToBig::convert<T>(s0);
+          buffer[index]=s0; ++index;
+        }
+        else
+        {
+          ss.str("");
+          ss << s0;
+          fprintf(vtkFile, "%s\n", ss.str().c_str());
         }
       }
-      else
+
+      // Write the Buffer
+      if(writeBinaryData == true)
       {
-        ss.str("");
-        ss << m[i] << " ";
-        if(false == writeConformalMesh)
-        {
-          ss << m[i] << " ";
-        }
-        fprintf(vtkFile, "%s ", ss.str().c_str());
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
+        fwrite(&(buffer.front()), sizeof(T), size, vtkFile);
       }
     }
   }
+
 }
 
 
@@ -554,10 +632,89 @@ void writeCellScalarData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
-                                FILE* vtkFile, int nT)
+void writeCellNormalData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+                         bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
+
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
+
+  int triangleCount = triangles.GetNumberOfTuples();
+  IDataArray::Pointer data = dc->getFaceData(dataName);
+  std::stringstream ss;
+  if (NULL != data.get())
+  {
+    int32_t totalCellsWritten = 0;
+
+    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+    fprintf(vtkFile, "\n");
+    fprintf(vtkFile, "NORMALS %s %s\n", dataName.c_str(), dataType.c_str());
+    // Loop over all the grains
+    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    {
+      int32_t gid = (*grainIter).first; // The current Grain Id
+      size_t size = (*grainIter).second; // The number of triangles for this grain id
+      std::vector<T> buffer(size* 3, 0);
+      totalCellsWritten += size*3;
+      size_t index = 0;
+
+      for (int j = 0; j < triangleCount; j++)
+      {
+        if (triangles[j].labels[0] != gid && triangles[j].labels[1] != gid) { continue; }
+        // Get the data
+        T s0 = static_cast<T>(m[j*3+0]);
+        T s1 = static_cast<T>(m[j*3+1]);
+        T s2 = static_cast<T>(m[j*3+2]);
+        // Flip the normal if needed because the current grain id is assigned to the triangle.labels[1]
+        if (triangles[j].labels[1] == gid )
+        {
+          s0 *= -1.0;
+          s1 *= -1.0;
+          s2 *= -1.0;
+        }
+        // Write the values to the buffer after an Endian swap.
+        if(writeBinaryData == true)
+        {
+          MXA::Endian::FromSystemToBig::convert<T>(s0);
+          buffer[index]=s0; ++index;
+
+          MXA::Endian::FromSystemToBig::convert<T>(s1);
+          buffer[index]=s1; ++index;
+
+          MXA::Endian::FromSystemToBig::convert<T>(s2);
+          buffer[index]=s2; ++index;
+        }
+        else
+        {
+          ss.str("");
+          ss << s0 << " " << s1 << " " << s2;
+          fprintf(vtkFile, "%s\n", ss.str().c_str());
+        }
+      }
+
+      // Write the Buffer
+      if(writeBinaryData == true)
+      {
+        fwrite(&(buffer.front()), sizeof(T), size*3, vtkFile);
+      }
+    }
+  }
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename DataContainer, typename T>
+void writeCellVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+                         bool writeBinaryData, const std::string &vtkAttributeType,
+                         FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+{
+  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
+
+  int triangleCount = triangles.GetNumberOfTuples();
+
   IDataArray::Pointer data = dc->getFaceData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
@@ -565,7 +722,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.c_str(), dataName.c_str(), dataType.c_str());
-    for(int i = 0; i < nT; ++i)
+    for(int i = 0; i < triangleCount; ++i)
     {
       T s0 = 0x00;
       T s1 = 0x00;
@@ -581,21 +738,13 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s2, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
-        {
-          fwrite(&s0, sizeof(T), 1, vtkFile);
-          fwrite(&s1, sizeof(T), 1, vtkFile);
-          fwrite(&s2, sizeof(T), 1, vtkFile);
-        }
+
       }
       else
       {
         ss.str("");
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        if(false == writeConformalMesh)
-        {
-          ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        }
+
         fprintf(vtkFile, "%s ", ss.str().c_str());
         if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }
@@ -606,119 +755,69 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh,
-                                FILE* vtkFile, int nT)
-{
-  IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
-  if (NULL != data.get())
-  {
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
-    fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "NORMALS %s %s\n", dataName.c_str(), dataType.c_str());
-    for(int i = 0; i < nT; ++i)
-    {
-      T s0 = 0x00;
-      T s1 = 0x00;
-      T s2 = 0x00;
-      if(writeBinaryData == true)
-      {
-        s0 = static_cast<T>(m[i*3+0]);
-        s1 = static_cast<T>(m[i*3+1]);
-        s2 = static_cast<T>(m[i*3+2]);
-        MXA::Endian::FromSystemToBig::convert<T>(s0);
-        MXA::Endian::FromSystemToBig::convert<T>(s1);
-        MXA::Endian::FromSystemToBig::convert<T>(s2);
-        fwrite(&s0, sizeof(T), 1, vtkFile);
-        fwrite(&s1, sizeof(T), 1, vtkFile);
-        fwrite(&s2, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
-        {
-          s0 = static_cast<T>(m[i*3+0]) * -1.0;
-          s1 = static_cast<T>(m[i*3+1]) * -1.0;
-          s2 = static_cast<T>(m[i*3+2]) * -1.0;
-          MXA::Endian::FromSystemToBig::convert<T>(s0);
-          MXA::Endian::FromSystemToBig::convert<T>(s1);
-          MXA::Endian::FromSystemToBig::convert<T>(s2);
-          fwrite(&s0, sizeof(T), 1, vtkFile);
-          fwrite(&s1, sizeof(T), 1, vtkFile);
-          fwrite(&s2, sizeof(T), 1, vtkFile);
-        }
-      }
-      else
-      {
-        ss.str("");
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        if(false == writeConformalMesh)
-        {
-          ss << -1.0*m[i*3+0] << " " << -1.0*m[i*3+1] << " " << -1.0*m[i*3+2] << " ";
-        }
-        fprintf(vtkFile, "%s ", ss.str().c_str());
-        if (i%50 == 0) { fprintf(vtkFile, "\n"); }
-      }
-    }
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
+int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
   int err = 0;
   if (NULL == vtkFile)
   {
     return -1;
   }
-
-
   // Write the triangle region ids
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
 
-  int nT = triangles.GetNumberOfTuples();
-  int triangleCount = nT;
+  int triangleCount = triangles.GetNumberOfTuples();
   int swapped;
-  if (false == m_WriteConformalMesh)
-  {
-    triangleCount = nT * 2;
-  }
 
-
-    // This is like a "section header"
+  // This is like a "section header"
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
+  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount * 2);
+
+  int32_t totalCellsWritten = 0;
 
   // Write the GrainId Data to the file
   fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for(int i = 0; i < nT; ++i)
-  {
-    SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
 
+
+  // Loop over all the grains
+  for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+  {
+    int32_t gid = (*grainIter).first; // The current Grain Id
+    size_t size = (*grainIter).second; // The number of triangles for this grain id
+    std::vector<int32_t> buffer(size, 0);
+    totalCellsWritten += size;
+
+    // Endian Swap our current grain Id since we are going to write it a bunch of times.
+    swapped = gid;
+    MXA::Endian::FromSystemToBig::convert<int>(swapped);
+    size_t index = 0;
+
+    // Loop over all the triangles looking for the current grain id
+    // this is probably sub-optimal as if we have 1000 grains we are going to loop 1000 times but this will use the
+    // least amount of memory. We could run a filter to group the triangles by grain but then we would need an
+    // additional amount of memory equal to 3X the memory used for the triangle list because every triangle will be listed
+    // twice. We could get some slightly better performance if we buffered 4K worth of data then wrote out that data
+    // in one chunk versus what we are doing here.
+    for (int j = 0; j < triangleCount; j++)
+    {
+      if (triangles[j].labels[0] == gid || triangles[j].labels[1] == gid)
+      {
+        if(m_WriteBinaryFile == true)
+        {
+          buffer[index]=swapped;
+          ++index;
+        }
+        else
+        {
+          fprintf(vtkFile, "%d\n", gid);
+        }
+      }
+    }
+    // Write the Buffer
     if(m_WriteBinaryFile == true)
     {
-      swapped = t.labels[0];
-      MXA::Endian::FromSystemToBig::convert<int>(swapped);
-      fwrite(&swapped, sizeof(int), 1, vtkFile);
-      if(false == m_WriteConformalMesh)
-      {
-        swapped = t.labels[1];
-        MXA::Endian::FromSystemToBig::convert<int>(swapped);
-        fwrite(&swapped, sizeof(int), 1, vtkFile);
-      }
+      fwrite(&(buffer.front()), sizeof(int32_t), size, vtkFile);
     }
-    else
-    {
-      fprintf(vtkFile, "%d\n", t.labels[0]);
-      if(false == m_WriteConformalMesh)
-      {
-        fprintf(vtkFile, "%d\n", t.labels[1]);
-      }
-    }
-
   }
 
 #if 0
@@ -750,33 +849,38 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
     }
   }
 #endif
-
-  writeCellScalarData<SurfaceMeshDataContainer, int32_t>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshGrainFaceId,
-                                                                             "int", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
-
-  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
-
-  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
-
-  writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalDirection1,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
-
-  writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalDirection2,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, "VECTORS", vtkFile, nT);
-
-  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
-
-  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
-
+  notifyStatusMessage("Writing Face Normals...");
   writeCellNormalData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshTriangleNormals,
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+
+  notifyStatusMessage("Writing Principal Curvature 1");
+  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
+                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+  notifyStatusMessage("Writing Principal Curvature 2");
+  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
+                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+
+  notifyStatusMessage("Writing Grain Face Id");
+  writeCellScalarData<SurfaceMeshDataContainer, int32_t>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshGrainFaceId,
+                                                         "int", m_WriteBinaryFile, vtkFile, grainIds);
+
+  notifyStatusMessage("Writing Gaussian Curvature");
+  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
+                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+
+  notifyStatusMessage("Writing Mean Curvature");
+  writeCellScalarData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
+                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+#if 0
+  writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalDirection1,
+                                                        "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
+
+  writeCellVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalDirection2,
+                                                        "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
   writeCellNormalData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), "Goldfeather_Triangle_Normals",
-                                                                             "double", m_WriteBinaryFile, m_WriteConformalMesh, vtkFile, nT);
+                                                        "double", m_WriteBinaryFile, vtkFile, nT);
+#endif
 
   return err;
 }
