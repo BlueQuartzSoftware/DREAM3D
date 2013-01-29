@@ -177,12 +177,12 @@ int DataContainerReader::getSizeResolutionOrigin(int64_t volDims[3], float spaci
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
   if(dcGid < 0)
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss <<": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    ss <<": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss.str(), -150);
     return -1;
@@ -294,12 +294,12 @@ int DataContainerReader::gatherData(bool preflight)
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;
   }
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
   if(dcGid < 0)
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss << ": Error opening group '" << DREAM3D::HDF5::DataContainerName << "'";
+    ss << ": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;

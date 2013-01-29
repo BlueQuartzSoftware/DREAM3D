@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshToVtk_H_
-#define _SurfaceMeshToVtk_H_
+#ifndef _SurfaceMeshToNonconformalVtk_H_
+#define _SurfaceMeshToNonconformalVtk_H_
 
 #include <string>
 
@@ -45,27 +45,26 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 /**
- * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
+ * @class SurfaceMeshToNonconformalVtk SurfaceMeshToNonconformalVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToNonconformalVtk.h
  * @brief This class creates a VTK Polydata file written in the VTK Legacy file format.
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToVtk)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToVtk)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToVtk, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SurfaceMeshToNonconformalVtk)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToNonconformalVtk)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToNonconformalVtk, AbstractFilter)
 
-    virtual ~SurfaceMeshToVtk();
+    virtual ~SurfaceMeshToNonconformalVtk();
 
     // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputVtkFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -78,7 +77,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write Vtk PolyData from SurfaceMesh"; }
+    virtual const std::string getHumanLabel() { return "Write Vtk PolyData (NonConformal) from SurfaceMesh"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -104,7 +103,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     virtual void preflight();
 
   protected:
-    SurfaceMeshToVtk();
+    SurfaceMeshToNonconformalVtk();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -116,16 +115,14 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int writeCellData(FILE* vtkFile);
+    int writeCellData(FILE* vtkFile, std::map<int32_t, int32_t> &grainIds);
 
     int writePointData(FILE* vtkFile);
 
 
   private:
-    int8_t*  m_SurfaceMeshNodeType;
-
-    SurfaceMeshToVtk(const SurfaceMeshToVtk&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshToVtk&); // Operator '=' Not Implemented
+    SurfaceMeshToNonconformalVtk(const SurfaceMeshToNonconformalVtk&); // Copy Constructor Not Implemented
+    void operator=(const SurfaceMeshToNonconformalVtk&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshToVtk_H_ */
+#endif /* _SurfaceMeshToNonconformalVtk_H_ */

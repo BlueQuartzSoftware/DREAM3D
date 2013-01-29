@@ -124,7 +124,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
     return -1;
   }
   OPEN_HDF5_FILE(fileId, m_FileName);
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), fileId);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataContainerName.c_str(), fileId);
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
   hid_t dataset;
@@ -147,11 +147,11 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 
   status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, count, NULL);
   if (status < 0) {
-	  //FIXME: Implement the error trapping
+    //FIXME: Implement the error trapping
   }
   status = H5Dread(dataset, H5T_NATIVE_INT, memspace, filespace, H5P_DEFAULT, fileVoxelLayer);
   if (status < 0) {
-	  //FIXME: Implement the error trapping
+    //FIXME: Implement the error trapping
   }
 
   H5Sclose(memspace);
@@ -191,7 +191,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   if (err < 0) { return err; }
 
 
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_FileId);
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
   // Check to make sure we can read the amount of data requested. On a 32 bit

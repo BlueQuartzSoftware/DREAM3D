@@ -247,10 +247,10 @@ int BinaryNodesTrianglesReader::read()
 
   // Allocate all the nodes
   typedef SurfaceMesh::DataStructures::Vert_t Vert_t;
-  StructArray<Vert_t>::Pointer m_NodeListPtr = StructArray<Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<Vert_t>::Pointer m_NodeListPtr = StructArray<Vert_t>::CreateArray(nNodes, DREAM3D::PointData::SurfaceMeshNodes);
   Vert_t* m_NodeList = m_NodeListPtr->GetPointer(0);
 
-  Int8ArrayType::Pointer nodeTypePtr = Int8ArrayType::CreateArray(nNodes, 1, DREAM3D::CellData::SurfaceMeshNodeType);
+  Int8ArrayType::Pointer nodeTypePtr = Int8ArrayType::CreateArray(nNodes, 1, DREAM3D::PointData::SurfaceMeshNodeType);
   nodeTypePtr->initializeWithZeros();
   int8_t* nodeType = nodeTypePtr->GetPointer(0);
 
@@ -281,8 +281,9 @@ int BinaryNodesTrianglesReader::read()
 
   // Allocate all the Triangle Objects
   typedef SurfaceMesh::DataStructures::Face_t Face_t;
-  StructArray<Face_t>::Pointer m_TriangleListPtr = StructArray<Face_t>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<Face_t>::Pointer m_TriangleListPtr = StructArray<Face_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshTriangles);
   Face_t* m_TriangleList = m_TriangleListPtr->GetPointer(0);
+  ::memset(m_TriangleList, 0xAB, sizeof(Face_t) * nTriangles);
 
   SurfaceMesh::TrianglesFile::TrianglesFileRecord_t tRecord;
   for (size_t i = 0; i < nTriangles; i++)

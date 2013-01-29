@@ -125,29 +125,7 @@ namespace DREAM3D
     const std::string ConfidenceIndex("Confidence Index");
     const std::string IPFColor("IPFColor");
 
-    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
-    const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
-    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
-    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
-    const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
-    const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
-    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
-    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
-    const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
-    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
-    const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
-    const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");
-    const std::string SurfaceMeshTriangleNormals("SurfaceMeshTriangleNormals");
-    const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
-    const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
-    const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
-    const std::string SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
-    const std::string SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
-    const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
-    const std::string SurfaceMeshPrincipalDirection1("PrincipalDirection1");
-    const std::string SurfaceMeshPrincipalDirection2("PrincipalDirection2");
-    const std::string SurfaceMeshNodeTriangles("SurfaceMeshNodeTriangles");
-    const std::string SurfaceMeshEdgeTriangles("SurfaceMeshEdgeTriangles");
+
 
 
     const std::string SolidMeshNodes("SolidMeshNodes");
@@ -200,10 +178,49 @@ namespace DREAM3D
     const std::string MaterialName("MaterialName");
   }
 
+
+  namespace PointData
+  {
+    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
+    const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
+    //  const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
+    //   const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
+    const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
+    const std::string SurfaceMeshNodeTriangles("SurfaceMeshNodeTriangles");
+  }
+
+  namespace FaceData
+  {
+    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
+    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
+    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
+    const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");
+    const std::string SurfaceMeshTriangleNormals("SurfaceMeshTriangleNormals");
+    const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
+    const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
+    const std::string SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
+    const std::string SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
+    const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
+    const std::string SurfaceMeshPrincipalDirection1("PrincipalDirection1");
+    const std::string SurfaceMeshPrincipalDirection2("PrincipalDirection2");
+  }
+
+  namespace EdgeData
+  {
+    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
+    const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
+    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
+    const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
+    const std::string SurfaceMeshEdgeTriangles("SurfaceMeshEdgeTriangles");
+  }
+
+
   namespace HDF5
   {
 
-    const std::string DataContainerName("DataContainer");
+    const std::string VoxelDataContainerName("DataContainer");
+    const std::string SurfaceMeshDataContainerName("SurfaceMeshDataContainer");
+    const std::string SolidMeshDataContainerName("SolidMeshDataContainer");
     const std::string VoxelDataName("VoxelData");
     const std::string PipelineGroupName("Pipeline");
     const std::string ObjectType("ObjectType");

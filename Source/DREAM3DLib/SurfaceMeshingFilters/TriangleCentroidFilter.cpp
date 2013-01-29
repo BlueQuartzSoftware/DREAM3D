@@ -92,7 +92,7 @@ class CalculateCentroidsImpl
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter() :
 SurfaceMeshFilter(),
-m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::CellData::SurfaceMeshTriangleCentroids),
+m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleCentroids),
 m_SurfaceMeshTriangleCentroids(NULL)
 {
   setupFilterParameters();

@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------
 SharedGrainFaceFilter::SharedGrainFaceFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshGrainFaceIdArrayName(DREAM3D::CellData::SurfaceMeshGrainFaceId)
+  m_SurfaceMeshGrainFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshGrainFaceId)
 {
   setupFilterParameters();
 }
@@ -110,9 +110,9 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
     }
 
     // List any arrays that are created during this filter
-    Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::CellData::SurfaceMeshGrainFaceId);
-    sm->addPointData(DREAM3D::CellData::SurfaceMeshGrainFaceId, grainFaceId);
-    addCreatedCellData(DREAM3D::CellData::SurfaceMeshGrainFaceId);
+    Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGrainFaceId);
+    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
+    addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId);
 
   }
 }
@@ -153,7 +153,7 @@ void SharedGrainFaceFilter::execute()
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
 
-  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::CellData::SurfaceMeshGrainFaceId);
+  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshGrainFaceId);
   grainFaceId->initializeWithZeros();
 
 
@@ -230,7 +230,7 @@ void SharedGrainFaceFilter::execute()
 
   m_SharedGrainFaces = faces;
 
-  getSurfaceMeshDataContainer()->addPointData(DREAM3D::CellData::SurfaceMeshGrainFaceId, grainFaceId);
+  getSurfaceMeshDataContainer()->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

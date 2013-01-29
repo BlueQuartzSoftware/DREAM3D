@@ -208,27 +208,27 @@ void DataContainerWriter::execute()
   scopedFileSentinel.setFileId(m_FileId);
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerName.c_str(), m_FileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_FileId);
   if (err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::DataContainerName << std::endl;
+    ss << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.c_str(), H5P_DEFAULT );
+  dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::DataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
   // This just writes the header information
-  err = writeMetaInfo(DREAM3D::HDF5::DataContainerName, volDims, spacing, origin);
+  err = writeMetaInfo(DREAM3D::HDF5::VoxelDataContainerName, volDims, spacing, origin);
   if (err < 0)
   {
     ss.str("");

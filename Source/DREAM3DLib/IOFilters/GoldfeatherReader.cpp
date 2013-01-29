@@ -116,8 +116,8 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(-387);
   }
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangles);
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
@@ -168,12 +168,12 @@ void GoldfeatherReader::execute()
   dataCheck(false, nNodes, 1, 1);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::PointData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
   SurfaceMesh::DataStructures::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 
-  DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::CellData::SurfaceMeshNodeNormals);
+  DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::PointData::SurfaceMeshNodeNormals);
   double* normals = normalsPtr->GetPointer(0);
 
   DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(nNodes, 1, "Principal_Curvature_1");
@@ -234,7 +234,7 @@ void GoldfeatherReader::execute()
 
 
 
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangles, DREAM3D::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshTriangles);
   trianglesPtr->initializeWithZeros();
   SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
 

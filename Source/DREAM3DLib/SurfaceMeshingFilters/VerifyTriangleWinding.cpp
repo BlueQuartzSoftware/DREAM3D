@@ -209,8 +209,8 @@ class LabelVisitorInfo
 // -----------------------------------------------------------------------------
 VerifyTriangleWinding::VerifyTriangleWinding() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::CellData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshNodeTrianglesArrayName(DREAM3D::CellData::SurfaceMeshNodeTriangles),
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshNodeTrianglesArrayName(DREAM3D::PointData::SurfaceMeshNodeTriangles),
   m_DoUniqueEdgesFilter(false),
   m_DoNodeTriangleConnectivityFilter(false)
 {
@@ -273,9 +273,12 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
       setErrorCondition(-385);
     }
 
-    if (sm->getPointData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+    if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
     {
       m_DoUniqueEdgesFilter = true;
+    } else
+    {
+      m_DoUniqueEdgesFilter = false;
     }
   }
 }
@@ -307,6 +310,7 @@ void VerifyTriangleWinding::execute()
     return;
   }
   setErrorCondition(0);
+  dataCheck(false, 1, 1, 1);
 
   //  Generate the Unique Edges
   if (m_DoUniqueEdgesFilter == true)
@@ -450,7 +454,14 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
       notifyErrorMessage("Error Reversing the Triangle Winding", -801);
       return -1;
     }
-    normal = TriangleOps::computeNormal(verts[triangles[seedTriangleIdx].verts[2]], verts[triangles[seedTriangleIdx].verts[1]], verts[triangles[seedTriangleIdx].verts[0]]);
+    if (triangle.labels[0] == label)
+    {
+      normal = TriangleOps::computeNormal(verts[triangles[seedTriangleIdx].verts[0]], verts[triangles[seedTriangleIdx].verts[1]], verts[triangles[seedTriangleIdx].verts[2]]);
+    }
+    else
+    {
+      normal = TriangleOps::computeNormal(verts[triangles[seedTriangleIdx].verts[2]], verts[triangles[seedTriangleIdx].verts[1]], verts[triangles[seedTriangleIdx].verts[0]]);
+    }
     if (normal.x < 0.0f)
     {
       notifyErrorMessage("Error After attempted triangle winding reversal. Triangle normal is still oriented in wrong direction.", -802);
@@ -468,7 +479,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
   std::cout << "Triangle.labels[1] " << triangles[index].labels[1] << std::endl;\
 
 #define PRINT_VERT(index)\
-std::cout << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << std::endl;
+  std::cout << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << std::endl;
 
 #define PRINT_NORMAL(i, nodes, triangles)\
 { VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);\
@@ -495,7 +506,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   }
   SurfaceMesh::DataStructures::Face_t* triangles = masterTriangleList->GetPointer(0);
 
-  SurfaceMesh::DataStructures::Vert_t* verts = getSurfaceMeshDataContainer()->getVertices()->GetPointer(0);
+//  SurfaceMesh::DataStructures::Vert_t* verts = getSurfaceMeshDataContainer()->getVertices()->GetPointer(0);
 
   int numTriangles = masterTriangleList->GetNumberOfTuples();
 
