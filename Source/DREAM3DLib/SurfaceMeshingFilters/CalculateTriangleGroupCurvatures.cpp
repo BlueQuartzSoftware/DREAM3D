@@ -245,7 +245,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     {
       // Solve the Least Squares fit for f(x,y) = 0.5 * A * x^2 + Bxy + 0.5*C*y^2 where
       // we are solving for the A, B & C constants.
-      int cols = 3;
+      int cols = 7;
       int rows = patchCentroids->GetNumberOfTuples();
       Eigen::MatrixXd A(rows, cols);
       Eigen::VectorXd b(rows);
@@ -259,10 +259,15 @@ void CalculateTriangleGroupCurvatures::operator()() const
         A(m) = 0.5 * x * x;  // 1/2 x^2
         A(m + rows) = x * y; // x*y
         A(m + rows*2) = 0.5 * y * y;  // 1/2 y^2
+        A(m + rows*3) = x*x*x;
+        A(m + rows*4) = x*x*y;
+        A(m + rows*5) = x*y*y;
+        A(m + rows*6) = y*y*y;
         b[m] = z; // The Z Values
       }
-      Eigen::Vector3d sln1 = A.colPivHouseholderQr().solve(b);
-      // Now that we have the A, B & C constants we can solve the Eigen value/vector problem
+      typedef Eigen::Matrix<double, 7, 1> Vector7d;
+      Vector7d sln1 = A.colPivHouseholderQr().solve(b);
+      // Now that we have the A, B, C, D, E, F & G constants we can solve the Eigen value/vector problem
       // to get the principal curvatures and pricipal directions.
       Eigen::Matrix2d M;
       M << sln1(0), sln1(1), sln1(1), sln1(2);
@@ -270,7 +275,6 @@ void CalculateTriangleGroupCurvatures::operator()() const
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::RealVectorType eValues = eig.eigenvalues();
       Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d>::MatrixType eVectors = eig.eigenvectors();
 
-      // These are reversed so the data matches the reference data from the Goldfeather Paper
       // Kappa1 >= Kappa2
       double kappa1 = eValues(0) * -1;// Kappa 1
       double kappa2 = eValues(1) * -1; //kappa 2
