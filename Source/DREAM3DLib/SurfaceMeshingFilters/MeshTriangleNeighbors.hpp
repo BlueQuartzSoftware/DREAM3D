@@ -96,6 +96,7 @@ class MeshTriangleNeighbors
     {
       this->Array[ptId].cells[pos] = cellId;
     }
+
     // Description:
     // Get a link structure given a point id.
     NeighborList& getNeighborList(size_t ptId) {
@@ -107,6 +108,7 @@ class MeshTriangleNeighbors
     unsigned short getNumberOfTriangles(size_t ptId) {
       return this->Array[ptId].ncells;
     }
+
     // Description:
     // Return a list of cell ids using the point.
     int* getNeighborListPointer(size_t ptId) {

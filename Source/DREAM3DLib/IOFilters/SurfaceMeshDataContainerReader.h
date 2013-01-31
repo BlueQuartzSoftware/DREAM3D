@@ -33,50 +33,62 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef _DATACONTAINERWRITER_H_
-#define _DATACONTAINERWRITER_H_
+#ifndef _SurfaceMeshDataContainerReader_H_
+#define _SurfaceMeshDataContainerReader_H_
 
 #include <string>
 
-#include <hdf5.h>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-
 
 
 /**
- * @class DataContainerWriter DataContainerWriter.h /IOFiltersFilters/DataContainerWriter.h
+ * @class SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.h DREAM3DLib/IOFilFilters/SurfaceMeshDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(DataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SurfaceMeshDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainerReader, AbstractFilter)
 
-    virtual ~DataContainerWriter();
+    virtual ~SurfaceMeshDataContainerReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteVoxelData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceMeshData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSolidMeshData)
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
+    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
-    virtual void preflight();
 
+    /**
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Write DREAM3D Data File"; }
 
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const std::string getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
@@ -84,37 +96,29 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     */
     virtual void execute();
 
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
+    virtual void preflight();
 
   protected:
-    DataContainerWriter();
+    SurfaceMeshDataContainerReader();
 
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    /**
-     * @brief Opens or Creates an HDF5 file to write data into
-     * @param append Should a new file be created or append data to a currenlty existing file
-     * @return
-     */
-    int openFile(bool append = false);
-
-    /**
-     * @brief Closes the currently open file
-     * @return
-     */
-    int closeFile();
-
-    int writePipeline();
-
   private:
-    hid_t m_FileId;
 
-
-    DataContainerWriter(const DataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const DataContainerWriter&); // Operator '=' Not Implemented
-
-
-
-
+    SurfaceMeshDataContainerReader(const SurfaceMeshDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const SurfaceMeshDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _DATACONTAINERWRITER_H_ */
+#endif /* _SurfaceMeshDataContainerReader_H_ */

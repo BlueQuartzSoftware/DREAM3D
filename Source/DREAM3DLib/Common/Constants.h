@@ -217,14 +217,21 @@ namespace DREAM3D
 
   namespace HDF5
   {
-
-    const std::string VoxelDataContainerName("DataContainer");
+    const std::string FileVersionName("FileVersion");
+    const std::string FileVersion("4.0");
+    const std::string VoxelDataContainerName("VoxelDataContainer");
     const std::string SurfaceMeshDataContainerName("SurfaceMeshDataContainer");
     const std::string SolidMeshDataContainerName("SolidMeshDataContainer");
     const std::string VoxelDataName("VoxelData");
     const std::string PipelineGroupName("Pipeline");
     const std::string ObjectType("ObjectType");
     const std::string NumComponents("NumComponents");
+
+    const std::string VerticesName("Vertices");
+    const std::string FacesName("Faces");
+    const std::string EdgesName("Edges");
+    const std::string MeshVertLinksName("MeshVertLinks");
+    const std::string MeshTriangleNeighborLists("MeshTriangleNeighborLists");
 
     //  const std::string Grain_ID("Grain_ID");
     // const std::string SchmidFactor ("SchmidFactor");

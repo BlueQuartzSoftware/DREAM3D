@@ -93,17 +93,22 @@ class MeshVertLinks
     {
       this->Array[ptId].cells[pos] = cellId;
     }
+
+    //----------------------------------------------------------------------------
     // Description:
     // Get a link structure given a point id.
     TriangleList& getTriangleList(size_t ptId) {
       return this->Array[ptId];
     }
 
+    //----------------------------------------------------------------------------
     // Description:
     // Get the number of cells using the point specified by ptId.
     uint16_t getNumberOfTriangles(size_t ptId) {
       return this->Array[ptId].ncells;
     }
+
+    //----------------------------------------------------------------------------
     // Description:
     // Return a list of cell ids using the point.
     int* getTriangleListPointer(size_t ptId) {
