@@ -56,12 +56,16 @@ namespace SurfaceMesh
     {
         Float_t pos[3];
     } Vert_t;
+    const int32_t k_VertexNumElements = 3;
 
     typedef struct
     {
         int verts[3];
         int labels[2];
     } Face_t;
+    // This constant values needs to be the number of total integers that are encoded into the Face Structure
+    const int32_t k_FaceNumElements = 5;
+
 
     typedef struct
     {

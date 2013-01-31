@@ -43,3 +43,10 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GoldfeatherReader GoldfeatherRea
 
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SolidMeshToVtk SolidMeshToVtk.html "" TRUE)
+
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VoxelDataContainerWriter VoxelDataContainerWriter.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VoxelDataContainerReader VoxelDataContainerReader.html "" FALSE)
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshDataContainerWriter SurfaceMeshDataContainerWriter.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.html "" FALSE)

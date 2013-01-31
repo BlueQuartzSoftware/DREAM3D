@@ -45,11 +45,12 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/Common/H5FilterParametersWriter.h"
+#include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
+//#include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
-
-typedef std::list<std::string> NameListType;
 
 
 /**
@@ -63,7 +64,7 @@ class HDF5ScopedFileSentinel
     {}
     virtual ~HDF5ScopedFileSentinel()
     {
-       if (m_FileId > 0) {
+      if (m_FileId > 0) {
         H5Utilities::closeFile(m_FileId);
       }
     }
@@ -76,8 +77,12 @@ class HDF5ScopedFileSentinel
 //
 // -----------------------------------------------------------------------------
 DataContainerWriter::DataContainerWriter() :
-AbstractFilter(),
-m_FileId(-1)
+  AbstractFilter(),
+  m_WritePipeline(true),
+  m_WriteVoxelData(true),
+  m_WriteSurfaceMeshData(true),
+  m_WriteSolidMeshData(true),
+  m_FileId(-1)
 {
   setupFilterParameters();
 }
@@ -106,6 +111,30 @@ void DataContainerWriter::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Voxel Data");
+    option->setPropertyName("WriteVoxelData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write SurfaceMesh Data");
+    option->setPropertyName("WriteSurfaceMeshData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Solid Mesh");
+    option->setPropertyName("WriteSolidMeshData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -115,6 +144,9 @@ void DataContainerWriter::setupFilterParameters()
 void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
+  writer->writeValue("WriteVoxelData", getWriteVoxelData() );
+  writer->writeValue("WriteSurfaceMeshData", getWriteSurfaceMeshData() );
+  writer->writeValue("WriteSolidMeshData", getWriteSolidMeshData() );
 }
 
 // -----------------------------------------------------------------------------
@@ -171,26 +203,17 @@ void DataContainerWriter::execute()
 
   std::stringstream ss;
   int err = 0;
-  hid_t dcGid = -1;
-
-
-  int64_t volDims[3] =
-  { m->getXPoints(), m->getYPoints(), m->getZPoints() };
-  float spacing[3] =
-  { m->getXRes(), m->getYRes(), m->getZRes() };
-  float origin[3] =
-  { 0.0f, 0.0f, 0.0f };
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   err = openFile(false); // Do NOT append to any existing file
@@ -207,61 +230,61 @@ void DataContainerWriter::execute()
   HDF5ScopedFileSentinel scopedFileSentinel(0);
   scopedFileSentinel.setFileId(m_FileId);
 
-  // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_FileId);
-  if (err < 0)
+  // Write our File Version string to the Root "/" group
+  H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+
+  // Write the Pipeline to the File
+  err = writePipeline();
+
+  /* WRITE THE VOXEL DATA TO THE HDF5 FILE */
+  if (getVoxelDataContainer() != NULL && m_WriteVoxelData == true)
   {
+    VoxelDataContainerWriter::Pointer voxelWriter = VoxelDataContainerWriter::New();
+    voxelWriter->setHdfFileId(m_FileId);
+    voxelWriter->setVoxelDataContainer(getVoxelDataContainer());
+    voxelWriter->setObservers(getObservers());
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
-    setErrorCondition(-60);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    return;
+    ss << getMessagePrefix() << " |--> Writing Voxel Data ";
+    voxelWriter->setMessagePrefix(ss.str());
+    voxelWriter->execute();
+    if (voxelWriter->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Writing the Voxel Data", -803);
+      return;
+    }
   }
-  dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), H5P_DEFAULT );
-  if (dcGid < 0)
+
+  /* WRITE THE SurfaceMesh DATA TO THE HDF5 FILE */
+  if (NULL != getSurfaceMeshDataContainer() && m_WriteSurfaceMeshData)
   {
+    SurfaceMeshDataContainerWriter::Pointer smWriter = SurfaceMeshDataContainerWriter::New();
+    smWriter->setHdfFileId(m_FileId);
+    smWriter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    smWriter->setObservers(getObservers());
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
-    setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    return;
+    ss << getMessagePrefix() << " |--> Writing SurfaceMesh Data ";
+    smWriter->setMessagePrefix(ss.str());
+    smWriter->execute();
+    if (smWriter->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Writing the SurfaceMesh Data", smWriter->getErrorCondition());
+      return;
+    }
   }
 
-  // This just writes the header information
-  err = writeMetaInfo(DREAM3D::HDF5::VoxelDataContainerName, volDims, spacing, origin);
-  if (err < 0)
-  {
-    ss.str("");
-    ss <<  ":Error Writing header information to output file" << std::endl;
-    setErrorCondition(-62);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
 
-  err = writeCellData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
+  notifyStatusMessage("Complete");
+}
 
-  err = writeFieldData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::writePipeline()
+{
 
-  err = writeEnsembleData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
+  // WRITE THE PIPELINE TO THE HDF5 FILE
   H5FilterParametersWriter::Pointer optionsWriter = H5FilterParametersWriter::New();
-  hid_t pipelineGroupId = H5Utilities::createGroup(dcGid, DREAM3D::HDF5::PipelineGroupName);
+  hid_t pipelineGroupId = H5Utilities::createGroup(m_FileId, DREAM3D::HDF5::PipelineGroupName);
   optionsWriter->setGroupId(pipelineGroupId);
 
   AbstractFilter::Pointer preFilter = getPreviousFilter();
@@ -277,16 +300,8 @@ void DataContainerWriter::execute()
   optionsWriter->closeOptionsGroup();
 
   H5Gclose(pipelineGroupId);
-  // Now finally close the group and the HDf5 File
-  H5Gclose(dcGid); // Close the Data Container Group
-//  err = closeFile();
-//  if (err >= 0) {
-//   scopedFileSentinel.setFileId(0);
-//  }
-
-  notifyStatusMessage("Complete");
+  return 1;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -294,16 +309,16 @@ void DataContainerWriter::execute()
 int DataContainerWriter::openFile(bool appendData)
 {
   // Try to open a file to append data into
-    if (APPEND_DATA_TRUE == appendData)
-    {
-      m_FileId = H5Utilities::openFile(m_OutputFile, false);
-    }
-    // No file was found or we are writing new data only to a clean file
-    if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
-    {
-      m_FileId = H5Utilities::createFile (m_OutputFile);
-    }
-    return m_FileId;
+  if (APPEND_DATA_TRUE == appendData)
+  {
+    m_FileId = H5Utilities::openFile(m_OutputFile, false);
+  }
+  // No file was found or we are writing new data only to a clean file
+  if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
+  {
+    m_FileId = H5Utilities::createFile (m_OutputFile);
+  }
+  return m_FileId;
 }
 
 // -----------------------------------------------------------------------------
@@ -313,240 +328,5 @@ int DataContainerWriter::closeFile()
 {
   // Close the file when we are finished with it
   return H5Utilities::closeFile(m_FileId);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
-                          float spacing[3], float origin[3])
-{
-  herr_t err = 0;
-  err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
-  if (err < 0)  {
-    return err;
-  }
-  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
-
-  int32_t rank =1;
-  hsize_t dims[1] = {3};
-  err = H5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
-  if (err < 0)
-  {
-     std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
-  }
-  err = H5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
-  if (err < 0)
-  {
-     std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
-  }
-  err = H5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
-  if (err < 0)
-  {
-     std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
-  }
-  int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
-  err = H5Lite::writeScalarAttribute(m_FileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
-  if (err < 0)
-  {
-    std::cout << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << std::endl;
-  }
-
-  err |= H5Gclose(gid);
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
-{
-  // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
-  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_FileId);
-  if (err < 0)
-  {
-    std::cout << "Error creating HDF Group " << hdfGroupPath << std::endl;
-  }
-  err = H5Lite::writeStringAttribute(m_FileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
-  if(err < 0)
-  {
-    std::cout << "Error writing string attribute to HDF Group " << hdfGroupPath << std::endl;
-  }
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerWriter::writeCellData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = m->getCellArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
-    notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = m->getCellData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerWriter::writeFieldData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  // Write the Field Data
-  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
-    return err;
-  }
-  err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
-  if(err < 0)
-  {
-    return err;
-  }
-
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-65);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = m->getFieldArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    IDataArray::Pointer array = m->getFieldData(*iter);
-    err = array->writeH5Data(fieldGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing field array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(fieldGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(fieldGroupId);
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DataContainerWriter::writeEnsembleData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  // Write the Ensemble data
-  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-66);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
-
-  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-67);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = m->getEnsembleArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    IDataArray::Pointer array = m->getEnsembleData(*iter);
-    err = array->writeH5Data(ensembleGid);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(ensembleGid); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-
-  // These should eventually go away when these "Ensemble Data" items get wrapped into the map structure of the
-  // data container class.
-//  err = writeEnsembleDataArray<unsigned int, int>(ensembleGid, m->phaseType, DREAM3D::EnsembleData::PhaseType);
-//  if(getErrorCondition() < 0)
-//  {
-//    return err;
-//  }
-//  err = writeEnsembleDataArray<unsigned int, int>(ensembleGid, m->crystruct, DREAM3D::EnsembleData::CrystalStructure);
-//  if(getErrorCondition() < 0)
-//  {
-//    return err;
-//  }
-
-  H5Gclose(ensembleGid);
-
-  return err;
 }
 
