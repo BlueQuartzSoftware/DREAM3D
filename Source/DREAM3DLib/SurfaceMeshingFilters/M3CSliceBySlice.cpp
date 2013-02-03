@@ -95,6 +95,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
+#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 
 
 #define WRITE_BINARY_TEMP_FILES 1
@@ -394,7 +395,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
     int8_t* m_SurfaceMeshNodeType;
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, PointData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
-    sm->setVertices(vertices);
+        sm->setVertices(vertices);
     sm->setFaces(triangles);
   }
 }
@@ -458,7 +459,7 @@ void M3CSliceBySlice::execute()
   int nNodes = 0; // number of total Nodes used...
 
 
-//  GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
+  //  GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
   size_t dims[3];
   SurfaceMesh::DataStructures::Float_t res[3];
@@ -589,19 +590,18 @@ void M3CSliceBySlice::execute()
 
     // find triangles and arrange the spins across each triangle...
     nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeTypePtr, cEdgePtr, cTrianglePtr);
+/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+    // THERE IS A SUBTLE BUG IN THIS NEXT FUNCTION WHERE SOMETIMES THE LABELS ARE NOT ARRANGED CORRECTLY. FOR NOW THE
+    // WORK AROUND IS TO JUST PUT THEM BACK TO THEIR ORIGINAL VALUES INSTEAD OF LEAVING THE -1 VALUE THAT IS PLACED
+    // IN THERE DURING THE EXECUTION OF THE ALGORITHM. AT SOME POINT THIS REALLY NEEDS TO BE FIXED PROPERLY BY
+    // SOME ONE WHO UNDERSTANDS THE CODE. THE SMALL_IN100 DATA SET CAN USUALLY TRIGGER THIS BUG.
     arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
+/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
 
     // assign new, cumulative Node id...
     nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeTypePtr);
     update_node_edge_kind(nTriangle,cTrianglePtr, cVertexNodeTypePtr, cEdgePtr);
 
-    //std::cout << "M3CSliceBySlice nNodes: " << nNodes << std::endl;
-
-    //    analyzeWinding();
-    //    eMap.clear();
-    //    labelTriangleMap.clear();
-
-    // std::cout << "nNodes: " << nNodes << std::endl;
     // Output Nodes and triangles...
     err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
     if (err < 0)
@@ -622,12 +622,6 @@ void M3CSliceBySlice::execute()
       setErrorCondition(-1);
       return;
     }
-
-    //    if (m_WriteSTLFile == true)
-    //    {
-    //      m_GrainChecker->addData(nTriangle, cTriID, cTriangle, cVertex);
-    //      writeSTLFiles(nTriangle, gidToSTLWriter);
-    //    }
     cNodeID = nNodes;
     cTriID = cTriID + nTriangle;
     cEdgeID = cEdgeID + nEdge;
@@ -811,22 +805,6 @@ void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
     ::memcpy((void*)vxPtr, (void*)fVxPtr, dims[0] * sizeof(int));
   }
 }
-
-/**
- * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
- * when the object goes out of scope.
- */
-class ScopedFileMonitor
-{
-  public:
-    ScopedFileMonitor(FILE* f) : m_File(f) {}
-    virtual ~ScopedFileMonitor() { fclose(m_File);}
-  private:
-    FILE* m_File;
-    ScopedFileMonitor(const ScopedFileMonitor&); // Copy Constructor Not Implemented
-    void operator=(const ScopedFileMonitor&); // Operator '=' Not Implemented
-};
-
 
 
 // -----------------------------------------------------------------------------
@@ -1676,43 +1654,32 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
 }
 
 #define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)\
-{\
-  size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
-  if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
-    Detail::triangleResizeCount++; \
-    if (Detail::triangleResizeCount == 10) { \
-      Detail::triangleResizeCount = 0;\
-      Detail::triangleResize *= 10;\
+  {\
+    size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
+    if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
+      Detail::triangleResizeCount++; \
+      if (Detail::triangleResizeCount == 10) { \
+        Detail::triangleResizeCount = 0;\
+        Detail::triangleResize *= 10;\
+      }\
+      cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
+  /*    StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
+      for(size_t xx_xx = current_##cTrianglePtr##_size; xx_xx < current_##cTrianglePtr##_size + Detail::triangleResize; ++xx_xx){\
+        cTriangle[xx_xx].node_id[0] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB;\
+        cTriangle[xx_xx].e_id[0] = 0xABABABAB; cTriangle[xx_xx].e_id[1] = 0xABABABAB; cTriangle[xx_xx].e_id[2] = 0xABABABAB;\
+        cTriangle[xx_xx].nSpin[0] = 0xABABABAB; cTriangle[xx_xx].nSpin[2] = 0xABABABAB;\
+        cTriangle[xx_xx].edgePlace[0] = 0xABABABAB;cTriangle[xx_xx].edgePlace[1] = 0xABABABAB; cTriangle[xx_xx].edgePlace[2] = 0xABABABAB;\
+      }*/\
     }\
-    cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
-   /* std::cout << "Resized Triangle Array to " << current_##cTrianglePtr##_size + Detail::triangleResize << std::endl;*/\
   }\
-}\
-StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
-cTriangle[ctid].node_id[0] = n0;\
-cTriangle[ctid].node_id[1] = n1;\
-cTriangle[ctid].node_id[2] = n2;\
-cTriangle[ctid].nSpin[0] = label0;\
-cTriangle[ctid].nSpin[1] = label1;\
-   /*cTriangle[ctid].tIndex = ctid;*/
+  StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
+  cTriangle[ctid].node_id[0] = n0;\
+  cTriangle[ctid].node_id[1] = n1;\
+  cTriangle[ctid].node_id[2] = n2;\
+  cTriangle[ctid].nSpin[0] = label0;\
+  cTriangle[ctid].nSpin[1] = label1;\
+  if (ctid == 3112052) { std::cout << "ctid: " << ctid << "  " << label0 << " " << label1 << ":: " << cTriangle[ctid].nSpin[0] << "  " << cTriangle[ctid].nSpin[1] << std::endl;}
 
-#if 0
-SharedEdge::Pointer e0 = SharedEdge::New(cTriangle[ctid].node_id[0], cTriangle[ctid].node_id[1]);\
-SharedEdge::Pointer e = eMap[e0->getId()];\
-if (NULL == e.get()) { eMap[e0->getId()] = e0; }else{ e0 = e; }\
-e0->triangles.insert(ctid);\
-SharedEdge::Pointer e1 = SharedEdge::New(cTriangle[ctid].node_id[1], cTriangle[ctid].node_id[2]);\
-e = eMap[e1->getId()];\
-if (NULL == e.get()) { eMap[e1->getId()] = e1; }else{ e1 = e;}\
-e1->triangles.insert(ctid);\
-SharedEdge::Pointer e2 = SharedEdge::New(cTriangle[ctid].node_id[2], cTriangle[ctid].node_id[0]);\
-e = eMap[e2->getId()]; \
-if (NULL == e.get()){ eMap[e2->getId()] = e2; }else{ e2 = e; }\
-e2->triangles.insert(ctid);\
-cTriangle[ctid]->edges[0] = e0;  cTriangle[ctid]->edges[1] = e1;  cTriangle[ctid]->edges[2] = e2;\
-labelTriangleMap[label0] = ctid;\
-labelTriangleMap[label1] = ctid;
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -1879,8 +1846,8 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
       te0 = loop[0];
       te1 = loop[1];
       te2 = loop[2];
-      ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] )
-          ctid++;
+      ADD_TRIANGLE(cTrianglePtr, ctid, cEdge[te0].node_id[0], cEdge[te1].node_id[0], cEdge[te2].node_id[0], cEdge[te0].nSpin[0], cEdge[te0].nSpin[1] );
+      ctid++;
     }
     else if (numN > 3)
     {
@@ -2539,13 +2506,15 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
   int32_t* voxels = voxelsPtr->GetPointer(0);
   SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
 
+  int nSpin1 = 0;
+  int nSpin2 = 0;
   for (int i = 0; i < numT; i++)
   { // for each triangle...
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
-    //  nSpin1 = cTriangle[i]->nSpin[0];
-    //  nSpin2 = cTriangle[i]->nSpin[1];
+      nSpin1 = cTriangle[i].nSpin[0];
+      nSpin2 = cTriangle[i].nSpin[1];
     cTriangle[i].nSpin[0] = -1;
     cTriangle[i].nSpin[1] = -1;
     for (int j = 0; j < 3; j++)
@@ -2669,6 +2638,17 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
       }
       if (gname != tgrainname1[index] && gname != tgrainname2[index]) k++;
     }
+    // IF WE FAILED TO PROPERLY SET THE LABELS THEN SIMPLY PUT THE LABELS BACK TO THEIR ORIGINAL VALUES. IF WE HAD
+    // PROPER CONNECTIVITY THIS WOULD NOT BE A PROBLEM AS WE WOULD JUST TEST AGAINST THE NEIGHBORS TO MAKE SURE OUR
+    // WINDING IS CORRECT.
+    if (cTriangle[i].nSpin[0] == -1)
+    {
+      cTriangle[i].nSpin[0] = nSpin1;
+    }
+    if (cTriangle[i].nSpin[1] == -1)
+    {
+      cTriangle[i].nSpin[1] = nSpin2;
+    }
   }
 }
 
@@ -2681,16 +2661,16 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
                                    DataArray<int8_t>::Pointer cVertexNodeTypePtr)
 {
   int nid = 0;
-//  int nkind = 0;
-//  int cnid = 0;
+  //  int nkind = 0;
+  //  int cnid = 0;
 
   int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
   nid = nN;
   for (int i = 0; i < (7 * 2 * NSP); i++)
   {
-//    nkind = nodeType[i];
-//    cnid = nodeID[i];
+    //    nkind = nodeType[i];
+    //    cnid = nodeID[i];
     //  plane = i % 7;
     if (nodeType[i] != DREAM3D::SurfaceMesh::NodeType::Unused && nodeID[i] == DREAM3D::SurfaceMesh::NodeId::Unused)
     {
@@ -2827,10 +2807,10 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
         std::cout << "Not enough data written to the Nodes file." << std::endl;
         return -1;
       }
-//      if (nodeKind[k] < 0)
-//      {
-//        std::cout <<getNameOfClass() <<  ": Node Id: " << record.nodeId << " NEGATIVE Node Type: " << nodeKind[k] << std::endl;
-//      }
+      //      if (nodeKind[k] < 0)
+      //      {
+      //        std::cout <<getNameOfClass() <<  ": Node Id: " << record.nodeId << " NEGATIVE Node Type: " << nodeKind[k] << std::endl;
+      //      }
     }
   }
   fclose(f);
@@ -2865,6 +2845,8 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
   SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->GetPointer(0);
 
+
+
   // Create a new file if this is our first slice
   if (zID == 0)
   {
@@ -2886,21 +2868,24 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
       return -1;
     }
   }
+  ScopedFileMonitor monitor(f);
+
   size_t totalWritten = 0;
+
   //  outFile << nt <<endl;
   for (int i = 0; i < end; i++)
   {
-
-    n1 = cTriangle[i].node_id[0];
-    n2 = cTriangle[i].node_id[1];
-    n3 = cTriangle[i].node_id[2];
+    SurfaceMesh::M3C::Patch& patch = cTriangle[i];
+    n1 = patch.node_id[0];
+    n2 = patch.node_id[1];
+    n3 = patch.node_id[2];
 
     record.nodeId_0 = nodeID[n1];
     record.nodeId_1 = nodeID[n2];
     record.nodeId_2 = nodeID[n3];
 
-    record.label_0 = (cTriangle[i].nSpin[0] == grainIdZeroMappingValue ? 0 : cTriangle[i].nSpin[0]);
-    record.label_1 = (cTriangle[i].nSpin[1] == grainIdZeroMappingValue ? 0 : cTriangle[i].nSpin[1]);
+    record.label_0 = (patch.nSpin[0] == grainIdZeroMappingValue ? 0 : patch.nSpin[0]);
+    record.label_1 = (patch.nSpin[1] == grainIdZeroMappingValue ? 0 : patch.nSpin[1]);
 
     totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
     if (totalWritten != 1)
@@ -2908,15 +2893,10 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
       std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
       return -1;
     }
-    if (cTriangle[i].nSpin[0] == -1 || cTriangle[i].nSpin[1] == -1)
-    {
-      std::cout << "Writing -1 Grain ID for Triangle " << record.triId << std::endl;
-    }
-
     record.triId = record.triId + 1;
   }
-  fclose(f);
 
+  // The ScopedFileMonitor Will make sure the FILE object is closed when we exit.
 
   return 0;
 }
