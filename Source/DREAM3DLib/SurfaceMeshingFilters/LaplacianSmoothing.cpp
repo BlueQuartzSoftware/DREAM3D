@@ -617,7 +617,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   SurfaceMesh::DataStructures::VertList_t::Pointer newPositionsPtr = SurfaceMesh::DataStructures::VertList_t::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
   newPositionsPtr->initializeWithZeros();
 
-  DEFINE_CLOCK;
+
   std::stringstream ss;
   for (int q=0; q<m_IterationSteps; q++)
   {
@@ -625,7 +625,6 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     ss.str("");
     ss << "Iteration " << q;
     notifyStatusMessage(ss.str());
-    START_CLOCK;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numVerts),
                       LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
@@ -638,8 +637,6 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     // SERIAL ONLY
     ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(SurfaceMesh::DataStructures::Vert_t) * vertsPtr->GetNumberOfTuples());
     // -----------
-    END_CLOCK("Laplacian Iteration complete");
-
 #if OUTPUT_DEBUG_VTK_FILES
     std::stringstream testFile;
     testFile << "/tmp/Laplacian_" << q << ".vtk";
