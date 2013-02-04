@@ -213,15 +213,31 @@ class MeshTriangleNeighbors
         // Only copy the first "N" values from the loop_neighbors vector into the storage array
         ::memcpy(this->Array[t].cells, &(loop_neighbors[0]), sizeof(int) * this->Array[t].ncells);
       }
-
-//      size_t memory_used = 0;
-//      for(size_t t = 0; t < nTriangles; ++t)
-//      {
-//        memory_used= memory_used + (10 + sizeof(int)*this->Array[t].ncells);
-//      }
-//      std::cout << "Triangle Neighbors Memory Used: " << memory_used << std::endl;
-
     }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void deserializeLinks(std::vector<uint8_t> &buffer, size_t nFaces)
+    {
+      size_t offset = 0;
+      allocate(nFaces); // Allocate all the links with 0 and NULL;
+      uint8_t* bufPtr = &(buffer.front());
+
+      // Walk the array and allocate all the array links to Zero and NULL
+      uint16_t* ncells = NULL;
+      int32_t* cells = NULL;
+      for(size_t i = 0; i < nFaces; ++i)
+      {
+        ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
+        this->Array[i].ncells = *ncells; // Set the number of cells in this link
+        offset += 2;
+        this->Array[i].cells = new int32_t[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(cells, bufPtr + offset, (*ncells)*sizeof(int32_t) ); // Copy from teh buffer into the new list memory
+        offset += (*ncells) * sizeof(int32_t); // Increment the offset
+      }
+    }
+
 
   protected:
     MeshTriangleNeighbors():Array(NULL),Size(0),MaxId(-1),Extend(1000) {}
