@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
 
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -76,7 +77,7 @@ void AddOrientationNoise::setupFilterParameters()
     option->setPropertyName("Magnitude");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-    option->setUnits("");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -134,6 +135,8 @@ void AddOrientationNoise::execute()
   {
     return;
   }
+
+  m_Magnitude = m_Magnitude*m_pi/180.0;
 
   add_orientation_noise();
 

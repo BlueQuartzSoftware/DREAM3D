@@ -485,18 +485,8 @@ bool SegmentBetaGrains::determineGrouping(int referencepoint, int neighborpoint,
 
 int SegmentBetaGrains::check_for_burgers(float betaQuat[5], float alphaQuat[5])
 {
-
-/*  float ea1 = 0.0*m_pi/180.0f;
-  float ea2 = 0.0*m_pi/180.0f;
-  float ea3 = 0.0*m_pi/180.0f;
-  OrientationMath::eulertoQuat(betaQuat, ea1, ea2, ea3);
-
-  ea1 = 0.0*m_pi/180.0f;
-  ea2 = 45.0*m_pi/180.0f;
-  ea3 = 54.73*m_pi/180.0f;
-  OrientationMath::eulertoQuat(alphaQuat, ea1, ea2, ea3);*/
-
-  float w = 0.0;
+  float dP = 0.0;
+  float angle = 0.0;
   float radToDeg = 180.0f/m_pi;
 
   float gBeta[3][3];
@@ -514,12 +504,46 @@ int SegmentBetaGrains::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   MatrixMath::transpose3x3(gAlpha, gAlphaT);
 
   float mat[3][3];
+  float a[3];
+  float b[3];
   for(int i=0;i<12;i++)
   {
     MatrixMath::multiply3x3with3x3(gBetaT, burgersCrystalDirections[i], mat);
-    w = OrientationMath::matrixMisorientation(mat, gAlphaT);
-    if((w*radToDeg) < m_AngleTolerance) return 1;
-//    else if((180.0f-(w*radToDeg)) < m_AngleTolerance) return 1;
+	a[0] = mat[0][2];
+	a[1] = mat[1][2];
+	a[2] = mat[2][2];
+	b[0] = gAlphaT[0][2];
+	b[1] = gAlphaT[1][2];
+	b[2] = gAlphaT[2][2];
+	dP = MatrixMath::dotProduct(a, b);
+	angle = acos(dP);
+	if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
+	{
+		a[0] = mat[0][0];
+		a[1] = mat[1][0];
+		a[2] = mat[2][0];
+		b[0] = gAlphaT[0][0];
+		b[1] = gAlphaT[1][0];
+		b[2] = gAlphaT[2][0];
+		dP = MatrixMath::dotProduct(a, b);
+		angle = acos(dP);
+		if((angle*radToDeg) < m_AngleTolerance) return 1;
+		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+		b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
+		b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
+		b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
+		dP = MatrixMath::dotProduct(a, b);
+		angle = acos(dP);
+		if((angle*radToDeg) < m_AngleTolerance) return 1;
+		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+		b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
+		b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
+		b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
+		dP = MatrixMath::dotProduct(a, b);
+		angle = acos(dP);
+		if((angle*radToDeg) < m_AngleTolerance) return 1;
+		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+	}
   }
 
   return 0;
