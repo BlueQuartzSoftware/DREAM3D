@@ -488,7 +488,6 @@ class StructArray : public IDataArray
     {
       assert(false);
       return -1;
-      //   return H5StructArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**
@@ -500,18 +499,6 @@ class StructArray : public IDataArray
     {
       assert(false);
       int err = -1;
-
-      //      this->Resize(0);
-      //      IStructArray::Pointer p = H5StructArrayReader::readIStructArray(parentId, GetName());
-      //      if (p.get() == NULL)
-      //      {
-      //        return -1;
-      //      }
-      //      this->NumberOfComponents = p->GetNumberOfComponents();
-      //      this->Size = p->GetSize();
-      //      this->MaxId = (Size == 0) ? 0 : Size -1;
-      //      this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
-      //      p->releaseOwnership();
 
       return err;
     }

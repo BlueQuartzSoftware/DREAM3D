@@ -45,7 +45,7 @@
 
 
 /**
- * @class SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.h DREAM3DLib/IOFilFilters/SurfaceMeshDataContainerReader.h
+ * @class SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.h DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h
  * @brief
  * @author
  * @date
@@ -61,10 +61,9 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     virtual ~SurfaceMeshDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
 
-
+    typedef std::list<std::string> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -102,6 +101,11 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     */
     virtual void preflight();
 
+    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
+    virtual void addCreatedPointData(const std::string &name);
+    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
+    virtual void addCreatedFaceData(const std::string &name);
+    virtual void addCreatedEdgeData(const std::string &name);
   protected:
     SurfaceMeshDataContainerReader();
 
@@ -114,6 +118,19 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int gatherData(bool preflight);
+    int gatherVertexData(hid_t dcGid, bool preflight);
+    int gatherFaceData(hid_t dcGid, bool preflight);
+    int gatherEdgeData(hid_t dcGid, bool preflight);
+    int readVertices(hid_t dcGid);
+    int readFaces(hid_t dcGid);
+    int readEdges(hid_t dcGid);
+    int readMeshVertLinks(hid_t dcGid, bool preflight);
+    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
+    int readVertexAttributeData(hid_t dcGid);
+    int readFaceAttributeData(hid_t dcGid);
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead);
+
 
   private:
 

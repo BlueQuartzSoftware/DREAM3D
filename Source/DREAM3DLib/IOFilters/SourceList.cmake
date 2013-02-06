@@ -50,3 +50,6 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VoxelDataContainerReader VoxelDa
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshDataContainerWriter SurfaceMeshDataContainerWriter.html "" FALSE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.html "" FALSE)
+
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SolidMeshDataContainerWriter SolidMeshDataContainerWriter.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SolidMeshDataContainerReader SolidMeshDataContainerReader.html "" FALSE)

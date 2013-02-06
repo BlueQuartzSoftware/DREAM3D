@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Common/H5FilterParametersWriter.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
-//#include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
@@ -68,9 +68,7 @@ class HDF5ScopedFileSentinel
         H5Utilities::closeFile(m_FileId);
       }
     }
-
     DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
-
 };
 
 // -----------------------------------------------------------------------------
@@ -127,14 +125,14 @@ void DataContainerWriter::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Solid Mesh");
-    option->setPropertyName("WriteSolidMeshData");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
+//  {
+//    FilterParameter::Pointer option = FilterParameter::New();
+//    option->setHumanLabel("Write Solid Mesh");
+//    option->setPropertyName("WriteSolidMeshData");
+//    option->setWidgetType(FilterParameter::BooleanWidget);
+//    option->setValueType("bool");
+//    parameters.push_back(option);
+//  }
   setFilterParameters(parameters);
 }
 
@@ -227,8 +225,7 @@ void DataContainerWriter::execute()
   }
 
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(0);
-  scopedFileSentinel.setFileId(m_FileId);
+  HDF5ScopedFileSentinel scopedFileSentinel(m_FileId);
 
   // Write our File Version string to the Root "/" group
   H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
@@ -255,7 +252,7 @@ void DataContainerWriter::execute()
   }
 
   /* WRITE THE SurfaceMesh DATA TO THE HDF5 FILE */
-  if (NULL != getSurfaceMeshDataContainer() && m_WriteSurfaceMeshData)
+  if (NULL != getSurfaceMeshDataContainer() && m_WriteSurfaceMeshData == true)
   {
     SurfaceMeshDataContainerWriter::Pointer smWriter = SurfaceMeshDataContainerWriter::New();
     smWriter->setHdfFileId(m_FileId);
@@ -268,6 +265,23 @@ void DataContainerWriter::execute()
     if (smWriter->getErrorCondition() < 0)
     {
       notifyErrorMessage("Error Writing the SurfaceMesh Data", smWriter->getErrorCondition());
+      return;
+    }
+  }
+
+  if (NULL != getSolidMeshDataContainer() && m_WriteSolidMeshData == true)
+  {
+    SolidMeshDataContainerWriter::Pointer smWriter = SolidMeshDataContainerWriter::New();
+    smWriter->setHdfFileId(m_FileId);
+    smWriter->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    smWriter->setObservers(getObservers());
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Writing Solid Mesh Data ";
+    smWriter->setMessagePrefix(ss.str());
+    smWriter->execute();
+    if (smWriter->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Writing the Solid Mesh Data", smWriter->getErrorCondition());
       return;
     }
   }

@@ -103,6 +103,7 @@
     <file>SurfaceMeshingFilters/QuickSurfaceMesh.html</file>
     <file>SurfaceMeshingFilters/ReverseTriangleWinding.html</file>
     <file>SurfaceMeshingFilters/SharedGrainFaceFilter.html</file>
+    <file>SurfaceMeshingFilters/TriangleCentroidFilter.html</file>
     <file>SurfaceMeshingFilters/TriangleNormalFilter.html</file>
     <file>SurfaceMeshingFilters/VerifyTriangleWinding.html</file>
     <file>SurfaceMeshingFilters/GrainFaceCurvatureFilter.html</file>

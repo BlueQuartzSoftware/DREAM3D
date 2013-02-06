@@ -282,8 +282,11 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglePtr = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglePtr = SurfaceMesh::DataStructures::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshTriangles);
   SurfaceMesh::DataStructures::Face_t* triangles = trianglePtr->GetPointer(0);
+
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
 
   // Store all the unique Spins
   std::set<int> uniqueSpins;
@@ -294,8 +297,8 @@ void NodesTrianglesToStl::execute()
     triangles[i].verts[0] = tData[1];
     triangles[i].verts[1] = tData[2];
     triangles[i].verts[2] = tData[3];
-    triangles[i].labels[0] = tData[7];
-    triangles[i].labels[1] = tData[8];
+    faceLabels[i*2] = tData[7];
+    faceLabels[i*2+1] = tData[8];
     uniqueSpins.insert(tData[7]);
     uniqueSpins.insert(tData[8]);
   }
@@ -350,11 +353,11 @@ void NodesTrianglesToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (triangles[t].labels[0] == spin)
+      if (faceLabels[t*2] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (triangles[t].labels[1] == spin)
+      else if (faceLabels[t*2+1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices

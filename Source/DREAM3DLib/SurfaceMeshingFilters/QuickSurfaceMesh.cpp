@@ -441,8 +441,10 @@ void QuickSurfaceMesh::execute()
 
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nodeCount, DREAM3D::PointData::SurfaceMeshNodes);
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshTriangles);
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(triangleCount, 2, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
   SurfaceMesh::DataStructures::Vert_t* vertex = vertices.get()->GetPointer(0);
   SurfaceMesh::DataStructures::Face_t* triangle = triangles.get()->GetPointer(0);
+  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
 
   triangleCount = 0;
 
@@ -482,16 +484,16 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
         triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].labels[0] = m_GrainIds[point];
-        triangle[triangleCount].labels[1] = -1;
+        faceLabels[triangleCount*2] = m_GrainIds[point];
+        faceLabels[triangleCount*2+1] = -1;
 
         triangleCount++;
 
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
         triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].labels[0] = m_GrainIds[point];
-        triangle[triangleCount].labels[1] = -1;
+        faceLabels[triangleCount*2] = m_GrainIds[point];
+        faceLabels[triangleCount*2+1] = -1;
 
         triangleCount++;
       }
@@ -520,16 +522,16 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
         triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-        triangle[triangleCount].labels[0] = m_GrainIds[point];
-        triangle[triangleCount].labels[1] = -1;
+        faceLabels[triangleCount*2] = m_GrainIds[point];
+        faceLabels[triangleCount*2+1] = -1;
 
         triangleCount++;
 
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
         triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-        triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
-        triangle[triangleCount].labels[1] = m_GrainIds[point];
+        faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+        faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
         triangleCount++;
       }
@@ -558,16 +560,16 @@ void QuickSurfaceMesh::execute()
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
         triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
-        triangle[triangleCount].labels[1] = m_GrainIds[point];
+        faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+        faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
         triangleCount++;
 
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
         triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
-        triangle[triangleCount].labels[1] = m_GrainIds[point];
+        faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+        faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
         triangleCount++;
       }
@@ -598,16 +600,16 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          triangle[triangleCount].labels[0] = m_GrainIds[point];
-          triangle[triangleCount].labels[1] = -1;
+          faceLabels[triangleCount*2] = m_GrainIds[point];
+          faceLabels[triangleCount*2+1] = -1;
 
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].labels[0] = m_GrainIds[point];
-          triangle[triangleCount].labels[1] = -1;
+          faceLabels[triangleCount*2] = m_GrainIds[point];
+          faceLabels[triangleCount*2+1] = -1;
 
           triangleCount++;
         }
@@ -636,16 +638,16 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          triangle[triangleCount].labels[0] = m_GrainIds[point];
-          triangle[triangleCount].labels[1] = -1;
+          faceLabels[triangleCount*2] = m_GrainIds[point];
+          faceLabels[triangleCount*2+1] = -1;
 
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].labels[0] = m_GrainIds[point];
-          triangle[triangleCount].labels[1] = -1;
+          faceLabels[triangleCount*2] = m_GrainIds[point];
+          faceLabels[triangleCount*2+1] = -1;
 
           triangleCount++;
         }
@@ -674,16 +676,16 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          triangle[triangleCount].labels[0] = m_GrainIds[point];
-          triangle[triangleCount].labels[1] = -1;
+          faceLabels[triangleCount*2] = m_GrainIds[point];
+          faceLabels[triangleCount*2+1] = -1;
 
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].labels[0] = m_GrainIds[point];
-          triangle[triangleCount].labels[1] = -1;
+          faceLabels[triangleCount*2] = m_GrainIds[point];
+          faceLabels[triangleCount*2+1] = -1;
 
           triangleCount++;
         }
@@ -715,16 +717,16 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
-          triangle[triangleCount].labels[1] = m_GrainIds[point];
+          faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+          faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].labels[0] = m_GrainIds[neigh1];
-          triangle[triangleCount].labels[1] = m_GrainIds[point];
+          faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+          faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
           triangleCount++;
         }
@@ -753,16 +755,16 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].labels[0] = m_GrainIds[neigh2];
-          triangle[triangleCount].labels[1] = m_GrainIds[point];
+          faceLabels[triangleCount*2] = m_GrainIds[neigh2];
+          faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          triangle[triangleCount].labels[0] = m_GrainIds[neigh2];
-          triangle[triangleCount].labels[1] = m_GrainIds[point];
+          faceLabels[triangleCount*2] = m_GrainIds[neigh2];
+          faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
           triangleCount++;
         }
@@ -791,16 +793,16 @@ void QuickSurfaceMesh::execute()
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          triangle[triangleCount].labels[0] = m_GrainIds[neigh3];
-          triangle[triangleCount].labels[1] = m_GrainIds[point];
+          faceLabels[triangleCount*2] = m_GrainIds[neigh3];
+          faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
           triangleCount++;
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-          triangle[triangleCount].labels[0] = m_GrainIds[neigh3];
-          triangle[triangleCount].labels[1] = m_GrainIds[point];
+          faceLabels[triangleCount*2] = m_GrainIds[neigh3];
+          faceLabels[triangleCount*2+1] = m_GrainIds[point];
 
           triangleCount++;
         }
@@ -810,6 +812,7 @@ void QuickSurfaceMesh::execute()
   }
 
   sm->setFaces(triangles);
+  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
   sm->setVertices(vertices);
 
   notifyStatusMessage("Complete");

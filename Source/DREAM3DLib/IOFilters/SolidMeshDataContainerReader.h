@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshDataContainerWriter_H_
-#define _SurfaceMeshDataContainerWriter_H_
+#ifndef _SolidMeshDataContainerReader_H_
+#define _SolidMeshDataContainerReader_H_
 
 #include <string>
 
@@ -45,26 +45,25 @@
 
 
 /**
- * @class SurfaceMeshDataContainerWriter SurfaceMeshDataContainerWriter.h DREAm3DLib/IOFilters/SurfaceMeshDataContainerWriter.h
+ * @class SolidMeshDataContainerReader SolidMeshDataContainerReader.h /IOFilters/SolidMeshDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SolidMeshDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(SolidMeshDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(SolidMeshDataContainerReader, AbstractFilter)
 
-    virtual ~SurfaceMeshDataContainerWriter();
+    virtual ~SolidMeshDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
 
 
-    typedef std::list<std::string> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -77,7 +76,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SurfaceMesh DataContainer Writer"; }
+    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -103,7 +102,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    SurfaceMeshDataContainerWriter();
+    SolidMeshDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -115,20 +114,10 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
-
-    int writeVertices(hid_t dcGid);
-    int writeTriangles(hid_t dcGid);
-    int writeEdges(hid_t dcGid);
-    int writeMeshVertLinks(hid_t dcGid);
-    int writeMeshTriangleNeighborLists(hid_t dcGid);
-    int writeVertexAttributeData(hid_t dcGid);
-    int writeFaceAttributeData(hid_t dcGid);
-    int writeEdgeAttributeData(hid_t dcGid);
   private:
 
-    SurfaceMeshDataContainerWriter(const SurfaceMeshDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshDataContainerWriter&); // Operator '=' Not Implemented
+    SolidMeshDataContainerReader(const SolidMeshDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const SolidMeshDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshDataContainerWriter_H_ */
+#endif /* _SolidMeshDataContainerReader_H_ */

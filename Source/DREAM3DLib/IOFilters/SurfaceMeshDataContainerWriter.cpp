@@ -41,7 +41,23 @@
 #include "H5Support/H5Lite.h"
 
 
+class H5GroupAutoCloser
+{
+public:
+  H5GroupAutoCloser(hid_t* groupId) :
+  gid(groupId)
+  {}
 
+  virtual ~H5GroupAutoCloser()
+  {
+    if (*gid > 0)
+    {
+      H5Gclose(*gid);
+    }
+  }
+  private:
+   hid_t* gid;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -93,6 +109,11 @@ void SurfaceMeshDataContainerWriter::dataCheck(bool preflight, size_t voxels, si
   {
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer is missing", getErrorCondition());
+  }
+  if(m_HdfFileId < 0)
+  {
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
 
 }
@@ -151,24 +172,23 @@ void SurfaceMeshDataContainerWriter::execute()
     return;
   }
 
+  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
+
   err = writeVertices(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeMeshVertLinks(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeVertexAttributeData(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
@@ -176,34 +196,37 @@ void SurfaceMeshDataContainerWriter::execute()
   err = writeTriangles(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeMeshTriangleNeighborLists(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeFaceAttributeData(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeEdges(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
+  err = writeEdgeAttributeData(dcGid);
+  if (err < 0)
+  {
     return;
   }
 
 
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
+  dcGid = -1;
 
   notifyStatusMessage("Complete");
 }
@@ -317,7 +340,7 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
   // Write the Vertex Data
   err = H5Utilities::createGroupsFromPath(H5_POINT_DATA_GROUP_NAME, dcGid);
@@ -452,24 +475,24 @@ int SurfaceMeshDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
   // Write the Face Data
-  err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
+  err = H5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t cellGroupId = H5Gopen(dcGid, H5_FACE_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -479,7 +502,7 @@ int SurfaceMeshDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << std::endl;
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = sm->getFaceData(*iter);
     err = array->writeH5Data(cellGroupId);
@@ -505,7 +528,59 @@ int SurfaceMeshDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceMeshDataContainerWriter::writeEdges(hid_t dcGid)
 {
-  herr_t err = -1;
-
+  herr_t err = 0;
+  notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+
+  // Write the Face Data
+  err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-63);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    return err;
+  }
+  hid_t cellGroupId = H5Gopen(dcGid, H5_EDGE_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-64);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    return err;
+  }
+  NameListType names = sm->getEdgeArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    ss.str("");
+    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << std::endl;
+    notifyStatusMessage(ss.str());
+    IDataArray::Pointer array = sm->getEdgeData(*iter);
+    err = array->writeH5Data(cellGroupId);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing Edge array '" << *iter << "' to the HDF5 File";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(err);
+      H5Gclose(cellGroupId); // Close the Cell Group
+      return err;
+    }
+  }
+  H5Gclose(cellGroupId); // Close the Cell Group
+  return err;
+}
+
+

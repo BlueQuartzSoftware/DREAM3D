@@ -149,9 +149,12 @@ void SharedGrainFaceFilter::execute()
   /* Place all your code to execute your filter here. */
 
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
-  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
+//  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshGrainFaceId);
   grainFaceId->initializeWithZeros();
@@ -166,16 +169,15 @@ void SharedGrainFaceFilter::execute()
   // Loop through all the Triangles and figure out how many triangles we have in each one.
   for(size_t t = 0; t < totalPoints; ++t)
   {
-    SurfaceMesh::DataStructures::Face_t& tri = triangles[t];
-    if (tri.labels[0] < tri.labels[1])
+    if (faceLabels[t*2] < faceLabels[t*2+1])
     {
-      faceId.g = tri.labels[0];
-      faceId.r = tri.labels[1];
+      faceId.g = faceLabels[t*2];
+      faceId.r = faceLabels[t*2+1];
     }
     else
     {
-      faceId.g = tri.labels[1];
-      faceId.r = tri.labels[0];
+      faceId.g = faceLabels[t*2+1];
+      faceId.r = faceLabels[t*2];
     }
 
     std::map<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);

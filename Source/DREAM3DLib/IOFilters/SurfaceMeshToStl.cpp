@@ -176,14 +176,19 @@ void SurfaceMeshToStl::execute()
   SurfaceMesh::DataStructures::Vert_t* nodes = nodesPtr->GetPointer(0);
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglePtr = sm->getFaces();
   SurfaceMesh::DataStructures::Face_t* triangles = trianglePtr->GetPointer(0);
+  // Get the Labels(GrainIds or Region Ids) for the triangles
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
   std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
-    uniqueSpins.insert(triangles[i].labels[0]);
-    uniqueSpins.insert(triangles[i].labels[1]);
+    uniqueSpins.insert(faceLabels[i*2]);
+    uniqueSpins.insert(faceLabels[i*2+1]);
   }
 
   unsigned char data[50];
@@ -234,11 +239,11 @@ void SurfaceMeshToStl::execute()
       vert1[1] = static_cast<float>(nodes[nId0].pos[1]);
       vert1[2] = static_cast<float>(nodes[nId0].pos[2]);
 
-      if (triangles[t].labels[0] == spin)
+      if (faceLabels[t*2] == spin)
       {
         winding = 0; // 0 = Write it using forward spin
       }
-      else if (triangles[t].labels[1] == spin)
+      else if (faceLabels[t*2+1] == spin)
       {
         winding = 1; // Write it using backward spin
         // Switch the 2 node indices

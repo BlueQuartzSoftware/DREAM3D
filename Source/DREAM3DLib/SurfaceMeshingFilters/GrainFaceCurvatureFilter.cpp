@@ -57,7 +57,7 @@
 GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
   SurfaceMeshFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
-  m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshTriangleEdges),
+  //m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshTriangleEdges),
   m_PrincipalCurvature1ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
   m_PrincipalCurvature2ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2),
   m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleNormals),
@@ -166,12 +166,12 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
     }
-    else
-    {
-      // This depends on the triangles array already being created
-      int size = sm->getFaces()->GetNumberOfTuples();
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
-    }
+//    else
+//    {
+//      // This depends on the triangles array already being created
+//      int size = sm->getFaces()->GetNumberOfTuples();
+//      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EdgeData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
+//    }
 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
