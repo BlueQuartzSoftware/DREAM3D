@@ -21,6 +21,7 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindCellQuats FindCellQuats.html
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindGrainCentroids FindGrainCentroids.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindSurfaceGrains FindSurfaceGrains.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains FindBoundingBoxGrains.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateIPFColors GenerateIPFColors.html "IPFFilterLegend.jpg" TRUE)
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" FALSE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DetermineGoodVoxels DetermineGoodVoxels.html "" FALSE)
