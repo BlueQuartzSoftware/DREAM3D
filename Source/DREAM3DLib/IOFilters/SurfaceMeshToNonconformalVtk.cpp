@@ -125,6 +125,11 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
+    if (sm->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels).get() == NULL)
+    {
+      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer messing Triangle Label array", getErrorCondition());
+    }
   }
 }
 
@@ -281,25 +286,30 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   int triangleCount = triangles.GetNumberOfTuples();
 
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
+
   // Store all the unique Spins
   std::map<int32_t, int32_t> grainTriangleCount;
   for (int i = 0; i < triangleCount; i++)
   {
-    if (grainTriangleCount.find(triangles[i].labels[0]) == grainTriangleCount.end())
+    if (grainTriangleCount.find(faceLabels[i*2]) == grainTriangleCount.end())
     {
-      grainTriangleCount[triangles[i].labels[0]] = 1;
+      grainTriangleCount[faceLabels[i*2]] = 1;
     }
     else
     {
-      grainTriangleCount[triangles[i].labels[0]]++;
+      grainTriangleCount[faceLabels[i*2]]++;
     }
-    if (grainTriangleCount.find(triangles[i].labels[1]) == grainTriangleCount.end())
+    if (grainTriangleCount.find(faceLabels[i*2+1]) == grainTriangleCount.end())
     {
-      grainTriangleCount[triangles[i].labels[1]] = 1;
+      grainTriangleCount[faceLabels[i*2+1]] = 1;
     }
     else
     {
-      grainTriangleCount[triangles[i].labels[1]]++;
+      grainTriangleCount[faceLabels[i*2+1]]++;
     }
   }
 
@@ -313,7 +323,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     totalCells += (*grainIter).second;
   }
-  assert(totalCells == triangleCount * 2);
+  assert(totalCells == (size_t)(triangleCount * 2) );
 
 
   // Loop over all the grains
@@ -333,8 +343,8 @@ void SurfaceMeshToNonconformalVtk::execute()
     {
       doWrite = 0;
 
-      if (triangles[j].labels[0] == gid ) { doWrite = 1; }
-      else if (triangles[j].labels[1] == gid) { doWrite = 2; } // We need to flip the winding of the triangle
+      if (faceLabels[j*2] == gid ) { doWrite = 1; }
+      else if (faceLabels[j*2+1] == gid) { doWrite = 2; } // We need to flip the winding of the triangle
       if (doWrite == 0) { continue; } // Labels in the triangle did match the current grain id.
 
       if (doWrite == 1)
@@ -576,6 +586,11 @@ void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataNa
 {
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
 
+  IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
+
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
   std::stringstream ss;
@@ -598,7 +613,7 @@ void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataNa
 
       for (int j = 0; j < triangleCount; j++)
       {
-        if (triangles[j].labels[0] != gid && triangles[j].labels[1] != gid) { continue; }
+        if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
         // Get the data
         T s0 = static_cast<T>(m[j]);
 
@@ -637,6 +652,10 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
 {
 
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
+  IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
@@ -659,13 +678,13 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
 
       for (int j = 0; j < triangleCount; j++)
       {
-        if (triangles[j].labels[0] != gid && triangles[j].labels[1] != gid) { continue; }
+        if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
         // Get the data
         T s0 = static_cast<T>(m[j*3+0]);
         T s1 = static_cast<T>(m[j*3+1]);
         T s2 = static_cast<T>(m[j*3+2]);
         // Flip the normal if needed because the current grain id is assigned to the triangle.labels[1]
-        if (triangles[j].labels[1] == gid )
+        if (faceLabels[j*2+1] == gid )
         {
           s0 *= -1.0;
           s1 *= -1.0;
@@ -764,6 +783,9 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
   }
   // Write the triangle region ids
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   int triangleCount = triangles.GetNumberOfTuples();
   int swapped;
@@ -777,7 +799,6 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
   // Write the GrainId Data to the file
   fprintf(vtkFile, "SCALARS GrainID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-
 
   // Loop over all the grains
   for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
@@ -800,7 +821,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
     // in one chunk versus what we are doing here.
     for (int j = 0; j < triangleCount; j++)
     {
-      if (triangles[j].labels[0] == gid || triangles[j].labels[1] == gid)
+      if (faceLabels[j*2] == gid || faceLabels[j*2+1] == gid)
       {
         if(m_WriteBinaryFile == true)
         {

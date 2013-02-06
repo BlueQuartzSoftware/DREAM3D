@@ -59,7 +59,7 @@ class MeshVertLinks
 
     class TriangleList {
       public:
-      unsigned short ncells;
+      uint16_t ncells;
       int* cells;
     };
 
@@ -73,7 +73,7 @@ class MeshVertLinks
         return;
       }
 
-      for (size_t i=0; i<=this->MaxId; i++)
+      for (size_t i=0; i<this->Size; i++)
       {
         if ( this->Array[i].cells != NULL )
         {
@@ -166,8 +166,6 @@ class MeshVertLinks
 
       // now allocate storage for the links
       this->allocateLinks(numPts);
-      this->MaxId = numPts - 1;
-      //size_t memory_used = 0;
 
       for (cellId=0; cellId < numCells; cellId++)
       {
@@ -191,35 +189,46 @@ class MeshVertLinks
 
       // Walk the array and allocate all the array links to Zero and NULL
       uint16_t* ncells = NULL;
-      int32_t* cells = NULL;
+     // int32_t* cells = NULL;
       for(size_t i = 0; i < nVerts; ++i)
       {
         ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
         this->Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
-        this->Array[i].cells = new int32_t[(*ncells)]; // Allocate a new chunk of memory to store the list
-        ::memcpy(cells, bufPtr + offset, (*ncells)*sizeof(int32_t) ); // Copy from teh buffer into the new list memory
-        offset += (*ncells) * sizeof(int32_t); // Increment the offset
+        this->Array[i].cells = new int32_t[this->Array[i].ncells]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->Array[i].cells, bufPtr + offset, this->Array[i].ncells*sizeof(int32_t) ); // Copy from teh buffer into the new list memory
+        offset += this->Array[i].ncells * sizeof(int32_t); // Increment the offset
       }
     }
 
   protected:
-    MeshVertLinks():Array(NULL),Size(0),MaxId(-1),Extend(1000) {}
+    MeshVertLinks():Array(NULL),Size(0) {}
 
     //----------------------------------------------------------------------------
     void allocate(size_t sz, size_t ext=1000)
     {
       static MeshVertLinks::TriangleList linkInit = {0,NULL};
 
-      this->Size = sz;
+
+      // This makes sure we deallocate any lists that have been created
+      for (size_t i = 0; i < Size; i++)
+      {
+        if ( this->Array[i].cells != NULL )
+        {
+          delete [] this->Array[i].cells;
+        }
+      }
+      // Now delete all the "NeighborLists" structures
       if ( this->Array != NULL )
       {
         delete [] this->Array;
       }
-      this->Array = new MeshVertLinks::TriangleList[sz];
-      this->Extend = ext;
-      this->MaxId = -1;
 
+      this->Size = sz;
+      // Allocate a whole new set of structures
+      this->Array = new MeshVertLinks::TriangleList[sz];
+
+      // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i=0; i < sz; i++)
       {
         this->Array[i] = linkInit;
@@ -239,20 +248,15 @@ class MeshVertLinks
     // Allocate memory for the list of lists of cell ids.
     void allocateLinks(size_t n)
     {
-     // size_t memory_used = 0;
       for (size_t i=0; i < n; i++)
       {
         this->Array[i].cells = new int[this->Array[i].ncells];
-     //   memory_used= memory_used + (10 + sizeof(int)*this->Array[i].ncells);
       }
-     // std::cout << "MeshVertLinks Memory Used: " << memory_used << std::endl;
     }
 
   private:
     TriangleList* Array;   // pointer to data
     size_t Size;
-    size_t MaxId;
-    size_t Extend;
 
     MeshVertLinks(const MeshVertLinks&); // Copy Constructor Not Implemented
     void operator=(const MeshVertLinks&); // Operator '=' Not Implemented

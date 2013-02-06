@@ -238,6 +238,9 @@ void GoldfeatherReader::execute()
   trianglesPtr->initializeWithZeros();
   SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
 
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
+
   DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, "Goldfeather_SurfaceMesh::DataStructures::Face_t_Normals");
   double* triNormals = triNormalsPtr->GetPointer(0);
 
@@ -248,14 +251,15 @@ void GoldfeatherReader::execute()
     triangles[t].verts[1] = y;
     triangles[t].verts[2] = z;
   //  triangles[t].tIndex = t;
-    triangles[t].labels[0] = 0;
-    triangles[t].labels[1] = 1;
+    faceLabels[t*2] = 0;
+    faceLabels[t*2+1] = 1;
     triNormals[t*3+0] = n0;
     triNormals[t*3+1] = n1;
     triNormals[t*3+2] = n2;
   }
 
   m->setFaces(trianglesPtr);
+  m->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
   m->addPointData(triNormalsPtr->GetName(), triNormalsPtr);
 
   /* Let the GUI know we are done with this filter */

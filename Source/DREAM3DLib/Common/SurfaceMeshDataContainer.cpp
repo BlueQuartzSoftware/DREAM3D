@@ -114,6 +114,14 @@ void SurfaceMeshDataContainer::removeMeshTriangleNeighborLists()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::setMeshVertLinks(MeshVertLinks::Pointer vertLinks)
+{
+  m_MeshVertLinks = vertLinks;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 MeshVertLinks::Pointer SurfaceMeshDataContainer::getMeshVertLinks()
 {
   return m_MeshVertLinks;
@@ -125,6 +133,14 @@ MeshVertLinks::Pointer SurfaceMeshDataContainer::getMeshVertLinks()
 MeshTriangleNeighbors::Pointer SurfaceMeshDataContainer::getMeshTriangleNeighborLists()
 {
   return m_TriangleNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::setMeshTriangleNeighborLists(MeshTriangleNeighbors::Pointer neighbors)
+{
+  m_TriangleNeighbors = neighbors;
 }
 
 // -----------------------------------------------------------------------------

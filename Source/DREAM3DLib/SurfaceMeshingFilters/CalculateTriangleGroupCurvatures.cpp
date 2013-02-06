@@ -109,8 +109,12 @@ void CalculateTriangleGroupCurvatures::operator()() const
 {
 
   // Get the Triangles Array
-  SurfaceMesh::DataStructures::FaceList_t::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getFaces();
-  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
+//  SurfaceMesh::DataStructures::FaceList_t::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getFaces();
+//  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
+
+  IDataArray::Pointer flPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
@@ -134,18 +138,18 @@ void CalculateTriangleGroupCurvatures::operator()() const
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
 
 
-  SurfaceMesh::DataStructures::Face_t& tri = triangles[m_TriangleIds[0]];
+  int32_t* fl = faceLabels + m_TriangleIds[0] * 2;
   int grain0 = 0;
   int grain1 = 0;
-  if (tri.labels[0] < tri.labels[1])
+  if (fl[0] < fl[1])
   {
-    grain0 = tri.labels[0];
-    grain1 = tri.labels[1];
+    grain0 = fl[0];
+    grain1 = fl[1];
   }
   else
   {
-    grain0 = tri.labels[1];
-    grain1 = tri.labels[0];
+    grain0 = fl[1];
+    grain1 = fl[0];
   }
 
   bool computeGaussian = (m_GaussianCurvature.get() != NULL);

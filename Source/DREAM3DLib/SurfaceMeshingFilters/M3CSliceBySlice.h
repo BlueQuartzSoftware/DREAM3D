@@ -108,6 +108,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, DeleteTempFiles)
 
@@ -122,6 +123,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
     // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
     virtual void addCreatedPointData(const std::string &name);
+    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
+    virtual void addCreatedFaceData(const std::string &name);
     void execute();
 
   protected:

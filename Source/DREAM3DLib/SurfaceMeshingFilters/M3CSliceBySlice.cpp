@@ -331,6 +331,7 @@ M3CSliceBySlice::M3CSliceBySlice() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::PointData::SurfaceMeshNodeType),
+  m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleLabels),
   m_DeleteTempFiles(true),
   m_GrainIds(NULL)
 {
@@ -395,8 +396,12 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
     int8_t* m_SurfaceMeshNodeType;
     CREATE_NON_PREREQ_DATA(sm, DREAM3D, PointData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
 
-        sm->setVertices(vertices);
+    DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+    sm->addFaceData(labels->GetName(), labels);
+    sm->setVertices(vertices);
     sm->setFaces(triangles);
+
+    addCreatedFaceData(labels->GetName());
   }
 }
 
@@ -682,6 +687,13 @@ void M3CSliceBySlice::addCreatedPointData(const std::string &name)
   addCreatedCellData(name);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::addCreatedFaceData(const std::string &name)
+{
+  addCreatedFieldData(name);
+}
 
 // -----------------------------------------------------------------------------
 //

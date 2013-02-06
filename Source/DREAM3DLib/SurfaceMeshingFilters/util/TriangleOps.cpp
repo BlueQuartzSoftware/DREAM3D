@@ -28,7 +28,10 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer
   std::vector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
   SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr = sm->getFaces();
-  SurfaceMesh::DataStructures::Face_t* faces = facesPtr->GetPointer(0);
+//  SurfaceMesh::DataStructures::Face_t* faces = facesPtr->GetPointer(0);
+  IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   // Get the Triangle Neighbor Structure
   MeshTriangleNeighbors::Pointer triNeighbors = sm->getMeshTriangleNeighborLists();
@@ -54,8 +57,9 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer
     // Iterate over the indices to find triangles that match the label and are NOT the current triangle index
     for (uint16_t n = 0; n < count; ++n)
     {
-      SM::Face_t& t = faces[nList[n]];
-      if ( (t.labels[0] == label || t.labels[1] == label)  && (nList[n] != triangleIndex) )
+      int32_t fl_0 = faceLabels[nList[n]*2];
+      int32_t fl_1 = faceLabels[nList[n]*2 + 1];
+      if ( (fl_0 == label || fl_1 == label)  && (nList[n] != triangleIndex) )
       {
         //  std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
         adjacentTris.push_back(nList[n]);
@@ -70,9 +74,11 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(SurfaceMesh::DataStructures::Face_t& triangle, int ids[4], int32_t label)
+void TriangleOps::getWindingIndices4(SurfaceMesh::DataStructures::Face_t &triangle,
+                                     int32_t *faceLabel,
+                                     int ids[4], int32_t label)
 {
-  int idx = TriangleOps::getLabelIndex(triangle, label);
+  int idx = TriangleOps::getLabelIndex(faceLabel, label);
 
   if (idx == 1)
   {
@@ -93,13 +99,17 @@ void TriangleOps::getWindingIndices4(SurfaceMesh::DataStructures::Face_t& triang
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(SurfaceMesh::DataStructures::Face_t &source, SurfaceMesh::DataStructures::Face_t &tri, int32_t label)
+bool TriangleOps::verifyWinding(SurfaceMesh::DataStructures::Face_t &source,
+                                SurfaceMesh::DataStructures::Face_t &tri,
+                                int32_t* faceLabelSource,
+                                int32_t* faceLabelTri,
+                                int32_t label)
 {
   int ids[4];
   int nids[4];
   bool flipped = false;
-  TriangleOps::getWindingIndices4(source, ids, label);
-  TriangleOps::getWindingIndices4(tri, nids, label);
+  TriangleOps::getWindingIndices4(source, faceLabelSource, ids, label);
+  TriangleOps::getWindingIndices4(tri, faceLabelTri, nids, label);
   //  int idx = 0;
   // There are 2 indices that are shared between the two triangles
   // Find them
@@ -136,20 +146,20 @@ bool TriangleOps::verifyWinding(SurfaceMesh::DataStructures::Face_t &source, Sur
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriangleOps::getLabelIndex(SurfaceMesh::DataStructures::Face_t &t, int label)
+int TriangleOps::getLabelIndex(int32_t *t, int label)
 {
-  if (label == t.labels[0]) return 0;
-  if (label == t.labels[1]) return 1;
+  if (label == t[0]) return 0;
+  if (label == t[1]) return 1;
   return 2; // Error condition. Valid values are 0 or 1 since there are only 2 elements to the array.
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> TriangleOps::getNodeIndices(SurfaceMesh::DataStructures::Face_t &t, int label)
+std::vector<int> TriangleOps::getNodeIndices(SurfaceMesh::DataStructures::Face_t &t, int32_t* faceLabel, int label)
 {
   std::vector<int > tNodes(3);
-  int idx = TriangleOps::getLabelIndex(t, label);
+  int idx = TriangleOps::getLabelIndex(faceLabel, label);
   if (idx == 1)
   {
     tNodes[0] = t.verts[2];
@@ -218,15 +228,16 @@ VectorType TriangleOps::computeNormal(SurfaceMesh::DataStructures::Vert_t& n0, S
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<int32_t> TriangleOps::generateUniqueLabels(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr)
+std::set<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
 {
   std::set<int32_t> uniqueLabels;
-  SurfaceMesh::DataStructures::Face_t* tris = trianglesPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  for (size_t i =0; i < trianglesPtr->GetNumberOfTuples(); ++i)
+  size_t count = faceLabelsPtr->GetNumberOfTuples();
+  for (size_t i =0; i < count; ++i)
   {
-    uniqueLabels.insert(tris[i].labels[0]);
-    uniqueLabels.insert(tris[i].labels[1]);
+    uniqueLabels.insert(faceLabels[i*2]);
+    uniqueLabels.insert(faceLabels[i*2+1]);
   }
   return uniqueLabels;
 }

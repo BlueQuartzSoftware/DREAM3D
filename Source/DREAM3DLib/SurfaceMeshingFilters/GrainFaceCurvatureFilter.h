@@ -60,7 +60,7 @@ class GrainFaceCurvatureFilter : public SurfaceMeshFilter
     virtual ~GrainFaceCurvatureFilter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
+ //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection1ArrayName)

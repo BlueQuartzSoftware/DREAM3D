@@ -677,6 +677,10 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
   // Write the triangle region ids
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
 
   int nT = triangles.GetNumberOfTuples();
   int triangleCount = nT;
@@ -696,26 +700,26 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for(int i = 0; i < nT; ++i)
   {
-    SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+    //SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
 
     if(m_WriteBinaryFile == true)
     {
-      swapped = t.labels[0];
+      swapped = faceLabels[i*2];
       MXA::Endian::FromSystemToBig::convert<int>(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
       if(false == m_WriteConformalMesh)
       {
-        swapped = t.labels[1];
+        swapped = faceLabels[i*2+1];
         MXA::Endian::FromSystemToBig::convert<int>(swapped);
         fwrite(&swapped, sizeof(int), 1, vtkFile);
       }
     }
     else
     {
-      fprintf(vtkFile, "%d\n", t.labels[0]);
+      fprintf(vtkFile, "%d\n", faceLabels[i*2]);
       if(false == m_WriteConformalMesh)
       {
-        fprintf(vtkFile, "%d\n", t.labels[1]);
+        fprintf(vtkFile, "%d\n", faceLabels[i*2+1]);
       }
     }
 

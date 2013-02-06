@@ -76,6 +76,7 @@ class NodeFunctions
 /**
  * @brief
  */
+ #if 0
 template<typename Node, typename T>
 class EdgeFunctions
 {
@@ -96,6 +97,8 @@ class EdgeFunctions
     EdgeFunctions(const EdgeFunctions&); // Copy Constructor Not Implemented
     void operator=(const EdgeFunctions&); // Operator '=' Not Implemented
 };
+#endif
+
 
 /**
  * @brief

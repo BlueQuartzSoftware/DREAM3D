@@ -90,7 +90,11 @@ void VoxelDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t f
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
-
+  if(m_HdfFileId < 0)
+  {
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+  }
 }
 
 

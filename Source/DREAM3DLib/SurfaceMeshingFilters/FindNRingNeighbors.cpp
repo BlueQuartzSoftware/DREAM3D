@@ -108,17 +108,22 @@ void FindNRingNeighbors::generate()
   }
 
   // Get a reference to our seed triangle
-  SurfaceMesh::DataStructures::Face_t& tri = triangles[m_TriangleId];
+  //SurfaceMesh::DataStructures::Face_t& tri = triangles[m_TriangleId];
+
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
 
   // Figure out these boolean values for a sanity check
-  bool check0 = tri.labels[0] == m_RegionId0 && tri.labels[1] == m_RegionId1;
-  bool check1 = tri.labels[1] == m_RegionId0 && tri.labels[0] == m_RegionId1;
+  bool check0 = faceLabels[m_TriangleId*2] == m_RegionId0 && faceLabels[m_TriangleId*2+1] == m_RegionId1;
+  bool check1 = faceLabels[m_TriangleId*2+1] == m_RegionId0 && faceLabels[m_TriangleId*2] == m_RegionId1;
 
 #if 1
   if ( check0 == false && check1 == false)
   {
     std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
-    std::cout << "Region Ids are: " << triangles[m_TriangleId].labels[0] << " & " << triangles[m_TriangleId].labels[1] << std::endl;
+    std::cout << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << std::endl;
     return;
   }
 #endif
@@ -148,8 +153,8 @@ void FindNRingNeighbors::generate()
         for(uint16_t t = 0; t < tCount; ++t)
         {
           int tid = data[t];
-          check0 = triangles[tid].labels[0] == m_RegionId0 && triangles[tid].labels[1] == m_RegionId1;
-          check1 = triangles[tid].labels[1] == m_RegionId0 && triangles[tid].labels[0] == m_RegionId1;
+          check0 = faceLabels[tid*2] == m_RegionId0 && faceLabels[tid*2+1] == m_RegionId1;
+          check1 = faceLabels[tid*2+1] == m_RegionId0 && faceLabels[tid*2] == m_RegionId1;
           if (check0 == true || check1 == true)
           {
             m_NRingTriangles.insert(static_cast<int>(tid) );

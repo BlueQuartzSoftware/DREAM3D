@@ -40,7 +40,7 @@
 #include <vector>
 #include <set>
 
-
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
@@ -48,30 +48,33 @@
 
 class SurfaceMeshDataContainer;
 
-
+/**
+ * @brief The TriangleOps class
+ */
 class TriangleOps
 {
   public:
     virtual ~TriangleOps();
 
-    static int getLabelIndex(SurfaceMesh::DataStructures::Face_t& t, int label);
+    static int getLabelIndex(int32_t* t, int label);
 
-    static std::vector<int> getNodeIndices(SurfaceMesh::DataStructures::Face_t& t, int label);
+    std::vector<int> getNodeIndices(SurfaceMesh::DataStructures::Face_t &t, int32_t* faceLabel, int label);
 
     static void flipWinding(SurfaceMesh::DataStructures::Face_t& triangle);
 
     static VectorType computeNormal(SurfaceMesh::DataStructures::Vert_t& n0, SurfaceMesh::DataStructures::Vert_t& n1, SurfaceMesh::DataStructures::Vert_t& n2);
 
-    static std::set<int32_t> generateUniqueLabels(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr);
+    static std::set<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
 
     static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* sm,
                                                         int32_t triangleIndex,
                                                         int32_t label);
 
-    static bool verifyWinding(SurfaceMesh::DataStructures::Face_t& source, SurfaceMesh::DataStructures::Face_t& tri, int32_t label);
+    static bool verifyWinding(SurfaceMesh::DataStructures::Face_t& source, SurfaceMesh::DataStructures::Face_t& tri,
+                                int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 
 
-    static void getWindingIndices4(SurfaceMesh::DataStructures::Face_t &triangle, int ids[4], int32_t label);
+    static void getWindingIndices4(SurfaceMesh::DataStructures::Face_t &triangle, int32_t* faceLabel, int ids[4], int32_t label);
 
   protected:
     TriangleOps();

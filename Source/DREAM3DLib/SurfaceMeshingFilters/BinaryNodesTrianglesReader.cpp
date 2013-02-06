@@ -285,6 +285,11 @@ int BinaryNodesTrianglesReader::read()
   Face_t* m_TriangleList = m_TriangleListPtr->GetPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(Face_t) * nTriangles);
 
+  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
+  faceLabelPtr->initializeWithZeros();
+
+
   SurfaceMesh::TrianglesFile::TrianglesFileRecord_t tRecord;
   for (size_t i = 0; i < nTriangles; i++)
   {
@@ -300,12 +305,13 @@ int BinaryNodesTrianglesReader::read()
     triangle.verts[0] = tRecord.nodeId_0;
     triangle.verts[1] = tRecord.nodeId_1;
     triangle.verts[2] = tRecord.nodeId_2;
-    triangle.labels[0] = tRecord.label_0;
-    triangle.labels[1] = tRecord.label_1;
+    faceLabels[tRecord.triId * 2] = tRecord.label_0;
+    faceLabels[tRecord.triId * 2 + 1] = tRecord.label_1;
   }
 
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
+  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
   sm->addPointData(nodeTypePtr->GetName(), nodeTypePtr);
 
 

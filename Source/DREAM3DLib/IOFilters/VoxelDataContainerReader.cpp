@@ -38,12 +38,22 @@
 
 
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 VoxelDataContainerReader::VoxelDataContainerReader() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_HdfFileId(-1),
+  m_ReadCellData(true),
+  m_ReadFieldData(true),
+  m_ReadEnsembleData(true)
 {
   setupFilterParameters();
 }
@@ -81,20 +91,24 @@ void VoxelDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VoxelDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
+  VoxelDataContainer* m = getVoxelDataContainer();
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
+  if(NULL == m)
   {
-    ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
-    setErrorCondition(-1);
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
-  */
+  if(m_HdfFileId < 0)
+  {
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+  }
 
+  if (m_HdfFileId > 0)
+  {
+    gatherData(preflight);
+  }
 
 }
 
@@ -114,20 +128,274 @@ void VoxelDataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 void VoxelDataContainerReader::execute()
 {
-  int err = 0;
-  std::stringstream ss;
-  setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss <<" DataContainer was NULL";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
+  //dataCheck(false, 1, 1, 1);
+  int err = 0;
+  std::stringstream ss;
 
-  /* Place all your code to execute your filter here. */
+  // Clear out everything from the data container before we start.
+  int64_t volDims[3] =
+  { 0, 0, 0 };
+  float spacing[3] =
+  { 1.0f, 1.0f, 1.0f };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  m->setDimensions(volDims[0], volDims[1], volDims[2]);
+  m->setResolution(spacing);
+  m->setOrigin(origin);
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage("Complete");
+  if(m_ReadCellData == true) m->clearCellData();
+  if(m_ReadFieldData == true) m->clearFieldData();
+  if(m_ReadEnsembleData == true) m->clearEnsembleData();
+
+  // We are actually wanting to read the file so set preflight to false
+  err = gatherData(false);
+
+  setErrorCondition(err);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
+{
+  int err = 0;
+  std::stringstream ss;
+
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
+  if(dcGid < 0)
+  {
+    err = H5Utilities::closeFile(fileId);
+    ss.str("");
+    ss <<": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss.str(), -150);
+    return -1;
+  }
+
+  err |= gatherMetaData(dcGid, volDims, spacing, origin);
+
+  err = H5Gclose(dcGid);
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
+{
+  int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  if(err < 0)
+  {
+    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
+    addErrorMessage(em);
+    setErrorCondition(-151);
+    return -1;
+  }
+
+  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  if(err < 0)
+  {
+    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
+    addErrorMessage(em);
+    setErrorCondition(-152);
+    return -1;
+  }
+
+  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  if(err < 0)
+  {
+    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
+    addErrorMessage(em);
+    setErrorCondition(-153);
+    return -1;
+  }
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerReader::gatherData(bool preflight)
+{
+  int err = 0;
+  std::stringstream ss;
+  int64_t volDims[3] =
+  { 0, 0, 0 };
+  float spacing[3] =
+  { 1.0f, 1.0f, 1.0f };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  if(m_HdfFileId < 0)
+  {
+    ss.str("");
+    ss << ": Error opening input file";
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return -1;
+  }
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
+  if(dcGid < 0)
+  {
+    ss.str("");
+    ss << ": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'. Is the .dream3d file a version 4 data file?";
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    return -1;
+  }
+
+  if(false == preflight)
+  {
+    err = gatherMetaData(dcGid, volDims, spacing, origin);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    m->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
+    m->setResolution(spacing);
+    m->setOrigin(origin);
+  }
+
+  if(m_ReadCellData == true)
+  {
+    std::vector<std::string> readNames;
+    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    for(size_t i = 0; i < readNames.size(); ++i)
+    {
+      addCreatedCellData(readNames[i]);
+    }
+  }
+
+  if(m_ReadFieldData == true)
+  {
+    std::vector<std::string> readNames;
+    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    for(size_t i = 0; i < readNames.size(); ++i)
+    {
+      addCreatedFieldData(readNames[i]);
+    }
+  }
+
+  if(m_ReadEnsembleData == true)
+  {
+    std::vector<std::string> readNames;
+    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    for(size_t i = 0; i < readNames.size(); ++i)
+    {
+      addCreatedEnsembleData(readNames[i]);
+    }
+  }
+
+  err |= H5Gclose(dcGid);
+
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead)
+{
+  std::stringstream ss;
+  int err = 0;
+  //Read the Cell Data
+  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error opening HDF5 Group " << groupName << std::endl;
+    setErrorCondition(-154);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    return -154;
+  }
+
+  NameListType names;
+  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::string classType;
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    namesRead.push_back(*iter);
+    classType.clear();
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
+    IDataArray::Pointer dPtr = IDataArray::NullPointer();
+
+    if(classType.find("DataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
+    }
+    else if(classType.compare("StringDataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readStringDataArray(gid, *iter, preflight);
+    }
+    else if(classType.compare("vector") == 0)
+    {
+
+    }
+    else if(classType.compare("NeighborList<T>") == 0)
+    {
+      dPtr = H5DataArrayReader::readNeighborListData(gid, *iter, preflight);
+    }
+    else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    {
+      StatsDataArray::Pointer statsData = StatsDataArray::New();
+      statsData->SetName(DREAM3D::EnsembleData::Statistics);
+      statsData->readH5Data(gid);
+      dPtr = statsData;
+    }
+
+    if (NULL != dPtr.get())
+    {
+      if(groupName.compare(H5_CELL_DATA_GROUP_NAME) == 0)
+      {
+        getVoxelDataContainer()->addCellData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      {
+        getVoxelDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      {
+        getVoxelDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+      }
+    }
+
+  }
+  H5Gclose(gid); // Close the Cell Group
+  return err;
 }

@@ -51,7 +51,6 @@ namespace SurfaceMesh
   {
     typedef float Float_t;
 
-
     typedef struct
     {
         Float_t pos[3];
@@ -61,21 +60,24 @@ namespace SurfaceMesh
     typedef struct
     {
         int verts[3];
-        int labels[2];
     } Face_t;
+
     // This constant values needs to be the number of total integers that are encoded into the Face Structure
-    const int32_t k_FaceNumElements = 5;
+    const int32_t k_FaceNumElements = 3;
 
+//    typedef struct
+//    {
+//      int labels[2];
+//    } FaceLabel_t;
 
-    typedef struct
-    {
-        int verts[2];
-    } Edge_t;
+//    typedef struct
+//    {
+//        int verts[2];
+//    } Edge_t;
 
 
     typedef StructArray<Vert_t> VertList_t;
     typedef StructArray<Face_t> FaceList_t;
-
 
     typedef VertList_t::Pointer VertListPointer_t;
     typedef FaceList_t::Pointer FaceListPointer_t;
@@ -84,10 +86,10 @@ namespace SurfaceMesh
     typedef std::map<int32_t, UniqueTriangleIds_t > NodeTrianglesMap_t;
 
 
-    typedef struct  {
-        uint16_t count;
-        int32_t* data;
-    } NodeTriangleMapping_t;
+//    typedef struct  {
+//        uint16_t count;
+//        int32_t* data;
+//    } NodeTriangleMapping_t;
   }
 }
 

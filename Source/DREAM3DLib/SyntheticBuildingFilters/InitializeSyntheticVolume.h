@@ -42,8 +42,12 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
-/*
- *
+/**
+ * @class InitializeSyntheticVolume InitializeSyntheticVolume.h DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h
+ * @brief
+ * @author
+ * @date
+ * @version 1.0
  */
 class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 {
@@ -58,8 +62,8 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	  //------ Required Ensemble Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
     virtual const std::string getGroupName()
     {

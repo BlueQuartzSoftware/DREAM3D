@@ -90,16 +90,16 @@ int main(int argc, char** argv)
   {
     std::cout << "Error Code: "<< binaryReader->getErrorCondition()  << std::endl;
   }
-  END_CLOCK("Reading Nodes & Triangles");
+  // END_CLOCK("Reading Nodes & Triangles");
 
 
   START_CLOCK;
   sm->buildMeshVertLinks();
-  END_CLOCK("Building Cell Links");
+  // END_CLOCK("Building Cell Links");
 
   START_CLOCK;
   sm->buildMeshTriangleNeighborLists();
-  END_CLOCK("Building Triangle Neighbor Lists");
+  // END_CLOCK("Building Triangle Neighbor Lists");
 
   START_CLOCK;
   LaplacianSmoothing::Pointer filter = LaplacianSmoothing::New();
@@ -112,7 +112,7 @@ int main(int argc, char** argv)
   filter->addObserver(&observer);
   filter->setIterationSteps(50);
   filter->execute();
-  END_CLOCK("Laplacian Filter");
+  // END_CLOCK("Laplacian Filter");
 
   std::cout << "Finished" << std::endl;
   return err;

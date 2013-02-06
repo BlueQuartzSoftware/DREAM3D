@@ -33,14 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
-
 #ifndef _VoxelDataContainerReader_H_
 #define _VoxelDataContainerReader_H_
 
 #include <string>
+
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -65,9 +63,13 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     virtual ~VoxelDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
+
+    typedef std::list<std::string> NameListType;
 
 
     /**
@@ -106,6 +108,8 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     */
     virtual void preflight();
 
+    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
+
   protected:
     VoxelDataContainerReader();
 
@@ -118,6 +122,10 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    int gatherData(bool preflight);
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead);
+    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
 

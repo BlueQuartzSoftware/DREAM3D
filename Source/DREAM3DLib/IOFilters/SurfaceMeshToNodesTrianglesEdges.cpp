@@ -315,6 +315,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   fprintf(triFile, "%lu\n", numTriangles);
   StructArray<SurfaceMesh::DataStructures::Face_t>* ts = StructArray<SurfaceMesh::DataStructures::Face_t>::SafePointerDownCast(triangles.get());
   SurfaceMesh::DataStructures::Face_t* t = ts->GetPointer(0);
+
+
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
+
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (size_t j = 0; j < numTriangles; ++j)
   {
@@ -329,7 +336,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 <<<<<<<<<< #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
 #endif
 
-    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, t[j].labels[0], t[j].labels[1]);
+    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, faceLabels[j*2], faceLabels[j*2+1]);
   }
 
   fclose(triFile);

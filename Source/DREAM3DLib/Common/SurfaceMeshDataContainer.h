@@ -101,6 +101,18 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     void removeMeshVertLinks();
 
     /**
+     * @brief getMeshVertLinks Returns the vert Links object
+     * @return
+     */
+    MeshVertLinks::Pointer getMeshVertLinks();
+
+    /**
+     * @brief setMeshVertLinks
+     * @param vertLinks
+     */
+    void setMeshVertLinks(MeshVertLinks::Pointer vertLinks);
+
+    /**
      * @brief buildMeshTriangleNeighborLists Creates the list of triangles that share a common edge with a triangle. Since
      * we create non-manifold meshes we can have more than 3 neighbors.
      */
@@ -112,16 +124,16 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     void removeMeshTriangleNeighborLists();
 
     /**
-     * @brief getMeshVertLinks Returns the vert Links object
-     * @return
-     */
-    MeshVertLinks::Pointer getMeshVertLinks();
-
-    /**
      * @brief getMeshTriangleNeighborLists Returns the Triangle Neighbor lists object
      * @return
      */
     MeshTriangleNeighbors::Pointer getMeshTriangleNeighborLists();
+
+    /**
+     * @brief setMeshTriangleNeighborLists
+     * @param neighbors
+     */
+    void setMeshTriangleNeighborLists(MeshTriangleNeighbors::Pointer neighbors);
 
 
     /**
