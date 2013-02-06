@@ -20,25 +20,33 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
    width:98%;
 }
 </style>
-<title>Add Orientation Noise</title>
+<title>Generate IPF Colors</title>
 </head>
 <body>
-<h1 class="pHeading1">Add Orientation Noise Filter</h1>
+<h1 class="pHeading1">Generate IPF Colors Filter</h1>
 <p class="pCellBody">
-<a href="../SyntheticBuildingFilters/AddOrientationNoise.html#wp2">Description</a>
-| <a href="../SyntheticBuildingFilters/AddOrientationNoise.html#wp3">Options</a>
-| <a href="../SyntheticBuildingFilters/AddOrientationNoise.html#wp4">Required Arrays</a>
-| <a href="../SyntheticBuildingFilters/AddOrientationNoise.html#wp5">Created Arrays</a>
-| <a href="../SyntheticBuildingFilters/AddOrientationNoise.html#wp1">Authors</a> </p>
+<a href="../GenericFilters/GenerateIPFColors.html#wp2">Description</a>
+| <a href="../GenericFilters/GenerateIPFColors.html#wp3">Options</a>
+| <a href="../GenericFilters/GenerateIPFColors.html#wp4">Required Arrays</a>
+| <a href="../GenericFilters/GenerateIPFColors.html#wp5">Created Arrays</a>
+| <a href="../GenericFilters/GenerateIPFColors.html#wp1">Authors</a> </p>
 
 <a name="wp7"></a>
 <h2 class="pHeading2">Group</h2>
-<p class="pBody">SyntheticBuilding</p>
+<p class="pBody">Generic</p>
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <!-- Write all your documentation here -->
 
 <p class="pBody">
+This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crystal Structures. The determination is based on the Crystal Structure Ensemble data
+ which must be present for this filter to run. The user can enter the Reference direction and is defaulted to [001].
+ 
+ <div align="left">
+<img src=":/GenericFilters/IPFFilterLegend.jpg" alt="IPF Legend" width="240" height="240" />
+</div>
+
+
 </p>
 
 <!-- Do NOT write documentation below this line -->
@@ -49,7 +57,11 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
 <tr bgcolor="#E2E2E2">
-<td>Magnitude of Orientation Noise</td><td>Double</td></tr>
+<td>X Reference Direction</td><td>Double</td></tr>
+<tr bgcolor="#E2E2E2">
+<td>Y Reference Direction</td><td>Double</td></tr>
+<tr bgcolor="#E2E2E2">
+<td>Z Reference Direction</td><td>Double</td></tr>
 </table>
 
 <!-- A table of Required Data for your filter -->
@@ -57,12 +69,15 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
 <tr bgcolor="#E2E2E2"><td>Cell</td><td>CellEulerAngles</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Ensemble</td><td>CrystalStructures</td><td></td></tr>
 </table>
 
 <!-- A table of Created Data for your filter -->
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellIPFColors</td><td>The array generated is a 3xN array of 8 bit unsigned integers which match up to the standard Red Green Blue colors from 0 - 255. N is the number of voxels in the volume.</td></tr>
 </table>
 
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
