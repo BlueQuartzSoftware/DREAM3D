@@ -66,23 +66,6 @@ const static float m_pi = static_cast<float>(M_PI);
   static const float unit112_1 = 1.0/sqrtf(6.0);
   static const float unit112_2 = 2.0/sqrtf(6.0);
 
-  float sampleSymm[4][3][3] = {{{1, 0, 0},
-								{0, 1, 0},
-								{0, 0, 1}},
-
-								{{1, 0, 0},
-								{0, -1, 0},
-								{0, 0, -1}},
-
-								{{-1, 0, 0},
-								{0, 1, 0},
-								{0, 0, -1}},
-
-								{{-1, 0, 0},
-								{0, -1, 0},
-								{0, 0, 1}}};
-
-
   float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
                     {-unit111, -unit112_1, unit110},
                     {unit111, -unit112_2, 0}},
