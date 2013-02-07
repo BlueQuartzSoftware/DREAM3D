@@ -160,7 +160,7 @@ void FillBadData::execute()
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
   m_Neighbors = neighborsPtr->GetPointer(0);
-  neighborsPtr->initializeWithZeros();
+  neighborsPtr->initializeWithValues(-1);
 
   BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
   m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
@@ -239,7 +239,7 @@ void FillBadData::execute()
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = 0;
-					m_CellPhases[currentvlist[k]] = 0;
+//					m_CellPhases[currentvlist[k]] = 0;
 				}
 				m_FieldPhases[0] = 0;
 			}
@@ -248,7 +248,7 @@ void FillBadData::execute()
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = -1;
-					m_CellPhases[currentvlist[k]] = 0;
+//					m_CellPhases[currentvlist[k]] = 0;
 				}
 			}
 			currentvlist.clear();
@@ -323,7 +323,7 @@ void FillBadData::execute()
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
-      if (grainname < 0 && m_GrainIds[neighbor] > 0)
+      if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
       {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {

@@ -214,6 +214,7 @@ VtkSCALARWRITER_CLASS_DEF(VoxelBCScalarWriter, r, Cell, Ebsd::Ctf::BC, Ebsd::Ctf
 VtkSCALARWRITER_CLASS_DEF(VoxelIQScalarWriter, r, Cell, DREAM3D::CellData::ImageQuality, DREAM3D::CellData::ImageQualityNoSpace, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelCIScalarWriter, r, Cell, DREAM3D::CellData::ConfidenceIndex, DREAM3D::CellData::ConfidenceIndexNoSpace, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF_CHAR(VoxelGoodVoxelScalarWriter, r, Cell, DREAM3D::CellData::GoodVoxels, DREAM3D::CellData::GoodVoxels, BoolArrayType, char, "%d ")
+VtkSCALARWRITER_CLASS_DEF(VoxelGlobAlphaScalarWriter, r, Cell, DREAM3D::CellData::GlobAlpha, DREAM3D::CellData::GlobAlpha, Int32ArrayType, int, "%d ")
 VtkSCALARWRITER_CLASS_DEF(VoxelKernelAverageMisorientationScalarWriter, r, Cell, DREAM3D::CellData::KernelAverageMisorientations, DREAM3D::CellData::KernelAverageMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGrainReferenceMisorientationScalarWriter, r, Cell, DREAM3D::CellData::GrainReferenceMisorientations, DREAM3D::CellData::GrainReferenceMisorientations, FloatArrayType, float, "%f ")
 VtkSCALARWRITER_CLASS_DEF(VoxelGrainReferenceCAxisMisorientationScalarWriter, r, Cell, DREAM3D::CellData::GrainReferenceCAxisMisorientations, DREAM3D::CellData::GrainReferenceCAxisMisorientations, FloatArrayType, float, "%f ")

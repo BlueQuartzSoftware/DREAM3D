@@ -34,71 +34,94 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AddBadData_H_
-#define AddBadData_H_
+#ifndef FindBoundaryStrengths_H_
+#define FindBoundaryStrengths_H_
 
-#include <string>
+#include <assert.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
+
+#include <cstddef>
 #include <vector>
+#include <string>
+#include <iostream>
+#include <cmath>
+#include <fstream>
+#include <list>
+#include <algorithm>
+#include <numeric>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
-
 /**
- * @class AddBadDatas AddBadDatas.h DREAM3DLib/SyntheticBuilderFilters/AddBadDatas.h
+ * @class FindBoundaryStrengths FindBoundaryStrengths.h DREAM3DLib/GenericFilters/FindBoundaryStrengths.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
+class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AddBadData)
-    DREAM3D_STATIC_NEW_MACRO(AddBadData)
-    DREAM3D_TYPE_MACRO_SUPER(AddBadData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindBoundaryStrengths)
+    DREAM3D_STATIC_NEW_MACRO(FindBoundaryStrengths)
+    DREAM3D_TYPE_MACRO_SUPER(FindBoundaryStrengths, AbstractFilter)
 
-    virtual ~AddBadData();
+    virtual ~FindBoundaryStrengths();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    //------ Required Cell Data
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getHumanLabel() { return "Add Bad Data"; }
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
-    DREAM3D_INSTANCE_PROPERTY(float, PoissonVolFraction)
-    DREAM3D_INSTANCE_PROPERTY(bool, BoundaryNoise)
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryVolFraction)
+    DREAM3D_INSTANCE_STRING_PROPERTY(vtkOutputFile)
+    DREAM3D_INSTANCE_PROPERTY(float, XLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, YLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, ZLoading)
+
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
     virtual void execute();
     virtual void preflight();
 
   protected:
-    AddBadData();
-
-    void add_noise();
+    FindBoundaryStrengths();
 
   private:
-    float* m_GBEuclideanDistances;
+    std::vector<OrientationMath*> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int32_t* m_FieldPhases;
+    float* m_AvgQuats;
+    unsigned int* m_CrystalStructures;
 
-    AddBadData(const AddBadData&); // Copy Constructor Not Implemented
-    void operator=(const AddBadData&); // Operator '=' Not Implemented
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindBoundaryStrengths(const FindBoundaryStrengths&); // Copy Constructor Not Implemented
+    void operator=(const FindBoundaryStrengths&); // Operator '=' Not Implemented
 };
 
-#endif /* AddBadData_H_ */
+#endif /* FindBoundaryStrengths_H_ */

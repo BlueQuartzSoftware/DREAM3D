@@ -353,9 +353,6 @@ void GrainFaceCurvatureFilter::execute()
     meanCurvature->initializeWithZeros();
   }
 
-
-
-
   int index = 0;
   m_TotalGrainFaces = sharedGrainFaces.size();
   m_CompletedGrainFaces = 0;

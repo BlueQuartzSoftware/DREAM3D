@@ -25,4 +25,4 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ConvertEulerAngles ConvertEulerA
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles StandardizeEulerAngles.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame RotateEulerRefFrame.html "" TRUE)
 
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} IdentifySample IdentifySample.html "" FALSE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} IdentifySample IdentifySample.html "" TRUE)

@@ -115,7 +115,6 @@ void IdentifySample::execute()
     return;
   }
 
-
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
@@ -123,14 +122,6 @@ void IdentifySample::execute()
     return;
   }
   setErrorCondition(0);
-
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
-  neighborsPtr->initializeWithValues(-1);
-
-  BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
-  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
-  alreadCheckedPtr->initializeWithZeros();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -145,101 +136,171 @@ void IdentifySample::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  std::vector<int > neighs;
-  std::vector<int > remove;
-//  size_t count = 1;
-//  int good = 1;
-//  int neighbor;
-//  int index = 0;
-//  float x, y, z;
-//  DimType column, row, plane;
-//  int neighpoint;
-//  size_t numgrains = m->getNumFieldTuples();
+  DimType neighpoints[6];
+  DimType xp = dims[0];
+  DimType yp = dims[1];
+  DimType zp = dims[2];
 
-  int neighpoints[6];
-  neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
-  neighpoints[1] = static_cast<int>(-dims[0]);
-  neighpoints[2] = static_cast<int>(-1);
-  neighpoints[3] = static_cast<int>(1);
-  neighpoints[4] = static_cast<int>(dims[0]);
-  neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
+  neighpoints[0] = -(xp * yp);
+  neighpoints[1] = -xp;
+  neighpoints[2] = -1;
+  neighpoints[3] = 1;
+  neighpoints[4] = xp;
+  neighpoints[5] = (xp * yp);
   std::vector<int> currentvlist;
+  std::vector<bool> checked;
+  checked.resize(totalPoints,false);
+  std::vector<bool> Sample;
+  Sample.resize(totalPoints,false);
+  std::vector<bool> notSample;
+  notSample.resize(totalPoints,false);
+  int biggestBlock = 0;
+  size_t count;
+  int good;
+  int neighbor;
+  DimType column, row, plane;
+  int index;
 
-/*  std::vector<int > n(numgrains + 1);
-  for (size_t iteration = 0; iteration < m_NumIterations; iteration++)
+  for (int i = 0; i < totalPoints; i++)
   {
-    for (int i = 0; i < totalPoints; i++)
+    if(checked[i] == false && m_GoodVoxels[i] == false)
     {
-	  std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notifyStatusMessage(ss.str());
-      int grainname = m_GrainIds[i];
-      if ((grainname == 0 && m_Direction == 1) || (grainname > 0 && m_Direction == 0))
+      currentvlist.push_back(i);
+      count = 0;
+      while (count < currentvlist.size())
       {
-        for (size_t c = 1; c < numgrains; c++)
-        {
-          n[c] = 0;
-        }
-        x = static_cast<float>(i % dims[0]);
-        y = static_cast<float>((i / dims[0]) % dims[1]);
-        z = static_cast<float>(i / (dims[0] * dims[1]));
+        index = currentvlist[count];
+        column = index % xp;
+        row = (index / xp) % yp;
+        plane = index / (xp * yp);
         for (int j = 0; j < 6; j++)
         {
           good = 1;
-          neighpoint = i + neighpoints[j];
-          if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (dims[2] - 1)) good = 0;
-          if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (dims[1] - 1)) good = 0;
-          if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (dims[0] - 1)) good = 0;
-          if (good == 1)
+          neighbor = static_cast<int>( index + neighpoints[j] );
+          if(j == 0 && plane == 0) good = 0;
+          if(j == 5 && plane == (zp - 1)) good = 0;
+          if(j == 1 && row == 0) good = 0;
+          if(j == 4 && row == (yp - 1)) good = 0;
+          if(j == 2 && column == 0) good = 0;
+          if(j == 3 && column == (xp - 1)) good = 0;
+          if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
           {
-            int grain = m_GrainIds[neighpoint];
-			if ((grain > 0 && m_Direction == 1) || (grain == 0 && m_Direction == 0))
-            {
-              neighs.push_back(grain);
-            }
+            currentvlist.push_back(neighbor);
+            checked[neighbor] = true;
           }
         }
-        int current = 0;
-        int most = 0;
-        int curgrain = 0;
-        int size = int(neighs.size());
-        for (int k = 0; k < size; k++)
-        {
-          int neighbor = neighs[k];
-          n[neighbor]++;
-          current = n[neighbor];
-          if (current > most)
-          {
-            most = current;
-            curgrain = neighbor;
-          }
-        }
-        if (size > 0)
-        {
-          m_Neighbors[i] = curgrain;
-          neighs.clear();
-        }
+        count++;
       }
-    }
-    for (int j = 0; j < totalPoints; j++)
-    {
-      int grainname = m_GrainIds[j];
-      int neighbor = m_Neighbors[j];
-//	  if ((grain > 0 && m_Direction == 1) || (grain == 0 && m_Direction == 0))
-      if ((grainname == 0 && neighbor > 0 && m_Direction == 1) || (grainname > 0 && neighbor == 0 && m_Direction == 0))
+      if(currentvlist.size() >= biggestBlock)
       {
-        m_GrainIds[j] = neighbor;
-		    m_CellPhases[j] = m_FieldPhases[neighbor];
-      }
+		  biggestBlock = currentvlist.size();
+		  for(int j = 0; j < totalPoints; j++)
+		  {
+			notSample[j] = false;
+		  }
+		  for(int j = 0; j < currentvlist.size(); j++)
+		  {
+			notSample[currentvlist[j]] = true;
+		  }
+	  }
+      currentvlist.clear();
     }
-//    std::stringstream ss;
-//     ss << "Assigning Bad Voxels count = " << count;
-//    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
-*/
+  for (int i = 0; i < totalPoints; i++)
+  {
+    if (notSample[i] == false && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
+	else if (notSample[i] == true && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
+  }
+  notSample.clear();
+  checked.clear();
+
+  biggestBlock = 0;
+  checked.resize(totalPoints,false);
+  for (int i = 0; i < totalPoints; i++)
+  {
+    if(checked[i] == false && m_GoodVoxels[i] == true)
+    {
+      currentvlist.push_back(i);
+      count = 0;
+      while (count < currentvlist.size())
+      {
+        index = currentvlist[count];
+        column = index % xp;
+        row = (index / xp) % yp;
+        plane = index / (xp * yp);
+        for (int j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighbor = static_cast<int>( index + neighpoints[j] );
+          if(j == 0 && plane == 0) good = 0;
+          if(j == 5 && plane == (zp - 1)) good = 0;
+          if(j == 1 && row == 0) good = 0;
+          if(j == 4 && row == (yp - 1)) good = 0;
+          if(j == 2 && column == 0) good = 0;
+          if(j == 3 && column == (xp - 1)) good = 0;
+          if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == true)
+          {
+            currentvlist.push_back(neighbor);
+            checked[neighbor] = true;
+          }
+        }
+        count++;
+      }
+      if(currentvlist.size() >= biggestBlock)
+      {
+		  biggestBlock = currentvlist.size();
+		  for(int j = 0; j < totalPoints; j++)
+		  {
+			Sample[j] = false;
+		  }
+		  for(int j = 0; j < currentvlist.size(); j++)
+		  {
+			Sample[currentvlist[j]] = true;
+		  }
+	  }
+      currentvlist.clear();
+    }
+  }
+  for (int i = 0; i < totalPoints; i++)
+  {
+    if (Sample[i] == false && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
+	else if (Sample[i] == true && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
+  }
+  Sample.clear();
+  checked.clear();
+
+/*  std::vector<bool> change;
+  change.resize(totalPoints,false);
+  for (int i = 0; i < totalPoints; i++)
+  {
+    if(m_GoodVoxels[i] == false)
+    {
+        column = i % xp;
+        row = (i / xp) % yp;
+        plane = i / (xp * yp);
+        for (int j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighbor = static_cast<int>( i + neighpoints[j] );
+          if(j == 0 && plane == 0) good = 0;
+          if(j == 5 && plane == (zp - 1)) good = 0;
+          if(j == 1 && row == 0) good = 0;
+          if(j == 4 && row == (yp - 1)) good = 0;
+          if(j == 2 && column == 0) good = 0;
+          if(j == 3 && column == (xp - 1)) good = 0;
+          if(good == 1 && m_GoodVoxels[neighbor] == true)
+          {
+            change[i] = true;
+          }
+        }
+	}
+  }
+  for(int j = 0; j < totalPoints; j++)
+  {
+	if(change[j] == true) m_GoodVoxels[j] = true;
+  }
+  change.clear();
+  */
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("Identifying Sample Complete");
 }

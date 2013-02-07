@@ -107,9 +107,6 @@ void FindNRingNeighbors::generate()
     node2TrianglePtr =sm->getMeshVertLinks();
   }
 
-  // Get a reference to our seed triangle
-  //SurfaceMesh::DataStructures::Face_t& tri = triangles[m_TriangleId];
-
   IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);

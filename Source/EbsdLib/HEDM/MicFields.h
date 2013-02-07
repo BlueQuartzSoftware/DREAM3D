@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,71 +34,47 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AddBadData_H_
-#define AddBadData_H_
+#ifndef MicFIELDS_H_
+#define MicFIELDS_H_
 
 #include <string>
 #include <vector>
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-
+#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/AbstractEbsdFields.h"
+#include "EbsdLib/HEDM/MicConstants.h"
 
 /**
- * @class AddBadDatas AddBadDatas.h DREAM3DLib/SyntheticBuilderFilters/AddBadDatas.h
- * @brief
- * @author
- * @date Nov 19, 2011
+ * @class MicFields MicFields.h EbsdLib/HEDM/MicFields.h
+ * @brief This class simply holds the names of the columns that are present in the
+ * HEDM .Mic file.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Aug 18, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
+class EbsdLib_EXPORT MicFields : public AbstractEbsdFields
 {
   public:
-    DREAM3D_SHARED_POINTERS(AddBadData)
-    DREAM3D_STATIC_NEW_MACRO(AddBadData)
-    DREAM3D_TYPE_MACRO_SUPER(AddBadData, AbstractFilter)
+    MicFields();
+    virtual ~MicFields();
 
-    virtual ~AddBadData();
+    virtual std::vector<std::string> getFieldNames();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    template<typename T>
+    T getFilterFields()
+    {
+      T fields;
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getHumanLabel() { return "Add Bad Data"; }
+      fields.push_back(Ebsd::Mic::Confidence.c_str());
 
-    DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
-    DREAM3D_INSTANCE_PROPERTY(float, PoissonVolFraction)
-    DREAM3D_INSTANCE_PROPERTY(bool, BoundaryNoise)
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryVolFraction)
-
-    virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-
-    virtual void execute();
-    virtual void preflight();
-
-  protected:
-    AddBadData();
-
-    void add_noise();
+      return fields;
+    }
 
   private:
-    float* m_GBEuclideanDistances;
-
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
-    AddBadData(const AddBadData&); // Copy Constructor Not Implemented
-    void operator=(const AddBadData&); // Operator '=' Not Implemented
+    MicFields(const MicFields&); // Copy Constructor Not Implemented
+    void operator=(const MicFields&); // Operator '=' Not Implemented
 };
 
-#endif /* AddBadData_H_ */
+#endif /* MicFIELDS_H_ */

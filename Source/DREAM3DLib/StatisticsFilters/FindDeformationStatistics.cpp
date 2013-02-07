@@ -204,36 +204,36 @@ void FindDeformationStatistics::execute()
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
-  float km, gbdist, tjdist, qpdist, sf, sf2, sfmm, gam, ssap;
-  int nearestneighbor, gname, gname2, ss1;
+  float kam, gbdist, tjdist, qpdist, sf, sf2, sfmm, grm, ssap;
+  int nearestneighbor, gname, gname2, ss1, ss2;
   float q1[5], q2[5];
   int kmdist[25];
   int gamdist[25];
-  float kmvgb[10][2];
-  float gamvgb[10][2];
-  float kmvtj[10][2];
-  float gamvtj[10][2];
-  float kmvqp[10][2];
-  float gamvqp[10][2];
-  float kmvsf[10][2];
-  float gamvsf[10][2];
-  float kmvsfmm[10][2];
-  float gamvsfmm[10][2];
-  float kmvssap[10][2];
-  float gamvssap[10][2];
-  float kmvdis[10][2];
-  float gamvdis[10][2];
-  float kmvsfdistthresh[10][10][2];
-  float gamvsfdistthresh[10][10][2];
-  float kmvsfmmdistthresh[10][10][2];
-  float gamvsfmmdistthresh[10][10][2];
-  float kmvssapdistthresh[10][10][2];
-  float gamvssapdistthresh[10][10][2];
-  float kmvdisdistthresh[10][10][2];
-  float gamvdisdistthresh[10][10][2];
-  float kmvsfmmssapthresh[10][10][2];
-  float gamvsfmmssapthresh[10][10][2];
-  int kmbin, gambin;
+  float kmvgb[25][2];
+  float gamvgb[25][2];
+  float kmvtj[25][2];
+  float gamvtj[25][2];
+  float kmvqp[25][2];
+  float gamvqp[25][2];
+  float kmvsf[25][2];
+  float gamvsf[25][2];
+  float kmvsfmm[25][2];
+  float gamvsfmm[25][2];
+  float kmvssap[25][2];
+  float gamvssap[25][2];
+  float kmvdis[25][2];
+  float gamvdis[25][2];
+  float kmvsfdistthresh[25][10][2];
+  float gamvsfdistthresh[25][10][2];
+  float kmvsfmmdistthresh[25][10][2];
+  float gamvsfmmdistthresh[25][10][2];
+  float kmvssapdistthresh[25][10][2];
+  float gamvssapdistthresh[25][10][2];
+  float kmvdisdistthresh[25][10][2];
+  float gamvdisdistthresh[25][10][2];
+  float kmvsfmmssapthresh[25][10][2];
+  float gamvsfmmssapthresh[25][10][2];
+  int kambin, grmbin;
   int gbbin, tjbin, qpbin;
   int sfbin, ssapbin, sfmmbin, disbin;
  // int actualpoints = 0;
@@ -244,7 +244,7 @@ void FindDeformationStatistics::execute()
   }
   for (int h = 0; h < 10; h++)
   {
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 25; i++)
       {
         for (int j = 0; j < 2; j++)
         {
@@ -281,41 +281,98 @@ void FindDeformationStatistics::execute()
     }
   }
 
+  float avgKAM = 0;
+  float avgGRM = 0;
+  float avgGBdist = 0;
+  float avgTJdist = 0;
+  float avgQPdist = 0;
+  float avgSF = 0;
+  float avgSFMM = 0;
+  float avgSSAP = 0;
+  float avgDIS = 0;
+  double counter = 0;
+  float LD[3];
   for (int i = 0; i < totalPoints; i++)
   {
     gname = m_GrainIds[i];
     if(gname > 0)
     {
-      km = m_KernelAverageMisorientations[i];
-      gam = m_GrainReferenceMisorientations[i];
-      gbdist = m_GBEuclideanDistances[i];
-      tjdist = m_TJEuclideanDistances[i];
-      qpdist = m_QPEuclideanDistances[i];
-      nearestneighbor = m_NearestNeighbors[i * 3 + 0];
-      gname2 = m_GrainIds[nearestneighbor];
-      sf = m_Schmids[gname];
-      sf2 = m_Schmids[gname2];
-      sfmm = sf / sf2;
+      avgKAM = avgKAM + m_KernelAverageMisorientations[i];
+      avgGRM = avgGRM + m_GrainReferenceMisorientations[i];
+	  avgGBdist = avgGBdist + m_GBEuclideanDistances[i];
+	  avgTJdist = avgTJdist + m_TJEuclideanDistances[i];
+	  avgQPdist = avgQPdist + m_QPEuclideanDistances[i];
+	  avgSF = avgSF + m_Schmids[gname];
+      gname2 = m_NearestNeighbors[i * 3 + 0];
+	  avgSFMM = avgSFMM + (m_Schmids[gname]/m_Schmids[gname2]);
       ss1 = m_SlipSystems[gname];
-      //	  ss2 = m_SlipSystems[gname2];
+      ss2 = m_SlipSystems[gname2];
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname + j];
         q2[j] = m_AvgQuats[5 * gname2 + j];
       }
-      OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
       if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2])
           && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
+		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
       }
       else
       {
         w = 0;
+		ssap = 0;
       }
-      kmbin = int(km / 0.2);
-      gambin = int(gam / 0.8);
+	  avgSSAP = avgSSAP + ssap;
+	  avgDIS = avgDIS + w;
+	  counter++;
+	}
+  }
+  avgKAM = avgKAM/counter;
+  avgGRM = avgGRM/counter;
+  avgGBdist = avgGBdist/counter;
+  avgTJdist = avgTJdist/counter;
+  avgQPdist = avgQPdist/counter;
+  avgSF = avgSF/counter;
+  avgSFMM = avgSFMM/counter;
+  avgSSAP = avgSSAP/counter;
+  avgDIS = avgDIS/counter;
+  for (int i = 0; i < totalPoints; i++)
+  {
+    gname = m_GrainIds[i];
+    if(gname > 0)
+    {
+      kam = m_KernelAverageMisorientations[i];
+      grm = m_GrainReferenceMisorientations[i];
+      gbdist = m_GBEuclideanDistances[i];
+      tjdist = m_TJEuclideanDistances[i];
+      qpdist = m_QPEuclideanDistances[i];
+      gname2 = m_NearestNeighbors[i * 3 + 0];
+      sf = m_Schmids[gname];
+      sf2 = m_Schmids[gname2];
+      sfmm = sf / sf2;
+      ss1 = m_SlipSystems[gname];
+      ss2 = m_SlipSystems[gname2];
+      for (int j = 0; j < 5; j++)
+      {
+        q1[j] = m_AvgQuats[5 * gname + j];
+        q2[j] = m_AvgQuats[5 * gname2 + j];
+      }
+      if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2])
+          && m_FieldPhases[gname] > 0)
+      {
+        w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = w *(180.0f/m_pi);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
+      }
+      else
+      {
+        w = 0;
+		ssap = 0;
+      }
+      kambin = int((kam/avgKAM)/0.1);
+      grmbin = int((grm/avgGRM)/0.1);
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
@@ -324,10 +381,10 @@ void FindDeformationStatistics::execute()
       if(sfmm < 1) sfmmbin = 4 - int(((1.0 / sfmm) - 1.0) / 0.2);
       ssapbin = int((ssap - 0.4) / 0.06);
       disbin = int((w) / 10.0);
-      if(kmbin < 0) kmbin = 0;
-      if(kmbin > 24) kmbin = 24;
-      if(gambin < 0) gambin = 0;
-      if(gambin > 24) gambin = 24;
+      if(kambin < 0) kambin = 0;
+      if(kambin > 24) kambin = 24;
+      if(grmbin < 0) grmbin = 0;
+      if(grmbin > 24) grmbin = 24;
       if(gbbin < 0) gbbin = 0;
       if(gbbin > 9) gbbin = 9;
       if(tjbin < 0) tjbin = 0;
@@ -342,66 +399,66 @@ void FindDeformationStatistics::execute()
       if(ssapbin > 9) ssapbin = 9;
       if(disbin < 0) disbin = 0;
       if(disbin > 9) disbin = 9;
-      kmdist[kmbin]++;
-      gamdist[gambin]++;
-      kmvgb[gbbin][0]++;
-      kmvgb[gbbin][1] = kmvgb[gbbin][1] + km;
-      gamvgb[gbbin][0]++;
-      gamvgb[gbbin][1] = gamvgb[gbbin][1] + gam;
-      kmvtj[tjbin][0]++;
-      kmvtj[tjbin][1] = kmvtj[tjbin][1] + km;
-      gamvtj[tjbin][0]++;
-      gamvtj[tjbin][1] = gamvtj[tjbin][1] + gam;
-      kmvqp[qpbin][0]++;
-      kmvqp[qpbin][1] = kmvqp[qpbin][1] + km;
-      gamvqp[qpbin][0]++;
-      gamvqp[qpbin][1] = gamvqp[qpbin][1] + gam;
+      kmdist[kambin]++;
+      gamdist[grmbin]++;
+      kmvgb[kambin][0]++;
+      kmvgb[kambin][1] = kmvgb[kambin][1] + (gbdist/avgGBdist);
+      gamvgb[grmbin][0]++;
+      gamvgb[grmbin][1] = gamvgb[grmbin][1] + (gbdist/avgGBdist);
+      kmvtj[kambin][0]++;
+      kmvtj[kambin][1] = kmvtj[kambin][1] + (tjdist/avgTJdist);
+      gamvtj[grmbin][0]++;
+      gamvtj[grmbin][1] = gamvtj[grmbin][1] + (tjdist/avgTJdist);
+      kmvqp[kambin][0]++;
+      kmvqp[kambin][1] = kmvqp[kambin][1] + (qpdist/avgQPdist);
+      gamvqp[grmbin][0]++;
+      gamvqp[grmbin][1] = gamvqp[grmbin][1] + (qpdist/avgQPdist);
       distance = int(m_GBEuclideanDistances[i]);
       if(distance > 9) distance = 9;
-      if(distance <= 5)
+      if(distance <= 3)
       {
-        kmvsf[sfbin][0]++;
-        kmvsf[sfbin][1] = kmvsf[sfbin][1] + km;
-        gamvsf[sfbin][0]++;
-        gamvsf[sfbin][1] = gamvsf[sfbin][1] + gam;
-        kmvsfmm[sfmmbin][0]++;
-        kmvsfmm[sfmmbin][1] = kmvsfmm[sfmmbin][1] + km;
-        gamvsfmm[sfmmbin][0]++;
-        gamvsfmm[sfmmbin][1] = gamvsfmm[sfmmbin][1] + gam;
-        kmvssap[ssapbin][0]++;
-        kmvssap[ssapbin][1] = kmvssap[ssapbin][1] + km;
-        gamvssap[ssapbin][0]++;
-        gamvssap[ssapbin][1] = gamvssap[ssapbin][1] + gam;
-        kmvdis[disbin][0]++;
-        kmvdis[disbin][1] = kmvdis[disbin][1] + km;
-        gamvdis[disbin][0]++;
-        gamvdis[disbin][1] = gamvdis[disbin][1] + gam;
+        kmvsf[kambin][0]++;
+        kmvsf[kambin][1] = kmvsf[kambin][1] + (sf/avgSF);
+        gamvsf[grmbin][0]++;
+        gamvsf[grmbin][1] = gamvsf[grmbin][1] + (sf/avgSF);
+        kmvsfmm[kambin][0]++;
+        kmvsfmm[kambin][1] = kmvsfmm[kambin][1] + (sfmm/avgSFMM);
+        gamvsfmm[grmbin][0]++;
+        gamvsfmm[grmbin][1] = gamvsfmm[grmbin][1] + (sfmm/avgSFMM);
+        kmvssap[kambin][0]++;
+        kmvssap[kambin][1] = kmvssap[kambin][1] + (ssap/avgSSAP);
+        gamvssap[grmbin][0]++;
+        gamvssap[grmbin][1] = gamvssap[grmbin][1] + (ssap/avgSSAP);
+        kmvdis[kambin][0]++;
+        kmvdis[kambin][1] = kmvdis[kambin][1] + (w/avgDIS);
+        gamvdis[grmbin][0]++;
+        gamvdis[grmbin][1] = gamvdis[grmbin][1] + (w/avgDIS);
       }
       kmvsfdistthresh[distance][sfbin][0]++;
-      kmvsfdistthresh[distance][sfbin][1] = kmvsfdistthresh[distance][sfbin][1] + km;
+      kmvsfdistthresh[distance][sfbin][1] = kmvsfdistthresh[distance][sfbin][1] + kam;
       gamvsfdistthresh[distance][sfbin][0]++;
-      gamvsfdistthresh[distance][sfbin][1] = gamvsfdistthresh[distance][sfbin][1] + gam;
+      gamvsfdistthresh[distance][sfbin][1] = gamvsfdistthresh[distance][sfbin][1] + grm;
       kmvsfmmdistthresh[distance][sfmmbin][0]++;
-      kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + km;
+      kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + kam;
       gamvsfmmdistthresh[distance][sfmmbin][0]++;
-      gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + gam;
+      gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + grm;
       kmvssapdistthresh[distance][ssapbin][0]++;
-      kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + km;
+      kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + kam;
       gamvssapdistthresh[distance][ssapbin][0]++;
-      gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + gam;
+      gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + grm;
       kmvdisdistthresh[distance][disbin][0]++;
-      kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + km;
+      kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + kam;
       gamvdisdistthresh[distance][disbin][0]++;
-      gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + gam;
+      gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + grm;
       kmvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-      kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + km;
+      kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + kam;
       gamvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-      gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + gam;
+      gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + grm;
     }
   }
   outFile << "Kernel Misorientation Data" << std::endl;
   outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 25; i++)
   {
     if (kmvgb[i][0] > 0) kmvgb[i][1] = kmvgb[i][1] / kmvgb[i][0];
     if (kmvtj[i][0] > 0) kmvtj[i][1] = kmvtj[i][1] / kmvtj[i][0];
@@ -422,7 +479,7 @@ void FindDeformationStatistics::execute()
   outFile << std::endl;
   outFile << "Grain Average Misorientation Data" << std::endl;
   outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 25; i++)
   {
     if (gamvgb[i][0] > 0) gamvgb[i][1] = gamvgb[i][1] / gamvgb[i][0];
     if (gamvtj[i][0] > 0) gamvtj[i][1] = gamvtj[i][1] / gamvtj[i][0];
