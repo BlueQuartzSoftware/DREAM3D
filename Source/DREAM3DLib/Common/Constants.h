@@ -124,13 +124,11 @@ namespace DREAM3D
     const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
     const std::string ConfidenceIndex("Confidence Index");
     const std::string IPFColor("IPFColor");
-
-
+    const std::string GlobAlpha("GlobAlpha");
 
 
     const std::string SolidMeshNodes("SolidMeshNodes");
     const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
-
   }
 
   namespace FieldData

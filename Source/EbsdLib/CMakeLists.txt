@@ -87,6 +87,7 @@ include_directories(${EbsdLib_BINARY_DIR})
 include ( ${EbsdLib_SOURCE_DIR}/Utilities/SourceList.cmake)
 include ( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
 include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
+include ( ${EbsdLib_SOURCE_DIR}/HEDM/SourceList.cmake)
 
 
 set(EbsdLib_SRCS
@@ -116,6 +117,8 @@ set(EbsdLib_PROJECT_SRCS
     ${TSL_HDRS}
     ${HKL_SRCS}
     ${HKL_HDRS}
+    ${HEDM_SRCS}
+    ${HEDM_HDRS}
     ${EbsdLib_Utilities_SRCS}
     ${EbsdLib_Utilities_HDRS}
     ${EbsdLib_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}

@@ -58,6 +58,7 @@
     <file>ProcessingFilters/ConvertEulerAngles.html</file>
     <file>ProcessingFilters/StandardizeEulerAngles.html</file>
     <file>ProcessingFilters/RotateEulerRefFrame.html</file>
+    <file>ProcessingFilters/IdentifySample.html</file>
 
     <!-- ***** ReconstructionFilters ***** -->
     <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
@@ -83,6 +84,7 @@
     <file>StatisticsFilters/FindAvgOrientations.html</file>
     <file>StatisticsFilters/FindAvgCAxes.html</file>
     <file>StatisticsFilters/FindAxisODF.html</file>
+    <file>StatisticsFilters/FindBoundaryStrengths.html</file>
     <file>StatisticsFilters/FindDeformationStatistics.html</file>
     <file>StatisticsFilters/FindEuclideanDistMap.html</file>
     <file>StatisticsFilters/FindGrainReferenceMisorientations.html</file>

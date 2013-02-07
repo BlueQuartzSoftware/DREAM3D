@@ -89,7 +89,7 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data"; }
+    virtual const std::string getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -108,14 +108,13 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
     * @param line The line to possibly modify
     */
-  std::string modifyAngHeaderLine(char* buf, size_t length);
+    std::string modifyAngHeaderLine(char* buf, size_t length);
 
-  std::string int_to_string(int value);
-  std::string float_to_string(float value);
+    std::string int_to_string(int value);
+    std::string float_to_string(float value);
 
     Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
     void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented
 };
-
 
 #endif /* Hex2SqrConverter_H_ */

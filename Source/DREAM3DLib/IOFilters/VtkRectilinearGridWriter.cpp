@@ -54,6 +54,7 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
 m_BCArrayName(Ebsd::Ctf::BC),
 m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
 m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
@@ -74,6 +75,7 @@ m_WriteBandContrasts(false),
 m_WriteConfidenceIndicies(false),
 m_WriteImageQualities(false),
 m_WriteGoodVoxels(false),
+m_WriteGlobAlpha(false),
 m_WriteRodriguesGAMColors(false),
 m_WriteGrainReferenceMisorientations(false),
 m_WriteGrainReferenceCAxisMisorientations(false),
@@ -195,6 +197,14 @@ void VtkRectilinearGridWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Glob Alpha");
+    option->setPropertyName("WriteGlobAlpha");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write IPF Colors");
     option->setPropertyName("WriteIPFColors");
     option->setWidgetType(FilterParameter::BooleanWidget);
@@ -279,6 +289,7 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteImageQualities", getWriteImageQualities() );
   writer->writeValue("WriteConfidenceIndicies", getWriteConfidenceIndicies() );
   writer->writeValue("WriteGoodVoxels", getWriteGoodVoxels() );
+  writer->writeValue("WriteGlobAlpha", getWriteGlobAlpha() );
   writer->writeValue("WriteGBEuclideanDistanceMap", getWriteGBEuclideanDistanceMap() );
   writer->writeValue("WriteTJEuclideanDistanceMap", getWriteTJEuclideanDistanceMap() );
   writer->writeValue("WriteQPEuclideanDistanceMap", getWriteQPEuclideanDistanceMap() );
@@ -342,6 +353,10 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_WriteGoodVoxels == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
+  }
+  if(m_WriteGlobAlpha == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, -303, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteKernelAverageMisorientations == true)
   {
@@ -516,6 +531,13 @@ void VtkRectilinearGridWriter::execute()
   if (m_WriteGoodVoxels == true)
   {
     VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGoodVoxelScalarWriter<VoxelDataContainer>(m));
+    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+    scalarsToWrite.push_back(w0);
+  }
+
+  if (m_WriteGlobAlpha == true)
+  {
+    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGlobAlphaScalarWriter<VoxelDataContainer>(m));
     w0->m_WriteBinaryFiles = m_WriteBinaryFile;
     scalarsToWrite.push_back(w0);
   }
