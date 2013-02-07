@@ -15,6 +15,8 @@
     <file>GenericFilters/FindGrainCentroids.html</file>
     <file>GenericFilters/FindSurfaceGrains.html</file>
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
+    <file>GenericFilters/GenerateIPFColors.html</file>
+    <file>GenericFilters/IPFFilterLegend.jpg</file>
     <file>GenericFilters/DumpCellData.html</file>
 
     <!-- ***** IOFilters ***** -->

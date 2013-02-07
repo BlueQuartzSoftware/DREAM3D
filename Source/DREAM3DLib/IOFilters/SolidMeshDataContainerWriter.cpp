@@ -43,7 +43,9 @@
 // -----------------------------------------------------------------------------
 SolidMeshDataContainerWriter::SolidMeshDataContainerWriter() :
   AbstractFilter(),
-  m_HdfFileId(-1)
+  m_HdfFileId(-1),
+  m_WriteXdmfFile(false),
+  m_XdmfPtr(NULL)
 {
   setupFilterParameters();
 }
@@ -128,4 +130,12 @@ void SolidMeshDataContainerWriter::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+{
+  m_XdmfPtr = xdmf;
 }

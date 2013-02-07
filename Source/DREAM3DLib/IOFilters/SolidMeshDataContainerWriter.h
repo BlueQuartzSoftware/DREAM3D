@@ -62,7 +62,9 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
+    void setXdmfOStream(std::ostream* xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -114,6 +116,7 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    std::ostream* m_XdmfPtr;
 
     SolidMeshDataContainerWriter(const SolidMeshDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const SolidMeshDataContainerWriter&); // Operator '=' Not Implemented

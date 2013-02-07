@@ -62,9 +62,12 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
     typedef std::list<std::string> NameListType;
+
+    void setXdmfOStream(std::ostream* xdmf);
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -125,7 +128,13 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     int writeVertexAttributeData(hid_t dcGid);
     int writeFaceAttributeData(hid_t dcGid);
     int writeEdgeAttributeData(hid_t dcGid);
+
+    void writeXdmfGridHeader();
+    void writeXdmfGridFooter();
+    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
+
   private:
+    std::ostream* m_XdmfPtr;
 
     SurfaceMeshDataContainerWriter(const SurfaceMeshDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshDataContainerWriter&); // Operator '=' Not Implemented
