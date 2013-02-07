@@ -73,9 +73,13 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationMath
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
 	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getSlipMisalignment(int ss1, int ss2, float q1[5], float q2[5], float &mPrime);
+    virtual void getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime);
+    virtual void getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1);
+    virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt);
+    virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7);
 
-  protected:
+
+protected:
     float _calcMisoQuat(const float quatsym[24][5], int numsym,
                   float q1[5], float q2[5],
                   float &n1, float &n2, float &n3);

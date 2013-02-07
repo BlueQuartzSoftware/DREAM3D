@@ -44,6 +44,7 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/HEDM/MicConstants.h"
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

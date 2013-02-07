@@ -51,6 +51,7 @@ namespace Ebsd
   {
     TSL = 0,
     HKL = 1,
+    HEDM = 1,
     UnknownManufacturer
   };
 
