@@ -85,6 +85,35 @@ class DataArray : public IDataArray
 
     typedef std::vector<Pointer>   ContainterType;
 
+
+    /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      T value = 0x00;
+      xdmfTypeName = "UNKNOWN";
+      precision = 0;
+      if (typeid(value) == typeid(int8_t)) { xdmfTypeName = "Char"; precision = 1;}
+      if (typeid(value) == typeid(uint8_t)) { xdmfTypeName = "UChar"; precision = 1;}
+
+      if (typeid(value) == typeid(int16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+      if (typeid(value) == typeid(uint16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+
+      if (typeid(value) == typeid(int32_t)) { xdmfTypeName = "Int"; precision = 4;}
+      if (typeid(value) == typeid(uint32_t)) { xdmfTypeName = "UInt"; precision = 4;}
+
+      if (typeid(value) == typeid(int64_t)) { xdmfTypeName = "Int"; precision = 8;}
+      if (typeid(value) == typeid(uint64_t)) { xdmfTypeName = "UInt"; precision = 8;}
+
+      if (typeid(value) == typeid(float)) { xdmfTypeName = "Float"; precision = 4;}
+      if (typeid(value) == typeid(double)) { xdmfTypeName = "Float"; precision = 8;}
+
+      if (typeid(value) == typeid(bool)) { xdmfTypeName = "uchar"; precision = 1;}
+    }
+
     /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
@@ -435,6 +464,7 @@ class DataArray : public IDataArray
     {
       return sizeof(T);
     }
+
 
     /**
      * @brief Returns the number of elements in the internal array.

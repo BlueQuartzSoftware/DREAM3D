@@ -114,6 +114,13 @@ class DREAM3DLib_EXPORT IDataArray
     virtual size_t GetTypeSize() = 0;
 
     /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    virtual void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision) = 0;
+
+    /**
      * @brief Erases tuples based on a list of specific Tuple indices
      * @param idxs The indices to erase
      * @return

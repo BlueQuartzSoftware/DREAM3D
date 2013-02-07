@@ -61,6 +61,17 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     virtual ~StatsDataArray();
 
+    /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      xdmfTypeName = getNameOfClass();
+      precision = 0;
+    }
+
     DREAM3D_INSTANCE_PROPERTY(std::vector<StatsData::Pointer>, StatsDataArray)
 
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
@@ -105,14 +116,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       {
           if (m_StatsDataArray[i].get() == NULL && phase_types != NULL)
           {
-			  if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) m_StatsDataArray[i] = PrimaryStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) m_StatsDataArray[i] = PrecipitateStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) m_StatsDataArray[i] = TransformationStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) m_StatsDataArray[i] = BoundaryStatsData::New();
-			  else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) m_StatsDataArray[i] = MatrixStatsData::New();
-			  else m_StatsDataArray[i] = StatsData::New();
+        if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) m_StatsDataArray[i] = PrimaryStatsData::New();
+        else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) m_StatsDataArray[i] = PrecipitateStatsData::New();
+        else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) m_StatsDataArray[i] = TransformationStatsData::New();
+        else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) m_StatsDataArray[i] = BoundaryStatsData::New();
+        else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) m_StatsDataArray[i] = MatrixStatsData::New();
+        else m_StatsDataArray[i] = StatsData::New();
           }
-		  if(phase_types == NULL) m_StatsDataArray[i] = StatsData::New();
+      if(phase_types == NULL) m_StatsDataArray[i] = StatsData::New();
       }
     }
 
@@ -218,7 +229,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual void initializeWithZeros();
 
-	/**
+  /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure

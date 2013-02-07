@@ -90,6 +90,17 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
     virtual ~BoundaryStatsData();
 
     /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      xdmfTypeName = getNameOfClass();
+      precision = 0;
+    }
+
+    /**
      * @brief Creates the Vector of FloatArrayType for a give distribution type
      * and sized according to numBins
      * @param distributionType The type of distribution as laid out in the DREAM3D::DistributionType
