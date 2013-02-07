@@ -141,13 +141,13 @@ void FindNRingNeighbors::generate()
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
     for(SurfaceMesh::DataStructures::UniqueTriangleIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
-      SurfaceMesh::DataStructures::Face_t& t = triangles[*triIter];
+      SurfaceMesh::DataStructures::Face_t& face = triangles[*triIter];
       // For each node, get the triangle ids that the node belongs to
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        uint16_t tCount = node2TrianglePtr->getNumberOfTriangles(t.verts[i]);
-        int32_t* data = node2TrianglePtr->getTriangleListPointer(t.verts[i]);
+        uint16_t tCount = node2TrianglePtr->getNumberOfTriangles(face.verts[i]);
+        int32_t* data = node2TrianglePtr->getTriangleListPointer(face.verts[i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for(uint16_t t = 0; t < tCount; ++t)
