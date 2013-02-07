@@ -20,3 +20,13 @@ for x in $files;
         mv "$x.tmp" "$x"
     done
 
+cd /Users/mjackson/Workspace/DREAM3D/Documentation/Filters
+
+    files=`find . -type f -name "*.html"`
+
+    for x in $files;
+      do
+          echo "Converting $x"
+          tr -d '\015' < "$x" > "$x.tmp"
+          mv "$x.tmp" "$x"
+      done
