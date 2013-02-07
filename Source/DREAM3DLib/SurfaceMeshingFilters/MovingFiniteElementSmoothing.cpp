@@ -401,7 +401,9 @@ void MovingFiniteElementSmoothing::execute()
 
 
   #if 1
+#if __APPLE__
   #warning Smoothing Triple Lines are NOT working because the code needs updated.
+#endif
   if(m_SmoothTripleLines == true)
   {
     m_SmoothTripleLines= false;
