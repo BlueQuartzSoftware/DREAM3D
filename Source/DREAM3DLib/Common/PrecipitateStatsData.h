@@ -85,9 +85,20 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
   public:
     DREAM3D_SHARED_POINTERS(PrecipitateStatsData)
     DREAM3D_STATIC_NEW_MACRO(PrecipitateStatsData)
-	DREAM3D_TYPE_MACRO_SUPER(PrecipitateStatsData, StatsData)
+    DREAM3D_TYPE_MACRO_SUPER(PrecipitateStatsData, StatsData)
 
     virtual ~PrecipitateStatsData();
+
+    /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      xdmfTypeName = getNameOfClass();
+      precision = 0;
+    }
 
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
@@ -96,7 +107,7 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     virtual std::string getStatsType();
     virtual unsigned int getPhaseType();
 
-	 /**
+   /**
      * @breif this will generate the Bin Numbers values;
      */
     FloatArrayType::Pointer generateBinNumbers();
@@ -121,7 +132,7 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 
-	size_t getNumberOfBins()
+  size_t getNumberOfBins()
     {
       return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
     }
