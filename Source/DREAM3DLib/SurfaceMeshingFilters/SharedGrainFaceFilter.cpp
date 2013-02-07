@@ -165,19 +165,22 @@ void SharedGrainFaceFilter::execute()
   uint32_t index = 0;
   struct { int g; int r; } faceId;
   uint64_t* faceId_64 = reinterpret_cast<uint64_t*>(&faceId);
-
+  int32_t fl0 = -1;
+  int32_t fl1 = -1;
   // Loop through all the Triangles and figure out how many triangles we have in each one.
   for(size_t t = 0; t < totalPoints; ++t)
   {
-    if (faceLabels[t*2] < faceLabels[t*2+1])
+    fl0 = faceLabels[t*2];
+    fl1 = faceLabels[t*2+1];
+    if (fl0 < fl1)
     {
-      faceId.g = faceLabels[t*2];
-      faceId.r = faceLabels[t*2+1];
+      faceId.g = fl0;
+      faceId.r = fl1;
     }
     else
     {
-      faceId.g = faceLabels[t*2+1];
-      faceId.r = faceLabels[t*2];
+      faceId.g = fl1;
+      faceId.r = fl0;
     }
 
     std::map<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);
@@ -241,7 +244,7 @@ void SharedGrainFaceFilter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SharedGrainFaceFilter::SharedGrainFaces_t &SharedGrainFaceFilter::getSharedGrainFaces()
+SharedGrainFaceFilter::SharedGrainFaces_t& SharedGrainFaceFilter::getSharedGrainFaces()
 {
   return m_SharedGrainFaces;
 }
