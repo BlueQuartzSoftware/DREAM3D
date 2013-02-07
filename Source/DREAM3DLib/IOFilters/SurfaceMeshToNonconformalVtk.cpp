@@ -128,7 +128,7 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
     if (sm->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels).get() == NULL)
     {
       setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer messing Triangle Label array", getErrorCondition());
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangle Label array", getErrorCondition());
     }
   }
 }
@@ -846,7 +846,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "SCALARS TriangleID int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  for(int i = 0; i < nT; ++i)
+  for(int i = 0; i < triangleCount * 2; ++i)
   {
     //Triangle& t = triangles[i]; // Get the current Node
 
@@ -855,18 +855,12 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
       swapped = i;
       MXA::Endian::FromSystemToBig::convert<int>(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
-      if(false == m_WriteConformalMesh)
-      {
-        fwrite(&swapped, sizeof(int), 1, vtkFile);
-      }
+      fwrite(&swapped, sizeof(int), 1, vtkFile);
     }
     else
     {
       fprintf(vtkFile, "%d\n", i);
-      if(false == m_WriteConformalMesh)
-      {
-        fprintf(vtkFile, "%d\n", i);
-      }
+      fprintf(vtkFile, "%d\n", i);
     }
   }
 #endif
