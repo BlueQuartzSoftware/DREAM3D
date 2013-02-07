@@ -40,6 +40,7 @@
 #include <iostream>
 #include <queue>
 #include <deque>
+#include <limits>
 
 #ifdef _MSC_VER
 #include <hash_set>
@@ -535,8 +536,8 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   }
 
   Mesh::Pointer mesh = Mesh::New();
-  int min = INT32_MAX;
-  int max = INT32_MIN;
+  int min = std::numeric_limits<int32_t>::max();
+  int max = std::numeric_limits<int32_t>::min();
   // Set the min and Max labels in the Mesh class;
   for(int n = 0; n < numTriangles; ++n)
   {
