@@ -61,8 +61,18 @@ class DREAM3DLib_EXPORT GoldfeatherReader : public AbstractFilter
 
     virtual ~GoldfeatherReader();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_1ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_2ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Direction_1ArrayName)
+     DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Direction_2ArrayName)
+     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeNormalsArrayName)
+     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
+     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
+     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTrianglesArrayName)
+
+
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
      DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
 
