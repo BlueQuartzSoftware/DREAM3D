@@ -38,6 +38,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MatrixMath.h"
 
 #define MULT_QUAT(q1, q2, out)\
     out[1] = q2[4] * q1[1] + q2[1] * q1[4] + q2[3] * q1[2] - q2[2] * q1[3];\
@@ -80,7 +81,10 @@ class DREAM3DLib_EXPORT OrientationMath
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3) = 0;
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys) = 0;
-    virtual void getSlipMisalignment(int ss1, int ss2, float q1[5], float q2[5], float &mPrime) = 0;
+    virtual void getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime) = 0;
+    virtual void getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1) = 0;
+    virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt) = 0;
+    virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7) = 0;
 
     static void axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);

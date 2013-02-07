@@ -89,7 +89,7 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data"; }
+    virtual const std::string getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

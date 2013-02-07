@@ -47,6 +47,9 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/CtfFields.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"
+#include "EbsdLib/HEDM/MicConstants.h"
+#include "EbsdLib/HEDM/MicFields.h"
+#include "EbsdLib/HEDM/H5MicImporter.h"
 
 #include "DREAM3DLib/Common/Observable.h"
 
@@ -112,6 +115,10 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
        ebsdFields = new CtfFields;
+    }
+    else if(ext.compare(Ebsd::Mic::FileExt) == 0)
+    {
+       ebsdFields = new MicFields;
     }
     else
     {
@@ -279,6 +286,18 @@ void EbsdToH5Ebsd::execute()
       setErrorCondition(-1);
     }
     fileImporter = H5CtfImporter::New();
+  }
+  else if(ext.compare(Ebsd::Mic::FileExt) == 0)
+  {
+    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Mic::Manufacturer);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Could not write the Manufacturer Data to the HDF5 File";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(-1);
+    }
+    fileImporter = H5MicImporter::New();
   }
   else
   {

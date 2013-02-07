@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,81 +33,95 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef EbsdToH5Ebsd_H_
-#define EbsdToH5Ebsd_H_
 
 
+
+
+#ifndef _H5MicIMPORTER_H_
+#define _H5MicIMPORTER_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
 #endif
 
 
+#include "hdf5.h"
+
 #include <vector>
 #include <string>
 
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXA.h"
-
-#include "EbsdLib/EbsdConstants.h"
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdImporter.h"
+#include "EbsdLib/HEDM/MicReader.h"
 
 /**
- * @class EbsdToH5Ebsd EbsdToH5Ebsd.h EbsdToH5Ebsd/EbsdToH5Ebsd.h
- * @brief This class is used to import multiple EBSD files into an HDF5 file.
+ * @class H5MicImporter H5MicImporter.h EbsdLib/HEDM/H5MicImporter.h
+ * @brief This class will read a series of .Mic files and store the values into
+ * an HDF5 file according to the .h5ebsd specification
  * @author Michael A. Jackson for BlueQuartz Software
- * @author Dr. Michael Groeber, US Air Force Research Laboratories
  * @date March 23, 2011
  * @version 1.2
- *
  */
-class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
+class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
 {
+
   public:
-    DREAM3D_SHARED_POINTERS(EbsdToH5Ebsd)
-    DREAM3D_STATIC_NEW_MACRO(EbsdToH5Ebsd)
-    DREAM3D_TYPE_MACRO_SUPER(EbsdToH5Ebsd, AbstractFilter)
+    EBSD_SHARED_POINTERS(H5MicImporter)
+    EBSD_TYPE_MACRO(H5MicImporter)
+    EBSD_STATIC_NEW_SUPERCLASS(EbsdImporter, H5MicImporter)
 
-    virtual ~EbsdToH5Ebsd();
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReorderArray)
-    DREAM3D_INSTANCE_PROPERTY(bool, RotateSlice)
-    DREAM3D_INSTANCE_PROPERTY(bool, AlignEulers)
-    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
-
-    virtual void preflight();
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
-
-    virtual void setupFilterParameters();
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual ~H5MicImporter();
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
-    virtual void execute();
+     * @brief Imports a specific file into the HDF5 file
+     * @param fileId The valid HDF5 file Id for an already open HDF5 file
+     * @param index The slice index for the file
+     * @param MicFile The absolute path to the input .Mic file
+     */
+    int importFile(hid_t fileId, int64_t index, const std::string &MicFile);
+
+    /**
+     * @brief Writes the phase data into the HDF5 file
+     * @param reader Valid MicReader instance
+     * @param gid Valid HDF5 Group ID for the phases.
+     * @return error condition
+     */
+    int writePhaseData(MicReader &reader, hid_t gid);
+
+    /**
+     * @brief Returns the dimensions for the EBSD Data set
+     * @param x Number of X Voxels (out)
+     * @param y Number of Y Voxels (out)
+     */
+    virtual void getDims(int64_t &x, int64_t &y);
+
+    /**
+     * @brief Returns the x and y resolution of the voxels
+     * @param x The x resolution (out)
+     * @param y The y resolution (out)
+     */
+    virtual void getResolution(float &x, float &y);
+
+    /**
+     * @brief Return the number of slices imported
+     * @return
+     */
+    virtual int numberOfSlicesImported();
 
   protected:
-    EbsdToH5Ebsd();
+    H5MicImporter();
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    int64_t xDim;
+    int64_t yDim;
+    float xRes;
+    float yRes;
 
-    EbsdToH5Ebsd(const EbsdToH5Ebsd&); // Copy Constructor Not Implemented
-    void operator=(const EbsdToH5Ebsd&); // Operator '=' Not Implemented
+    H5MicImporter(const H5MicImporter&); // Copy Constructor Not Implemented
+    void operator=(const H5MicImporter&); // Operator '=' Not Implemented
 };
 
 
-#endif /* EbsdToH5Ebsd_H_ */
+#endif /* _H5MicIMPORTER_H_ */

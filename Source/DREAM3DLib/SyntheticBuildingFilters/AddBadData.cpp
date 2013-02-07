@@ -51,9 +51,13 @@
 AddBadData::AddBadData() :
 AbstractFilter(),
 m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+m_PoissonNoise(false),
+m_PoissonVolFraction(0.0f),
+m_BoundaryNoise(false),
+m_BoundaryVolFraction(0.0f),
 m_GBEuclideanDistances(NULL)
 {
-
+	setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -61,6 +65,48 @@ m_GBEuclideanDistances(NULL)
 // -----------------------------------------------------------------------------
 AddBadData::~AddBadData()
 {
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AddBadData::setupFilterParameters()
+{
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Add Poisson Noise");
+    option->setPropertyName("PoissonNoise");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Volume Fraction of Poisson Noise");
+    option->setPropertyName("PoissonVolFraction");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Add Boundary Noise");
+    option->setPropertyName("BoundaryNoise");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Volume Fraction of Boundary Noise");
+    option->setPropertyName("BoundaryVolFraction");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
@@ -131,19 +177,28 @@ void  AddBadData::add_noise()
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
 
-  int count1 = 0;
-  int count2 = 0;
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); ++i)
   {
-	  if(m_GBEuclideanDistances[i] < 1)
+	  if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
 	  {
-		count1++;
 		random = static_cast<float>( rg.genrand_res53() );
-		if(random < 0.1)
+		if(random < m_BoundaryVolFraction)
 		{
-		  count2++;
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+			p->InitializeTuple(i,0); 
+          }
+		}
+	  }
+	  if(m_PoissonNoise == true && m_GBEuclideanDistances[i] >=1)
+	  {
+		random = static_cast<float>( rg.genrand_res53() );
+		if(random < m_PoissonVolFraction)
+		{
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             std::string name = *iter;

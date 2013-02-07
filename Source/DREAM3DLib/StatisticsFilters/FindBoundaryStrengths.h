@@ -84,10 +84,13 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
+	//------ Required Ensemble Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(vtkOutputFile)
+    DREAM3D_INSTANCE_PROPERTY(float, XLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, YLoading)
+    DREAM3D_INSTANCE_PROPERTY(float, ZLoading)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
@@ -112,9 +115,8 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_FieldPhases;
-    int32_t* m_SlipSystems;
     float* m_AvgQuats;
-    float* m_Schmids;
+	unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -291,6 +291,7 @@ void FindDeformationStatistics::execute()
   float avgSSAP = 0;
   float avgDIS = 0;
   double counter = 0;
+  float LD[3];
   for (int i = 0; i < totalPoints; i++)
   {
     gname = m_GrainIds[i];
@@ -316,7 +317,7 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getSlipMisalignment(ss1, ss2, q1, q2, ssap);
+		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
       }
       else
       {
@@ -363,7 +364,7 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getSlipMisalignment(ss1, ss2, q1, q2, ssap);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
       }
       else
       {
