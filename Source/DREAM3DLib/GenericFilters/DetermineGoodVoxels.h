@@ -68,14 +68,8 @@ class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName()
-    {
-      return DREAM3D::FilterGroups::GenericFilters;
-    }
-    virtual const std::string getHumanLabel()
-    {
-      return "Determine Good Voxels";
-    }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Determine Good Voxels"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
