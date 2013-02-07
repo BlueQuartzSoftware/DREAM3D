@@ -99,6 +99,43 @@ void MatrixMath::normalizeVector(double g[3])
   g[2] = g[2]/denom;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatrixMath::normalizeVector(double &i, double &j, double &k)
+{
+  double denom;
+  denom = sqrt(((i*i)+(j*j)+(k*k)));
+  i = i/denom;
+  j = j/denom;
+  k = k/denom;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatrixMath::normalizeVector(float g[3])
+{
+  float denom;
+  denom = sqrtf(((g[0]*g[0])+(g[1]*g[1])+(g[2]*g[2])));
+  g[0] = g[0]/denom;
+  g[1] = g[1]/denom;
+  g[2] = g[2]/denom;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatrixMath::normalizeVector(float &i, float &j, float &k)
+{
+  float denom;
+  denom = sqrtf(((i*i)+(j*j)+(k*k)));
+  i = i/denom;
+  j = j/denom;
+  k = k/denom;
+}
+
+
 
 void MatrixMath::multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3])
 {
@@ -184,7 +221,7 @@ void MatrixMath::normalize3x1(float g[3])
 
 float MatrixMath::dotProduct(float a[3], float b[3])
 {
-	float norm1 = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
-	float norm2 = sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
-	return (a[0]*b[0]+a[1]*b[1]+a[2]*b[2])/(norm1*norm2);
+  float norm1 = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+  float norm2 = sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
+  return (a[0]*b[0]+a[1]*b[1]+a[2]*b[2])/(norm1*norm2);
 }
