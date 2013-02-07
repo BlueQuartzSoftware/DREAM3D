@@ -64,7 +64,13 @@ class DREAM3DLib_EXPORT MatrixMath
     static float dotProduct(float a[3], float b[3]);
 
     static void crossProduct(double a[3], double b[3], double c[3]);
+
+
+
     static void normalizeVector(double a[3]);
+    static void normalizeVector(double &i, double &j, double &k);
+    static void normalizeVector(float a[3]);
+    static void normalizeVector(float &i, float &j, float &k);
 
   protected:
     MatrixMath();
