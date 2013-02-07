@@ -80,6 +80,7 @@ DataContainerWriter::DataContainerWriter() :
   m_WriteVoxelData(true),
   m_WriteSurfaceMeshData(true),
   m_WriteSolidMeshData(true),
+  m_WriteXdmfFile(false),
   m_FileId(-1)
 {
   setupFilterParameters();
@@ -133,6 +134,17 @@ void DataContainerWriter::setupFilterParameters()
 //    option->setValueType("bool");
 //    parameters.push_back(option);
 //  }
+
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Xdmf File");
+    option->setPropertyName("WriteXdmfFile");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    option->setUnits("XML Wrapper");
+    parameters.push_back(option);
+  }
+
   setFilterParameters(parameters);
 }
 
@@ -145,6 +157,7 @@ void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->writeValue("WriteVoxelData", getWriteVoxelData() );
   writer->writeValue("WriteSurfaceMeshData", getWriteSurfaceMeshData() );
   writer->writeValue("WriteSolidMeshData", getWriteSolidMeshData() );
+  writer->writeValue("WriteXdmfFile", getWriteXdmfFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -185,8 +198,6 @@ void DataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::execute()
 {
-
-
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
@@ -230,21 +241,41 @@ void DataContainerWriter::execute()
   // Write our File Version string to the Root "/" group
   H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
 
+  std::ofstream xdmf;
+  if (m_WriteXdmfFile == true)
+  {
+    std::string name = MXAFileInfo::fileNameWithOutExtension(m_OutputFile);
+    if(parentPath.empty() == true)
+    {
+      name = name + ".xdmf";
+    }
+    else
+    {
+      name = parentPath + MXAFileInfo::Separator + name + ".xdmf";
+    }
+    xdmf.open(name.c_str(), std::ios_base::binary);
+    if (xdmf.is_open() == true) {
+      writeXdmfHeader(xdmf);
+    }
+  }
+
   // Write the Pipeline to the File
   err = writePipeline();
 
   /* WRITE THE VOXEL DATA TO THE HDF5 FILE */
   if (getVoxelDataContainer() != NULL && m_WriteVoxelData == true)
   {
-    VoxelDataContainerWriter::Pointer voxelWriter = VoxelDataContainerWriter::New();
-    voxelWriter->setHdfFileId(m_FileId);
-    voxelWriter->setVoxelDataContainer(getVoxelDataContainer());
-    voxelWriter->setObservers(getObservers());
+    VoxelDataContainerWriter::Pointer writer = VoxelDataContainerWriter::New();
+    writer->setHdfFileId(m_FileId);
+    writer->setVoxelDataContainer(getVoxelDataContainer());
+    writer->setObservers(getObservers());
+    writer->setWriteXdmfFile(getWriteXdmfFile());
+    writer->setXdmfOStream(&xdmf);
     ss.str("");
     ss << getMessagePrefix() << " |--> Writing Voxel Data ";
-    voxelWriter->setMessagePrefix(ss.str());
-    voxelWriter->execute();
-    if (voxelWriter->getErrorCondition() < 0)
+    writer->setMessagePrefix(ss.str());
+    writer->execute();
+    if (writer->getErrorCondition() < 0)
     {
       notifyErrorMessage("Error Writing the Voxel Data", -803);
       return;
@@ -254,40 +285,69 @@ void DataContainerWriter::execute()
   /* WRITE THE SurfaceMesh DATA TO THE HDF5 FILE */
   if (NULL != getSurfaceMeshDataContainer() && m_WriteSurfaceMeshData == true)
   {
-    SurfaceMeshDataContainerWriter::Pointer smWriter = SurfaceMeshDataContainerWriter::New();
-    smWriter->setHdfFileId(m_FileId);
-    smWriter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-    smWriter->setObservers(getObservers());
+    SurfaceMeshDataContainerWriter::Pointer writer = SurfaceMeshDataContainerWriter::New();
+    writer->setHdfFileId(m_FileId);
+    writer->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    writer->setObservers(getObservers());
+    writer->setWriteXdmfFile(getWriteXdmfFile());
+    writer->setXdmfOStream(&xdmf);
     ss.str("");
     ss << getMessagePrefix() << " |--> Writing SurfaceMesh Data ";
-    smWriter->setMessagePrefix(ss.str());
-    smWriter->execute();
-    if (smWriter->getErrorCondition() < 0)
+    writer->setMessagePrefix(ss.str());
+    writer->execute();
+    if (writer->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Writing the SurfaceMesh Data", smWriter->getErrorCondition());
+      notifyErrorMessage("Error Writing the SurfaceMesh Data", writer->getErrorCondition());
       return;
     }
   }
 
   if (NULL != getSolidMeshDataContainer() && m_WriteSolidMeshData == true)
   {
-    SolidMeshDataContainerWriter::Pointer smWriter = SolidMeshDataContainerWriter::New();
-    smWriter->setHdfFileId(m_FileId);
-    smWriter->setSolidMeshDataContainer(getSolidMeshDataContainer());
-    smWriter->setObservers(getObservers());
+    SolidMeshDataContainerWriter::Pointer writer = SolidMeshDataContainerWriter::New();
+    writer->setHdfFileId(m_FileId);
+    writer->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    writer->setObservers(getObservers());
+    writer->setWriteXdmfFile(getWriteXdmfFile());
+    writer->setXdmfOStream(&xdmf);
     ss.str("");
     ss << getMessagePrefix() << " |--> Writing Solid Mesh Data ";
-    smWriter->setMessagePrefix(ss.str());
-    smWriter->execute();
-    if (smWriter->getErrorCondition() < 0)
+    writer->setMessagePrefix(ss.str());
+    writer->execute();
+    if (writer->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Writing the Solid Mesh Data", smWriter->getErrorCondition());
+      notifyErrorMessage("Error Writing the Solid Mesh Data", writer->getErrorCondition());
       return;
     }
   }
 
+  if (m_WriteXdmfFile == true)
+  {
+    writeXdmfFooter(xdmf);
+  }
+
 
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerWriter::writeXdmfHeader(std::ostream &xdmf)
+{
+  xdmf << "<?xml version=\"1.0\"?>" << std::endl;
+  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << std::endl;
+  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" << std::endl;
+  xdmf << " <Domain>" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerWriter::writeXdmfFooter(std::ostream &xdmf)
+{
+  xdmf << " </Domain>" << std::endl;
+  xdmf << "</Xdmf>" << std::endl;
 }
 
 // -----------------------------------------------------------------------------

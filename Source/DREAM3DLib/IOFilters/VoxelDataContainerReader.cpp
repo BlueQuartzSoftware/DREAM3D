@@ -248,6 +248,10 @@ int VoxelDataContainerReader::gatherData(bool preflight)
     return -1;
   }
   hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
+  if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
+  {
+    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+  }
   if(dcGid < 0)
   {
     ss.str("");

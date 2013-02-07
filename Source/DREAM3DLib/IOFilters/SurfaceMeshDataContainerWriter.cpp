@@ -36,6 +36,8 @@
 
 #include "SurfaceMeshDataContainerWriter.h"
 
+#include "MXA/Utilities/MXAFileInfo.h"
+
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -64,7 +66,9 @@ public:
 // -----------------------------------------------------------------------------
 SurfaceMeshDataContainerWriter::SurfaceMeshDataContainerWriter() :
   AbstractFilter(),
-  m_HdfFileId(-1)
+  m_HdfFileId(-1),
+  m_WriteXdmfFile(false),
+  m_XdmfPtr(NULL)
 {
   setupFilterParameters();
 }
@@ -172,6 +176,9 @@ void SurfaceMeshDataContainerWriter::execute()
     return;
   }
 
+  writeXdmfGridHeader();
+
+
   H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   err = writeVertices(dcGid);
@@ -228,7 +235,137 @@ void SurfaceMeshDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
+  writeXdmfGridFooter();
+
+
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+{
+  m_XdmfPtr = xdmf;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
+{
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  {
+    return;
+  }
+  SurfaceMesh::DataStructures::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
+  if (NULL == faces.get())
+  {
+    return;
+  }
+  SurfaceMesh::DataStructures::VertListPointer_t verts = getSurfaceMeshDataContainer()->getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
+
+  std::ostream& out = *m_XdmfPtr;
+  out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << std::endl;
+
+  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
+  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  std::vector<char> nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/Faces" << std::endl;
+  out << "      </DataItem>" << std::endl;
+  out << "    </Topology>" << std::endl;
+
+  out << "    <Geometry Type=\"XYZ\">" << std::endl;
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << std::endl;
+  out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/Vertices" << std::endl;
+  out << "      </DataItem>" << std::endl;
+  out << "    </Geometry>" << std::endl;
+  out << "" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainerWriter::writeXdmfGridFooter()
+{
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  {
+    return;
+  }
+  SurfaceMesh::DataStructures::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
+  if (NULL == faces.get())
+  {
+    return;
+  }
+  std::ostream& out = *m_XdmfPtr;
+  out << "  </Grid>" << std::endl;
+  out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << std::endl;
+  out << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
+{
+#if 0
+      <Attribute Name="Node Type" Center="Node">
+      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
+        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/SurfaceMeshDataContainer/POINT_DATA/SurfaceMeshNodeType
+      </DataItem>
+    </Attribute>
+#endif
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  { return; }
+
+
+
+  std::ostream& out = *m_XdmfPtr;
+  std::stringstream dimStr;
+  int precision = 0;
+  std::string xdmfTypeName;
+  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  if (0 == precision)
+  {
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+    return;
+  }
+
+  int numComp = array->GetNumberOfComponents();
+  out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+  if (numComp == 1)
+  {
+    out << "AttributeType=\"Scalar\" ";
+    dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
+  }
+  else
+  {
+    out << "AttributeType=\"Vector\" ";
+    dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
+  }
+  out << "Center=\"" << centering << "\">" << std::endl;
+  // Open the <DataItem> Tag
+  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
+  out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+
+  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  std::vector<char> nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+
+  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = MXAFileInfo::filename(hdfFileName);
+
+  out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/" << groupName << "/" << array->GetName() << std::endl;
+  out << "      </DataItem>" << std::endl;
+  out << "    </Attribute>" << std::endl << std::endl;
 }
 
 
@@ -381,13 +518,14 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
+    writeXdmfAttributeData(H5_POINT_DATA_GROUP_NAME, array, "Node");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
   return err;
 }
 
 
-
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int SurfaceMeshDataContainerWriter::writeMeshTriangleNeighborLists(hid_t dcGid)
@@ -516,6 +654,7 @@ int SurfaceMeshDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
+    writeXdmfAttributeData(H5_FACE_DATA_GROUP_NAME, array, "Cell");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
   return err;

@@ -38,6 +38,7 @@
 #define _DATACONTAINERWRITER_H_
 
 #include <string>
+#include <iostream>
 
 #include <hdf5.h>
 
@@ -69,6 +70,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteVoxelData)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceMeshData)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteSolidMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
 
     virtual void preflight();
@@ -104,6 +106,9 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     int closeFile();
 
     int writePipeline();
+
+    void writeXdmfHeader(std::ostream &out);
+    void writeXdmfFooter(std::ostream &out);
 
   private:
     hid_t m_FileId;

@@ -66,9 +66,11 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
     typedef std::list<std::string> NameListType;
+
+    void setXdmfOStream(std::ostream* xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -128,6 +130,11 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     int writeFieldData(hid_t dcGid);
     int writeEnsembleData(hid_t dcGid);
 
+    void writeXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
+    void writeXdmfGridFooter();
+    void writeXdmfCellData(const std::string groupName, IDataArray::Pointer array);
+
+
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
@@ -166,6 +173,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     }
 
   private:
+    std::ostream* m_XdmfPtr;
 
     VoxelDataContainerWriter(const VoxelDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const VoxelDataContainerWriter&); // Operator '=' Not Implemented

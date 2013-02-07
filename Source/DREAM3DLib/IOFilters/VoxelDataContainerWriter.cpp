@@ -35,6 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VoxelDataContainerWriter.h"
 
+
+#include "MXA/Utilities/MXAFileInfo.h"
+
+
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
@@ -45,7 +49,9 @@
 // -----------------------------------------------------------------------------
 VoxelDataContainerWriter::VoxelDataContainerWriter() :
   AbstractFilter(),
-  m_HdfFileId(-1)
+  m_HdfFileId(-1),
+  m_WriteXdmfFile(false),
+  m_XdmfPtr(NULL)
 {
   setupFilterParameters();
 }
@@ -134,6 +140,8 @@ void VoxelDataContainerWriter::execute()
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
 
+  writeXdmfGridHeader(origin, spacing, volDims);
+
   // Create the HDF5 Group for the Data Container
   err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_HdfFileId);
   if (err < 0)
@@ -190,16 +198,116 @@ void VoxelDataContainerWriter::execute()
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
 
+  writeXdmfGridFooter();
+
   notifyStatusMessage("Complete");
 }
-
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
-float spacing[3], float origin[3])
+void VoxelDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+{
+  m_XdmfPtr = xdmf;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainerWriter::writeXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
+{
+  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  {
+    return;
+  }
+  std::ostream& out = *m_XdmfPtr;
+  out << "\n  <Grid Name=\"Voxel DataContainer\" GridType=\"Uniform\">" << std::endl;
+  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << std::endl;
+  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << std::endl;
+  out << "      <!-- Origin -->" << std::endl;
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << std::endl;
+  out << "      <!-- DxDyDz (Spacing/Resolution)-->" << std::endl;
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << std::endl;
+  out << "    </Geometry>" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainerWriter::writeXdmfGridFooter()
+{
+  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  {
+    return;
+  }
+  std::ostream& out = *m_XdmfPtr;
+  out << "  </Grid>" << std::endl;
+  out << "    <!-- *************** END OF VoxelDataContainer *************** -->" << std::endl;
+  out << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainerWriter::writeXdmfCellData(const std::string groupName, IDataArray::Pointer array)
+{
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  { return; }
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  int64_t volDims[3] = { m->getXPoints(), m->getYPoints(), m->getZPoints() };
+
+  std::ostream& out = *m_XdmfPtr;
+  std::stringstream dimStr;
+  int precision = 0;
+  std::string xdmfTypeName;
+  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  if (0 == precision)
+  {
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+    return;
+  }
+
+  int numComp = array->GetNumberOfComponents();
+  out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+  if (numComp == 1)
+  {
+    out << "AttributeType=\"Scalar\" ";
+    dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " ";
+  }
+  else
+  {
+    out << "AttributeType=\"Vector\" ";
+    dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " " << numComp << " ";
+  }
+  out << "Center=\"Cell\">" << std::endl;
+  // Open the <DataItem> Tag
+  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
+  out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+
+  //       <Attribute Name="Confidence Index" AttributeType="Scalar" Center="Cell">
+  //<DataItem Format="HDF" Dimensions="117 201 190" NumberType="Float" Precision="4">
+  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  std::vector<char> nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+
+  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = MXAFileInfo::filename(hdfFileName);
+
+  out << "        " << hdfFileName << ":/VoxelDataContainer/" << groupName << "/" << array->GetName() << std::endl;
+  //Small_IN100.dream3d:/DataContainer/CELL_DATA/Confidence Index
+  out << "      </DataItem>" << std::endl;
+  //     </Attribute>
+
+  out << "    </Attribute>" << std::endl << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
@@ -284,6 +392,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
+    writeXdmfCellData(H5_CELL_DATA_GROUP_NAME, array);
   }
   H5Gclose(cellGroupId); // Close the Cell Group
   return err;
