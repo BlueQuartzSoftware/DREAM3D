@@ -246,16 +246,14 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   deletePointers();
   // Initialize new pointers
   size_t totalDataRows = 0;
+  size_t totalPossibleDataRows = 0;
   size_t fieldsRead = 0;
   float origEdgeLength;
   float xMax = 0, yMax = 0;
   float xMin = 1000000000, yMin = 1000000000;
   size_t counter = 0;
 
-  // The buf variable already has the first line of data in it
-  fieldsRead = sscanf(buf, "%d", &totalDataRows);
-
-  initPointers(totalDataRows);
+  initPointers(1);
   if (NULL == m_Euler1 || NULL == m_Euler2 || NULL == m_Euler3
       || NULL == m_Conf || NULL == m_Phase || NULL == m_Level  || m_X == NULL || m_Y == NULL)
   {
@@ -263,17 +261,19 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
     return -1;
   }
 
-  ::memset(buf, 0, bufSize); // Clear the buffer
-  in.getline(buf, kBufferSize);// Read the next line of data
   fieldsRead = sscanf(buf, "%f", &origEdgeLength);
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
   this->parseDataLine(buf, 0);
+  int level = m_Level[0];
+  float newEdgeLength = origEdgeLength/powf(2.0,float(level));
+  totalPossibleDataRows = 6*powf(4,level);
+  initPointers(totalPossibleDataRows);
+  this->parseDataLine(buf, 0);
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
-  int level = m_Level[0];
-  float newEdgeLength = origEdgeLength/powf(2,float(level));
-  for(size_t i = 1; i < totalDataRows; ++i)
+  ++counter;
+  for(size_t i = 1; i < totalPossibleDataRows; ++i)
   {
       this->parseDataLine(buf, i);
       ::memset(buf, 0, bufSize); // Clear the buffer
@@ -281,45 +281,40 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
       ++counter;
       if (in.eof() == true) break;
   }
-
-  if (counter != totalDataRows && in.eof() == true)
-  {
-
-    std::cout << "Premature End Of File reached.\n"
-        << getFileName()
-        << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
-        << "\nTotal Data Points Read=" << counter << std::endl;
-  }
+  totalDataRows = counter;
 
   std::vector<float> EA1(totalDataRows,0.0);
   std::vector<float> EA2(totalDataRows,0.0);
   std::vector<float> EA3(totalDataRows,0.0);
   std::vector<float> confidence(totalDataRows,0.0);
   std::vector<int> phase(totalDataRows,0);
+  std::vector<int> up(totalDataRows,0);
   std::vector<float> xVal(totalDataRows,0.0);
   std::vector<float> yVal(totalDataRows,0.0);
   float constant = 1.0/(2.0*sqrt(3.0));
+  float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
 	if(m_Up[i] == 1)
 	{
-		m_X[i] = m_X[i] + (newEdgeLength/2.0);
-		m_Y[i] = m_Y[i] + (constant*newEdgeLength);
+		x = m_X[i] + (newEdgeLength/2.0);
+		y = m_Y[i] + (constant*newEdgeLength);
 	}
 	if(m_Up[i] == 2)
 	{
-		m_X[i] = m_X[i] + (newEdgeLength/2.0);
-		m_Y[i] = m_Y[i] - (constant*newEdgeLength);
+		x = m_X[i] + (newEdgeLength/2.0);
+		y = m_Y[i] - (constant*newEdgeLength);
 	}
-	if(m_X[i] > xMax) xMax = m_X[i];
-	if(m_Y[i] > yMax) yMax = m_Y[i];
-	if(m_X[i] < xMin) xMin = m_X[i];
-	if(m_Y[i] < yMin) yMin = m_Y[i];
+	if(x > xMax) xMax = x;
+	if(y > yMax) yMax = y;
+	if(x < xMin) xMin = x;
+	if(y < yMin) yMin = y;
 	EA1[i] = m_Euler1[i];
 	EA2[i] = m_Euler2[i];
 	EA3[i] = m_Euler3[i];
 	confidence[i] = m_Conf[i];
 	phase[i] = m_Phase[i];
+	up[i] = m_Up[i];
 	xVal[i] = m_X[i];
 	yVal[i] = m_Y[i];
   }
@@ -334,22 +329,47 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   initPointers(xDim*yDim);
 
 
-  float x, y;
-  int col, row, point;
+  float xA, xB, xC, yA, yB, yC;
+  int point;
+  float root3over2 = sqrt(3.0)/2.0;
+  int check1, check2, check3;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
-     x = xVal[i]-xMin;
-     y = yVal[i]-yMin;
-	 col = int(x/newEdgeLength);
-	 row = int(y/newEdgeLength);
-	 point = (row*xDim) + col;
-	 m_Euler1[point] = EA1[i];
-	 m_Euler2[point] = EA2[i];
-	 m_Euler3[point] = EA3[i];
-	 m_Conf[point] = confidence[i];
-	 m_Phase[point] = phase[i];
-	 m_X[point] = col*newEdgeLength;
-	 m_Y[point] = row*newEdgeLength;
+     xA = xVal[i]-xMin;
+     xB = xA + newEdgeLength;
+	 xC = xA + (newEdgeLength/2.0);
+     if(up[i] == 1)
+	 {
+		 yA = yVal[i]-yMin;
+		 yB = yA;
+		 yC = yA+(root3over2*newEdgeLength);
+	 }     
+	 if(up[i] == 2)
+	 {
+		 yB = yVal[i]-yMin;
+		 yC = yB;
+		 yA = yB-(root3over2*newEdgeLength);
+	 }
+	 for(int j = int(xA/newEdgeLength); j < int(xB/newEdgeLength)+1; j++)
+	 {
+		 for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
+		 {
+			 check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
+			 check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
+			 check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
+			 if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
+			 {
+				 point = (k*xDim) + j;
+				 m_Euler1[point] = EA1[i];
+				 m_Euler2[point] = EA2[i];
+				 m_Euler3[point] = EA3[i];
+				 m_Conf[point] = confidence[i];
+				 m_Phase[point] = phase[i];
+				 m_X[point] = j*newEdgeLength;
+				 m_Y[point] = k*newEdgeLength;
+			 }
+		 }
+	 }
   }
 
 
@@ -415,7 +435,7 @@ void MicReader::parseDataLine(const std::string &line, size_t i)
    * 2 columns and all the other columns are the same as above.
    */
   float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, z=-1.0f, conf=-1.0f;
-  int ph = 1, up = 0, level = 0, good = 0;
+  int up = 0, level = 0, good = 0;
   size_t offset = 0;
   size_t fieldsRead = 0;
   fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf);
@@ -426,7 +446,7 @@ void MicReader::parseDataLine(const std::string &line, size_t i)
   m_Euler2[offset] = p;
   m_Euler3[offset] = p2;
   m_Conf[offset] = conf;
-  m_Phase[offset] = ph;
+  m_Phase[offset] = good;
   m_Level[offset] = level;
   m_Up[offset] = up;
   m_X[offset] = x;
