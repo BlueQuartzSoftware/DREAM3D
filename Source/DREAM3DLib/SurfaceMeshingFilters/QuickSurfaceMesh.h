@@ -42,8 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
@@ -59,15 +58,15 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
 
      virtual ~QuickSurfaceMesh();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+   //------ Required Cell Data
+  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
      virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	virtual void execute();
+  virtual void execute();
      virtual void preflight();
 
    protected:

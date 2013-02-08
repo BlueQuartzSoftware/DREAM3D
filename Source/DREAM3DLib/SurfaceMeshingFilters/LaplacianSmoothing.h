@@ -42,7 +42,10 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+
+
+#define OUTPUT_DEBUG_VTK_FILES 0
 
 
 /**
@@ -53,20 +56,17 @@
  * @date   Oct 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
+class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(LaplacianSmoothing)
     DREAM3D_STATIC_NEW_MACRO(LaplacianSmoothing)
-    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
 
     virtual ~LaplacianSmoothing();
 
     // We need these arrays for this filter to work correctly
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
- //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
-
-
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(int, IterationSteps)
@@ -143,15 +143,23 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public AbstractFilter
     virtual int generateLambdaArray(DataArray<int8_t> *nodeTypePtr);
 
     /**
-     * @brief This method runs the actual Laplacian smoothing algorithm using the Lambda
-     * array to perform the smoothing. Subclasses may have set a more node type specific
-     * lambda array values.
+     * @brief This version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
      * @return
      */
-    virtual int smooth();
+    virtual int edgeBasedSmoothing();
+
+    /**
+     * @brief vertexBasedSmoothing Uses the Vertex->Triangle connectivity information for its algorithm
+     * @return
+     */
+    virtual int vertexBasedSmoothing();
 
   private:
     bool m_DoConnectivityFilter;
+
+#if OUTPUT_DEBUG_VTK_FILES
+    void writeVTKFile(const std::string &outputVtkFile);
+#endif
 
 
     LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented

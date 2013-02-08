@@ -43,6 +43,10 @@
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QComboBox>
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -51,7 +55,7 @@
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 
 
 #include "QtSupport/QR3DFileCompleter.h"
@@ -236,8 +240,17 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     if(fi.exists() && fi.isFile())
     {
       m_DataContainer = VoxelDataContainer::New();
-      DataContainerReader::Pointer reader = DataContainerReader::New();
-      reader->setInputFile(m_InputFile->text().toStdString());
+      std::stringstream ss;
+      hid_t fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true); // Open the file Read Only
+      if(fileId < 0)
+      {
+        ss.str("");
+        ss << ": Error opening input file '" << m_InputFile->text().toStdString() << "'";
+        return;
+      }
+
+      VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+      reader->setHdfFileId(fileId);
       reader->setVoxelDataContainer(m_DataContainer.get());
       reader->setReadCellData(false);
       reader->setReadFieldData(false);

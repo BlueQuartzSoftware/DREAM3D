@@ -1,5 +1,5 @@
 
- 
+
 # In this file we are doing all of our 'configure' checks. Things like checking
 # for headers, functions, libraries, types and size of types.
 INCLUDE (${CMAKE_ROOT}/Modules/CheckIncludeFile.cmake)
@@ -38,7 +38,6 @@ CORE_CHECK_INCLUDE_FILE("unistd.h"        HAVE_UNISTD_H   CMP)
 CORE_CHECK_INCLUDE_FILE("fcntl.h"         HAVE_FCNTL_H   CMP)
 CORE_CHECK_INCLUDE_FILE("errno.h"         HAVE_ERRNO_H   CMP)
 
-  
 IF(WIN32)
   IF(NOT UNIX)
     SET(CMP_HAVE_WINDOWS 1)
@@ -264,7 +263,7 @@ if (MSVC)
  set(CMP_HAVE_TIME_GETTIMEOFDAY "TRUE")
  set(VERSION_COMPILE_FLAGS "/DCMP_HAVE_TIME_GETTIMEOFDAY")
 endif()
- 
+
 IF (NOT MSVC)
     TRY_COMPILE(CMP_HAVE_TIME_GETTIMEOFDAY
           ${CMAKE_BINARY_DIR}

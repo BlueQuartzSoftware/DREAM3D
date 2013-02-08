@@ -99,8 +99,8 @@ float OrthoRhombicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
   qr[4] = -q1[4] * q2[4] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
   for (int i = 0; i < numsym; i++)
   {
-	//  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
-	  MULT_QUAT(qr, quatsym[i], qc)
+  //  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
+    MULT_QUAT(qr, quatsym[i], qc)
     if (qc[4] < -1) {
       qc[4] = -1;
     }
@@ -108,9 +108,9 @@ float OrthoRhombicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
       qc[4] = 1;
     }
 
-	QuattoAxisAngle(qc, w, n1, n2, n3);
+  QuattoAxisAngle(qc, w, n1, n2, n3);
 
-	if (w > m_pi) {
+  if (w > m_pi) {
       w = two_pi - w;
     }
     if (w < wmin)
@@ -147,17 +147,17 @@ void OrthoRhombicOps::getODFFZRod(float &r1,float &r2, float &r3)
 
 void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
-	float w, n1, n2, n3;
-	float FZn1, FZn2, FZn3;
+  float w, n1, n2, n3;
+  float FZn1, FZn2, FZn3;
 
-	_calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
-	RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  _calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
+  RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
-	FZn1 = fabs(n1);
-	FZn2 = fabs(n2);
-	FZn3 = fabs(n3);
+  FZn1 = fabs(n1);
+  FZn2 = fabs(n2);
+  FZn3 = fabs(n3);
 
-	axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
+  axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
 void OrthoRhombicOps::getNearestQuat( float *q1, float *q2)
@@ -303,15 +303,16 @@ void OrthoRhombicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, f
 {
   float g1[3][3];
   float g2[3][3];
-  float hkl1[3], uvw1[3];
-  float hkl2[3], uvw2[3];
-  float slipDirection[3], slipPlane[3];
-  float denomhkl1=0, denomhkl2=0, denomuvw1=0, denomuvw2=0;
-  float directionMisalignment=0, totalDirectionMisalignment=0;
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float maxF1=0;
+//  float hkl1[3], uvw1[3];
+//  float hkl2[3], uvw2[3];
+//  float slipDirection[3], slipPlane[3];
+//  float denomhkl1=0, denomhkl2=0, denomuvw1=0, denomuvw2=0;
+//  float directionMisalignment=0, totalDirectionMisalignment=0;
+//  float schmidFactor1=0, schmidFactor2=0;
+    float maxSchmidFactor=0;
+//  float directionComponent1=0, planeComponent1=0;
+//  float directionComponent2=0, planeComponent2=0;
+//  float maxF1=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
@@ -320,106 +321,107 @@ void OrthoRhombicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, f
   if(maxSF == true) maxSchmidFactor = 0;
 /*  for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-	  planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor1;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[i][0];
-			  slipDirection[1] = CubicSlipDirections[i][1];
-			  slipDirection[2] = CubicSlipDirections[i][2];
-			  slipPlane[0] = CubicSlipPlanes[i][0];
-			  slipPlane[1] = CubicSlipPlanes[i][1];
-			  slipPlane[2] = CubicSlipPlanes[i][2];
-			  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-			  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-			  MatrixMath::normalize3x1(hkl2);
-			  MatrixMath::normalize3x1(uvw2);
-			  directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-			  planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
-			  schmidFactor2 = directionComponent2*planeComponent2;
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-		  }
-		  F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F1 < maxF1) F1 = maxF1;
-			  else maxF1 = F1;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::normalize3x1(hkl1);
+    MatrixMath::normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor1;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[i][0];
+        slipDirection[1] = CubicSlipDirections[i][1];
+        slipDirection[2] = CubicSlipDirections[i][2];
+        slipPlane[0] = CubicSlipPlanes[i][0];
+        slipPlane[1] = CubicSlipPlanes[i][1];
+        slipPlane[2] = CubicSlipPlanes[i][2];
+        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::normalize3x1(hkl2);
+        MatrixMath::normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        schmidFactor2 = directionComponent2*planeComponent2;
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+      }
+      F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
+      if(maxSF == false)
+      {
+        if(F1 < maxF1) F1 = maxF1;
+        else maxF1 = F1;
+      }
+    }
   }
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-	  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-	  MatrixMath::normalize3x1(hkl2);
-	  MatrixMath::normalize3x1(uvw2);
-	  directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-	  planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
-	  schmidFactor2 = directionComponent2*planeComponent2;
-	  if(schmidFactor2 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor2;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[i][0];
-			  slipDirection[1] = CubicSlipDirections[i][1];
-			  slipDirection[2] = CubicSlipDirections[i][2];
-			  slipPlane[0] = CubicSlipPlanes[i][0];
-			  slipPlane[1] = CubicSlipPlanes[i][1];
-			  slipPlane[2] = CubicSlipPlanes[i][2];
-			  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-			  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-			  MatrixMath::normalize3x1(hkl1);
-			  MatrixMath::normalize3x1(uvw1);
-			  directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-			  planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
-			  schmidFactor1 = directionComponent1*planeComponent1;
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-		  }
-		  F1 = schmidFactor2*directionComponent2*totalDirectionMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F1 < maxF1) F1 = maxF1;
-			  else maxF1 = F1;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
+    MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
+    MatrixMath::normalize3x1(hkl2);
+    MatrixMath::normalize3x1(uvw2);
+    directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
+    planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+    schmidFactor2 = directionComponent2*planeComponent2;
+    if(schmidFactor2 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor2;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[i][0];
+        slipDirection[1] = CubicSlipDirections[i][1];
+        slipDirection[2] = CubicSlipDirections[i][2];
+        slipPlane[0] = CubicSlipPlanes[i][0];
+        slipPlane[1] = CubicSlipPlanes[i][1];
+        slipPlane[2] = CubicSlipPlanes[i][2];
+        MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
+        MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
+        MatrixMath::normalize3x1(hkl1);
+        MatrixMath::normalize3x1(uvw1);
+        directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
+        planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+        schmidFactor1 = directionComponent1*planeComponent1;
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+      }
+      F1 = schmidFactor2*directionComponent2*totalDirectionMisalignment;
+      if(maxSF == false)
+      {
+        if(F1 < maxF1) F1 = maxF1;
+        else maxF1 = F1;
+      }
+    }
   }*/
 }
 void OrthoRhombicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt)
 {
   float g1[3][3];
   float g2[3][3];
-  float hkl1[3], uvw1[3];
-  float hkl2[3], uvw2[3];
-  float slipDirection[3], slipPlane[3];
-  float directionMisalignment=0, totalDirectionMisalignment=0;
-  float planeMisalignment=0, totalPlaneMisalignment=0;
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float maxF1spt=0;
+//  float hkl1[3], uvw1[3];
+//  float hkl2[3], uvw2[3];
+//  float slipDirection[3], slipPlane[3];
+//  float directionMisalignment=0, totalDirectionMisalignment=0;
+//  float planeMisalignment=0, totalPlaneMisalignment=0;
+//  float schmidFactor1=0, schmidFactor2=0;
+    float maxSchmidFactor=0;
+//  float directionComponent1=0, planeComponent1=0;
+//  float directionComponent2=0, planeComponent2=0;
+//  float maxF1spt=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
@@ -428,99 +430,99 @@ void OrthoRhombicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF
   if(maxSF == true) maxSchmidFactor = 0;
 /*  for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-	  planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  totalPlaneMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor1;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-			  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-			  MatrixMath::normalize3x1(hkl2);
-			  MatrixMath::normalize3x1(uvw2);
-			  directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-			  planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
-			  schmidFactor2 = directionComponent2*planeComponent2;
-			  directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-			  planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-			  totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
-		  }
-		  F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F1spt < maxF1spt) F1spt = maxF1spt;
-			  else maxF1spt = F1spt;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::normalize3x1(hkl1);
+    MatrixMath::normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      totalPlaneMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor1;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::normalize3x1(hkl2);
+        MatrixMath::normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        schmidFactor2 = directionComponent2*planeComponent2;
+        directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+        totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
+      }
+      F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
+      if(maxSF == false)
+      {
+        if(F1spt < maxF1spt) F1spt = maxF1spt;
+        else maxF1spt = F1spt;
+      }
+    }
   }
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-	  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-	  MatrixMath::normalize3x1(hkl2);
-	  MatrixMath::normalize3x1(uvw2);
-	  directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-	  planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
-	  schmidFactor2 = directionComponent2*planeComponent2;
-	  if(schmidFactor2 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  totalPlaneMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor2;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-			  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-			  MatrixMath::normalize3x1(hkl1);
-			  MatrixMath::normalize3x1(uvw1);
-			  directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-			  planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
-			  schmidFactor1 = directionComponent1*planeComponent1;
-			  directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-			  planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-			  totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
-		  }
-		  F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F1spt < maxF1spt) F1spt = maxF1spt;
-			  else maxF1spt = F1spt;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
+    MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
+    MatrixMath::normalize3x1(hkl2);
+    MatrixMath::normalize3x1(uvw2);
+    directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
+    planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+    schmidFactor2 = directionComponent2*planeComponent2;
+    if(schmidFactor2 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      totalPlaneMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor2;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
+        MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
+        MatrixMath::normalize3x1(hkl1);
+        MatrixMath::normalize3x1(uvw1);
+        directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
+        planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+        schmidFactor1 = directionComponent1*planeComponent1;
+        directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+        totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
+      }
+      F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
+      if(maxSF == false)
+      {
+        if(F1spt < maxF1spt) F1spt = maxF1spt;
+        else maxF1spt = F1spt;
+      }
+    }
   }*/
 }
 
@@ -528,14 +530,14 @@ void OrthoRhombicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, f
 {
   float g1[3][3];
   float g2[3][3];
-  float hkl1[3], uvw1[3];
-  float hkl2[3], uvw2[3];
-  float slipDirection[3], slipPlane[3];
-  float directionMisalignment=0, totalDirectionMisalignment=0;
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float maxF7=0;
+//  float hkl1[3], uvw1[3];
+//  float hkl2[3], uvw2[3];
+//  float slipDirection[3], slipPlane[3];
+//  float directionMisalignment=0, totalDirectionMisalignment=0;
+//  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
+//  float directionComponent1=0, planeComponent1=0;
+//  float directionComponent2=0, planeComponent2=0;
+//  float maxF7=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
@@ -544,90 +546,90 @@ void OrthoRhombicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, f
 
 /*  for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-	  planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor1;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-			  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-			  MatrixMath::normalize3x1(hkl2);
-			  MatrixMath::normalize3x1(uvw2);
-			  directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-			  planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
-			  schmidFactor2 = directionComponent2*planeComponent2;
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-		  }
-		  F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F7 < maxF7) F7 = maxF7;
-			  else maxF7 = F7;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::normalize3x1(hkl1);
+    MatrixMath::normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor1;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::normalize3x1(hkl2);
+        MatrixMath::normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        schmidFactor2 = directionComponent2*planeComponent2;
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+      }
+      F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;
+      if(maxSF == false)
+      {
+        if(F7 < maxF7) F7 = maxF7;
+        else maxF7 = F7;
+      }
+    }
   }
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-	  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-	  MatrixMath::normalize3x1(hkl2);
-	  MatrixMath::normalize3x1(uvw2);
-	  directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-	  planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
-	  schmidFactor2 = directionComponent2*planeComponent2;
-	  if(schmidFactor2 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor2;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-			  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-			  MatrixMath::normalize3x1(hkl1);
-			  MatrixMath::normalize3x1(uvw1);
-			  directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-			  planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
-			  schmidFactor1 = directionComponent1*planeComponent1;
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-		  }
-		  F7 = directionComponent2*directionComponent2*totalDirectionMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F7 < maxF7) F7 = maxF7;
-			  else maxF7 = F7;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
+    MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
+    MatrixMath::normalize3x1(hkl2);
+    MatrixMath::normalize3x1(uvw2);
+    directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
+    planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+    schmidFactor2 = directionComponent2*planeComponent2;
+    if(schmidFactor2 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor2;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
+        MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
+        MatrixMath::normalize3x1(hkl1);
+        MatrixMath::normalize3x1(uvw1);
+        directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
+        planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+        schmidFactor1 = directionComponent1*planeComponent1;
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+      }
+      F7 = directionComponent2*directionComponent2*totalDirectionMisalignment;
+      if(maxSF == false)
+      {
+        if(F7 < maxF7) F7 = maxF7;
+        else maxF7 = F7;
+      }
+    }
   }*/
 }

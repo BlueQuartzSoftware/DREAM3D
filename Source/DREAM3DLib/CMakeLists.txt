@@ -218,7 +218,6 @@ include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SamplingFilters/SourceList.cmake)
-include(${DREAM3DLib_SOURCE_DIR}/SolidMeshingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/StatisticsFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SurfaceMeshingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SyntheticBuildingFilters/SourceList.cmake)
@@ -243,10 +242,9 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${DREAM3DLib_BINARY_DIR} )
 
-
 #-- Add a library for the DREAM3DLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} MXA EbsdLib ${TBB_LIBRARIES} ${VXL_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} MXA EbsdLib ${TBB_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

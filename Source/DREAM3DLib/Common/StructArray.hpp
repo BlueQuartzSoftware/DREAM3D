@@ -96,6 +96,17 @@ class StructArray : public IDataArray
     }
 
     /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      xdmfTypeName = getNameOfClass();
+      precision = 0;
+    }
+
+    /**
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
@@ -488,7 +499,6 @@ class StructArray : public IDataArray
     {
       assert(false);
       return -1;
-      //   return H5StructArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**
@@ -500,18 +510,6 @@ class StructArray : public IDataArray
     {
       assert(false);
       int err = -1;
-
-      //      this->Resize(0);
-      //      IStructArray::Pointer p = H5StructArrayReader::readIStructArray(parentId, GetName());
-      //      if (p.get() == NULL)
-      //      {
-      //        return -1;
-      //      }
-      //      this->NumberOfComponents = p->GetNumberOfComponents();
-      //      this->Size = p->GetSize();
-      //      this->MaxId = (Size == 0) ? 0 : Size -1;
-      //      this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
-      //      p->releaseOwnership();
 
       return err;
     }

@@ -37,6 +37,7 @@
 
 
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/Common/MatrixMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -182,6 +183,8 @@ void GenerateIPFColors::execute()
   int phase;
   size_t index = 0;
 
+  // Make sure we are dealing with a unit 1 vector.
+  MatrixMath::normalizeVector(m_XRefDirection, m_YRefDirection, m_ZRefDirection);
 
   uint8_t hkl[3] = { 0, 0, 0 };
   // Write the IPF Coloring Cell Data

@@ -1,5 +1,5 @@
 # Locate Intel Threading Building Blocks include paths and libraries
-# TBB can be found at http://www.threadingbuildingblocks.org/ 
+# TBB can be found at http://www.threadingbuildingblocks.org/
 # Written by Hannes Hofmann, hannes.hofmann _at_ informatik.uni-erlangen.de
 # Adapted by Gino van den Bergen gino _at_ dtecta.com
 
@@ -25,6 +25,7 @@
 # TBB_DEBUG_LIBRARIES, the libraries to link against to use TBB with debug symbols.
 # TBB_FOUND, If false, don't try to use TBB.
 
+set(TBB_DEBUG 0)
 
 if (WIN32)
     # has intel64/vc8   intel64/vc9
@@ -46,8 +47,11 @@ if (WIN32)
     if (MSVC10)
         set(_TBB_COMPILER "vc10")
     endif(MSVC10)
+	if (MSVC11)
+		set(_TBB_COMPILER "vc11")
+	endif(MSVC11)
     if (NOT _TBB_COMPILER)
-        message("ERROR: TBB supports only VC 7.1, 8, 9 and 10 compilers on Windows platforms.")
+        message("ERROR: TBB supports only VC 7.1, 8, 9, 10 and 11 compilers on Windows platforms.")
     endif (NOT _TBB_COMPILER)
     set(_TBB_ARCHITECTURE ${TBB_ARCHITECTURE})
 endif (WIN32)
@@ -130,9 +134,9 @@ if (NOT TBB_INSTALL_DIR)
     mark_as_advanced(TBB_INSTALL_DIR)
 endif (NOT TBB_INSTALL_DIR)
 
-message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
 
-#-- A macro to rewrite the paths of the library. This is necessary, because 
+
+#-- A macro to rewrite the paths of the library. This is necessary, because
 #   find_library() always found the intel64/vc9 version of the TBB libs
 macro(TBB_CORRECT_LIB_DIR var_name)
 #    if (NOT "${_TBB_ARCHITECTURE}" STREQUAL "intel64")
@@ -153,14 +157,14 @@ find_path(TBB_INCLUDE_DIR
     NO_DEFAULT_PATH
 )
 mark_as_advanced(TBB_INCLUDE_DIR)
-message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
+
 
 
 #-- Look for libraries
 # GvdB: $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
-message(STATUS "TBB_ARCH_PLATFORM: $ENV{TBB_ARCH_PLATFORM}")
+
 # if (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
-    set(_TBB_LIBRARY_DIR 
+    set(_TBB_LIBRARY_DIR
          ${_TBB_INSTALL_DIR}/lib/$ENV{TBB_ARCH_PLATFORM}
          ${_TBB_INSTALL_DIR}/$ENV{TBB_ARCH_PLATFORM}/lib
         )
@@ -172,6 +176,15 @@ message(STATUS "TBB_ARCH_PLATFORM: $ENV{TBB_ARCH_PLATFORM}")
 
 #message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
 #message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
+
+if (TBB_DEBUG)
+message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
+message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
+message(STATUS "TBB_ARCH_PLATFORM: $ENV{TBB_ARCH_PLATFORM}")
+message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
+message(STATUS "TBB_LIBRARY: ${TBB_LIBRARY}")
+endif()
+
 
 
 find_library(TBB_LIBRARY_RELEASE        ${_TBB_LIB_NAME}        ${_TBB_LIBRARY_DIR} NO_DEFAULT_PATH)
@@ -191,6 +204,7 @@ find_library(TBB_MALLOC_LIBRARY_DEBUG ${_TBB_LIB_MALLOC_DEBUG_NAME} ${_TBB_LIBRA
 #mark_as_advanced(TBB_LIBRARY_DEBUG TBB_MALLOC_LIBRARY_DEBUG)
 
 
+
 # include the macro to adjust libraries
 INCLUDE (${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)
 cmp_ADJUST_LIB_VARS(TBB)
@@ -198,13 +212,25 @@ cmp_ADJUST_LIB_VARS(TBB)
 set(TBB_MALLOC_INCLUDE_DIR ${TBB_INCLUDE_DIR})
 cmp_ADJUST_LIB_VARS(TBB_MALLOC)
 
+if (TBB_DEBUG)
+message(STATUS "TBB_LIBRARY_DEBUG: ${TBB_LIBRARY_DEBUG}")
+message(STATUS "TBB_LIBRARY_RELEASE: ${TBB_LIBRARY_RELEASE}")
+message(STATUS "TBB_MALLOC_LIBRARY: ${TBB_MALLOC_LIBRARY}")
+message(STATUS "TBB_MALLOC_LIBRARY_DEBUG: ${TBB_MALLOC_LIBRARY_DEBUG}")
+message(STATUS "TBB_MALLOC_LIBRARY_RELEASE: ${TBB_MALLOC_LIBRARY_RELEASE}")
+endif()
+
+
 if (TBB_INCLUDE_DIR)
     if (TBB_LIBRARY)
         set(TBB_FOUND 1)
         set(TBB_LIBRARIES ${TBB_LIBRARY} ${TBB_MALLOC_LIBRARY} )
+
         set(TBB_MALLOC_LIBRARIES ${TBB_MALLOC_LIBRARY})
         set(TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR} CACHE PATH "TBB include directory")
+        mark_as_advanced(TBB_INCLUDE_DIRS)
         set(TBB_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
+        mark_as_advanced(TBB_BIN_DIR)
         set(TBB_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")
         set(TBB_MALLOC_BIN_DIR ${_TBB_INSTALL_DIR}/bin/$ENV{TBB_ARCH_PLATFORM} CACHE PATH "TBB Binary Directory")
         set(TBB_MALLOC_LIB_DIR ${_TBB_LIBRARY_DIR} CACHE PATH "TBB Library Directory")

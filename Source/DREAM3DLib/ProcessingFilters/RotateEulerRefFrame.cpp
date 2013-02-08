@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RotateEulerRefFrame.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -151,7 +151,7 @@ class RotateEulerRefFrameImpl
       }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t> &r) const
     {
       convert(r.begin(), r.end());
@@ -271,7 +271,7 @@ void RotateEulerRefFrame::execute()
   }
 
 //  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
-//#if DREAM3D_USE_PARALLEL_ALGORITHMS
+//#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     RotateEulerRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());

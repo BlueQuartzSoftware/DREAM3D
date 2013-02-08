@@ -848,8 +848,13 @@ QString PluginMaker::generateCmakeContents() {
     std::cout << cppGen->getFileName().toStdString() << std::endl;
     std::cout << hGen->getFileName().toStdString() << std::endl;
 
-    hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
-    srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");
+  //  hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
+  //  srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");
+
+    QFileInfo fi(hGen->getFileName());
+    QString className = fi.baseName();
+
+    srcContents.append("ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ").append(className).append(" ").append(className).append(".html \"\" TRUE)\n");
 
     pluginName = m_PluginName->text();
   }

@@ -85,9 +85,20 @@ class DREAM3DLib_EXPORT MatrixStatsData : public StatsData
   public:
     DREAM3D_SHARED_POINTERS(MatrixStatsData)
     DREAM3D_STATIC_NEW_MACRO(MatrixStatsData)
-	DREAM3D_TYPE_MACRO_SUPER(MatrixStatsData, StatsData)
+    DREAM3D_TYPE_MACRO_SUPER(MatrixStatsData, StatsData)
 
     virtual ~MatrixStatsData();
+
+    /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      xdmfTypeName = getNameOfClass();
+      precision = 0;
+    }
 
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
 

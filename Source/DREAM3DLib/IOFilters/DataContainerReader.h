@@ -46,7 +46,7 @@
 
 
 /**
- * @class DataContainerReader DataContainerReader.h DREAM3DLib/IO/DataContainerReader.h
+ * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jul 17, 2012
@@ -62,9 +62,9 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual ~DataContainerReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVoxelData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadSurfaceMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadSolidMeshData)
 
     virtual void preflight();
 
@@ -79,15 +79,19 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     virtual void execute();
 
-    int getSizeResolutionOrigin(int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
     DataContainerReader();
 
-    int gatherData(bool preflight);
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead);
-    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
     DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented

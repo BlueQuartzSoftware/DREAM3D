@@ -121,7 +121,7 @@ void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, siz
         setErrorCondition(-384);
     }
 
-    if (sm->getNodes().get() == NULL)
+    if (sm->getVertices().get() == NULL)
     {
         addErrorMessage(getHumanLabel(), "SolidMesh DataContainer missing Nodes", -384);
         setErrorCondition(-384);
@@ -175,8 +175,8 @@ void SolidMeshToVtk::execute()
   setErrorCondition(0);
   SolidMeshDataContainer* m = getSolidMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<Node>::Pointer nodesPtr = m->getNodes();
-  StructArray<Node>& nodes = *(nodesPtr);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Make sure any directory path is also available as the user may have just typed
@@ -223,10 +223,10 @@ void SolidMeshToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    Node& n = nodes[i]; // Get the current Node
-    pos[0] = static_cast<float>(n.coord[0]);
-    pos[1] = static_cast<float>(n.coord[1]);
-    pos[2] = static_cast<float>(n.coord[2]);
+    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
+    pos[0] = static_cast<float>(n.pos[0]);
+    pos[1] = static_cast<float>(n.pos[1]);
+    pos[2] = static_cast<float>(n.pos[2]);
     if (m_WriteBinaryFile == true)
     {
         MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
@@ -318,9 +318,9 @@ int SolidMeshToVtk::writePointData(FILE* vtkFile)
   }
 
   // Write the triangle indices into the vtk File
-//  StructArray<Triangle>& triangles = *(getSolidMeshDataContainer()->getTriangles());
+//  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSolidMeshDataContainer()->getTriangles());
 
-  StructArray<Node>& nodes = *(getSolidMeshDataContainer()->getNodes());
+  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(getSolidMeshDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
 

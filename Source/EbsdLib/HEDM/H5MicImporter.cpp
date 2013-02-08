@@ -188,7 +188,7 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
       ss << "H5MicImporter Error: Unknown error.";
     }
     setPipelineMessage(ss.str());
-    
+
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
@@ -317,15 +317,14 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
 {
   int err = 0;
- // int retErr = 0;
-  int32_t rank = 1;
-  hsize_t dims[1] = { 0 };
+//  int32_t rank = 1;
+//  hsize_t dims[1] = { 0 };
   std::vector<MicPhase::Pointer> phases = reader.getPhaseVector();
   for (std::vector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     MicPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
-	WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Mic::PhaseName)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Mic::PhaseName)
 
     err = H5Gclose(pid);
   }

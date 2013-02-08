@@ -12,7 +12,6 @@
 set(DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5DataArrayWriter.hpp
-#  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StringDataArrayWriter.hpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/VTKH5Constants.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5StatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5PrimaryStatsDataDelegate.h

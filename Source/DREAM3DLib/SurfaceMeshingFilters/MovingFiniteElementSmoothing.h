@@ -33,10 +33,6 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-/*
- * Your License or Copyright Information can go here
- */
-
 #ifndef _MovingFiniteElementSmoothing_H_
 #define _MovingFiniteElementSmoothing_H_
 
@@ -44,8 +40,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
  * @class MovingFiniteElementSmoothing MovingFiniteElementSmoothing.h /Code/Filters/MovingFiniteElementSmoothing.h
@@ -60,12 +55,12 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public AbstractFilter
+class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MovingFiniteElementSmoothing);
-    DREAM3D_STATIC_NEW_MACRO(MovingFiniteElementSmoothing);
-    DREAM3D_TYPE_MACRO_SUPER(MovingFiniteElementSmoothing, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(MovingFiniteElementSmoothing)
+    DREAM3D_STATIC_NEW_MACRO(MovingFiniteElementSmoothing)
+    DREAM3D_TYPE_MACRO_SUPER(MovingFiniteElementSmoothing, SurfaceMeshFilter)
 
     virtual ~MovingFiniteElementSmoothing();
 

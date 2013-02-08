@@ -36,24 +36,31 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <p class="pBody">IO</p>
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
-<p>
 <!-- Write all your documentation here -->
+
+<p class="pBody">
 This filter reads information about the features/grains that are in the sample. The
  basic format of the file is the number of features/grains on the first line of the file followed by
  columnar formatted data listing: Grain Id, PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.<br />
- *If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine. Feature/Grain Ids
- start from zero (0) and Phase Ids start from one (1).<br/>
-<p>
+ *If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine.<br/>
+</p>
+<b>Feature/Grain Ids start from One (1) and Phase Ids start from One (1).<br />
+DREAM3D uses Grain Id Zero(0) internally which has several ramifications which the user needs to understand. Statistics
+will <i>NOT</i> be calculated for any voxel or field data with a value of Zero (0). If your segmented data numbering
+starts with Zero (0) then the user needs to find a way to renumber Grain=0 to another value. Max + 1 typically.</b>
+
+<p class="pBody">
 For example if you have a file with 123 grains and 2 phases then the file would be similar to the following: </p>
 <pre>
 123<br />
-0   2  1.2  0.4  0.8<br />
-1   1  0.8  0.99  1.0<br />
+1   2  1.2  0.4  0.8<br />
+2   1  0.8  0.99  1.0<br />
 .....<br />
 121 1 0.3  0.5  0.9<br />
-122 2 1.0  1.1  0.03<br />
+123 2 1.0  1.1  0.03<br />
 </pre>
 
+<b>Note the arrays that are being created</b> Any existing arrays will be OVER WRITTEN with incoming data.
 <!-- Do NOT write documentation below this line -->
 </p>
 

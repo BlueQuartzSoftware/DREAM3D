@@ -35,24 +35,47 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "InitializeSyntheticVolume.h"
 
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+
+/**
+ * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
+ * is closed when the variable goes out of Scope
+ */
+class HDF5ScopedFileSentinel
+{
+  public:
+    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
+    {}
+    virtual ~HDF5ScopedFileSentinel()
+    {
+      if (m_FileId > 0) {
+        H5Utilities::closeFile(m_FileId);
+      }
+    }
+    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-m_InputFile(""),
-m_XVoxels(50),
-m_YVoxels(50),
-m_ZVoxels(50),
-m_XRes(0.15f),
-m_YRes(0.15f),
-m_ZRes(0.15f),
-m_GrainIds(NULL),
-m_CellPhases(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
+  m_InputFile(""),
+  m_XVoxels(50),
+  m_YVoxels(50),
+  m_ZVoxels(50),
+  m_XRes(0.15f),
+  m_YRes(0.15f),
+  m_ZRes(0.15f),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL)
 {
   setupFilterParameters();
 }
@@ -69,7 +92,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
- std::vector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Statistics File");
@@ -141,7 +164,7 @@ void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWr
 }
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond); }
+  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond); }
 
 // -----------------------------------------------------------------------------
 //
@@ -154,9 +177,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-  if(m_InputFile.empty() == true)
+      if(m_InputFile.empty() == true)
   {
     ss << "The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
@@ -187,13 +210,26 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
+  std::stringstream ss;
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
   getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   dataCheck(true, 1, 1, 1);
 
-  DataContainerReader::Pointer read_data = DataContainerReader::New();
-  read_data->setInputFile(m_InputFile);
+  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  if(fileId < 0)
+  {
+    ss.str("");
+    ss << ": Error opening input file '" << m_InputFile << "'";
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
+  }
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+
+  VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
+  read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
@@ -210,6 +246,7 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
+  std::stringstream ss;
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -219,12 +256,24 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  DataContainerReader::Pointer read_data = DataContainerReader::New();
-  read_data->setInputFile(m_InputFile);
+  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  if(fileId < 0)
+  {
+    ss.str("");
+    ss << ": Error opening input file '" << m_InputFile << "'";
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
+  }
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+
+  VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
+  read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
-  read_data->setVoxelDataContainer(m);
+  read_data->setVoxelDataContainer(getVoxelDataContainer());
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
@@ -243,6 +292,6 @@ void InitializeSyntheticVolume::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("InitializeSyntheticVolume Complete");
+  notifyStatusMessage("InitializeSyntheticVolume Complete");
 }
 

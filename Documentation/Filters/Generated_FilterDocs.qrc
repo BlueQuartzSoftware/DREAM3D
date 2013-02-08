@@ -17,6 +17,7 @@
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
     <file>GenericFilters/GenerateIPFColors.html</file>
     <file>GenericFilters/IPFFilterLegend.jpg</file>
+    <file>GenericFilters/DumpCellData.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -39,9 +40,12 @@
     <file>IOFilters/SurfaceMeshToNodesTrianglesEdges.html</file>
     <file>IOFilters/SurfaceMeshToStl.html</file>
     <file>IOFilters/SurfaceMeshToVtk.html</file>
-    <file>IOFilters/SolidMeshToVtk.html</file>
+    <file>IOFilters/SurfaceMeshToNonconformalVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
+    <file>IOFilters/VtkGrainIdReader.html</file>
+    <file>IOFilters/GoldfeatherReader.html</file>
+    <file>IOFilters/SolidMeshToVtk.html</file>
 
     <!-- ***** ProcessingFilters ***** -->
     <file>ProcessingFilters/MinNeighbors.html</file>
@@ -76,10 +80,6 @@
     <file>SamplingFilters/CropVolume.html</file>
     <file>SamplingFilters/Hex2SqrConverter.html</file>
 
-    <!-- ***** SolidMeshingFilters ***** -->
-    <file>SolidMeshingFilters/QuickSolidMesh.html</file>
-    <file>SolidMeshingFilters/DecimateSolidMesh.html</file>
-
     <!-- ***** StatisticsFilters ***** -->
     <file>StatisticsFilters/FindAvgOrientations.html</file>
     <file>StatisticsFilters/FindAvgCAxes.html</file>
@@ -100,12 +100,17 @@
     <file>StatisticsFilters/FindSlicetoSliceRotations.html</file>
 
     <!-- ***** SurfaceMeshingFilters ***** -->
-    <file>SurfaceMeshingFilters/QuickSurfaceMesh.html</file>
-    <file>SurfaceMeshingFilters/M3CEntireVolume.html</file>
+    <file>SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html</file>
+    <file>SurfaceMeshingFilters/LaplacianSmoothing.html</file>
     <file>SurfaceMeshingFilters/M3CSliceBySlice.html</file>
     <file>SurfaceMeshingFilters/MovingFiniteElementSmoothing.html</file>
-    <file>SurfaceMeshingFilters/LaplacianSmoothing.html</file>
-    <file>SurfaceMeshingFilters/GenerateMeshConnectivity.html</file>
+    <file>SurfaceMeshingFilters/QuickSurfaceMesh.html</file>
+    <file>SurfaceMeshingFilters/ReverseTriangleWinding.html</file>
+    <file>SurfaceMeshingFilters/SharedGrainFaceFilter.html</file>
+    <file>SurfaceMeshingFilters/TriangleCentroidFilter.html</file>
+    <file>SurfaceMeshingFilters/TriangleNormalFilter.html</file>
+    <file>SurfaceMeshingFilters/VerifyTriangleWinding.html</file>
+    <file>SurfaceMeshingFilters/GrainFaceCurvatureFilter.html</file>
 
     <!-- ***** SyntheticBuildingFilters ***** -->
     <file>SyntheticBuildingFilters/PackPrimaryPhases.html</file>
