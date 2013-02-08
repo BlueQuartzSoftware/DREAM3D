@@ -43,7 +43,7 @@
 #include <sstream>
 #include <algorithm>
 
-
+#include "MXA/Utilities/MXAFileInfo.h"
 #include "MicConstants.h"
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
@@ -196,7 +196,6 @@ int MicReader::readFile()
   int err = 1;
   char buf[kBufferSize];
   std::ifstream in(getFileName().c_str());
-  setHeaderIsComplete(false);
   if (!in.is_open())
   {
     std::cout << "Mic file could not be opened: " << getFileName() << std::endl;
@@ -210,17 +209,28 @@ int MicReader::readFile()
   m_CurrentPhase = MicPhase::New();
   m_PhaseVector.push_back(m_CurrentPhase);
 
-  while (!in.eof() && false == getHeaderIsComplete())
+  std::string parentPath = MXAFileInfo::parentPath(getFileName());
+  std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
+  if(parentPath.empty() == true) name = name + ".config";
+  else name = parentPath + MXAFileInfo::Separator + name + ".config";
+  std::ifstream inHeader(name.c_str());
+  if (!inHeader.is_open())
+  {
+    std::cout << "Config file could not be opened: " << name << std::endl;
+    return -100;
+  }
+  
+  // 'name' now contains the complete path to the file with the new extension
+
+  while (!inHeader.eof())
   {
     ::memset(buf, 0, kBufferSize);
-    in.getline(buf, kBufferSize);
+    inHeader.getline(buf, kBufferSize);
     int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
     parseHeaderLine(buf, kBufferSize);
-    if (getHeaderIsComplete() == false) {
-      origHeader.append(buf);
-    }
+    origHeader.append(buf);
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);
