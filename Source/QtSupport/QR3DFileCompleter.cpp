@@ -83,6 +83,6 @@ QR3DFileCompleter::QR3DFileCompleter(QObject* o, bool dirs) :
 // -----------------------------------------------------------------------------
 QString QR3DFileCompleter::pathFromIndex(const QModelIndex& idx) const
 {
-  return QDir::fromNativeSeparators(QCompleter::pathFromIndex(idx));
+  return QDir::toNativeSeparators(QCompleter::pathFromIndex(idx));
 }
 
