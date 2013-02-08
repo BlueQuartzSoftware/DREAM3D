@@ -251,7 +251,8 @@ void DataContainerWriter::execute()
     }
     else
     {
-      name = parentPath + MXAFileInfo::Separator + name + ".xdmf";
+      name = name + ".xdmf";
+//      name = parentPath + MXAFileInfo::Separator + name + ".xdmf";
     }
     xdmf.open(name.c_str(), std::ios_base::binary);
     if (xdmf.is_open() == true) {
