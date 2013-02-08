@@ -773,7 +773,7 @@ void QFilterWidget::selectOutputFile()
     return;
   }
 
-  
+
   // Store the last used directory into the private instance variable
   file = QDir::toNativeSeparators(file);
   QFileInfo fi(file);
@@ -1132,9 +1132,11 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 //    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
 //  }
   drag->exec(Qt::MoveAction);
-
-
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString QFilterWidget::getFileExtension(std::string propName)
 {
   std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
@@ -1149,6 +1151,10 @@ QString QFilterWidget::getFileExtension(std::string propName)
   }
   return QString("");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString QFilterWidget::getFileType(std::string propName)
 {
   std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
@@ -1162,4 +1168,28 @@ QString QFilterWidget::getFileType(std::string propName)
     }
   }
   return QString("");
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc)
+{
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc)
+{
+
 }

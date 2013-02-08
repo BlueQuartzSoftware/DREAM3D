@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QDataContainerReaderWidget</class>
+ <widget class="QFilterWidget" name="QDataContainerReaderWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>635</width>
+    <height>329</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="title">
+   <string/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <property name="leftMargin">
+    <number>20</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>20</number>
+   </property>
+   <property name="bottomMargin">
+    <number>12</number>
+   </property>
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>DREAM3D File:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFSDropLineEdit" name="m_InputFile"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="m_InputFileBtn">
+       <property name="text">
+        <string>Select...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="5" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Voxel Data</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Cell Data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Field Data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Ensemble Data</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QListWidget" name="voxelCellDataList"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QListWidget" name="voxelEnsembleDataList"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QListWidget" name="voxelFieldDataList"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QCheckBox" name="m_ReadVoxelData">
+         <property name="text">
+          <string>Read Voxel Data</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Surface Mesh Data</string>
+      </attribute>
+      <widget class="QCheckBox" name="m_ReadSurfaceMeshData">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>0</y>
+         <width>294</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Read Surface Mesh</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_3">
+      <attribute name="title">
+       <string>Solid Mesh Data</string>
+      </attribute>
+      <widget class="QCheckBox" name="m_ReadSolidMeshData">
+       <property name="geometry">
+        <rect>
+         <x>390</x>
+         <y>10</y>
+         <width>589</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Read Solid Mesh</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QFSDropLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QFilterWidget</class>
+   <extends>QGroupBox</extends>
+   <header location="global">QFilterWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

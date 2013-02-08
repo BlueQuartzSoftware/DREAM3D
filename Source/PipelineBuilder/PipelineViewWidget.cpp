@@ -335,6 +335,11 @@ void PipelineViewWidget::preflightPipeline()
       }
 
 
+      // Tell the widget that we have arrays and to possibly update its gui
+      fw->updateVoxelArrayNames(m);
+      fw->updateSurfaceMeshArrayNames(sm);
+      fw->updateSolidMeshArrayNames(solid);
+
     }
   }
   errorTableWidget->resizeRowsToContents();

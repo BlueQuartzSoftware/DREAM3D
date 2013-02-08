@@ -116,6 +116,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
+    virtual void updateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
+    virtual void updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
+    virtual void updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+
   signals:
     void dragStarted(QFilterWidget* widget);
     void parametersChanged();
