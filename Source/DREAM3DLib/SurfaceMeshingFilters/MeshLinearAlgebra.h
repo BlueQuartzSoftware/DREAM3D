@@ -31,15 +31,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /*
- From: 	  fuyar@andrew.cmu.edu
- Subject: 	Re: [Fwd: Re: Sukbin's codes on Eaglepeak]
- Date: 	June 24, 2009 4:30:26 PM EDT
- To: 	  rollett@andrew.cmu.edu
-
- Hi Tony,
-
- 1)You can find the code for mean width, along with some compilation notes
- on mrsec:/lisachan/MeanWidth.
 
  2) Attached are two files for mesh smoothing code, let me know if the face nodes are acting weird.
  You'd need two input files,  nodes.txt and triangles.txt from Sukbin's meshing analysis.

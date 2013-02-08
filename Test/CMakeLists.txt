@@ -13,6 +13,10 @@ project(DREAM3DTest)
 
 set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
 
+# --------
+add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
+
+
 # --------------------------------------------------------------------------
 macro (ConvertPathToHeaderCompatible INPUT)
     IF (WIN32)
@@ -70,6 +74,14 @@ add_executable(FilterPipelineTest FilterPipelineTest.cpp )
 target_link_libraries(FilterPipelineTest DREAM3DLib)
 add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest)
 
+# --------------------------------------------------------------------------
+# ManagedPointerArrayTest
+# --------------------------------------------------------------------------
+add_executable(ManagedPointerArrayTest ManagedPointerArrayTest.cpp )
+target_link_libraries(ManagedPointerArrayTest DREAM3DLib)
+add_test(ManagedPointerArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ManagedPointerArrayTest)
+
+
 
 # --------------------------------------------------------------------------
 # MXAFileSystemPathTest
@@ -111,6 +123,13 @@ add_executable(H5UtilitiesTest ${DREAM3DTest_SOURCE_DIR}/H5UtilitiesTest.cpp)
 target_link_libraries(H5UtilitiesTest H5Support MXA)
 add_test(H5UtilitiesTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5UtilitiesTest)
 
+if(0)
+# THis is just a quick test to make sure that the latest HDF5 can actually write data
+# sets that are larger than 4GB in size
+add_executable(BigHDF5DatasetTest ${DREAM3DTest_SOURCE_DIR}/BigHDF5DatasetTest.cpp)
+target_link_libraries(BigHDF5DatasetTest H5Support MXA)
+add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest)
+endif()
 
 # --------------------------------------------------------------------------
 # DataArray Testing

@@ -65,7 +65,7 @@ endif()
 # calculate how many commits since the last "tag" was applied to the repository.
 # this basically gives us an always incrementing number for the patch level
 # and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "4RC1")
+set(CMP_VERSION_MAJOR "4-Sudip")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
@@ -112,31 +112,14 @@ ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDIF(HDF5_FOUND)
 
-# ---------- Find VXL Headers/Libraries -----------------------
-if(0)
-find_package(VXL)
-if (VXL_FOUND)
-    file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${VXL_LIB_DIR};")
-    include_directories(${VXL_INCLUDE_DIRS} )
-    # This copies the DLL (if needed) into the various build directories on MSVC systems
-    CMP_COPY_DEPENDENT_LIBRARIES("vxl_vcl")
-    # Append the locations of the VXL libraries to our Library Search Paths
-    list(APPEND CMP_LIB_SEARCH_DIRS ${VXL_LIB_DIR} )
-    # Create an install rule to copy the dependent shared library over to the installed location
-    CMP_LIBRARIES_INSTALL_RULES("vxl_vcl" ".")
-ELSE(VXL_FOUND)
-    MESSAGE(FATAL_ERROR "Cannot build without VXL.  Please set VXL_INSTALL environment variable to point to your VXL installation.")
-ENDIF(VXL_FOUND)
-endif()
-
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set(DREAM3D_USE_PARALLEL_ALGORITHMS "")
 option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
-if (DREAM3D_USE_MULTITHREADED_ALGOS)
+if(DREAM3D_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
-    if (TBB_FOUND)
+    if(TBB_FOUND)
         include_directories(${TBB_INCLUDE_DIRS} )
         CMP_COPY_DEPENDENT_LIBRARIES("tbb;tbb_malloc")
         # Append the locations of the TBB libraries to our Library Search Paths
@@ -149,6 +132,16 @@ if (DREAM3D_USE_MULTITHREADED_ALGOS)
     set(DREAM3D_USE_PARALLEL_ALGORITHMS "1")
 endif()
 
+# --------------------------------------------------------------------
+# DREAM3D needs the Eigen library for Least Squares fit and Eigen
+# value/vector calculations.
+Find_Package(Eigen REQUIRED)
+if(NOT EIGEN_FOUND)
+  message(WARNING "The Eigen Library is required for some algorithms. The Eigen Library could not be located so these algorithms will be disabled.")
+else()
+  message(STATUS "Found Eigen Library")
+  include_directories( ${EIGEN_INCLUDE_DIRS} )
+endif()
 
 # We do NOT want to install any of the headers
 set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")

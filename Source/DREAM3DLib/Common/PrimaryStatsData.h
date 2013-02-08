@@ -89,13 +89,25 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
 
     virtual ~PrimaryStatsData();
 
+    /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    {
+      xdmfTypeName = getNameOfClass();
+      precision = 0;
+    }
+
     virtual std::string getStatsType();
     virtual unsigned int getPhaseType();
 
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
 
-	 /**
+
+   /**
      * @breif this will generate the Bin Numbers values;
      */
     FloatArrayType::Pointer generateBinNumbers();
@@ -120,7 +132,7 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 
-	size_t getNumberOfBins()
+  size_t getNumberOfBins()
     {
       return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
     }

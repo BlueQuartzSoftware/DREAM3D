@@ -99,10 +99,10 @@ class DREAM3DLib_EXPORT OrientationMath
     static void QuattoEuler(float *q, float &ea1, float &ea2, float &ea3);
     static void changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3);
     static void multiplyQuaternions(float inQuat[5], float multQuat[5], float outQuat[5]);
-	static void normalizeQuat(float* qr);
-	static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
-	static void eulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
-	static void mattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3);
+    static void normalizeQuat(float* qr);
+    static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
+    static void eulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
+    static void mattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3);
     static void eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
     static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
     static float matrixMisorientation(float g1[3][3], float g2[3][3]);

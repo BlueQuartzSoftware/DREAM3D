@@ -79,13 +79,13 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 
     virtual ~FindBoundaryStrengths();
 
-	//------ Required Cell Data
+    //------ Required Cell Data
 
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(vtkOutputFile)
     DREAM3D_INSTANCE_PROPERTY(float, XLoading)
@@ -96,10 +96,10 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
-	/**
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 
     int32_t* m_FieldPhases;
     float* m_AvgQuats;
-	unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -47,13 +47,15 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
-
+#include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -63,6 +65,25 @@
 
 #include "SGApplication.h"
 #include "EditPhaseDialog.h"
+
+/**
+ * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
+ * is closed when the variable goes out of Scope
+ */
+class HDF5ScopedFileSentinel
+{
+  public:
+    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
+    {}
+    virtual ~HDF5ScopedFileSentinel()
+    {
+      if (m_FileId > 0) {
+        H5Utilities::closeFile(m_FileId);
+      }
+    }
+    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
+};
+
 
 // -----------------------------------------------------------------------------
 //
@@ -644,13 +665,18 @@ void StatsGeneratorUI::on_actionSave_triggered()
     }
   }
 
-  DataContainerWriter::Pointer writer = DataContainerWriter::New();
+
+  hid_t fileId = H5Utilities::createFile (m_FilePath.toStdString());
+    // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+
+  VoxelDataContainerWriter::Pointer writer = VoxelDataContainerWriter::New();
   writer->setVoxelDataContainer(m.get());
-  writer->setOutputFile(m_FilePath.toStdString());
+  writer->setHdfFileId(fileId);
   writer->execute();
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
-  writer = DataContainerWriter::NullPointer();
+  writer = VoxelDataContainerWriter::NullPointer();
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);
@@ -744,35 +770,40 @@ void StatsGeneratorUI::openFile(QString h5file)
   phaseTabs->clear();
 
   // Instantiate a Reader object
-  //FilterPipeline::Pointer pipeline = FilterPipeline::New();
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  //pipeline->setVoxelDataContainer(m);
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_FilePath.toStdString());
-  reader->setVoxelDataContainer(m.get());
-  reader->setReadCellData(false);
-  reader->setReadFieldData(false);
-  reader->setReadEnsembleData(true);
-  reader->execute();
-//  pipeline->pushBack(reader);
-//  pipeline->run();
-  err = reader->getErrorCondition();
-  if (err < 0)
   {
-    this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
-    return;
-  }
+    // We are going to scope this next section so that we make sure the HDF5 file gets closed after the reading is complete
+    std::stringstream ss;
+    hid_t fileId = H5Utilities::openFile(m_FilePath.toStdString(), true); // Open the file Read Only
+    if(fileId < 0)
+    {
+      ss.str("");
+      ss << ": Error opening input file '" << m_FilePath.toStdString() << "'";
+      return;
+    }
+    // This will make sure if we return early from this method that the HDF5 File is properly closed.
+    HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+
+    VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+    reader->setHdfFileId(fileId);
+    reader->setVoxelDataContainer(m.get());
+    reader->setReadCellData(false);
+    reader->setReadFieldData(false);
+    reader->setReadEnsembleData(true);
+    reader->execute();
+    err = reader->getErrorCondition();
+    if (err < 0)
+    {
+      this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
+      return;
+    }
+  } // The HDF5 file will get properly closed when we move to the next line because the ScopedFileMonitor will go out of scope and close the file
 
   // Get the number of Phases
   size_t ensembles = m->getNumEnsembleTuples();
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles*1, NULL);
-
-//  StatsDataArray* m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-
- // StatsDataArray& statsDataArray = *m_StatsDataArray;
-
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects

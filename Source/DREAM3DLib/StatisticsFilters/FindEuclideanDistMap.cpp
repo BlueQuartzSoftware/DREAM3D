@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/atomic.h>
@@ -384,7 +384,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
 	if(coordination.size() >= 2) m_TJEuclideanDistances[a] = 0, m_NearestNeighbors[a*3+0] = coordination[0], m_NearestNeighbors[a*3+1] = coordination[0], m_NearestNeighbors[a*3+2] = -1;
 	if(coordination.size() > 2) m_QPEuclideanDistances[a] = 0, m_NearestNeighbors[a*3+0] = coordination[0], m_NearestNeighbors[a*3+1] = coordination[0], m_NearestNeighbors[a*3+2] = coordination[0];
  }
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   tbb::task_group* g = new tbb::task_group;
   g->run(FindEuclideanMap(m, 0));

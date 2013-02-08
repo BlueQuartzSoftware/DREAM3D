@@ -178,14 +178,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
   //float q2[5];
 
   typedef DataArray<unsigned int> XTalType;
-  //XTalType* crystructPtr = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
- // unsigned int* crystruct = crystructPtr->GetPointer(0);
 
   float w;
-//  float n1= 0.0f, n2= 0.0f, n3= 0.0f;
-//  float r1= 0.0f, r2= 0.0f, r3= 0.0f;
- // unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
- // unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)

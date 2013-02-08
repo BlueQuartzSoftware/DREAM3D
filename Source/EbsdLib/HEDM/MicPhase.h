@@ -66,8 +66,9 @@ class EbsdLib_EXPORT MicPhase
 
     virtual ~MicPhase();
 
-    EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName)
+    EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
+
 
     void printSelf(std::ostream &stream);
 

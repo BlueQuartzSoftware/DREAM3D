@@ -38,6 +38,7 @@
 #define _DATACONTAINERWRITER_H_
 
 #include <string>
+#include <iostream>
 
 #include <hdf5.h>
 
@@ -48,8 +49,12 @@
 
 
 
-/*
- *
+/**
+ * @class DataContainerWriter DataContainerWriter.h /IOFiltersFilters/DataContainerWriter.h
+ * @brief
+ * @author
+ * @date
+ * @version 1.0
  */
 class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 {
@@ -62,6 +67,11 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVoxelData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSolidMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
+
 
     virtual void preflight();
 
@@ -95,15 +105,10 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
      */
     int closeFile();
 
-    int writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
-                              float spacing[3], float origin[3]);
+    int writePipeline();
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
-
-    int writeCellData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
-
+    void writeXdmfHeader(std::ostream &out);
+    void writeXdmfFooter(std::ostream &out);
 
   private:
     hid_t m_FileId;
@@ -112,43 +117,6 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     DataContainerWriter(const DataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerWriter&); // Operator '=' Not Implemented
 
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const std::string &label)
-     {
-      herr_t err = 0;
-      int numComp = 1;
-      std::vector<int> eData(v.size());
-      for (size_t i = 0; i < v.size(); ++i)
-      {
-        eData[i] = v[i];
-      }
-
-      if(eData.size() > 0)
-      {
-        K* eDataPtr = const_cast<K*>(&(eData.front()));
-        int num = static_cast<int>(eData.size() / numComp);
-        int32_t rank = 1;
-        hsize_t dims[1] =
-        { (hsize_t)num * (hsize_t)numComp };
-
-        err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
-        err |= H5Lite::writeScalarAttribute(ensembleGid, label, std::string(H5_NUMCOMPONENTS), numComp);
-        err |= H5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
-
-        if(err < 0)
-        {
-          setErrorCondition(err);
-          std::stringstream ss;
-          ss << "Error writing Ensemble data set '" << label << "'";
-        }
-      }
-
-      return err;
-    }
 
 
 

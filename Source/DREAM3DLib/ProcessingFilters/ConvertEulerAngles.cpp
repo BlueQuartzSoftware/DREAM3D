@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ConvertEulerAngles.h"
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
@@ -47,8 +47,7 @@
 
 class ConvertEulerAnglesImpl
 {
-    float* m_CellEulerAngles;
-    float  convFactor;
+
   public:
     ConvertEulerAnglesImpl(float* data, float factor) :
       m_CellEulerAngles(data),
@@ -64,13 +63,15 @@ class ConvertEulerAnglesImpl
       }
     }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range<size_t> &r) const
     {
       convert(r.begin(), r.end());
     }
 #endif
-
+  private:
+     float* m_CellEulerAngles;
+     float  convFactor;
 
 };
 
@@ -179,7 +180,7 @@ void ConvertEulerAngles::execute()
 
   totalPoints = totalPoints * 3;
 //  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 //#if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     ConvertEulerAnglesImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());

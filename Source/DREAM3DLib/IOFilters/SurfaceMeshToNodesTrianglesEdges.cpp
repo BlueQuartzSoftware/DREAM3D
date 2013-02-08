@@ -41,7 +41,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 
-
+ #define WRITE_EDGES_FILE 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,20 +77,23 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output Edges File");
-    option->setPropertyName("OutputEdgesFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Triangles File");
     option->setPropertyName("OutputTrianglesFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setValueType("string");
     parameters.push_back(option);
   }
+    #if WRITE_EDGES_FILE
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output Edges File");
+    option->setPropertyName("OutputEdgesFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  #endif
+
   setFilterParameters(parameters);
 }
 
@@ -116,11 +119,13 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
     addErrorMessage(getHumanLabel(), "The output Nodes file needs to be set", -380);
     setErrorCondition(-380);
   }
+  #if WRITE_EDGES_FILE
   if(true == m_OutputEdgesFile.empty())
   {
     addErrorMessage(getHumanLabel(), "The output Edges file needs to be set", -381);
     setErrorCondition(-381);
   }
+  #endif
   if(true == m_OutputTrianglesFile.empty())
   {
     addErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", -382);
@@ -134,27 +139,29 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
     setErrorCondition(-384);
   }
   else {
-    if (sm->getTriangles().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
-    if (sm->getNodes().get() == NULL)
+    if (sm->getFaces().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
       setErrorCondition(-384);
     }
-    IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
+    if (sm->getVertices().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", -385);
+      setErrorCondition(-384);
+    }
+  #if WRITE_EDGES_FILE
+    IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
     if (edges.get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing DREAM3D::CellData::SurfaceMeshEdges Information", -386);
       setErrorCondition(-385);
     }
-    IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
+#endif
+    IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
     if (nodeKinds.get() == NULL)
     {
       setErrorCondition(-559);
-      notifyErrorMessage("SurfaceMesh DataContainer missing Node Kind Array", -559);
+      notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::PointData::SurfaceMeshNodeType Array", -387);
       return;
     }
   }
@@ -179,52 +186,24 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
+
+
+  dataCheck(false, 1,1,1);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
-    return;
-  }
 
-  StructArray<Node>::Pointer nodes = sm->getNodes();
-  if (NULL == nodes.get())
-  {
-    setErrorCondition(-555);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
-    return;
-  }
 
-  StructArray<Triangle>::Pointer triangles = sm->getTriangles();
-  if (NULL == triangles.get())
-  {
-    setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
-    return;
-  }
-  IDataArray::Pointer edges = sm->getCellData(DREAM3D::CellData::SurfaceMeshEdges);
-  if (edges.get() == NULL)
-  {
-    setErrorCondition(-557);
-    notifyErrorMessage("SurfaceMesh DataContainer missing Edges", -557);
-    return;
-  }
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = sm->getVertices();
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = sm->getFaces();
+  IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
 
-  IDataArray::Pointer iEdges = sm->getCellData(DREAM3D::CellData::SurfaceMeshInternalEdges);
-  if (iEdges.get() == NULL)
-  {
-    setErrorCondition(-558);
-    notifyErrorMessage("SurfaceMesh DataContainer missing Internal Edges", -558);
-    return;
-  }
-
-  IDataArray::Pointer nodeKinds = sm->getCellData(DREAM3D::CellData::SurfaceMeshNodeType);
-  if (nodeKinds.get() == NULL)
-  {
-    setErrorCondition(-559);
-    notifyErrorMessage("SurfaceMesh DataContainer missing Node Kind Array", -559);
-    return;
-  }
+#if WRITE_EDGES_FILE
+  IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
+  IDataArray::Pointer iEdges = sm->getPointData(DREAM3D::CellData::SurfaceMeshInternalEdges);
+#endif
 
   setErrorCondition(0);
 
@@ -232,6 +211,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // ++++++++++++++ Write the Nodes File +++++++++++++++++++++++++++++++++++++++++++
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
+  notifyStatusMessage("Writing Nodes Text File");
   std::string parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
@@ -252,15 +232,17 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   int numNodes = nodes->GetNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
-  Node* v = nodes->GetPointer(0);
+  SurfaceMesh::DataStructures::Vert_t* v = nodes->GetPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
-    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(nodeKind[i]), v[i].coord[0], v[i].coord[1], v[i].coord[2]);
+    fprintf(nodesFile, "%10d    %3d    %8.4f %8.4f %8.4f\n", i, static_cast<int>(nodeKind[i]), v[i].pos[0], v[i].pos[1], v[i].pos[2]);
   }
   fclose(nodesFile);
 
+#if WRITE_EDGES_FILE
   // ++++++++++++++ Write the Edges File +++++++++++++++++++++++++++++++++++++++++++
+  notifyStatusMessage("Writing Edges Text File");
   parentPath = MXAFileInfo::parentPath(getOutputEdgesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
@@ -282,8 +264,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   size_t nie = iEdges->GetNumberOfTuples();
   int kind = 0;
   int newnid1 = 0, newnid2 = 0;
-  StructArray<Segment>* faceEdges = StructArray<Segment>::SafePointerDownCast(edges.get());
-  Segment* fe = faceEdges->GetPointer(0);
+  StructArray<SurfaceMesh::M3C::Segment>* faceEdges = StructArray<SurfaceMesh::M3C::Segment>::SafePointerDownCast(edges.get());
+  SurfaceMesh::M3C::Segment* fe = faceEdges->GetPointer(0);
   fprintf(eFile, "%lu\n", nfe + nie);
 
   for (size_t k = 0; k < nfe; ++k)
@@ -296,8 +278,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     fprintf(eFile, "%10lu    %8d %8d    %6d    %6d %6d %6d %6d\n", k, newnid1, newnid2, kind, fe[k].nSpin[0], fe[k].nSpin[1], 0, 0);
   }
 
-  StructArray<ISegment>* internalEdges = StructArray<ISegment>::SafePointerDownCast(iEdges.get());
-  ISegment* ie = internalEdges->GetPointer(0);
+  StructArray<SurfaceMesh::M3C::ISegment>* internalEdges = StructArray<SurfaceMesh::M3C::ISegment>::SafePointerDownCast(iEdges.get());
+  SurfaceMesh::M3C::ISegment* ie = internalEdges->GetPointer(0);
   for (size_t kk = 0; kk < nie; ++kk)
   {
 
@@ -308,8 +290,10 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   }
 
   fclose(eFile);
+#endif
 
   // ++++++++++++++ Write the Triangles File +++++++++++++++++++++++++++++++++++++++++++
+  notifyStatusMessage("Writing Triangles Text File");
   parentPath = MXAFileInfo::parentPath(getOutputTrianglesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
@@ -329,20 +313,30 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   size_t numTriangles = triangles->GetNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
-  StructArray<Triangle>* ts = StructArray<Triangle>::SafePointerDownCast(triangles.get());
-  Triangle* t = ts->GetPointer(0);
-  int n1, n2, n3, e1, e2, e3;
+  StructArray<SurfaceMesh::DataStructures::Face_t>* ts = StructArray<SurfaceMesh::DataStructures::Face_t>::SafePointerDownCast(triangles.get());
+  SurfaceMesh::DataStructures::Face_t* t = ts->GetPointer(0);
+
+
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+
+
+  int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
   for (size_t j = 0; j < numTriangles; ++j)
   {
-    n1 = t[j].node_id[0];
-    n2 = t[j].node_id[1];
-    n3 = t[j].node_id[2];
+    n1 = t[j].verts[0];
+    n2 = t[j].verts[1];
+    n3 = t[j].verts[2];
 
+  #if WRITE_EDGES_FILE
     e1 = t[j].e_id[0];
     e2 = t[j].e_id[1];
     e3 = t[j].e_id[2];
+<<<<<<<<<< #error FIX THIS CODE BELOW. WE PROBABLY NEED TO GENERATE THE EDGE INFORMATION IF NEEDED
+#endif
 
-    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, t[j].nSpin[0], t[j].nSpin[1]);
+    fprintf(triFile, "%10lu    %10d %10d %10d    %10d %10d %10d    %5d %5d\n", j, n1, n2, n3, e1, e2, e3, faceLabels[j*2], faceLabels[j*2+1]);
   }
 
   fclose(triFile);

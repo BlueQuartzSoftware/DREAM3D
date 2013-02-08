@@ -53,35 +53,35 @@ class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindGrainCentroids)
-     DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids)
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(FindGrainCentroids)
+    DREAM3D_TYPE_MACRO_SUPER(FindGrainCentroids, AbstractFilter)
 
-     virtual ~FindGrainCentroids();
+    virtual ~FindGrainCentroids();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float) // N x 6 Array
+    DECLARE_WRAPPED_ARRAY(graincenters, m_GrainCenters, float) // N x 6 Array
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-     virtual const std::string getHumanLabel() { return "Find Field Centroids"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Find Field Centroids"; }
 
-	 virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-     virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
-   protected:
-     FindGrainCentroids();
+  protected:
+    FindGrainCentroids();
 
     void find_centroids();
     void find_centroids2D();
 
-private:
+  private:
     int32_t* m_GrainIds;
     float* m_Centroids;
 

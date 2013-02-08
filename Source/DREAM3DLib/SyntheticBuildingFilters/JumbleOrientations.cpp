@@ -178,7 +178,7 @@ void JumbleOrientations::execute()
     generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
 
 
-    size_t r;
+    int r;
     float temp1, temp2, temp3;
     //--- Shuffle elements by randomly exchanging each with one other.
     for (int i=1; i< totalFields; i++) {

@@ -153,10 +153,14 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
   if(err== -303)
   {
+
     setErrorCondition(0);
     FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
+    std::stringstream ss;
+    ss << getMessagePrefix() << " |--> " << find_cellquats->getNameOfClass();
     find_cellquats->setObservers(this->getObservers());
     find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
+    find_cellquats->setMessagePrefix(ss.str());
     if(preflight == true) find_cellquats->preflight();
     if(preflight == false) find_cellquats->execute();
   }
@@ -195,11 +199,14 @@ void EBSDSegmentGrains::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFieldDataArrays(1);
+  // This runs a subfilter 
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
+  // Tell the user we are starting the filter
+  notifyStatusMessage("Starting");
 
   //Convert user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;

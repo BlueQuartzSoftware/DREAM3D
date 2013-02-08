@@ -71,14 +71,14 @@
  * target to destination. This is NOT just a simple pointer copy.
  */
 #define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, m_msgType)\
-if (NULL != sharedPtr.get())\
+  if (NULL != sharedPtr.get())\
 {\
   sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
-}\
-if (NULL != obj->sharedPtr.get())\
+  }\
+  if (NULL != obj->sharedPtr.get())\
 {\
   sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
-}
+  }
 
 
 // -----------------------------------------------------------------------------
@@ -123,20 +123,9 @@ namespace DREAM3D
     const std::string ImageQuality("Image Quality");
     const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
     const std::string ConfidenceIndex("Confidence Index");
-	const std::string IPFColor("IPFColor");
-	const std::string GlobAlpha("GlobAlpha");
+    const std::string IPFColor("IPFColor");
+    const std::string GlobAlpha("GlobAlpha");
 
-    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
-    const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
-    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
-    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
-    const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
-    const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
-    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
-    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
-    const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
-    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
-    const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
 
     const std::string SolidMeshNodes("SolidMeshNodes");
     const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
@@ -166,7 +155,7 @@ namespace DREAM3D
     const std::string Poles("Poles");
     const std::string Neighborhoods("Neighborhoods");
     const std::string GrainAvgMisorientations("GrainAvgMisorientations");
-	const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
+    const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
     const std::string KernelAvgMisorientations("KernelAvgMisorientations");
     const std::string NeighborList("NeighborList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
@@ -187,23 +176,71 @@ namespace DREAM3D
     const std::string MaterialName("MaterialName");
   }
 
+
+  namespace PointData
+  {
+    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
+    const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
+    //  const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
+    //   const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
+    const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
+    const std::string SurfaceMeshNodeTriangles("SurfaceMeshNodeTriangles");
+  }
+
+  namespace FaceData
+  {
+    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
+    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
+    const std::string SurfaceMeshTriangleLabels("SurfaceMeshTriangleLabels");
+    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
+    const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");
+    const std::string SurfaceMeshTriangleNormals("SurfaceMeshTriangleNormals");
+    const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
+    const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
+    const std::string SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
+    const std::string SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
+    const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
+    const std::string SurfaceMeshPrincipalDirection1("PrincipalDirection1");
+    const std::string SurfaceMeshPrincipalDirection2("PrincipalDirection2");
+  }
+
+  namespace EdgeData
+  {
+    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
+    const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
+    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
+    const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
+    const std::string SurfaceMeshEdgeTriangles("SurfaceMeshEdgeTriangles");
+  }
+
+
   namespace HDF5
   {
-
+    const std::string FileVersionName("FileVersion");
+    const std::string FileVersion("4.0");
     const std::string DataContainerName("DataContainer");
+    const std::string VoxelDataContainerName("VoxelDataContainer");
+    const std::string SurfaceMeshDataContainerName("SurfaceMeshDataContainer");
+    const std::string SolidMeshDataContainerName("SolidMeshDataContainer");
     const std::string VoxelDataName("VoxelData");
     const std::string PipelineGroupName("Pipeline");
     const std::string ObjectType("ObjectType");
     const std::string NumComponents("NumComponents");
 
-  //  const std::string Grain_ID("Grain_ID");
-   // const std::string SchmidFactor ("SchmidFactor");
+    const std::string VerticesName("Vertices");
+    const std::string FacesName("Faces");
+    const std::string EdgesName("Edges");
+    const std::string MeshVertLinksName("MeshVertLinks");
+    const std::string MeshTriangleNeighborLists("MeshTriangleNeighborLists");
+
+    //  const std::string Grain_ID("Grain_ID");
+    // const std::string SchmidFactor ("SchmidFactor");
     const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
     const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
     const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
-  //  const std::string ImageQuality( "ImageQuality");
+    //  const std::string ImageQuality( "ImageQuality");
 
-   // const std::string Phase("Phase");
+    // const std::string Phase("Phase");
 
     const std::string Statistics("Statistics");
     const std::string AxisOrientation("AxisOrientation");
@@ -412,13 +449,17 @@ namespace DREAM3D
   {
     namespace NodeType
     {
-      const int8_t Unused = -1;
+      const int8_t Unused = 0;
       const int8_t Default = 2;
       const int8_t TriplePoint = 3;
       const int8_t QuadPoint = 4;
       const int8_t SurfaceDefault = 12;
       const int8_t SurfaceTriplePoint = 13;
       const int8_t SurfaceQuadPoint = 14;
+    }
+    namespace NodeId
+    {
+      const int8_t Unused = -1;
     }
   }
 
@@ -433,23 +474,23 @@ namespace DREAM3D
 
 
 #if 0
-  const double Textures[15][3] =
-  {
-    { 0.610865,0.785398,0.0},
-    { 1.029744,0.645772,1.099557},
-    { 1.570796,0.610865,0.785398},
-    { 1.029744,0.506145,1.099557},
-    { 0.820305,0.645772,1.099557},
-    { 0.0,0.610865,0.785398},
-    { 0.0,0.785398,0.0},
-    { 0.0,0.0,0.0},
-    { 0.0,0.349066,0.0},
-    { 0.0,0.610865,0.0},
-    { 0.349066,0.0,0.0},
-    { 0.610865,0.0,0.0},
-    { 1.22173,0.785398,0.0},
-    { 0.959931,0.349066,0.0},
-    { 0.959931,1.308997,0.436332}};
+const double Textures[15][3] =
+{
+  { 0.610865,0.785398,0.0},
+  { 1.029744,0.645772,1.099557},
+  { 1.570796,0.610865,0.785398},
+  { 1.029744,0.506145,1.099557},
+  { 0.820305,0.645772,1.099557},
+  { 0.0,0.610865,0.785398},
+  { 0.0,0.785398,0.0},
+  { 0.0,0.0,0.0},
+  { 0.0,0.349066,0.0},
+  { 0.0,0.610865,0.0},
+  { 0.349066,0.0,0.0},
+  { 0.610865,0.0,0.0},
+  { 1.22173,0.785398,0.0},
+  { 0.959931,0.349066,0.0},
+  { 0.959931,1.308997,0.436332}};
 
 
 
