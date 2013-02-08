@@ -674,7 +674,7 @@ void QFilterWidget::selectInputFile()
     return;
   }
   bool ok = false;
-
+  file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
@@ -721,6 +721,7 @@ void QFilterWidget::selectInputPath()
     return;
   }
   bool ok = false;
+  file = QDir::toNativeSeparators(file);
 
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
@@ -771,7 +772,10 @@ void QFilterWidget::selectOutputFile()
   {
     return;
   }
+
+  
   // Store the last used directory into the private instance variable
+  file = QDir::toNativeSeparators(file);
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
 
@@ -818,6 +822,8 @@ void QFilterWidget::selectOutputPath()
   {
     return;
   }
+  file = QDir::toNativeSeparators(file);
+
   // Store the last used directory into the private instance variable
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
@@ -889,7 +895,6 @@ void QFilterWidget::updateQLineEditStringValue(const QString &v)
   if(le)
   {
     setProperty(whoSent->objectName().toStdString().c_str(), le->text());
-
   }
 }
 
