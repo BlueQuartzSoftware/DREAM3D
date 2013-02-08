@@ -31,6 +31,7 @@
 #include "QFSDropLineEdit.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 #include <QtCore/QUrl>
 #include <QtGui/QWidget>
 #include <QtGui/QDragEnterEvent>
@@ -74,6 +75,7 @@ void QFSDropLineEdit::dropEvent(QDropEvent *event)
 		if ( urlList.size() > 0) // if at least one QUrl is present in list
 		{
 			fName = urlList[0].toLocalFile(); // convert first QUrl to local path
+      fName = QDir::toNativeSeparators(fName);
 			info.setFile( fName ); // information about file
 			 setText( fName ); // if is file, setText
 			 emit textChanged(fName);
