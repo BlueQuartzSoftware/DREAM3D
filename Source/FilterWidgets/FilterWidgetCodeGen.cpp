@@ -193,6 +193,11 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+#if 0
+#define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
+template<typename T>\
+void methodName(typename T::Pointer t, FILE* f){ }
+#else
 #define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
 template<typename T>\
 void methodName(typename T::Pointer t, FILE* f){\
@@ -228,6 +233,7 @@ void methodName(typename T::Pointer t, FILE* f){\
       writerName(f, list, t->getNameOfClass(), "Created Ensemble Data");\
     }\
 }
+#endif
 
 ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToHeader, writeArrayNameHeaderCode)
 ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToSource, writeArrayNameSourceCode)
@@ -775,7 +781,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
           opt->getWidgetType() == FilterParameter::InputFileWidget ||
           opt->getWidgetType() == FilterParameter::InputPathWidget)
       {
-        fprintf(f, "  m_%s = QDir::toNativeSeparators(m_%s);\n", prop.c_str(), prop.c_str()); 
+        fprintf(f, "  m_%s = QDir::toNativeSeparators(m_%s);\n", prop.c_str(), prop.c_str());
       }
       fprintf(f, "  emit parametersChanged();\n}\n");
 
@@ -809,7 +815,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     {
       fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
     }
-    
+
   }
   fprintf(f, "}\n");
 
@@ -866,6 +872,16 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     #endif
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
+    {
+      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
+      fprintf(f, "   if (cb) {\n");
+      fprintf(f, "     bool ok = false;\n");
+      fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
+      fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
+      fprintf(f, "     }\n");
+      fprintf(f, "   }\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::ArrayNameComboBox)
     {
       fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (cb) {\n");
