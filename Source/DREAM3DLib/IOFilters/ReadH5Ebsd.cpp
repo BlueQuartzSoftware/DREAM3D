@@ -591,7 +591,6 @@ void ReadH5Ebsd::execute()
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
-	  if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal) cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0); 
     }
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
 

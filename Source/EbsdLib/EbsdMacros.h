@@ -49,7 +49,7 @@
     err = H5Gclose(gid);\
     return -1; }\
   else {\
-    EbsdHeaderEntry::Pointer p = m_Headermap[key];\
+    EbsdHeaderEntry::Pointer p = m_HeaderMap[key];\
     class* c = dynamic_cast<class*>(p.get());\
     c->setValue(t);\
   }\
@@ -67,7 +67,7 @@
     err = H5Gclose(gid);\
     return -1; }\
     else {\
-      EbsdHeaderEntry::Pointer p = m_Headermap[key];\
+      EbsdHeaderEntry::Pointer p = m_HeaderMap[key];\
       class* c = dynamic_cast<class*>(p.get());\
       c->setValue(t);\
     }\
