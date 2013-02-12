@@ -43,9 +43,7 @@
 //
 // -----------------------------------------------------------------------------
 DumpCellData::DumpCellData() :
-  AbstractFilter(),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_DropAllData(false)
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -63,24 +61,22 @@ DumpCellData::~DumpCellData()
 void DumpCellData::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+//  {
+//    FilterParameter::Pointer parameter = FilterParameter::New();
+//    parameter->setHumanLabel("Drop ALL Cell Data");
+//    parameter->setPropertyName("DropAllData");
+//    parameter->setWidgetType(FilterParameter::BooleanWidget);
+//    parameter->setValueType("bool");
+//    parameters.push_back(parameter);
+//  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Drop ALL Cell Data");
-    parameter->setPropertyName("DropAllData");
-    parameter->setWidgetType(FilterParameter::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-#if 0
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Drop ALL Cell Data");
-    parameter->setPropertyName("DropAllData");
+    parameter->setHumanLabel("Arrays to Delete");
+    parameter->setPropertyName("ArraysToDelete");
     parameter->setWidgetType(FilterParameter::ArraySelectionWidget);
-    parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
-#endif
+
   setFilterParameters(parameters);
 }
 
@@ -91,7 +87,7 @@ void DumpCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("DropAllData", getDropAllData() );
+  //writer->writeValue("DropAllData", getDropAllData() );
 }
 
 // -----------------------------------------------------------------------------
@@ -131,19 +127,58 @@ void DumpCellData::execute()
   setErrorCondition(0);
 
 
-  std::list<std::string> nameList =  m->getCellArrayNameList();
-  for(std::list<std::string>::iterator iter = nameList.begin(); iter != nameList.end(); ++iter)
-  {
-    if ( (*iter).compare(m_GrainIdsArrayName) != 0)
-    {
-      m->removeCellData(*iter);
-    }
-  }
-  if (m_DropAllData == true)
-  {
-    m->removeCellData(m_GrainIdsArrayName);
-  }
+//  std::list<std::string> nameList =  m->getCellArrayNameList();
+//  for(std::list<std::string>::iterator iter = nameList.begin(); iter != nameList.end(); ++iter)
+//  {
+//    if ( (*iter).compare(m_GrainIdsArrayName) != 0)
+//    {
+//      m->removeCellData(*iter);
+//    }
+//  }
+//  if (m_DropAllData == true)
+//  {
+//    m->removeCellData(m_GrainIdsArrayName);
+//  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DumpCellData::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+                                                     std::set<std::string> selectedFieldArrays,
+                                                     std::set<std::string> selectedEnsembleArrays)
+{
+  m_SelectedVoxelCellArrays = selectedCellArrays;
+  m_SelectedVoxelFieldArrays = selectedFieldArrays;
+  m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DumpCellData::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                     std::set<std::string> selectedFaceArrays,
+                                                     std::set<std::string> selectedEdgeArrays)
+{
+  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DumpCellData::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                     std::set<std::string> selectedFaceArrays,
+                                                     std::set<std::string> selectedEdgeArrays)
+{
+  m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
+  m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
+  m_SelectedSolidMeshEdgeArrays = selectedEdgeArrays;
+}
+
+
+
+

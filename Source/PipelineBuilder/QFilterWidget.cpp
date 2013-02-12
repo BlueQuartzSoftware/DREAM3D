@@ -64,6 +64,8 @@
 #include "QtSupport/QFSDropLineEdit.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 
+#include "ArraySelectionWidget.h"
+
 
 #define PADDING 5
 #define BORDER 2
@@ -117,11 +119,11 @@ QString QFilterWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QFilterWidget* QFilterWidget::createDeepCopy()
-{
-  QFilterWidget* widget = new QFilterWidget();
-  return widget;
-}
+//QFilterWidget* QFilterWidget::createDeepCopy()
+//{
+//  QFilterWidget* widget = new QFilterWidget();
+//  return widget;
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -608,6 +610,10 @@ void QFilterWidget::setupGui()
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
+    else if (wType == FilterParameter::ArraySelectionWidget)
+    {
+      setupArraySelectionWidget(frmLayout, optIndex, option, label);
+    }
     ++optIndex;
   }
 
@@ -652,6 +658,20 @@ void QFilterWidget::setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, i
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex,
+                                              FilterParameter* option, QLabel* label )
+{
+  label->deleteLater();
+  ArraySelectionWidget* w = new ArraySelectionWidget(this);
+  w->setObjectName((QString::fromStdString(option->getPropertyName())));
+  frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1193,52 +1213,34 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
   {
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
-    std::list<std::string> arrayNames;
+    QString propertyName = QString::fromStdString(option->getPropertyName());
 
     switch(wType)
     {
       case FilterParameter::VoxelCellArrayNameSelectionWidget:
-        arrayNames = vdc->getCellArrayNameList();
+        updateArrayNameComboBox(vdc->getCellArrayNameList(), propertyName);
         break;
       case FilterParameter::VoxelFieldArrayNameSelectionWidget:
-        arrayNames = vdc->getFieldArrayNameList();
+        updateArrayNameComboBox(vdc->getFieldArrayNameList(), propertyName);
         break;
       case FilterParameter::VoxelEnsembleArrayNameSelectionWidget:
-        arrayNames = vdc->getEnsembleArrayNameList();
+        updateArrayNameComboBox(vdc->getEnsembleArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget:
-        arrayNames = smdc->getPointArrayNameList();
+        updateArrayNameComboBox(smdc->getPointArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget:
-        arrayNames = smdc->getFaceArrayNameList();
+        updateArrayNameComboBox(smdc->getFaceArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget:
-        arrayNames = smdc->getEdgeArrayNameList();
+        updateArrayNameComboBox(smdc->getEdgeArrayNameList(), propertyName);
+        break;
+      case FilterParameter::ArraySelectionWidget:
+        updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
         break;
       default:
         break;
     }
-    if (arrayNames.size() == 0) { continue; }
-    QComboBox* cb = qFindChild<QComboBox*>(this, QString::fromStdString(option->getPropertyName()));
-    if (NULL == cb) { continue; }
-    QString selectedName = cb->currentText();
-    cb->blockSignals(true);
-    cb->clear();
-    int index = 0;
-    for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
-    {
-      QString name = QString::fromStdString(*iter);
-      cb->addItem(name);
-      if (name.compare(selectedName) == 0)
-      {
-        index = cb->count()-1;
-      }
-    }
-    cb->setCurrentIndex(index);
-    cb->blockSignals(false);
-
-    // This is implemented by subclasses of QFilter Widget if they need this implemented.
-    arrayNameComboBoxUpdated(cb);
   }
 }
 
@@ -1248,6 +1250,47 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
 void QFilterWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
   std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName)
+{
+  if (arrayNames.size() == 0) { return; }
+  QComboBox* cb = qFindChild<QComboBox*>(this, propertyName);
+  if (NULL == cb) { return; }
+  QString selectedName = cb->currentText();
+  cb->blockSignals(true);
+  cb->clear();
+  int index = 0;
+  for(std::list<std::string>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    QString name = QString::fromStdString(*iter);
+    cb->addItem(name);
+    if (name.compare(selectedName) == 0)
+    {
+      index = cb->count()-1;
+    }
+  }
+  cb->setCurrentIndex(index);
+  cb->blockSignals(false);
+
+  // This is implemented by subclasses of QFilter Widget if they need this implemented.
+  arrayNameComboBoxUpdated(cb);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
+                                               SurfaceMeshDataContainer::Pointer smdc,
+                                               SolidMeshDataContainer::Pointer sdc,
+                                               QString propertyName)
+{
+  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, propertyName);
+  if (NULL == w) { return; }
+  w->updateArrays(vdc, smdc, sdc);
 }
 
 // -----------------------------------------------------------------------------

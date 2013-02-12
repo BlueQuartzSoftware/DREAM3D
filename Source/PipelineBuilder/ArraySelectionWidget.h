@@ -39,9 +39,11 @@
 
 #include <QtGui/QTabWidget>
 
-
 #include "ui_ArraySelectionWidget.h"
 
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
 
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
@@ -65,6 +67,28 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      */
     virtual void setupGui();
 
+    virtual void updateArrays(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void updateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
+    virtual void updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
+    virtual void updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+
+    virtual void updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc);
+    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
+    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
+    virtual void clearArraySelectionLists();
+
+
+    template<typename Filter>
+    void getArraySelections(Filter* filter)
+    {
+
+    }
+
+  signals:
+    void parametersChanged();
+
+  public slots:
+        void arrayListUpdated(QListWidgetItem* item);
 
   private:
     ArraySelectionWidget(const ArraySelectionWidget&); // Copy Constructor Not Implemented
