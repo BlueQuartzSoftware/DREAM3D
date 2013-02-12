@@ -205,7 +205,7 @@ void FindDeformationStatistics::execute()
   float w, n1, n2, n3;
   int distance;
   float kam, gbdist, tjdist, qpdist, sf, sf2, sfmm, grm, ssap;
-  int nearestneighbor, gname, gname2, ss1, ss2;
+  int gname, gname2, ss1, ss2;
   float q1[5], q2[5];
   int kmdist[25];
   int gamdist[25];
@@ -299,12 +299,12 @@ void FindDeformationStatistics::execute()
     {
       avgKAM = avgKAM + m_KernelAverageMisorientations[i];
       avgGRM = avgGRM + m_GrainReferenceMisorientations[i];
-	  avgGBdist = avgGBdist + m_GBEuclideanDistances[i];
-	  avgTJdist = avgTJdist + m_TJEuclideanDistances[i];
-	  avgQPdist = avgQPdist + m_QPEuclideanDistances[i];
-	  avgSF = avgSF + m_Schmids[gname];
+    avgGBdist = avgGBdist + m_GBEuclideanDistances[i];
+    avgTJdist = avgTJdist + m_TJEuclideanDistances[i];
+    avgQPdist = avgQPdist + m_QPEuclideanDistances[i];
+    avgSF = avgSF + m_Schmids[gname];
       gname2 = m_NearestNeighbors[i * 3 + 0];
-	  avgSFMM = avgSFMM + (m_Schmids[gname]/m_Schmids[gname2]);
+    avgSFMM = avgSFMM + (m_Schmids[gname]/m_Schmids[gname2]);
       ss1 = m_SlipSystems[gname];
       ss2 = m_SlipSystems[gname2];
       for (int j = 0; j < 5; j++)
@@ -317,17 +317,17 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
       }
       else
       {
         w = 0;
-		ssap = 0;
+    ssap = 0;
       }
-	  avgSSAP = avgSSAP + ssap;
-	  avgDIS = avgDIS + w;
-	  counter++;
-	}
+    avgSSAP = avgSSAP + ssap;
+    avgDIS = avgDIS + w;
+    counter++;
+  }
   }
   avgKAM = avgKAM/counter;
   avgGRM = avgGRM/counter;
@@ -369,7 +369,7 @@ void FindDeformationStatistics::execute()
       else
       {
         w = 0;
-		ssap = 0;
+    ssap = 0;
       }
       kambin = int((kam/avgKAM)/0.1);
       grmbin = int((grm/avgGRM)/0.1);

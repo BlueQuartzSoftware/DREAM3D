@@ -361,3 +361,30 @@ void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selec
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
   m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                     std::set<std::string> selectedFaceArrays,
+                                                     std::set<std::string> selectedEdgeArrays)
+{
+  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                     std::set<std::string> selectedFaceArrays,
+                                                     std::set<std::string> selectedEdgeArrays)
+{
+  m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
+  m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
+  m_SelectedSolidMeshEdgeArrays = selectedEdgeArrays;
+}
+
+
+
+

@@ -64,7 +64,6 @@
 #include "QtSupport/QFSDropLineEdit.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 
-#include "PipelineArraySelectionWidget.h"
 
 #define PADDING 5
 #define BORDER 2
@@ -1195,19 +1194,31 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
     std::list<std::string> arrayNames;
-    if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
-    {
-      arrayNames = vdc->getCellArrayNameList();
-    }
-    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
-    {
-      arrayNames = vdc->getFieldArrayNameList();
-    }
-    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
-    {
-      arrayNames = vdc->getEnsembleArrayNameList();
-    }
 
+    switch(wType)
+    {
+      case FilterParameter::VoxelCellArrayNameSelectionWidget:
+        arrayNames = vdc->getCellArrayNameList();
+        break;
+      case FilterParameter::VoxelFieldArrayNameSelectionWidget:
+        arrayNames = vdc->getFieldArrayNameList();
+        break;
+      case FilterParameter::VoxelEnsembleArrayNameSelectionWidget:
+        arrayNames = vdc->getEnsembleArrayNameList();
+        break;
+      case FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget:
+        arrayNames = smdc->getPointArrayNameList();
+        break;
+      case FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget:
+        arrayNames = smdc->getFaceArrayNameList();
+        break;
+      case FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget:
+        arrayNames = smdc->getEdgeArrayNameList();
+        break;
+      default:
+        break;
+    }
+    if (arrayNames.size() == 0) { continue; }
     QComboBox* cb = qFindChild<QComboBox*>(this, QString::fromStdString(option->getPropertyName()));
     if (NULL == cb) { continue; }
     QString selectedName = cb->currentText();
@@ -1226,6 +1237,7 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
     cb->setCurrentIndex(index);
     cb->blockSignals(false);
 
+    // This is implemented by subclasses of QFilter Widget if they need this implemented.
     arrayNameComboBoxUpdated(cb);
   }
 }

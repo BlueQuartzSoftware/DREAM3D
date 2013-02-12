@@ -84,10 +84,9 @@ AbstractFilter::Pointer QDataContainerReaderWidget::getFilter()
   filter->setReadVoxelData( getReadVoxelData() );
   filter->setReadSurfaceMeshData( getReadSurfaceMeshData() );
 
-
-
   filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList), getSelectedArrays(voxelFieldArrayList), getSelectedArrays(voxelEnsembleArrayList));
-
+  filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList), getSelectedArrays(surfaceMeshFaceArrayList), getSelectedArrays(surfaceMeshEdgeArrayList));
+  filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList), getSelectedArrays(solidMeshFaceArrayList), getSelectedArrays(solidMeshEdgeArrayList));
   return filter;
 }
 
@@ -191,20 +190,17 @@ void QDataContainerReaderWidget::on_m_InputFileBtn_clicked()
   QString ext = getFileExtension(propName.toStdString());
   QString s = Ftype + QString("DREAM3D Files (*.dream3d *.h5 *.hdf5);;All Files(*.*)");
   QString defaultName = getOpenDialogLastDirectory();
-  QString outputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
-  if(true == outputFile.isEmpty())
+  QString inputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
+  if(true == inputFile.isEmpty())
   {
     return;
   }
   // Store the last used directory into the private instance variable
-  outputFile = QDir::toNativeSeparators(outputFile);
-  if (!outputFile.isNull())
+  inputFile = QDir::toNativeSeparators(inputFile);
+  if (!inputFile.isNull())
   {
-    m_InputFile->blockSignals(true);
-    m_InputFile->setText(QDir::toNativeSeparators(outputFile));
-    on_m_InputFile_textChanged(m_InputFile->text());
-    getOpenDialogLastDirectory() = outputFile;
-    m_InputFile->blockSignals(false);
+    setInputFile(inputFile);
+    setOpenDialogLastDirectory(inputFile);
   }
 }
 
@@ -216,19 +212,8 @@ void QDataContainerReaderWidget::on_m_InputFile_textChanged(const QString & text
 {
   if (verifyPathExists(m_InputFile->text(), m_InputFile) )
   {
-
-    QDir dir(m_InputFile->text());
-    QString dirname = dir.dirName();
-    dir.cdUp();
-
-    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ebsd";
-    outPath = QDir::toNativeSeparators(outPath);
-
-    m_InputFile->blockSignals(true);
-    m_InputFile->setText(QDir::toNativeSeparators(m_InputFile->text()));
-    m_InputFile->blockSignals(false);
-
-    clearArraySelectionLists();
+    setInputFile(m_InputFile->text());
+    setOpenDialogLastDirectory(m_InputFile->text());
   }
 
 }
@@ -265,8 +250,6 @@ void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Poi
 void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
   updateVoxelArrayNames(vdc);
-
-
 }
 
 
@@ -278,34 +261,6 @@ void QDataContainerReaderWidget::arrayListUpdated(QListWidgetItem *item)
 {
   emit parametersChanged();
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc )
-{
-  QStringList selectedArrays;
-  for(qint32 i = 0; i < listWidget->count(); ++i)
-  {
-    if (listWidget->item(i)->checkState() == Qt::Checked)
-    {
-      selectedArrays << listWidget->item(i)->text();
-    }
-  }
-  listWidget->blockSignals(true);
-  listWidget->clear();
-  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
-  {
-    QString name = QString::fromStdString(*iter);
-    listWidget->addItem(name);
-    Qt::CheckState checked = Qt::Unchecked;
-    if (selectedArrays.contains(name) == true) { checked = Qt::Checked; }
-    listWidget->item(listWidget->count() - 1)->setCheckState(checked);
-  }
-  listWidget->blockSignals(false);
-}
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -357,6 +312,32 @@ void QDataContainerReaderWidget::updateSolidMeshArrayNames(SolidMeshDataContaine
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc )
+{
+  QStringList selectedArrays;
+  for(qint32 i = 0; i < listWidget->count(); ++i)
+  {
+    if (listWidget->item(i)->checkState() == Qt::Checked)
+    {
+      selectedArrays << listWidget->item(i)->text();
+    }
+  }
+  listWidget->blockSignals(true);
+  listWidget->clear();
+  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    QString name = QString::fromStdString(*iter);
+    listWidget->addItem(name);
+    Qt::CheckState checked = Qt::Unchecked;
+    if (selectedArrays.contains(name) == true) { checked = Qt::Checked; }
+    listWidget->item(listWidget->count() - 1)->setCheckState(checked);
+  }
+  listWidget->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 std::set<std::string> QDataContainerReaderWidget::getSelectedArrays(QListWidget*listWidget)
 {
   std::set<std::string> selectedArrays;
@@ -398,6 +379,4 @@ void QDataContainerReaderWidget::clearArraySelectionLists()
   surfaceMeshVertexArrayList->clear();
   surfaceMeshFaceArrayList->clear();
   surfaceMeshEdgeArrayList->clear();
-
-
 }

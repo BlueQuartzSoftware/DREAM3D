@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ArraySelectionWidget</class>
+ <widget class="QTabWidget" name="ArraySelectionWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>582</width>
+    <height>286</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="currentIndex">
+   <number>2</number>
+  </property>
+  <widget class="QWidget" name="voxel_data">
+   <attribute name="title">
+    <string>Voxel Data</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="horizontalSpacing">
+     <number>4</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>6</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0" colspan="2">
+     <widget class="QCheckBox" name="m_ReadVoxelData">
+      <property name="text">
+       <string>Read Voxel Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Cell Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Field Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Ensemble Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QListWidget" name="voxelCellArrayList"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QListWidget" name="voxelFieldArrayList"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QListWidget" name="voxelEnsembleArrayList"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="surfacemesh_data">
+   <attribute name="title">
+    <string>Surface Mesh Data</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <property name="horizontalSpacing">
+     <number>4</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>6</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0" colspan="3">
+     <widget class="QCheckBox" name="m_ReadSurfaceMeshData">
+      <property name="text">
+       <string>Read Surface Mesh</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Vertex Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Face Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Edge Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QListWidget" name="surfaceMeshVertexArrayList"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QListWidget" name="surfaceMeshFaceArrayList"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QListWidget" name="surfaceMeshEdgeArrayList"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="solidmesh_data">
+   <attribute name="title">
+    <string>Solid Mesh Data</string>
+   </attribute>
+   <layout class="QGridLayout" name="gridLayout_3">
+    <property name="horizontalSpacing">
+     <number>4</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>6</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item row="0" column="0" colspan="2">
+     <widget class="QCheckBox" name="m_ReadSolidMeshData">
+      <property name="text">
+       <string>Read Solid Mesh</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>Vertex Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string>Face Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
+       <string>Edge Data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QListWidget" name="solidMeshVertexArrayList"/>
+    </item>
+    <item row="2" column="1">
+     <widget class="QListWidget" name="solidMeshFaceArrayList"/>
+    </item>
+    <item row="2" column="2">
+     <widget class="QListWidget" name="solidMeshEdgeArrayList"/>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
