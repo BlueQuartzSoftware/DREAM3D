@@ -64,27 +64,27 @@ m_SingleSliceRead(-1)
 {
 
   // Initialize the map of header key to header value
-  m_Headermap[Ebsd::Ctf::ChannelTextFile] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ChannelTextFile);
-  m_Headermap[Ebsd::Ctf::Prj] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Prj);
-  m_Headermap[Ebsd::Ctf::Author] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Author);
-  m_Headermap[Ebsd::Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::JobMode);
-  m_Headermap[Ebsd::Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::XCells);
-  m_Headermap[Ebsd::Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::YCells);
-  m_Headermap[Ebsd::Ctf::ZCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::ZCells);
-  m_Headermap[Ebsd::Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::XStep);
-  m_Headermap[Ebsd::Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::YStep);
-  m_Headermap[Ebsd::Ctf::ZStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::ZStep);
-  m_Headermap[Ebsd::Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE1);
-  m_Headermap[Ebsd::Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE2);
-  m_Headermap[Ebsd::Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE3);
-  m_Headermap[Ebsd::Ctf::Euler] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Euler);
-  m_Headermap[Ebsd::Ctf::Mag] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Mag);
-  m_Headermap[Ebsd::Ctf::Coverage] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Coverage);
-  m_Headermap[Ebsd::Ctf::Device] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Device);
-  m_Headermap[Ebsd::Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::KV);
-  m_Headermap[Ebsd::Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
-  m_Headermap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
-  m_Headermap[Ebsd::Ctf::NumPhases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
+  m_HeaderMap[Ebsd::Ctf::ChannelTextFile] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ChannelTextFile);
+  m_HeaderMap[Ebsd::Ctf::Prj] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Prj);
+  m_HeaderMap[Ebsd::Ctf::Author] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Author);
+  m_HeaderMap[Ebsd::Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::JobMode);
+  m_HeaderMap[Ebsd::Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::XCells);
+  m_HeaderMap[Ebsd::Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::YCells);
+  m_HeaderMap[Ebsd::Ctf::ZCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::ZCells);
+  m_HeaderMap[Ebsd::Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::XStep);
+  m_HeaderMap[Ebsd::Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::YStep);
+  m_HeaderMap[Ebsd::Ctf::ZStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::ZStep);
+  m_HeaderMap[Ebsd::Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE1);
+  m_HeaderMap[Ebsd::Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE2);
+  m_HeaderMap[Ebsd::Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE3);
+  m_HeaderMap[Ebsd::Ctf::Euler] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Euler);
+  m_HeaderMap[Ebsd::Ctf::Mag] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Mag);
+  m_HeaderMap[Ebsd::Ctf::Coverage] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Coverage);
+  m_HeaderMap[Ebsd::Ctf::Device] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Device);
+  m_HeaderMap[Ebsd::Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::KV);
+  m_HeaderMap[Ebsd::Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
+  m_HeaderMap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
+  m_HeaderMap[Ebsd::Ctf::NumPhases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
 
   setXCells(0);
   setYCells(0);
@@ -462,7 +462,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
     if(line[0].compare(Ebsd::Ctf::NumPhases) == 0)
     {
       //  std::cout << "Parsing Phases" << std::endl;
-      EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
+      EbsdHeaderEntry::Pointer p = m_HeaderMap[line[0]];
       p->parseValue(const_cast<char*>(line[1].c_str()), 0, line[1].length());
       int nPhases = getNumPhases();
       // We start the Phase Index at "1" instead of Zero by convention
@@ -481,27 +481,27 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
     {
       // We parse out lots of stuff from this one line
       //Mag
-      EbsdHeaderEntry::Pointer p0 = m_Headermap[line[1]];
+      EbsdHeaderEntry::Pointer p0 = m_HeaderMap[line[1]];
       p0->parseValue(const_cast<char*>(line[2].c_str()), 0, line[2].length());
         PRINT_HTML_TABLE_ROW(p0)
       //Coverage
-      EbsdHeaderEntry::Pointer p1 = m_Headermap[line[3]];
+      EbsdHeaderEntry::Pointer p1 = m_HeaderMap[line[3]];
       p1->parseValue(const_cast<char*>(line[4].c_str()), 0, line[4].length());
       PRINT_HTML_TABLE_ROW(p1)
       //Device
-      EbsdHeaderEntry::Pointer p2 = m_Headermap[line[5]];
+      EbsdHeaderEntry::Pointer p2 = m_HeaderMap[line[5]];
       p2->parseValue(const_cast<char*>(line[6].c_str()), 0, line[6].length());
       PRINT_HTML_TABLE_ROW(p2)
       //KV
-      EbsdHeaderEntry::Pointer p3 = m_Headermap[line[7]];
+      EbsdHeaderEntry::Pointer p3 = m_HeaderMap[line[7]];
       p3->parseValue(const_cast<char*>(line[8].c_str()), 0, line[8].length());
       PRINT_HTML_TABLE_ROW(p3)
       //TiltAngle
-      EbsdHeaderEntry::Pointer p4 = m_Headermap[line[9]];
+      EbsdHeaderEntry::Pointer p4 = m_HeaderMap[line[9]];
       p4->parseValue(const_cast<char*>(line[10].c_str()), 0, line[10].length());
       PRINT_HTML_TABLE_ROW(p4)
       //TiltAxis
-      EbsdHeaderEntry::Pointer p5 = m_Headermap[line[11]];
+      EbsdHeaderEntry::Pointer p5 = m_HeaderMap[line[11]];
       p5->parseValue(const_cast<char*>(line[12].c_str()), 0, line[12].length());
       PRINT_HTML_TABLE_ROW(p5)
     }
@@ -511,7 +511,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
     }
     else // This is the generic Catch all
     {
-      EbsdHeaderEntry::Pointer p = m_Headermap[line[0]];
+      EbsdHeaderEntry::Pointer p = m_HeaderMap[line[0]];
       if(NULL == p.get())
       {
         std::cout << "---------------------------" << std::endl;

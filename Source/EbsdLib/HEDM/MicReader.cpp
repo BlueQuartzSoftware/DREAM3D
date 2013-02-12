@@ -48,6 +48,14 @@
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
 
+ #ifdef _MSC_VER
+
+	#if _MSC_VER < 1400
+		#define snprintf _snprintf
+	#else
+		#define snprintf sprintf_s
+	#endif
+#endif
 
 
 // -----------------------------------------------------------------------------
@@ -67,6 +75,77 @@ EbsdReader()
   m_Up = NULL;
   m_X = NULL;
   m_Y = NULL;
+
+	m_HeaderMap[Ebsd::Mic::InfileBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InfileBasename);
+	m_HeaderMap[Ebsd::Mic::InfileSerialLength] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::InfileSerialLength);
+	m_HeaderMap[Ebsd::Mic::OutfileBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutfileBasename);
+	m_HeaderMap[Ebsd::Mic::OutfileSerialLength] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::OutfileSerialLength);
+	m_HeaderMap[Ebsd::Mic::OutStructureBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutStructureBasename);
+	m_HeaderMap[Ebsd::Mic::BCPeakDetectorOffset] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::BCPeakDetectorOffset);
+	m_HeaderMap[Ebsd::Mic::InFileType] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InFileType);
+	m_HeaderMap[Ebsd::Mic::OutfileExtension] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutfileExtension);
+	m_HeaderMap[Ebsd::Mic::InfileExtesnion] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InfileExtesnion);
+	m_HeaderMap[Ebsd::Mic::BeamEnergyWidth] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamEnergyWidth);
+	m_HeaderMap[Ebsd::Mic::BeamDirection] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::BeamDirection);
+	m_HeaderMap[Ebsd::Mic::BeamDeflectionChiLaue] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::BeamDeflectionChiLaue);
+	m_HeaderMap[Ebsd::Mic::BeamHeight] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamHeight);
+	m_HeaderMap[Ebsd::Mic::BeamEnergy] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamEnergy);
+	m_HeaderMap[Ebsd::Mic::DetectorFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorFilename);
+	m_HeaderMap[Ebsd::Mic::OptimizationConstrainFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OptimizationConstrainFilename);
+	m_HeaderMap[Ebsd::Mic::EtaLimit] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::EtaLimit);
+	m_HeaderMap[Ebsd::Mic::SampleFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleFilename);
+	m_HeaderMap[Ebsd::Mic::StructureFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::StructureFilename);
+	m_HeaderMap[Ebsd::Mic::RotationRangeFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::RotationRangeFilename);
+	m_HeaderMap[Ebsd::Mic::FundamentalZoneFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::FundamentalZoneFilename);
+	m_HeaderMap[Ebsd::Mic::SampleSymmetry] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleSymmetry);
+	m_HeaderMap[Ebsd::Mic::MinAmplitudeFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinAmplitudeFraction);
+	m_HeaderMap[Ebsd::Mic::MaxQ] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxQ);
+	m_HeaderMap[Ebsd::Mic::MaxInitSideLength] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxInitSideLength);
+	m_HeaderMap[Ebsd::Mic::MinSideLength] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinSideLength);
+	m_HeaderMap[Ebsd::Mic::LocalOrientationGridRadius] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::LocalOrientationGridRadius);
+	m_HeaderMap[Ebsd::Mic::MinLocalResolution] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinLocalResolution);
+	m_HeaderMap[Ebsd::Mic::MaxLocalResolution] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxLocalResolution);
+	m_HeaderMap[Ebsd::Mic::MaxAcceptedCost] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxAcceptedCost);
+	m_HeaderMap[Ebsd::Mic::MaxConvergenceCost] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxConvergenceCost);
+	m_HeaderMap[Ebsd::Mic::MaxMCSteps] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxMCSteps);
+	m_HeaderMap[Ebsd::Mic::MCRadiusScaleFactor] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MCRadiusScaleFactor);
+	m_HeaderMap[Ebsd::Mic::SuccessiveRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SuccessiveRestarts);
+	m_HeaderMap[Ebsd::Mic::SecondsBetweenSave] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SecondsBetweenSave);
+	m_HeaderMap[Ebsd::Mic::NumParameterOptimizationSteps] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumParameterOptimizationSteps);
+	m_HeaderMap[Ebsd::Mic::NumElementToOptimizePerPE] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumElementToOptimizePerPE);
+	m_HeaderMap[Ebsd::Mic::OptimizationFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OptimizationFilename);
+	m_HeaderMap[Ebsd::Mic::DetectionLimitFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectionLimitFilename);
+	m_HeaderMap[Ebsd::Mic::ParameterMCInitTemperature] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ParameterMCInitTemperature);
+	m_HeaderMap[Ebsd::Mic::OrientationSearchMethod] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OrientationSearchMethod);
+	m_HeaderMap[Ebsd::Mic::CoolingFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::CoolingFraction);
+	m_HeaderMap[Ebsd::Mic::ThermalizeFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ThermalizeFraction);
+	m_HeaderMap[Ebsd::Mic::ParameterRefinements] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParameterRefinements);
+	m_HeaderMap[Ebsd::Mic::NumDetectors] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumDetectors);
+	m_HeaderMap[Ebsd::Mic::DetectorSpacing] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorSpacing);
+	m_HeaderMap[Ebsd::Mic::DetectorSpacingDeviation] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::DetectorSpacingDeviation);
+	m_HeaderMap[Ebsd::Mic::DetectorOrientationDeviationInEuler] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorOrientationDeviationInEuler);
+	m_HeaderMap[Ebsd::Mic::DetectorOrientationDeviationInSO3] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::DetectorOrientationDeviationInSO3);
+	m_HeaderMap[Ebsd::Mic::ParamMCMaxLocalRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCMaxLocalRestarts);
+	m_HeaderMap[Ebsd::Mic::ParamMCMaxGlobalRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCMaxGlobalRestarts);
+	m_HeaderMap[Ebsd::Mic::ParamMCNumGlobalSearchElements] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCNumGlobalSearchElements);
+	m_HeaderMap[Ebsd::Mic::ConstrainedOptimization] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ConstrainedOptimization);
+	m_HeaderMap[Ebsd::Mic::SearchVolumeReductionFactor] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SearchVolumeReductionFactor);
+	m_HeaderMap[Ebsd::Mic::FileNumStart] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::FileNumStart);
+	m_HeaderMap[Ebsd::Mic::FileNumEnd] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::FileNumEnd);
+	m_HeaderMap[Ebsd::Mic::SampleLocation] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleLocation);
+	m_HeaderMap[Ebsd::Mic::SampleOrientation] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleOrientation);
+	m_HeaderMap[Ebsd::Mic::EnableStrain] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::EnableStrain);
+	m_HeaderMap[Ebsd::Mic::SampleCenter] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleCenter);
+	m_HeaderMap[Ebsd::Mic::SampleRadius] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::SampleRadius);
+	m_HeaderMap[Ebsd::Mic::MaxDeepeningHitRatio] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxDeepeningHitRatio);
+	m_HeaderMap[Ebsd::Mic::ConsistencyError] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ConsistencyError);
+	m_HeaderMap[Ebsd::Mic::BraggFilterTolerance] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BraggFilterTolerance);
+	m_HeaderMap[Ebsd::Mic::MinAccelerationThreshold] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinAccelerationThreshold);
+	m_HeaderMap[Ebsd::Mic::MaxDiscreteCandidates] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxDiscreteCandidates);
+	m_HeaderMap[Ebsd::Mic::XDim] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::XDim);
+	m_HeaderMap[Ebsd::Mic::YDim] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::YDim);
+	m_HeaderMap[Ebsd::Mic::XRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::XRes);
+	m_HeaderMap[Ebsd::Mic::YRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::YRes);
 
   setNumFields(8);
 }
@@ -165,26 +244,41 @@ int MicReader::readHeaderOnly()
 {
   int err = 1;
   char buf[kBufferSize];
-  std::ifstream in(getFileName().c_str());
-  setHeaderIsComplete(false);
-  if (!in.is_open())
-  {
-    std::cout << "Mic file could not be opened: " << getFileName() << std::endl;
-    return -100;
-  }
+
   std::string origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
-  while (!in.eof() && false == getHeaderIsComplete())
+  m_CurrentPhase = MicPhase::New();
+  m_PhaseVector.push_back(m_CurrentPhase);
+
+  std::string parentPath = MXAFileInfo::parentPath(getFileName());
+  std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
+  if(parentPath.empty() == true) name = name + ".config";
+  else name = parentPath + MXAFileInfo::Separator + name + ".config";
+  std::ifstream inHeader(name.c_str());
+  if (!inHeader.is_open())
+  {
+    std::cout << "Config file could not be opened: " << name << std::endl;
+    return -100;
+  }
+  
+  // 'name' now contains the complete path to the file with the new extension
+
+  while (!inHeader.eof())
   {
     ::memset(buf, 0, kBufferSize);
-    in.getline(buf, kBufferSize);
+    inHeader.getline(buf, kBufferSize);
+    int i = 0;
+    while (buf[i] != 0) { ++i; }
+    buf[i] = 10; //Add back in the \n character
     parseHeaderLine(buf, kBufferSize);
     origHeader.append(buf);
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);
+
+
   return err;
 }
 
@@ -271,6 +365,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
     return -1;
   }
 
+  ::memset(buf, 0, bufSize); // Clear the buffer
+  in.getline(buf, kBufferSize);// Read the next line of data
   fieldsRead = sscanf(buf, "%f", &origEdgeLength);
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
@@ -333,7 +429,22 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   xRes = newEdgeLength;
   yRes = newEdgeLength;
 
-    // Delete any currently existing pointers 
+  char buf[16];
+  ::memset(buf, 0, 16);
+  snprintf(buf, 16, "%d", xDim);
+  m_HeaderMap[Ebsd::Mic::XDim]->parseValue(buf,0,16);
+  ::memset(buf, 0, 16);
+  snprintf(buf, 16, "%d", yDim);
+  m_HeaderMap[Ebsd::Mic::YDim]->parseValue(buf,0,16);
+  ::memset(buf, 0, 16);
+  snprintf(buf, 16, "%f", xRes);
+  m_HeaderMap[Ebsd::Mic::XRes]->parseValue(buf,0,16);
+  ::memset(buf, 0, 16);
+  snprintf(buf, 16, "%f", yRes);
+  m_HeaderMap[Ebsd::Mic::YRes]->parseValue(buf,0,16);
+
+  
+  // Delete any currently existing pointers 
   deletePointers();
     // Resize pointers 
   initPointers(xDim*yDim);
@@ -391,9 +502,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 // -----------------------------------------------------------------------------
 void MicReader::parseHeaderLine(char* buf, size_t length)
 {
-  if (buf[0] != '#')
+  if (buf[0] == '#')
   {
-    setHeaderIsComplete(true);
     return;
   }
   // Start at the first character and walk until you find another non-space character
@@ -420,7 +530,35 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
     return;
   }
 
+  EbsdHeaderEntry::Pointer p = m_HeaderMap[word];
+  if (NULL == p.get())
+  {
+      /*
+      std::cout << "---------------------------" << std::endl;
+      std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
+      std::string upper(word);
+      std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
+      std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
+      std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
 
+      std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
+      std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
+      */
+#if 0
+      std::cout << "<tr>\n    <td>" << word << "</td>\n    <td>" << "H5T_STRING" << "</td>\n";
+      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << word << "</td>\n</tr>" << std::endl;
+#endif
+      return;
+  }
+  else
+  {
+      p->parseValue(buf, wordEnd, length);
+#if 0
+      std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";
+      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
+#endif
+
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -469,7 +607,7 @@ void MicReader::parseDataLine(const std::string &line, size_t i)
 // -----------------------------------------------------------------------------
 int MicReader::getXDimension()
 {
-  return xDim;
+  return getXDim();
 }
 
 // -----------------------------------------------------------------------------
@@ -477,14 +615,14 @@ int MicReader::getXDimension()
 // -----------------------------------------------------------------------------
 int MicReader::getYDimension()
 {
-  return yDim;
+  return getYDim();
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void MicReader::setXDimension(int xD)
 {
-  xDim = xD;
+  setXDim(xD);
 }
 
 // -----------------------------------------------------------------------------
@@ -492,14 +630,14 @@ void MicReader::setXDimension(int xD)
 // -----------------------------------------------------------------------------
 void MicReader::setYDimension(int yD)
 {
-  yDim = yD;
+  setYDim(yD);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 float MicReader::getXStep()
 {
-  return xRes;
+  return getXRes();
 }
 
 // -----------------------------------------------------------------------------
@@ -507,7 +645,7 @@ float MicReader::getXStep()
 // -----------------------------------------------------------------------------
 float MicReader::getYStep()
 {
-  return yRes;
+  return getYRes();
 }
 
 // -----------------------------------------------------------------------------
@@ -525,9 +663,7 @@ void MicReader::transformData()
   size_t offset = 0;
 
   size_t yCells = getYDimension();
-  size_t xCells = getYDimension();
-  yCells = 429;
-  xCells = 431;
+  size_t xCells = getXDimension();
   size_t totalDataRows = yCells * xCells;
 
   std::vector<size_t> shuffleTable(totalDataRows, 0);
@@ -545,14 +681,7 @@ void MicReader::transformData()
        offset = (adjustedrow*xCells)+(adjustedcol);
        if(getAlignEulers() == true)
      {
-       if (p1[i] - M_PI_2 < 0.0f)
-       {
-        p1[i] = static_cast<float>( p1[i] + M_PI_2*3.0f );
-       }
-       else
-       {
-        p1[i] = static_cast<float>( p1[i] - M_PI_2 );
-       }
+        p1[i] = p1[i];
      }
        shuffleTable[(row*xCells)+col] = offset;
        ++i;

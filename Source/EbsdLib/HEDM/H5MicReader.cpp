@@ -159,6 +159,12 @@ int H5MicReader::readHeader(hid_t parId)
 
 
 
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<float>, float, XRes, Ebsd::Mic::XRes)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<float>, float, YRes, Ebsd::Mic::YRes)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<int>, int, XDim, Ebsd::Mic::XDim)
+  READ_EBSD_HEADER_DATA("H5MicReader", MicHeaderEntry<int>, int, YDim, Ebsd::Mic::YDim)
+
+
   hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
@@ -207,8 +213,6 @@ int H5MicReader::readData(hid_t parId)
 
   size_t xDim = getXDimension();
   size_t yDim = getYDimension();
-  xDim = 431;
-  yDim = 429;
 
   if (yDim < 1)
   {

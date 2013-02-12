@@ -296,7 +296,7 @@ static Pointer New args \
  */
 #define EbsdHeader_SET_PROPERTY( HeaderType, m_msgType, prpty, key) \
   void set##prpty(m_msgType value) { \
-    HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
+    HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
       std::cout << "Value for Key: " << key << " was null." << std::endl;} }
 
@@ -305,7 +305,7 @@ static Pointer New args \
  */
 #define EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key) \
   m_msgType get##prpty() { \
-    HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
+    HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
       std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
 
