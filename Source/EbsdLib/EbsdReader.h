@@ -203,7 +203,7 @@ class EbsdLib_EXPORT EbsdReader
       }
 
   protected:
-    std::map<std::string, EbsdHeaderEntry::Pointer> m_Headermap;
+    std::map<std::string, EbsdHeaderEntry::Pointer> m_HeaderMap;
 
 
   private:

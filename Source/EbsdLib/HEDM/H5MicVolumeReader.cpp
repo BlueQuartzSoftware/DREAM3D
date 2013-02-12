@@ -224,8 +224,6 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
     readerIndex = 0;
     xpointsslice = reader->getXDimension();
     ypointsslice = reader->getYDimension();
-	xpointsslice = 431;
-	ypointsslice = 429;
     float* euler1Ptr = reader->getEuler1Pointer();
     float* euler2Ptr = reader->getEuler2Pointer();
     float* euler3Ptr = reader->getEuler3Pointer();
@@ -275,6 +273,10 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
         {
           m_Phase[index] = 1;
         }
+		if(m_Phase[index] > 2)
+		{
+			int stop = 0;
+		}
 
         ++readerIndex;
       }
