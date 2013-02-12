@@ -55,9 +55,9 @@
 class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DumpCellData);
-    DREAM3D_STATIC_NEW_MACRO(DumpCellData);
-    DREAM3D_TYPE_MACRO_SUPER(DumpCellData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DumpCellData)
+    DREAM3D_STATIC_NEW_MACRO(DumpCellData)
+    DREAM3D_TYPE_MACRO_SUPER(DumpCellData, AbstractFilter)
 
     virtual ~DumpCellData();
 
@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(bool, DropAllData)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+
 
 
 

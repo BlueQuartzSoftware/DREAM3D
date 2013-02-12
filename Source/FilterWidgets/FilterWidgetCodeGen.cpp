@@ -347,9 +347,9 @@ void createHeaderFile( const std::string &group, const std::string &filter)
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
     }
 
-    if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget
-        || opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget
-        || opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget) { implementArrayNameComboBoxUpdated = true; }
+    if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
+        && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget )
+        { implementArrayNameComboBoxUpdated = true; }
   }
 
   if (true == implementArrayNameComboBoxUpdated)
@@ -892,11 +892,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "     }\n");
       fprintf(f, "   }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget
-    || opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget
-    || opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
-    {
-      implementArrayNameComboBoxUpdated = true;
+    else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
+              && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget )
+        { implementArrayNameComboBoxUpdated = true;
     #warning The Read/Write options need to be implemented for the ArraySelection Widgets
 //      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
 //      fprintf(f, "   if (cb) {\n");
@@ -929,9 +927,8 @@ void createSourceFile( const std::string &group, const std::string &filter)
       std::string prop = opt->getPropertyName();
       std::string typ = opt->getValueType();
       std::string hl = opt->getHumanLabel();
-      if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget
-          || opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget
-          || opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget) {
+      if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
+              && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget ) {
         fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.c_str());
         fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.c_str());
       }

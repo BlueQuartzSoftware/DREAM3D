@@ -71,7 +71,16 @@ void DumpCellData::setupFilterParameters()
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
-
+#if 0
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Drop ALL Cell Data");
+    parameter->setPropertyName("DropAllData");
+    parameter->setWidgetType(FilterParameter::ArraySelectionWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }
+#endif
   setFilterParameters(parameters);
 }
 

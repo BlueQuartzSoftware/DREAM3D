@@ -55,7 +55,7 @@
 
 #include "FilterWidgetManager.h"
 #include "QFilterPipeline.h"
-#include "PipelineArraySelectionWidget.h"
+
 
 
 
