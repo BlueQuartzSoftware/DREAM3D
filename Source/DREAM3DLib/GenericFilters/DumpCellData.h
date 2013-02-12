@@ -38,6 +38,7 @@
 #define _DumpCellData_H_
 
 #include <string>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -61,14 +62,10 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
 
     virtual ~DumpCellData();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(bool, DropAllData)
-
-
-
+    typedef std::set<std::string> ArrayList_t;
+    virtual void setVoxelSelectedArrayNames(ArrayList_t selectedCellArrays,   ArrayList_t selectedFieldArrays, ArrayList_t selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
+    virtual void setSolidMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -81,7 +78,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Delete Cell Data"; }
+    virtual const std::string getHumanLabel() { return "Delete Arrays"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -120,6 +117,15 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    std::set<std::string> m_SelectedVoxelCellArrays;
+    std::set<std::string> m_SelectedVoxelFieldArrays;
+    std::set<std::string> m_SelectedVoxelEnsembleArrays;
+    std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
+    std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
+    std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
+    std::set<std::string> m_SelectedSolidMeshVertexArrays;
+    std::set<std::string> m_SelectedSolidMeshFaceArrays;
+    std::set<std::string> m_SelectedSolidMeshEdgeArrays;
 
     DumpCellData(const DumpCellData&); // Copy Constructor Not Implemented
     void operator=(const DumpCellData&); // Operator '=' Not Implemented

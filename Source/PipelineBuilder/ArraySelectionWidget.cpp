@@ -60,5 +60,160 @@ ArraySelectionWidget::~ArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::setupGui()
 {
+  connect(voxelCellArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(voxelFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(voxelEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(surfaceMeshVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(surfaceMeshFaceArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(surfaceMeshEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::arrayListUpdated(QListWidgetItem *item)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::updateArrays(VoxelDataContainer::Pointer vdc,
+                                               SurfaceMeshDataContainer::Pointer smdc,
+                                               SolidMeshDataContainer::Pointer sdc)
+{
+  updateVoxelArrayNames(vdc);
+  updateSurfaceMeshArrayNames(smdc);
+  updateSolidMeshArrayNames(sdc);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::updateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
+{
+  std::list<std::string> cellNames = vdc->getCellArrayNameList();
+  updateArrayList(voxelCellArrayList, cellNames, vdc);
+  std::set<std::string> nonSelectedArrays = getNonSelectedArrays(voxelCellArrayList);
+  for(std::set<std::string>::iterator iter = nonSelectedArrays.begin(); iter != nonSelectedArrays.end(); ++iter)
+  {
+    vdc->removeCellData(*iter);
+  }
+
+
+  std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
+  updateArrayList(voxelFieldArrayList, fieldNames, vdc);
+  nonSelectedArrays = getNonSelectedArrays(voxelFieldArrayList);
+  for(std::set<std::string>::iterator iter = nonSelectedArrays.begin(); iter != nonSelectedArrays.end(); ++iter)
+  {
+    vdc->removeFieldData(*iter);
+  }
+
+  std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
+  updateArrayList(voxelEnsembleArrayList, ensembleNames, vdc);
+  nonSelectedArrays = getNonSelectedArrays(voxelEnsembleArrayList);
+  for(std::set<std::string>::iterator iter = nonSelectedArrays.begin(); iter != nonSelectedArrays.end(); ++iter)
+  {
+    vdc->removeEnsembleData(*iter);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
+{
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer vdc)
+{
+
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc )
+{
+  QStringList selectedArrays;
+  for(qint32 i = 0; i < listWidget->count(); ++i)
+  {
+    if (listWidget->item(i)->checkState() == Qt::Checked)
+    {
+      selectedArrays << listWidget->item(i)->text();
+    }
+  }
+  listWidget->blockSignals(true);
+  listWidget->clear();
+  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    QString name = QString::fromStdString(*iter);
+    listWidget->addItem(name);
+    Qt::CheckState checked = Qt::Unchecked;
+    if (selectedArrays.contains(name) == true) { checked = Qt::Checked; }
+    listWidget->item(listWidget->count() - 1)->setCheckState(checked);
+  }
+  listWidget->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
+{
+  std::set<std::string> selectedArrays;
+  for(qint32 i = 0; i < listWidget->count(); ++i)
+  {
+    if (listWidget->item(i)->checkState() == Qt::Checked)
+    {
+      selectedArrays.insert(listWidget->item(i)->text().toStdString());
+    }
+  }
+  return selectedArrays;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::set<std::string> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
+{
+  std::set<std::string> non_selectedArrays;
+  for(qint32 i = 0; i < listWidget->count(); ++i)
+  {
+    if (listWidget->item(i)->checkState() == Qt::Unchecked)
+    {
+      non_selectedArrays.insert(listWidget->item(i)->text().toStdString());
+    }
+  }
+  return non_selectedArrays;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::clearArraySelectionLists()
+{
+  voxelCellArrayList->clear();
+  voxelFieldArrayList->clear();
+  voxelEnsembleArrayList->clear();
+
+  surfaceMeshVertexArrayList->clear();
+  surfaceMeshFaceArrayList->clear();
+  surfaceMeshEdgeArrayList->clear();
+}
+

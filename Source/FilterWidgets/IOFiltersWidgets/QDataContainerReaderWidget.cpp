@@ -250,6 +250,8 @@ void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Poi
 void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
   updateVoxelArrayNames(vdc);
+  updateSurfaceMeshArrayNames(smdc);
+  updateSolidMeshArrayNames(sdc);
 }
 
 

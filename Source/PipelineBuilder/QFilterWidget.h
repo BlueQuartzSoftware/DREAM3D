@@ -113,7 +113,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void emitParametersChanged();
 
-    virtual QFilterWidget* createDeepCopy();
+   // virtual QFilterWidget* createDeepCopy();
 
     virtual QString  getFilterGroup();
 
@@ -122,7 +122,26 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+    /** @brief Subclasses can implement this method to add in any custom internal updates that are necessary */
     virtual void arrayNameComboBoxUpdated(QComboBox* cb);
+
+    /**
+     * @brief This method updates a combo box that is holding a list of Array Names from the data container
+     */
+    virtual void updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName);
+
+    /**
+     * @brief updateArraySelectionWidget This method allows the ArraySelectionWidget to update it's lists of arrays
+     * @param vdc Voxel Data Container
+     * @param smdc SurfaceMesh Data Container
+     * @param sdc SolidMesh Data Container
+     */
+    virtual void updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
+                                            SurfaceMeshDataContainer::Pointer smdc,
+                                            SolidMeshDataContainer::Pointer sdc,
+                                            QString propertyName);
+
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -183,7 +202,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
-
+    void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
   private:
     QRect      m_DeleteRect;
     QPoint     dragStartPosition;
