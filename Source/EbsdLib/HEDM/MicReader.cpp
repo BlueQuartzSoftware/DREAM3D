@@ -50,11 +50,11 @@
 
  #ifdef _MSC_VER
 
-	#if _MSC_VER < 1400
-		#define snprintf _snprintf
-	#else
-		#define snprintf sprintf_s
-	#endif
+  #if _MSC_VER < 1400
+    #define snprintf _snprintf
+  #else
+    #define snprintf sprintf_s
+  #endif
 #endif
 
 
@@ -64,8 +64,8 @@
 MicReader::MicReader() :
 EbsdReader()
 {
-	
-	// Init all the arrays to NULL
+
+  // Init all the arrays to NULL
   m_Euler1 = NULL;
   m_Euler2 = NULL;
   m_Euler3 = NULL;
@@ -76,76 +76,76 @@ EbsdReader()
   m_X = NULL;
   m_Y = NULL;
 
-	m_HeaderMap[Ebsd::Mic::InfileBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InfileBasename);
-	m_HeaderMap[Ebsd::Mic::InfileSerialLength] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::InfileSerialLength);
-	m_HeaderMap[Ebsd::Mic::OutfileBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutfileBasename);
-	m_HeaderMap[Ebsd::Mic::OutfileSerialLength] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::OutfileSerialLength);
-	m_HeaderMap[Ebsd::Mic::OutStructureBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutStructureBasename);
-	m_HeaderMap[Ebsd::Mic::BCPeakDetectorOffset] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::BCPeakDetectorOffset);
-	m_HeaderMap[Ebsd::Mic::InFileType] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InFileType);
-	m_HeaderMap[Ebsd::Mic::OutfileExtension] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutfileExtension);
-	m_HeaderMap[Ebsd::Mic::InfileExtesnion] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InfileExtesnion);
-	m_HeaderMap[Ebsd::Mic::BeamEnergyWidth] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamEnergyWidth);
-	m_HeaderMap[Ebsd::Mic::BeamDirection] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::BeamDirection);
-	m_HeaderMap[Ebsd::Mic::BeamDeflectionChiLaue] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::BeamDeflectionChiLaue);
-	m_HeaderMap[Ebsd::Mic::BeamHeight] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamHeight);
-	m_HeaderMap[Ebsd::Mic::BeamEnergy] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamEnergy);
-	m_HeaderMap[Ebsd::Mic::DetectorFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorFilename);
-	m_HeaderMap[Ebsd::Mic::OptimizationConstrainFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OptimizationConstrainFilename);
-	m_HeaderMap[Ebsd::Mic::EtaLimit] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::EtaLimit);
-	m_HeaderMap[Ebsd::Mic::SampleFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleFilename);
-	m_HeaderMap[Ebsd::Mic::StructureFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::StructureFilename);
-	m_HeaderMap[Ebsd::Mic::RotationRangeFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::RotationRangeFilename);
-	m_HeaderMap[Ebsd::Mic::FundamentalZoneFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::FundamentalZoneFilename);
-	m_HeaderMap[Ebsd::Mic::SampleSymmetry] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleSymmetry);
-	m_HeaderMap[Ebsd::Mic::MinAmplitudeFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinAmplitudeFraction);
-	m_HeaderMap[Ebsd::Mic::MaxQ] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxQ);
-	m_HeaderMap[Ebsd::Mic::MaxInitSideLength] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxInitSideLength);
-	m_HeaderMap[Ebsd::Mic::MinSideLength] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinSideLength);
-	m_HeaderMap[Ebsd::Mic::LocalOrientationGridRadius] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::LocalOrientationGridRadius);
-	m_HeaderMap[Ebsd::Mic::MinLocalResolution] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinLocalResolution);
-	m_HeaderMap[Ebsd::Mic::MaxLocalResolution] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxLocalResolution);
-	m_HeaderMap[Ebsd::Mic::MaxAcceptedCost] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxAcceptedCost);
-	m_HeaderMap[Ebsd::Mic::MaxConvergenceCost] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxConvergenceCost);
-	m_HeaderMap[Ebsd::Mic::MaxMCSteps] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxMCSteps);
-	m_HeaderMap[Ebsd::Mic::MCRadiusScaleFactor] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MCRadiusScaleFactor);
-	m_HeaderMap[Ebsd::Mic::SuccessiveRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SuccessiveRestarts);
-	m_HeaderMap[Ebsd::Mic::SecondsBetweenSave] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SecondsBetweenSave);
-	m_HeaderMap[Ebsd::Mic::NumParameterOptimizationSteps] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumParameterOptimizationSteps);
-	m_HeaderMap[Ebsd::Mic::NumElementToOptimizePerPE] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumElementToOptimizePerPE);
-	m_HeaderMap[Ebsd::Mic::OptimizationFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OptimizationFilename);
-	m_HeaderMap[Ebsd::Mic::DetectionLimitFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectionLimitFilename);
-	m_HeaderMap[Ebsd::Mic::ParameterMCInitTemperature] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ParameterMCInitTemperature);
-	m_HeaderMap[Ebsd::Mic::OrientationSearchMethod] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OrientationSearchMethod);
-	m_HeaderMap[Ebsd::Mic::CoolingFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::CoolingFraction);
-	m_HeaderMap[Ebsd::Mic::ThermalizeFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ThermalizeFraction);
-	m_HeaderMap[Ebsd::Mic::ParameterRefinements] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParameterRefinements);
-	m_HeaderMap[Ebsd::Mic::NumDetectors] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumDetectors);
-	m_HeaderMap[Ebsd::Mic::DetectorSpacing] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorSpacing);
-	m_HeaderMap[Ebsd::Mic::DetectorSpacingDeviation] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::DetectorSpacingDeviation);
-	m_HeaderMap[Ebsd::Mic::DetectorOrientationDeviationInEuler] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorOrientationDeviationInEuler);
-	m_HeaderMap[Ebsd::Mic::DetectorOrientationDeviationInSO3] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::DetectorOrientationDeviationInSO3);
-	m_HeaderMap[Ebsd::Mic::ParamMCMaxLocalRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCMaxLocalRestarts);
-	m_HeaderMap[Ebsd::Mic::ParamMCMaxGlobalRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCMaxGlobalRestarts);
-	m_HeaderMap[Ebsd::Mic::ParamMCNumGlobalSearchElements] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCNumGlobalSearchElements);
-	m_HeaderMap[Ebsd::Mic::ConstrainedOptimization] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ConstrainedOptimization);
-	m_HeaderMap[Ebsd::Mic::SearchVolumeReductionFactor] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SearchVolumeReductionFactor);
-	m_HeaderMap[Ebsd::Mic::FileNumStart] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::FileNumStart);
-	m_HeaderMap[Ebsd::Mic::FileNumEnd] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::FileNumEnd);
-	m_HeaderMap[Ebsd::Mic::SampleLocation] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleLocation);
-	m_HeaderMap[Ebsd::Mic::SampleOrientation] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleOrientation);
-	m_HeaderMap[Ebsd::Mic::EnableStrain] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::EnableStrain);
-	m_HeaderMap[Ebsd::Mic::SampleCenter] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleCenter);
-	m_HeaderMap[Ebsd::Mic::SampleRadius] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::SampleRadius);
-	m_HeaderMap[Ebsd::Mic::MaxDeepeningHitRatio] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxDeepeningHitRatio);
-	m_HeaderMap[Ebsd::Mic::ConsistencyError] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ConsistencyError);
-	m_HeaderMap[Ebsd::Mic::BraggFilterTolerance] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BraggFilterTolerance);
-	m_HeaderMap[Ebsd::Mic::MinAccelerationThreshold] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinAccelerationThreshold);
-	m_HeaderMap[Ebsd::Mic::MaxDiscreteCandidates] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxDiscreteCandidates);
-	m_HeaderMap[Ebsd::Mic::XDim] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::XDim);
-	m_HeaderMap[Ebsd::Mic::YDim] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::YDim);
-	m_HeaderMap[Ebsd::Mic::XRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::XRes);
-	m_HeaderMap[Ebsd::Mic::YRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::YRes);
+  m_HeaderMap[Ebsd::Mic::InfileBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InfileBasename);
+  m_HeaderMap[Ebsd::Mic::InfileSerialLength] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::InfileSerialLength);
+  m_HeaderMap[Ebsd::Mic::OutfileBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutfileBasename);
+  m_HeaderMap[Ebsd::Mic::OutfileSerialLength] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::OutfileSerialLength);
+  m_HeaderMap[Ebsd::Mic::OutStructureBasename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutStructureBasename);
+  m_HeaderMap[Ebsd::Mic::BCPeakDetectorOffset] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::BCPeakDetectorOffset);
+  m_HeaderMap[Ebsd::Mic::InFileType] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InFileType);
+  m_HeaderMap[Ebsd::Mic::OutfileExtension] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OutfileExtension);
+  m_HeaderMap[Ebsd::Mic::InfileExtesnion] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::InfileExtesnion);
+  m_HeaderMap[Ebsd::Mic::BeamEnergyWidth] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamEnergyWidth);
+  m_HeaderMap[Ebsd::Mic::BeamDirection] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::BeamDirection);
+  m_HeaderMap[Ebsd::Mic::BeamDeflectionChiLaue] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::BeamDeflectionChiLaue);
+  m_HeaderMap[Ebsd::Mic::BeamHeight] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamHeight);
+  m_HeaderMap[Ebsd::Mic::BeamEnergy] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BeamEnergy);
+  m_HeaderMap[Ebsd::Mic::DetectorFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorFilename);
+  m_HeaderMap[Ebsd::Mic::OptimizationConstrainFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OptimizationConstrainFilename);
+  m_HeaderMap[Ebsd::Mic::EtaLimit] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::EtaLimit);
+  m_HeaderMap[Ebsd::Mic::SampleFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleFilename);
+  m_HeaderMap[Ebsd::Mic::StructureFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::StructureFilename);
+  m_HeaderMap[Ebsd::Mic::RotationRangeFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::RotationRangeFilename);
+  m_HeaderMap[Ebsd::Mic::FundamentalZoneFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::FundamentalZoneFilename);
+  m_HeaderMap[Ebsd::Mic::SampleSymmetry] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleSymmetry);
+  m_HeaderMap[Ebsd::Mic::MinAmplitudeFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinAmplitudeFraction);
+  m_HeaderMap[Ebsd::Mic::MaxQ] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxQ);
+  m_HeaderMap[Ebsd::Mic::MaxInitSideLength] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxInitSideLength);
+  m_HeaderMap[Ebsd::Mic::MinSideLength] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinSideLength);
+  m_HeaderMap[Ebsd::Mic::LocalOrientationGridRadius] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::LocalOrientationGridRadius);
+  m_HeaderMap[Ebsd::Mic::MinLocalResolution] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinLocalResolution);
+  m_HeaderMap[Ebsd::Mic::MaxLocalResolution] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxLocalResolution);
+  m_HeaderMap[Ebsd::Mic::MaxAcceptedCost] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxAcceptedCost);
+  m_HeaderMap[Ebsd::Mic::MaxConvergenceCost] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxConvergenceCost);
+  m_HeaderMap[Ebsd::Mic::MaxMCSteps] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxMCSteps);
+  m_HeaderMap[Ebsd::Mic::MCRadiusScaleFactor] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MCRadiusScaleFactor);
+  m_HeaderMap[Ebsd::Mic::SuccessiveRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SuccessiveRestarts);
+  m_HeaderMap[Ebsd::Mic::SecondsBetweenSave] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SecondsBetweenSave);
+  m_HeaderMap[Ebsd::Mic::NumParameterOptimizationSteps] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumParameterOptimizationSteps);
+  m_HeaderMap[Ebsd::Mic::NumElementToOptimizePerPE] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumElementToOptimizePerPE);
+  m_HeaderMap[Ebsd::Mic::OptimizationFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OptimizationFilename);
+  m_HeaderMap[Ebsd::Mic::DetectionLimitFilename] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectionLimitFilename);
+  m_HeaderMap[Ebsd::Mic::ParameterMCInitTemperature] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ParameterMCInitTemperature);
+  m_HeaderMap[Ebsd::Mic::OrientationSearchMethod] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::OrientationSearchMethod);
+  m_HeaderMap[Ebsd::Mic::CoolingFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::CoolingFraction);
+  m_HeaderMap[Ebsd::Mic::ThermalizeFraction] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ThermalizeFraction);
+  m_HeaderMap[Ebsd::Mic::ParameterRefinements] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParameterRefinements);
+  m_HeaderMap[Ebsd::Mic::NumDetectors] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::NumDetectors);
+  m_HeaderMap[Ebsd::Mic::DetectorSpacing] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorSpacing);
+  m_HeaderMap[Ebsd::Mic::DetectorSpacingDeviation] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::DetectorSpacingDeviation);
+  m_HeaderMap[Ebsd::Mic::DetectorOrientationDeviationInEuler] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::DetectorOrientationDeviationInEuler);
+  m_HeaderMap[Ebsd::Mic::DetectorOrientationDeviationInSO3] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::DetectorOrientationDeviationInSO3);
+  m_HeaderMap[Ebsd::Mic::ParamMCMaxLocalRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCMaxLocalRestarts);
+  m_HeaderMap[Ebsd::Mic::ParamMCMaxGlobalRestarts] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCMaxGlobalRestarts);
+  m_HeaderMap[Ebsd::Mic::ParamMCNumGlobalSearchElements] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ParamMCNumGlobalSearchElements);
+  m_HeaderMap[Ebsd::Mic::ConstrainedOptimization] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::ConstrainedOptimization);
+  m_HeaderMap[Ebsd::Mic::SearchVolumeReductionFactor] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::SearchVolumeReductionFactor);
+  m_HeaderMap[Ebsd::Mic::FileNumStart] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::FileNumStart);
+  m_HeaderMap[Ebsd::Mic::FileNumEnd] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::FileNumEnd);
+  m_HeaderMap[Ebsd::Mic::SampleLocation] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleLocation);
+  m_HeaderMap[Ebsd::Mic::SampleOrientation] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleOrientation);
+  m_HeaderMap[Ebsd::Mic::EnableStrain] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::EnableStrain);
+  m_HeaderMap[Ebsd::Mic::SampleCenter] = MicStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Mic::SampleCenter);
+  m_HeaderMap[Ebsd::Mic::SampleRadius] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::SampleRadius);
+  m_HeaderMap[Ebsd::Mic::MaxDeepeningHitRatio] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MaxDeepeningHitRatio);
+  m_HeaderMap[Ebsd::Mic::ConsistencyError] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::ConsistencyError);
+  m_HeaderMap[Ebsd::Mic::BraggFilterTolerance] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::BraggFilterTolerance);
+  m_HeaderMap[Ebsd::Mic::MinAccelerationThreshold] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::MinAccelerationThreshold);
+  m_HeaderMap[Ebsd::Mic::MaxDiscreteCandidates] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::MaxDiscreteCandidates);
+  m_HeaderMap[Ebsd::Mic::XDim] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::XDim);
+  m_HeaderMap[Ebsd::Mic::YDim] = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::YDim);
+  m_HeaderMap[Ebsd::Mic::XRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::XRes);
+  m_HeaderMap[Ebsd::Mic::YRes] = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::YRes);
 
   setNumFields(8);
 }
@@ -262,7 +262,7 @@ int MicReader::readHeaderOnly()
     std::cout << "Config file could not be opened: " << name << std::endl;
     return -100;
   }
-  
+
   // 'name' now contains the complete path to the file with the new extension
 
   while (!inHeader.eof())
@@ -313,7 +313,7 @@ int MicReader::readFile()
     std::cout << "Config file could not be opened: " << name << std::endl;
     return -100;
   }
-  
+
   // 'name' now contains the complete path to the file with the new extension
 
   while (!inHeader.eof())
@@ -346,7 +346,7 @@ int MicReader::readFile()
 // -----------------------------------------------------------------------------
 int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 {
-  // Delete any currently existing pointers 
+  // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
   size_t totalDataRows = 0;
@@ -401,52 +401,52 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
-	if(m_Up[i] == 1)
-	{
-		x = m_X[i] + (newEdgeLength/2.0);
-		y = m_Y[i] + (constant*newEdgeLength);
-	}
-	if(m_Up[i] == 2)
-	{
-		x = m_X[i] + (newEdgeLength/2.0);
-		y = m_Y[i] - (constant*newEdgeLength);
-	}
-	if(x > xMax) xMax = x;
-	if(y > yMax) yMax = y;
-	if(x < xMin) xMin = x;
-	if(y < yMin) yMin = y;
-	EA1[i] = m_Euler1[i];
-	EA2[i] = m_Euler2[i];
-	EA3[i] = m_Euler3[i];
-	confidence[i] = m_Conf[i];
-	phase[i] = m_Phase[i];
-	up[i] = m_Up[i];
-	xVal[i] = m_X[i];
-	yVal[i] = m_Y[i];
+  if(m_Up[i] == 1)
+  {
+    x = m_X[i] + (newEdgeLength/2.0);
+    y = m_Y[i] + (constant*newEdgeLength);
+  }
+  if(m_Up[i] == 2)
+  {
+    x = m_X[i] + (newEdgeLength/2.0);
+    y = m_Y[i] - (constant*newEdgeLength);
+  }
+  if(x > xMax) xMax = x;
+  if(y > yMax) yMax = y;
+  if(x < xMin) xMin = x;
+  if(y < yMin) yMin = y;
+  EA1[i] = m_Euler1[i];
+  EA2[i] = m_Euler2[i];
+  EA3[i] = m_Euler3[i];
+  confidence[i] = m_Conf[i];
+  phase[i] = m_Phase[i];
+  up[i] = m_Up[i];
+  xVal[i] = m_X[i];
+  yVal[i] = m_Y[i];
   }
   xDim = int((xMax-xMin)/newEdgeLength)+1;
   yDim = int((yMax-yMin)/newEdgeLength)+1;
   xRes = newEdgeLength;
   yRes = newEdgeLength;
 
-  char buf[16];
-  ::memset(buf, 0, 16);
-  snprintf(buf, 16, "%d", xDim);
-  m_HeaderMap[Ebsd::Mic::XDim]->parseValue(buf,0,16);
-  ::memset(buf, 0, 16);
-  snprintf(buf, 16, "%d", yDim);
-  m_HeaderMap[Ebsd::Mic::YDim]->parseValue(buf,0,16);
-  ::memset(buf, 0, 16);
-  snprintf(buf, 16, "%f", xRes);
-  m_HeaderMap[Ebsd::Mic::XRes]->parseValue(buf,0,16);
-  ::memset(buf, 0, 16);
-  snprintf(buf, 16, "%f", yRes);
-  m_HeaderMap[Ebsd::Mic::YRes]->parseValue(buf,0,16);
+  char buf_2[16];
+  ::memset(buf_2, 0, 16);
+  snprintf(buf_2, 16, "%d", xDim);
+  m_HeaderMap[Ebsd::Mic::XDim]->parseValue(buf_2,0,16);
+  ::memset(buf_2, 0, 16);
+  snprintf(buf_2, 16, "%d", yDim);
+  m_HeaderMap[Ebsd::Mic::YDim]->parseValue(buf_2,0,16);
+  ::memset(buf_2, 0, 16);
+  snprintf(buf_2, 16, "%f", xRes);
+  m_HeaderMap[Ebsd::Mic::XRes]->parseValue(buf_2,0,16);
+  ::memset(buf_2, 0, 16);
+  snprintf(buf_2, 16, "%f", yRes);
+  m_HeaderMap[Ebsd::Mic::YRes]->parseValue(buf_2,0,16);
 
-  
-  // Delete any currently existing pointers 
+
+  // Delete any currently existing pointers
   deletePointers();
-    // Resize pointers 
+    // Resize pointers
   initPointers(xDim*yDim);
 
 
@@ -458,39 +458,39 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   {
      xA = xVal[i]-xMin;
      xB = xA + newEdgeLength;
-	 xC = xA + (newEdgeLength/2.0);
+   xC = xA + (newEdgeLength/2.0);
      if(up[i] == 1)
-	 {
-		 yA = yVal[i]-yMin;
-		 yB = yA;
-		 yC = yA+(root3over2*newEdgeLength);
-	 }     
-	 if(up[i] == 2)
-	 {
-		 yB = yVal[i]-yMin;
-		 yC = yB;
-		 yA = yB-(root3over2*newEdgeLength);
-	 }
-	 for(int j = int(xA/newEdgeLength); j < int(xB/newEdgeLength)+1; j++)
-	 {
-		 for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
-		 {
-			 check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
-			 check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
-			 check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
-			 if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
-			 {
-				 point = (k*xDim) + j;
-				 m_Euler1[point] = EA1[i];
-				 m_Euler2[point] = EA2[i];
-				 m_Euler3[point] = EA3[i];
-				 m_Conf[point] = confidence[i];
-				 m_Phase[point] = phase[i];
-				 m_X[point] = j*newEdgeLength;
-				 m_Y[point] = k*newEdgeLength;
-			 }
-		 }
-	 }
+   {
+     yA = yVal[i]-yMin;
+     yB = yA;
+     yC = yA+(root3over2*newEdgeLength);
+   }
+   if(up[i] == 2)
+   {
+     yB = yVal[i]-yMin;
+     yC = yB;
+     yA = yB-(root3over2*newEdgeLength);
+   }
+   for(int j = int(xA/newEdgeLength); j < int(xB/newEdgeLength)+1; j++)
+   {
+     for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
+     {
+       check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
+       check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
+       check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
+       if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
+       {
+         point = (k*xDim) + j;
+         m_Euler1[point] = EA1[i];
+         m_Euler2[point] = EA2[i];
+         m_Euler3[point] = EA3[i];
+         m_Conf[point] = confidence[i];
+         m_Phase[point] = phase[i];
+         m_X[point] = j*newEdgeLength;
+         m_Y[point] = k*newEdgeLength;
+       }
+     }
+   }
   }
 
 
