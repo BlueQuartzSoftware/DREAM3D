@@ -112,7 +112,7 @@ const static float m_pi = static_cast<float>(M_PI);
 
                     {{-unit111, unit112_2, 0},
                     {unit111, unit112_1, unit110},
-					{unit111, unit112_1, -unit110}}};
+          {unit111, unit112_1, -unit110}}};
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -225,7 +225,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   if(m_IdentifyGlobAlpha == true)
   {
-	  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
 
   // Field Data
@@ -363,7 +363,7 @@ void MergeColonies::execute()
 
   if(m_IdentifyGlobAlpha == true)
   {
-	identify_globAlpha();
+  identify_globAlpha();
   }
 
  notifyStatusMessage("Completed");
@@ -408,7 +408,7 @@ void MergeColonies::merge_colonies()
         int size = int(neighborlist[firstgrain].size());
         for (int l = 0; l < size; l++)
         {
-		  int colony = 0;
+      int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
@@ -530,41 +530,41 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   for(int i=0;i<12;i++)
   {
     MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
-	a[0] = mat[0][2];
-	a[1] = mat[1][2];
-	a[2] = mat[2][2];
-	b[0] = gAlphaT[0][2];
-	b[1] = gAlphaT[1][2];
-	b[2] = gAlphaT[2][2];
-	dP = MatrixMath::dotProduct(a, b);
-	angle = acos(dP);
-	if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
-	{
-		a[0] = mat[0][0];
-		a[1] = mat[1][0];
-		a[2] = mat[2][0];
-		b[0] = gAlphaT[0][0];
-		b[1] = gAlphaT[1][0];
-		b[2] = gAlphaT[2][0];
-		dP = MatrixMath::dotProduct(a, b);
-		angle = acos(dP);
-		if((angle*radToDeg) < m_AngleTolerance) return 1;
-		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
-		b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
-		b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
-		b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
-		dP = MatrixMath::dotProduct(a, b);
-		angle = acos(dP);
-		if((angle*radToDeg) < m_AngleTolerance) return 1;
-		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
-		b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
-		b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
-		b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
-		dP = MatrixMath::dotProduct(a, b);
-		angle = acos(dP);
-		if((angle*radToDeg) < m_AngleTolerance) return 1;
-		if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
-	}
+  a[0] = mat[0][2];
+  a[1] = mat[1][2];
+  a[2] = mat[2][2];
+  b[0] = gAlphaT[0][2];
+  b[1] = gAlphaT[1][2];
+  b[2] = gAlphaT[2][2];
+  dP = MatrixMath::dotProduct(a, b);
+  angle = acos(dP);
+  if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
+  {
+    a[0] = mat[0][0];
+    a[1] = mat[1][0];
+    a[2] = mat[2][0];
+    b[0] = gAlphaT[0][0];
+    b[1] = gAlphaT[1][0];
+    b[2] = gAlphaT[2][0];
+    dP = MatrixMath::dotProduct(a, b);
+    angle = acos(dP);
+    if((angle*radToDeg) < m_AngleTolerance) return 1;
+    if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+    b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
+    b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
+    b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
+    dP = MatrixMath::dotProduct(a, b);
+    angle = acos(dP);
+    if((angle*radToDeg) < m_AngleTolerance) return 1;
+    if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+    b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
+    b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
+    b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
+    dP = MatrixMath::dotProduct(a, b);
+    angle = acos(dP);
+    if((angle*radToDeg) < m_AngleTolerance) return 1;
+    if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
+  }
   }
 
   return 0;
@@ -576,17 +576,17 @@ void MergeColonies::identify_globAlpha()
   int64_t totalPoints = m->getTotalPoints();
   std::vector<int> betaSize(numParents,0);
   std::vector<int> totalSize(numParents,0);
-  for (size_t i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
-	int pnum = m_ParentIds[i];
-	totalSize[pnum]++;
-	if(m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::Cubic) betaSize[pnum]++;
+  int pnum = m_ParentIds[i];
+  totalSize[pnum]++;
+  if(m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::Cubic) betaSize[pnum]++;
   }
-  for (size_t i = 0; i < totalPoints; i++)
+  for (int64_t i = 0; i < totalPoints; i++)
   {
-	  int pnum = m_ParentIds[i];
-	  float ratio = float(betaSize[pnum])/float(totalSize[pnum]);
-	  if(ratio > 0.0) m_GlobAlpha[i] = 0;
-	  else m_GlobAlpha[i] = 1;
+    int pnum = m_ParentIds[i];
+    float ratio = float(betaSize[pnum])/float(totalSize[pnum]);
+    if(ratio > 0.0) m_GlobAlpha[i] = 0;
+    else m_GlobAlpha[i] = 1;
   }
 }

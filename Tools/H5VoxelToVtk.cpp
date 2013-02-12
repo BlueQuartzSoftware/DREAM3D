@@ -202,7 +202,7 @@ int main(int argc, char **argv)
 
   int64_t totalPoints = m->getTotalPoints();
   int32_t* m_GrainIds = NULL;
-  m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, NULL);
+  m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, 1, NULL);
     if (0 == m_GrainIds ) {
       ss << "Filter " << getNameOfClass() << " requires the data array '" <<
       "DREAM3D" << "::" << "CellData" << "::" <<  "GrainIds" << "' to already be created prior to execution." << std::endl;

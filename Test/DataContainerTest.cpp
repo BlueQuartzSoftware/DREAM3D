@@ -294,28 +294,28 @@ void _arrayCreation(VoxelDataContainer::Pointer m)
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10*2, absFilt.get());
+  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, absFilt.get());
+  ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool* bool_ptr =  m->getCellDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10*2, absFilt.get());
+  bool* bool_ptr =  m->getCellDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
+  ptr = m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
@@ -330,28 +330,28 @@ void _arrayCreation(VoxelDataContainer::Pointer m)
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10*2, absFilt.get());
+  ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, absFilt.get());
+  ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool_ptr =  m->getFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10*2, absFilt.get());
+  bool_ptr =  m->getFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
+  ptr = m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
@@ -367,28 +367,28 @@ void _arrayCreation(VoxelDataContainer::Pointer m)
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10*2, absFilt.get());
+  ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, absFilt.get());
+  ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool_ptr =  m->getEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10*2, absFilt.get());
+  bool_ptr =  m->getEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
   DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10*2, absFilt.get());
+  ptr = m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 

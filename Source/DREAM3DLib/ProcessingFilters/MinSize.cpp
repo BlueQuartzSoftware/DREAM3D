@@ -90,12 +90,12 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-  #if 0
+#if 1
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Grain Ids Array Name");
     option->setPropertyName("GrainIdsArrayName");
-    option->setWidgetType(FilterParameter::ArrayNameComboBox);
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -104,7 +104,7 @@ void MinSize::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Phase Array Name");
     option->setPropertyName("CellPhasesArrayName");
-    option->setWidgetType(FilterParameter::ArrayNameComboBox);
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -113,12 +113,12 @@ void MinSize::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Field Phase Array Name");
     option->setPropertyName("FieldPhasesArrayName");
-    option->setWidgetType(FilterParameter::ArrayNameComboBox);
+    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
   }
-  #endif
+#endif
   setFilterParameters(parameters);
 }
 
@@ -138,24 +138,19 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+  std::cout << "-----   MinSize::dataCheck  ------------" << std::endl;
+  std::cout << m_GrainIdsArrayName << std::endl;
+  std::cout << m_CellPhasesArrayName << std::endl;
+  std::cout << m_FieldPhasesArrayName << std::endl;
 
-      TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-      if(err == -302)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
 }
 
 // -----------------------------------------------------------------------------

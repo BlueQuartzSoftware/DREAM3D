@@ -79,12 +79,12 @@ QString QFilterWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 QFilterWidget::QFilterWidget(QWidget* parent) :
-      QGroupBox(parent),
-      m_CurrentBorderColorFactor(0),
-      m_BorderIncrement(16),
-      m_IsSelected(false),
-      m_HasPreflightErrors(false),
-      m_HasPreflightWarnings(false)
+  QGroupBox(parent),
+  m_CurrentBorderColorFactor(0),
+  m_BorderIncrement(16),
+  m_IsSelected(false),
+  m_HasPreflightErrors(false),
+  m_HasPreflightWarnings(false)
 {
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
@@ -112,7 +112,7 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 QString QFilterWidget::getFilterGroup()
 {
-    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,9 +148,9 @@ void QFilterWidget::setHasPreflightErrors(bool hasErrors)
   m_HasPreflightErrors = hasErrors;
   if (m_HasPreflightErrors == true)
   {
-//    m_timer->start(100);
-//    m_CurrentBorderColorFactor = 64;
-//    m_BorderIncrement = 16;
+    //    m_timer->start(100);
+    //    m_CurrentBorderColorFactor = 64;
+    //    m_BorderIncrement = 16;
   }
   else
   {
@@ -167,9 +167,9 @@ void QFilterWidget::setHasPreflightWarnings(bool hasWarnings)
   m_HasPreflightWarnings = hasWarnings;
   if (m_HasPreflightWarnings == true)
   {
-//    m_timer->start(100);
-//    m_CurrentBorderColorFactor = 64;
-//    m_BorderIncrement = 16;
+    //    m_timer->start(100);
+    //    m_CurrentBorderColorFactor = 64;
+    //    m_BorderIncrement = 16;
   }
   else
   {
@@ -259,23 +259,23 @@ void QFilterWidget::updateWidgetStyle()
   QResource headerResource(headerFile);
   if (true == headerResource.isValid())
   {
-      style.append("background-image: url(");
-      style.append( headerFile );
-      style.append(");\n");
+    style.append("background-image: url(");
+    style.append( headerFile );
+    style.append(");\n");
   }
   else
 #endif
 
 
-  QString headerImage("background-image: url(:/filterWidgetBorder.png);");
+    QString headerImage("background-image: url(:/filterWidgetBorder.png);");
   if(m_HasPreflightWarnings == true)
   {
-      headerImage = "background-image: url(:/filterWidgetBorder_Warning.png);";
+    headerImage = "background-image: url(:/filterWidgetBorder_Warning.png);";
   }
 
   if(m_HasPreflightErrors == true)
   {
-      headerImage = "background-image: url(:/filterWidgetBorder_Error.png);";
+    headerImage = "background-image: url(:/filterWidgetBorder_Error.png);";
   }
   style.append(headerImage);
   style.append("background-position: top ;\n background-repeat: repeat-x;");
@@ -347,7 +347,7 @@ void QFilterWidget::setupGui()
 
   // Add the TabWidget to the top level Vertical Layout
   vertLayout_0->addWidget(tabWidget);
-QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
+  QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
 #else
 
   QVBoxLayout* vertLayout = new QVBoxLayout(this);
@@ -370,7 +370,7 @@ QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
     QString labelName = QString::fromStdString(option->getHumanLabel());
     if (option->getUnits().empty() == false)
     {
-        labelName.append(" (").append(QString::fromStdString(option->getUnits())).append(")");
+      labelName.append(" (").append(QString::fromStdString(option->getUnits())).append(")");
     }
     QLabel* label = new QLabel(labelName, this);
 
@@ -423,13 +423,13 @@ QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
       theSlot.append("set");
       theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-     // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
+      // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
       QObject::connect( com, SIGNAL(activated(const QString &)),
-                      this, theSlot.toAscii());
+                        this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
                         this, theSlot.toAscii());
-//      connect(fp, SIGNAL(textChanged(const QString &)),
-//              this, SLOT(updateLineEdit(const QString &)));
+      //      connect(fp, SIGNAL(textChanged(const QString &)),
+      //              this, SLOT(updateLineEdit(const QString &)));
 
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
@@ -455,13 +455,13 @@ QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
       theSlot.append("set");
       theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-     // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
+      // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
       QObject::connect( com, SIGNAL(activated(const QString &)),
-                      this, theSlot.toAscii());
+                        this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
                         this, theSlot.toAscii());
-//      connect(fp, SIGNAL(textChanged(const QString &)),
-//              this, SLOT(updateLineEdit(const QString &)));
+      //      connect(fp, SIGNAL(textChanged(const QString &)),
+      //              this, SLOT(updateLineEdit(const QString &)));
 
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
@@ -537,7 +537,7 @@ QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
       QVariant v = property(option->getPropertyName().c_str());
       le->setChecked(v.toBool());
     }
-    #if 0
+#if 0
     else if (wType == FilterParameter::IntConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
@@ -570,7 +570,7 @@ QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
       QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toDouble());
     }
-    #endif
+#endif
     else if (wType == FilterParameter::ChoiceWidget)
     {
       ChoiceFilterParameter* choiceFilterParameter = ChoiceFilterParameter::SafeObjectDownCast<FilterParameter*, ChoiceFilterParameter*>(option);
@@ -597,9 +597,61 @@ QVBoxLayout* vertLayout = new QVBoxLayout(parameterTab);
       cb->setCurrentIndex(uintValue);
       setProperty(option->getPropertyName().c_str(), uintValue);
     }
+    else if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
+    {
+      setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
+    {
+      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
+    {
+      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
     ++optIndex;
   }
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
+                                                   FilterParameter* option, QLabel* label )
+{
+  frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
+  QComboBox* cb = new QComboBox(this);
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
+  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
+                                                    FilterParameter* option, QLabel* label )
+{
+  frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
+  QComboBox* cb = new QComboBox(this);
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
+  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex,
+                                                       FilterParameter* option, QLabel* label )
+{
+  frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
+  QComboBox* cb = new QComboBox(this);
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
+  frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+  connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 }
 
 // -----------------------------------------------------------------------------
@@ -624,8 +676,8 @@ AbstractFilter::Pointer QFilterWidget::getFilter()
 void QFilterWidget::updateQLineEditIntValue()
 {
   QObject* whoSent = sender();
-//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-//      << whoSent->objectName().toStdString() << std::endl;
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //      << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -644,8 +696,8 @@ void QFilterWidget::updateQLineEditIntValue()
 void QFilterWidget::updateQLineEditDoubleValue()
 {
   QObject* whoSent = sender();
-//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
- //     << whoSent->objectName().toStdString() << std::endl;
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //     << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -713,9 +765,9 @@ void QFilterWidget::selectInputPath()
   QObject* whoSent = sender();
 
   QString file = QFileDialog::getExistingDirectory(this,
-                                              tr("Select Input Folder"),
-                                              m_OpenDialogLastDirectory,
-                                              QFileDialog::ShowDirsOnly);
+                                                   tr("Select Input Folder"),
+                                                   m_OpenDialogLastDirectory,
+                                                   QFileDialog::ShowDirsOnly);
   if(true == file.isEmpty())
   {
     return;
@@ -817,7 +869,7 @@ void QFilterWidget::selectOutputPath()
 {
   QObject* whoSent = sender();
   QString file = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"),
-                                              m_OpenDialogLastDirectory, QFileDialog::ShowDirsOnly);
+                                                   m_OpenDialogLastDirectory, QFileDialog::ShowDirsOnly);
   if(true == file.isEmpty())
   {
     return;
@@ -868,7 +920,7 @@ void QFilterWidget::selectOutputPath()
 void QFilterWidget::updateComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -880,7 +932,28 @@ void QFilterWidget::updateComboBoxValue(int v)
       std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
     }
   }
+}
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateArrayNameComboBoxValue(int v)
+{
+  QObject* whoSent = sender();
+  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
+  if(cb)
+  {
+    bool ok = false;
+    QString text = cb->itemText(v);
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), text);
+    if (true == ok) { }
+    else
+    {
+      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -889,8 +962,8 @@ void QFilterWidget::updateComboBoxValue(int v)
 void QFilterWidget::updateQLineEditStringValue(const QString &v)
 {
   QObject* whoSent = sender();
-//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-//      << whoSent->objectName().toStdString() << std::endl;
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //      << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le)
   {
@@ -921,8 +994,8 @@ void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 void QFilterWidget::updateQCheckBoxValue(int v)
 {
   QObject* whoSent = sender();
-//  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
-//      << " via QCheckBox." <<  std::endl;
+  //  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+  //      << " via QCheckBox." <<  std::endl;
   QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
   if(le)
   {
@@ -937,7 +1010,7 @@ void QFilterWidget::updateLineEdit(const QString &v)
 {
   QObject* whoSent = sender();
   std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
-      << " via QLineEdit." <<  std::endl;
+            << " via QLineEdit." <<  std::endl;
   assert(false);
 }
 
@@ -964,68 +1037,6 @@ void QFilterWidget::readOptions(QSettings &prefs)
 {
 
 }
-#if 0
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::setCellDataArrayNames(QStringList arrayNames)
-{
-//  std::cout << getFilter()->getNameOfClass() << " Possible Cell Data" << std::endl;
-//  QStringList::const_iterator constIterator;
-//  for (constIterator = arrayNames.constBegin(); constIterator != arrayNames.constEnd(); ++constIterator)
-//  {
-//    std::cout << (*constIterator).toLocal8Bit().constData() << std::endl;
-//  }
-  getPipelineArraySelectionWidget()->setPossibleCellArrayNames(arrayNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::setFieldDataArrayNames(QStringList arrayNames)
-{
-//  std::cout << getFilter()->getNameOfClass() << " Possible Field Data" << std::endl;
-//  QStringList::const_iterator constIterator;
-//  for (constIterator = arrayNames.constBegin(); constIterator != arrayNames.constEnd(); ++constIterator)
-//  {
-//    std::cout << (*constIterator).toLocal8Bit().constData() << std::endl;
-//  }
-  getPipelineArraySelectionWidget()->setPossibleFieldArrayNames(arrayNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::setEnsembleDataArrayNames(QStringList arrayNames)
-{
-//  std::cout << getFilter()->getNameOfClass() << " Possible Ensemble Data" << std::endl;
-//  QStringList::const_iterator constIterator;
-//  for (constIterator = arrayNames.constBegin(); constIterator != arrayNames.constEnd(); ++constIterator)
-//  {
-//    std::cout << (*constIterator).toLocal8Bit().constData() << std::endl;
-//  }
-  getPipelineArraySelectionWidget()->setPossibleEnsembleArrayNames(arrayNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::updatePipelineArrayNames(AbstractFilter* filter)
-{
-  typedef std::set<std::string> StringSet_t;
-  StringSet_t cellNameSet = filter->getCreatedCellData();
-  StringSet_t fieldNameset = filter->getCreatedFieldData();
-  StringSet_t ensembleNameSet = filter->getCreatedEnsembleData();
-
-  StringSet_t cellReqNameSet = filter->getRequiredCellData();
-  StringSet_t fieldReqNameSet = filter->getRequiredFieldData();
-  StringSet_t ensembleReqNameSet = filter->getRequiredEnsembleData();
-
-
-
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -1096,15 +1107,15 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
   p.begin(&transparent);
   p.setOpacity(0.70);
- // p.setCompositionMode(QPainter::CompositionMode_Plus);
+  // p.setCompositionMode(QPainter::CompositionMode_Plus);
   p.drawPixmap(0, 0, pixmap);
- // p.setCompositionMode(QPainter::CompositionMode_Plus);
+  // p.setCompositionMode(QPainter::CompositionMode_Plus);
 
   // Set transparency level to 150 (possible values are 0-255)
   // The alpha channel of a color specifies the transparency effect,
   // 0 represents a fully transparent color, while 255 represents
   // a fully opaque color.
-//  p.fillRect(transparent.rect(), QColor(0, 0, 0, 150));
+  //  p.fillRect(transparent.rect(), QColor(0, 0, 0, 150));
   p.end();
 #endif
 
@@ -1123,14 +1134,14 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
   emit dragStarted(this);
 
-//  if(drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
-//  {
-//    std::cout << "Drag should close the widget because it was MOVE" << std::endl;
-//  }
-//  else
-//  {
-//    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
-//  }
+  //  if(drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
+  //  {
+  //    std::cout << "Drag should close the widget because it was MOVE" << std::endl;
+  //  }
+  //  else
+  //  {
+  //    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
+  //  }
   drag->exec(Qt::MoveAction);
 }
 
@@ -1140,13 +1151,13 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 QString QFilterWidget::getFileExtension(std::string propName)
 {
   std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
-//  int optIndex = 0;
+  //  int optIndex = 0;
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
     if(option->getPropertyName().compare(propName) == 0)
     {
-        return QString::fromStdString(option->getFileExtension());
+      return QString::fromStdString(option->getFileExtension());
     }
   }
   return QString("");
@@ -1164,32 +1175,73 @@ QString QFilterWidget::getFileType(std::string propName)
     FilterParameter* option = (*iter).get();
     if(option->getPropertyName().compare(propName) == 0)
     {
-        return QString::fromStdString(option->getFileType());
+      return QString::fromStdString(option->getFileType());
     }
   }
   return QString("");
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
+void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
+  std::cout << "void QFilterWidget::preflightAboutToExecute(...)" << std::endl;
 
+  // This section will update any combo boxes that are "Array Name" lists for the Voxel arrays.
+  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  {
+    FilterParameter* option = (*iter).get();
+    FilterParameter::WidgetType wType = option->getWidgetType();
+    std::list<std::string> arrayNames;
+    if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
+    {
+      arrayNames = vdc->getCellArrayNameList();
+    }
+    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
+    {
+      arrayNames = vdc->getFieldArrayNameList();
+    }
+    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
+    {
+      arrayNames = vdc->getEnsembleArrayNameList();
+    }
+
+    QComboBox* cb = qFindChild<QComboBox*>(this, QString::fromStdString(option->getPropertyName()));
+    if (NULL == cb) { continue; }
+    QString selectedName = cb->currentText();
+    cb->blockSignals(true);
+    cb->clear();
+    int index = 0;
+    for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+    {
+      QString name = QString::fromStdString(*iter);
+      cb->addItem(name);
+      if (name.compare(selectedName) == 0)
+      {
+        index = cb->count()-1;
+      }
+    }
+    cb->setCurrentIndex(index);
+    cb->blockSignals(false);
+
+    arrayNameComboBoxUpdated(cb);
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc)
+void QFilterWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
-
+  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc)
+void QFilterWidget::arrayNameComboBoxUpdated(QComboBox* cb)
 {
 
 }

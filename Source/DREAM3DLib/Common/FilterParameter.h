@@ -66,8 +66,10 @@ class FilterParameter
       OutputFileWidget,
       OutputPathWidget,
       BooleanWidget,
-      ChoiceWidget,
-      ArrayNameComboBox,
+      ChoiceWidget, // Generic ComboBox Drop down where the filter provides the list of strings
+      VoxelCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
+      VoxelFieldArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
+      VoxelEnsembleArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
       CustomWidget
       /* If you add more widget types you need to update the QFilterWidget code to
        * account for these new types. You also need to update the FilterWidgetCodeGen.cpp

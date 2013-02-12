@@ -51,11 +51,11 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 IdentifySample::IdentifySample() :
-AbstractFilter(),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_AlreadyChecked(NULL),
-m_Neighbors(NULL),
-m_GoodVoxels(NULL)
+  AbstractFilter(),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_AlreadyChecked(NULL),
+  m_Neighbors(NULL),
+  m_GoodVoxels(NULL)
 {
   setupFilterParameters();
 }
@@ -106,7 +106,7 @@ void IdentifySample::preflight()
 void IdentifySample::execute()
 {
   setErrorCondition(0);
- // int err = 0;
+  // int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -193,23 +193,23 @@ void IdentifySample::execute()
       }
       if(currentvlist.size() >= biggestBlock)
       {
-		  biggestBlock = currentvlist.size();
-		  for(int j = 0; j < totalPoints; j++)
-		  {
-			notSample[j] = false;
-		  }
-		  for(int j = 0; j < currentvlist.size(); j++)
-		  {
-			notSample[currentvlist[j]] = true;
-		  }
-	  }
+        biggestBlock = currentvlist.size();
+        for(int j = 0; j < totalPoints; j++)
+        {
+          notSample[j] = false;
+        }
+        for(size_t j = 0; j < currentvlist.size(); j++)
+        {
+          notSample[currentvlist[j]] = true;
+        }
+      }
       currentvlist.clear();
     }
   }
   for (int i = 0; i < totalPoints; i++)
   {
     if (notSample[i] == false && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
-	else if (notSample[i] == true && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
+    else if (notSample[i] == true && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
   }
   notSample.clear();
   checked.clear();
@@ -248,28 +248,28 @@ void IdentifySample::execute()
       }
       if(currentvlist.size() >= biggestBlock)
       {
-		  biggestBlock = currentvlist.size();
-		  for(int j = 0; j < totalPoints; j++)
-		  {
-			Sample[j] = false;
-		  }
-		  for(int j = 0; j < currentvlist.size(); j++)
-		  {
-			Sample[currentvlist[j]] = true;
-		  }
-	  }
+        biggestBlock = currentvlist.size();
+        for(int j = 0; j < totalPoints; j++)
+        {
+          Sample[j] = false;
+        }
+        for(int j = 0; j < currentvlist.size(); j++)
+        {
+          Sample[currentvlist[j]] = true;
+        }
+      }
       currentvlist.clear();
     }
   }
   for (int i = 0; i < totalPoints; i++)
   {
     if (Sample[i] == false && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
-	else if (Sample[i] == true && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
+    else if (Sample[i] == true && m_GoodVoxels[i] == false) m_GoodVoxels[i] = true;
   }
   Sample.clear();
   checked.clear();
 
-/*  std::vector<bool> change;
+  /*  std::vector<bool> change;
   change.resize(totalPoints,false);
   for (int i = 0; i < totalPoints; i++)
   {
@@ -293,14 +293,14 @@ void IdentifySample::execute()
             change[i] = true;
           }
         }
-	}
+  }
   }
   for(int j = 0; j < totalPoints; j++)
   {
-	if(change[j] == true) m_GoodVoxels[j] = true;
+  if(change[j] == true) m_GoodVoxels[j] = true;
   }
   change.clear();
   */
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Identifying Sample Complete");
+  notifyStatusMessage("Identifying Sample Complete");
 }

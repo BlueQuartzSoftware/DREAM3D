@@ -269,6 +269,11 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
 
+
+    DOES_DATASET_EXIST_DECL(PointData)
+    DOES_DATASET_EXIST_DECL(FaceData)
+    DOES_DATASET_EXIST_DECL(EdgeData)
+
   protected:
      SurfaceMeshDataContainer();
 

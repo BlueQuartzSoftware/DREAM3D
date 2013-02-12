@@ -31,6 +31,10 @@
 #ifndef _QDataContainerReaderWidget_H_
 #define _QDataContainerReaderWidget_H_
 
+
+#include <string>
+#include <set>
+
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
 
@@ -41,6 +45,7 @@
 
 #include "FilterWidgets/ui_QDataContainerReaderWidget.h"
 
+class QListWidget;
 
 class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContainerReaderWidget
 {
@@ -73,9 +78,15 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     virtual void updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
     virtual void updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
 
+    virtual void updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc);
+    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
+    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
+    virtual void clearArraySelectionLists();
 
  public slots:
     void setInputFile(const QString &v);
+
+    void arrayListUpdated(QListWidgetItem* item);
 
 
 protected slots:
@@ -84,6 +95,10 @@ protected slots:
 
   protected:
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
+
+  public:
+    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
   private:
     QString m_FilterGroup;
