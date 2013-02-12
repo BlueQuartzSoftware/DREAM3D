@@ -55,7 +55,8 @@
 * @brief Creates a "setter" method to set the property.
 */
 #define QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty) \
-  void set##prpty(m_msgType value) { this->m_##prpty = value; emit parametersChanged(); }
+  void set##prpty(m_msgType value, bool emitChanged = true) { this->m_##prpty = value;\
+  if (true == emitChanged) { emit parametersChanged();} }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
@@ -78,6 +79,9 @@
 class QMouseEvent;
 class AbstractFilter;
 class PipelineArraySelectionWidget;
+class QFormLayout;
+class QLabel;
+class QComboBox;
 
 /**
  * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
@@ -116,9 +120,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-    virtual void updateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
-    virtual void updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
-    virtual void updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void arrayNameComboBoxUpdated(QComboBox* cb);
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -134,6 +138,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void selectOutputFile();
     virtual void selectOutputPath();
     virtual void updateComboBoxValue(int v);
+    virtual void updateArrayNameComboBoxValue(int v);
     virtual void updateQSpinBoxValue(int v);
     virtual void updateQDoubleSpinBoxValue(double v);
     virtual void updateQCheckBoxValue(int v);
@@ -175,6 +180,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual QString getFileExtension(std::string propName);
     virtual QString getFileType(std::string propName);
 
+    void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+
   private:
     QRect      m_DeleteRect;
     QPoint     dragStartPosition;
@@ -186,6 +195,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool       m_HasPreflightErrors;
     bool       m_HasPreflightWarnings;
     static QString m_OpenDialogLastDirectory;
+
+
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented

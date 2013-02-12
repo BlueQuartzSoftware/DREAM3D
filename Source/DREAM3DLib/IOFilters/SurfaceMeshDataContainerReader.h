@@ -62,6 +62,9 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
 
     typedef std::list<std::string> NameListType;
 

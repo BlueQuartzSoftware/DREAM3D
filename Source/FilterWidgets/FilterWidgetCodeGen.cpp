@@ -193,7 +193,7 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 0
+#if 1
 #define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
 template<typename T>\
 void methodName(typename T::Pointer t, FILE* f){ }
@@ -300,7 +300,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   }
   fprintf(f, "class Q%sWidget : public QFilterWidget \n{\n", filter.c_str());
   fprintf(f, "   Q_OBJECT\n");
-  fprintf(f, " public:\n");
+  fprintf(f, "  public:\n");
   fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filter.c_str());
   fprintf(f, "    virtual ~Q%sWidget();\n", filter.c_str());
   fprintf(f, "    virtual AbstractFilter::Pointer getFilter();\n");
@@ -309,7 +309,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "    QFilterWidget* createDeepCopy();\n\n");
   fprintf(f, "    QString getFilterGroup();\n\n");
 
-
+  bool implementArrayNameComboBoxUpdated = false;
  // Loop on all the filter options
   for(size_t i = 0; i < options.size(); ++i)
   {
@@ -320,25 +320,25 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     if (opt->getCastableValueType().empty() == false)
     {
       std::string cType = opt->getCastableValueType();
-      fprintf(f, " private:\n");
+      fprintf(f, "  private:\n");
       fprintf(f, "    %s m_%s;\n", cType.c_str(), prop.c_str());
-      fprintf(f, " public:\n");
+      fprintf(f, "  public:\n");
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, " public slots:\n");
-      fprintf(f, "    void set%s(%s v);\n", prop.c_str(), cType.c_str());
-      fprintf(f, " public:\n");
+      fprintf(f, "  public slots:\n");
+      fprintf(f, "    void set%s(%s v, bool emitChanged = true);\n", prop.c_str(), cType.c_str());
+      fprintf(f, "  public:\n");
       fprintf(f, "    %s  get%s();\n", cType.c_str(), prop.c_str());
     }
     else if (opt->getValueType().compare("string") == 0)
     {
       std::string cType = "QString";
-      fprintf(f, " private:\n");
+      fprintf(f, "  private:\n");
       fprintf(f, "    QString m_%s;\n", prop.c_str());
-      fprintf(f, " public:\n");
+      fprintf(f, "  public:\n");
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, " public slots:\n");
-      fprintf(f, "    void set%s(const %s &v);\n", prop.c_str(), cType.c_str());
-      fprintf(f, " public:\n");
+      fprintf(f, "  public slots:\n");
+      fprintf(f, "    void set%s(const %s &v, bool emitChanged = true);\n", prop.c_str(), cType.c_str());
+      fprintf(f, "  public:\n");
       fprintf(f, "    %s  get%s();\n\n", cType.c_str(), prop.c_str());
     }
     else
@@ -346,7 +346,17 @@ void createHeaderFile( const std::string &group, const std::string &filter)
       fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
     }
+
+    if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget
+        || opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget
+        || opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget) { implementArrayNameComboBoxUpdated = true; }
   }
+
+  if (true == implementArrayNameComboBoxUpdated)
+  {
+    fprintf(f, "  public:\n    virtual void arrayNameComboBoxUpdated(QComboBox* cb);\n\n");
+  }
+
 
   // This template function will generate all the necessary code to set the name of each
   // required and created array.
@@ -753,6 +763,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fprintf(f, "  return w;\n");
   fprintf(f, "}\n");
 
+  bool implementArrayNameComboBoxUpdated = false;
   // Loop on all the filter options
   for (size_t i = 0; i < options.size(); ++i)
   {
@@ -765,8 +776,8 @@ void createSourceFile( const std::string &group, const std::string &filter)
       std::string cType = opt->getCastableValueType();
 
       fprintf(f, "// -----------------------------------------------------------------------------\n");
-      fprintf(f, "void Q%sWidget::set%s(%s v)\n{\n  m_%s = static_cast<%s>(v);\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str(), typ.c_str());
-      fprintf(f, "  emit parametersChanged();\n}\n");
+      fprintf(f, "void Q%sWidget::set%s(%s v, bool emitChanged)\n{\n  m_%s = static_cast<%s>(v);\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str(), typ.c_str());
+      fprintf(f, "  if (true == emitChanged) { emit parametersChanged();}\n}\n");
       fprintf(f, "// -----------------------------------------------------------------------------\n");
       fprintf(f, "%s  Q%sWidget::get%s() { \n  return static_cast<%s>(m_%s); \n}\n", cType.c_str(), filter.c_str(), prop.c_str(), typ.c_str(), prop.c_str());
     }
@@ -775,7 +786,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
       std::string cType = "QString";
 
       fprintf(f, "// -----------------------------------------------------------------------------\n");
-      fprintf(f, "void Q%sWidget::set%s(const %s &v)\n{\n  m_%s = v;\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str());
+      fprintf(f, "void Q%sWidget::set%s(const %s &v, bool emitChanged)\n{\n  m_%s = v;\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str());
       if (opt->getWidgetType() == FilterParameter::OutputFileWidget ||
           opt->getWidgetType() == FilterParameter::OutputPathWidget ||
           opt->getWidgetType() == FilterParameter::InputFileWidget ||
@@ -783,7 +794,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
       {
         fprintf(f, "  m_%s = QDir::toNativeSeparators(m_%s);\n", prop.c_str(), prop.c_str());
       }
-      fprintf(f, "  emit parametersChanged();\n}\n");
+      fprintf(f, "  if (true == emitChanged) { emit parametersChanged();}\n}\n");
 
       fprintf(f, "// -----------------------------------------------------------------------------\n");
       fprintf(f, "%s  Q%sWidget::get%s()\n{ \n  return m_%s; \n}\n", cType.c_str(), filter.c_str(), prop.c_str(), prop.c_str());
@@ -881,15 +892,19 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "     }\n");
       fprintf(f, "   }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::ArrayNameComboBox)
+    else if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget
+    || opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget
+    || opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
     {
-      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
-      fprintf(f, "   if (cb) {\n");
-      fprintf(f, "     bool ok = false;\n");
-      fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
-      fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
-      fprintf(f, "     }\n");
-      fprintf(f, "   }\n");
+      implementArrayNameComboBoxUpdated = true;
+    #warning The Read/Write options need to be implemented for the ArraySelection Widgets
+//      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
+//      fprintf(f, "   if (cb) {\n");
+//      fprintf(f, "     bool ok = false;\n");
+//      fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
+//      fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
+//      fprintf(f, "     }\n");
+//      fprintf(f, "   }\n");
     }
     else
     {
@@ -897,14 +912,38 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     fprintf(f, "  }\n");
   }
-  fprintf(f, "\n}\n\n\n");
+  fprintf(f, "\n}\n");
 
   // This template function will generate all the necessary code to set the name of each
   // required and created array.
   appendArrayNameCodeToSource<T>(t, f);
 
+  if (true == implementArrayNameComboBoxUpdated)
+  {
+    fprintf(f, "// -----------------------------------------------------------------------------\n");
+    fprintf(f, "void Q%sWidget::arrayNameComboBoxUpdated(QComboBox* cb)\n{\n", filter.c_str());
+    fprintf(f, "  if (NULL == cb) { return; }\n"); // Make sure we have a non null QWidget to deal with
+    for (size_t i = 0; i < options.size(); ++i)
+    {
+      FilterParameter::Pointer opt = options[i];
+      std::string prop = opt->getPropertyName();
+      std::string typ = opt->getValueType();
+      std::string hl = opt->getHumanLabel();
+      if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget
+          || opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget
+          || opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget) {
+        fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.c_str());
+        fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.c_str());
+      }
+    }
+    fprintf(f, "}\n");
+  }
 
+#if 0
 
+#endif
+
+  fprintf(f, "\n\n");
   fclose(f);
 
   // Now compare the file just generated with any possible existing file

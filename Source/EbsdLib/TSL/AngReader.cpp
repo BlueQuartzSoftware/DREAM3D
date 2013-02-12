@@ -212,8 +212,13 @@ int AngReader::readHeaderOnly()
   {
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
+    int i = 0;
+    while (buf[i] != 0) { ++i; }
+    buf[i] = 10; //Add back in the \n character
     parseHeaderLine(buf, kBufferSize);
-    origHeader.append(buf);
+    if (getHeaderIsComplete() == false) {
+      origHeader.append(buf);
+    }
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);

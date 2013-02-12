@@ -760,8 +760,8 @@ int PrecipitatePhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   size_t ensembles = m->getNumEnsembleTuples();
 
   // Get pointers
-  unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles*1, NULL);
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles*1, NULL);
+  unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
+  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
 
   //unsigned int* shapeTypes = m->getEnsembleDataSizeCheck<unsigned int, ShapeTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::ShapeTypes, ensembles*1, NULL);
 

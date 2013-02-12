@@ -46,38 +46,38 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
-/*
+/**
  *
  */
 class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(FindGrainPhases)
-     DREAM3D_STATIC_NEW_MACRO(FindGrainPhases)
-     DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(FindGrainPhases)
+    DREAM3D_TYPE_MACRO_SUPER(FindGrainPhases, AbstractFilter)
 
-     virtual ~FindGrainPhases();
+    virtual ~FindGrainPhases();
 
-	 //------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-     virtual const std::string getHumanLabel() { return "Find Field Phases"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getHumanLabel() { return "Find Field Phases"; }
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
-   protected:
-     FindGrainPhases();
+  protected:
+    FindGrainPhases();
 
-   private:
+  private:
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;
     int32_t* m_FieldPhases;

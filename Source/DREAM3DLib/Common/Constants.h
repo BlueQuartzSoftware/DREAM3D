@@ -106,8 +106,10 @@ namespace DREAM3D
     const std::string GrainIds("GrainIds");
     const std::string ParentIds("ParentIds");
     const std::string Phases("Phases");
+    const std::string CellPhases("Phases");
     const std::string BandContrast("BandContrast");
     const std::string EulerAngles("EulerAngles");
+    const std::string CellEulerAngles("CellEulerAngles");
     const std::string SurfaceVoxels("SurfaceVoxels");
     const std::string Quats("Quats");
     const std::string GoodVoxels("GoodVoxels");
@@ -125,7 +127,7 @@ namespace DREAM3D
     const std::string ConfidenceIndex("Confidence Index");
     const std::string IPFColor("IPFColor");
     const std::string GlobAlpha("GlobAlpha");
-
+    const std::string BC("BandContrasts");
 
     const std::string SolidMeshNodes("SolidMeshNodes");
     const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
@@ -135,7 +137,9 @@ namespace DREAM3D
   {
     const std::string Active("Active");
     const std::string Phases("Phases");
+    const std::string FieldPhases("Phases");
     const std::string EulerAngles("EulerAngles");
+    const std::string FieldEulerAngles("EulerAngles");
     const std::string AxisEulerAngles("AxisEulerAngles");
     const std::string SurfaceFields("SurfaceFields");
     const std::string BiasedFields("BiasedFields");
