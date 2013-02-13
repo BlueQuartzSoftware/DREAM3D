@@ -66,13 +66,80 @@ void MicPhase::printSelf(std::ostream &stream)
 
 
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicPhase::parseString(char* value, size_t start, size_t length, std::string &data)
+{
+  if (value[start] == ':')
+  {
+    ++start;
+  } // move past the ":" character
+  while (value[start] == ' ' || value[start] == '\t')
+  {
+    ++start;
+  }
 
+  size_t len = strlen(value);
+  // Strip off training new line and carriage returns
+  if (value[len-1] == '\r' || value[len-1] == '\n')
+  {
+    len--;
+  }
+  if (value[len-1] == '\r' || value[len-1] == '\n')
+  {
+    len--;
+  }
+  std::string data2(&(value[start]), len - start);
+  data = data2;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicPhase::parseLatticeConstants(char* value, size_t start, size_t length)
+{
+  std::string data;
+  parseString(value, start, length, data);
+  m_LatticeConstants = data;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicPhase::parseLatticeAngles(char* value, size_t start, size_t length)
+{
+  std::string data;
+  parseString(value, start, length, data);
+  m_LatticeAngles = data;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicPhase::parseBasisAtoms(char* value, size_t start, size_t length)
+{
+  std::string data;
+  parseString(value, start, length, data);
+  m_BasisAtoms = data;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicPhase::parseZandCoordinates(char* value, size_t start, size_t length)
+{
+  std::string data;
+  parseString(value, start, length, data);
+  m_ZandCoordinates.push_back(data);
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 unsigned int MicPhase::determineCrystalStructure()
 {
-	unsigned int crystal_structure = Ebsd::CrystalStructure::Cubic;
+	unsigned int crystal_structure;
+	if(m_Symmetry.compare(Ebsd::Mic::Cubic) == 0) crystal_structure = Ebsd::CrystalStructure::Cubic;
+	else if(m_Symmetry.compare(Ebsd::Mic::Hexagonal) == 0) crystal_structure = Ebsd::CrystalStructure::Hexagonal;
+	else if(m_Symmetry.compare(Ebsd::Mic::Orthorhombic) == 0) crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
+	else if(m_Symmetry.compare(Ebsd::Mic::Tetragonal) == 0) crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
+	else crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
 
   return crystal_structure;
 }

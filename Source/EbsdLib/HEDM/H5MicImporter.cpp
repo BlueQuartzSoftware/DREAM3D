@@ -385,22 +385,105 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 
 
 
+#define WRITE_PHASE_HEADER_DATA(reader, m_msgType, prpty, key)\
+{\
+  m_msgType t = reader->get##prpty();\
+  err = H5Lite::writeScalarDataset(pid, key, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5MicImporter Error: Could not write Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+    progressMessage(ss.str(), 100);\
+    err = H5Gclose(pid);\
+    return -1; }\
+}
+
+#define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
+{\
+  m_msgType t = reader->get##prpty();\
+  err = H5Lite::writeStringDataset(pid, key, t);\
+  if (err < 0) {\
+    std::ostringstream ss;\
+    ss << "H5MicImporter Error: Could not write Ang Header value '" << t\
+    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+    progressMessage(ss.str(), 100);\
+    err = H5Gclose(pid);\
+    return -1; }\
+}
+
+#define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
+{\
+  std::vector<m_msgType> tempVar = reader->get##prpty();\
+  dims[0] = tempVar.size();\
+  m_msgType* dataPtr = &(tempVar.front());\
+  if (NULL != dataPtr) {\
+    err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
+    if (err < 0) {\
+      std::ostringstream ss;\
+      ss << "H5MicImporter Error: Could not write Ang Data array for '" << key\
+      <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+      progressMessage(ss.str(), 100);\
+      err = H5Gclose(pid); \
+      return -1; }\
+}\
+}
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
 {
   int err = 0;
-//  int32_t rank = 1;
-//  hsize_t dims[1] = { 0 };
+ // int retErr = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 0 };
   std::vector<MicPhase::Pointer> phases = reader.getPhaseVector();
   for (std::vector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     MicPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Mic::PhaseName)
+    WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Mic::Phase)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeConstants, Ebsd::Mic::LatticeConstants)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeAngles, Ebsd::Mic::LatticeAngles)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, BasisAtoms, Ebsd::Mic::BasisAtoms)
+	WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Symmetry, Ebsd::Mic::Symmetry)
 
+	if (p->getZandCoordinates().size() > 0) {
+		hid_t ZandCGid = H5Utilities::createGroup(pid, Ebsd::Mic::ZandCoordinates);
+      err = writeZandCoordinates(p, ZandCGid);
+      if (err < 0) {
+        std::ostringstream ss;
+        ss << "H5MicImporter Error: Could not write Mic Z and Coordinates to the HDF5 file with data set name '"
+			<< Ebsd::Mic::ZandCoordinates << "'" << std::endl;
+        progressMessage(ss.str(), 100);
+        err = H5Gclose(ZandCGid);
+        return -1;
+      }
+      err = H5Gclose(ZandCGid);
+    }
     err = H5Gclose(pid);
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5MicImporter::writeZandCoordinates(MicPhase* p, hid_t ZandCGid)
+{
+ int err = 0;
+  std::vector<std::string> ZandCs = p->getZandCoordinates();
+  std::string ZandC;
+  int count = 0;
+  for (std::vector<std::string>::iterator f = ZandCs.begin(); f != ZandCs.end(); ++f )
+  {
+	err = H5Lite::writeStringDataset(ZandCGid, StringUtils::numToString(count), *f);
+	count++;
+  }
+  err = H5Gclose(ZandCGid);
+  
+  return err;
+}
+

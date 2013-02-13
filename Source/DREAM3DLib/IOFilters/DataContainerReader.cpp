@@ -134,14 +134,23 @@ void DataContainerReader::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-  //  {
-  //    FilterParameter::Pointer option = FilterParameter::New();
-  //    option->setHumanLabel("Read SolidMesh Data");
-  //    option->setPropertyName("ReadSolidMeshData");
-  //    option->setWidgetType(FilterParameter::BooleanWidget);
-  //    option->setValueType("bool");
-  //    parameters.push_back(option);
-  //  }
+    {
+      FilterParameter::Pointer option = FilterParameter::New();
+      option->setHumanLabel("Read SolidMesh Data");
+      option->setPropertyName("ReadSolidMeshData");
+      option->setWidgetType(FilterParameter::BooleanWidget);
+      option->setValueType("bool");
+      parameters.push_back(option);
+    }
+
+      {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Arrays to Read");
+    parameter->setPropertyName("ArraysToRead");
+    parameter->setWidgetType(FilterParameter::ArraySelectionWidget);
+    parameters.push_back(parameter);
+  }
+
   setFilterParameters(parameters);
 }
 
