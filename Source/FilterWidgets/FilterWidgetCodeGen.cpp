@@ -283,8 +283,8 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
   }
 
-  fprintf(f, "#ifndef _Q%s_H_\n", filter.c_str());
-  fprintf(f, "#define _Q%s_H_\n\n", filter.c_str());
+  fprintf(f, "#ifndef _Q%sWidget_H_\n", filter.c_str());
+  fprintf(f, "#define _Q%sWidget_H_\n\n", filter.c_str());
 
   fprintf(f, "#include <QtCore/QObject>\n");
   fprintf(f, "#include <QtCore/QSettings>\n\n");
@@ -371,7 +371,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filter.c_str(), filter.c_str());
   fprintf(f, "    void operator=(const Q%sWidget&);\n", filter.c_str());
   fprintf(f, "};\n");
-  fprintf(f, "#endif /* Q%s_H_ */\n", filter.c_str());
+  fprintf(f, "#endif /* Q%sWidget_H_ */\n", filter.c_str());
 
   fclose(f);
 
@@ -919,7 +919,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
     else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
              && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget )
     { implementArrayNameComboBoxUpdated = true;
+#if __APPLE__
 #warning The Read/Write options need to be implemented for the ArraySelection Widgets
+#endif
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {

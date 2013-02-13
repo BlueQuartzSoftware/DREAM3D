@@ -1244,7 +1244,7 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
         updateArrayNameComboBox(smdc->getEdgeArrayNameList(), propertyName);
         break;
       case FilterParameter::ArraySelectionWidget:
-        updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
+   //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
         break;
       default:
         break;
@@ -1257,7 +1257,7 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
 // -----------------------------------------------------------------------------
 void QFilterWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
-  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
+//  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
