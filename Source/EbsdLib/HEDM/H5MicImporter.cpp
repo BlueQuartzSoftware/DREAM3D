@@ -480,6 +480,7 @@ int H5MicImporter::writeZandCoordinates(MicPhase* p, hid_t ZandCGid)
   for (std::vector<std::string>::iterator f = ZandCs.begin(); f != ZandCs.end(); ++f )
   {
 	err = H5Lite::writeStringDataset(ZandCGid, StringUtils::numToString(count), *f);
+	count++;
   }
   err = H5Gclose(ZandCGid);
   
