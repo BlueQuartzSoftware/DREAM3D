@@ -63,6 +63,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     virtual ~DumpCellData();
 
     typedef std::set<std::string> ArrayList_t;
+
     virtual void setVoxelSelectedArrayNames(ArrayList_t selectedCellArrays,   ArrayList_t selectedFieldArrays, ArrayList_t selectedEnsembleArrays);
     virtual void setSurfaceMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
     virtual void setSolidMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
@@ -120,9 +121,11 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     std::set<std::string> m_SelectedVoxelCellArrays;
     std::set<std::string> m_SelectedVoxelFieldArrays;
     std::set<std::string> m_SelectedVoxelEnsembleArrays;
+
     std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
     std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
     std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
+
     std::set<std::string> m_SelectedSolidMeshVertexArrays;
     std::set<std::string> m_SelectedSolidMeshFaceArrays;
     std::set<std::string> m_SelectedSolidMeshEdgeArrays;

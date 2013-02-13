@@ -77,63 +77,63 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
 
     virtual ~VoxelDataContainer();
 
-    template<typename T>
-    std::string TypeForPrimitive(T value)
-    {
+//    template<typename T>
+//    std::string TypeForPrimitive(T value)
+//    {
 
-      if (typeid(value) == typeid(float)) return "H5T_NATIVE_FLOAT";
-      if (typeid(value) == typeid(double)) return "H5T_NATIVE_DOUBLE";
+//      if (typeid(value) == typeid(float)) return "H5T_NATIVE_FLOAT";
+//      if (typeid(value) == typeid(double)) return "H5T_NATIVE_DOUBLE";
 
-      if (typeid(value) == typeid(int8_t)) return "H5T_NATIVE_INT8";
-      if (typeid(value) == typeid(uint8_t)) return "H5T_NATIVE_UINT8";
-# if CMP_TYPE_CHAR_IS_SIGNED
-      if (typeid(value) == typeid(char)) return "H5T_NATIVE_INT8";
-#else
-      if (typeid(value) == typeid(char)) return "H5T_NATIVE_UINT8";
-#endif
-      if (typeid(value) == typeid(signed char)) return "H5T_NATIVE_INT8";
-      if (typeid(value) == typeid(unsigned char)) return "H5T_NATIVE_UINT8";
-
-
-      if (typeid(value) == typeid(int16_t)) return "H5T_NATIVE_INT16";
-      if (typeid(value) == typeid(short)) return "H5T_NATIVE_INT16";
-      if (typeid(value) == typeid(signed short)) return "H5T_NATIVE_INT16";
-      if (typeid(value) == typeid(uint16_t)) return "H5T_NATIVE_UINT16";
-      if (typeid(value) == typeid(unsigned short)) return "H5T_NATIVE_UINT16";
+//      if (typeid(value) == typeid(int8_t)) return "H5T_NATIVE_INT8";
+//      if (typeid(value) == typeid(uint8_t)) return "H5T_NATIVE_UINT8";
+//# if CMP_TYPE_CHAR_IS_SIGNED
+//      if (typeid(value) == typeid(char)) return "H5T_NATIVE_INT8";
+//#else
+//      if (typeid(value) == typeid(char)) return "H5T_NATIVE_UINT8";
+//#endif
+//      if (typeid(value) == typeid(signed char)) return "H5T_NATIVE_INT8";
+//      if (typeid(value) == typeid(unsigned char)) return "H5T_NATIVE_UINT8";
 
 
-      if (typeid(value) == typeid(int32_t)) return "H5T_NATIVE_INT32";
-      if (typeid(value) == typeid(uint32_t)) return "H5T_NATIVE_UINT32";
-#if (CMP_SIZEOF_INT == 4)
-      if (typeid(value) == typeid(int)) return "H5T_NATIVE_INT32";
-      if (typeid(value) == typeid(signed int)) return "H5T_NATIVE_INT32";
-      if (typeid(value) == typeid(unsigned int)) return "H5T_NATIVE_UINT32";
-#endif
+//      if (typeid(value) == typeid(int16_t)) return "H5T_NATIVE_INT16";
+//      if (typeid(value) == typeid(short)) return "H5T_NATIVE_INT16";
+//      if (typeid(value) == typeid(signed short)) return "H5T_NATIVE_INT16";
+//      if (typeid(value) == typeid(uint16_t)) return "H5T_NATIVE_UINT16";
+//      if (typeid(value) == typeid(unsigned short)) return "H5T_NATIVE_UINT16";
 
 
-#if (CMP_SIZEOF_LONG == 4)
-      if (typeid(value) == typeid(long int)) return "H5T_NATIVE_INT32";
-      if (typeid(value) == typeid(signed long int)) return "H5T_NATIVE_INT32";
-      if (typeid(value) == typeid(unsigned long int)) return "H5T_NATIVE_UINT32";
-#elif (CMP_SIZEOF_LONG == 8)
-      if (typeid(value) == typeid(long int)) return "H5T_NATIVE_INT64";
-      if (typeid(value) == typeid(signed long int)) return "H5T_NATIVE_INT64";
-      if (typeid(value) == typeid(unsigned long int)) return "H5T_NATIVE_UINT64";
-#endif
+//      if (typeid(value) == typeid(int32_t)) return "H5T_NATIVE_INT32";
+//      if (typeid(value) == typeid(uint32_t)) return "H5T_NATIVE_UINT32";
+//#if (CMP_SIZEOF_INT == 4)
+//      if (typeid(value) == typeid(int)) return "H5T_NATIVE_INT32";
+//      if (typeid(value) == typeid(signed int)) return "H5T_NATIVE_INT32";
+//      if (typeid(value) == typeid(unsigned int)) return "H5T_NATIVE_UINT32";
+//#endif
 
 
-#if (CMP_SIZEOF_LONG_LONG == 8)
-      if (typeid(value) == typeid(long long int)) return "H5T_NATIVE_INT64";
-      if (typeid(value) == typeid(signed long long int)) return "H5T_NATIVE_INT64";
-      if (typeid(value) == typeid(unsigned long long int)) return "H5T_NATIVE_UINT64";
-#endif
-      if (typeid(value) == typeid(int64_t)) return "H5T_NATIVE_INT64";
-      if (typeid(value) == typeid(uint64_t)) return "H5T_NATIVE_UINT64";
+//#if (CMP_SIZEOF_LONG == 4)
+//      if (typeid(value) == typeid(long int)) return "H5T_NATIVE_INT32";
+//      if (typeid(value) == typeid(signed long int)) return "H5T_NATIVE_INT32";
+//      if (typeid(value) == typeid(unsigned long int)) return "H5T_NATIVE_UINT32";
+//#elif (CMP_SIZEOF_LONG == 8)
+//      if (typeid(value) == typeid(long int)) return "H5T_NATIVE_INT64";
+//      if (typeid(value) == typeid(signed long int)) return "H5T_NATIVE_INT64";
+//      if (typeid(value) == typeid(unsigned long int)) return "H5T_NATIVE_UINT64";
+//#endif
 
-      if (typeid(value) == typeid(bool)) return "H5T_NATIVE_UINT8";
 
-      return "H5T_UNKNOWN";
-    }
+//#if (CMP_SIZEOF_LONG_LONG == 8)
+//      if (typeid(value) == typeid(long long int)) return "H5T_NATIVE_INT64";
+//      if (typeid(value) == typeid(signed long long int)) return "H5T_NATIVE_INT64";
+//      if (typeid(value) == typeid(unsigned long long int)) return "H5T_NATIVE_UINT64";
+//#endif
+//      if (typeid(value) == typeid(int64_t)) return "H5T_NATIVE_INT64";
+//      if (typeid(value) == typeid(uint64_t)) return "H5T_NATIVE_UINT64";
+
+//      if (typeid(value) == typeid(bool)) return "H5T_NATIVE_UINT8";
+
+//      return "H5T_UNKNOWN";
+//    }
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)

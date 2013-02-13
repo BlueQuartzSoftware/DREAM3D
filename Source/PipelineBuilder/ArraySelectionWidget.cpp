@@ -66,12 +66,21 @@ void ArraySelectionWidget::setupGui()
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(voxelEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
+
   connect(surfaceMeshVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(surfaceMeshFaceArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(surfaceMeshEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
+
+  connect(solidMeshVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(solidMeshFaceArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+  connect(solidMeshEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+
 }
 
 
@@ -80,7 +89,7 @@ void ArraySelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::arrayListUpdated(QListWidgetItem *item)
 {
-  emit parametersChanged();
+  emit arrayListsChanged();
 }
 
 // -----------------------------------------------------------------------------

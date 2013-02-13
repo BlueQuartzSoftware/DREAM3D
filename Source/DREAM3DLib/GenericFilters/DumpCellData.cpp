@@ -61,14 +61,6 @@ DumpCellData::~DumpCellData()
 void DumpCellData::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-//  {
-//    FilterParameter::Pointer parameter = FilterParameter::New();
-//    parameter->setHumanLabel("Drop ALL Cell Data");
-//    parameter->setPropertyName("DropAllData");
-//    parameter->setWidgetType(FilterParameter::BooleanWidget);
-//    parameter->setValueType("bool");
-//    parameters.push_back(parameter);
-//  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Arrays to Delete");
@@ -96,6 +88,70 @@ void DumpCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 void DumpCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  typedef std::set<std::string> NameList_t;
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if (NULL != m)
+  {
+    for(NameList_t::iterator iter = m_SelectedVoxelCellArrays.begin(); iter != m_SelectedVoxelCellArrays.end(); ++iter)
+    {
+      m->removeCellData(*iter);
+    }
+
+    std::cout << "  Cell Arrays Remaining" << std::endl;
+    std::list<std::string> cellNames = m->getCellArrayNameList();
+    for(std::list<std::string>::iterator iter = cellNames.begin(); iter != cellNames.end(); ++iter)
+    {
+      std::cout << "    * " << *iter << std::endl;
+    }
+    std::cout << " ############################ " << std::endl;
+
+    for(NameList_t::iterator iter = m_SelectedVoxelFieldArrays.begin(); iter != m_SelectedVoxelFieldArrays.end(); ++iter)
+    {
+      m->removeFieldData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedVoxelEnsembleArrays.begin(); iter != m_SelectedVoxelEnsembleArrays.end(); ++iter)
+    {
+      m->removeEnsembleData(*iter);
+    }
+  }
+
+
+
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if (NULL != sm)
+  {
+    for(NameList_t::iterator iter = m_SelectedSurfaceMeshVertexArrays.begin(); iter != m_SelectedSurfaceMeshVertexArrays.end(); ++iter)
+    {
+      sm->removePointData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedSurfaceMeshFaceArrays.begin(); iter != m_SelectedSurfaceMeshFaceArrays.end(); ++iter)
+    {
+      sm->removeFaceData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedSurfaceMeshEdgeArrays.begin(); iter != m_SelectedSurfaceMeshEdgeArrays.end(); ++iter)
+    {
+      sm->removeEdgeData(*iter);
+    }
+  }
+
+  SolidMeshDataContainer* sol = getSolidMeshDataContainer();
+  if (NULL != sol)
+  {
+    for(NameList_t::iterator iter = m_SelectedSolidMeshVertexArrays.begin(); iter != m_SelectedSolidMeshVertexArrays.end(); ++iter)
+    {
+      sol->removeCellData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedSolidMeshFaceArrays.begin(); iter != m_SelectedSolidMeshFaceArrays.end(); ++iter)
+    {
+      sol->removeFieldData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedSolidMeshEdgeArrays.begin(); iter != m_SelectedSolidMeshEdgeArrays.end(); ++iter)
+    {
+      sol->removeEnsembleData(*iter);
+    }
+  }
+
 }
 
 

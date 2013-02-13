@@ -162,8 +162,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void updateQDoubleSpinBoxValue(double v);
     virtual void updateQCheckBoxValue(int v);
     virtual void updateQLineEditStringValue(const QString &v);
-
     virtual void updateLineEdit(const QString &v);
+    virtual void updateArraySelectionWidget();
 
     virtual void setIsSelected(bool b);
 
@@ -203,6 +203,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
+
+
   private:
     QRect      m_DeleteRect;
     QPoint     dragStartPosition;
