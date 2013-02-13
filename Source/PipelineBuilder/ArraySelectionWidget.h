@@ -81,14 +81,18 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     template<typename Filter>
     void getArraySelections(Filter* filter)
     {
+      std::cout << "ArraySelectionWidget::getArraySelections(Filter* filter): " << filter->getNameOfClass() << std::endl;
+      filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList), getSelectedArrays(voxelFieldArrayList), getSelectedArrays(voxelEnsembleArrayList));
+      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList), getSelectedArrays(surfaceMeshFaceArrayList), getSelectedArrays(surfaceMeshEdgeArrayList));
+      filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList), getSelectedArrays(solidMeshFaceArrayList), getSelectedArrays(solidMeshEdgeArrayList));
 
     }
 
   signals:
-    void parametersChanged();
+    void arrayListsChanged();
 
   public slots:
-        void arrayListUpdated(QListWidgetItem* item);
+    void arrayListUpdated(QListWidgetItem* item);
 
   private:
     ArraySelectionWidget(const ArraySelectionWidget&); // Copy Constructor Not Implemented

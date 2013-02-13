@@ -670,8 +670,16 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
   ArraySelectionWidget* w = new ArraySelectionWidget(this);
   w->setObjectName((QString::fromStdString(option->getPropertyName())));
   frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
+  connect(w, SIGNAL(arrayListsChanged()), this, SLOT(updateArraySelectionWidget()));
 }
 
+// -----------------------------------------------------------------------------
+// This slot is just here to
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateArraySelectionWidget()
+{
+  emit parametersChanged();
+}
 
 // -----------------------------------------------------------------------------
 //
