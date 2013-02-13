@@ -77,8 +77,8 @@ class HDF5ScopedFileSentinel
     DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
     DREAM3D_INSTANCE_PROPERTY(bool, TurnOffErrors)
 
-  private:
-    herr_t (*_oldHDF_error_func)(hid_t, void *);
+    private:
+      herr_t (*_oldHDF_error_func)(hid_t, void *);
     void* _oldHDF_error_client_data;
 };
 
@@ -134,16 +134,16 @@ void DataContainerReader::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-    {
-      FilterParameter::Pointer option = FilterParameter::New();
-      option->setHumanLabel("Read SolidMesh Data");
-      option->setPropertyName("ReadSolidMeshData");
-      option->setWidgetType(FilterParameter::BooleanWidget);
-      option->setValueType("bool");
-      parameters.push_back(option);
-    }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Read SolidMesh Data");
+    option->setPropertyName("ReadSolidMeshData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
 
-      {
+  {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Arrays to Read");
     parameter->setPropertyName("ArraysToRead");
@@ -208,6 +208,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     {
       VoxelDataContainerReader::Pointer voxelReader = VoxelDataContainerReader::New();
       voxelReader->setHdfFileId(fileId);
+//      voxelReader->setCellArraysToRead(m_SelectedVoxelCellArrays);
+//      voxelReader->setFieldArraysToRead(m_SelectedVoxelFieldArrays);
+//      voxelReader->setEnsembleArraysToRead(m_SelectedVoxelEnsembleArrays);
       voxelReader->setVoxelDataContainer(getVoxelDataContainer());
       voxelReader->setObservers(getObservers());
       ss.str("");
@@ -226,6 +229,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     {
       SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
       smReader->setHdfFileId(fileId);
+//      smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
+//      smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
+//      smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
       smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
       smReader->setObservers(getObservers());
       ss.str("");
@@ -244,6 +250,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     {
       SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
       smReader->setHdfFileId(fileId);
+//      smReader->setCellArraysToRead(m_SelectedSolidMeshVertexArrays);
+//      smReader->setFieldArraysToRead(m_SelectedSolidMeshFaceArrays);
+//      smReader->setEnsembleArraysToRead(m_SelectedSolidMeshEdgeArrays);
       smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
       smReader->setObservers(getObservers());
       ss.str("");
@@ -303,7 +312,6 @@ void DataContainerReader::execute()
     voxelReader->setCellArraysToRead(m_SelectedVoxelCellArrays);
     voxelReader->setFieldArraysToRead(m_SelectedVoxelFieldArrays);
     voxelReader->setEnsembleArraysToRead(m_SelectedVoxelEnsembleArrays);
-
     voxelReader->setVoxelDataContainer(getVoxelDataContainer());
     voxelReader->setObservers(getObservers());
     ss.str("");
@@ -343,6 +351,9 @@ void DataContainerReader::execute()
   {
     SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
     smReader->setHdfFileId(fileId);
+    smReader->setCellArraysToRead(m_SelectedSolidMeshVertexArrays);
+    smReader->setFieldArraysToRead(m_SelectedSolidMeshFaceArrays);
+    smReader->setEnsembleArraysToRead(m_SelectedSolidMeshEdgeArrays);
     smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
     smReader->setObservers(getObservers());
     ss.str("");
@@ -375,8 +386,8 @@ void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selec
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                     std::set<std::string> selectedFaceArrays,
-                                                     std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
@@ -386,8 +397,8 @@ void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string>
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                     std::set<std::string> selectedFaceArrays,
-                                                     std::set<std::string> selectedEdgeArrays)
+                                                         std::set<std::string> selectedFaceArrays,
+                                                         std::set<std::string> selectedEdgeArrays)
 {
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
