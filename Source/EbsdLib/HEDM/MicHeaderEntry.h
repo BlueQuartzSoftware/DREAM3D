@@ -116,7 +116,7 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
     void parseValue(char* value, size_t start, size_t length)
     {
       if (value[start] == ':') { ++start; } // move past the ":" character
-      while(value[start] == ' ')
+      while(value[start] < 33)
       {
         ++start;
       }

@@ -65,6 +65,11 @@ namespace Ebsd {
  {
    const std::string Manufacturer("HEDM");
 
+  DECLARE_STRING_CONST(Cubic)
+  DECLARE_STRING_CONST(Hexagonal)
+  DECLARE_STRING_CONST(Orthorhombic)
+  DECLARE_STRING_CONST(Tetragonal)
+
    const std::string FileExt("mic");
 
   DECLARE_STRING_CONST(InfileBasename)
@@ -134,6 +139,11 @@ namespace Ebsd {
   DECLARE_STRING_CONST(MinAccelerationThreshold)
   DECLARE_STRING_CONST(MaxDiscreteCandidates)
 
+  DECLARE_STRING_CONST(LatticeConstants)
+  DECLARE_STRING_CONST(LatticeAngles)
+  DECLARE_STRING_CONST(BasisAtoms)
+  DECLARE_STRING_CONST(Symmetry)
+  DECLARE_STRING_CONST(ZandCoordinates)
 
   DECLARE_STRING_CONST(XDim)
   DECLARE_STRING_CONST(YDim)

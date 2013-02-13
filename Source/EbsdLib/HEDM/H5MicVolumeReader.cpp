@@ -273,10 +273,6 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
         {
           m_Phase[index] = 1;
         }
-		if(m_Phase[index] > 2)
-		{
-			int stop = 0;
-		}
 
         ++readerIndex;
       }
