@@ -88,6 +88,7 @@ class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
      * @return error condition
      */
     int writePhaseData(MicReader &reader, hid_t gid);
+    int writeZandCoordinates(MicPhase* p, hid_t ZandCGid);
 
     /**
      * @brief Returns the dimensions for the EBSD Data set

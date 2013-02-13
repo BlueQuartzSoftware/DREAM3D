@@ -269,10 +269,10 @@ int MicReader::readHeaderOnly()
   {
     ::memset(buf, 0, kBufferSize);
     inHeader.getline(buf, kBufferSize);
-    int i = 0;
+    parseHeaderLine(buf, kBufferSize);
+	int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
-    parseHeaderLine(buf, kBufferSize);
     origHeader.append(buf);
   }
   // Update the Original Header variable
@@ -300,8 +300,6 @@ int MicReader::readFile()
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
-  m_CurrentPhase = MicPhase::New();
-  m_PhaseVector.push_back(m_CurrentPhase);
 
   std::string parentPath = MXAFileInfo::parentPath(getFileName());
   std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
@@ -320,14 +318,54 @@ int MicReader::readFile()
   {
     ::memset(buf, 0, kBufferSize);
     inHeader.getline(buf, kBufferSize);
-    int i = 0;
+    parseHeaderLine(buf, kBufferSize);
+	int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
-    parseHeaderLine(buf, kBufferSize);
+
     origHeader.append(buf);
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);
+
+  parentPath = MXAFileInfo::parentPath(getFileName());
+  name = MXAFileInfo::fileNameWithOutExtension(getFileName());
+  if(parentPath.empty() == true) name = name + ".dat";
+  else name = parentPath + MXAFileInfo::Separator + name + ".dat";
+  std::ifstream inHeader2(name.c_str());
+  if (!inHeader2.is_open())
+  {
+    std::cout << "Dat file could not be opened: " << name << std::endl;
+    return -100;
+  }
+  
+  // 'name' now contains the complete path to the file with the new extension
+
+  m_CurrentPhase = MicPhase::New();
+
+  //hard-coded dat file read
+    ::memset(buf, 0, kBufferSize);
+    inHeader2.getline(buf, kBufferSize);
+	m_CurrentPhase->parseLatticeConstants(buf,0,kBufferSize);
+    ::memset(buf, 0, kBufferSize);
+    inHeader2.getline(buf, kBufferSize);
+	m_CurrentPhase->parseLatticeAngles(buf,0,kBufferSize);
+    ::memset(buf, 0, kBufferSize);
+    inHeader2.getline(buf, kBufferSize);
+	m_CurrentPhase->parseBasisAtoms(buf,0,kBufferSize);
+	int numAtoms;
+	size_t fieldsRead = sscanf(buf, "%d", &numAtoms);	
+	for(int iter=0;iter<numAtoms;iter++)
+	{
+		::memset(buf, 0, kBufferSize);
+		inHeader2.getline(buf, kBufferSize);
+		m_CurrentPhase->parseZandCoordinates(buf,0,kBufferSize);
+	}
+	m_CurrentPhase->setPhaseIndex(1);
+	std::string symm = getSampleSymmetry();
+	m_CurrentPhase->setSymmetry(symm);
+	m_PhaseVector.push_back(m_CurrentPhase);
+
 
   // We need to pass in the buffer because it has the first line of data
   err = readData(in, buf, kBufferSize);
@@ -368,6 +406,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
   fieldsRead = sscanf(buf, "%f", &origEdgeLength);
+  origEdgeLength = origEdgeLength;
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
   this->parseDataLine(buf, 0);
@@ -426,8 +465,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   xDim = int((xMax-xMin)/newEdgeLength)+1;
   yDim = int((yMax-yMin)/newEdgeLength)+1;
-  xRes = newEdgeLength;
-  yRes = newEdgeLength;
+  xRes = newEdgeLength*1000.0;
+  yRes = newEdgeLength*1000.0;
 
   char buf[16];
   ::memset(buf, 0, 16);
@@ -475,6 +514,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 	 {
 		 for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
 		 {
+			 x = float(j)*newEdgeLength;
+			 y = float(k)*newEdgeLength;
 			 check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
 			 check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
 			 check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
@@ -486,8 +527,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 				 m_Euler3[point] = EA3[i];
 				 m_Conf[point] = confidence[i];
 				 m_Phase[point] = phase[i];
-				 m_X[point] = j*newEdgeLength;
-				 m_Y[point] = k*newEdgeLength;
+				 m_X[point] = float(j)*xRes;
+				 m_Y[point] = float(k)*yRes;
 			 }
 		 }
 	 }
@@ -507,7 +548,7 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
     return;
   }
   // Start at the first character and walk until you find another non-space character
-  size_t i = 1;
+  size_t i = 0;
   while(buf[i] == ' ')
   {
     ++i;
