@@ -54,6 +54,7 @@ class QTreeWidgetItem;
 class QFilterWidget;
 class QMenu;
 
+
 /**
  * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
  * @brief This class represents the User Interface for the Synthetic Grain Generator module
@@ -153,6 +154,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
     void on_filterList_currentItemChanged( QListWidgetItem * item, QListWidgetItem * previous );
 
+    void on_filterSearch_textChanged (const QString& text);
 
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();

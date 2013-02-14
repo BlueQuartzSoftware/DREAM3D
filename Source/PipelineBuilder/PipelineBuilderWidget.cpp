@@ -55,6 +55,7 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QKeySequence>
+#include <QtGui/QSortFilterProxyModel>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -398,6 +399,8 @@ void PipelineBuilderWidget::setupGui()
     presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "DataContainerWriter" << "VtkRectilinearGridWriter";
     m_presetMap["Synthetic(Two Phases)"] = presetFilterList;
   }
+
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -575,7 +578,74 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
   helpText->setHtml(html);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
+{
 
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
+  FilterWidgetManager::Collection factories = fm->getFactories(); // Get all the Factories
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  if (item->parent() == NULL && item->text(0).compare(Detail::Library) == 0)
+  {
+    factories = fm->getFactories();
+  }
+  else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
+  {
+    factories = fm->getFactories(item->text(0).toStdString());
+  }
+
+  // Nothing was in the search Field so just reset to what was listed before
+  if (text.isEmpty() == true)
+  {
+    updateFilterGroupList(factories);
+    return;
+  }
+
+  // The user is typing something in the search box so lets search the filter class name and human label
+  filterList->clear();
+  for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
+  {
+    IFilterWidgetFactory::Pointer wigFactory = (*factory).second;
+    if (NULL == wigFactory.get() ) {
+      continue;
+    }
+    QString humanName = QString::fromStdString(wigFactory->getFilterHumanLabel());
+    bool match = false;
+    if (humanName.contains(text, Qt::CaseInsensitive) == true)
+    {
+      match = true;
+    }
+    QString filterName = QString::fromStdString((*factory).first);
+    if (filterName.contains(text, Qt::CaseInsensitive) == true)
+    {
+      match = true;
+    }
+    // Nothing matched the string
+    if (false == match) { continue; }
+
+    QString iconName(":/");
+    iconName.append( QString::fromStdString(wigFactory->getFilterGroup()));
+    iconName.append("_Icon.png");
+
+    // Validate the icon is in the resource system
+    QFileInfo iconInfo(iconName);
+    if (iconInfo.exists() == false)
+    {
+      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+    }
+
+    QIcon icon(iconName);
+    // Create the QListWidgetItem and add it to the filterList
+    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
+    // Set an "internal" QString that is the name of the filter. We need this value
+    // when the item is clicked in order to retreive the Filter Widget from the
+    // filter widget manager.
+    filterItem->setData( Qt::UserRole, filterName);
+  }
+
+}
 
 
 // -----------------------------------------------------------------------------
