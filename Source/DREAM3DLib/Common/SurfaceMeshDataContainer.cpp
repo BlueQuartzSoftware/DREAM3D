@@ -70,6 +70,13 @@ SurfaceMeshDataContainer::~SurfaceMeshDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, PointData)
+DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, FaceData)
+DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, EdgeData)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshDataContainer::buildMeshVertLinks()
 {
   m_MeshVertLinks = MeshVertLinks::New();

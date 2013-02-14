@@ -58,7 +58,7 @@ class FilterParameter
 
     enum WidgetType
     {
-      StringWidget,
+      StringWidget = 0,
       IntWidget,
       DoubleWidget,
       InputFileWidget,
@@ -66,7 +66,16 @@ class FilterParameter
       OutputFileWidget,
       OutputPathWidget,
       BooleanWidget,
-      ChoiceWidget,
+      ChoiceWidget, // Generic ComboBox Drop down where the filter provides the list of strings
+      /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
+      VoxelCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
+      VoxelFieldArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
+      VoxelEnsembleArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
+      SurfaceMeshVertexArrayNameSelectionWidget,
+      SurfaceMeshFaceArrayNameSelectionWidget,
+      SurfaceMeshEdgeArrayNameSelectionWidget,
+      /* ****  AND THIS LINE ******** */
+      ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       CustomWidget
       /* If you add more widget types you need to update the QFilterWidget code to
        * account for these new types. You also need to update the FilterWidgetCodeGen.cpp

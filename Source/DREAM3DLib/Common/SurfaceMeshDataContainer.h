@@ -90,6 +90,11 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer, Vertices)
     DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer, Faces)
 
+
+    DOES_DATASET_EXIST_DECL(PointData)
+    DOES_DATASET_EXIST_DECL(FaceData)
+    DOES_DATASET_EXIST_DECL(EdgeData)
+
     /**
      * @brief buildMeshVertLinks Creates the list of triangles for each vertex that the vertex is a part of
      */
@@ -268,6 +273,8 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     int getNumEdgeArrays();
 
     DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
+
+
 
   protected:
      SurfaceMeshDataContainer();

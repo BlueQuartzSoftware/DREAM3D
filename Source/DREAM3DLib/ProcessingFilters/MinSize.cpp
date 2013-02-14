@@ -54,16 +54,16 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 MinSize::MinSize() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_MinAllowedGrainSize(1),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_FieldPhases(NULL),
-m_Active(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_MinAllowedGrainSize(1),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_FieldPhases(NULL),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -90,6 +90,35 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
+#if 1
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Grain Ids Array Name");
+    option->setPropertyName("GrainIdsArrayName");
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Cell Phase Array Name");
+    option->setPropertyName("CellPhasesArrayName");
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Field Phase Array Name");
+    option->setPropertyName("FieldPhasesArrayName");
+    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+#endif
   setFilterParameters(parameters);
 }
 
@@ -109,24 +138,14 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -143,7 +162,7 @@ void MinSize::preflight()
 void MinSize::execute()
 {
   setErrorCondition(0);
- // int err = 0;
+  // int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -178,7 +197,7 @@ void MinSize::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Minimum Size Filter Complete");
+  notifyStatusMessage("Minimum Size Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -207,13 +226,13 @@ void MinSize::assign_badpoints()
 
   std::vector<int > remove;
   int good = 1;
-//  int neighbor;
-//  int index = 0;
-//  float x, y, z;
+  //  int neighbor;
+  //  int index = 0;
+  //  float x, y, z;
   int current = 0;
   int most = 0;
-//  int curgrain = 0;
- // DimType row, plane;
+  //  int curgrain = 0;
+  // DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
 
@@ -237,66 +256,66 @@ void MinSize::assign_badpoints()
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-        kstride = static_cast<int>( dims[0]*dims[1]*k );
-        for (int j = 0; j < dims[1]; j++)
+      kstride = static_cast<int>( dims[0]*dims[1]*k );
+      for (int j = 0; j < dims[1]; j++)
+      {
+        jstride = static_cast<int>( dims[0]*j );
+        for (int i = 0; i < dims[0]; i++)
         {
-            jstride = static_cast<int>( dims[0]*j );
-            for (int i = 0; i < dims[0]; i++)
+          count = kstride+jstride+i;
+          std::stringstream ss;
+          //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
+          //	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
+          grainname = m_GrainIds[count];
+          if (grainname < 0)
+          {
+            counter++;
+            current = 0;
+            most = 0;
+            for (int l = 0; l < 6; l++)
             {
-              count = kstride+jstride+i;
-              std::stringstream ss;
-        //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-        //	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
-              grainname = m_GrainIds[count];
-              if (grainname < 0)
+              good = 1;
+              neighpoint = static_cast<int>( count + neighpoints[l] );
+              if (l == 0 && k == 0) good = 0;
+              if (l == 5 && k == (dims[2] - 1)) good = 0;
+              if (l == 1 && j == 0) good = 0;
+              if (l == 4 && j == (dims[1] - 1)) good = 0;
+              if (l == 2 && i == 0) good = 0;
+              if (l == 3 && i == (dims[0] - 1)) good = 0;
+              if (good == 1)
               {
-                counter++;
-                current = 0;
-                most = 0;
-                for (int l = 0; l < 6; l++)
+                grain = m_GrainIds[neighpoint];
+                if (grain >= 0)
                 {
-                  good = 1;
-                  neighpoint = static_cast<int>( count + neighpoints[l] );
-                  if (l == 0 && k == 0) good = 0;
-                  if (l == 5 && k == (dims[2] - 1)) good = 0;
-                  if (l == 1 && j == 0) good = 0;
-                  if (l == 4 && j == (dims[1] - 1)) good = 0;
-                  if (l == 2 && i == 0) good = 0;
-                  if (l == 3 && i == (dims[0] - 1)) good = 0;
-                  if (good == 1)
+                  n[grain]++;
+                  current = n[grain];
+                  if (current > most)
                   {
-                    grain = m_GrainIds[neighpoint];
-                    if (grain >= 0)
-                    {
-                      n[grain]++;
-                      current = n[grain];
-                      if (current > most)
-                      {
-                        most = current;
-                        m_Neighbors[count] = neighpoint;
-                      }
-                    }
+                    most = current;
+                    m_Neighbors[count] = neighpoint;
                   }
                 }
-                for (int l = 0; l < 6; l++)
-                {
-                  good = 1;
-                  neighpoint = static_cast<int>( count + neighpoints[l] );
-                  if (l == 0 && k == 0) good = 0;
-                  if (l == 5 && k == (dims[2] - 1)) good = 0;
-                  if (l == 1 && j == 0) good = 0;
-                  if (l == 4 && j == (dims[1] - 1)) good = 0;
-                  if (l == 2 && i == 0) good = 0;
-                  if (l == 3 && i == (dims[0] - 1)) good = 0;
-                  if (good == 1)
-                  {
-                    grain = m_GrainIds[neighpoint];
-                    if(grain >= 0) n[grain] = 0;
-                  }
-                }
+              }
+            }
+            for (int l = 0; l < 6; l++)
+            {
+              good = 1;
+              neighpoint = static_cast<int>( count + neighpoints[l] );
+              if (l == 0 && k == 0) good = 0;
+              if (l == 5 && k == (dims[2] - 1)) good = 0;
+              if (l == 1 && j == 0) good = 0;
+              if (l == 4 && j == (dims[1] - 1)) good = 0;
+              if (l == 2 && i == 0) good = 0;
+              if (l == 3 && i == (dims[0] - 1)) good = 0;
+              if (good == 1)
+              {
+                grain = m_GrainIds[neighpoint];
+                if(grain >= 0) n[grain] = 0;
+              }
             }
           }
         }
+      }
     }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
@@ -308,18 +327,18 @@ void MinSize::assign_badpoints()
         if (grainname < 0 && m_GrainIds[neighbor] >= 0)
         {
 
-            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-            {
-              std::string name = *iter;
-              IDataArray::Pointer p = m->getCellData(*iter);
-              p->CopyTuple(neighbor, j);
-            }
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
         }
       }
     }
-//    std::stringstream ss;
-//     ss << "Assigning Bad Voxels count = " << count;
-//    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
+    //    std::stringstream ss;
+    //     ss << "Assigning Bad Voxels count = " << count;
+    //    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
 }
 
@@ -344,9 +363,9 @@ void MinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-      std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notifyStatusMessage(ss.str());
+    std::stringstream ss;
+    //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
+    //	  notifyStatusMessage(ss.str());
     if(voxcounts[i] >= m_MinAllowedGrainSize )
     {
       m_Active[i] = true;

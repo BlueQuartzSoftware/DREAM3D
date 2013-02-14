@@ -72,6 +72,14 @@ VoxelDataContainer::~VoxelDataContainer()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DOES_DATASET_EXIST_DEFN(VoxelDataContainer, CellData)
+DOES_DATASET_EXIST_DEFN(VoxelDataContainer, FieldData)
+DOES_DATASET_EXIST_DEFN(VoxelDataContainer, EnsembleData)
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

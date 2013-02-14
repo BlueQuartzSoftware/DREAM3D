@@ -218,7 +218,7 @@ int AngReader::readHeaderOnly()
     buf[i] = 10; //Add back in the \n character
     if (getHeaderIsComplete() == false) {
       origHeader.append(buf);
-	}
+    }
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);
@@ -450,7 +450,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
       std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
 
       std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
-      std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
+      std::cout << "m_HeaderMap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
       */
 #if 0
       std::cout << "<tr>\n    <td>" << word << "</td>\n    <td>" << "H5T_STRING" << "</td>\n";

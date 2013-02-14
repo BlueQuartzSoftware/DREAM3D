@@ -53,17 +53,33 @@
 class HDF5ScopedFileSentinel
 {
   public:
-    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
-    {}
+    HDF5ScopedFileSentinel(hid_t fileId, bool turnOffErrors) : m_FileId(fileId), m_TurnOffErrors(turnOffErrors)
+    {
+      if (m_TurnOffErrors == true)
+      {
+        H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
+        H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+      }
+
+    }
     virtual ~HDF5ScopedFileSentinel()
     {
+      if (m_TurnOffErrors == true)
+      {
+        H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
+      }
       if (m_FileId > 0) {
         H5Utilities::closeFile(m_FileId);
       }
+
     }
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
+    DREAM3D_INSTANCE_PROPERTY(bool, TurnOffErrors)
 
+    private:
+      herr_t (*_oldHDF_error_func)(hid_t, void *);
+    void* _oldHDF_error_client_data;
 };
 
 
@@ -118,14 +134,23 @@ void DataContainerReader::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-//  {
-//    FilterParameter::Pointer option = FilterParameter::New();
-//    option->setHumanLabel("Read SolidMesh Data");
-//    option->setPropertyName("ReadSolidMeshData");
-//    option->setWidgetType(FilterParameter::BooleanWidget);
-//    option->setValueType("bool");
-//    parameters.push_back(option);
-//  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Read SolidMesh Data");
+    option->setPropertyName("ReadSolidMeshData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Arrays to Read");
+    parameter->setPropertyName("ArraysToRead");
+    parameter->setWidgetType(FilterParameter::ArraySelectionWidget);
+    parameters.push_back(parameter);
+  }
+
   setFilterParameters(parameters);
 }
 
@@ -176,7 +201,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
-    HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+    HDF5ScopedFileSentinel scopedFileSentinel(fileId, true);
 
     /* READ THE VOXEL DATA TO THE HDF5 FILE */
     if (getVoxelDataContainer() != NULL && m_ReadVoxelData == true)
@@ -249,7 +274,7 @@ void DataContainerReader::execute()
 {
   int32_t err = 0;
   std::stringstream ss;
- // dataCheck(false, 1, 1, 1);
+  // dataCheck(false, 1, 1, 1);
 
   hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
@@ -262,10 +287,11 @@ void DataContainerReader::execute()
   }
 
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+  HDF5ScopedFileSentinel scopedFileSentinel(fileId, true);
 
   // Read our File Version string to the Root "/" group
   std::string fileVersion;
+
   H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
 
@@ -274,6 +300,9 @@ void DataContainerReader::execute()
   {
     VoxelDataContainerReader::Pointer voxelReader = VoxelDataContainerReader::New();
     voxelReader->setHdfFileId(fileId);
+    voxelReader->setCellArraysToRead(m_SelectedVoxelCellArrays);
+    voxelReader->setFieldArraysToRead(m_SelectedVoxelFieldArrays);
+    voxelReader->setEnsembleArraysToRead(m_SelectedVoxelEnsembleArrays);
     voxelReader->setVoxelDataContainer(getVoxelDataContainer());
     voxelReader->setObservers(getObservers());
     ss.str("");
@@ -292,6 +321,9 @@ void DataContainerReader::execute()
   {
     SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
     smReader->setHdfFileId(fileId);
+    smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
+    smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
+    smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
     smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
     smReader->setObservers(getObservers());
     ss.str("");
@@ -310,6 +342,9 @@ void DataContainerReader::execute()
   {
     SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
     smReader->setHdfFileId(fileId);
+    smReader->setCellArraysToRead(m_SelectedSolidMeshVertexArrays);
+    smReader->setFieldArraysToRead(m_SelectedSolidMeshFaceArrays);
+    smReader->setEnsembleArraysToRead(m_SelectedSolidMeshEdgeArrays);
     smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
     smReader->setObservers(getObservers());
     ss.str("");
@@ -323,7 +358,44 @@ void DataContainerReader::execute()
     }
   }
 
-
-
   notifyStatusMessage("Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+                                                     std::set<std::string> selectedFieldArrays,
+                                                     std::set<std::string> selectedEnsembleArrays)
+{
+  m_SelectedVoxelCellArrays = selectedCellArrays;
+  m_SelectedVoxelFieldArrays = selectedFieldArrays;
+  m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays)
+{
+  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                         std::set<std::string> selectedFaceArrays,
+                                                         std::set<std::string> selectedEdgeArrays)
+{
+  m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
+  m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
+  m_SelectedSolidMeshEdgeArrays = selectedEdgeArrays;
+}
+
+
+
+

@@ -803,7 +803,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   size_t ensembles = m->getNumEnsembleTuples();
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles*1, NULL);
+  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects

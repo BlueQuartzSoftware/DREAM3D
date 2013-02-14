@@ -58,6 +58,7 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 
 #include "QEbsdReferenceFrameDialog.h"
+
 #include "IOFiltersWidgets/moc_QEbsdToH5EbsdWidget.cxx"
 
 // -----------------------------------------------------------------------------

@@ -79,6 +79,10 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     virtual void execute();
 
+    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,   std::set<std::string> selectedFieldArrays, std::set<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,   std::set<std::string> selectedFaceArrays, std::set<std::string> selectedEdgeArrays);
+    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,   std::set<std::string> selectedFaceArrays, std::set<std::string> selectedEdgeArrays);
+
 
   protected:
     DataContainerReader();
@@ -94,6 +98,16 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    std::set<std::string> m_SelectedVoxelCellArrays;
+    std::set<std::string> m_SelectedVoxelFieldArrays;
+    std::set<std::string> m_SelectedVoxelEnsembleArrays;
+    std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
+    std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
+    std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
+    std::set<std::string> m_SelectedSolidMeshVertexArrays;
+    std::set<std::string> m_SelectedSolidMeshFaceArrays;
+    std::set<std::string> m_SelectedSolidMeshEdgeArrays;
+
     DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReader&); // Operator '=' Not Implemented
 

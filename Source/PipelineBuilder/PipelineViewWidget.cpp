@@ -55,7 +55,7 @@
 
 #include "FilterWidgetManager.h"
 #include "QFilterPipeline.h"
-#include "PipelineArraySelectionWidget.h"
+
 
 
 
@@ -309,6 +309,8 @@ void PipelineViewWidget::preflightPipeline()
     {
       fw->setHasPreflightErrors(false);
       fw->setHasPreflightWarnings(false);
+      fw->preflightAboutToExecute(m, sm, solid);
+
       AbstractFilter::Pointer filter = fw->getFilter();
 
       filter->setVoxelDataContainer(m.get());
@@ -334,7 +336,8 @@ void PipelineViewWidget::preflightPipeline()
         }
       }
 
-
+      // Tell the widget that we have arrays and to possibly update its gui
+      fw->preflightDoneExecuting(m, sm, solid);
     }
   }
   errorTableWidget->resizeRowsToContents();
