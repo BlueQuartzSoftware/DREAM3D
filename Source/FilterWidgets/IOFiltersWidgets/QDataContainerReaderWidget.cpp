@@ -84,9 +84,8 @@ AbstractFilter::Pointer QDataContainerReaderWidget::getFilter()
   filter->setReadVoxelData( getReadVoxelData() );
   filter->setReadSurfaceMeshData( getReadSurfaceMeshData() );
 
-  filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList), getSelectedArrays(voxelFieldArrayList), getSelectedArrays(voxelEnsembleArrayList));
-  filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList), getSelectedArrays(surfaceMeshFaceArrayList), getSelectedArrays(surfaceMeshEdgeArrayList));
-  filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList), getSelectedArrays(solidMeshFaceArrayList), getSelectedArrays(solidMeshEdgeArrayList));
+  arraySelectionWidget->getArraySelections(filter.get());
+
   return filter;
 }
 
@@ -116,21 +115,42 @@ void QDataContainerReaderWidget::setupGui()
   QObject::connect( com, SIGNAL(activated(const QString &)),
                     this, SLOT(on_m_InputFile_textChanged(const QString &)));
 
+  connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
+          this, SLOT(arraySelectionWidgetChanged()));
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::arraySelectionWidgetChanged()
+{
+  emit parametersChanged();
+}
 
 
-  connect(voxelCellArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(voxelFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(voxelEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceMeshVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceMeshFaceArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceMeshEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
-          this, SLOT(arrayListUpdated(QListWidgetItem*)));
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::on_m_ReadVoxelData_stateChanged(int state)
+{
+  emit parametersChanged();
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::on_m_ReadSurfaceMeshData_stateChanged(int state)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::on_m_ReadSolidMeshData_stateChanged(int state)
+{
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +261,9 @@ bool QDataContainerReaderWidget::verifyPathExists(QString outFilePath, QLineEdit
 // -----------------------------------------------------------------------------
 void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
-
+  // This would only really make sense if the Reader were in the middle of a pipeline then the list
+  // would show what is currently in the pipeline
+//  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
 }
 
 // -----------------------------------------------------------------------------
@@ -249,136 +271,7 @@ void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Poi
 // -----------------------------------------------------------------------------
 void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
-  updateVoxelArrayNames(vdc);
-  updateSurfaceMeshArrayNames(smdc);
-  updateSolidMeshArrayNames(sdc);
+  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
+  arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
 }
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::arrayListUpdated(QListWidgetItem *item)
-{
-  emit parametersChanged();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::updateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
-{
-  std::list<std::string> cellNames = vdc->getCellArrayNameList();
-  updateArrayList(voxelCellArrayList, cellNames, vdc);
-  std::set<std::string> nonSelectedArrays = getNonSelectedArrays(voxelCellArrayList);
-  for(std::set<std::string>::iterator iter = nonSelectedArrays.begin(); iter != nonSelectedArrays.end(); ++iter)
-  {
-    vdc->removeCellData(*iter);
-  }
-
-
-  std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
-  updateArrayList(voxelFieldArrayList, fieldNames, vdc);
-  nonSelectedArrays = getNonSelectedArrays(voxelFieldArrayList);
-  for(std::set<std::string>::iterator iter = nonSelectedArrays.begin(); iter != nonSelectedArrays.end(); ++iter)
-  {
-    vdc->removeFieldData(*iter);
-  }
-
-  std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
-  updateArrayList(voxelEnsembleArrayList, ensembleNames, vdc);
-  nonSelectedArrays = getNonSelectedArrays(voxelEnsembleArrayList);
-  for(std::set<std::string>::iterator iter = nonSelectedArrays.begin(); iter != nonSelectedArrays.end(); ++iter)
-  {
-    vdc->removeEnsembleData(*iter);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer vdc)
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc )
-{
-  QStringList selectedArrays;
-  for(qint32 i = 0; i < listWidget->count(); ++i)
-  {
-    if (listWidget->item(i)->checkState() == Qt::Checked)
-    {
-      selectedArrays << listWidget->item(i)->text();
-    }
-  }
-  listWidget->blockSignals(true);
-  listWidget->clear();
-  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
-  {
-    QString name = QString::fromStdString(*iter);
-    listWidget->addItem(name);
-    Qt::CheckState checked = Qt::Unchecked;
-    if (selectedArrays.contains(name) == true) { checked = Qt::Checked; }
-    listWidget->item(listWidget->count() - 1)->setCheckState(checked);
-  }
-  listWidget->blockSignals(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::set<std::string> QDataContainerReaderWidget::getSelectedArrays(QListWidget*listWidget)
-{
-  std::set<std::string> selectedArrays;
-  for(qint32 i = 0; i < listWidget->count(); ++i)
-  {
-    if (listWidget->item(i)->checkState() == Qt::Checked)
-    {
-      selectedArrays.insert(listWidget->item(i)->text().toStdString());
-    }
-  }
-  return selectedArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::set<std::string> QDataContainerReaderWidget::getNonSelectedArrays(QListWidget*listWidget)
-{
-  std::set<std::string> non_selectedArrays;
-  for(qint32 i = 0; i < listWidget->count(); ++i)
-  {
-    if (listWidget->item(i)->checkState() == Qt::Unchecked)
-    {
-      non_selectedArrays.insert(listWidget->item(i)->text().toStdString());
-    }
-  }
-  return non_selectedArrays;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::clearArraySelectionLists()
-{
-  voxelCellArrayList->clear();
-  voxelFieldArrayList->clear();
-  voxelEnsembleArrayList->clear();
-
-  surfaceMeshVertexArrayList->clear();
-  surfaceMeshFaceArrayList->clear();
-  surfaceMeshEdgeArrayList->clear();
-}

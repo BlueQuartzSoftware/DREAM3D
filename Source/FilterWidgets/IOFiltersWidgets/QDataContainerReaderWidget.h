@@ -49,8 +49,8 @@ class QListWidget;
 
 class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContainerReaderWidget
 {
-   Q_OBJECT
- public:
+    Q_OBJECT
+  public:
     QDataContainerReaderWidget(QWidget* parent = NULL);
     virtual ~QDataContainerReaderWidget();
     virtual AbstractFilter::Pointer getFilter();
@@ -65,40 +65,36 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     QString  getInputFile();
 
     Q_PROPERTY(bool ReadVoxelData READ getReadVoxelData WRITE setReadVoxelData)
-   // QFILTERWIDGET_INSTANCE_PROPERTY(bool, ReadVoxelData)
     void setReadVoxelData(bool value) { this->m_ReadVoxelData->setChecked(value); emit parametersChanged();}
     bool getReadVoxelData() { return this->m_ReadVoxelData->isChecked(); }
 
     Q_PROPERTY(bool ReadSurfaceMeshData READ getReadSurfaceMeshData WRITE setReadSurfaceMeshData)
-    //QFILTERWIDGET_INSTANCE_PROPERTY(bool, ReadSurfaceMeshData)
     void setReadSurfaceMeshData(bool value) { this->m_ReadSurfaceMeshData->setChecked(value); emit parametersChanged();}
     bool getReadSurfaceMeshData() { return this->m_ReadSurfaceMeshData->isChecked(); }
 
-    virtual void updateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
-    virtual void updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
-    virtual void updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+    Q_PROPERTY(bool ReadSolidMeshData READ getReadSolidMeshData WRITE setReadSolidMeshData)
+    void setReadSolidMeshData(bool value) { this->m_ReadSolidMeshData->setChecked(value); emit parametersChanged();}
+    bool getReadSolidMeshData() { return this->m_ReadSolidMeshData->isChecked(); }
 
-    virtual void updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc);
-    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
-    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
-    virtual void clearArraySelectionLists();
 
- public slots:
+    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+  public slots:
     void setInputFile(const QString &v);
+    void arraySelectionWidgetChanged();
 
-    void arrayListUpdated(QListWidgetItem* item);
 
-
-protected slots:
+  protected slots:
     void on_m_InputFileBtn_clicked();
     void on_m_InputFile_textChanged(const QString & text);
+    void on_m_ReadVoxelData_stateChanged(int state);
+    void on_m_ReadSurfaceMeshData_stateChanged(int state);
+    void on_m_ReadSolidMeshData_stateChanged(int state);
 
   protected:
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
-  public:
-    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
-    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
   private:
     QString m_FilterGroup;

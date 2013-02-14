@@ -57,6 +57,8 @@
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/SolidMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshTriangleNeighbors.hpp"
 
 /**
  * @class SolidMeshDataContainer SolidMeshDataContainer.h DREAM3DLib/Common/SolidMeshDataContainer.h
@@ -74,35 +76,36 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
 
     virtual ~SolidMeshDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Cell)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Field)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Point)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getCellData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
-
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getPointData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
 
     DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer, Vertices)
     DREAM3D_INSTANCE_PROPERTY(StructArray<Tetrahedron>::Pointer, Tetrahedrons)
 
-    DOES_DATASET_EXIST_DECL(CellData)
-    DOES_DATASET_EXIST_DECL(FieldData)
-    DOES_DATASET_EXIST_DECL(EnsembleData)
+
+    DOES_DATASET_EXIST_DECL(PointData)
+    DOES_DATASET_EXIST_DECL(FaceData)
+    DOES_DATASET_EXIST_DECL(EdgeData)
+
 
   /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addCellData(const std::string &name, IDataArray::Pointer data);
+    void addPointData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getCellData(const std::string &name);
+    IDataArray::Pointer getPointData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -110,46 +113,46 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeCellData(const std::string &name);
+    IDataArray::Pointer removePointData(const std::string &name);
 
     /**
-     * @brief Removes all the Cell Arrays
+     * @brief Removes all the Point Arrays
      */
-    void clearCellData();
+    void clearPointData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Cell (Formerly Cell) group
+     * Point group
      * @return
      */
-    std::list<std::string> getCellArrayNameList();
+    std::list<std::string> getPointArrayNameList();
 
     /**
-     * @brief Returns the total number of arrays that are stored in the Cell group
+     * @brief Returns the total number of arrays that are stored in the Point group
      * @return
      */
-    int getNumCellArrays();
+    int getNumPointArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumCellTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumPointTuples)
 
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    void addFaceData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getFaceData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -157,52 +160,52 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeFaceData(const std::string &name);
 
     /**
-     * @brief Removes all the Field Arrays
+     * @brief Removes all the Face Arrays
      */
-    void clearFieldData();
+    void clearFaceData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Field (Formerly Grain) group
+     * Face (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFieldArrayNameList();
+    std::list<std::string> getFaceArrayNameList();
 
     /**
-     * @brief Returns the total number of arrays that are stored in the Field group
+     * @brief Returns the total number of arrays that are stored in the Face group
      * @return
      */
-    int getNumFieldArrays();
+    int getNumFaceArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceTuples)
 
     /**
-     * @brief Resizes all of the Field Arrays to have 'size' tuples
+     * @brief Resizes all of the Face Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeFieldDataArrays(size_t size);
+    void resizeFaceDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addEdgeData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getEdgeData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -210,27 +213,30 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeEdgeData(const std::string &name);
 
     /**
      * @brief Removes all the ensemble data
      */
-    void clearEnsembleData();
+    void clearEdgeData();
 
-    std::list<std::string> getEnsembleArrayNameList();
+    std::list<std::string> getEdgeArrayNameList();
 
-    int getNumEnsembleArrays();
+    int getNumEdgeArrays();
 
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
 
   protected:
      SolidMeshDataContainer();
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_CellData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+     std::map<std::string, IDataArray::Pointer> m_PointData;
+     std::map<std::string, IDataArray::Pointer> m_FaceData;
+     std::map<std::string, IDataArray::Pointer> m_EdgeData;
+
+     MeshVertLinks::Pointer m_MeshVertLinks;
+     MeshTriangleNeighbors::Pointer m_TriangleNeighbors;
 
      SolidMeshDataContainer(const SolidMeshDataContainer&);
      void operator =(const SolidMeshDataContainer&);

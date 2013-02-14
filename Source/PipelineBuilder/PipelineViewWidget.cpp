@@ -336,10 +336,8 @@ void PipelineViewWidget::preflightPipeline()
         }
       }
 
-
       // Tell the widget that we have arrays and to possibly update its gui
       fw->preflightDoneExecuting(m, sm, solid);
-
     }
   }
   errorTableWidget->resizeRowsToContents();

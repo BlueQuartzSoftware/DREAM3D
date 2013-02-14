@@ -208,9 +208,6 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     {
       VoxelDataContainerReader::Pointer voxelReader = VoxelDataContainerReader::New();
       voxelReader->setHdfFileId(fileId);
-//      voxelReader->setCellArraysToRead(m_SelectedVoxelCellArrays);
-//      voxelReader->setFieldArraysToRead(m_SelectedVoxelFieldArrays);
-//      voxelReader->setEnsembleArraysToRead(m_SelectedVoxelEnsembleArrays);
       voxelReader->setVoxelDataContainer(getVoxelDataContainer());
       voxelReader->setObservers(getObservers());
       ss.str("");
@@ -229,9 +226,6 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     {
       SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
       smReader->setHdfFileId(fileId);
-//      smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
-//      smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
-//      smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
       smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
       smReader->setObservers(getObservers());
       ss.str("");
@@ -250,9 +244,6 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     {
       SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
       smReader->setHdfFileId(fileId);
-//      smReader->setCellArraysToRead(m_SelectedSolidMeshVertexArrays);
-//      smReader->setFieldArraysToRead(m_SelectedSolidMeshFaceArrays);
-//      smReader->setEnsembleArraysToRead(m_SelectedSolidMeshEdgeArrays);
       smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
       smReader->setObservers(getObservers());
       ss.str("");
