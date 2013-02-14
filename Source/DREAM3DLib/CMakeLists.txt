@@ -191,11 +191,10 @@ macro(ADD_DREAM3D_FILTER filterGroup filterName filterDocFile filterDocImages pu
             endif()
         endif()
 
-
-        file(APPEND ${CodeGeneratorFile} "createHeaderFile<${filterName}>(\"${filterGroup}\", \"${filterName}\");\n")
-        file(APPEND ${CodeGeneratorFile} "createSourceFile<${filterName}>(\"${filterGroup}\", \"${filterName}\");\n")
-        file(APPEND ${CodeGeneratorFile} "createHTMLFile<${filterName}>(\"${filterGroup}\", \"${filterName}\");\n")
-
+        file(APPEND ${CodeGeneratorFile} "  ${filterName}::Pointer _${filterName} = ${filterName}::New();\n")
+        file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
+        file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
+        file(APPEND ${CodeGeneratorFile} "  createHTMLFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get());\n\n")
 
         file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"FilterWidgets/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
 
