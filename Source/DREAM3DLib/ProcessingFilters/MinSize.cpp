@@ -90,7 +90,6 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-#if 1
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Grain Ids Array Name");
@@ -118,7 +117,7 @@ void MinSize::setupFilterParameters()
     option->setUnits("");
     parameters.push_back(option);
   }
-#endif
+
   setFilterParameters(parameters);
 }
 
