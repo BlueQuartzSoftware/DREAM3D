@@ -111,13 +111,13 @@ void ArraySelectionWidget::populateArrayNames(VoxelDataContainer::Pointer vdc,
 void ArraySelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
 {
   std::list<std::string> cellNames = vdc->getCellArrayNameList();
-  populateArrayList(voxelCellArrayList, cellNames, vdc);
+  populateArrayList(voxelCellArrayList, cellNames);
 
   std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
-  populateArrayList(voxelFieldArrayList, fieldNames, vdc);
+  populateArrayList(voxelFieldArrayList, fieldNames);
 
   std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
-  populateArrayList(voxelEnsembleArrayList, ensembleNames, vdc);
+  populateArrayList(voxelEnsembleArrayList, ensembleNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -125,7 +125,14 @@ void ArraySelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer v
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
 {
+  std::list<std::string> cellNames = vdc->getPointArrayNameList();
+  populateArrayList(surfaceMeshPointArrayList, cellNames);
 
+  std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
+  populateArrayList(surfaceMeshFaceArrayList, fieldNames);
+
+  std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
+  populateArrayList(surfaceMeshEdgeArrayList, ensembleNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -133,15 +140,20 @@ void ArraySelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContaine
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer vdc)
 {
+  std::list<std::string> cellNames = vdc->getPointArrayNameList();
+  populateArrayList(solidMeshPointArrayList, cellNames);
 
+  std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
+  populateArrayList(solidMeshFaceArrayList, fieldNames);
+
+  std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
+  populateArrayList(solidMeshEdgeArrayList, ensembleNames);
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc )
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames)
 {
   QStringList selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
@@ -257,5 +269,9 @@ void ArraySelectionWidget::clearArraySelectionLists()
   surfaceMeshPointArrayList->clear();
   surfaceMeshFaceArrayList->clear();
   surfaceMeshEdgeArrayList->clear();
+
+  surfaceMeshPointArrayList->clear();
+  solidMeshFaceArrayList->clear();
+  solidMeshEdgeArrayList->clear();
 }
 

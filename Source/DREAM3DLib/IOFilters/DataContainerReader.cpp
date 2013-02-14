@@ -214,11 +214,6 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       ss << getMessagePrefix() << " |--> Reading Voxel Data ";
       voxelReader->setMessagePrefix(ss.str());
       voxelReader->preflight();
-      if (voxelReader->getErrorCondition() < 0)
-      {
-        notifyErrorMessage("Error Reading the Voxel Data", -803);
-        return;
-      }
     }
 
     /* READ THE SurfaceMesh DATA TO THE HDF5 FILE */
@@ -232,11 +227,6 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       ss << getMessagePrefix() << " |--> Reading SurfaceMesh Data ";
       smReader->setMessagePrefix(ss.str());
       smReader->preflight();
-      if (smReader->getErrorCondition() < 0)
-      {
-        notifyErrorMessage("Error Reading the SurfaceMesh Data", smReader->getErrorCondition());
-        return;
-      }
     }
 
     /* READ THE SolidMesh DATA TO THE HDF5 FILE */
@@ -250,11 +240,6 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
       smReader->setMessagePrefix(ss.str());
       smReader->preflight();
-      if (smReader->getErrorCondition() < 0)
-      {
-        notifyErrorMessage("Error Reading the Solid Mesh Data", smReader->getErrorCondition());
-        return;
-      }
     }
   }
 }
