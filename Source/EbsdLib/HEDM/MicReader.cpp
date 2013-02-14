@@ -48,13 +48,13 @@
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
 
- #ifdef _MSC_VER
+#ifdef _MSC_VER
 
-  #if _MSC_VER < 1400
-    #define snprintf _snprintf
-  #else
-    #define snprintf sprintf_s
-  #endif
+#if _MSC_VER < 1400
+#define snprintf _snprintf
+#else
+#define snprintf sprintf_s
+#endif
 #endif
 
 
@@ -62,7 +62,7 @@
 //
 // -----------------------------------------------------------------------------
 MicReader::MicReader() :
-EbsdReader()
+  EbsdReader()
 {
 
   // Init all the arrays to NULL
@@ -270,7 +270,7 @@ int MicReader::readHeaderOnly()
     ::memset(buf, 0, kBufferSize);
     inHeader.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-  int i = 0;
+    int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
     origHeader.append(buf);
@@ -319,7 +319,7 @@ int MicReader::readFile()
     ::memset(buf, 0, kBufferSize);
     inHeader.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-  int i = 0;
+    int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
 
@@ -344,17 +344,17 @@ int MicReader::readFile()
   m_CurrentPhase = MicPhase::New();
 
   //hard-coded dat file read
-    ::memset(buf, 0, kBufferSize);
-    inHeader2.getline(buf, kBufferSize);
+  ::memset(buf, 0, kBufferSize);
+  inHeader2.getline(buf, kBufferSize);
   m_CurrentPhase->parseLatticeConstants(buf,0,kBufferSize);
-    ::memset(buf, 0, kBufferSize);
-    inHeader2.getline(buf, kBufferSize);
+  ::memset(buf, 0, kBufferSize);
+  inHeader2.getline(buf, kBufferSize);
   m_CurrentPhase->parseLatticeAngles(buf,0,kBufferSize);
-    ::memset(buf, 0, kBufferSize);
-    inHeader2.getline(buf, kBufferSize);
+  ::memset(buf, 0, kBufferSize);
+  inHeader2.getline(buf, kBufferSize);
   m_CurrentPhase->parseBasisAtoms(buf,0,kBufferSize);
   int numAtoms;
-  size_t fieldsRead = sscanf(buf, "%d", &numAtoms);
+  sscanf(buf, "%d", &numAtoms);
   for(int iter=0;iter<numAtoms;iter++)
   {
     ::memset(buf, 0, kBufferSize);
@@ -420,11 +420,11 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   ++counter;
   for(size_t i = 1; i < totalPossibleDataRows; ++i)
   {
-      this->parseDataLine(buf, i);
-      ::memset(buf, 0, bufSize); // Clear the buffer
-      in.getline(buf, kBufferSize);// Read the next line of data
-      ++counter;
-      if (in.eof() == true) break;
+    this->parseDataLine(buf, i);
+    ::memset(buf, 0, bufSize); // Clear the buffer
+    in.getline(buf, kBufferSize);// Read the next line of data
+    ++counter;
+    if (in.eof() == true) break;
   }
   totalDataRows = counter;
 
@@ -440,28 +440,28 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
-  if(m_Up[i] == 1)
-  {
-    x = m_X[i] + (newEdgeLength/2.0);
-    y = m_Y[i] + (constant*newEdgeLength);
-  }
-  if(m_Up[i] == 2)
-  {
-    x = m_X[i] + (newEdgeLength/2.0);
-    y = m_Y[i] - (constant*newEdgeLength);
-  }
-  if(x > xMax) xMax = x;
-  if(y > yMax) yMax = y;
-  if(x < xMin) xMin = x;
-  if(y < yMin) yMin = y;
-  EA1[i] = m_Euler1[i];
-  EA2[i] = m_Euler2[i];
-  EA3[i] = m_Euler3[i];
-  confidence[i] = m_Conf[i];
-  phase[i] = m_Phase[i];
-  up[i] = m_Up[i];
-  xVal[i] = m_X[i];
-  yVal[i] = m_Y[i];
+    if(m_Up[i] == 1)
+    {
+      x = m_X[i] + (newEdgeLength/2.0);
+      y = m_Y[i] + (constant*newEdgeLength);
+    }
+    if(m_Up[i] == 2)
+    {
+      x = m_X[i] + (newEdgeLength/2.0);
+      y = m_Y[i] - (constant*newEdgeLength);
+    }
+    if(x > xMax) xMax = x;
+    if(y > yMax) yMax = y;
+    if(x < xMin) xMin = x;
+    if(y < yMin) yMin = y;
+    EA1[i] = m_Euler1[i];
+    EA2[i] = m_Euler2[i];
+    EA3[i] = m_Euler3[i];
+    confidence[i] = m_Conf[i];
+    phase[i] = m_Phase[i];
+    up[i] = m_Up[i];
+    xVal[i] = m_X[i];
+    yVal[i] = m_Y[i];
   }
   xDim = int((xMax-xMin)/newEdgeLength)+1;
   yDim = int((yMax-yMin)/newEdgeLength)+1;
@@ -485,7 +485,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   // Delete any currently existing pointers
   deletePointers();
-    // Resize pointers
+  // Resize pointers
   initPointers(xDim*yDim);
 
 
@@ -495,43 +495,43 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   int check1, check2, check3;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
-     xA = xVal[i]-xMin;
-     xB = xA + newEdgeLength;
-   xC = xA + (newEdgeLength/2.0);
-     if(up[i] == 1)
-   {
-     yA = yVal[i]-yMin;
-     yB = yA;
-     yC = yA+(root3over2*newEdgeLength);
-   }
-   if(up[i] == 2)
-   {
-     yB = yVal[i]-yMin;
-     yC = yB;
-     yA = yB-(root3over2*newEdgeLength);
-   }
-   for(int j = int(xA/newEdgeLength); j < int(xB/newEdgeLength)+1; j++)
-   {
-     for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
-     {
-       x = float(j)*newEdgeLength;
-       y = float(k)*newEdgeLength;
-       check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
-       check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
-       check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
-       if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
-       {
-         point = (k*xDim) + j;
-         m_Euler1[point] = EA1[i];
-         m_Euler2[point] = EA2[i];
-         m_Euler3[point] = EA3[i];
-         m_Conf[point] = confidence[i];
-         m_Phase[point] = phase[i];
-         m_X[point] = float(j)*xRes;
-         m_Y[point] = float(k)*yRes;
-       }
-     }
-   }
+    xA = xVal[i]-xMin;
+    xB = xA + newEdgeLength;
+    xC = xA + (newEdgeLength/2.0);
+    if(up[i] == 1)
+    {
+      yA = yVal[i]-yMin;
+      yB = yA;
+      yC = yA+(root3over2*newEdgeLength);
+    }
+    if(up[i] == 2)
+    {
+      yB = yVal[i]-yMin;
+      yC = yB;
+      yA = yB-(root3over2*newEdgeLength);
+    }
+    for(int j = int(xA/newEdgeLength); j < int(xB/newEdgeLength)+1; j++)
+    {
+      for(int k = int(yA/newEdgeLength); k < int(yC/newEdgeLength)+1; k++)
+      {
+        x = float(j)*newEdgeLength;
+        y = float(k)*newEdgeLength;
+        check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
+        check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
+        check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
+        if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
+        {
+          point = (k*xDim) + j;
+          m_Euler1[point] = EA1[i];
+          m_Euler2[point] = EA2[i];
+          m_Euler3[point] = EA3[i];
+          m_Conf[point] = confidence[i];
+          m_Phase[point] = phase[i];
+          m_X[point] = float(j)*xRes;
+          m_Y[point] = float(k)*yRes;
+        }
+      }
+    }
   }
 
 
@@ -574,7 +574,7 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
   EbsdHeaderEntry::Pointer p = m_HeaderMap[word];
   if (NULL == p.get())
   {
-      /*
+    /*
       std::cout << "---------------------------" << std::endl;
       std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
       std::string upper(word);
@@ -586,17 +586,17 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
       std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
       */
 #if 0
-      std::cout << "<tr>\n    <td>" << word << "</td>\n    <td>" << "H5T_STRING" << "</td>\n";
-      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << word << "</td>\n</tr>" << std::endl;
+    std::cout << "<tr>\n    <td>" << word << "</td>\n    <td>" << "H5T_STRING" << "</td>\n";
+    std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << word << "</td>\n</tr>" << std::endl;
 #endif
-      return;
+    return;
   }
   else
   {
-      p->parseValue(buf, wordEnd, length);
+    p->parseValue(buf, wordEnd, length);
 #if 0
-      std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";
-      std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
+    std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";
+    std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
 #endif
 
   }
@@ -712,27 +712,27 @@ void MicReader::transformData()
   size_t i = 0;
   size_t adjustedcol, adjustedrow;
   for(size_t row = 0; row < yCells; ++row)
-   {
-     for(size_t col = 0; col < xCells; ++col)
-     {
-     adjustedcol = col;
-     adjustedrow = row;
-     if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
-     if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
-       offset = (adjustedrow*xCells)+(adjustedcol);
-       if(getAlignEulers() == true)
-     {
+  {
+    for(size_t col = 0; col < xCells; ++col)
+    {
+      adjustedcol = col;
+      adjustedrow = row;
+      if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
+      if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
+      offset = (adjustedrow*xCells)+(adjustedcol);
+      if(getAlignEulers() == true)
+      {
         p1[i] = p1[i];
-     }
-       shuffleTable[(row*xCells)+col] = offset;
-       ++i;
       }
+      shuffleTable[(row*xCells)+col] = offset;
+      ++i;
     }
+  }
 
   SHUFFLE_ARRAY(Euler1, p1, float)
-  SHUFFLE_ARRAY(Euler2, p, float)
-  SHUFFLE_ARRAY(Euler3, p2, float)
-  SHUFFLE_ARRAY(Confidence, conf, float)
-  SHUFFLE_ARRAY(Phase, ph, int)
+      SHUFFLE_ARRAY(Euler2, p, float)
+      SHUFFLE_ARRAY(Euler3, p2, float)
+      SHUFFLE_ARRAY(Confidence, conf, float)
+      SHUFFLE_ARRAY(Phase, ph, int)
 
 }

@@ -131,8 +131,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     virtual void populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
 
     virtual void populateArrayList(QListWidget* listWidget,
-                                    std::list<std::string> &arrayNames,
-                                    VoxelDataContainer::Pointer vdc);
+                                    std::list<std::string> &arrayNames);
 
     /**
      * @brief Returns the list of selected Array Names
