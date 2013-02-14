@@ -162,7 +162,7 @@ include_directories(${PROJECT_BINARY_DIR})
 # --------------------------------------------------------------------
 IF ( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-DDEBUG)
-  ADD_DEFINITIONS(-Wall)
+#  ADD_DEFINITIONS(-Wall)
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
 # On linux we need to set this because some of the libraries are Static
