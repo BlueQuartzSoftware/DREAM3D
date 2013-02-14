@@ -44,6 +44,7 @@
 
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MD5.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
@@ -193,65 +194,9 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#if 1
-#define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
-  template<typename T>\
-  void methodName(typename T::Pointer t, FILE* f){ }
-#else
-#define ARRAY_NAME_CODE_GEN_METHODS(methodName, writerName)\
-  template<typename T>\
-  void methodName(typename T::Pointer t, FILE* f){\
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();\
-  t->setVoxelDataContainer(m.get());\
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();\
-  t->setSurfaceMeshDataContainer(sm.get());\
-  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();\
-  t->setSolidMeshDataContainer(solid.get());\
-  t->preflight();\
-{\
-  std::set<std::string> list = t->getRequiredCellData();\
-  writerName(f, list, t->getNameOfClass(), "Required Cell Data");\
-  }\
-{\
-  std::set<std::string> list = t->getCreatedCellData();\
-  writerName(f, list, t->getNameOfClass(), "Created Cell Data");\
-  }\
-{\
-  std::set<std::string> list = t->getRequiredFieldData();\
-  writerName(f, list, t->getNameOfClass(), "Required Field Data");\
-  }\
-{\
-  std::set<std::string> list = t->getCreatedFieldData();\
-  writerName(f, list, t->getNameOfClass(), "Created Field Data");\
-  }\
-{\
-  std::set<std::string> list = t->getRequiredEnsembleData();\
-  writerName(f, list, t->getNameOfClass(), "Required Ensemble Data");\
-  }\
-{\
-  std::set<std::string> list = t->getCreatedEnsembleData();\
-  writerName(f, list, t->getNameOfClass(), "Created Ensemble Data");\
-  }\
-  }
-#endif
-
-ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToHeader, writeArrayNameHeaderCode)
-ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameCodeToSource, writeArrayNameSourceCode)
-ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameConstructorCode, writeArrayNameConstructorCode)
-ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameGetFilterCode, writeArrayNameGetFilterCode)
-ARRAY_NAME_CODE_GEN_METHODS(appendArrayNameDeepCopyCode, writeArrayNameDeepCopyCode)
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void createHeaderFile( const std::string &group, const std::string &filter)
+void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options)
 {
-  typename T::Pointer t = T::New();
-  std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
-
-
-  std::stringstream ss;
+std::stringstream ss;
   ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
   std::string completePath = MXADir::toNativeSeparators(ss.str());
   if (MXADir::exists(completePath) == true)
@@ -370,7 +315,7 @@ void createHeaderFile( const std::string &group, const std::string &filter)
 
   // This template function will generate all the necessary code to set the name of each
   // required and created array.
-  appendArrayNameCodeToHeader<T>(t, f);
+  //appendArrayNameCodeToHeader<T>(t, f);
 
   fprintf(f, "  private:\n");
   fprintf(f, "    QString m_FilterGroup;\n\n");
@@ -395,25 +340,36 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     FILE* c = fopen(completePath.c_str(), "rb");
     unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
     size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
-    if (itemsRead != 1)
+    if(itemsRead != 1)
     {
 
     }
     fclose(c);
 
+    MD5 md5_current;
+    md5_current.update(currentContents, currentFileSize);
+    md5_current.finalize();
+    std::string currentHexDigest = md5_current.hexdigest();
+
+
     FILE* t = fopen(tempPath.c_str(), "rb");
     unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
     itemsRead = fread(tempContents, tempFileSize, 1, t);
-    if (itemsRead != 1)
+    if(itemsRead != 1)
     {
 
     }
     fclose(t);
 
-    int result = ::memcmp(currentContents, tempContents, tempFileSize);
-    if (result != 0)
+    MD5 md5;
+    md5.update(tempContents, tempFileSize);
+    md5.finalize();
+    std::string tempHexDigest = md5.hexdigest();
+
+  // Use MD5 Checksums to figure out if the files are different
+    if (tempHexDigest.compare(currentHexDigest) != 0)
     {
-      std::cout << "1-Creating Header File: " <<completePath << std::endl;
+      std::cout << "0-Creating Header File: " << completePath << std::endl;
       copyFile(tempPath, completePath);
     }
   }
@@ -449,201 +405,11 @@ void createHTMLFragment( const std::string &group, const std::string &filter)
   fclose(f);
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void createOptionsWriterCode( const std::string &group, const std::string &filter)
+void createSourceFile( const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options)
 {
-
-#if (GENERATE_OPTIONS_WRITER_CODE == 0)
-  if (true) return;
-#endif
-  typename T::Pointer t = T::New();
-
-
-  std::stringstream ss;
-  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
-  std::string completePath = MXADir::toNativeSeparators(ss.str());
-  //  if (MXADir::exists(completePath) == true)
-  //  {
-  //   std::cout << filter << ": FilterParameters file already exists in source directory. NOT generating FilterParametersWriter." << std::endl;
-  //   return;
-  //  }
-  std::string origHeaderFile = completePath;
-  ss.str("");
-  ss << FILTER_WIDGETS_BINARY_DIR() << "/NameMapping/" << group << "/";
-
-  MXADir::mkdir(ss.str(), true);
-
-  ss << filter << "_NameMapping.h";
-
-  completePath = MXADir::toNativeSeparators(ss.str());
-
-  FILE* f = fopen(completePath.c_str(), "wb");
-  if (NULL == f)
-  {
-    return;
-  }
-
-
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  t->setVoxelDataContainer(m.get());
-  t->preflight();
-
-  {
-    std::set<std::string> list = t->getRequiredCellData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "//------ Required Cell Data\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedCellData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "//------ Created Cell Data\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getRequiredFieldData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "//------ Required Field Data\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedFieldData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "//------ Created Field Data\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-      }
-    }
-  }
-
-  {
-    std::set<std::string> list = t->getRequiredEnsembleData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "//------ Required Ensemble Data\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedEnsembleData();
-    if(list.size() > 0)
-    {
-      fprintf(f, "//------ Created Ensemble Data\n");
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "DREAM3D_INSTANCE_STRING_PROPERTY(%sArrayName)\n", (*iter).c_str() );
-      }
-    }
-  }
-
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  // BUild up the initializer List
-  fprintf(f, "\n\n// These go in the constructors initializer list\n" );
-  fprintf(f, "// They should be placed just under the call to the superclass\n" );
-  fprintf(f, "// which in most cases is 'AbstractFilter()'\n");
-
-  {
-    std::set<std::string> list = t->getRequiredCellData();
-    if(list.size() > 0)
-    {
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "m_%sArrayName(DREAM3D::CellData::%s),\n", (*iter).c_str(), (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedCellData();
-    if(list.size() > 0)
-    {
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "m_%sArrayName(DREAM3D::CellData::%s),\n", (*iter).c_str(), (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getRequiredFieldData();
-    if(list.size() > 0)
-    {
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "m_%sArrayName(DREAM3D::FieldData::%s),\n", (*iter).c_str(), (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedFieldData();
-    if(list.size() > 0)
-    {
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "m_%sArrayName(DREAM3D::FieldData::%s),\n", (*iter).c_str(), (*iter).c_str() );
-      }
-    }
-  }
-
-  {
-    std::set<std::string> list = t->getRequiredEnsembleData();
-    if(list.size() > 0)
-    {
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "m_%sArrayName(DREAM3D::EnsembleData::%s),\n", (*iter).c_str(), (*iter).c_str() );
-      }
-    }
-  }
-  {
-    std::set<std::string> list = t->getCreatedEnsembleData();
-    if(list.size() > 0)
-    {
-      for (std::set<std::string>::iterator iter = list.begin(); iter != list.end(); ++iter)
-      {
-        fprintf(f, "m_%sArrayName(DREAM3D::EnsembleData::%s),\n", (*iter).c_str(), (*iter).c_str() );
-      }
-    }
-  }
-
-  fclose(f);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-template<typename T>
-void createSourceFile( const std::string &group, const std::string &filter)
-{
-
-  createOptionsWriterCode<T>(group, filter);
-  typename T::Pointer t = T::New();
-  std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
-
   std::stringstream ss;
   ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
   std::string completePath = MXADir::toNativeSeparators(ss.str());
@@ -673,16 +439,16 @@ void createSourceFile( const std::string &group, const std::string &filter)
   bool implementArrayNameSelectionWidget = false;
 
   fprintf(f, "/*\n");
-  fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
-  fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
-  fprintf(f, "  The code generated is based off values from the filter located at\n");
+  fprintf(f, "* This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
+  fprintf(f, "* If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
+  fprintf(f, "* The code generated is based off values from the filter located at\n");
   if(FILTER_INCLUDE_PREFIX().empty() == true)
   {
-    fprintf(f, "  %s/%s.h\n*/\n", group.c_str(), filter.c_str());
+    fprintf(f, "* %s/%s.h\n*/\n", group.c_str(), filter.c_str());
   }
   else
   {
-    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+    fprintf(f, "* %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
   }
   fprintf(f, "#include \"%s\"\n", headerFile.c_str());
   fprintf(f, "#include <QtCore/QDir>\n");
@@ -722,7 +488,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   }
 
   // Generate code to get all the array names and set the local variables that hold those names
-  appendArrayNameConstructorCode<T>(t, f);
+  //appendArrayNameConstructorCode<T>(t, f);
 
   // Finish Writing the remainder of the constructor code
   fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
@@ -760,7 +526,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
   }
   // Generate all the source code to set the various array names into the filter
-  appendArrayNameGetFilterCode<T>(t, f);
+//  appendArrayNameGetFilterCode<T>(t, f);
 
   fprintf(f, "  return filter;\n");
   fprintf(f, "}\n");
@@ -915,7 +681,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
 
   // This template function will generate all the necessary code to set the name of each
   // required and created array.
-  appendArrayNameCodeToSource<T>(t, f);
+  //appendArrayNameCodeToSource<T>(t, f);
 
   if (true == implementArrayNameComboBoxUpdated)
   {
@@ -964,6 +730,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
   // Now compare the file just generated with any possible existing file
   size_t currentFileSize = MXAFileInfo::fileSize(completePath);
   size_t tempFileSize = MXAFileInfo::fileSize(tempPath);
+
   // If the file sizes are different then copy the file
   if(currentFileSize != tempFileSize)
   {
@@ -981,6 +748,12 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     fclose(c);
 
+    MD5 md5_current;
+    md5_current.update(currentContents, currentFileSize);
+    md5_current.finalize();
+    std::string currentHexDigest = md5_current.hexdigest();
+
+
     FILE* t = fopen(tempPath.c_str(), "rb");
     unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
     itemsRead = fread(tempContents, tempFileSize, 1, t);
@@ -990,8 +763,13 @@ void createSourceFile( const std::string &group, const std::string &filter)
     }
     fclose(t);
 
-    int result = ::memcmp(currentContents, tempContents, tempFileSize);
-    if(result != 0)
+    MD5 md5;
+    md5.update(tempContents, tempFileSize);
+    md5.finalize();
+    std::string tempHexDigest = md5.hexdigest();
+
+  // Use MD5 Checksums to figure out if the files are different
+    if (tempHexDigest.compare(currentHexDigest) != 0)
     {
       std::cout << "0-Creating Source File: " << completePath << std::endl;
       copyFile(tempPath, completePath);
@@ -1169,8 +947,7 @@ void createPreflightTestCode( const std::string &group, const std::string &filte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-void createHTMLFile( const std::string &group, const std::string &filter)
+void createHTMLFile( const std::string &group, const std::string &filter, AbstractFilter* t)
 {
 #if (GENERATE_FILTER_TEXT_LIST == 1)
   createListFile<T>(group, filter);
@@ -1187,7 +964,7 @@ void createHTMLFile( const std::string &group, const std::string &filter)
 #if (GENERATE_HTML_FILE == 0)
   return;
 #endif
-  typename T::Pointer t = T::New();
+//  typename T::Pointer t = T::New();
   std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   std::stringstream ss;
