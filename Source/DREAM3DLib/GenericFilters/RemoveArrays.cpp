@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DumpCellData.h"
+#include "RemoveArrays.h"
 
 
 
@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DumpCellData::DumpCellData() :
+RemoveArrays::RemoveArrays() :
   AbstractFilter()
 {
   setupFilterParameters();
@@ -51,14 +51,14 @@ DumpCellData::DumpCellData() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DumpCellData::~DumpCellData()
+RemoveArrays::~RemoveArrays()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::setupFilterParameters()
+void RemoveArrays::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -75,7 +75,7 @@ void DumpCellData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
@@ -85,7 +85,7 @@ void DumpCellData::writeFilterParameters(AbstractFilterParametersWriter* writer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   typedef std::set<std::string> NameList_t;
@@ -97,15 +97,6 @@ void DumpCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       m->removeCellData(*iter);
     }
-
-    std::cout << "  Cell Arrays Remaining" << std::endl;
-    std::list<std::string> cellNames = m->getCellArrayNameList();
-    for(std::list<std::string>::iterator iter = cellNames.begin(); iter != cellNames.end(); ++iter)
-    {
-      std::cout << "    * " << *iter << std::endl;
-    }
-    std::cout << " ############################ " << std::endl;
-
     for(NameList_t::iterator iter = m_SelectedVoxelFieldArrays.begin(); iter != m_SelectedVoxelFieldArrays.end(); ++iter)
     {
       m->removeFieldData(*iter);
@@ -140,15 +131,15 @@ void DumpCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   {
     for(NameList_t::iterator iter = m_SelectedSolidMeshVertexArrays.begin(); iter != m_SelectedSolidMeshVertexArrays.end(); ++iter)
     {
-      sol->removeCellData(*iter);
+      sol->removePointData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSolidMeshFaceArrays.begin(); iter != m_SelectedSolidMeshFaceArrays.end(); ++iter)
     {
-      sol->removeFieldData(*iter);
+      sol->removeFaceData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSolidMeshEdgeArrays.begin(); iter != m_SelectedSolidMeshEdgeArrays.end(); ++iter)
     {
-      sol->removeEnsembleData(*iter);
+      sol->removeEdgeData(*iter);
     }
   }
 
@@ -158,7 +149,7 @@ void DumpCellData::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::preflight()
+void RemoveArrays::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -168,7 +159,7 @@ void DumpCellData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::execute()
+void RemoveArrays::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -181,29 +172,15 @@ void DumpCellData::execute()
     return;
   }
   setErrorCondition(0);
-
-
-//  std::list<std::string> nameList =  m->getCellArrayNameList();
-//  for(std::list<std::string>::iterator iter = nameList.begin(); iter != nameList.end(); ++iter)
-//  {
-//    if ( (*iter).compare(m_GrainIdsArrayName) != 0)
-//    {
-//      m->removeCellData(*iter);
-//    }
-//  }
-//  if (m_DropAllData == true)
-//  {
-//    m->removeCellData(m_GrainIdsArrayName);
-//  }
-
-  /* Let the GUI know we are done with this filter */
+  // Simply running the preflight will do what we need it to.
+  dataCheck(false, 0, 0, 0);
   notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+void RemoveArrays::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
                                                      std::set<std::string> selectedFieldArrays,
                                                      std::set<std::string> selectedEnsembleArrays)
 {
@@ -215,7 +192,7 @@ void DumpCellData::setVoxelSelectedArrayNames(std::set<std::string> selectedCell
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+void RemoveArrays::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                      std::set<std::string> selectedFaceArrays,
                                                      std::set<std::string> selectedEdgeArrays)
 {
@@ -223,10 +200,11 @@ void DumpCellData::setSurfaceMeshSelectedArrayNames(std::set<std::string> select
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DumpCellData::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+void RemoveArrays::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                      std::set<std::string> selectedFaceArrays,
                                                      std::set<std::string> selectedEdgeArrays)
 {

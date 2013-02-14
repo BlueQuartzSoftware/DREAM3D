@@ -98,7 +98,7 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QListWidget" name="surfaceMeshVertexArrayList"/>
+     <widget class="QListWidget" name="surfaceMeshPointArrayList"/>
     </item>
     <item row="1" column="1">
      <widget class="QListWidget" name="surfaceMeshFaceArrayList"/>
@@ -144,7 +144,7 @@
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QListWidget" name="solidMeshVertexArrayList"/>
+     <widget class="QListWidget" name="solidMeshPointArrayList"/>
     </item>
     <item row="1" column="1">
      <widget class="QListWidget" name="solidMeshFaceArrayList"/>

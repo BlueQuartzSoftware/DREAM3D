@@ -51,9 +51,9 @@
 // -----------------------------------------------------------------------------
 SolidMeshDataContainer::SolidMeshDataContainer() :
 Observable(),
-m_NumCellTuples(0),
-m_NumFieldTuples(0),
-m_NumEnsembleTuples(0)
+m_NumPointTuples(0),
+m_NumFaceTuples(0),
+m_NumEdgeTuples(0)
 {
 
 }
@@ -66,75 +66,76 @@ SolidMeshDataContainer::~SolidMeshDataContainer()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, PointData)
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, FaceData)
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, EdgeData)
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, CellData)
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, FieldData)
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, EnsembleData)
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
+void SolidMeshDataContainer::addPointData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Cell array with different array name than key name" << std::endl;
+    std::cout << "SolidMeshDataContainer::Adding Cell array with different array name than key name" << std::endl;
     std::cout << "Key name: " << name << std::endl;
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_CellData[name] = data;
-  m_NumCellTuples = data->GetNumberOfTuples();
+  m_PointData[name] = data;
+  m_NumPointTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getCellData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::getPointData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_CellData.find(name);
-  if ( it == m_CellData.end() )
+  it =  m_PointData.find(name);
+  if ( it == m_PointData.end() )
   {
     return IDataArray::NullPointer();
   }
   return (*it).second;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removeCellData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::removePointData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_CellData.find(name);
-  if ( it == m_CellData.end() )
+  it =  m_PointData.find(name);
+  if ( it == m_PointData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_CellData.erase(it);
+  m_PointData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearCellData()
+void SolidMeshDataContainer::clearPointData()
 {
-  m_CellData.clear();
+  m_PointData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SolidMeshDataContainer::getCellArrayNameList()
+std::list<std::string> SolidMeshDataContainer::getPointArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_PointData.begin(); iter != m_PointData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -144,21 +145,22 @@ std::list<std::string> SolidMeshDataContainer::getCellArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainer::getNumCellArrays()
+int SolidMeshDataContainer::getNumPointArrays()
 {
-  return static_cast<int>(m_CellData.size());
+  return static_cast<int>(m_PointData.size());
 }
+
 
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::getFaceData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(name);
-  if ( it == m_FieldData.end() )
+  it =  m_FaceData.find(name);
+  if ( it == m_FaceData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -168,7 +170,7 @@ IDataArray::Pointer SolidMeshDataContainer::getFieldData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void SolidMeshDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -177,41 +179,41 @@ void SolidMeshDataContainer::addFieldData(const std::string &name, IDataArray::P
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_FieldData[name] = data;
-  m_NumFieldTuples = data->GetNumberOfTuples();
+  m_FaceData[name] = data;
+  m_NumFaceTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::removeFaceData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(name);
-  if ( it == m_FieldData.end() )
+  it =  m_FaceData.find(name);
+  if ( it == m_FaceData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_FieldData.erase(it);
+  m_FaceData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearFieldData()
+void SolidMeshDataContainer::clearFaceData()
 {
-  m_FieldData.clear();
+  m_FaceData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SolidMeshDataContainer::getFieldArrayNameList()
+std::list<std::string> SolidMeshDataContainer::getFaceArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -221,34 +223,34 @@ std::list<std::string> SolidMeshDataContainer::getFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainer::getNumFieldArrays()
+int SolidMeshDataContainer::getNumFaceArrays()
 {
-  return static_cast<int>(m_FieldData.size());
+  return static_cast<int>(m_FaceData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::resizeFieldDataArrays(size_t size)
+void SolidMeshDataContainer::resizeFaceDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
-  m_NumFieldTuples = size;
+  m_NumFaceTuples = size;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::getEdgeData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EnsembleData.find(name);
-  if ( it == m_EnsembleData.end() )
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -258,52 +260,52 @@ IDataArray::Pointer SolidMeshDataContainer::getEnsembleData(const std::string &n
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void SolidMeshDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
+    std::cout << "Adding Edge array with different array name than key name" << std::endl;
     std::cout << "Key name: " << name << std::endl;
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_EnsembleData[name] = data;
-  m_NumEnsembleTuples = data->GetNumberOfTuples();
+  m_EdgeData[name] = data;
+  m_NumEdgeTuples = data->GetNumberOfTuples();
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::removeEdgeData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EnsembleData.find(name);
-  if ( it == m_EnsembleData.end() )
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_EnsembleData.erase(it);
+  m_EdgeData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearEnsembleData()
+void SolidMeshDataContainer::clearEdgeData()
 {
-  m_EnsembleData.clear();
-  m_NumEnsembleTuples = 0;
+  m_EdgeData.clear();
+  m_NumEdgeTuples = 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SolidMeshDataContainer::getEnsembleArrayNameList()
+std::list<std::string> SolidMeshDataContainer::getEdgeArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -313,9 +315,9 @@ std::list<std::string> SolidMeshDataContainer::getEnsembleArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainer::getNumEnsembleArrays()
+int SolidMeshDataContainer::getNumEdgeArrays()
 {
-  return static_cast<int>(m_EnsembleData.size());
+  return static_cast<int>(m_EdgeData.size());
 }
 
 

@@ -968,7 +968,7 @@ void QFilterWidget::updateComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -1213,8 +1213,6 @@ QString QFilterWidget::getFileType(std::string propName)
 // -----------------------------------------------------------------------------
 void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
-  std::cout << "void QFilterWidget::preflightAboutToExecute(...)" << std::endl;
-
   // This section will update any combo boxes that are "Array Name" lists for the Voxel arrays.
   std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
@@ -1296,9 +1294,9 @@ void QFilterWidget::updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
                                                SolidMeshDataContainer::Pointer sdc,
                                                QString propertyName)
 {
-  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, propertyName);
-  if (NULL == w) { return; }
-  w->updateArrays(vdc, smdc, sdc);
+//  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, propertyName);
+//  if (NULL == w) { return; }
+//  w->updateArrays(vdc, smdc, sdc);
 }
 
 // -----------------------------------------------------------------------------

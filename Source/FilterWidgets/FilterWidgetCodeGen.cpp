@@ -310,6 +310,8 @@ void createHeaderFile( const std::string &group, const std::string &filter)
   fprintf(f, "    QString getFilterGroup();\n\n");
 
   bool implementArrayNameComboBoxUpdated = false;
+  bool implementArraySelectionWidget = false;
+
   // Loop on all the filter options
   for(size_t i = 0; i < options.size(); ++i)
   {
@@ -343,7 +345,11 @@ void createHeaderFile( const std::string &group, const std::string &filter)
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      // Nothing to print at this time
+      implementArraySelectionWidget = true;
+      fprintf(f, "  public:\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+     // fprintf(f, "    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "\n\n");
     }
     else
     {
@@ -663,6 +669,9 @@ void createSourceFile( const std::string &group, const std::string &filter)
 
   FILE* f = fopen(tempPath.c_str(), "wb");
 
+  bool implementArrayNameComboBoxUpdated = false;
+  bool implementArrayNameSelectionWidget = false;
+
   fprintf(f, "/*\n");
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
@@ -704,6 +713,7 @@ void createSourceFile( const std::string &group, const std::string &filter)
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
       fprintf(f, "    //Do we need to preset something from the filter maybe?\n");
+      implementArrayNameSelectionWidget = true;
     }
     else
     {
@@ -758,32 +768,10 @@ void createSourceFile( const std::string &group, const std::string &filter)
   fprintf(f, "// -----------------------------------------------------------------------------\n");
   fprintf(f, "QFilterWidget* Q%sWidget::createDeepCopy() \n{\n", filter.c_str());
   fprintf(f, "  Q%sWidget* w = new Q%sWidget(NULL);\n", filter.c_str(), filter.c_str());
-#if 0
-  for (size_t i = 0; i < options.size(); ++i)
-  {
-    FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
-    if(opt->getValueType().compare("string") == 0)
-    {
-      fprintf(f, "  w->set%s( get%s() );\n", prop.c_str(), prop.c_str());
-    }
-    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
-    {
-
-    }
-    else
-    {
-      fprintf(f, "  w->set%s( get%s() );\n", prop.c_str(), prop.c_str());
-    }
-  }
-  // Generate the code that will push the names of the arrays to the deep copy
-  appendArrayNameDeepCopyCode<T>(t, f);
-#endif
   fprintf(f, "  return w;\n");
   fprintf(f, "}\n");
 
-  bool implementArrayNameComboBoxUpdated = false;
+
   // Loop on all the filter options
   for (size_t i = 0; i < options.size(); ++i)
   {
@@ -896,16 +884,6 @@ void createSourceFile( const std::string &group, const std::string &filter)
       fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
     }
-#if 0
-    else if(opt->getWidgetType() == FilterParameter::IntConstrainedWidget)
-    {
-      fprintf(f, "assert(false);\n");
-    }
-    else if(opt->getWidgetType() == FilterParameter::DoubleConstrainedWidget)
-    {
-      fprintf(f, "assert(false);\n");
-    }
-#endif
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
       fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
@@ -959,9 +937,26 @@ void createSourceFile( const std::string &group, const std::string &filter)
     fprintf(f, "}\n");
   }
 
-#if 0
+  if (implementArrayNameSelectionWidget == true)
+  {
 
-#endif
+    fprintf(f, "// -----------------------------------------------------------------------------\n");
+    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)\n{\n", filter.c_str());
+    for (size_t i = 0; i < options.size(); ++i)
+    {
+      FilterParameter::Pointer opt = options[i];
+      std::string prop = opt->getPropertyName();
+      std::string typ = opt->getValueType();
+      std::string hl = opt->getHumanLabel();
+      if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
+        fprintf(f, "  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
+
+        fprintf(f, "  if (NULL != w) {\n    w->populateArrayNames(vdc, smdc, sdc);\n  }\n");
+      }
+    }
+    fprintf(f, "}\n");
+
+  }
 
   fprintf(f, "\n\n");
   fclose(f);
@@ -1439,8 +1434,6 @@ fclose(f);
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-
-if (true) return 0;
 
 #if (GENERATE_FILTER_TEXT_LIST == 1)
   std::string s = FILTER_WIDGETS_TEMP_DIR();

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DumpCellData_H_
-#define _DumpCellData_H_
+#ifndef _RemoveArrays_H_
+#define _RemoveArrays_H_
 
 #include <string>
 #include <set>
@@ -47,20 +47,20 @@
 
 
 /**
- * @class DumpCellData DumpCellData.h /FilterCategoryFilters/DumpCellData.h
+ * @class RemoveArrays RemoveArrays.h /FilterCategoryFilters/RemoveArrays.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
+class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DumpCellData)
-    DREAM3D_STATIC_NEW_MACRO(DumpCellData)
-    DREAM3D_TYPE_MACRO_SUPER(DumpCellData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(RemoveArrays)
+    DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
+    DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
-    virtual ~DumpCellData();
+    virtual ~RemoveArrays();
 
     typedef std::set<std::string> ArrayList_t;
 
@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     virtual void preflight();
 
   protected:
-    DumpCellData();
+    RemoveArrays();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -130,8 +130,8 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     std::set<std::string> m_SelectedSolidMeshFaceArrays;
     std::set<std::string> m_SelectedSolidMeshEdgeArrays;
 
-    DumpCellData(const DumpCellData&); // Copy Constructor Not Implemented
-    void operator=(const DumpCellData&); // Operator '=' Not Implemented
+    RemoveArrays(const RemoveArrays&); // Copy Constructor Not Implemented
+    void operator=(const RemoveArrays&); // Operator '=' Not Implemented
 };
 
-#endif /* _DumpCellData_H_ */
+#endif /* _RemoveArrays_H_ */

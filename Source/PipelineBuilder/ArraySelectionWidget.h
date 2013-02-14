@@ -67,32 +67,79 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      */
     virtual void setupGui();
 
-    virtual void updateArrays(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
-    virtual void updateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
-    virtual void updateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
-    virtual void updateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+    /**
+     * @brief populateArrayNames
+     * @param vdc
+     * @param smdc
+     * @param sdc
+     */
+    virtual void populateArrayNames(VoxelDataContainer::Pointer vdc,
+                                    SurfaceMeshDataContainer::Pointer smdc,
+                                    SolidMeshDataContainer::Pointer sdc);
+    /**
+     * @brief This method examines the selections in each of the array lists and if an array is selected
+     * it is removed from the data container.
+     * @param vdc
+     * @param smdc
+     * @param sdc
+     */
+    virtual void removeSelectionsFromDataContainers(VoxelDataContainer::Pointer vdc,
+                                    SurfaceMeshDataContainer::Pointer smdc,
+                                    SolidMeshDataContainer::Pointer sdc);
 
-    virtual void updateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, VoxelDataContainer::Pointer vdc);
-    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
-    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
-    virtual void clearArraySelectionLists();
+    /**
+     * @brief This method examines the selections in each of the array lists and if an array is <b>NOT</b> selected
+     * it is removed from the data container.
+     * @param vdc
+     * @param smdc
+     * @param sdc
+     */
+    virtual void removeNonSelectionsFromDataContainers(VoxelDataContainer::Pointer vdc,
+                                    SurfaceMeshDataContainer::Pointer smdc,
+                                    SolidMeshDataContainer::Pointer sdc);
 
-
+    /**
+     * @brief
+     */
     template<typename Filter>
     void getArraySelections(Filter* filter)
     {
-      std::cout << "ArraySelectionWidget::getArraySelections(Filter* filter): " << filter->getNameOfClass() << std::endl;
-      filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList), getSelectedArrays(voxelFieldArrayList), getSelectedArrays(voxelEnsembleArrayList));
-      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList), getSelectedArrays(surfaceMeshFaceArrayList), getSelectedArrays(surfaceMeshEdgeArrayList));
-      filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList), getSelectedArrays(solidMeshFaceArrayList), getSelectedArrays(solidMeshEdgeArrayList));
-
+      //std::cout << "ArraySelectionWidget::getArraySelections(Filter* filter): " << filter->getNameOfClass() << std::endl;
+      filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList),
+                                          getSelectedArrays(voxelFieldArrayList),
+                                          getSelectedArrays(voxelEnsembleArrayList));
+      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshPointArrayList),
+                                                getSelectedArrays(surfaceMeshFaceArrayList),
+                                                getSelectedArrays(surfaceMeshEdgeArrayList));
+      filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshPointArrayList),
+                                              getSelectedArrays(solidMeshFaceArrayList),
+                                              getSelectedArrays(solidMeshEdgeArrayList));
     }
 
   signals:
     void arrayListsChanged();
 
-  public slots:
+  protected slots:
     void arrayListUpdated(QListWidgetItem* item);
+
+  protected:
+
+
+
+    virtual void populateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
+    virtual void populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
+    virtual void populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+
+    virtual void populateArrayList(QListWidget* listWidget,
+                                    std::list<std::string> &arrayNames,
+                                    VoxelDataContainer::Pointer vdc);
+
+    /**
+     * @brief Returns the list of selected Array Names
+     */
+    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
+    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
+    virtual void clearArraySelectionLists();
 
   private:
     ArraySelectionWidget(const ArraySelectionWidget&); // Copy Constructor Not Implemented
