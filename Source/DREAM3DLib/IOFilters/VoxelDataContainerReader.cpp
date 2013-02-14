@@ -278,7 +278,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
   if(m_ReadCellData == true)
   {
     std::vector<std::string> readNames;
-    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames);
+    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, m_CellArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -294,7 +294,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
   if(m_ReadFieldData == true)
   {
     std::vector<std::string> readNames;
-    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames);
+    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -310,7 +310,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
   if(m_ReadEnsembleData == true)
   {
     std::vector<std::string> readNames;
-    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames);
+    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -332,7 +332,9 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead)
+int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead)
 {
   std::stringstream ss;
   int err = 0;
@@ -353,6 +355,8 @@ int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string &gro
   std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
+    std::set<std::string>::iterator contains = namesToRead.find(*iter);
+    if (contains == namesToRead.end() && false == preflight) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
     H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);

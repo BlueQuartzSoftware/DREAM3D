@@ -34,10 +34,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DumpCellData_H_
-#define _DumpCellData_H_
+#ifndef _RemoveArrays_H_
+#define _RemoveArrays_H_
 
 #include <string>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,29 +47,26 @@
 
 
 /**
- * @class DumpCellData DumpCellData.h /FilterCategoryFilters/DumpCellData.h
+ * @class RemoveArrays RemoveArrays.h /FilterCategoryFilters/RemoveArrays.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
+class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(DumpCellData);
-    DREAM3D_STATIC_NEW_MACRO(DumpCellData);
-    DREAM3D_TYPE_MACRO_SUPER(DumpCellData, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(RemoveArrays)
+    DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
+    DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
-    virtual ~DumpCellData();
+    virtual ~RemoveArrays();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    typedef std::set<std::string> ArrayList_t;
 
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(bool, DropAllData)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-
-
+    virtual void setVoxelSelectedArrayNames(ArrayList_t selectedCellArrays,   ArrayList_t selectedFieldArrays, ArrayList_t selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
+    virtual void setSolidMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -81,7 +79,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Delete Cell Data"; }
+    virtual const std::string getHumanLabel() { return "Delete Arrays"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -107,7 +105,7 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     virtual void preflight();
 
   protected:
-    DumpCellData();
+    RemoveArrays();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -120,9 +118,20 @@ class DREAM3DLib_EXPORT DumpCellData : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    std::set<std::string> m_SelectedVoxelCellArrays;
+    std::set<std::string> m_SelectedVoxelFieldArrays;
+    std::set<std::string> m_SelectedVoxelEnsembleArrays;
 
-    DumpCellData(const DumpCellData&); // Copy Constructor Not Implemented
-    void operator=(const DumpCellData&); // Operator '=' Not Implemented
+    std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
+    std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
+    std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
+
+    std::set<std::string> m_SelectedSolidMeshVertexArrays;
+    std::set<std::string> m_SelectedSolidMeshFaceArrays;
+    std::set<std::string> m_SelectedSolidMeshEdgeArrays;
+
+    RemoveArrays(const RemoveArrays&); // Copy Constructor Not Implemented
+    void operator=(const RemoveArrays&); // Operator '=' Not Implemented
 };
 
-#endif /* _DumpCellData_H_ */
+#endif /* _RemoveArrays_H_ */

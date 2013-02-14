@@ -44,7 +44,7 @@
     _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
     addErrorMessage(getHumanLabel(), _##Name##_ss.str(), errCode##000);\
   }\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL == m_##Name ) {\
     errVariable = errCode;\
   }}
@@ -57,18 +57,25 @@
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){ \
     setErrorCondition(err##000);\
-    ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
-    addErrorMessage(getHumanLabel(), ss.str(), err);\
+    ss << "The name of the array for the " << #NameSpace << "::" << #DType << "::" << #Name << " was empty. Please provide a name for this array" << std::endl;\
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
   }\
+  if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
+    setErrorCondition(err##001);\
+    ss.str("");\
+    ss << "An array with name '" << m_##Name##ArrayName << "'' in the " << #DType << " grouping does not exist and is required for this filter to execute." << std::endl;\
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+  }\
+  else { \
   std::string _s(#Name); \
   addRequired##DType(_s);\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
-    ss.str(""); ss << "\nFilter " << getNameOfClass() << " requires " << #DType << " array '" << \
-    m_##Name##ArrayName << "' to already be created prior to execution." << std::endl;\
-    addErrorMessage(getHumanLabel(), ss.str(), err); \
-    setErrorCondition(err);\
-  }}
+    ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named '" << NameSpace::DType::Name  << "' for this filter."\
+    << "The preflight failed for one or more reasons. Check additional error messages for more details." << std::endl;\
+    setErrorCondition(err##002);\
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition()); \
+  }}}
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
   {\
@@ -80,7 +87,7 @@
   }\
   std::string _s(#Name);\
   addCreated##DType(_s);\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size*NumComp, NULL);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL ==  m_##Name ) \
   {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
@@ -95,13 +102,22 @@
         ss << "'" << m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
         setErrorCondition(-500);\
       }\
-      addErrorMessage(getHumanLabel(), ss.str(), -500);\
-    } else {\
+      addErrorMessage(getHumanLabel(), ss.str(), -50001);\
+    } \
+    else {\
       p->initializeWithValues(initValue);\
       p->SetNumberOfComponents(NumComp);\
       p->SetName(m_##Name##ArrayName);\
       dc->add##DType(m_##Name##ArrayName, p);\
       m_##Name = p->GetPointer(0);\
+    }\
+    if (p->GetPointer(0) == NULL)\
+    {\
+      setErrorCondition(-11000);\
+      ss.str("");\
+      ss << "'" << m_##Name##ArrayName << "' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
+      << " Please add a filter before this filter that will result in a properly sized array.";\
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
     }\
   }\
 }
@@ -109,34 +125,41 @@
 
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, AbstractFilter* obv)\
+PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, int numComp, AbstractFilter* obv)\
 {\
 PtrType* gi = NULL;\
 IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
-  std::stringstream s;\
+  /*std::stringstream s;\
   s << #GetMethod << "(std::string name) where name = '" << arrayName \
   << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer";\
   if (NULL != obv) {obv->setErrorCondition(-500);\
-  obv->addErrorMessage(getNameOfClass(), s.str(), -500);}\
+  obv->addErrorMessage(getNameOfClass(), s.str(), -500);}*/\
   return gi;\
 }\
-if (size != iDataArray->GetSize()) {\
+if (size*numComp != iDataArray->GetSize()) {\
   std::stringstream s;\
   s << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
   s << " Required: " << size << " Contains: " << iDataArray->GetSize();\
   if (NULL != obv) {obv->setErrorCondition(-501);\
-  obv->addErrorMessage(getNameOfClass(), s.str(), -501);}\
+  obv->addErrorMessage(obv->getHumanLabel(), s.str(), -501);}\
   return gi;\
 }\
-gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
-if (NULL == gi) {\
-  std::stringstream s;\
-  s << " -  Array " << arrayName << " from the DataContainer class could not be cast to correct type.";\
-  if (NULL != obv) {obv->setErrorCondition(-502);\
-  obv->addErrorMessage(getNameOfClass(), s.str(), -502);}\
-  return gi;\
+if (numComp != iDataArray->GetNumberOfComponents()) {\
+      if (NULL != obv) {std::stringstream ss;\
+      ss << "\nFilter " << obv->getHumanLabel() << " requires an array where the number of components is " << 1 << " but the array"\
+      << " that was supplied has " << iDataArray->GetNumberOfComponents() << "." << std::endl;\
+      obv->addErrorMessage(obv->getHumanLabel(), ss.str(),503);}\
+      return gi;\
 }\
+  gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
+  if (NULL == gi) {\
+    std::stringstream s;\
+    s << " -  Array '" << arrayName << "' stored in the DataContainer could not be cast to correct type. For example selecting an array with floating point values for an array that needs integer values";\
+    if (NULL != obv) {obv->setErrorCondition(-502);\
+    obv->addErrorMessage(obv->getHumanLabel(), s.str(), -502);}\
+    return gi;\
+  }\
 return gi;\
 }
 
@@ -239,6 +262,15 @@ m_msgType* valuePtr = NULL;\
 }
 
 
+
+#define DOES_DATASET_EXIST_DECL(DType)\
+virtual bool does##DType##Exist(const std::string &name);
+
+#define DOES_DATASET_EXIST_DEFN(Class, DType)\
+bool Class::does##DType##Exist(const std::string &name) {\
+  std::map<std::string, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
+  return ( iter != m_##DType.end());\
+}
 
 #endif /* _DATACONTAINERMACROS_H_ */
 

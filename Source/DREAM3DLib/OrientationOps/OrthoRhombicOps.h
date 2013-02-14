@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -71,9 +71,9 @@ class DREAM3DLib_EXPORT OrthoRhombicOps : public OrientationMath
     virtual void getFZQuat(float *qr);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles( int choose, float &synea1, float &synea2, float &synea3);
-	virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
+    virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
     virtual void getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime);
     virtual void getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1);
     virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt);

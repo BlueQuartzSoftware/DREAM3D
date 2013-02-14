@@ -55,7 +55,8 @@
 * @brief Creates a "setter" method to set the property.
 */
 #define QFILTERWIDGET_SET_PROPERTY(m_msgType, prpty) \
-  void set##prpty(m_msgType value) { this->m_##prpty = value; emit parametersChanged(); }
+  void set##prpty(m_msgType value, bool emitChanged = true) { this->m_##prpty = value;\
+  if (true == emitChanged) { emit parametersChanged();} }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
@@ -78,6 +79,9 @@
 class QMouseEvent;
 class AbstractFilter;
 class PipelineArraySelectionWidget;
+class QFormLayout;
+class QLabel;
+class QComboBox;
 
 /**
  * @class QFilterWidget QFilterWidget.h FilterWidgets/QFilterWidget.h
@@ -109,12 +113,35 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void emitParametersChanged();
 
-    virtual QFilterWidget* createDeepCopy();
+   // virtual QFilterWidget* createDeepCopy();
 
     virtual QString  getFilterGroup();
 
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+
+    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+    /** @brief Subclasses can implement this method to add in any custom internal updates that are necessary */
+    virtual void arrayNameComboBoxUpdated(QComboBox* cb);
+
+    /**
+     * @brief This method updates a combo box that is holding a list of Array Names from the data container
+     */
+    virtual void updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName);
+
+    /**
+     * @brief updateArraySelectionWidget This method allows the ArraySelectionWidget to update it's lists of arrays
+     * @param vdc Voxel Data Container
+     * @param smdc SurfaceMesh Data Container
+     * @param sdc SolidMesh Data Container
+     */
+    virtual void updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
+                                            SurfaceMeshDataContainer::Pointer smdc,
+                                            SolidMeshDataContainer::Pointer sdc,
+                                            QString propertyName);
+
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -130,12 +157,13 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void selectOutputFile();
     virtual void selectOutputPath();
     virtual void updateComboBoxValue(int v);
+    virtual void updateArrayNameComboBoxValue(int v);
     virtual void updateQSpinBoxValue(int v);
     virtual void updateQDoubleSpinBoxValue(double v);
     virtual void updateQCheckBoxValue(int v);
     virtual void updateQLineEditStringValue(const QString &v);
-
     virtual void updateLineEdit(const QString &v);
+    virtual void updateArraySelectionWidget();
 
     virtual void setIsSelected(bool b);
 
@@ -171,6 +199,12 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual QString getFileExtension(std::string propName);
     virtual QString getFileType(std::string propName);
 
+    void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
+
+
   private:
     QRect      m_DeleteRect;
     QPoint     dragStartPosition;
@@ -182,6 +216,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool       m_HasPreflightErrors;
     bool       m_HasPreflightWarnings;
     static QString m_OpenDialogLastDirectory;
+
+
 
     QFilterWidget(const QFilterWidget&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidget&); // Operator '=' Not Implemented

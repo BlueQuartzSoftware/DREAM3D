@@ -56,9 +56,9 @@
 class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VoxelDataContainerReader);
-    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainerReader);
-    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainerReader, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(VoxelDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainerReader, AbstractFilter)
 
     virtual ~VoxelDataContainerReader();
 
@@ -68,6 +68,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
 
     typedef std::list<std::string> NameListType;
 
@@ -124,7 +127,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead);
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                       std::vector<std::string> &namesRead,
+                       std::set<std::string> &namesToRead);
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:

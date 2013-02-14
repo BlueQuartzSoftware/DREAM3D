@@ -51,9 +51,9 @@
 // -----------------------------------------------------------------------------
 SolidMeshDataContainer::SolidMeshDataContainer() :
 Observable(),
-m_NumCellTuples(0),
-m_NumFieldTuples(0),
-m_NumEnsembleTuples(0)
+m_NumPointTuples(0),
+m_NumFaceTuples(0),
+m_NumEdgeTuples(0)
 {
 
 }
@@ -65,4 +65,259 @@ SolidMeshDataContainer::~SolidMeshDataContainer()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, PointData)
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, FaceData)
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, EdgeData)
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::addPointData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "SolidMeshDataContainer::Adding Cell array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_PointData[name] = data;
+  m_NumPointTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SolidMeshDataContainer::getPointData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_PointData.find(name);
+  if ( it == m_PointData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SolidMeshDataContainer::removePointData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_PointData.find(name);
+  if ( it == m_PointData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_PointData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::clearPointData()
+{
+  m_PointData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> SolidMeshDataContainer::getPointArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_PointData.begin(); iter != m_PointData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SolidMeshDataContainer::getNumPointArrays()
+{
+  return static_cast<int>(m_PointData.size());
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SolidMeshDataContainer::getFaceData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FaceData.find(name);
+  if ( it == m_FaceData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Field array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_FaceData[name] = data;
+  m_NumFaceTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SolidMeshDataContainer::removeFaceData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FaceData.find(name);
+  if ( it == m_FaceData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_FaceData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::clearFaceData()
+{
+  m_FaceData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> SolidMeshDataContainer::getFaceArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SolidMeshDataContainer::getNumFaceArrays()
+{
+  return static_cast<int>(m_FaceData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::resizeFaceDataArrays(size_t size)
+{
+ // int success = 0;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
+  {
+    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    IDataArray::Pointer d = (*iter).second;
+    d->Resize(size);
+  }
+  m_NumFaceTuples = size;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SolidMeshDataContainer::getEdgeData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Edge array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_EdgeData[name] = data;
+  m_NumEdgeTuples = data->GetNumberOfTuples();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SolidMeshDataContainer::removeEdgeData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_EdgeData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SolidMeshDataContainer::clearEdgeData()
+{
+  m_EdgeData.clear();
+  m_NumEdgeTuples = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> SolidMeshDataContainer::getEdgeArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SolidMeshDataContainer::getNumEdgeArrays()
+{
+  return static_cast<int>(m_EdgeData.size());
+}
+
 

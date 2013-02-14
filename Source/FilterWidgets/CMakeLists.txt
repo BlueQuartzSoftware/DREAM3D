@@ -78,12 +78,14 @@ set(IOFILTER_WIDGET_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricItemDelegate.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QDataContainerReaderWidget.h
 )
 set(IOFILTER_WIDGET_SRCS
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.cpp
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QDataContainerReaderWidget.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/IOFiltersWidgets" "${IOFILTER_WIDGET_HDRS}" "${IOFILTER_WIDGET_SRCS}" "0")
 set(SYNTHETIC_WIDGET_HDRS
@@ -130,6 +132,7 @@ QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
+    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QDataContainerReaderWidget.ui
 )
 
 # --------------------------------------------------------------------

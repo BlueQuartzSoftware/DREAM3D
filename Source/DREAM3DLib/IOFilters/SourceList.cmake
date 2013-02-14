@@ -39,7 +39,7 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkRectilinearGridWriter VtkRect
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} YSChoiAbaqusReader YSChoiAbaqusReader.html "" TRUE)
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader VtkGrainIdReader.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GoldfeatherReader GoldfeatherReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GoldfeatherReader GoldfeatherReader.html "" FALSE)
 
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SolidMeshToVtk SolidMeshToVtk.html "" TRUE)
