@@ -100,6 +100,12 @@ class StringDataArray : public IDataArray
     }
 
     /**
+     * @brief getTypeAsString
+     * @return
+     */
+    virtual std::string getTypeAsString() { return "StringDataArray";}
+
+    /**
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
