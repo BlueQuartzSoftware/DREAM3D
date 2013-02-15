@@ -85,7 +85,6 @@ class DataArray : public IDataArray
 
     typedef std::vector<Pointer>   ContainterType;
 
-
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
@@ -146,6 +145,7 @@ class DataArray : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, int numComponents, const std::string &name)
     {
+
       DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
       if (d->Allocate() < 0)
       { // Could not allocate enough memory, reset the pointer to null and return

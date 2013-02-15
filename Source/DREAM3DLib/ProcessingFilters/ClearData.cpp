@@ -47,13 +47,13 @@
 //
 // -----------------------------------------------------------------------------
 ClearData::ClearData() :
-AbstractFilter(),
-m_XMin(0),
-m_YMin(0),
-m_ZMin(0),
-m_XMax(0),
-m_YMax(0),
-m_ZMax(0)
+  AbstractFilter(),
+  m_XMin(0),
+  m_YMin(0),
+  m_ZMin(0),
+  m_XMax(0),
+  m_YMax(0),
+  m_ZMax(0)
 {
   setupFilterParameters();
 }
@@ -77,7 +77,7 @@ void ClearData::setupFilterParameters()
     option->setPropertyName("XMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Column");
+    option->setUnits("Column");
     parameters.push_back(option);
   }
   {
@@ -86,7 +86,7 @@ void ClearData::setupFilterParameters()
     option->setPropertyName("YMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Row");
+    option->setUnits("Row");
     parameters.push_back(option);
   }
   {
@@ -95,7 +95,7 @@ void ClearData::setupFilterParameters()
     option->setPropertyName("ZMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Plane");
+    option->setUnits("Plane");
     parameters.push_back(option);
   }
   {
@@ -104,7 +104,7 @@ void ClearData::setupFilterParameters()
     option->setPropertyName("XMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Column");
+    option->setUnits("Column");
     parameters.push_back(option);
   }
   {
@@ -113,7 +113,7 @@ void ClearData::setupFilterParameters()
     option->setPropertyName("YMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Row");
+    option->setUnits("Row");
     parameters.push_back(option);
   }
   {
@@ -122,7 +122,7 @@ void ClearData::setupFilterParameters()
     option->setPropertyName("ZMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Plane");
+    option->setUnits("Plane");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -232,6 +232,6 @@ void ClearData::execute()
     }
   }
 
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }
 
