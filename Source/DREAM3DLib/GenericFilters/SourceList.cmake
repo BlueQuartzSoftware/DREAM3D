@@ -27,3 +27,4 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.ht
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DetermineGoodVoxels DetermineGoodVoxels.html "" FALSE)
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RemoveArrays RemoveArrays.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells SingleThresholdCells.html "" TRUE)
