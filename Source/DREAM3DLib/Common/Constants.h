@@ -474,6 +474,26 @@ namespace DREAM3D
     const std::string ElementQualityFile("element_quality_measures_v5.txt");
     const std::string VoxelsFile("voxels_v5.txt");
   }
+
+  namespace Comparison
+  {
+    namespace Strings
+    {
+      const std::string LessThan("<");
+      const std::string GreaterThan(">");
+      const std::string Equal("=");
+    }
+    enum Enumeration
+    {
+      Operator_LessThan = 0,
+      Operator_GreaterThan,
+      Operator_Equal,
+      Operator_Unknown
+    };
+
+  }
+
+
 }
 
 
