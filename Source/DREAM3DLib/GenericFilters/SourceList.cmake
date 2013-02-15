@@ -24,7 +24,6 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains FindBoundi
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GenerateIPFColors GenerateIPFColors.html "IPFFilterLegend.jpg" TRUE)
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" FALSE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells SingleThresholdCells.html "" TRUE)
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RemoveArrays RemoveArrays.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells SingleThresholdCells.html "" TRUE)
