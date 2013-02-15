@@ -17,6 +17,7 @@
     <file>GenericFilters/FindBoundingBoxGrains.html</file>
     <file>GenericFilters/GenerateIPFColors.html</file>
     <file>GenericFilters/IPFFilterLegend.jpg</file>
+    <file>GenericFilters/SingleThresholdCells.html</file>
     <file>GenericFilters/RemoveArrays.html</file>
 
     <!-- ***** IOFilters ***** -->

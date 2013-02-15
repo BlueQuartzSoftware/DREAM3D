@@ -74,17 +74,17 @@ m_PixmapGraphicsItem(NULL)
 {
   setupUi(this);
   m_OriginGroup = new QButtonGroup(this);
-  m_OriginGroup->addButton(m_UpperLeftBtn);
-  m_OriginGroup->addButton(m_UpperRightBtn);
-  m_OriginGroup->addButton(m_LowerLeftBtn);
-  m_OriginGroup->addButton(m_LowerRightBtn);
-  connect(m_UpperLeftBtn, SIGNAL(toggled(bool)),
+  m_OriginGroup->addButton(m_TSLdefaultBtn);
+  m_OriginGroup->addButton(m_HKLdefaultBtn);
+  m_OriginGroup->addButton(m_HEDMdefaultBtn);
+  m_OriginGroup->addButton(m_NoTransBtn);
+  connect(m_TSLdefaultBtn, SIGNAL(toggled(bool)),
           this, SLOT(originChanged(bool)));
-  connect(m_UpperRightBtn, SIGNAL(toggled(bool)),
+  connect(m_HKLdefaultBtn, SIGNAL(toggled(bool)),
           this, SLOT(originChanged(bool)));
-  connect(m_LowerLeftBtn, SIGNAL(toggled(bool)),
+  connect(m_HEDMdefaultBtn, SIGNAL(toggled(bool)),
           this, SLOT(originChanged(bool)));
-  connect(m_LowerRightBtn, SIGNAL(toggled(bool)),
+  connect(m_NoTransBtn, SIGNAL(toggled(bool)),
           this, SLOT(originChanged(bool)));
   connect(buttonBox, SIGNAL(helpRequested ()),
           this, SLOT(toggleHelp()));
@@ -94,7 +94,7 @@ m_PixmapGraphicsItem(NULL)
   loadEbsdData();
   updateGraphicsView();
   m_CurrentCorner = 0;
-  m_UpperLeftBtn->setChecked(true);
+  m_NoTransBtn->setChecked(true);
   m_ExplanationScrollArea->setVisible(false);
   buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
 
@@ -122,21 +122,12 @@ void QEbsdReferenceFrameDialog::setEbsdFileName(QString filename)
 
 Ebsd::EbsdToSampleCoordinateMapping QEbsdReferenceFrameDialog::getSelectedOrigin()
 {
-  if (m_UpperLeftBtn->isChecked()) { return Ebsd::UpperLeftOrigin; }
-  if (m_UpperRightBtn->isChecked()) { return Ebsd::UpperRightOrigin; }
-  if (m_LowerRightBtn->isChecked()) { return Ebsd::LowerRightOrigin; }
-  if (m_LowerLeftBtn->isChecked()) { return Ebsd::LowerLeftOrigin; }
+  if (m_TSLdefaultBtn->isChecked()) { return Ebsd::TSLdefault; }
+  if (m_HKLdefaultBtn->isChecked()) { return Ebsd::HKLdefault; }
+  if (m_HEDMdefaultBtn->isChecked()) { return Ebsd::HEDMdefault; }
+  if (m_NoTransBtn->isChecked()) { return Ebsd::UnknownCoordinateMapping; }
   return Ebsd::UnknownCoordinateMapping;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool QEbsdReferenceFrameDialog::alignEulers()
-{
-  return m_AlignEulers->isChecked();
-}
-
 
 // -----------------------------------------------------------------------------
 //
