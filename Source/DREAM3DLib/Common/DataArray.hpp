@@ -85,6 +85,20 @@ class DataArray : public IDataArray
 
     typedef std::vector<Pointer>   ContainterType;
 
+  enum NumType {
+    Int8 = 0,
+    UInt8,
+    Int16,
+    UInt16,
+    Int32,
+    UInt32,
+    Int64,
+    UInt64,
+    Float,
+    Double,
+	Bool,
+    UnknownNumType
+  };
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -114,7 +128,37 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(bool)) { xdmfTypeName = "uchar"; precision = 1;}
     }
 
+
     /**
+     * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
+     * can be a primitive like char, float, int or the name of a class.
+     * @return
+     */
+
+    NumType GetType()
+    {
+      T value = 0x00;
+      if (typeid(value) == typeid(int8_t)) { return Int8;}
+      if (typeid(value) == typeid(uint8_t)) { return UInt8;}
+
+      if (typeid(value) == typeid(int16_t)) { return Int16;}
+      if (typeid(value) == typeid(uint16_t)) { return UInt16;}
+
+      if (typeid(value) == typeid(int32_t)) { return Int32;}
+      if (typeid(value) == typeid(uint32_t)) { return UInt32;}
+
+      if (typeid(value) == typeid(int64_t)) { return Int64;}
+      if (typeid(value) == typeid(uint64_t)) { return UInt64;}
+
+      if (typeid(value) == typeid(float)) { return Float;}
+      if (typeid(value) == typeid(double)) { return Double;}
+
+      if (typeid(value) == typeid(bool)) { return Bool}
+
+	  return UnknownNumType;
+    }
+	
+	/**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
@@ -137,25 +181,6 @@ class DataArray : public IDataArray
       return ptr;
     }
 
-     /**
-     * @brief Static constructor
-     * @param numTuples The number of tuples in the array.
-     * @param numComponents The number of Components in each Tuple
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
-     */
-    static Pointer CreateArray(size_t numTuples, int numComponents, const std::string &name)
-    {
-      DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
-      if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return DataArray<T>::NullPointer();
-      }
-      d->SetName(name);
-      Pointer ptr(d);
-      return ptr;
-    }
 
      /**
      * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data

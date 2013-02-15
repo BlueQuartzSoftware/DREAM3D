@@ -97,11 +97,10 @@ namespace Ebsd
 
   enum EbsdToSampleCoordinateMapping
   {
-    UpperLeftOrigin = 0,
-    UpperRightOrigin = 1,
-    LowerRightOrigin = 2,
-    LowerLeftOrigin = 3,
-    UnknownCoordinateMapping
+    TSLdefault = 0,
+    HKLdefault = 1,
+    HEDMdefault = 2,
+    UnknownCoordinateMapping = 3
   };
 
   namespace StackingOrder {
