@@ -37,8 +37,12 @@
 #ifndef _FilterParameter_H_
 #define _FilterParameter_H_
 
+#include <vector>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+typedef struct { int x; int y; int z; } IntVec3Widget_t;
 
 /**
  * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
@@ -76,6 +80,8 @@ class FilterParameter
       SurfaceMeshEdgeArrayNameSelectionWidget,
       /* ****  AND THIS LINE ******** */
       ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
+      IntVec3Widget,
+      FloatVec3Widget,
       CustomWidget
       /* If you add more widget types you need to update the QFilterWidget code to
        * account for these new types. You also need to update the FilterWidgetCodeGen.cpp

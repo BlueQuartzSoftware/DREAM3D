@@ -1211,7 +1211,7 @@ fclose(f);
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-
+  if (true) return 0;
 #if (GENERATE_FILTER_TEXT_LIST == 1)
   std::string s = FILTER_WIDGETS_TEMP_DIR();
   s.append("html_fragment.html");

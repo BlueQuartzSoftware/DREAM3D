@@ -18,6 +18,7 @@
     <file>GenericFilters/GenerateIPFColors.html</file>
     <file>GenericFilters/IPFFilterLegend.jpg</file>
     <file>GenericFilters/RemoveArrays.html</file>
+    <file>GenericFilters/SingleThresholdCells.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>

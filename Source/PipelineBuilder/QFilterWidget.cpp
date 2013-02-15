@@ -73,6 +73,7 @@
 #define IMAGE_HEIGHT 17
 
 
+
 // Initialize private static member variable
 QString QFilterWidget::m_OpenDialogLastDirectory = "";
 
@@ -87,6 +88,7 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false)
 {
+  qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
@@ -614,9 +616,49 @@ void QFilterWidget::setupGui()
     {
       setupArraySelectionWidget(frmLayout, optIndex, option, label);
     }
+    else if (wType == FilterParameter::IntVec3Widget)
+    {
+      setupIntVec3Widget(frmLayout, optIndex, option, label);
+    }
     ++optIndex;
   }
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
+                                       FilterParameter* option, QLabel* label )
+{
+  frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
+  QString prop = QString::fromStdString(option->getPropertyName());
+
+  QHBoxLayout* horizontalLayout = new QHBoxLayout();
+  horizontalLayout->setSpacing(8);
+  horizontalLayout->setContentsMargins(-1, 0, -1, -1);
+  QLineEdit* Dimensions_0 = new QLineEdit(this);
+  Dimensions_0->setObjectName(QString::fromUtf8("0_") + prop);
+  QIntValidator* val_0 = new QIntValidator(this);
+  Dimensions_0->setValidator(val_0);
+  horizontalLayout->addWidget(Dimensions_0);
+
+  QLineEdit* Dimensions_1 = new QLineEdit(this);
+  Dimensions_1->setObjectName(QString::fromUtf8("1_") + prop);
+  QIntValidator* val_1 = new QIntValidator(this);
+  Dimensions_1->setValidator(val_1);
+  horizontalLayout->addWidget(Dimensions_1);
+
+  QLineEdit* Dimensions_2 = new QLineEdit(this);
+  Dimensions_2->setObjectName(QString::fromUtf8("2_") + prop);
+  QIntValidator* val_2 = new QIntValidator(this);
+  Dimensions_2->setValidator(val_2);
+  horizontalLayout->addWidget(Dimensions_2);
+
+  frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
+  connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
+  connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
+  connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
 }
 
 // -----------------------------------------------------------------------------
@@ -672,6 +714,40 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
   frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
   connect(w, SIGNAL(arrayListsChanged()), this, SLOT(updateArraySelectionWidget()));
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateIntVec3Widget(const QString &v)
+{
+  std::cout << "Vect3 Updated" << std::endl;
+  QObject* whoSent = sender();
+  QString dims_n = whoSent->objectName();
+  dims_n = dims_n.mid(2);
+
+
+  IntVec3Widget_t value;
+  value.x = 10;
+  value.y = 20;
+  value.z = 30;
+
+
+  QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
+  if(le) {
+    bool ok = false;
+    //int value = le->text().toInt(&ok);
+    if (false == ok) {
+     // value = 0;
+      le->setText("0");
+    }
+    QVariant v;
+    v.setValue(value);
+    setProperty(dims_n.toStdString().c_str(), v);
+  }
+}
+
+
+
 
 // -----------------------------------------------------------------------------
 // This slot is just here to
@@ -968,7 +1044,7 @@ void QFilterWidget::updateComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-//  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -1242,7 +1318,7 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
         updateArrayNameComboBox(smdc->getEdgeArrayNameList(), propertyName);
         break;
       case FilterParameter::ArraySelectionWidget:
-   //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
+        //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);
         break;
       default:
         break;
@@ -1255,7 +1331,7 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
 // -----------------------------------------------------------------------------
 void QFilterWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
-//  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
+  //  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -1294,9 +1370,9 @@ void QFilterWidget::updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
                                                SolidMeshDataContainer::Pointer sdc,
                                                QString propertyName)
 {
-//  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, propertyName);
-//  if (NULL == w) { return; }
-//  w->updateArrays(vdc, smdc, sdc);
+  //  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, propertyName);
+  //  if (NULL == w) { return; }
+  //  w->updateArrays(vdc, smdc, sdc);
 }
 
 // -----------------------------------------------------------------------------
