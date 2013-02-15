@@ -36,9 +36,13 @@
 #ifndef _StructArray_H_
 #define _StructArray_H_
 
+#include <string>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArrayFilter.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+
 
 template<typename T>
 class StructArray : public IDataArray
@@ -105,6 +109,26 @@ class StructArray : public IDataArray
       xdmfTypeName = getNameOfClass();
       precision = 0;
     }
+
+    /**
+     * @brief getTypeAsString
+     * @return
+     */
+    virtual std::string getTypeAsString(){ return "struct"; }
+
+        /**
+    * @brief Returns the HDF Type for a given primitive value.
+     * @param value A value to use. Can be anything. Just used to get the type info
+     * from
+     * @return The HDF5 native type for the value
+     */
+    virtual std::string getFullNameOfClass()
+    {
+      std::string theType = getTypeAsString();
+      theType = "StrucArray<" + theType + ">";
+      return theType;
+    }
+
 
     /**
      * @brief Gives this array a human readable name
@@ -525,6 +549,7 @@ class StructArray : public IDataArray
       return Array[i];
     }
 
+
   protected:
     /**
      * @brief Protected Constructor
@@ -660,7 +685,6 @@ class StructArray : public IDataArray
 
       return this->Array;
     }
-
 
   private:
 
