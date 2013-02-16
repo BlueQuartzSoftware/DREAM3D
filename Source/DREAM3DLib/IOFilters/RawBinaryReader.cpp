@@ -36,14 +36,46 @@
 #include "RawBinaryReader.h"
 
 
-
+namespace Detail
+{
+  enum NumType {
+    Int8 = 0,
+    UInt8,
+    Int16,
+    UInt16,
+    Int32,
+    UInt32,
+    Int64,
+    UInt64,
+    Float,
+    Double,
+    UnknownNumType
+  };
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 RawBinaryReader::RawBinaryReader() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_ScalarType(0),
+  m_Endian(0),
+  m_Dimensionality(0),
+  m_NumberOfComponents(0),
+  m_GrainIdsArrayName(""),
+  m_InputFile("")
 {
+  m_Dimensions.x = 0;
+  m_Dimensions.y = 0;
+  m_Dimensions.z = 0;
+
+  m_Origin.x = 0.0;
+  m_Origin.y = 0.0;
+  m_Origin.z = 0.0;
+
+  m_Spacing.x = 0.0;
+  m_Spacing.y = 0.0;
+  m_Spacing.z = 0.0;
   setupFilterParameters();
 }
 
@@ -82,7 +114,22 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  /*  For an Integer use this code*/
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Dimensionality");
+    option->setPropertyName("Dimensionality");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("NumberOfComponents");
+    option->setPropertyName("NumberOfComponents");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Endian");
@@ -104,8 +151,25 @@ void RawBinaryReader::setupFilterParameters()
     option->setUnits("XYZ");
     parameters.push_back(option);
   }
-  /*   For an input file use this code*/
-    {
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Origin");
+    option->setPropertyName("Origin");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("float");
+    option->setUnits("XYZ");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Spacing");
+    option->setPropertyName("Spacing");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("float");
+    option->setUnits("XYZ");
+    parameters.push_back(option);
+  }
+  {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
@@ -113,9 +177,14 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setValueType("string");
     parameters.push_back(parameter);
   }
-
-
-
+    {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Array Name");
+    parameter->setPropertyName("GrainIdsArrayName");
+    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setValueType("string");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -126,7 +195,14 @@ void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("ScalarType", getScalarType() );
+  writer->writeValue("Dimensionality", getDimensionality() );
+  writer->writeValue("NumberOfComponents", getNumberOfComponents() );
+  writer->writeValue("Endian", getEndian() );
+  writer->writeValue("Dimensions", getDimensions() );
+  writer->writeValue("Origin", getOrigin() );
+  writer->writeValue("Spacing", getSpacing() );
+  writer->writeValue("InputFile", getInputFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -135,20 +211,61 @@ void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writ
 void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
+  VoxelDataContainer* m = getVoxelDataContainer();
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
+  if (getInputFile().empty() == true)
   {
-    ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
-    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  */
 
+  IDataArray::Pointer p = IDataArray::NullPointer();
+  if (m_ScalarType == Detail::Int8)
+  {
+    p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::UInt8)
+  {
+    p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::Int16)
+  {
+    p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::UInt16)
+  {
+    p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::Int32)
+  {
+    p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::UInt32)
+  {
+    p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::Int64)
+  {
+    p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::UInt64)
+  {
+    p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::Float)
+  {
+    p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+  if (m_ScalarType == Detail::Double)
+  {
+    p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+  }
+
+  m->addCellData(p->GetName(), p);
+  addCreatedCellData(p->GetName());
 
 }
 
@@ -181,6 +298,11 @@ void RawBinaryReader::execute()
   setErrorCondition(0);
 
   /* Place all your code to execute your filter here. */
+  size_t totalVoxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
+
+
+  dataCheck(false, totalVoxels, 1, 1);
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

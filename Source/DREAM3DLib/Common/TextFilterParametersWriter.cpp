@@ -72,7 +72,7 @@ int TextFilterParametersWriter::closeOptionsGroup()
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, const std::string value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -82,7 +82,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, const std::st
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, int8_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -91,7 +91,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int8_t value)
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, int16_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -100,7 +100,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int16_t value
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, int32_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -109,7 +109,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int32_t value
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, int64_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -118,7 +118,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int64_t value
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, uint8_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -127,7 +127,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint8_t value
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, uint16_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -136,7 +136,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint16_t valu
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, uint32_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -145,7 +145,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint32_t valu
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, uint64_t value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -154,7 +154,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint64_t valu
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, float value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -163,7 +163,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, float value)
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, double value)
 {
-  int err = 0;
+  int err = -1;
   return err;
 }
 
@@ -172,7 +172,25 @@ int TextFilterParametersWriter::writeValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, QualityMetricFilter* f)
 {
-  int err = 0;
+  int err = -1;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, IntVec3Widget_t v)
+{
+  int err = -1;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, FloatVec3Widget_t v)
+{
+  int err = -1;
   return err;
 }
 

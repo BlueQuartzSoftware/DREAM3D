@@ -114,6 +114,7 @@ class ManagedArrayOfArrays : public IDataArray
       precision = 0;
     }
 
+    virtual std::string getTypeAsString() { return "ManagedArrayOfArrays";}
     /**
      * @brief Gives this array a human readable name
      * @param name The name of this array

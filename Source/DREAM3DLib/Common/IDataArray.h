@@ -13,6 +13,7 @@
 
 
 //-- C++
+#include <string>
 #include <iostream>
 #include <vector>
 
@@ -175,6 +176,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
+    virtual std::string getTypeAsString() = 0;
 
   protected:
 

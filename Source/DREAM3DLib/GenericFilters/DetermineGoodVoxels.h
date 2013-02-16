@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/QualityMetricFilter.h"
 
-/*
+/**
  *
  */
 class DREAM3DLib_EXPORT DetermineGoodVoxels : public AbstractFilter

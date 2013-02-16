@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 typedef struct { int x; int y; int z; } IntVec3Widget_t;
+typedef struct { float x; float y; float z; } FloatVec3Widget_t;
 
 /**
  * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
