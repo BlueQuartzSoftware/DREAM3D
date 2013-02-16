@@ -55,20 +55,10 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
-      /**
-     * @brief
-     * @param r
-     */
-    void setupQualityMetricFilters(ReadH5Ebsd::Pointer filter);
 
     QString getFilterGroup();
 
   protected slots:
-
-    void on_addQualityMetric_clicked();
-
-    void on_removeQualityMetric_clicked();
-
     void m_SetSliceInfo();
 
     // Auto Hookup Slots
@@ -78,23 +68,14 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     QFilterWidget* createDeepCopy();
 
   private slots:
-    void phaseTypeEdited(int i);
 
   private:
-    QualityMetricTableModel*    m_QualityMetricTableModel;
-    bool                        m_phaseTypeEdited;
     bool                        rotateslice;
     bool                        reorderarray;
-    bool                        aligneulers;
+   unsigned int                 aligneulers;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
-
-    /**
-     * @brief
-     * @return
-     */
-    bool checkPhaseTypes();
 
     void populateCreatedRequiredLists( QString filePath );
 

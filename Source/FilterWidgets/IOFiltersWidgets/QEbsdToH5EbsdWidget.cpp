@@ -66,8 +66,8 @@
 // -----------------------------------------------------------------------------
 QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
 QFilterWidget(parent),
-m_RotateSlice(true),
-m_ReorderArray(true)
+m_RotateSlice(false),
+m_ReorderArray(false)
 {
 
   if ( getOpenDialogLastDirectory().isEmpty() )
@@ -113,7 +113,6 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
   filter->setRefFrameZDir( getRefFrameZDir() );
   filter->setRotateSlice( m_RotateSlice );
   filter->setReorderArray( m_ReorderArray );
-  filter->setAlignEulers( m_AlignEulers );
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -551,11 +550,10 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   {
 
     Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
-    if (mapping == Ebsd::UpperLeftOrigin){ m_RotateSlice = false; m_ReorderArray = true; }
-    if (mapping == Ebsd::UpperRightOrigin){ m_RotateSlice = true; m_ReorderArray = false; }
-    if (mapping == Ebsd::LowerRightOrigin){ m_RotateSlice = true; m_ReorderArray = true; }
-    if (mapping == Ebsd::LowerLeftOrigin){ m_RotateSlice = false; m_ReorderArray = false; }
-    m_AlignEulers = d.alignEulers();
+	if (mapping == Ebsd::TSLdefault){ m_RotateSlice = true; m_ReorderArray = true; }
+    if (mapping == Ebsd::HKLdefault){ m_RotateSlice = true; m_ReorderArray = true; }
+    if (mapping == Ebsd::HEDMdefault){ m_RotateSlice = false; m_ReorderArray = false; }
+	if (mapping == Ebsd::UnknownCoordinateMapping){ m_RotateSlice = false; m_ReorderArray = false; }
   }
 
 #if 0

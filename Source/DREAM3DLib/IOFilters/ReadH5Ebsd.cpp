@@ -54,8 +54,6 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "DREAM3DLib/GenericFilters/DetermineGoodVoxels.h"
-
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -75,9 +73,7 @@ ReadH5Ebsd::ReadH5Ebsd() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
@@ -85,10 +81,8 @@ m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_Manufacturer(Ebsd::UnknownManufacturer),
 m_CellPhases(NULL),
-m_GoodVoxels(NULL),
 m_CellEulerAngles(NULL),
 m_CrystalStructures(NULL),
-m_PhaseTypes(NULL),
 tempxpoints(0),
 tempypoints(0),
 totaltemppoints(0)
@@ -106,29 +100,9 @@ ReadH5Ebsd::~ReadH5Ebsd()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-
   writer->writeValue("H5EbsdFile", getH5EbsdFile() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
-  int numQFilters = static_cast<int>( getQualityMetricFilters().size() );
-  writer->writeValue("NumQualityFilters",  numQFilters);
-  std::stringstream ss;
-  for(size_t i = 0; i < getQualityMetricFilters().size(); i++)
-  {
-    ss << "QualityMetricFilter-" << i;
-    writer->writeValue(ss.str(), m_QualityMetricFilters[i].get());
-    ss.str("");
-  }
-
-  int numPhaseType = static_cast<int>( m_PTypes->GetNumberOfTuples() );
-
-  writer->writeValue("NumPhaseTypes", numPhaseType);
-  for(int i = 0; i < numPhaseType; ++i)
-  {
-    ss << "PhaseType-" << i;
-    writer->writeValue(ss.str(), m_PTypes->GetValue(i));
-    ss.str("");
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -270,14 +244,11 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
 
   addCreatedEnsembleData(m_MaterialNamesArrayName);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
@@ -609,27 +580,6 @@ void ReadH5Ebsd::execute()
     return;
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, totalPoints, 1)
-
-  // Run the filter to determine the good Voxels (if there are actual quality metric filterss)
-  if(m_QualityMetricFilters.size() > 0)
-  {
-    DetermineGoodVoxels::Pointer filter = DetermineGoodVoxels::New();
-    filter->setQualityMetricFilters(m_QualityMetricFilters);
-    filter->setObservers(getObservers());
-    filter->setMessagePrefix(getMessagePrefix());
-    filter->setEbsdVolumeReader(ebsdReader);
-    filter->setVoxelDataContainer(m);
-    filter->execute();
-    err = filter->getErrorCondition();
-    if(err < 0)
-    {
-      setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), "Error Filtering Ebsd Data.", err);
-      return;
-    }
-    filter = DetermineGoodVoxels::NullPointer(); // Clean up some memory
-  }
   // If there is an error set this to something negative and also set a message
   ss.str("");
   ss << getHumanLabel() << " Completed";

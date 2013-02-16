@@ -51,7 +51,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/QualityMetricFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
 
@@ -78,10 +77,8 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
 
@@ -91,7 +88,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PTypes)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<QualityMetricFilter::Pointer>, QualityMetricFilters)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
 
 
@@ -111,11 +107,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
   private:
     int32_t* m_CellPhases;
-    bool* m_GoodVoxels;
     float* m_CellEulerAngles;
 
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
 
     int tempxpoints;
     int tempypoints;
