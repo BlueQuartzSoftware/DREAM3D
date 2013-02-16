@@ -137,7 +137,6 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     bool m_RotateSlice;
     bool m_ReorderArray;
-    bool m_AlignEulers;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 

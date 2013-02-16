@@ -61,6 +61,9 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HKL/CtfReader.h"
 
+#include "EbsdLib/HEDM/MicConstants.h"
+#include "EbsdLib/HEDM/MicReader.h"
+
 #include "IOFiltersWidgets/moc_QEbsdReferenceFrameDialog.cxx"
 
 // -----------------------------------------------------------------------------
@@ -93,7 +96,7 @@ m_PixmapGraphicsItem(NULL)
 
   loadEbsdData();
   updateGraphicsView();
-  m_CurrentCorner = 0;
+  m_CurrentCorner = 3;
   m_NoTransBtn->setChecked(true);
   m_ExplanationScrollArea->setVisible(false);
   buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
@@ -156,6 +159,15 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     arrayNames[1] = Ebsd::Ctf::Euler2;
     arrayNames[2] = Ebsd::Ctf::Euler3;
     reader->readOnlySliceIndex(0); // Some .ctf files may actually be 3D. We only need the first slice
+  }
+  else if (ext.compare(Ebsd::Mic::FileExt) == 0)
+  {
+    MicReader* reader = new MicReader;
+//    convertDegToRads = true;
+    arrayNames[0] = Ebsd::Mic::Euler1;
+    arrayNames[1] = Ebsd::Mic::Euler2;
+	arrayNames[2] = Ebsd::Mic::Euler3;
+    ebsdReader.reset(static_cast<EbsdReader*>(reader));
   }
   if (NULL == ebsdReader.get())
   {
@@ -234,33 +246,33 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
 {
   if (checked == false) { return; }
   int corner = 0;
-  if (m_UpperLeftBtn->isChecked()) { corner = 0; }
-  if (m_UpperRightBtn->isChecked()) { corner = 1; }
-  if (m_LowerRightBtn->isChecked()) { corner = 2; }
-  if (m_LowerLeftBtn->isChecked()) { corner = 3; }
+  if (m_TSLdefaultBtn->isChecked()) { corner = 0; }
+  else if (m_HKLdefaultBtn->isChecked()) { corner = 1; }
+  else if (m_HEDMdefaultBtn->isChecked()) { corner = 2; }
+  else if (m_NoTransBtn->isChecked()) { corner = 3; }
 
   switch(m_CurrentCorner)
   {
 
     case 0:
-      if (corner == 1) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
-      if (corner == 2) {m_EbsdImage = m_EbsdImage.mirrored(true, true);}
-      if (corner == 3) {m_EbsdImage = m_EbsdImage.mirrored(false, true);}
+      if (corner == 1) {m_EbsdImage = m_EbsdImage.mirrored(false, false);}
+      if (corner == 2) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
+      if (corner == 3) {m_EbsdImage = m_EbsdImage.mirrored(true, true);}
       break;
     case 1:
-      if (corner == 0) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
-      if (corner == 2) {m_EbsdImage = m_EbsdImage.mirrored(false, true);}
+      if (corner == 0) {m_EbsdImage = m_EbsdImage.mirrored(false, false);}
+      if (corner == 2) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
       if (corner == 3) {m_EbsdImage = m_EbsdImage.mirrored(true, true);}
       break;
     case 2:
-      if (corner == 0) {m_EbsdImage = m_EbsdImage.mirrored(true, true);}
-      if (corner == 1) {m_EbsdImage = m_EbsdImage.mirrored(false, true);}
-      if (corner == 3) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
+      if (corner == 0) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
+      if (corner == 1) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
+      if (corner == 3) {m_EbsdImage = m_EbsdImage.mirrored(false, true);}
       break;
     case 3:
-      if (corner == 0) {m_EbsdImage = m_EbsdImage.mirrored(false, true);}
+      if (corner == 0) {m_EbsdImage = m_EbsdImage.mirrored(true, true);}
       if (corner == 1) {m_EbsdImage = m_EbsdImage.mirrored(true, true);}
-      if (corner == 2) {m_EbsdImage = m_EbsdImage.mirrored(true, false);}
+      if (corner == 2) {m_EbsdImage = m_EbsdImage.mirrored(false, true);}
       break;
     default:
       break;
