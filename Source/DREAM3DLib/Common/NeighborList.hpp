@@ -78,6 +78,13 @@ class NeighborList : public IDataArray
       precision = 0;
     }
 
+
+    /**
+     * @brief getTypeAsString
+     * @return
+     */
+    virtual std::string getTypeAsString() { return "NeighborList<T>";}
+
     void SetName(const std::string &name) { m_Name = name; }
     std::string GetName() { return m_Name; }
 

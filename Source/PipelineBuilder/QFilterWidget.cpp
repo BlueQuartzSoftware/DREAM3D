@@ -62,7 +62,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QFSDropLineEdit.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
+
 
 #include "ArraySelectionWidget.h"
 
@@ -72,10 +72,20 @@
 #define IMAGE_WIDTH 17
 #define IMAGE_HEIGHT 17
 
+// These Streams need to be implemented so that our 3 Element Vectors can be read/write to disk/prefs files
+QDataStream &operator<<( QDataStream &out, const IntVec3Widget_t& v) {
+ out << v.x << v.y << v.z; return out;
+}
+QDataStream &operator>>( QDataStream &in, IntVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
+
+QDataStream &operator<<( QDataStream &out, const FloatVec3Widget_t& v) { out << v.x << v.y << v.z; return out; }
+QDataStream &operator>>( QDataStream &in, FloatVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
+
 
 
 // Initialize private static member variable
 QString QFilterWidget::m_OpenDialogLastDirectory = "";
+
 
 // -----------------------------------------------------------------------------
 //
@@ -89,6 +99,7 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   m_HasPreflightWarnings(false)
 {
   qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
+  qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
@@ -620,6 +631,10 @@ void QFilterWidget::setupGui()
     {
       setupIntVec3Widget(frmLayout, optIndex, option, label);
     }
+    else if (wType == FilterParameter::FloatVec3Widget)
+    {
+      setupFloatVec3Widget(frmLayout, optIndex, option, label);
+    }
     ++optIndex;
   }
 
@@ -659,6 +674,42 @@ void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
   connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
   connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
   connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateIntVec3Widget(const QString &)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex,
+                                         FilterParameter* option, QLabel* label )
+{
+  frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
+  QString prop = QString::fromStdString(option->getPropertyName());
+
+  QHBoxLayout* horizontalLayout = new QHBoxLayout();
+  horizontalLayout->setSpacing(8);
+  horizontalLayout->setContentsMargins(-1, 0, -1, -1);
+  QLineEdit* Dimensions_0 = new QLineEdit(this);
+  Dimensions_0->setObjectName(QString::fromUtf8("0_") + prop);
+  QDoubleValidator* val_0 = new QDoubleValidator(this);
+  Dimensions_0->setValidator(val_0);
+  horizontalLayout->addWidget(Dimensions_0);
+
+  QLineEdit* Dimensions_1 = new QLineEdit(this);
+  Dimensions_1->setObjectName(QString::fromUtf8("1_") + prop);
+  QDoubleValidator* val_1 = new QDoubleValidator(this);
+  Dimensions_1->setValidator(val_1);
+  horizontalLayout->addWidget(Dimensions_1);
+
+  QLineEdit* Dimensions_2 = new QLineEdit(this);
+  Dimensions_2->setObjectName(QString::fromUtf8("2_") + prop);
+  QDoubleValidator* val_2 = new QDoubleValidator(this);
+  Dimensions_2->setValidator(val_2);
+  horizontalLayout->addWidget(Dimensions_2);
+
+  frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
+  connect(Dimensions_0, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
+  connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
+  connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
 }
 
 // -----------------------------------------------------------------------------
@@ -720,34 +771,103 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateIntVec3Widget(const QString &v)
 {
-  std::cout << "Vect3 Updated" << std::endl;
   QObject* whoSent = sender();
-  QString dims_n = whoSent->objectName();
-  dims_n = dims_n.mid(2);
+  QString baseName = whoSent->objectName();
+  baseName = baseName.mid(2); // Grab everything to the RIGHT of the index=2 element
 
+  bool ok = false;
 
   IntVec3Widget_t value;
-  value.x = 10;
-  value.y = 20;
-  value.z = 30;
+  value.x = 0;
+  value.y = 0;
+  value.z = 0;
 
-
-  QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
+  QString name = QString::fromUtf8("0_") + baseName;
+  QLineEdit* le = qFindChild<QLineEdit*>(this, name);
   if(le) {
-    bool ok = false;
-    //int value = le->text().toInt(&ok);
+    value.x = le->text().toInt(&ok);
     if (false == ok) {
-     // value = 0;
+      value.x = 0;
       le->setText("0");
     }
-    QVariant v;
-    v.setValue(value);
-    setProperty(dims_n.toStdString().c_str(), v);
   }
+
+  name = QString::fromUtf8("1_") + baseName;
+  le = qFindChild<QLineEdit*>(this, name);
+  if(le) {
+    value.y = le->text().toInt(&ok);
+    if (false == ok) {
+      value.y = 0;
+      le->setText("0");
+    }
+  }
+
+  name = QString::fromUtf8("2_") + baseName;
+  le = qFindChild<QLineEdit*>(this, name);
+  if(le) {
+    value.z = le->text().toInt(&ok);
+    if (false == ok) {
+      value.z = 0;
+      le->setText("0");
+    }
+  }
+
+  QVariant variant;
+  variant.setValue(value);
+  setProperty(baseName.toAscii(), variant);
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateFloatVec3Widget(const QString &v)
+{
+  QObject* whoSent = sender();
+  QString baseName = whoSent->objectName();
+  baseName = baseName.mid(2); // Grab everything to the RIGHT of the index=2 element
 
+  bool ok = false;
+
+  FloatVec3Widget_t value;
+  value.x = 0.0;
+  value.y = 0.0;
+  value.z = 0.0;
+
+  QString name = QString::fromUtf8("0_") + baseName;
+  QLineEdit* le = qFindChild<QLineEdit*>(this, name);
+  if(le) {
+    value.x = le->text().toFloat(&ok);
+    if (false == ok) {
+      value.x = 0;
+      le->setText("0");
+    }
+  }
+
+  name = QString::fromUtf8("1_") + baseName;
+  le = qFindChild<QLineEdit*>(this, name);
+  if(le) {
+    value.y = le->text().toFloat(&ok);
+    if (false == ok) {
+      value.y = 0;
+      le->setText("0");
+    }
+  }
+
+  name = QString::fromUtf8("2_") + baseName;
+  le = qFindChild<QLineEdit*>(this, name);
+  if(le) {
+    value.z = le->text().toFloat(&ok);
+    if (false == ok) {
+      value.z = 0;
+      le->setText("0");
+    }
+  }
+
+  QVariant variant;
+  variant.setValue(value);
+  setProperty(baseName.toAscii(), variant);
+}
 
 // -----------------------------------------------------------------------------
 // This slot is just here to

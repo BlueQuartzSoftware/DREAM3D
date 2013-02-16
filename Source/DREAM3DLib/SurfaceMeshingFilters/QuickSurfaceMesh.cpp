@@ -447,7 +447,7 @@ void QuickSurfaceMesh::execute()
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
 
   triangleCount = 0;
-
+  const SurfaceMesh::DataStructures::Float_t k_Two = static_cast<SurfaceMesh::DataStructures::Float_t>(2.0);
   for(size_t k = 0; k < zP; k++)
   {
     for(size_t j = 0; j < yP; j++)
@@ -462,24 +462,24 @@ void QuickSurfaceMesh::execute()
       if(i == 0)
       {
         nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
         nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -500,24 +500,24 @@ void QuickSurfaceMesh::execute()
       if(j == 0)
       {
         nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
         nodeId4 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId4]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId4]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
@@ -538,24 +538,24 @@ void QuickSurfaceMesh::execute()
       if(k == 0)
       {
         nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId3 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId3]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId3]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         nodeId4 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-        vertex[m_NodeIds[nodeId4]].pos[2] = (k*zRes) - (zRes/2.0);
+        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+        vertex[m_NodeIds[nodeId4]].pos[2] = (k*zRes) - (zRes/k_Two);
 
         triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
         triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -578,24 +578,24 @@ void QuickSurfaceMesh::execute()
         if(i == (xP-1))
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -616,24 +616,24 @@ void QuickSurfaceMesh::execute()
         if(j == (yP-1))
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -654,24 +654,24 @@ void QuickSurfaceMesh::execute()
         if(k == (zP-1))
         {
           nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
@@ -695,24 +695,24 @@ void QuickSurfaceMesh::execute()
         if(m_GrainIds[point] != m_GrainIds[neigh1])
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -733,24 +733,24 @@ void QuickSurfaceMesh::execute()
         if(m_GrainIds[point] != m_GrainIds[neigh2])
         {
           nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -771,24 +771,24 @@ void QuickSurfaceMesh::execute()
         if(m_GrainIds[point] != m_GrainIds[neigh3])
         {
           nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/2.0);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/2.0);
+          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
 
           triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
           triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];

@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 
 
@@ -68,17 +68,10 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, ScalarType)
     DREAM3D_INSTANCE_PROPERTY(int, Endian)
     DREAM3D_INSTANCE_PROPERTY(int, Dimensionality)
-    DREAM3D_INSTANCE_PROPERTY(float, XOrigin)
-    DREAM3D_INSTANCE_PROPERTY(float, YOrigin)
-    DREAM3D_INSTANCE_PROPERTY(float, ZOrigin)
-
-    DREAM3D_INSTANCE_PROPERTY(float, XSpacing)
-    DREAM3D_INSTANCE_PROPERTY(float, YSpacing)
-    DREAM3D_INSTANCE_PROPERTY(float, ZSpacing)
-
-    DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
-
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfComponents)
+    DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Spacing)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
