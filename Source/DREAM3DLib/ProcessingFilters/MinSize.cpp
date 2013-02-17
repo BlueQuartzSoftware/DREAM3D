@@ -127,6 +127,9 @@ void MinSize::setupFilterParameters()
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
+  writer->writeValue("GrainIdsArrayName", getGrainIdsArrayName());
+  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName());
+  writer->writeValue("FieldPhasesArrayName", getFieldPhasesArrayName());
 }
 
 // -----------------------------------------------------------------------------
