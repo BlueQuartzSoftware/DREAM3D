@@ -87,6 +87,21 @@ class DataArray : public IDataArray
 
     typedef std::vector<Pointer>   ContainterType;
 
+  enum NumType {
+    Int8 = 0,
+    UInt8,
+    Int16,
+    UInt16,
+    Int32,
+    UInt32,
+    Int64,
+    UInt64,
+    Float,
+    Double,
+	Bool,
+    UnknownNumType
+  };
+
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.

@@ -44,6 +44,7 @@
     <file>IOFilters/SurfaceMeshToNonconformalVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
+    <file>IOFilters/RawBinaryReader.html</file>
     <file>IOFilters/VtkGrainIdReader.html</file>
     <file>IOFilters/SolidMeshToVtk.html</file>
 
