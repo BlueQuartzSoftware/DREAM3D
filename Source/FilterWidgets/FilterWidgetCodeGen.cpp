@@ -49,7 +49,6 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 
-
 // Enable this to generate a text file that has each filter and all of its
 // parameters, required array and created array listed.
 #define GENERATE_FILTER_TEXT_LIST 0
@@ -196,7 +195,7 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 // -----------------------------------------------------------------------------
 void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options)
 {
-std::stringstream ss;
+  std::stringstream ss;
   ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
   std::string completePath = MXADir::toNativeSeparators(ss.str());
   if (MXADir::exists(completePath) == true)
@@ -235,7 +234,8 @@ std::stringstream ss;
   fprintf(f, "#include <QtCore/QSettings>\n\n");
 
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
-  fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n\n");
+  fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
+  fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
   if (FILTER_INCLUDE_PREFIX().empty() == true) {
     fprintf(f, "#include \"%s/%s.h\"\n", group.c_str(), filter.c_str());
   }
@@ -293,8 +293,18 @@ std::stringstream ss;
       implementArraySelectionWidget = true;
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
-     // fprintf(f, "    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      // fprintf(f, "    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
       fprintf(f, "\n\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
+    {
+      fprintf(f, "    Q_PROPERTY(IntVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(IntVec3Widget_t, %s)\n\n", prop.c_str());
+    }
+    else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+    {
+      fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.c_str());
     }
     else
     {
@@ -366,7 +376,7 @@ std::stringstream ss;
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 
-  // Use MD5 Checksums to figure out if the files are different
+    // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
     {
       std::cout << "0-Creating Header File: " << completePath << std::endl;
@@ -526,7 +536,7 @@ void createSourceFile( const std::string &group, const std::string &filter, std:
     }
   }
   // Generate all the source code to set the various array names into the filter
-//  appendArrayNameGetFilterCode<T>(t, f);
+  //  appendArrayNameGetFilterCode<T>(t, f);
 
   fprintf(f, "  return filter;\n");
   fprintf(f, "}\n");
@@ -600,6 +610,32 @@ void createSourceFile( const std::string &group, const std::string &filter, std:
     {
 
     }
+    else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
+    {
+      fprintf(f, "// ------------- %s ----------------------------------\n", prop.c_str());
+      fprintf(f, "  IntVec3Widget_t v_%s = get%s();\n", prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.c_str());
+      fprintf(f, "  prefs.setArrayIndex(0);\n");
+      fprintf(f, "  prefs.setValue(\"x\", v_%s.x);\n", prop.c_str());
+      fprintf(f, "  prefs.setArrayIndex(1);\n");
+      fprintf(f, "  prefs.setValue(\"y\", v_%s.y);\n", prop.c_str());
+      fprintf(f, "  prefs.setArrayIndex(2);\n");
+      fprintf(f, "  prefs.setValue(\"z\", v_%s.z);\n", prop.c_str());
+      fprintf(f, "  prefs.endArray();\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+    {
+      fprintf(f, "// ------------- %s ----------------------------------\n", prop.c_str());
+      fprintf(f, "  FloatVec3Widget_t v_%s = get%s();\n", prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.c_str());
+      fprintf(f, "  prefs.setArrayIndex(0);\n");
+      fprintf(f, "  prefs.setValue(\"x\", (double)(v_%s.x));\n", prop.c_str());
+      fprintf(f, "  prefs.setArrayIndex(1);\n");
+      fprintf(f, "  prefs.setValue(\"y\", (double)(v_%s.y));\n", prop.c_str());
+      fprintf(f, "  prefs.setArrayIndex(2);\n");
+      fprintf(f, "  prefs.setValue(\"z\", (double)(v_%s.z));\n", prop.c_str());
+      fprintf(f, "  prefs.endArray();\n");
+    }
     else
     {
       fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
@@ -618,6 +654,7 @@ void createSourceFile( const std::string &group, const std::string &filter, std:
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
     std::string hl = opt->getHumanLabel();
+    fprintf(f, "// ------------- %s ----------------------------------\n", prop.c_str());
     fprintf(f, "  {\n   QVariant p_%s = prefs.value(\"%s\");\n", prop.c_str(), prop.c_str());
 
     if(opt->getWidgetType() == FilterParameter::StringWidget)
@@ -670,6 +707,52 @@ void createSourceFile( const std::string &group, const std::string &filter, std:
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
 
+    }
+    else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
+    {
+      fprintf(f, "   bool ok = false;\n");
+      fprintf(f, "   IntVec3Widget_t v3 = p_%s.value<IntVec3Widget_t>();\n", prop.c_str());
+      fprintf(f, "   prefs.beginReadArray(\"%s\");\n", prop.c_str());
+
+      fprintf(f, "   prefs.setArrayIndex(0);\n");
+      fprintf(f, "   v3.x = prefs.value(\"x\", v3.x).toInt(&ok);\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_0 = findChild<QLineEdit*>(\"0_%s\");\n", prop.c_str());
+      fprintf(f, "   if (le_0) { le_0->setText(QString::number(v3.x)); }\n");
+
+      fprintf(f, "   prefs.setArrayIndex(1);\n");
+      fprintf(f, "   v3.y = prefs.value(\"y\", v3.y).toInt(&ok);\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_1 = findChild<QLineEdit*>(\"1_%s\");\n", prop.c_str());
+      fprintf(f, "   if (le_1) { le_1->setText(QString::number(v3.y)); }\n");
+
+      fprintf(f, "   prefs.setArrayIndex(2);\n");
+      fprintf(f, "   v3.z = prefs.value(\"z\", v3.z).toInt(&ok);\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_2 = findChild<QLineEdit*>(\"2_%s\");\n", prop.c_str());
+      fprintf(f, "   if (le_2) { le_2->setText(QString::number(v3.z)); }\n");
+
+      fprintf(f, "   prefs.endArray();\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+    {
+      fprintf(f, "   bool ok = false;\n");
+      fprintf(f, "   FloatVec3Widget_t v3 = p_%s.value<FloatVec3Widget_t>();\n", prop.c_str());
+      fprintf(f, "   prefs.beginReadArray(\"%s\");\n", prop.c_str());
+
+      fprintf(f, "   prefs.setArrayIndex(0);\n");
+      fprintf(f, "   v3.x = prefs.value(\"x\", v3.x).toFloat(&ok);\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_0 = findChild<QLineEdit*>(\"0_%s\");\n", prop.c_str());
+      fprintf(f, "   if (le_0) { le_0->setText(QString::number(v3.x)); }\n");
+
+      fprintf(f, "   prefs.setArrayIndex(1);\n");
+      fprintf(f, "   v3.y = prefs.value(\"y\", v3.y).toFloat(&ok);\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_1 = findChild<QLineEdit*>(\"1_%s\");\n", prop.c_str());
+      fprintf(f, "   if (le_1) { le_1->setText(QString::number(v3.y)); }\n");
+
+      fprintf(f, "   prefs.setArrayIndex(2);\n");
+      fprintf(f, "   v3.z = prefs.value(\"z\", v3.z).toFloat(&ok);\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_2 = findChild<QLineEdit*>(\"2_%s\");\n", prop.c_str());
+      fprintf(f, "   if (le_2) { le_2->setText(QString::number(v3.z)); }\n");
+
+      fprintf(f, "   prefs.endArray();\n");
     }
     else
     {
@@ -768,7 +851,7 @@ void createSourceFile( const std::string &group, const std::string &filter, std:
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 
-  // Use MD5 Checksums to figure out if the files are different
+    // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
     {
       std::cout << "0-Creating Source File: " << completePath << std::endl;
@@ -964,7 +1047,7 @@ void createHTMLFile( const std::string &group, const std::string &filter, Abstra
 #if (GENERATE_HTML_FILE == 0)
   return;
 #endif
-//  typename T::Pointer t = T::New();
+  //  typename T::Pointer t = T::New();
   std::vector<FilterParameter::Pointer> options = t->getFilterParameters();
 
   std::stringstream ss;

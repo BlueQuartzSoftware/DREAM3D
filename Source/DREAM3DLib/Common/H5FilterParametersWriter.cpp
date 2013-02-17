@@ -209,3 +209,30 @@ int H5FilterParametersWriter::writeValue(const std::string name, QualityMetricFi
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, IntVec3Widget_t v)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 3 };
+  err = H5Lite::writePointerDataset<int32_t>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<int32_t*>(&v) );
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, FloatVec3Widget_t v)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 3 };
+  err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  return err;
+}
+
+
+
+

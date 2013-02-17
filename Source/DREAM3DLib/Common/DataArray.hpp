@@ -192,6 +192,7 @@ class DataArray : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, int numComponents, const std::string &name)
     {
+
       DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
       if (d->Allocate() < 0)
       { // Could not allocate enough memory, reset the pointer to null and return
