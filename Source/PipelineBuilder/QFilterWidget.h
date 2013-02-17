@@ -44,11 +44,12 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
 #include "PipelineBuilderDLLExport.h"
 
+#include "DREAM3DLib/Common/FilterParameter.h"
 
-
+Q_DECLARE_METATYPE(IntVec3Widget_t)
+Q_DECLARE_METATYPE(FloatVec3Widget_t)
 
 #if 1
 /**
@@ -72,6 +73,7 @@
   QFILTERWIDGET_GET_PROPERTY(m_msgType, prpty)
 
 #endif
+
 
 
 
@@ -164,9 +166,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void updateQLineEditStringValue(const QString &v);
     virtual void updateLineEdit(const QString &v);
     virtual void updateArraySelectionWidget();
+    virtual void updateIntVec3Widget(const QString &v);
+    virtual void updateFloatVec3Widget(const QString &v);
 
     virtual void setIsSelected(bool b);
-
 
     /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
@@ -203,7 +206,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
-
+    void setupIntVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
+    void setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
 
   private:
     QRect      m_DeleteRect;

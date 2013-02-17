@@ -54,16 +54,16 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 PerPhaseMinSize::PerPhaseMinSize() :
-MinSize(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_MinAllowedGrainSize(1),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_FieldPhases(NULL),
-m_Active(NULL)
+  MinSize(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_MinAllowedGrainSize(1),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_FieldPhases(NULL),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -98,6 +98,33 @@ void PerPhaseMinSize::setupFilterParameters()
     option->setValueType("int");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Grain Ids Array Name");
+    option->setPropertyName("GrainIdsArrayName");
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Cell Phase Array Name");
+    option->setPropertyName("CellPhasesArrayName");
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Field Phase Array Name");
+    option->setPropertyName("FieldPhasesArrayName");
+    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -108,6 +135,9 @@ void PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );
+  writer->writeValue("GrainIdsArrayName", getGrainIdsArrayName());
+  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName());
+  writer->writeValue("FieldPhasesArrayName", getFieldPhasesArrayName());
 }
 
 // -----------------------------------------------------------------------------
@@ -131,9 +161,9 @@ void PerPhaseMinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-      std::stringstream ss;
-//	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	  notifyStatusMessage(ss.str());
+    std::stringstream ss;
+    //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
+    //	  notifyStatusMessage(ss.str());
     if(voxcounts[i] >= m_MinAllowedGrainSize )
     {
       m_Active[i] = true;
