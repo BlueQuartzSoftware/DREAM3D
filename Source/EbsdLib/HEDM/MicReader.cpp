@@ -371,11 +371,6 @@ int MicReader::readFile()
   err = readData(in, buf, kBufferSize);
   if (err < 0) { return err;}
 
-  if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
-  {
-    transformData();
-  }
-
   return err;
 }
 
@@ -687,52 +682,4 @@ float MicReader::getXStep()
 float MicReader::getYStep()
 {
   return getYRes();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MicReader::transformData()
-{
-  float* p1 = getEuler1Pointer();
-  float* p = getEuler2Pointer();
-  float* p2 = getEuler3Pointer();
-
-  int* ph = getPhasePointer();
-  float* conf = getConfidencePointer();
-
-  size_t offset = 0;
-
-  size_t yCells = getYDimension();
-  size_t xCells = getXDimension();
-  size_t totalDataRows = yCells * xCells;
-
-  std::vector<size_t> shuffleTable(totalDataRows, 0);
-
-  size_t i = 0;
-  size_t adjustedcol, adjustedrow;
-  for(size_t row = 0; row < yCells; ++row)
-  {
-    for(size_t col = 0; col < xCells; ++col)
-    {
-      adjustedcol = col;
-      adjustedrow = row;
-      if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
-      if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
-      offset = (adjustedrow*xCells)+(adjustedcol);
-      if(getAlignEulers() == true)
-      {
-        p1[i] = p1[i];
-      }
-      shuffleTable[(row*xCells)+col] = offset;
-      ++i;
-    }
-  }
-
-  SHUFFLE_ARRAY(Euler1, p1, float)
-      SHUFFLE_ARRAY(Euler2, p, float)
-      SHUFFLE_ARRAY(Euler3, p2, float)
-      SHUFFLE_ARRAY(Confidence, conf, float)
-      SHUFFLE_ARRAY(Phase, ph, int)
-
 }

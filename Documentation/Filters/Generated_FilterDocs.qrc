@@ -19,6 +19,7 @@
     <file>GenericFilters/IPFFilterLegend.jpg</file>
     <file>GenericFilters/RemoveArrays.html</file>
     <file>GenericFilters/SingleThresholdCells.html</file>
+    <file>GenericFilters/MultiThresholdCells.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -125,3 +126,4 @@
     <file>SyntheticBuildingFilters/InitSynthVol.jpg</file>
   </qresource>
 </RCC>
+

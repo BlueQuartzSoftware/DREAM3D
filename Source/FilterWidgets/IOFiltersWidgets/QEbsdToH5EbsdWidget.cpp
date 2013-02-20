@@ -66,8 +66,10 @@
 // -----------------------------------------------------------------------------
 QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
 QFilterWidget(parent),
-m_RotateSlice(false),
-m_ReorderArray(false)
+m_SampleTransformationAngle(0.0),
+m_EulerTransformationAngle(0.0),
+m_SampleTransformationAxis(0.0),
+m_EulerTransformationAxis(0.0)
 {
 
   if ( getOpenDialogLastDirectory().isEmpty() )
@@ -108,11 +110,13 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setZResolution(m_zSpacing->text().toFloat(&ok));
+  filter->setSampleTransformationAngle(m_SampleTransformationAngle);
+  filter->setSampleTransformationAxis(m_SampleTransformationAxis);
+  filter->setEulerTransformationAngle(m_EulerTransformationAngle);
+  filter->setEulerTransformationAxis(m_EulerTransformationAxis);
 
 
   filter->setRefFrameZDir( getRefFrameZDir() );
-  filter->setRotateSlice( m_RotateSlice );
-  filter->setReorderArray( m_ReorderArray );
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -550,10 +554,52 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   {
 
     Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
-	if (mapping == Ebsd::TSLdefault){ m_RotateSlice = true; m_ReorderArray = true; }
-    if (mapping == Ebsd::HKLdefault){ m_RotateSlice = true; m_ReorderArray = true; }
-    if (mapping == Ebsd::HEDMdefault){ m_RotateSlice = false; m_ReorderArray = false; }
-	if (mapping == Ebsd::UnknownCoordinateMapping){ m_RotateSlice = false; m_ReorderArray = false; }
+	m_SampleTransformationAxis.resize(3);
+	m_EulerTransformationAxis.resize(3);
+	if (mapping == Ebsd::TSLdefault)
+	{ 
+		m_SampleTransformationAngle = 90.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 1.0; 
+		m_SampleTransformationAxis[2] = 0.0; 
+		m_EulerTransformationAngle = 270.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
+    else if (mapping == Ebsd::HKLdefault)
+	{ 
+		m_SampleTransformationAngle = 90.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 1.0; 
+		m_SampleTransformationAxis[2] = 0.0; 
+		m_EulerTransformationAngle = 0.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
+    else if (mapping == Ebsd::HEDMdefault)
+	{ 
+		m_SampleTransformationAngle = 0.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 0.0; 
+		m_SampleTransformationAxis[2] = 1.0; 
+		m_EulerTransformationAngle = 0.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
+	else if (mapping == Ebsd::UnknownCoordinateMapping)
+	{
+		m_SampleTransformationAngle = 0.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 0.0; 
+		m_SampleTransformationAxis[2] = 1.0; 
+		m_EulerTransformationAngle = 0.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
   }
 
 #if 0

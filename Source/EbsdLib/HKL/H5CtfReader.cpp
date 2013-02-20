@@ -137,11 +137,6 @@ int H5CtfReader::readFile()
   err = H5Gclose(gid);
   err = H5Utilities::closeFile(fileId);
 
-  if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
-  {
-	  transformData();
-  }
-
   return err;
 }
 

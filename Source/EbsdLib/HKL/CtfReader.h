@@ -163,7 +163,6 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     virtual void printHeader(std::ostream &out);
 
   protected:
-    virtual void transformData();
 
   private:
     int m_SingleSliceRead;

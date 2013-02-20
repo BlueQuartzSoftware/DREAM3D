@@ -1014,4 +1014,3 @@ typedef DataArray<float>  FloatArrayType;
 typedef DataArray<double>  DoubleArrayType;
 
 #endif //_DataArray_h_
-

@@ -135,8 +135,10 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
 
-    bool m_RotateSlice;
-    bool m_ReorderArray;
+    float m_SampleTransformationAngle;
+    float m_EulerTransformationAngle;
+	std::vector<float> m_SampleTransformationAxis;
+	std::vector<float> m_EulerTransformationAxis;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 

@@ -83,6 +83,7 @@ AbstractFilter::Pointer QDataContainerReaderWidget::getFilter()
   filter->setInputFile( getInputFile().toStdString() );
   filter->setReadVoxelData( getReadVoxelData() );
   filter->setReadSurfaceMeshData( getReadSurfaceMeshData() );
+  filter->setReadSolidMeshData( getReadSolidMeshData() );
 
   arraySelectionWidget->getArraySelections(filter.get());
 
@@ -172,7 +173,10 @@ void QDataContainerReaderWidget::writeOptions(QSettings &prefs)
   prefs.setValue("InputFile", QDir::toNativeSeparators(getInputFile()) );
   prefs.setValue("ReadVoxelData", getReadVoxelData() );
   prefs.setValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );
+  prefs.setValue("ReadSolidMeshData", getReadSolidMeshData() );
+  arraySelectionWidget->writeOptions(prefs, "ArraySelections");
 }
+
 // -----------------------------------------------------------------------------
 void QDataContainerReaderWidget::readOptions(QSettings &prefs)
 {
@@ -193,7 +197,13 @@ void QDataContainerReaderWidget::readOptions(QSettings &prefs)
     QCheckBox* le = findChild<QCheckBox*>("ReadSurfaceMeshData");
     if (le) { le->setChecked(p_ReadSurfaceMeshData.toBool()); }
   }
+  {
+    QVariant p_ReadSolidMeshData = prefs.value("ReadSolidMeshData");
+    QCheckBox* le = findChild<QCheckBox*>("ReadSolidMeshData");
+    if (le) { le->setChecked(p_ReadSolidMeshData.toBool()); }
+  }
 
+  arraySelectionWidget->readOptions(prefs, "ArraySelections");
 }
 
 // -----------------------------------------------------------------------------

@@ -58,7 +58,7 @@
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
-    m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(1.0), m_ReorderArray(false), m_RotateSlice(false), m_AlignEulers(false)
+    m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(1.0), m_SampleTransformationAngle(0.0), m_SampleTransformationAxis(0.0), m_EulerTransformationAngle(0.0), m_EulerTransformationAxis(0.0)
 {
 
 }
@@ -225,35 +225,39 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  unsigned int flag = 0;
-  if(m_RotateSlice == true) flag = 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::RotateSlice, flag);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
   if(err < 0)
   {
     ss.str("");
-    ss << "Could not write the Rotate Slice Bool to the HDF5 File";
+    ss << "Could not write the Sample Transformation Angle to the HDF5 File";
     addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
   }
 
-  flag = 0;
-  if(m_ReorderArray == true) flag = 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ReorderArray, flag);
+  std::vector<hsize_t> dims(1,3);
+  err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
   if(err < 0)
   {
     ss.str("");
-    ss << "Could not write the Reorder Array Bool to the HDF5 File";
+    ss << "Could not write the Sample Transformation Axis to the HDF5 File";
     addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
   }
 
-  flag = 0;
-  if(m_AlignEulers == true) flag = 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::AlignEulers, flag);
+  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
   if(err < 0)
   {
     ss.str("");
-    ss << "Could not write the Align Eulers Bool to the HDF5 File";
+    ss << "Could not write the Euler Transformation Angle to the HDF5 File";
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    setErrorCondition(-1);
+  }
+
+  err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::EulerTransformationAxis, dims, m_EulerTransformationAxis);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Could not write the Euler Transformation Axis to the HDF5 File";
     addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
   }

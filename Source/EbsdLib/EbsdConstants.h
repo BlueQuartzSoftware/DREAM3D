@@ -62,9 +62,10 @@ namespace Ebsd
     const std::string ZEndIndex("ZEndIndex");
     const std::string ZResolution("Z Resolution");
     const std::string StackingOrder("Stacking Order");
-    const std::string RotateSlice("RotateSlice");
-    const std::string ReorderArray("ReorderArray");
-    const std::string AlignEulers("AlignEulers");
+    const std::string SampleTransformationAngle("SampleTransformationAngle");
+    const std::string SampleTransformationAxis("SampleTransformationAxis");
+    const std::string EulerTransformationAngle("EulerTransformationAngle");
+    const std::string EulerTransformationAxis("EulerTransformationAxis");
 
     const std::string Manufacturer("Manufacturer");
     const std::string OriginalFile("OriginalFile");

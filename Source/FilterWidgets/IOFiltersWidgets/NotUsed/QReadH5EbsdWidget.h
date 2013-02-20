@@ -70,9 +70,10 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
   private slots:
 
   private:
-    bool                        rotateslice;
-    bool                        reorderarray;
-   unsigned int                 aligneulers;
+    float                        sampleTransAngle;
+	std::vector<float>           sampleTransAxis;
+    float                        eulerTransAngle;
+	std::vector<float>           eulerTransAxis;
 
     void setupGui();
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);

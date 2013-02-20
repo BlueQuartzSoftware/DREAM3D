@@ -36,7 +36,7 @@
 #ifndef _ArraySelectionWidget_H_
 #define _ArraySelectionWidget_H_
 
-
+#include <QtCore/QSettings>
 #include <QtGui/QTabWidget>
 
 #include "ui_ArraySelectionWidget.h"
@@ -116,6 +116,19 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
                                               getSelectedArrays(solidMeshEdgeArrayList));
     }
 
+    /**
+     * @brief writeOptions
+     * @param prefs
+     */
+    virtual void readOptions(QSettings &prefs, QString name);
+
+    /**
+     * @brief writeOptions
+     * @param prefs
+     */
+    virtual void writeOptions(QSettings &prefs, QString name);
+
+
   signals:
     void arrayListsChanged();
 
@@ -130,6 +143,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     virtual void populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
     virtual void populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
 
+    virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames);
     virtual void populateArrayList(QListWidget* listWidget,
                                     std::list<std::string> &arrayNames);
 
@@ -139,6 +153,10 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
     virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
     virtual void clearArraySelectionLists();
+
+    void writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget);
+    void readSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget);
+    void setSelections(QListWidget* listWidget, QStringList &selections);
 
   private:
     ArraySelectionWidget(const ArraySelectionWidget&); // Copy Constructor Not Implemented

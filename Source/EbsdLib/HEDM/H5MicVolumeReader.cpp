@@ -212,8 +212,10 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
     reader->setFileName(getFileName());
     reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()));
     reader->setUserZDir(getStackingOrder());
-    reader->setRotateSlice(getRotateSlice());
-    reader->setReorderArray(getReorderArray());
+    reader->setSampleTransformationAngle(getSampleTransformationAngle());
+    reader->setSampleTransformationAxis(getSampleTransformationAxis());
+    reader->setEulerTransformationAngle(getEulerTransformationAngle());
+    reader->setEulerTransformationAxis(getEulerTransformationAxis());
 
     err = reader->readFile();
     if(err < 0)
