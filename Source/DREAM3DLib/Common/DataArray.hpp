@@ -98,7 +98,7 @@ class DataArray : public IDataArray
     UInt64,
     Float,
     Double,
-	Bool,
+  Bool,
     UnknownNumType
   };
 
@@ -155,12 +155,12 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(float)) { return Float;}
       if (typeid(value) == typeid(double)) { return Double;}
 
-      if (typeid(value) == typeid(bool)) { return Bool}
+      if (typeid(value) == typeid(bool)) { return Bool;}
 
-	  return UnknownNumType;
+    return UnknownNumType;
     }
-	
-	/**
+
+  /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
