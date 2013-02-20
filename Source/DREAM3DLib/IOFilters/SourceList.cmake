@@ -37,7 +37,7 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToVtk SurfaceMeshToVt
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToNonconformalVtk SurfaceMeshToNonconformalVtk.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkRectilinearGridWriter VtkRectilinearGridWriter.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} YSChoiAbaqusReader YSChoiAbaqusReader.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RawBinaryReader RawBinaryReader.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RawBinaryReader RawBinaryReader.html "" FALSE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader VtkGrainIdReader.html "" TRUE)
 # This is a reader to read some Data from Jack Goldfeather to validate the Curvature Calculation codes
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} GoldfeatherReader GoldfeatherReader.html "" FALSE)

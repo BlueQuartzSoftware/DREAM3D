@@ -150,10 +150,25 @@ void ArraySelectionWidget::populateSolidMeshArrayNames(SolidMeshDataContainer::P
   populateArrayList(solidMeshEdgeArrayList, ensembleNames);
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames)
+{
+  // Convert from STL container to Qt Container then pass through to the next method.
+  QStringList qArrayNames;
+  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    qArrayNames << QString::fromStdString(*iter);
+  }
+  populateArrayList(listWidget, qArrayNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringList &arrayNames)
 {
   QStringList selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
@@ -165,13 +180,29 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<
   }
   listWidget->blockSignals(true);
   listWidget->clear();
-  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  foreach(QString name, arrayNames)
   {
-    QString name = QString::fromStdString(*iter);
     listWidget->addItem(name);
     Qt::CheckState checked = Qt::Unchecked;
     if (selectedArrays.contains(name) == true) { checked = Qt::Checked; }
     listWidget->item(listWidget->count() - 1)->setCheckState(checked);
+  }
+  listWidget->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &selections)
+{
+  listWidget->blockSignals(true);
+  int count = listWidget->count();
+  for(int i = 0; i < count; ++i)
+  {
+    QString name = listWidget->item(i)->text();
+    if (selections.contains(name) == true) {
+      listWidget->item(i)->setCheckState(Qt::Checked);
+    }
   }
   listWidget->blockSignals(false);
 }
@@ -207,8 +238,8 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(VoxelDataContainer
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VoxelDataContainer::Pointer vdc,
-                                                              SurfaceMeshDataContainer::Pointer smdc,
-                                                              SolidMeshDataContainer::Pointer sdc)
+                                                                 SurfaceMeshDataContainer::Pointer smdc,
+                                                                 SolidMeshDataContainer::Pointer sdc)
 {
   REMOVE_ARRAYS_HELPER(voxel, vdc, Cell, NonSelected)
   REMOVE_ARRAYS_HELPER(voxel, vdc, Field, NonSelected)
@@ -257,6 +288,7 @@ std::set<std::string> ArraySelectionWidget::getNonSelectedArrays(QListWidget*lis
   return non_selectedArrays;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -270,8 +302,82 @@ void ArraySelectionWidget::clearArraySelectionLists()
   surfaceMeshFaceArrayList->clear();
   surfaceMeshEdgeArrayList->clear();
 
-  surfaceMeshPointArrayList->clear();
+  solidMeshPointArrayList->clear();
   solidMeshFaceArrayList->clear();
   solidMeshEdgeArrayList->clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
+{
+  readSelections(prefs, name, "VoxelCell", voxelCellArrayList);
+  readSelections(prefs, name, "VoxelField", voxelFieldArrayList);
+  readSelections(prefs, name, "VoxelEnsemble", voxelEnsembleArrayList);
+
+  readSelections(prefs, name, "SurfaceMeshPoint", surfaceMeshPointArrayList);
+  readSelections(prefs, name, "SurfaceMeshFace", surfaceMeshFaceArrayList);
+  readSelections(prefs, name, "SurfaceMeshEdge", surfaceMeshEdgeArrayList);
+
+  readSelections(prefs, name, "SolidMeshPoint", solidMeshPointArrayList);
+  readSelections(prefs, name, "SolidMeshFace", solidMeshFaceArrayList);
+  readSelections(prefs, name, "SolidMeshEnsemble", solidMeshEdgeArrayList);
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
+{
+  writeSelections(prefs, name, "VoxelCell", voxelCellArrayList);
+  writeSelections(prefs, name, "VoxelField", voxelFieldArrayList);
+  writeSelections(prefs, name, "VoxelEnsemble", voxelEnsembleArrayList);
+
+  writeSelections(prefs, name, "SurfaceMeshPoint", surfaceMeshPointArrayList);
+  writeSelections(prefs, name, "SurfaceMeshFace", surfaceMeshFaceArrayList);
+  writeSelections(prefs, name, "SurfaceMeshEdge", surfaceMeshEdgeArrayList);
+
+  writeSelections(prefs, name, "SolidMeshPoint", solidMeshPointArrayList);
+  writeSelections(prefs, name, "SolidMeshFace", solidMeshFaceArrayList);
+  writeSelections(prefs, name, "SolidMeshEnsemble", solidMeshEdgeArrayList);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget)
+{
+
+  std::set<std::string> selections = getSelectedArrays(widget);
+  int count = selections.size();
+  prefs.beginWriteArray(name + "_" + prefix, count);
+  count = 0;
+  for(std::set<std::string>::iterator iter = selections.begin(); iter != selections.end(); ++iter)
+  {
+    prefs.setArrayIndex(count++);
+    prefs.setValue(prefix, QString::fromStdString(*iter));
+  }
+  prefs.endArray();
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::readSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget)
+{
+  int count = prefs.beginReadArray(name + "_" + prefix);
+  QStringList selections;
+  for(int i = 0; i < count; ++i)
+  {
+    prefs.setArrayIndex(i);
+    QString str = prefs.value(prefix, QString::fromUtf8("NOT_FOUND")).toString();
+    selections.push_back(str);
+  }
+  prefs.endArray();
+  populateArrayList(widget, selections);
+  setSelections(widget, selections);
 }
 

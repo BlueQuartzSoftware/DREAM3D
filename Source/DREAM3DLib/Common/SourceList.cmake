@@ -58,7 +58,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.h
-#  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
 )
 
 set(DREAM3DLib_Common_SRCS
@@ -93,6 +93,7 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/QualityMetricFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.cpp
 #  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractSurfaceMeshAlgorithm.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS}" "${DREAM3DLib_Common_SRCS}" "0")

@@ -104,20 +104,20 @@
       }\
       addErrorMessage(getHumanLabel(), ss.str(), -50001);\
     } \
-    else {\
-      p->initializeWithValues(initValue);\
-      p->SetNumberOfComponents(NumComp);\
-      p->SetName(m_##Name##ArrayName);\
-      dc->add##DType(m_##Name##ArrayName, p);\
-      m_##Name = p->GetPointer(0);\
-    }\
-    if (p->GetPointer(0) == NULL)\
+    else if (p->GetPointer(0) == NULL)\
     {\
       setErrorCondition(-11000);\
       ss.str("");\
       ss << "'" << m_##Name##ArrayName << "' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
       << " Please add a filter before this filter that will result in a properly sized array.";\
       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+    }\
+    else {\
+      p->initializeWithValues(initValue);\
+      p->SetNumberOfComponents(NumComp);\
+      p->SetName(m_##Name##ArrayName);\
+      dc->add##DType(m_##Name##ArrayName, p);\
+      m_##Name = p->GetPointer(0);\
     }\
   }\
 }
