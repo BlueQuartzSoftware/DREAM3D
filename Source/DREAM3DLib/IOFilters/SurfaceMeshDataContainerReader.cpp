@@ -103,7 +103,11 @@ void SurfaceMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, si
   }
   else if (preflight == true)
   {
-    gatherData(preflight);
+    int err = gatherData(preflight);
+    if (err < 0)
+    {
+
+    }
   }
 }
 
@@ -184,7 +188,7 @@ int SurfaceMeshDataContainerReader::gatherData(bool preflight)
     ss << "Error opening Group " << DREAM3D::HDF5::SurfaceMeshDataContainerName << std::endl;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return -61;
+    return getErrorCondition();
   }
 
   HDF_ERROR_HANDLER_OFF

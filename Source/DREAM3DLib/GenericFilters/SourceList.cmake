@@ -28,3 +28,4 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} DetermineGoodVoxels DetermineGoo
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RemoveArrays RemoveArrays.html "" TRUE)
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells SingleThresholdCells.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MultiThresholdCells MultiThresholdCells.html "" TRUE)

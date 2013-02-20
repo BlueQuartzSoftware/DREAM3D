@@ -91,7 +91,7 @@ DataContainerReader::DataContainerReader() :
   AbstractFilter(),
   m_InputFile(""),
   m_ReadVoxelData(true),
-  m_ReadSurfaceMeshData(true),
+  m_ReadSurfaceMeshData(false),
   m_ReadSolidMeshData(false)
 {
   setupFilterParameters();
@@ -214,6 +214,12 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       ss << getMessagePrefix() << " |--> Reading Voxel Data ";
       voxelReader->setMessagePrefix(ss.str());
       voxelReader->preflight();
+      if (voxelReader->getErrorCondition() < 0)
+      {
+        setReadSurfaceMeshData(false);
+        setErrorCondition(voxelReader->getErrorCondition());
+        addErrorMessage(getHumanLabel(), "The voxel data was not available in the data file.", getErrorCondition());
+      }
     }
 
     /* READ THE SurfaceMesh DATA TO THE HDF5 FILE */
@@ -227,6 +233,12 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       ss << getMessagePrefix() << " |--> Reading SurfaceMesh Data ";
       smReader->setMessagePrefix(ss.str());
       smReader->preflight();
+      if (smReader->getErrorCondition() < 0)
+      {
+        setReadSurfaceMeshData(false);
+        setErrorCondition(smReader->getErrorCondition());
+        addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
+      }
     }
 
     /* READ THE SolidMesh DATA TO THE HDF5 FILE */
@@ -240,6 +252,12 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
       smReader->setMessagePrefix(ss.str());
       smReader->preflight();
+      if (smReader->getErrorCondition() < 0)
+      {
+        setReadSurfaceMeshData(false);
+        setErrorCondition(smReader->getErrorCondition());
+        addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
+      }
     }
   }
 }

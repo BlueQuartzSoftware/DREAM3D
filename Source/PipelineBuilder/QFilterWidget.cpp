@@ -65,6 +65,7 @@
 
 
 #include "ArraySelectionWidget.h"
+#include "ComparisonSelectionWidget.h"
 
 
 #define PADDING 5
@@ -635,6 +636,10 @@ void QFilterWidget::setupGui()
     {
       setupFloatVec3Widget(frmLayout, optIndex, option, label);
     }
+    else if (wType == FilterParameter::ComparisonSelectionWidget)
+    {
+      setupComparisonArraysWidget(frmLayout, optIndex, option, label);
+    }
     ++optIndex;
   }
 
@@ -766,6 +771,20 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
   connect(w, SIGNAL(arrayListsChanged()), this, SLOT(updateArraySelectionWidget()));
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label )
+{
+  ComparisonSelectionWidget* w = new ComparisonSelectionWidget(this);
+  w->setHumanLabel(label->text());
+  w->setObjectName((QString::fromStdString(option->getPropertyName())));
+  frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
+  connect(w, SIGNAL(parametersChanged()), this, SLOT(updateComparisonSelectionWidget()));
+  label->deleteLater();
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -873,6 +892,14 @@ void QFilterWidget::updateFloatVec3Widget(const QString &v)
 // This slot is just here to
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateArraySelectionWidget()
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateComparisonSelectionWidget()
 {
   emit parametersChanged();
 }
