@@ -209,4 +209,3 @@ void SingleThresholdCells::execute()
   m->addCellData(DREAM3D::CellData::GoodVoxels, baseArray);
  notifyStatusMessage("Determine Good Voxels Complete");
 }
-

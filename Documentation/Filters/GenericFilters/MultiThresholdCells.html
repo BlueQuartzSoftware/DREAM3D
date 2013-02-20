@@ -20,35 +20,37 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
       width:98%;
 }
 </style>
-<title>Single Threshold (Cell Data)</title>
+<title>Multi Threshold (Cell Data)</title>
 </head>
 <body>
-<h1 class="pHeading1">Single Threshold (Cell Data) Filter</h1>
+<h1 class="pHeading1">Multi Threshold (Cell Data) Filter</h1>
 <p class="pCellBody">
-<a href="../Filters/SingleThresholdCells.html#wp2">Description</a>
-| <a href="../Filters/SingleThresholdCells.html#wp3">Options</a>
-| <a href="../Filters/SingleThresholdCells.html#wp4">Required Arrays</a>
-| <a href="../Filters/SingleThresholdCells.html#wp5">Created Arrays</a>
-| <a href="../Filters/SingleThresholdCells.html#wp1">Authors</a> </p>
+<a href="../GenericFilters/MultiThresholdCells.html#wp2">Description</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp3">Options</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp4">Required Arrays</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp5">Created Arrays</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp1">Authors</a> </p>
 
 <a name="wp7"></a>
 <h2 class="pHeading2">Group</h2>
 <p class="pBody">Generic</p>
 
-<p class="pBody"></p>
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <!-- Write all your documentation here -->
 
 <p class="pBody">
-This filter allows the user to select a specific array and apply a comparison operation (&lt, &gt, =) of a
- value (set by the user). The result is a new array of Boolean values added to the pipeline. The user can set
- the name of the array that is added through the <b>Output Array Name</b> option.
+This filter is similar to the <a href="SingleThresholdCells.html">SingleThresholdCells</a> filter but allows the user
+ to input more than a single cell array. Internally the algorithm creates the output boolean arrays for each comparison
+ that the user creates. Then all the output arrays are compared and if <b>any</b> of the values for a specific cell voxel
+ is <b>false</b> then the corresponding voxel cell in the final output array is marked as false. This is considered a
+ logical 'or' operation.
 </p>
+
 <p class="pBody">
- For example if you wanted to generate a boolean array that indicated which cells had an '<i>Image Quality</i>' greater
- than '<i>120</i>' then the user would select the '<i>Image Quality</i>' array from the <b>Input Cell Array Name</b> combobox,
- set the Comparison Operator to "&gt" and set the <b>Value</b> to 120. The user should also input a name for the created
- boolean array.
+  An exmaple of this filter's use would be after EBSD data is read into DREAM3D and the user wants to have DREAM3D consider
+ voxels that the user considers 'good'. The user would insert this filter and select the criteria that makes a voxel 'good'.
+ For the <i>Small IN100</i> example data set the typical values are a <i>Confidence Index</i> &gt 0.1 and an <i>Image Quality</i>
+ &gt 120.
 </p>
 
 <!-- Do NOT write documentation below this line -->
@@ -59,13 +61,7 @@ This filter allows the user to select a specific array and apply a comparison op
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
 <tr bgcolor="#E2E2E2">
-<td>Input Cell Array Name</td><td>String based on an array that is stored in the pipeline at the time the filter is run</td></tr>
-<tr bgcolor="#E2E2E2">
-<td>Comparison Operator</td><td>&lt, &gt, =</td></tr>
-<tr bgcolor="#E2E2E2">
-<td>Value</td><td>The value to compare each cell against. Internally stored as a double precision floating point.</td></tr>
-<tr bgcolor="#E2E2E2">
-<td>Output Array Name</td><td>String</td></tr>
+<td>Select Arrays to Compare</td><td>Defined by the user</td></tr>
 </table>
 
 <!-- A table of Required Data for your filter -->

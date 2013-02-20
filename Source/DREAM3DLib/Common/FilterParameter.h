@@ -44,6 +44,8 @@
 
 typedef struct { int x; int y; int z; } IntVec3Widget_t;
 typedef struct { float x; float y; float z; } FloatVec3Widget_t;
+typedef struct { std::string arrayName; int compOperator; double compValue; } ComparisonInput_t;
+
 
 /**
  * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
@@ -79,8 +81,13 @@ class FilterParameter
       SurfaceMeshVertexArrayNameSelectionWidget,
       SurfaceMeshFaceArrayNameSelectionWidget,
       SurfaceMeshEdgeArrayNameSelectionWidget,
+      SolidMeshVertexArrayNameSelectionWidget,
+      SolidMeshFaceArrayNameSelectionWidget,
+      SolidMeshEdgeArrayNameSelectionWidget,
       /* ****  AND THIS LINE ******** */
       ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
+      /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
+      ComparisonSelectionWidget,
       IntVec3Widget,
       FloatVec3Widget,
       CustomWidget

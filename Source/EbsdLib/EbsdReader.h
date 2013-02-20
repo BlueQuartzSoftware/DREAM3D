@@ -67,9 +67,10 @@ class EbsdLib_EXPORT EbsdReader
     EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage);
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
-    EBSD_INSTANCE_PROPERTY(bool, RotateSlice)
-    EBSD_INSTANCE_PROPERTY(bool, ReorderArray)
-    EBSD_INSTANCE_PROPERTY(bool, AlignEulers)
+    EBSD_INSTANCE_PROPERTY(float, SampleTransformationAngle)
+	EBSD_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(float, EulerTransformationAngle)
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
 
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName)
@@ -156,11 +157,6 @@ class EbsdLib_EXPORT EbsdReader
     */
     virtual void deletePointers() = 0;
 
-  /**
-   * @brief Performs an "in-place" spacial and crystalographic reference frame
-   * transformation based on the user origin and user Z direction
-   */
-    virtual void transformData() = 0;
 
 
     /**

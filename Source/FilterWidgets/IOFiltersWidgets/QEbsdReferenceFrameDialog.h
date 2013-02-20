@@ -74,7 +74,6 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
 
 
     Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
-    bool alignEulers();
 
 
   protected slots:

@@ -80,9 +80,10 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReorderArray)
-    DREAM3D_INSTANCE_PROPERTY(bool, RotateSlice)
-    DREAM3D_INSTANCE_PROPERTY(bool, AlignEulers)
+    DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
+	DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
+	DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     virtual void preflight();
