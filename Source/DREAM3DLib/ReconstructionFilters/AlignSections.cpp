@@ -64,9 +64,9 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
-AbstractFilter(),
-m_WriteAlignmentShifts(true),
-m_AlignmentShiftFileName("aligntest.txt")
+  AbstractFilter(),
+  m_WriteAlignmentShifts(true),
+  m_AlignmentShiftFileName("aligntest.txt")
 {
 
 }
@@ -182,7 +182,7 @@ void AlignSections::execute()
   int xspot, yspot;
   DimType newPosition;
   DimType currentPosition;
-//  unsigned int  phase2;
+  //  unsigned int  phase2;
 
   std::vector<int> xshifts;
   std::vector<int> yshifts;
@@ -194,6 +194,7 @@ void AlignSections::execute()
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   DimType progIncrement = dims[2]/100;
   DimType prog = 1;
+  int progressInt = 0;
   std::stringstream ss;
 
   for (DimType i = 1; i < dims[2]; i++)
@@ -201,7 +202,8 @@ void AlignSections::execute()
     if (i > prog)
     {
       ss.str("");
-      ss << "Aligning Sections - Transferring Cell Data - " << ((float)i/dims[2])*100 << " Percent Complete";
+      progressInt = ((float)i/dims[2])*100.0;
+      ss << "Transferring Cell Data - " << progressInt << "% Complete";
       notifyStatusMessage(ss.str());
       prog = prog + progIncrement;
     }
@@ -217,34 +219,34 @@ void AlignSections::execute()
         if(yshifts[i] >= 0) yspot = static_cast<int>(l);
         else if(yshifts[i] < 0) yspot = static_cast<int>( dims[1] - 1 - l );
         if(xshifts[i] >= 0) xspot = static_cast<int>(n);
-		else if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
+        else if(xshifts[i] < 0) xspot = static_cast<int>( dims[0] - 1 - n );
         newPosition = (slice * dims[0] * dims[1]) + (yspot * dims[0]) + xspot;
         currentPosition = (slice * dims[0] * dims[1]) + ((yspot + yshifts[i]) * dims[0]) + (xspot + xshifts[i]);
         if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
-            && (xspot + xshifts[i]) <= dims[0] - 1)
+           && (xspot + xshifts[i]) <= dims[0] - 1)
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-              p->CopyTuple(currentPosition, newPosition);
+            p->CopyTuple(currentPosition, newPosition);
           }
         }
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
-            || (xspot + xshifts[i]) > dims[0] - 1)
+           || (xspot + xshifts[i]) > dims[0] - 1)
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
-              p->InitializeTuple(newPosition, 0.0);          }
+            p->InitializeTuple(newPosition, 0.0);          }
         }
       }
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
 
 

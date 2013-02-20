@@ -55,24 +55,22 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-using namespace std;
-
 const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AlignSectionsMisorientation::AlignSectionsMisorientation() :
-AlignSections(),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_MisorientationTolerance(5.0f),
-m_Quats(NULL),
-m_CellPhases(NULL),
-m_GoodVoxels(NULL),
-m_CrystalStructures(NULL)
+  AlignSections(),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_MisorientationTolerance(5.0f),
+  m_Quats(NULL),
+  m_CellPhases(NULL),
+  m_GoodVoxels(NULL),
+  m_CrystalStructures(NULL)
 {
   Seed = MXA::getMilliSeconds();
 
@@ -204,7 +202,7 @@ void AlignSectionsMisorientation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
 
 
@@ -216,7 +214,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
-  ofstream outFile;
+  std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
     outFile.open(getAlignmentShiftFileName().c_str());
   }
@@ -242,7 +240,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   int oldyshift = 0;
   float count = 0;
   int slice = 0;
-//  int xspot, yspot;
+  //  int xspot, yspot;
   float w;
   float n1, n2, n3;
   float q1[5];
@@ -251,17 +249,19 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   int curposition = 0;
 
   unsigned int phase1, phase2;
+  int progInt = 0;
 
   std::vector<std::vector<float> >  misorients;
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-      misorients[a].resize(dims[1], 0.0);
+    misorients[a].resize(dims[1], 0.0);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     std::stringstream ss;
-    ss << "Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+    progInt = ((float)iter/dims[2])*100.0f;
+    ss << "Determining Shifts - " << progInt << "% Complete";
     notifyStatusMessage(ss.str());
     if (getCancel() == true)
     {
@@ -291,7 +291,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
           disorientation = 0;
           count = 0;
           if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
-              && (j + oldyshift) < (dims[1] / 2))
+             && (j + oldyshift) < (dims[1] / 2))
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -304,22 +304,22 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                   curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
                   {
-                      w = 10000.0;
-                      if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
-                      {
-                        q1[1] = m_Quats[refposition * 5 + 1];
-                        q1[2] = m_Quats[refposition * 5 + 2];
-                        q1[3] = m_Quats[refposition * 5 + 3];
-                        q1[4] = m_Quats[refposition * 5 + 4];
-                        phase1 = m_CrystalStructures[m_CellPhases[refposition]];
-                        q2[1] = m_Quats[curposition * 5 + 1];
-                        q2[2] = m_Quats[curposition * 5 + 2];
-                        q2[3] = m_Quats[curposition * 5 + 3];
-                        q2[4] = m_Quats[curposition * 5 + 4];
-                        phase2 = m_CrystalStructures[m_CellPhases[curposition]];
-                        if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-                      }
-                      if(w > m_MisorientationTolerance) disorientation++;
+                    w = 10000.0;
+                    if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
+                    {
+                      q1[1] = m_Quats[refposition * 5 + 1];
+                      q1[2] = m_Quats[refposition * 5 + 2];
+                      q1[3] = m_Quats[refposition * 5 + 3];
+                      q1[4] = m_Quats[refposition * 5 + 4];
+                      phase1 = m_CrystalStructures[m_CellPhases[refposition]];
+                      q2[1] = m_Quats[curposition * 5 + 1];
+                      q2[2] = m_Quats[curposition * 5 + 2];
+                      q2[3] = m_Quats[curposition * 5 + 3];
+                      q2[4] = m_Quats[curposition * 5 + 4];
+                      phase2 = m_CrystalStructures[m_CellPhases[curposition]];
+                      if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+                    }
+                    if(w > m_MisorientationTolerance) disorientation++;
                   }
                   if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
                   if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
@@ -345,10 +345,10 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << endl;
+      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
   }
   if (getWriteAlignmentShifts() == true) {
-  outFile.close();
+    outFile.close();
   }
 }
