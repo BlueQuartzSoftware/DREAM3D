@@ -38,6 +38,7 @@
 #define H5EBSDVOLUMEREADER_H_
 
 #include <string>
+#include <vector>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -142,9 +143,10 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 
     virtual Ebsd::RefFrameZDir getStackingOrder();
 
-    virtual bool getRotateSlice();
-    virtual bool getReorderArray();
-    virtual bool getAlignEulers();
+    virtual float getSampleTransformationAngle();
+    virtual std::vector<float> getSampleTransformationAxis();
+    virtual float getEulerTransformationAngle();
+	virtual std::vector<float> getEulerTransformationAxis();
 
   protected:
     H5EbsdVolumeInfo();
@@ -161,9 +163,10 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     int m_ZEnd;
     Ebsd::RefFrameZDir   m_StackingOrder;
     int m_NumPhases;
-    bool m_RotateSlice;
-    bool m_ReorderArray;
-    bool m_AlignEulers;
+    float m_SampleTransformationAngle;
+	std::vector<float> m_SampleTransformationAxis;
+    float m_EulerTransformationAngle;
+	std::vector<float> m_EulerTransformationAxis;
 
     std::string m_Manufacturer;
 

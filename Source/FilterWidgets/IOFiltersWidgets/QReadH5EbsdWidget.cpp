@@ -53,9 +53,10 @@
 //
 // -----------------------------------------------------------------------------
 QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
-    rotateslice(false),
-    reorderarray(false),
-    aligneulers(0)
+    sampleTransAngle(0.0),
+    sampleTransAxis(0.0),
+    eulerTransAngle(0.0),
+    eulerTransAxis(0.0)
 {
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -96,6 +97,7 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
   filter->setH5EbsdFile(m_H5EbsdFile->text().toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
+  filter->setUseTransformations(m_UseTransformations->isChecked());
 
   filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
   return filter;
@@ -229,18 +231,19 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 
       m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
 
-      rotateslice = h5Reader->getRotateSlice();
-      reorderarray = h5Reader->getReorderArray();
-      aligneulers = h5Reader->getAlignEulers();
+	  sampleTransAngle = h5Reader->getSampleTransformationAngle();
+	  sampleTransAxis = h5Reader->getSampleTransformationAxis();
+	  eulerTransAngle = h5Reader->getEulerTransformationAngle();
+	  eulerTransAxis = h5Reader->getEulerTransformationAxis();
 
-      if(rotateslice == true) m_RotateSliceLabel->setText("true");
-      else if(rotateslice == false) m_RotateSliceLabel->setText("false");
-
-      if(reorderarray == true) m_ReorderArrayLabel->setText("true");
-      else if(reorderarray == false) m_ReorderArrayLabel->setText("false");
-
-      if(aligneulers == true) m_AlignEulersLabel->setText("true");
-      else if(aligneulers == false) m_AlignEulersLabel->setText("false");
+	  QString sampleTrans;
+	  QString eulerTrans;
+	  sampleTransAxis = h5Reader->getSampleTransformationAxis();
+	  eulerTransAxis = h5Reader->getEulerTransformationAxis();
+	  sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
+	  eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
+	  m_SampleTransformationLabel->setText(sampleTrans);
+      m_EulerTransformationLabel->setText(eulerTrans);
 
       setOpenDialogLastDirectory( fi.path() );
 
@@ -256,11 +259,10 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
     m_YRes->setText("xxx");
     m_ZRes->setText("xxx");
     m_EbsdManufacturer->setText("xxx");
-    m_ReorderArrayLabel->setText("xxx");
-    m_RotateSliceLabel->setText("xxx");
+    m_SampleTransformationLabel->setText("xxx");
+    m_EulerTransformationLabel->setText("xxx");
     m_ZMin->setText("xxx");
     m_ZMax->setText("xxx");
-    m_AlignEulersLabel->setText("xxx");
     m_StackingOrder->setText("xxx");
   }
   emit parametersChanged();
@@ -322,13 +324,16 @@ void QReadH5EbsdWidget::readOptions(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  //double d;
+  bool b;
 
   READ_FILEPATH_SETTING(prefs, m_, H5EbsdFile, "");
   on_m_H5EbsdFile_textChanged(QString(""));
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
-//  READ_SETTING(prefs, m_, MisorientationTolerance, ok, d, 5.0 , Double);
+
+  
+  QVariant UseTrans = prefs.value("UseTransformations");
+  m_UseTransformations->setChecked(UseTrans.toBool());
 
 
 }
@@ -342,6 +347,7 @@ void QReadH5EbsdWidget::writeOptions(QSettings &prefs)
   prefs.setValue("H5EbsdFile", m_H5EbsdFile->text());
   prefs.setValue("ZStartIndex", m_ZStartIndex->value());
   prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
+  prefs.setValue("UseTransformations",m_UseTransformations->isChecked());
 //  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
 
 

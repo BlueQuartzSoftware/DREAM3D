@@ -138,8 +138,6 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     virtual int getYDimension();
     virtual void setYDimension(int ydim);
 
-    virtual void transformData();
-
 protected:
 
 

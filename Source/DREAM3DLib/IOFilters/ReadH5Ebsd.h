@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(DataArray<unsigned int>::Pointer, PTypes)
+    DREAM3D_INSTANCE_PROPERTY(bool, UseTransformations)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
 
 
@@ -148,11 +148,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       // be filled in based on values from the data file
       crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
       materialNames->SetValue(0, "Invalid Phase");
-      if (m_PTypes.get() == NULL || m_PTypes->GetSize() == 0)
-      {
-        return -1;
-      }
-      m_PTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
 
       for(size_t i=0;i<phases.size();i++)
       {
@@ -162,7 +157,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
       }
       getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PTypes);
       getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
       getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;

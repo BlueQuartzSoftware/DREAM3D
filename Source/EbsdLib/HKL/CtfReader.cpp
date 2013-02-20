@@ -317,11 +317,6 @@ int CtfReader::readFile()
   err = readData(in);
   if (err < 0) { return err;}
 
-  if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
-  {
-      transformData();
-  }
-
   return err;
 }
 
@@ -712,83 +707,6 @@ void CtfReader::setYDimension(int ydim)
   /* Copy the values back into the array over writing the original values*/\
   ::memcpy(var, tempPtr, numRows * sizeof(m_msgType));
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CtfReader::transformData()
-{
-  float* p1 = getEuler1Pointer();
-  size_t offset = 0;
-  size_t yCells = getYCells();
-  size_t xCells = getXCells();
-  int zCells = getZCells();
-  if (zCells < 0 || m_SingleSliceRead >= 0)
-  {
-    zCells = 1;
-  }
-  size_t rowsPerSlice = yCells * xCells;
-
-  std::vector<size_t> shuffleTable(rowsPerSlice, 0);
-
-  size_t i = 0;
-  size_t adjustedcol, adjustedrow;
-
-  int* intPtr = allocateArray<int>(rowsPerSlice);
-  float* floatPtr = allocateArray<float>(rowsPerSlice);
-
-  for (int slice = 0; slice < zCells; ++slice)
-  {
-    for (size_t row = 0; row < yCells; ++row)
-    {
-      for (size_t col = 0; col < xCells; ++col)
-      {
-        adjustedcol = col;
-        adjustedrow = row;
-        if(getRotateSlice() == true) adjustedcol = (xCells - 1) - adjustedcol, adjustedrow = (yCells - 1) - adjustedrow;
-        if(getReorderArray() == true) adjustedrow = (yCells - 1) - adjustedrow;
-        offset = (slice*xCells*yCells) + (adjustedrow * xCells) + (adjustedcol);
-        if(getAlignEulers() == true)
-        {
-          p1[i] = p1[i];
-        }
-        shuffleTable[(row * xCells) + col] = offset;
-        ++i;
-      }
-    }
-
-    Ebsd::NumType numType = Ebsd::UnknownNumType;
-    std::string colName;
-    for (std::map<std::string, int>::iterator iter = m_NameIndexMap.begin(); iter != m_NameIndexMap.end(); ++iter )
-    {
-      colName = (*iter).first;
-      numType = getPointerType(colName);
-      if(numType == Ebsd::Int32)
-      {
-        int32_t* ptr = static_cast<int32_t*>(getPointerByName(colName));
-        if (NULL == ptr) { assert(false); } // We are going to crash here. I would rather crash than have bad data
-        ptr = ptr + (slice * xCells * yCells); // Put the pointer at the proper offset into the larger array
-        CTF_SHUFFLE_ARRAY(intPtr, ptr, int, rowsPerSlice);
-      }
-      else if (numType == Ebsd::Float)
-      {
-        float* ptr = static_cast<float*>(getPointerByName(colName));
-        if (NULL == ptr) { assert(false); } // We are going to crash here. I would rather crash than have bad data
-        ptr = ptr + (slice * xCells * yCells); // Put the pointer at the proper offset into the larger array
-        CTF_SHUFFLE_ARRAY(floatPtr, ptr, float, rowsPerSlice);
-      }
-      else
-      {
-        assert(false); // We are going to crash here because I would rather crash than have bad data
-      }
-    }
-
-  } // End slice loop
-
-  delete [] intPtr;
-  delete [] floatPtr;
-}
 
 // -----------------------------------------------------------------------------
 //

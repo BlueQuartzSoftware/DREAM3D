@@ -41,9 +41,10 @@
 // -----------------------------------------------------------------------------
 EbsdReader::EbsdReader() :
 m_UserZDir(Ebsd::LowtoHigh),
-m_RotateSlice(false),
-m_ReorderArray(false),
-m_AlignEulers(false),
+m_SampleTransformationAngle(0.0),
+m_SampleTransformationAxis(0.0),
+m_EulerTransformationAngle(0.0),
+m_EulerTransformationAxis(0.0),
 m_FileName(""),
 m_NumFields(0),
 m_OriginalHeader(""),

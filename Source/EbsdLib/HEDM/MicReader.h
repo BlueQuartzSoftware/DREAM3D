@@ -191,8 +191,6 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     virtual float getXStep();
     virtual float getYStep();
 
-    virtual void transformData();
-
 protected:
 
 

@@ -48,6 +48,14 @@
       return err;\
     }
 
+#define EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, path, var)\
+    err = H5Lite::readVectorDataset(fileId, path, var);\
+    if (err < 0) {\
+      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
+      err = H5Utilities::closeFile(fileId);\
+      return err;\
+    }
+
 
 #define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
     { cast t;\
@@ -79,9 +87,10 @@ m_ZStart(0),
 m_ZEnd(0),
 m_StackingOrder(Ebsd::LowtoHigh),
 m_NumPhases(0),
-m_RotateSlice(false),
-m_ReorderArray(false),
-m_AlignEulers(false)
+m_SampleTransformationAngle(0.0),
+m_SampleTransformationAxis(0.0),
+m_EulerTransformationAngle(0.0),
+m_EulerTransformationAxis(0.0)
 {
     m_Manufacturer = "Unknown";
 }
@@ -138,9 +147,10 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZResolution, m_ZRes);
 
   EBSD_VOLREADER_READ_HEADER_CAST(fileId, Ebsd::H5::StackingOrder, m_StackingOrder, Ebsd::RefFrameZDir, unsigned int);
-  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::RotateSlice, m_RotateSlice);
-  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ReorderArray, m_ReorderArray);
-  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::AlignEulers, m_AlignEulers);
+  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
+  EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, Ebsd::H5::SampleTransformationAxis, m_SampleTransformationAxis);
+  EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
+  EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, Ebsd::H5::EulerTransformationAxis, m_EulerTransformationAxis);
 
 
   m_Manufacturer = "";
@@ -337,41 +347,67 @@ Ebsd::RefFrameZDir H5EbsdVolumeInfo::getStackingOrder()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool H5EbsdVolumeInfo::getRotateSlice()
+float H5EbsdVolumeInfo::getSampleTransformationAngle()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) { return true; }
+    if (err < 0) { return 0.0; }
   }
-  return m_RotateSlice;
+  return m_SampleTransformationAngle;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool H5EbsdVolumeInfo::getReorderArray()
+std::vector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) { return true; }
+    if (err < 0) 
+	{ 
+		std::vector<float> axis(3);
+		axis[0] = 0.0;
+		axis[1] = 0.0;
+		axis[2] = 1.0;
+		return axis; 
+	}
   }
-  return m_ReorderArray;
+  return m_SampleTransformationAxis;
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool H5EbsdVolumeInfo::getAlignEulers()
+float H5EbsdVolumeInfo::getEulerTransformationAngle()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) { return true; }
+    if (err < 0) { return 0.0; }
   }
-  return m_AlignEulers;
+  return m_EulerTransformationAngle;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
+{
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+    err = readVolumeInfo();
+    if (err < 0) 
+	{ 
+		std::vector<float> axis(3);
+		axis[0] = 0.0;
+		axis[1] = 0.0;
+		axis[2] = 1.0;
+		return axis; 
+	}
+  }
+  return m_EulerTransformationAxis;
 }
