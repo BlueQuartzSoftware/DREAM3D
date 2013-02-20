@@ -36,142 +36,7 @@
 #include "SingleThresholdCells.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-
-
-/**
- * @brief The ThresholdFilter class
- */
-class ThresholdFilter : public IDataArrayFilter
-{
-  public:
-    ThresholdFilter(DREAM3D::Comparison::Enumeration compType, double compValue, BoolArrayType* output) :
-      comparisonOperator(compType),
-      comparisonValue(compValue),
-      m_Output(output)
-    {}
-
-    virtual ~ThresholdFilter()
-    {}
-
-    template<typename T>
-    void filterDataLessThan(IDataArray* m_Input)
-    {
-      size_t m_NumValues = m_Input->GetNumberOfTuples();
-      T v = static_cast<T>(comparisonValue);
-      T* data = IDataArray::SafeReinterpretCast<IDataArray*, DataArray<T>*, T*>(m_Input);
-      for (size_t i = 0; i < m_NumValues; ++i)
-      {
-        bool b = (data[i] < v);
-        m_Output->SetValue(i, b);
-      }
-    }
-
-    template<typename T>
-    void filterDataGreaterThan(IDataArray* m_Input)
-    {
-      size_t m_NumValues = m_Input->GetNumberOfTuples();
-      T v = static_cast<T>(comparisonValue);
-      T* data = IDataArray::SafeReinterpretCast<IDataArray*, DataArray<T>*, T*>(m_Input);
-      for (size_t i = 0; i < m_NumValues; ++i)
-      {
-        bool b = (data[i] > v);
-        m_Output->SetValue(i, b);
-      }
-    }
-
-    template<typename T>
-    void filterDataEqualTo(IDataArray* m_Input)
-    {
-      size_t m_NumValues = m_Input->GetNumberOfTuples();
-      T v = static_cast<T>(comparisonValue);
-      T* data = IDataArray::SafeReinterpretCast<IDataArray*, DataArray<T>*, T*>(m_Input);
-      for (size_t i = 0; i < m_NumValues; ++i)
-      {
-        bool b = (data[i] == v);
-        m_Output->SetValue(i, b);
-      }
-    }
-
-
-#define FILTER_DATA_HELPER(dType, ops, Type) \
-  if (dType.compare(#Type) == 0) {\
-  if (ops == DREAM3D::Comparison::Operator_LessThan) filterDataLessThan<Type>(input);\
-  else if (ops == DREAM3D::Comparison::Operator_GreaterThan) filterDataGreaterThan<Type>(input);\
-  else if (ops == DREAM3D::Comparison::Operator_Equal) filterDataEqualTo<Type>(input);\
-  return 1;\
-  }
-
-
-    int execute(IDataArray *input, IDataArray *output)
-    {
-      m_Output->initializeWithZeros();
-      std::string dType = input->getTypeAsString();
-
-      FILTER_DATA_HELPER(dType, comparisonOperator, float);
-      FILTER_DATA_HELPER(dType, comparisonOperator, double);
-
-      FILTER_DATA_HELPER(dType, comparisonOperator, int8_t);
-      FILTER_DATA_HELPER(dType, comparisonOperator, uint8_t);
-# if CMP_TYPE_CHAR_IS_SIGNED
-      FILTER_DATA_HELPER(dType, comparisonOperator, char);
-#else
-      FILTER_DATA_HELPER(dType, comparisonOperator, char);
-#endif
-      FILTER_DATA_HELPER(dType, comparisonOperator, signed char);
-      FILTER_DATA_HELPER(dType, comparisonOperator, unsigned char);
-
-
-      FILTER_DATA_HELPER(dType, comparisonOperator, int16_t);
-      FILTER_DATA_HELPER(dType, comparisonOperator, short);
-      FILTER_DATA_HELPER(dType, comparisonOperator, signed short);
-      FILTER_DATA_HELPER(dType, comparisonOperator, uint16_t);
-      FILTER_DATA_HELPER(dType, comparisonOperator, unsigned short);
-
-
-      FILTER_DATA_HELPER(dType, comparisonOperator, int32_t);
-      FILTER_DATA_HELPER(dType, comparisonOperator, uint32_t);
-#if (CMP_SIZEOF_INT == 4)
-      FILTER_DATA_HELPER(dType, comparisonOperator, int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, signed int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, unsigned int);
-#endif
-
-
-#if (CMP_SIZEOF_LONG == 4)
-      FILTER_DATA_HELPER(dType, comparisonOperator, long int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, signed long int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, unsigned long int);
-#elif (CMP_SIZEOF_LONG == 8)
-      FILTER_DATA_HELPER(dType, comparisonOperator, long int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, signed long int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, unsigned long int);
-#endif
-
-
-#if (CMP_SIZEOF_LONG_LONG == 8)
-      FILTER_DATA_HELPER(dType, comparisonOperator, long long int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, signed long long int);
-      FILTER_DATA_HELPER(dType, comparisonOperator, unsigned long long int);
-#endif
-      FILTER_DATA_HELPER(dType, comparisonOperator, int64_t);
-      FILTER_DATA_HELPER(dType, comparisonOperator, uint64_t);
-
-      FILTER_DATA_HELPER(dType, comparisonOperator, bool);
-
-      return -1;
-    }
-
-  private:
-    DREAM3D::Comparison::Enumeration comparisonOperator;
-    double comparisonValue;
-    BoolArrayType* m_Output;
-
-
-    ThresholdFilter(const ThresholdFilter&); // Copy Constructor Not Implemented
-    void operator=(const ThresholdFilter&); // Operator '=' Not Implemented
-};
-
-
+#include "DREAM3DLib/Common/ThresholdFilterHelper.h"
 
 
 // -----------------------------------------------------------------------------
@@ -180,8 +45,8 @@ class ThresholdFilter : public IDataArrayFilter
 SingleThresholdCells::SingleThresholdCells():
   AbstractFilter(),
   m_SelectedCellArrayName(""),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL)
+  m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
+  m_Output(NULL)
 {
   setupFilterParameters();
 }
@@ -199,7 +64,6 @@ SingleThresholdCells::~SingleThresholdCells()
 void SingleThresholdCells::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
@@ -230,7 +94,14 @@ void SingleThresholdCells::setupFilterParameters()
     option->setValueType("double");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Array Name");
+    parameter->setPropertyName("OutputArrayName");
+    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setValueType("string");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -240,6 +111,9 @@ void SingleThresholdCells::setupFilterParameters()
 void SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
+  writer->writeValue("ComparisonOperator", getComparisonOperator() );
+  writer->writeValue("ComparisonValue", getComparisonValue() );
+  writer->writeValue("OutputArrayName", getOutputArrayName() );
 }
 
 // -----------------------------------------------------------------------------
@@ -250,14 +124,13 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, bool, BoolArrayType, true, voxels, 1)
 
-      if(m_SelectedCellArrayName.empty() == true)
+  if(m_SelectedCellArrayName.empty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -299,7 +172,7 @@ void SingleThresholdCells::execute()
     return;
   }
 
-  IDataArray::Pointer goodVoxelsPtr = m->getCellData(m_GoodVoxelsArrayName);
+  IDataArray::Pointer goodVoxelsPtr = m->getCellData(m_OutputArrayName);
   BoolArrayType* goodVoxels = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(goodVoxelsPtr.get());
   if (NULL == goodVoxels)
   {
@@ -309,12 +182,12 @@ void SingleThresholdCells::execute()
   }
 
 
-  ThresholdFilter filter(static_cast<DREAM3D::Comparison::Enumeration>(m_ComparisonOperator), m_ComparisonValue, goodVoxels);
+  ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(m_ComparisonOperator), m_ComparisonValue, goodVoxels);
 
   filter.execute(inputData.get(), goodVoxelsPtr.get());
 
 
   m->addCellData(goodVoxelsPtr->GetName(), goodVoxelsPtr);
-  notifyStatusMessage("Determine Good Voxels Complete");
+  notifyStatusMessage("Complete");
 }
 

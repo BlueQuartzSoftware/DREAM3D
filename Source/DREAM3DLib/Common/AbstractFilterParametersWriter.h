@@ -83,6 +83,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const std::string name, QualityMetricFilter* f) = 0;
     virtual int writeValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual int writeValue(const std::string name, FloatVec3Widget_t v) = 0;
+    virtual int writeValue(const std::string name, ComparisonInput_t v) = 0;
 
   protected:
     AbstractFilterParametersWriter();

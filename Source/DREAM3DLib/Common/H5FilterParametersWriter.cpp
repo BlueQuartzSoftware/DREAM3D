@@ -233,6 +233,18 @@ int H5FilterParametersWriter::writeValue(const std::string name, FloatVec3Widget
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v)
+{
+  int err = 0;
 
+  float value = v.compValue;
+  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
+  err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
+  return err;
+}
 
 

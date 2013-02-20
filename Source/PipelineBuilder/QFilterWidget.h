@@ -168,6 +168,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void updateArraySelectionWidget();
     virtual void updateIntVec3Widget(const QString &v);
     virtual void updateFloatVec3Widget(const QString &v);
+    virtual void updateComparisonSelectionWidget();
 
     virtual void setIsSelected(bool b);
 
@@ -208,6 +209,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupArraySelectionWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupIntVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
+    void setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
 
   private:
     QRect      m_DeleteRect;
