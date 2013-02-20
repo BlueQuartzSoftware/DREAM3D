@@ -35,14 +35,18 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SingleThresholdCells.h"
 
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/ThresholdFilterHelper.h"
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SingleThresholdCells::SingleThresholdCells():
-AbstractFilter(),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_GoodVoxels(NULL)
+  AbstractFilter(),
+  m_SelectedCellArrayName(""),
+  m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
+  m_Output(NULL)
 {
   setupFilterParameters();
 }
@@ -60,7 +64,44 @@ SingleThresholdCells::~SingleThresholdCells()
 void SingleThresholdCells::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Input Cell Array Name");
+    option->setPropertyName("SelectedCellArrayName");
+    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
+    option->setHumanLabel("Comparison Operator");
+    option->setPropertyName("ComparisonOperator");
+    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back(DREAM3D::Comparison::Strings::LessThan);
+    choices.push_back(DREAM3D::Comparison::Strings::GreaterThan);
+    choices.push_back(DREAM3D::Comparison::Strings::Equal);
+    option->setChoices(choices);
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Value");
+    option->setPropertyName("ComparisonValue");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("double");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Array Name");
+    parameter->setPropertyName("OutputArrayName");
+    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setValueType("string");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -69,6 +110,10 @@ void SingleThresholdCells::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
+  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
+  writer->writeValue("ComparisonOperator", getComparisonOperator() );
+  writer->writeValue("ComparisonValue", getComparisonValue() );
+  writer->writeValue("OutputArrayName", getOutputArrayName() );
 }
 
 // -----------------------------------------------------------------------------
@@ -79,13 +124,12 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
-  if(m_SelectedArrayName.empty() == true)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, bool, BoolArrayType, true, voxels, 1)
+
+  if(m_SelectedCellArrayName.empty() == true)
   {
-    std::stringstream ss;
-    ss << "No array name was selected.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
-	setErrorCondition(-10000);
+    setErrorCondition(-11000);
+    notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
 }
 
@@ -111,101 +155,39 @@ void SingleThresholdCells::execute()
   }
   setErrorCondition(0);
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
   //int err = 0;
   std::stringstream ss;
 
-
-  // Create an Array of Void Pointers that will point to the data that is going to
-  // serve as the filter data, such as Confidence Index or Image Quality
-  std::vector<void*> dataPointers(m_QualityMetricFilters.size(), NULL);
-  std::vector<DataArray::NumType> dataTypes(m_QualityMetricFilters.size(), DataArray::UnknownNumType);
-
-  // Gather some information about the filters and types in order to run the QualityMetric Filter
-  for (size_t i = 0; i < m_QualityMetricFilters.size(); ++i)
-  {
-    dataPointers[i] = m_EbsdVolumeReader->getPointerByName(m_QualityMetricFilters[i]->getFieldName());
-    dataTypes[i] = m_EbsdVolumeReader->getPointerType(m_QualityMetricFilters[i]->getFieldName());
-  }
-
-  // Figure out which are good voxels
-  int64_t nPoints = m->getTotalPoints();
-
-
-  if(m_QualityMetricFilters.size() == 0)
+  IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
+  if (NULL == inputData.get())
   {
     ss.str("");
-    ss << getHumanLabel() << " - No filters have been added to do the analysis.";
-    setErrorCondition(-100);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    ss << "Selected array '" << m_SelectedCellArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+    setErrorCondition(-11001);
+    notifyErrorMessage(ss.str(), getErrorCondition());
+    return;
+  }
+
+  IDataArray::Pointer goodVoxelsPtr = m->getCellData(m_OutputArrayName);
+  BoolArrayType* goodVoxels = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(goodVoxelsPtr.get());
+  if (NULL == goodVoxels)
+  {
+    setErrorCondition(-11002);
+    notifyErrorMessage("Could not properly cast the output array to a BoolArrayType", getErrorCondition());
     return;
   }
 
 
-  size_t nFilters = m_QualityMetricFilters.size();
-  for (size_t i = 0; i < nFilters; ++i)
-  {
-    m_QualityMetricFilters[i]->setInput(dataPointers[i]);
-    m_QualityMetricFilters[i]->setDataType(dataTypes[i]);
-    m_QualityMetricFilters[i]->setNumValues(nPoints);
-    m_QualityMetricFilters[i]->setInputPhaseData(m_CellPhases);
-    m_QualityMetricFilters[i]->filter();
-    ss.str("");
-    ss << getHumanLabel() << " - " << i << "/" << nFilters-1 << " Quality Metric Filters Complete";
-    notifyStatusMessage(ss.str());
-  }
+  ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(m_ComparisonOperator), m_ComparisonValue, goodVoxels);
 
-  // Get the first bool array to use as a reference
-  QualityMetricFilter::Pointer qmFilter = m_QualityMetricFilters[0];
-  if(qmFilter.get() == NULL)
-  {
-    ss.str("");
-    ss << getHumanLabel() << " - QualityMetricFilter[0] is NULL";
-    setErrorCondition(-100);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    return;
-  }
-  BoolArrayType::Pointer baseArray = m_QualityMetricFilters[0]->getOutput();
-  baseArray->SetName(DREAM3D::CellData::GoodVoxels);
-  bool* baseArrayPtr = baseArray->GetPointer(0);
-  if(NULL == baseArrayPtr)
-  {
-    ss.str("");
-    ss << getHumanLabel() << " - baseArrayPtr is NULL";
-    setErrorCondition(-101);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    return;
-  }
+  filter.execute(inputData.get(), goodVoxelsPtr.get());
 
-  for (size_t i = 1; i < nFilters; ++i)
-  {
-    BoolArrayType::Pointer currentArray = m_QualityMetricFilters[i]->getOutput();
-    if(currentArray.get() == NULL)
-    {
-      ss.str("");
-      ss << getHumanLabel() << " - currentArray is NULL";
-      setErrorCondition(-102);
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
-      return;
-    }
 
-    bool* currentArrayPtr = currentArray->GetPointer(0);
-    if(NULL == currentArrayPtr)
-    {
-      ss.str("");
-      ss << getHumanLabel() << " - currentArray returned NULL";
-      setErrorCondition(-103);
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
-      return;
-    }
-    for (int64_t p = 0; p < nPoints; ++p)
-    {
-      if(baseArrayPtr[p] == false || currentArrayPtr[p] == false)
-      {
-        baseArrayPtr[p] = false;
-      }
-    }
-  }
-
-  m->addCellData(DREAM3D::CellData::GoodVoxels, baseArray);
- notifyStatusMessage("Determine Good Voxels Complete");
+  m->addCellData(goodVoxelsPtr->GetName(), goodVoxelsPtr);
+  notifyStatusMessage("Complete");
 }
+
