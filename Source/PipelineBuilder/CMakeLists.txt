@@ -55,6 +55,9 @@ set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.h
     ${PROJECT_SOURCE_DIR}/AddFavoriteWidget.h
     ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.h
+    ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.h
+    ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
+    ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
 )
 
 set(PipelineBuilderLib_SRCS
@@ -64,6 +67,8 @@ set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/QFilterPipeline.cpp
     ${PROJECT_SOURCE_DIR}/AddFavoriteWidget.cpp
     ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.cpp
+    ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
+    ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")
@@ -76,6 +81,7 @@ QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS
             ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/ArraySelectionWidget.ui
+            ${PROJECT_SOURCE_DIR}/UI_Files/ComparisonSelectionWidget.ui
       )
 
 QT4_WRAP_CPP( PipelineBuilderLib_Generated_MOC_SRCS ${PipelineBuilderLib_HDRS} )

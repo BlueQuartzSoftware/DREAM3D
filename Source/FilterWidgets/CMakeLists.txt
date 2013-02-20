@@ -73,16 +73,16 @@ include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
 # Add in ONLY those headers and sources that need to have various Qt related
 # utilities run against them
 set(IOFILTER_WIDGET_HDRS
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.h
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.h
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricItemDelegate.h
+    #${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.h
+    #${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.h
+    #${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricItemDelegate.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.h
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QDataContainerReaderWidget.h
 )
 set(IOFILTER_WIDGET_SRCS
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.cpp
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.cpp
+    #${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.cpp
+    #${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QualityMetricTableModel.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.cpp
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QDataContainerReaderWidget.cpp
@@ -129,7 +129,7 @@ QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}
 QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/SyntheticBuildingFiltersWidgets/QInitializeSyntheticVolumeWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/SamplingFiltersWidgets/QHex2SqrConverterWidget.ui
-    ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui
+    #${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QReadH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
     ${FilterWidgetsLib_SOURCE_DIR}/IOFiltersWidgets/QDataContainerReaderWidget.ui

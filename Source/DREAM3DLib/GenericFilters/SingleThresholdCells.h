@@ -60,7 +60,7 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
     DREAM3D_INSTANCE_PROPERTY(double, ComparisonValue)
@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
       void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    bool* m_GoodVoxels;
+    bool* m_Output;
 
 
     SingleThresholdCells(const SingleThresholdCells&); // Copy Constructor Not Implemented

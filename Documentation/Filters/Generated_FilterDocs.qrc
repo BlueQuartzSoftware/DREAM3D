@@ -19,6 +19,7 @@
     <file>GenericFilters/IPFFilterLegend.jpg</file>
     <file>GenericFilters/RemoveArrays.html</file>
     <file>GenericFilters/SingleThresholdCells.html</file>
+    <file>GenericFilters/MultiThresholdCells.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -44,7 +45,6 @@
     <file>IOFilters/SurfaceMeshToNonconformalVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
-    <file>IOFilters/RawBinaryReader.html</file>
     <file>IOFilters/VtkGrainIdReader.html</file>
     <file>IOFilters/SolidMeshToVtk.html</file>
 

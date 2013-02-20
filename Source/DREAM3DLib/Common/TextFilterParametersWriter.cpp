@@ -194,4 +194,12 @@ int TextFilterParametersWriter::writeValue(const std::string name, FloatVec3Widg
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v)
+{
+  int err = -1;
+  return err;
+}
 
