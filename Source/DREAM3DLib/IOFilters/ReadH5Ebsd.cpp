@@ -79,6 +79,7 @@ m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
+m_UseTransformations(true),
 m_Manufacturer(Ebsd::UnknownManufacturer),
 m_CellPhases(NULL),
 m_CellEulerAngles(NULL),
@@ -103,6 +104,7 @@ void ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
   writer->writeValue("H5EbsdFile", getH5EbsdFile() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
+  writer->writeValue("UseTransformations", getUseTransformations() );
 }
 
 // -----------------------------------------------------------------------------

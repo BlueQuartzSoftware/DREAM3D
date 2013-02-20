@@ -263,11 +263,6 @@ int AngReader::readFile()
   err = readData(in, buf, kBufferSize);
   if (err < 0) { return err;}
 
-  if(getRotateSlice() == true || getReorderArray() == true || getAlignEulers() == true)
-  {
-    transformData();
-  }
-
   return err;
 }
 
@@ -549,71 +544,4 @@ int AngReader::getYDimension()
 void AngReader::setYDimension(int ydim)
 {
   setNumRows(ydim);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AngReader::transformData()
-{
-  float* p1 = getPhi1Pointer();
-  float* p = getPhiPointer();
-  float* p2 = getPhi2Pointer();
-
-  int* ph = getPhasePointer();
-  float* iqual = getImageQualityPointer();
-  float* conf = getConfidenceIndexPointer();
-  float* semSignal = getSEMSignalPointer();
-  float* fit = getFitPointer();
-
-  size_t offset = 0;
-
-  size_t yCells = getNumRows();
-  size_t xCells = getNumEvenCols();
-  size_t totalDataRows = yCells * xCells;
-
-  std::vector<size_t> shuffleTable(totalDataRows, 0);
-
-  size_t i = 0;
-  size_t adjustedcol, adjustedrow;
-  for(size_t row = 0; row < yCells; ++row)
-   {
-     for(size_t col = 0; col < xCells; ++col)
-     {
-     adjustedcol = col;
-     adjustedrow = row;
-     if(getRotateSlice() == true) adjustedcol = (xCells-1)-adjustedcol, adjustedrow = (yCells-1)-adjustedrow;
-     if(getReorderArray() == true) adjustedrow = (yCells-1)-adjustedrow;
-       offset = (adjustedrow*xCells)+(adjustedcol);
-       if(getAlignEulers() == true)
-     {
-       if (p1[i] - M_PI_2 < 0.0f)
-       {
-        p1[i] = static_cast<float>( p1[i] + M_PI_2*3.0f );
-       }
-       else
-       {
-        p1[i] = static_cast<float>( p1[i] - M_PI_2 );
-       }
-     }
-       shuffleTable[(row*xCells)+col] = offset;
-       ++i;
-      }
-    }
-
-  SHUFFLE_ARRAY(Phi1, p1, float)
-  SHUFFLE_ARRAY(Phi, p, float)
-  SHUFFLE_ARRAY(Phi2, p2, float)
-  SHUFFLE_ARRAY(ImageQuality, iqual, float)
-  SHUFFLE_ARRAY(ConfidenceIndex, conf, float)
-  SHUFFLE_ARRAY(Phase, ph, int)
-  if (NULL != semSignal)
-  {
-    SHUFFLE_ARRAY(SEMSignal, semSignal, float)
-  }
-  if (NULL != fit)
-  {
-    SHUFFLE_ARRAY(Fit, fit, float)
-  }
-
 }
