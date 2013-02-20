@@ -83,6 +83,7 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const std::string name, QualityMetricFilter* f);
     virtual int writeValue(const std::string name, IntVec3Widget_t v);
     virtual int writeValue(const std::string name, FloatVec3Widget_t v);
+    virtual int writeValue(const std::string name, ComparisonInput_t v);
 
   protected:
     H5FilterParametersWriter();
