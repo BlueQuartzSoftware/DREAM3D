@@ -74,8 +74,8 @@ void FieldDataCSVWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("FieldDataFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("csv");
-	option->setFileType("Comma Separated Data");
+  option->setFileExtension("*.csv");
+  option->setFileType("Comma Separated Data");
     option->setValueType("string");
     parameters.push_back(option);
   }

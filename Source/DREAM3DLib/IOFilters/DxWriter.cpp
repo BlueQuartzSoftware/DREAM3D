@@ -70,7 +70,7 @@ void DxWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("dx");
+    option->setFileExtension("*.dx");
     option->setFileType("Open DX Visualization");
     option->setValueType("string");
     parameters.push_back(option);

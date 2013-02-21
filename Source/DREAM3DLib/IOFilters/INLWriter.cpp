@@ -84,7 +84,7 @@ void INLWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("txt");
+    option->setFileExtension("*.txt");
     option->setFileType("INL Format");
     option->setValueType("string");
     parameters.push_back(option);
