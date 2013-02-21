@@ -39,25 +39,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
-
-/**
- * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
- * is closed when the variable goes out of Scope
- */
-class HDF5ScopedFileSentinel
-{
-  public:
-    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
-    {}
-    virtual ~HDF5ScopedFileSentinel()
-    {
-      if (m_FileId > 0) {
-        H5Utilities::closeFile(m_FileId);
-      }
-    }
-    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
-};
 
 // -----------------------------------------------------------------------------
 //
@@ -226,7 +209,7 @@ void InitializeSyntheticVolume::preflight()
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
   VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
   read_data->setHdfFileId(fileId);
@@ -266,7 +249,7 @@ void InitializeSyntheticVolume::execute()
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
   VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
   read_data->setHdfFileId(fileId);

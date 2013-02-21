@@ -149,10 +149,10 @@ int testComponents(const std::string &name, int scalarType)
   dims.z = Z_DIM;
   filt->setDimensions(dims);
   FloatVec3Widget_t origin;
-  origin.x = origin.y = origin.z = 1.0;
+  origin.x = origin.y = origin.z = 1.0f;
   filt->setOrigin(origin);
   FloatVec3Widget_t spacing;
-  spacing.x = spacing.y = spacing.z = 0.55;
+  spacing.x = spacing.y = spacing.z = 0.55f;
   filt->setSpacing(spacing);
   filt->setOutputArrayName("Test_Array");
 
