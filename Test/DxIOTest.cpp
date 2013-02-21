@@ -185,8 +185,14 @@ int TestDxReader()
 
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   reader->setVoxelDataContainer(m.get());
-  reader->execute( );
+  reader->preflight();
   int err = reader->getErrorCondition();
+  DREAM3D_REQUIRE(err >= 0);
+
+  m->clearCellData(); // We MUST clear out the dummy data that was put in the Cell Data of the Voxel Data container
+  // Now execute the filter
+  reader->execute( );
+  err = reader->getErrorCondition();
   m->getDimensions(nx, ny, nz);
 
   IDataArray::Pointer mdata = reader->getVoxelDataContainer()->getCellData(DREAM3D::CellData::GrainIds);

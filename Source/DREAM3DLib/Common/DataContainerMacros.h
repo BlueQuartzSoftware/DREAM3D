@@ -130,11 +130,6 @@ PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, int num
 PtrType* gi = NULL;\
 IDataArray::Pointer iDataArray = GetMethod(arrayName);\
 if (iDataArray.get() == 0) {\
-  /*std::stringstream s;\
-  s << #GetMethod << "(std::string name) where name = '" << arrayName \
-  << "' returned a NULL DataArray indicating the array with 'name=" << arrayName << "' was not in the DataContainer";\
-  if (NULL != obv) {obv->setErrorCondition(-500);\
-  obv->addErrorMessage(getNameOfClass(), s.str(), -500);}*/\
   return gi;\
 }\
 if (size*numComp != iDataArray->GetSize()) {\

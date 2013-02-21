@@ -32,7 +32,7 @@
 #include <QtCore/QDir>
 
 #include <QtGui/QFileDialog>
-#include <QtGui/QCheckbox>
+#include <QtGui/QCheckBox>
 
 
 #include "QtSupport/QCheckboxDialog.h"

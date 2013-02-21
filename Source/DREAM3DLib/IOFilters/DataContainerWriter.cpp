@@ -48,28 +48,11 @@
 #include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"
+#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
 
-
-/**
- * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
- * is closed when the variable goes out of Scope
- */
-class HDF5ScopedFileSentinel
-{
-  public:
-    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
-    {}
-    virtual ~HDF5ScopedFileSentinel()
-    {
-      if (m_FileId > 0) {
-        H5Utilities::closeFile(m_FileId);
-      }
-    }
-    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
-};
 
 // -----------------------------------------------------------------------------
 //
@@ -236,7 +219,7 @@ void DataContainerWriter::execute()
   }
 
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(m_FileId);
+  HDF5ScopedFileSentinel scopedFileSentinel(&m_FileId, true);
 
   // Write our File Version string to the Root "/" group
   H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);

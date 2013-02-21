@@ -44,45 +44,7 @@
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
-
-
-/**
- * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
- * is closed when the variable goes out of Scope
- */
-class HDF5ScopedFileSentinel
-{
-  public:
-    HDF5ScopedFileSentinel(hid_t fileId, bool turnOffErrors) : m_FileId(fileId), m_TurnOffErrors(turnOffErrors)
-    {
-      if (m_TurnOffErrors == true)
-      {
-        H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
-        H5Eset_auto(H5E_DEFAULT, NULL, NULL);
-      }
-
-    }
-    virtual ~HDF5ScopedFileSentinel()
-    {
-      if (m_TurnOffErrors == true)
-      {
-        H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
-      }
-      if (m_FileId > 0) {
-        H5Utilities::closeFile(m_FileId);
-      }
-
-    }
-
-    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, TurnOffErrors)
-
-    private:
-      herr_t (*_oldHDF_error_func)(hid_t, void *);
-    void* _oldHDF_error_client_data;
-};
-
-
+#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -201,7 +163,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
-    HDF5ScopedFileSentinel scopedFileSentinel(fileId, true);
+    HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
     /* READ THE VOXEL DATA TO THE HDF5 FILE */
     if (getVoxelDataContainer() != NULL && m_ReadVoxelData == true)
@@ -290,12 +252,12 @@ void DataContainerReader::execute()
   }
 
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(fileId, true);
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
   // Read our File Version string to the Root "/" group
   std::string fileVersion;
 
-  H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
+  err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
 
   /* READ THE VOXEL DATA TO THE HDF5 FILE */
