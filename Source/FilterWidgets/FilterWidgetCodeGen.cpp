@@ -205,6 +205,14 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
   }
 
   ss.str("");
+  // Make sure the output path exists
+  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets";
+  if (MXADir::exists(ss.str()) == false)
+  {
+    MXADir::mkdir(ss.str(), true);
+  }
+
+  ss.str("");
   ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
 
   completePath = MXADir::toNativeSeparators(ss.str());

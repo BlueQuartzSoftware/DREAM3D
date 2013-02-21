@@ -57,7 +57,7 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
-#include "SamplingFiltersWidgets/moc_QHex2SqrConverterWidget.cxx"
+#include "DREAM3DLib/SamplingFiltersWidgets/moc_QHex2SqrConverterWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //

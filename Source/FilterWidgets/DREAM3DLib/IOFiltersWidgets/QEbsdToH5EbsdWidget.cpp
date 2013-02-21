@@ -59,7 +59,7 @@
 
 #include "QEbsdReferenceFrameDialog.h"
 
-#include "IOFiltersWidgets/moc_QEbsdToH5EbsdWidget.cxx"
+#include "DREAM3DLib/IOFiltersWidgets/moc_QEbsdToH5EbsdWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //

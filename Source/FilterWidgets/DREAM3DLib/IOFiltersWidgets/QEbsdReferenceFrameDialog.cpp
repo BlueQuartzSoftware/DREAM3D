@@ -64,7 +64,7 @@
 #include "EbsdLib/HEDM/MicConstants.h"
 #include "EbsdLib/HEDM/MicReader.h"
 
-#include "IOFiltersWidgets/moc_QEbsdReferenceFrameDialog.cxx"
+#include "DREAM3DLib/IOFiltersWidgets/moc_QEbsdReferenceFrameDialog.cxx"
 
 // -----------------------------------------------------------------------------
 //
