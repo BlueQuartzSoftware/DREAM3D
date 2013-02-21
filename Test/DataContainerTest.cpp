@@ -174,6 +174,7 @@ void TestDataContainerReader()
   reader->setReadVoxelData(true);
   reader->setReadSurfaceMeshData(false);
   reader->setReadSolidMeshData(false);
+  reader->setReadAllArrays(true);
   reader->execute();
   int err = reader->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)

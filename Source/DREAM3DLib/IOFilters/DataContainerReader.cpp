@@ -54,7 +54,8 @@ DataContainerReader::DataContainerReader() :
   m_InputFile(""),
   m_ReadVoxelData(true),
   m_ReadSurfaceMeshData(false),
-  m_ReadSolidMeshData(false)
+  m_ReadSolidMeshData(false),
+  m_ReadAllArrays(true)
 {
   setupFilterParameters();
 }
@@ -268,6 +269,7 @@ void DataContainerReader::execute()
     voxelReader->setCellArraysToRead(m_SelectedVoxelCellArrays);
     voxelReader->setFieldArraysToRead(m_SelectedVoxelFieldArrays);
     voxelReader->setEnsembleArraysToRead(m_SelectedVoxelEnsembleArrays);
+    voxelReader->setReadAllArrays(m_ReadAllArrays);
     voxelReader->setVoxelDataContainer(getVoxelDataContainer());
     voxelReader->setObservers(getObservers());
     ss.str("");
@@ -289,6 +291,7 @@ void DataContainerReader::execute()
     smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
     smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
     smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
+    smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
     smReader->setObservers(getObservers());
     ss.str("");
@@ -310,6 +313,7 @@ void DataContainerReader::execute()
     smReader->setCellArraysToRead(m_SelectedSolidMeshVertexArrays);
     smReader->setFieldArraysToRead(m_SelectedSolidMeshFaceArrays);
     smReader->setEnsembleArraysToRead(m_SelectedSolidMeshEdgeArrays);
+    smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
     smReader->setObservers(getObservers());
     ss.str("");
@@ -336,6 +340,7 @@ void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selec
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
   m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
+  m_ReadAllArrays = false;
 }
 
 // -----------------------------------------------------------------------------
@@ -348,6 +353,7 @@ void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string>
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+  m_ReadAllArrays = false;
 }
 // -----------------------------------------------------------------------------
 //
@@ -359,6 +365,7 @@ void DataContainerReader::setSolidMeshSelectedArrayNames(std::set<std::string> s
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
   m_SelectedSolidMeshEdgeArrays = selectedEdgeArrays;
+  m_ReadAllArrays = false;
 }
 
 

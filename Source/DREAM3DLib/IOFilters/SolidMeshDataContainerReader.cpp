@@ -44,7 +44,8 @@
 // -----------------------------------------------------------------------------
 SolidMeshDataContainerReader::SolidMeshDataContainerReader() :
   AbstractFilter(),
-  m_HdfFileId(-1)
+  m_HdfFileId(-1),
+  m_ReadAllArrays(false)
 {
   setupFilterParameters();
 }
