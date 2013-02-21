@@ -105,7 +105,7 @@ void DataContainerWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("dream3d");
+    option->setFileExtension("*.dream3d");
     option->setFileType("DREAM.3D Data");
     option->setValueType("string");
     parameters.push_back(option);
