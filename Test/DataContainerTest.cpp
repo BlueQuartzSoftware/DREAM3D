@@ -231,8 +231,6 @@ void insertDeleteArray(VoxelDataContainer::Pointer m)
   t = m->getCellData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
-
-
   m->addFieldData("Test", p);
   t = m->getFieldData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
@@ -241,8 +239,6 @@ void insertDeleteArray(VoxelDataContainer::Pointer m)
   t = m->getFieldData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
-
-
   m->addEnsembleData("Test", p);
   t = m->getEnsembleData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
@@ -250,11 +246,7 @@ void insertDeleteArray(VoxelDataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->getEnsembleData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
-
 }
-
-
-
 
 // -----------------------------------------------------------------------------
 //
