@@ -40,7 +40,7 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 
 
-#include "IOFiltersWidgets/moc_QDataContainerReaderWidget.cxx"
+#include "DREAM3DLib/IOFiltersWidgets/moc_QDataContainerReaderWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //

@@ -36,6 +36,7 @@
 
 // C Includes
 #include <stdlib.h>
+#include <assert.h>
 
 // C++ Includes
 #include <string>
@@ -56,8 +57,8 @@
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
 
-#include "PipelineBuilder/PipelineViewWidget.h"
-#include "PipelineBuilder/QFilterWidget.h"
+//#include "PipelineBuilder/PipelineViewWidget.h"
+//#include "PipelineBuilder/QFilterWidget.h"
 
 
 // -----------------------------------------------------------------------------
@@ -66,7 +67,7 @@
 void readSettings(QSettings &prefs)
 {
 
-  PipelineViewWidget viewWidget;
+  //PipelineViewWidget viewWidget;
 
   prefs.beginGroup("PipelineBuilder");
 
@@ -84,13 +85,13 @@ void readSettings(QSettings &prefs)
     QString filterName = prefs.value("Filter_Name", "").toString();
 
     std::cout << "Adding Filter " << filterName.toStdString() << std::endl;
-    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
-    if(w) {
-      w->blockSignals(true);
-      w->readOptions(prefs);
-      w->blockSignals(false);
-      //w->emitParametersChanged();
-    }
+//    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+//    if(w) {
+//      w->blockSignals(true);
+//      w->readOptions(prefs);
+//      w->blockSignals(false);
+//      //w->emitParametersChanged();
+//    }
     prefs.endGroup();
   }
 }
@@ -101,7 +102,7 @@ void readSettings(QSettings &prefs)
 int main (int argc, char const *argv[])
 {
    // This code is NOT READY to run AT ALL. IT was just a PLACE TO START
-  assert(false)
+  assert(false);
   QString configFile;
 
   try
