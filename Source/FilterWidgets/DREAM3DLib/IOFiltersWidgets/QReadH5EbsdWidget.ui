@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>680</width>
-    <height>169</height>
+    <width>598</width>
+    <height>212</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>1000</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -162,7 +162,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -207,7 +207,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -265,7 +265,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0.2500</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -310,7 +310,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -352,7 +352,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0.0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -403,7 +403,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -448,7 +448,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>100</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -493,7 +493,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>Unknown Stacking Order</string>
+          <string>Unknown</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -683,16 +683,6 @@ font-size: 10px;
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="m_UseTransformations">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>Use Recommended Transformations</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
     </layout>
@@ -711,21 +701,18 @@ font-size: 10px;
      <property name="margin">
       <number>10</number>
      </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
+     <item row="0" column="5">
+      <widget class="QCheckBox" name="m_UseTransformations">
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
        </property>
        <property name="text">
-        <string>Start Slice</string>
+        <string>Use Recommended Transformations</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="m_ZStartIndex">
+     <item row="0" column="3">
+      <widget class="QSpinBox" name="m_ZEndIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -734,7 +721,7 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="0" column="4">
+     <item row="0" column="6">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -760,8 +747,8 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QSpinBox" name="m_ZEndIndex">
+     <item row="0" column="1">
+      <widget class="QSpinBox" name="m_ZStartIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -769,6 +756,35 @@ font-size: 11px;
         </size>
        </property>
       </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Start Slice</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>12</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -787,8 +803,6 @@ font-size: 11px;
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
