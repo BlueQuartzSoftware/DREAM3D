@@ -22,7 +22,7 @@ ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME}
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} OpenCloseBadData OpenCloseBadData.html "" TRUE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} OpenCloseCoordinationNumber OpenCloseCoordinationNumber.html "" TRUE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ConvertEulerAngles ConvertEulerAngles.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles StandardizeEulerAngles.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles StandardizeEulerAngles.html "" FALSE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame RotateEulerRefFrame.html "" TRUE)
 
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} IdentifySample IdentifySample.html "" TRUE)

@@ -56,49 +56,55 @@ class StandardizeEulerAnglesImpl
     float* m_CellEulerAngles;
     int* m_CellPhases;
     unsigned int* m_CrystalStructures;
+    int64_t numCells;
+    size_t numEnsembles;
 
-  std::vector<OrientationMath*> m_OrientationOps;
-  OrientationMath::Pointer m_CubicOps;
-  OrientationMath::Pointer m_HexOps;
-  OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath*> m_OrientationOps;
+    OrientationMath::Pointer m_CubicOps;
+    OrientationMath::Pointer m_HexOps;
+    OrientationMath::Pointer m_OrthoOps;
+
   public:
-    StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs) :
+    StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs, int64_t numCells, size_t numEnsembles) :
       m_CellEulerAngles(eulers),
-    m_CellPhases(phases),
-    m_CrystalStructures(crystructs)
+      m_CellPhases(phases),
+      m_CrystalStructures(crystructs),
+      numCells(numCells),
+      numEnsembles(numEnsembles)
     {
-    m_HexOps = HexagonalOps::New();
-    m_OrientationOps.push_back(m_HexOps.get());
-    m_CubicOps = CubicOps::New();
-    m_OrientationOps.push_back(m_CubicOps.get());
-    m_OrthoOps = OrthoRhombicOps::New();
-    m_OrientationOps.push_back(m_OrthoOps.get());
-  }
+      m_HexOps = HexagonalOps::New();
+      m_OrientationOps.push_back(m_HexOps.get());
+      m_CubicOps = CubicOps::New();
+      m_OrientationOps.push_back(m_CubicOps.get());
+      m_OrthoOps = OrthoRhombicOps::New();
+      m_OrientationOps.push_back(m_OrthoOps.get());
+    }
     virtual ~StandardizeEulerAnglesImpl(){}
 
     void convert(size_t start, size_t end) const
     {
-
-    float ea1, ea2, ea3;
-   // float w, n1, n2, n3;
-    float q[5];
-  //  float min = 1;
-//	  std::string filename = "Test.txt";
-//	  std::ofstream outFile;
-//	  outFile.open(filename.c_str());
+      float ea1, ea2, ea3;
+      float q[5];
+      int cellPhase = 0;
+      unsigned int crystalStruct = 0;
+      OrientationMath* ormath = NULL;
       for (size_t i = start; i < end; i++)
       {
-    ea1 = m_CellEulerAngles[3*i];
-    ea2 = m_CellEulerAngles[3*i+1];
-    ea3 = m_CellEulerAngles[3*i+2];
-    OrientationMath::eulertoQuat(q, ea1, ea2, ea3);
-    m_OrientationOps[m_CrystalStructures[m_CellPhases[i]]]->getFZQuat(q);
-    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
-    m_CellEulerAngles[3*i] = ea1;
-    m_CellEulerAngles[3*i+1] = ea2;
-    m_CellEulerAngles[3*i+2] = ea3;
-//		outFile << ea1 << " " << ea2 << " " << ea3 << std::endl;
-    }
+        ea1 = m_CellEulerAngles[3*i];
+        ea2 = m_CellEulerAngles[3*i+1];
+        ea3 = m_CellEulerAngles[3*i+2];
+        OrientationMath::eulertoQuat(q, ea1, ea2, ea3);
+        cellPhase = m_CellPhases[i];
+        crystalStruct = m_CrystalStructures[cellPhase];
+        if (crystalStruct == Ebsd::CrystalStructure::UnknownCrystalStructure) { continue; }
+        ormath = m_OrientationOps[crystalStruct];
+        ormath->getFZQuat(q);
+
+        OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+        m_CellEulerAngles[3*i] = ea1;
+        m_CellEulerAngles[3*i+1] = ea2;
+        m_CellEulerAngles[3*i+2] = ea3;
+      }
     }
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -117,13 +123,13 @@ class StandardizeEulerAnglesImpl
 //
 // -----------------------------------------------------------------------------
 StandardizeEulerAngles::StandardizeEulerAngles() :
-AbstractFilter(),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_CellEulerAngles(NULL),
-m_CellPhases(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CellEulerAngles(NULL),
+  m_CellPhases(NULL),
+  m_CrystalStructures(NULL)
 {
   setupFilterParameters();
 }
@@ -168,6 +174,8 @@ void StandardizeEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fie
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+
+  addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
 }
 
 // -----------------------------------------------------------------------------
@@ -202,12 +210,12 @@ void StandardizeEulerAngles::execute()
 
 #if DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures), tbb::auto_partitioner());
+                    StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles), tbb::auto_partitioner());
 
 #else
-  StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures);
+  StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles);
   serial.convert(0, totalPoints);
 #endif
 
- notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
