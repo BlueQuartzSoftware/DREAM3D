@@ -39,7 +39,12 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <p class="pBody">
-</p>
+ This surface meshing algorithm proceeds by creating a pair of triangles for each face
+ of the voxel where the neighboring voxel have a different grain id value. No attempt is
+ made to mimic the operations of a MultiMaterial Marching Cubes algorithm. The meshing operation
+ is extremely quick but can result in a surface mesh that is very "stair stepped". The user
+ is encouraged to use a smoothing operation on the surface mesh.
+ </p>
 
 <!-- Do NOT write documentation below this line -->
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
@@ -61,7 +66,7 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL)<br />
 <b>Contact Info:</b> dream3d@bluequartz.net<br />
 <b>Version:</b> 1.0.0<br />
 <b>License:</b> See the License.txt file that came with DREAM3D.<br />

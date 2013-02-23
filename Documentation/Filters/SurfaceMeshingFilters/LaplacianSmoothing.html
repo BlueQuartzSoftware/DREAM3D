@@ -45,8 +45,8 @@ This filter implements a simple Laplcian based smoothing filter. In the Laplacia
  the user can arrest the shrinkage of the surface mesh during the smoothing process.</p>
 <p class="pBody">
   Currently if you lock the <b>Default Lambda</b> value to Zero (0) the Triple Lines and Quad points will not be able to
-  move because none of their neighbors can move. The user may want to consider allowing a small value of &lamda;
-  for the Default Nodes which will allow some movement of the Triple Lines and/or Quad Points
+  move because none of their neighbors can move. The user may want to consider allowing a small value of &lambda;
+  for the default nodes which will allow some movement of the triple lines and/or Quad Points
 </p>
 <p class="pBody">
 This filter will create additional internal arrays in order to facilitate the calculations. These arrays are
@@ -91,16 +91,16 @@ more smoothing but will also cause the volume to shrink more.</td></tr>
 <td>Default Lambda</td><td>Double</td><td>The value of lambda to apply to general internal
 nodes that are not Triple lines, Quad Points or on the "surface" of the volume.</td></tr>
 <tr bgcolor="#E2E2E2">
-<td>Surface Points Lambda</td><td>Double</td><td>The value of lambda to apply to nodes that lie on the
+<td>Surface Points Lambda</td><td>Double</td><td>The value of lambda to apply to nodes that lie on the outer
 surface of the volume</td></tr>
 <tr bgcolor="#E2E2E2">
 <td>Triple Line Lambda</td><td>Double</td><td>Value of Lambda to apply to nodes designated as Triple Line nodes.</td></tr>
 <tr bgcolor="#E2E2E2">
 <td>Quad Points Lambda</td><td>Double</td><td>Value of Lambda to apply to nodes designated as Quad points.</td></tr>
 <tr bgcolor="#E2E2E2">
-<td>Surface Triple Line Lambda</td><td>Double</td><td>Value of Lambda for Triple Lines that lie on the surface of the volume</td></tr>
+<td>Surface Triple Line Lambda</td><td>Double</td><td>Value of Lambda for Triple Lines that lie on the outer surface of the volume</td></tr>
 <tr bgcolor="#E2E2E2">
-<td>Surface Quad Points Lambda</td><td>Double</td><td>Value of Lambda for the Quad Points that lie on the surface of the volume.</td></tr>
+<td>Surface Quad Points Lambda</td><td>Double</td><td>Value of Lambda for the Quad Points that lie on the outer surface of the volume.</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
