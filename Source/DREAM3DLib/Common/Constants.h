@@ -128,6 +128,7 @@ namespace DREAM3D
     const std::string IPFColor("IPFColor");
     const std::string GlobAlpha("GlobAlpha");
     const std::string BC("BandContrasts");
+    const std::string ImageData("ImageData");
 
     const std::string SolidMeshNodes("SolidMeshNodes");
     const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
