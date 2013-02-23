@@ -39,8 +39,9 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <p class="pBody">
- This filter groups triangles together using the criteria that each triangle has the same pair of Grain Id values. A new
- array is created to store this information.
+ This filter generates all the unique grain id to grain id values. For example if Grain Id = 4 had 3 neighbors with values
+ of 6, 8 and 9 then at least 3 unique values would be generated for the pairs (4,6), (4, 8) and (4,9). This value is stored
+ in the array at the same index as the triangle is stored in the triangle array. 
 </p>
 
 <!-- Do NOT write documentation below this line -->

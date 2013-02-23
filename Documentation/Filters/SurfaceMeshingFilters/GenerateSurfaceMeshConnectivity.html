@@ -33,14 +33,27 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <a name="wp7"></a>
 <h2 class="pHeading2">Group</h2>
-<p class="pBody">SurfaceMeshing</p>
+<p class="pBody">Surface Meshing</p>
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <!-- Write all your documentation here -->
 
 <p class="pBody">
+This filter will generate the following connectivity data structures:
+</p>
+<p class="pBody">
+<b>Per Vertex Triangle List</b> For each vertex in the mesh a list of triangles is generated that the vertex is a part of.
 </p>
 
+<p class="pBody">
+<b>Per Triangle Neighbor List</b> For each triangle in the mesh a list of triangles that share a common edge is generated. 
+Because the mesh is non-manifold each triangle can have more than 3 neighbors.
+</p>
+
+<p class="pBody">
+<b>List of Unique Edges</b> This will generate a list of unsigned 64 bit integers where the high 32 bits are the first vertex index and the 
+ low 32 bits are the second vertex. The lowest vertex id is always listed first and therefor the Edge list becomes a unique list.
+</p>
 <!-- Do NOT write documentation below this line -->
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION START -->
 
@@ -52,6 +65,8 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <td>Genereate Per Vertex Triangle List</td><td>Boolean (On or Off)</td></tr>
 <tr bgcolor="#E2E2E2">
 <td>Genereate Triangle Neighbors List</td><td>Boolean (On or Off)</td></tr>
+<tr bgcolor="#E2E2E2">
+<td>Genereate Unique Edge Ids</td><td>Boolean (On or Off)</td></tr>
 </table>
 
 <!-- A table of Required Data for your filter -->
@@ -68,10 +83,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-Copyright [INSERT YOUR NAME HERE]<br />
-Contact Info:[INSERT EMAIL ADDRESS HERE]<br />
-Version: 1.0.0<br />
-License: See the License.txt file that came with DREAM3D.<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
 </p>
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
 <div>  <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>  </div>

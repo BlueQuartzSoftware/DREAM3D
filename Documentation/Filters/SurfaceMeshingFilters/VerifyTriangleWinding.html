@@ -40,7 +40,8 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <p class="pBody">
  This filter analyzes the mesh for consistent triangle winding and fixes any inconsistencies that are found. This algorithm
-can be memory intensive for larger meshes. The algorithm is a generate advancing wave front type of algorithm.
+ can be memory intensive for larger meshes. The algorithm is an advancing wave front type of algorithm. The algorithm is know to have
+ problems if there are disconnected grains with the same ID in the surface mesh.
 </p>
 
 <!-- Do NOT write documentation below this line -->

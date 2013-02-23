@@ -39,9 +39,9 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <!-- Write all your documentation here -->
 
 <p class="pBody">
- This filter reverses the winding on each triangle effectively flipping the normal of the triangle. Some analysis
- filters require the normals to be pointing "away" from the center of a grain. The current surface meshing algorithms
- tend to orient the normals pointing "into" the grain.
+ This filter reverses the winding on each triangle. If the next filter is to compute the surface normals the user will
+ notice that the normals now point in the opposite direction. Some analysis filters require the normals to be pointing
+ "away" from the center of a grain. The current surface meshing algorithms tend to orient the normals pointing "into" the grain.
 </p>
 
 <!-- Do NOT write documentation below this line -->
