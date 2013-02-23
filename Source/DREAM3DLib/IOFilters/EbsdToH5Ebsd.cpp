@@ -58,7 +58,13 @@
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
-    m_ZStartIndex(0), m_ZEndIndex(0), m_ZResolution(1.0), m_SampleTransformationAngle(0.0), m_SampleTransformationAxis(0.0), m_EulerTransformationAngle(0.0), m_EulerTransformationAxis(0.0)
+m_ZStartIndex(0),
+m_ZEndIndex(0),
+m_ZResolution(1.0),
+m_SampleTransformationAngle(0.0),
+m_SampleTransformationAxis(0.0),
+m_EulerTransformationAngle(0.0),
+m_EulerTransformationAxis(0.0)
 {
 
 }

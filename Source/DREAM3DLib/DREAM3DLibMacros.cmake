@@ -8,7 +8,7 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup)
     file(APPEND ${HtmlDocQrcFile} "\n    <!-- ***** ${filterGroup} ***** -->\n")
     file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
     file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
- #   file(MAKE_DIRECTORY ${WidgetsBinaryDir}/${filterGroup}Widgets)
+ #   file(MAKE_DIRECTORY ${${WidgetLib}_BINARY_DIR}/${filterGroup}Widgets)
     message(STATUS "Generating Widgets for ${filterGroup}")
 endmacro()
 
@@ -38,13 +38,13 @@ endmacro()
 
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_FILTER
-macro(ADD_DREAM3D_FILTER  LibPrefix WidgetsBinaryDir filterGroup filterName filterDocFile filterDocImages publicFilter)
+macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocFile filterDocImages publicFilter)
 
     set(Project_SRCS ${Project_SRCS}
-                    ${${LibPrefix}_SOURCE_DIR}/${filterGroup}/${filterName}.h
-                    ${${LibPrefix}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp)
+                    ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
+                    ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp)
     #--- Organize inside the Visual Studio/Xcode Projects
-    cmp_IDE_SOURCE_PROPERTIES( "${LibPrefix}/${filterGroup}" "${${LibPrefix}_SOURCE_DIR}/${filterGroup}/${filterName}.h" "${${LibPrefix}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp" "0")
+    cmp_IDE_SOURCE_PROPERTIES( "${FilterLib}/${filterGroup}" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h" "${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp" "0")
 
     #-- Create an Install Rule for the headers
     if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
@@ -53,22 +53,23 @@ macro(ADD_DREAM3D_FILTER  LibPrefix WidgetsBinaryDir filterGroup filterName filt
             COMPONENT Headers   )
     endif()
 
-    file(APPEND ${AllFiltersHeaderFile} "#include \"${LibPrefix}/${filterGroup}/${filterName}.h\"\n")
+    file(APPEND ${AllFiltersHeaderFile} "#include \"${FilterLib}/${filterGroup}/${filterName}.h\"\n")
 
     if( ${publicFilter} STREQUAL TRUE)
         message(STATUS "    ${filterName}")
 
         file(APPEND ${CodeGeneratorFile} "  ${filterName}::Pointer _${filterName} = ${filterName}::New();\n")
 
-        if(NOT EXISTS ${FilterWidgetsLib_SOURCE_DIR}/${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.h )
-            file(APPEND ${FilterWidget_GEN_HDRS_File} "${WidgetsBinaryDir}/${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.h;")
-            file(APPEND ${FilterWidget_GEN_SRCS_File} "${WidgetsBinaryDir}/${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.cpp;")
-            if( NOT EXISTS ${WidgetsBinaryDir}/${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.h)
+        if(NOT EXISTS ${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h )
+          #  message(STATUS "${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h")
+            file(APPEND ${FilterWidget_GEN_HDRS_File} "${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h;")
+            file(APPEND ${FilterWidget_GEN_SRCS_File} "${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp;")
+            if( NOT EXISTS ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
                 set(GENERATED_MOC_SOURCE_FILE "moc_Q${name}Widget.cpp")
                 configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.h.in
-                              ${WidgetsBinaryDir}/${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.h)
+                              ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
                 configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.cpp.in
-                              ${WidgetsBinaryDir}/${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
+                              ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
             endif()
 
             file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
@@ -77,7 +78,7 @@ macro(ADD_DREAM3D_FILTER  LibPrefix WidgetsBinaryDir filterGroup filterName filt
 
         file(APPEND ${CodeGeneratorFile} "  createHTMLFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get());\n\n")
 
-        file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"${LibPrefix}/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
+        file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
 
         file(APPEND ${HtmlDocQrcFile} "    <file>${filterGroup}/${filterName}.html</file>\n")
         foreach(resource ${filterDocImages})
