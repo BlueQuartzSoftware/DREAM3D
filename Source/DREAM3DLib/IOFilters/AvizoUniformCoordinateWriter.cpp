@@ -68,7 +68,7 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("am");
+    option->setFileExtension("*.am");
     option->setFileType("Amira Mesh");
     option->setValueType("string");
     parameters.push_back(option);

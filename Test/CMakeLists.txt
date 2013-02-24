@@ -236,6 +236,10 @@ target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
 add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
 target_link_libraries(StructArrayTest EbsdLib MXA DREAM3DLib)
 
+# --------
+add_executable(RawBinaryReaderTest ${DREAM3DTest_SOURCE_DIR}/RawBinaryReaderTest.cpp)
+target_link_libraries(RawBinaryReaderTest EbsdLib MXA DREAM3DLib)
+add_test(RawBinaryReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RawBinaryReaderTest)
 
 # --------
 if(0)

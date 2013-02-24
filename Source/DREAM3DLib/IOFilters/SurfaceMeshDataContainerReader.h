@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
 
@@ -132,7 +133,9 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
     int readVertexAttributeData(hid_t dcGid);
     int readFaceAttributeData(hid_t dcGid);
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead);
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead);
 
 
   private:

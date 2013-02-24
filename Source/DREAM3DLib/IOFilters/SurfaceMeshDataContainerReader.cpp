@@ -51,7 +51,8 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshDataContainerReader::SurfaceMeshDataContainerReader() :
   AbstractFilter(),
-  m_HdfFileId(-1)
+  m_HdfFileId(-1),
+  m_ReadAllArrays(false)
 {
   setupFilterParameters();
 }
@@ -244,7 +245,7 @@ int SurfaceMeshDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight
 
   // Read all the Vertex Attribute data
   std::vector<std::string> readNames;
-  err = readGroupsData(dcGid, H5_POINT_DATA_GROUP_NAME, preflight, readNames);
+  err = readGroupsData(dcGid, H5_POINT_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
     err = 0;
@@ -288,7 +289,7 @@ int SurfaceMeshDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
 
   // Read all the Face Attribute data
   std::vector<std::string> readNames;
-  err = readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames);
+  err = readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
     err = 0;
@@ -327,7 +328,7 @@ int SurfaceMeshDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 
   // Read all the Edge Attribute data
   std::vector<std::string> readNames;
-  err = readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames);
+  err = readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
     err = 0;
@@ -539,7 +540,9 @@ int SurfaceMeshDataContainerReader::readEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight, std::vector<std::string> &namesRead)
+int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead)
 {
   std::stringstream ss;
   int err = 0;
@@ -556,6 +559,8 @@ int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::strin
   std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
+    std::set<std::string>::iterator contains = namesToRead.find(*iter);
+    if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
     H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);

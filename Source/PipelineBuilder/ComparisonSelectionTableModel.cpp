@@ -83,12 +83,12 @@ Qt::ItemFlags ComparisonSelectionTableModel::flags(const QModelIndex &index) con
     {
       theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
     }
-    else if ( col == FieldPhaseValue)
-    {
-      if (m_NumberOfPhases > 1) {
-        theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-      }
-    }
+//    else if ( col == FieldPhaseValue)
+//    {
+//      if (m_NumberOfPhases > 1) {
+//        theFlags = Qt::ItemIsEditable | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+//      }
+//    }
   }
   return theFlags;
 }
@@ -138,16 +138,16 @@ QVariant ComparisonSelectionTableModel::data(const QModelIndex &index, qint32 ro
         }
         break;
       }
-      case FieldPhaseValue:
-      {
-        comboBox.currentText = QString("1");
-        const QString header = headerData(FieldPhaseValue, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length())
-        {
-          comboBox.currentText = header;
-        }
-        break;
-      }
+//      case FieldPhaseValue:
+//      {
+//        comboBox.currentText = QString("1");
+//        const QString header = headerData(FieldPhaseValue, Qt::Horizontal, Qt::DisplayRole).toString();
+//        if (header.length() > comboBox.currentText.length())
+//        {
+//          comboBox.currentText = header;
+//        }
+//        break;
+//      }
       default:
         Q_ASSERT(false);
     }
@@ -202,9 +202,9 @@ QVariant ComparisonSelectionTableModel::headerData(int section, Qt::Orientation 
       case FieldOperator:
         return QVariant(QString("Filter"));
         break;
-      case FieldPhaseValue:
-        return QVariant(QString("Phase"));
-        break;
+//      case FieldPhaseValue:
+//        return QVariant(QString("Phase"));
+//        break;
       default:
         break;
     }

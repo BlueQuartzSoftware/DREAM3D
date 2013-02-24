@@ -47,7 +47,7 @@
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
-#include "IOFiltersWidgets/moc_QReadH5EbsdWidget.cxx"
+#include "DREAM3DLib/IOFiltersWidgets/moc_QReadH5EbsdWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //

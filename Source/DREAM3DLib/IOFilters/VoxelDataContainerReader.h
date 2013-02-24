@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
 

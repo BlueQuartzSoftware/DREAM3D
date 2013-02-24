@@ -35,7 +35,14 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RawBinaryReader.h"
 
+#include <stdio.h>
 
+
+#include "MXA/MXA.h"
+#include "MXA/Common/IO/MXAFileReader64.h"
+
+
+#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 namespace Detail
 {
   enum NumType {
@@ -53,6 +60,51 @@ namespace Detail
   };
 }
 
+#ifdef CMP_WORDS_BIGENDIAN
+#define SWAP_ARRAY(array)\
+  if (m_Endian == 0) { array->byteSwapElements(); }
+
+#else
+#define SWAP_ARRAY(array)\
+  if (m_Endian == 1) { array->byteSwapElements(); }
+
+#endif
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename)
+{
+  int err = 0;
+  FILE* f = fopen(filename.c_str(), "rb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  ScopedFileMonitor monitor(f);
+  size_t numElements = p->GetNumberOfTuples() * p->GetNumberOfComponents();
+  size_t numRead = 0;
+
+  T* ptr = p->GetPointer(0);
+  while(1)
+  {
+    numRead += fread(ptr, sizeof(T), numElements, f);
+    if (numRead == numElements)
+    {
+      break;
+    }
+    ptr = p->GetPointer(numRead);
+  }
+  return err;
+}
+
+
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,7 +114,7 @@ RawBinaryReader::RawBinaryReader() :
   m_Endian(0),
   m_Dimensionality(0),
   m_NumberOfComponents(0),
-  m_GrainIdsArrayName(""),
+  m_OutputArrayName(""),
   m_InputFile("")
 {
   m_Dimensions.x = 0;
@@ -73,9 +125,9 @@ RawBinaryReader::RawBinaryReader() :
   m_Origin.y = 0.0;
   m_Origin.z = 0.0;
 
-  m_Spacing.x = 0.0;
-  m_Spacing.y = 0.0;
-  m_Spacing.z = 0.0;
+  m_Spacing.x = 1.0;
+  m_Spacing.y = 1.0;
+  m_Spacing.z = 1.0;
   setupFilterParameters();
 }
 
@@ -94,6 +146,15 @@ void RawBinaryReader::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input File");
+    parameter->setPropertyName("InputFile");
+    parameter->setWidgetType(FilterParameter::InputFileWidget);
+    parameter->setValueType("string");
+    parameter->setFileExtension("*.raw *.bin");
+    parameters.push_back(parameter);
+  }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -169,18 +230,11 @@ void RawBinaryReader::setupFilterParameters()
     option->setUnits("XYZ");
     parameters.push_back(option);
   }
+
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameter::InputFileWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
-  }
-    {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Array Name");
-    parameter->setPropertyName("GrainIdsArrayName");
+    parameter->setHumanLabel("Output Array Name");
+    parameter->setPropertyName("OutputArrayName");
     parameter->setWidgetType(FilterParameter::StringWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
@@ -203,6 +257,7 @@ void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Spacing", getSpacing() );
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("OutputArrayName", getOutputArrayName() );
 }
 
 // -----------------------------------------------------------------------------
@@ -216,57 +271,83 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    ss.str("");
+    ss << "The input file was not set.";
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  IDataArray::Pointer p = IDataArray::NullPointer();
-  if (m_ScalarType == Detail::Int8)
+  if (m_NumberOfComponents < 1)
   {
-    p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::UInt8)
-  {
-    p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::Int16)
-  {
-    p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::UInt16)
-  {
-    p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::Int32)
-  {
-    p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::UInt32)
-  {
-    p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::Int64)
-  {
-    p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::UInt64)
-  {
-    p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::Float)
-  {
-    p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
-  }
-  if (m_ScalarType == Detail::Double)
-  {
-    p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_GrainIdsArrayName);
+    ss.str("");
+    ss << "The number of components must be larger than Zero";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  m->addCellData(p->GetName(), p);
-  addCreatedCellData(p->GetName());
+  if (m_Dimensionality < 1)
+  {
+    ss.str("");
+    ss << "The dimensionality must be larger than Zero";
+    setErrorCondition(-389);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
 
+  if (  m_Dimensions.x == 0 ||   m_Dimensions.y == 0 || m_Dimensions.z == 0)
+  {
+    ss.str("");
+    ss << "One of the dimensions has a size less than Zero (0). The minimum size must be at least One (1).";
+    setErrorCondition(-390);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+
+  if (true == preflight)
+  {
+    IDataArray::Pointer p = IDataArray::NullPointer();
+    if (m_ScalarType == Detail::Int8)
+    {
+      p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::UInt8)
+    {
+      p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::Int16)
+    {
+      p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::UInt16)
+    {
+      p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::Int32)
+    {
+      p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::UInt32)
+    {
+      p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::Int64)
+    {
+      p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::UInt64)
+    {
+      p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::Float)
+    {
+      p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+    else if (m_ScalarType == Detail::Double)
+    {
+      p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    }
+
+    m->addCellData(p->GetName(), p);
+    addCreatedCellData(p->GetName());
+  }
 }
 
 
@@ -297,13 +378,88 @@ void RawBinaryReader::execute()
   }
   setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
-  size_t totalVoxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
+  // Get the total size of the array from the options
+  size_t voxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
+  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->setResolution(m_Spacing.x, m_Spacing.y, m_Spacing.z);
+  m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
 
-  dataCheck(false, totalVoxels, 1, 1);
+  IDataArray::Pointer array = IDataArray::NullPointer();
+  if (m_ScalarType == Detail::Int8)
+  {
+    Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<int8_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::UInt8)
+  {
+    UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<uint8_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::Int16)
+  {
+    Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<int16_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::UInt16)
+  {
+    UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<uint16_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::Int32)
+  {
+    Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<int32_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::UInt32)
+  {
+    UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<uint32_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::Int64)
+  {
+    Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<int64_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::UInt64)
+  {
+    UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<uint64_t>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::Float)
+  {
+    FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<float>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
+  else if (m_ScalarType == Detail::Double)
+  {
+    DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+    ReadBinaryFile<double>(p, m_InputFile);
+    SWAP_ARRAY(p)
+        array = p;
+  }
 
 
+  m->addCellData(array->GetName(), array);
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

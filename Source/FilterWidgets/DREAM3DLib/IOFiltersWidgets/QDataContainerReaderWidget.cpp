@@ -29,18 +29,26 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "QDataContainerReaderWidget.h"
+
+
+
 #include <QtCore/QDir>
-
 #include <QtGui/QFileDialog>
-#include <QtGui/QCheckbox>
-
+#include <QtGui/QCheckBox>
 
 #include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/DREAM3DQtMacros.h"
 
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
-#include "IOFiltersWidgets/moc_QDataContainerReaderWidget.cxx"
+#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
+#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+
+
+#include "DREAM3DLib/IOFiltersWidgets/moc_QDataContainerReaderWidget.cxx"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -283,5 +291,34 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
 {
   arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
   arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
+
+
+  // -- This section fills in the GUI elements for the Dims, Res and Origin
+  int64_t dims[3];
+  float res[3];
+  float origin[3];
+
+  hid_t fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true);
+  if (fileId < 0) { return; }
+
+  HDF5ScopedFileSentinel sentinel(&fileId, true);
+
+  VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+  int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
+  if (err < 0) { return; }
+  H5Utilities::closeFile(fileId);
+
+  m_XDim->setText(QString::number(dims[0]));
+  m_YDim->setText(QString::number(dims[1]));
+  m_ZDim->setText(QString::number(dims[2]));
+
+  m_XRes->setText(QString::number(res[0]));
+  m_YRes->setText(QString::number(res[1]));
+  m_ZRes->setText(QString::number(res[2]));
+
+  m_XOrigin->setText(QString::number(origin[0]));
+  m_YOrigin->setText(QString::number(origin[1]));
+  m_ZOrigin->setText(QString::number(origin[2]));
+
 }
 

@@ -64,10 +64,17 @@ set(Project_SRCS
     ${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
 )
 
+#----- Bring in our CMake file with the macros
+include(${DREAM3DLib_SOURCE_DIR}/DREAM3DLibMacros.cmake)
+
+
+#-------------------------------------------------------------------------------
 Macro(D3DCompileDir DirName)
     include(${DREAM3DLib_SOURCE_DIR}/${DirName}/SourceList.cmake)
     set(Project_SRCS ${Project_SRCS} ${DREAM3DLib_${DirName}_SRCS} ${DREAM3DLib_${DirName}_HDRS})
 endMacro()
+
+
 
 # Add in our NON-Filter classes
 D3DCompileDir(Common)
@@ -120,94 +127,6 @@ set(FilterWidget_GEN_SRCS_File ${FilterWidgetsLib_BINARY_DIR}/FilterWidget_GEN_S
 file(WRITE ${FilterWidget_GEN_HDRS_File})
 file(WRITE ${FilterWidget_GEN_SRCS_File})
 
-#-------------------------------------------------------------------------------
-# Macro START_FILTER_GROUP
-macro(START_FILTER_GROUP filterGroup)
-    file(APPEND ${AllFiltersHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
-    file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
-    file(APPEND ${HtmlDocQrcFile} "\n    <!-- ***** ${filterGroup} ***** -->\n")
-    file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
-    file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
-    file(MAKE_DIRECTORY ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets)
-    message(STATUS "Generating Widgets for ${filterGroup}")
-endmacro()
-
-#-------------------------------------------------------------------------------
-# Macro ADD_DREAM3D_SUPPORT_HEADER
-macro(ADD_DREAM3D_SUPPORT_HEADER filterGroup headerFileName)
-    set(Project_SRCS ${Project_SRCS}
-                    ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName})
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName}" "" "0")
-endmacro()
-#-------------------------------------------------------------------------------
-# Macro ADD_DREAM3D_SUPPORT_SOURCE
-macro(ADD_DREAM3D_SUPPORT_SOURCE filterGroup sourceFileName)
-    set(Project_SRCS ${Project_SRCS}
-                    ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${sourceFileName})
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${sourceFileName}" "0")
-endmacro()
-#-------------------------------------------------------------------------------
-# Macro ADD_DREAM3D_SUPPORT_CLASS
-macro(ADD_DREAM3D_SUPPORT_CLASS filterGroup className)
-    set(Project_SRCS ${Project_SRCS}
-                    ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${className}.h
-                    ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${className}.cpp)
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${className}.h" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${className}.cpp" "0")
-endmacro()
-
-
-#-------------------------------------------------------------------------------
-# Macro ADD_DREAM3D_FILTER
-macro(ADD_DREAM3D_FILTER filterGroup filterName filterDocFile filterDocImages publicFilter)
-
-    set(Project_SRCS ${Project_SRCS}
-                    ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${filterName}.h
-                    ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${filterName}.cpp)
-    #--- Organize inside the Visual Studio/Xcode Projects
-    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${filterName}.h" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${filterName}.cpp" "0")
-
-    #-- Create an Install Rule for the headers
-    if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-        INSTALL (FILES ${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${filterName}.h
-            DESTINATION include/DREAM3DLib/${filterGroup}
-            COMPONENT Headers   )
-    endif()
-
-    file (APPEND ${AllFiltersHeaderFile} "#include \"DREAM3DLib/${filterGroup}/${filterName}.h\"\n")
-
-    if ( ${publicFilter} STREQUAL TRUE)
-        message(STATUS "    ${filterName}")
-        if (NOT EXISTS ${FilterWidgetsLib_SOURCE_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h )
-#            set(FilterWidget_GEN_HDRS ${FilterWidget_GEN_HDRS} ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h)
-            file(APPEND ${FilterWidget_GEN_HDRS_File} "${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h;")
-#            set(FilterWidget_GEN_SRCS ${FilterWidget_GEN_SRCS} ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
-           file(APPEND ${FilterWidget_GEN_SRCS_File} "${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.cpp;")
-            if ( NOT EXISTS ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h)
-                set(GENERATED_MOC_SOURCE_FILE "moc_Q${name}Widget.cpp")
-                configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.h.in
-                              ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.h)
-                configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.cpp.in
-                              ${FilterWidgetsLib_BINARY_DIR}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
-            endif()
-        endif()
-
-        file(APPEND ${CodeGeneratorFile} "  ${filterName}::Pointer _${filterName} = ${filterName}::New();\n")
-        file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
-        file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
-        file(APPEND ${CodeGeneratorFile} "  createHTMLFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get());\n\n")
-
-        file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"FilterWidgets/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
-
-        file(APPEND ${HtmlDocQrcFile} "    <file>${filterGroup}/${filterName}.html</file>\n")
-        foreach(resource ${filterDocImages})
-            file(APPEND ${HtmlDocQrcFile} "    <file>${filterGroup}/${resource}</file>\n")
-        endforeach()
-
-        file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${filterName}Widget>::Pointer q${filterName}WidgetFactory = QFilterWidgetFactory<Q${filterName}Widget>::New(); \n")
-        file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory); \n\n")
-
-    endif()
-endmacro()
 
 
 # Add in our Filter classes
