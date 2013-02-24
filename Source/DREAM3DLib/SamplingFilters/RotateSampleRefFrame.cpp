@@ -337,7 +337,7 @@ void RotateSampleRefFrame::execute()
 
 #else
   RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat);
-  serial.convert();
+  serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
 #endif
 
 
