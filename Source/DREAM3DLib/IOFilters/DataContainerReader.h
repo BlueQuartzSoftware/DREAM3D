@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVoxelData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadSurfaceMeshData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadSolidMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     virtual void preflight();
 

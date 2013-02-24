@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Spacing)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 

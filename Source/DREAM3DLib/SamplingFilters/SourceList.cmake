@@ -12,11 +12,11 @@
 set (DREAM3D_FILTER_GROUP_NAME SamplingFilters)
 set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
-START_FILTER_GROUP("${DREAM3D_FILTER_GROUP_NAME}")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}")
 
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} ChangeResolution ChangeResolution.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RegularizeZSpacing RegularizeZSpacing.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RotateSampleRefFrame RotateSampleRefFrame.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} CropVolume CropVolume.html "" TRUE)
-ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} Hex2SqrConverter Hex2SqrConverter.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ChangeResolution ChangeResolution.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RegularizeZSpacing RegularizeZSpacing.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RotateSampleRefFrame RotateSampleRefFrame.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} CropVolume CropVolume.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} Hex2SqrConverter Hex2SqrConverter.html "" TRUE)
 

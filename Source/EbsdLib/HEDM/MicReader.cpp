@@ -308,8 +308,8 @@ int MicReader::readFile()
   std::ifstream inHeader(name.c_str());
   if (!inHeader.is_open())
   {
-    std::cout << "Config file could not be opened: " << name << std::endl;
-    return -100;
+    std::cout << "matching config file could not be opened: " << name << std::endl;
+    return -101;
   }
 
   // 'name' now contains the complete path to the file with the new extension
@@ -335,8 +335,8 @@ int MicReader::readFile()
   std::ifstream inHeader2(name.c_str());
   if (!inHeader2.is_open())
   {
-    std::cout << "Dat file could not be opened: " << name << std::endl;
-    return -100;
+    std::cout << "Matching .dat file could not be opened: " << name << std::endl;
+    return -102;
   }
 
   // 'name' now contains the complete path to the file with the new extension

@@ -59,7 +59,6 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
       FieldName = 0,
       FieldOperator,
       FieldValue,
-      FieldPhaseValue,
       ColumnCount
     };
 

@@ -5,6 +5,6 @@
   <qresource>
 
     <!-- ***** GrainCurvatureFilters ***** -->
-    <file>SurfaceMeshFilters/GrainCurvatureFilter.html</file>
+    <file>GrainCurvatureFilters/ImageImportFilter.html</file>
   </qresource>
 </RCC>

@@ -105,6 +105,14 @@ namespace UnitTest
     const std::string TestFile("@DREAM3DTest_BINARY_DIR@/StatsDataTest/StatsDataTest.h5");
     const std::string TestFile2("@DREAM3DTest_BINARY_DIR@/StatsDataTest/StatsDataTest_rewrite.h5");
   }
+
+  namespace RawBinaryReaderTest
+  {
+    const std::string TestDir("@MXA_TEMP_DIR@RawBinaryReaderTest");
+    const std::string OutputFile("@MXA_TEMP_DIR@RawBinaryReaderTest/Output.bin");
+  }
+
+
 }
 
 // -----------------------------------------------------------------------------

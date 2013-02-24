@@ -1,74 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QReadH5EbsdWidget</class>
- <widget class="QFilterWidget" name="QReadH5EbsdWidget">
+ <class>QDataContainerReaderWidget</class>
+ <widget class="QFilterWidget" name="QDataContainerReaderWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>680</width>
-    <height>169</height>
+    <width>604</width>
+    <height>382</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>300</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>GroupBox</string>
+   <string>Form</string>
   </property>
   <property name="title">
-   <string>Load EBSD Data</string>
+   <string/>
   </property>
-  <property name="flat">
-   <bool>false</bool>
-  </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="verticalSpacing">
+    <number>4</number>
+   </property>
+   <property name="margin">
+    <number>5</number>
+   </property>
+   <item row="1" column="0">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>5</number>
+     </property>
      <property name="topMargin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="label">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
+      <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>EBSD HDF5 File</string>
+        <string>DREAM3D File:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QFSDropLineEdit" name="m_H5EbsdFile">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
+      <widget class="QFSDropLineEdit" name="m_InputFile"/>
      </item>
      <item>
-      <widget class="QPushButton" name="m_H5EbsdBtn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
+      <widget class="QPushButton" name="m_InputFileBtn">
        <property name="text">
-        <string>Select</string>
+        <string>Select...</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item>
+   <item row="4" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QCheckBox" name="m_ReadVoxelData">
+       <property name="text">
+        <string>Read Voxel Data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="m_ReadSurfaceMeshData">
+       <property name="text">
+        <string>Read Surface Mesh</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="m_ReadSolidMeshData">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Read Solid Mesh</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="5" column="0">
+    <widget class="ArraySelectionWidget" name="arraySelectionWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <layout class="QGridLayout" name="gridLayout_2">
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
      <property name="spacing">
       <number>4</number>
      </property>
-     <item row="1" column="0">
+     <item row="1" column="1">
       <layout class="QFormLayout" name="formLayout_3">
        <property name="fieldGrowthPolicy">
         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
@@ -117,7 +167,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>1000</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -162,7 +212,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -207,7 +257,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -216,7 +266,7 @@ font-size: 10px;
        </item>
       </layout>
      </item>
-     <item row="1" column="1">
+     <item row="1" column="2">
       <layout class="QFormLayout" name="formLayout_4">
        <property name="labelAlignment">
         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -265,7 +315,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0.2500</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -310,7 +360,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -352,7 +402,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0.0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -361,20 +411,7 @@ font-size: 10px;
        </item>
       </layout>
      </item>
-     <item row="1" column="4" rowspan="2">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="1" column="2">
+     <item row="1" column="3">
       <layout class="QFormLayout" name="formLayout">
        <property name="fieldGrowthPolicy">
         <enum>QFormLayout::FieldsStayAtSizeHint</enum>
@@ -389,7 +426,7 @@ font-size: 10px;
         <number>5</number>
        </property>
        <item row="0" column="1">
-        <widget class="QLabel" name="m_ZMin">
+        <widget class="QLabel" name="m_XOrigin">
          <property name="font">
           <font>
            <pointsize>-1</pointsize>
@@ -403,7 +440,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -426,7 +463,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>Maximum Slice:</string>
+          <string>Y Origin:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -434,7 +471,7 @@ font-size: 10px;
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLabel" name="m_ZMax">
+        <widget class="QLabel" name="m_YOrigin">
          <property name="font">
           <font>
            <pointsize>-1</pointsize>
@@ -448,7 +485,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>100</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -471,7 +508,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>Minimum Slice:</string>
+          <string>X Origin:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -479,7 +516,7 @@ font-size: 10px;
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="m_StackingOrder">
+        <widget class="QLabel" name="m_ZOrigin">
          <property name="font">
           <font>
            <pointsize>-1</pointsize>
@@ -493,7 +530,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>Unknown Stacking Order</string>
+          <string>--</string>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -516,7 +553,7 @@ font-size: 10px;
 }</string>
          </property>
          <property name="text">
-          <string>Stacking Order:</string>
+          <string>Y Origin:</string>
          </property>
          <property name="scaledContents">
           <bool>false</bool>
@@ -525,217 +562,8 @@ font-size: 10px;
        </item>
       </layout>
      </item>
-     <item row="1" column="3">
-      <layout class="QFormLayout" name="formLayout_2">
-       <property name="fieldGrowthPolicy">
-        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-       </property>
-       <property name="labelAlignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-       <property name="leftMargin">
-        <number>5</number>
-       </property>
-       <property name="rightMargin">
-        <number>5</number>
-       </property>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-         </property>
-         <property name="text">
-          <string>Sample Transformation(Recommended):</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="m_SampleTransformationLabel">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
-         <property name="text">
-          <string>false</string>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_20">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-         </property>
-         <property name="text">
-          <string>Euler Transformation (Recommended):</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="m_EulerTransformationLabel">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
-         <property name="text">
-          <string>false</string>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="m_EbsdManufacturer">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
-         <property name="text">
-          <string>XXX</string>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_23">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-         </property>
-         <property name="text">
-          <string>EBSD Manufacturer:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QCheckBox" name="m_UseTransformations">
-         <property name="layoutDirection">
-          <enum>Qt::RightToLeft</enum>
-         </property>
-         <property name="text">
-          <string>Use Recommended Transformations</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QGridLayout" name="gridLayout_3">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMaximumSize</enum>
-     </property>
-     <property name="horizontalSpacing">
-      <number>6</number>
-     </property>
-     <property name="verticalSpacing">
-      <number>4</number>
-     </property>
-     <property name="margin">
-      <number>10</number>
-     </property>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Start Slice</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QSpinBox" name="m_ZStartIndex">
-       <property name="minimumSize">
-        <size>
-         <width>75</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <spacer name="horizontalSpacer_2">
+     <item row="1" column="4">
+      <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -747,30 +575,27 @@ font-size: 11px;
        </property>
       </spacer>
      </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_6">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
        <property name="styleSheet">
         <string notr="true">QLabel {
 font-weight: bold;
-font-size: 11px;
+font-size: 12px;
 }</string>
        </property>
        <property name="text">
-        <string>End Slice</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QSpinBox" name="m_ZEndIndex">
-       <property name="minimumSize">
-        <size>
-         <width>75</width>
-         <height>0</height>
-        </size>
+        <string>Voxel Volume Info:</string>
        </property>
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -786,9 +611,13 @@ font-size: 11px;
    <header location="global">QFilterWidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>ArraySelectionWidget</class>
+   <extends>QTabWidget</extends>
+   <header location="global">ArraySelectionWidget.h</header>
+   <container>1</container>
+  </customwidget>
  </customwidgets>
- <resources>
-  <include location="../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
