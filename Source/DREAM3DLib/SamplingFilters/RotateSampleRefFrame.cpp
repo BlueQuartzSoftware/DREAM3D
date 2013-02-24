@@ -74,26 +74,27 @@ class RotateSampleRefFrameImpl
 
     DataArray<size_t>::Pointer newIndicesPtr;
     RotateSampleRefFrameImplArg_t*  m_params;
-    float rotMatrix[3][3];
+    float rotMatrixInv[3][3];
 
   public:
     RotateSampleRefFrameImpl(DataArray<size_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3]) :
       newIndicesPtr(newindices),
       m_params(args)
     {
-      rotMatrix[0][0] = rotMat[0][0];
-      rotMatrix[0][1] = rotMat[0][1];
-      rotMatrix[0][2] = rotMat[0][2];
-      rotMatrix[1][0] = rotMat[1][0];
-      rotMatrix[1][1] = rotMat[1][1];
-      rotMatrix[1][2] = rotMat[1][2];
-      rotMatrix[2][0] = rotMat[2][0];
-      rotMatrix[2][1] = rotMat[2][1];
-      rotMatrix[2][2] = rotMat[2][2];
+      // We have to inline the 3x3 Maxtrix transpose here because of the "const" nature of the 'convert' function
+      rotMatrixInv[0][0] = rotMat[0][0];
+      rotMatrixInv[0][1] = rotMat[1][0];
+      rotMatrixInv[0][2] = rotMat[2][0];
+      rotMatrixInv[1][0] = rotMat[0][1];
+      rotMatrixInv[1][1] = rotMat[1][1];
+      rotMatrixInv[1][2] = rotMat[2][1];
+      rotMatrixInv[2][0] = rotMat[0][2];
+      rotMatrixInv[2][1] = rotMat[1][2];
+      rotMatrixInv[2][2] = rotMat[2][2];
     }
     virtual ~RotateSampleRefFrameImpl(){}
 
-    void convert()
+    void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
     {
 
       size_t* newindicies = newIndicesPtr->GetPointer(0);
@@ -103,14 +104,15 @@ class RotateSampleRefFrameImpl
       float coordsNew[3];
       int colOld, rowOld, planeOld;
 
-      MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
-      for (size_t k = 0; k <m_params->zpNew; k++)
+      //MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
+
+      for (size_t k = zStart; k < zEnd; k++)
       {
         index = (m_params->xpNew*m_params->ypNew)*k;
-        for (size_t j = 0; j < m_params->ypNew; j++)
+        for (size_t j = yStart; j < yEnd; j++)
         {
           index = index + (m_params->xpNew*j);
-          for (size_t i = 0; i < m_params->zpNew; i++)
+          for (size_t i = xStart; i < xEnd; i++)
           {
             index = index + i;
             newindicies[index] = -1;
@@ -125,10 +127,6 @@ class RotateSampleRefFrameImpl
             {
               newindicies[index] = (m_params->xp*m_params->yp*planeOld)+(m_params->xp*rowOld)+colOld;
             }
-            else
-            {
-             #error Mike Fix this, what happens if the above if statement is false? If it can NEVER be false then you do not need the if statement
-            }
           }
         }
       }
@@ -137,7 +135,7 @@ class RotateSampleRefFrameImpl
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range3d<size_t, size_t, size_t> &r) const
     {
-      convert();
+      convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
 #endif
 
@@ -332,13 +330,10 @@ void RotateSampleRefFrame::execute()
 
   DataArray<size_t>::Pointer newIndiciesPtr = DataArray<size_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
   size_t* newindicies = newIndiciesPtr->GetPointer(0);
-  #error Mike - You need to initilize the newIndiciesPtr to something. Right now it will have junk in it and there is a possibility
-  #error that some of the values may NOT get filled in.
-  #error Also note that 'size_t' is an unsigned variable which causes problems below
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(),
-                    RotateSampleRefFrameImpl(newIndiciesPtr, &params), tbb::auto_partitioner());
+  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
+                    RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
 
 #else
   RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat);
@@ -364,10 +359,7 @@ void RotateSampleRefFrame::execute()
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
       newIndicies_I = newindicies[i];
-      #error newIndicies_T is an UNSIGNED integer which means it will NEVER be less than Zero (0). Either take out the if
-      #error statement or change the newIndiciesPtr type to "int32_t" or "int64_t" if the data set could be larger than
-      #error 32 bit addressing can handle, which is true for most voxel data sets that we deal with from the likes of Dave R.
-      #error Or should the if statement be Greater-Than ONLY and not Greater-Than or Equal-To
+
       if(newIndicies_I >= 0)
       {
         source = p->GetVoidPointer((nComp * newIndicies_I));
