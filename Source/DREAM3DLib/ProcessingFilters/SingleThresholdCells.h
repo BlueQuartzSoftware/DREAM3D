@@ -68,7 +68,7 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getHumanLabel() { return "Single Threshold (Cell Data)"; }
 
     virtual void setupFilterParameters();

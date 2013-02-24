@@ -43,6 +43,7 @@
     <file>IOFilters/SurfaceMeshToNonconformalVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
+    <file>IOFilters/RawBinaryReader.html</file>
     <file>IOFilters/VtkGrainIdReader.html</file>
     <file>IOFilters/SolidMeshToVtk.html</file>
 
@@ -60,6 +61,8 @@
     <file>ProcessingFilters/IdentifySample.html</file>
     <file>ProcessingFilters/SingleThresholdCells.html</file>
     <file>ProcessingFilters/MultiThresholdCells.html</file>
+    <file>ProcessingFilters/SingleThresholdFields.html</file>
+    <file>ProcessingFilters/MultiThresholdFields.html</file>
 
     <!-- ***** ReconstructionFilters ***** -->
     <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
