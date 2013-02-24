@@ -285,7 +285,7 @@ bool ComparisonSelectionTableModel::insertRows(int row, int count, const QModelI
   QString fieldName = m_PossibleFields.at(0);
   float fieldValue = 0.0f;
   QString fieldOperator = ">";
-  int fieldPhaseValue = 1;
+  //int fieldPhaseValue = 1;
 
   beginInsertRows(QModelIndex(), row, row + count - 1);
   for (int i = 0; i < count; ++i)

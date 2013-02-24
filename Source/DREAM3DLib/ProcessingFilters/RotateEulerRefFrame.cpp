@@ -38,6 +38,7 @@
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
+#include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
@@ -53,34 +54,33 @@ const static float m_pi = static_cast<float>(M_PI);
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
-  float angle;
-  FloatVec3Widget_t axis;
+    float angle;
+    FloatVec3Widget_t axis;
   public:
     RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3Widget_t rotAxis) :
       m_CellEulerAngles(data),
-    angle(rotAngle),
-    axis(rotAxis)
+      angle(rotAngle),
+      axis(rotAxis)
     {}
     virtual ~RotateEulerRefFrameImpl(){}
 
     void convert(size_t start, size_t end) const
     {
       float rotMat[3][3];
-  //  float degToRad = m_pi/180.0;
 
-	  OrientationMath::axisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
-	  float ea1=0, ea2=0, ea3=0;
-	  float ea1new=0, ea2new=0, ea3new=0;
-	  float g[3][3];
-	  float gNew[3][3];
-	  for (size_t i = start; i < end; i++)
+      OrientationMath::axisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
+      float ea1=0, ea2=0, ea3=0;
+      float ea1new=0, ea2new=0, ea3new=0;
+      float g[3][3];
+      float gNew[3][3];
+      for (size_t i = start; i < end; i++)
       {
         ea1 = m_CellEulerAngles[3*i+0];
         ea2 = m_CellEulerAngles[3*i+1];
         ea3 = m_CellEulerAngles[3*i+2];
-		OrientationMath::eulertoMat(ea1, ea2, ea3, g);
-		MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
-		OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
+        OrientationMath::eulertoMat(ea1, ea2, ea3, g);
+        MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
+        OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
         m_CellEulerAngles[3*i+0] = ea1new;
         m_CellEulerAngles[3*i+1] = ea2new;
         m_CellEulerAngles[3*i+2] = ea3new;
@@ -103,10 +103,10 @@ class RotateEulerRefFrameImpl
 //
 // -----------------------------------------------------------------------------
 RotateEulerRefFrame::RotateEulerRefFrame() :
-AbstractFilter(),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CellEulerAngles(NULL),
-m_RotationAngle(0.0)
+  AbstractFilter(),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_RotationAngle(0.0),
+  m_CellEulerAngles(NULL)
 {
   m_RotationAxis.x = 0.0;
   m_RotationAxis.y = 0.0;
@@ -145,7 +145,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -202,8 +202,8 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-//  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
-//#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  //  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
+  //#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #if 0
   tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                     RotateEulerRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
@@ -213,5 +213,5 @@ void RotateEulerRefFrame::execute()
   serial.convert(0, totalPoints);
 #endif
 
- notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
