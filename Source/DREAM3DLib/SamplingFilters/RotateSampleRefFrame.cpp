@@ -50,18 +50,18 @@
 const static float m_pi = static_cast<float>(M_PI);
 
 typedef struct {
-  size_t   xp;
-  size_t   yp;
-  size_t   zp;
-  float   xRes;
-  float   yRes;
-  float   zRes;
-  size_t   xpNew;
-  size_t   ypNew;
-  size_t   zpNew;
-  float   xResNew;
-  float   yResNew;
-  float   zResNew;
+    size_t   xp;
+    size_t   yp;
+    size_t   zp;
+    float   xRes;
+    float   yRes;
+    float   zRes;
+    size_t   xpNew;
+    size_t   ypNew;
+    size_t   zpNew;
+    float   xResNew;
+    float   yResNew;
+    float   zResNew;
 
 } RotateSampleRefFrameImplArg_t;
 
@@ -74,57 +74,61 @@ class RotateSampleRefFrameImpl
 
     DataArray<size_t>::Pointer newIndicesPtr;
     RotateSampleRefFrameImplArg_t*  m_params;
-	float rotMatrix[3][3];
+    float rotMatrix[3][3];
 
   public:
     RotateSampleRefFrameImpl(DataArray<size_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3]) :
       newIndicesPtr(newindices),
       m_params(args)
     {
-		rotMatrix[0][0] = rotMat[0][0];  
-		rotMatrix[0][1] = rotMat[0][1];  
-		rotMatrix[0][2] = rotMat[0][2];  
-		rotMatrix[1][0] = rotMat[1][0];  
-		rotMatrix[1][1] = rotMat[1][1];  
-		rotMatrix[1][2] = rotMat[1][2];  
-		rotMatrix[2][0] = rotMat[2][0];  
-		rotMatrix[2][1] = rotMat[2][1];  
-		rotMatrix[2][2] = rotMat[2][2];  
-	}
+      rotMatrix[0][0] = rotMat[0][0];
+      rotMatrix[0][1] = rotMat[0][1];
+      rotMatrix[0][2] = rotMat[0][2];
+      rotMatrix[1][0] = rotMat[1][0];
+      rotMatrix[1][1] = rotMat[1][1];
+      rotMatrix[1][2] = rotMat[1][2];
+      rotMatrix[2][0] = rotMat[2][0];
+      rotMatrix[2][1] = rotMat[2][1];
+      rotMatrix[2][2] = rotMat[2][2];
+    }
     virtual ~RotateSampleRefFrameImpl(){}
 
-    void convert() 
+    void convert()
     {
 
       size_t* newindicies = newIndicesPtr->GetPointer(0);
       int64_t index = 0;
-	  float rotMatrixInv[3][3];
-	  float coords[3];
-	  float coordsNew[3];
-	  int colOld, rowOld, planeOld;
+      float rotMatrixInv[3][3];
+      float coords[3];
+      float coordsNew[3];
+      int colOld, rowOld, planeOld;
 
-	  MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
-	  for (size_t k = 0; k <m_params->zpNew; k++)
+      MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
+      for (size_t k = 0; k <m_params->zpNew; k++)
       {
-		index = (m_params->xpNew*m_params->ypNew)*k;
-		for (size_t j = 0; j < m_params->ypNew; j++)
+        index = (m_params->xpNew*m_params->ypNew)*k;
+        for (size_t j = 0; j < m_params->ypNew; j++)
         {
-		  index = index + (m_params->xpNew*j);
-		  for (size_t i = 0; i < m_params->zpNew; i++)
+          index = index + (m_params->xpNew*j);
+          for (size_t i = 0; i < m_params->zpNew; i++)
           {
-			index = index + i;
-			newindicies[index] = -1;
-			coords[2] = float(k)*m_params->zResNew;
-			coords[1] = float(j)*m_params->yResNew;
-			coords[0] = float(i)*m_params->xResNew;
-			MatrixMath::multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
-			colOld = coordsNew[0]/m_params->xRes;
-			rowOld = coordsNew[1]/m_params->yRes;
-			planeOld = coordsNew[2]/m_params->zRes;
-			if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
-			{
-	            newindicies[index] = (m_params->xp*m_params->yp*planeOld)+(m_params->xp*rowOld)+colOld;
-			}
+            index = index + i;
+            newindicies[index] = -1;
+            coords[2] = float(k)*m_params->zResNew;
+            coords[1] = float(j)*m_params->yResNew;
+            coords[0] = float(i)*m_params->xResNew;
+            MatrixMath::multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
+            colOld = coordsNew[0]/m_params->xRes;
+            rowOld = coordsNew[1]/m_params->yRes;
+            planeOld = coordsNew[2]/m_params->zRes;
+            if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
+            {
+              newindicies[index] = (m_params->xp*m_params->yp*planeOld)+(m_params->xp*rowOld)+colOld;
+            }
+            else
+            {
+             #error Mike Fix this, what happens if the above if statement is false? If it can NEVER be false then you do not need the if statement
+            }
           }
         }
       }
@@ -138,9 +142,9 @@ class RotateSampleRefFrameImpl
 #endif
 
   private:
-//    VoxelDataContainer* m;
-//    uint32_t angle;
-//    uint32_t axis;
+    //    VoxelDataContainer* m;
+    //    uint32_t angle;
+    //    uint32_t axis;
 
 };
 
@@ -148,8 +152,8 @@ class RotateSampleRefFrameImpl
 //
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
-AbstractFilter(),
-m_RotationAngle(0.0)
+  AbstractFilter(),
+  m_RotationAngle(0.0)
 {
   m_RotationAxis.x = 0.0;
   m_RotationAxis.y = 0.0;
@@ -187,7 +191,7 @@ void RotateSampleRefFrame::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-	option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -271,24 +275,24 @@ void RotateSampleRefFrame::execute()
   OrientationMath::axisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
   for(int i=0;i<8;i++)
   {
-	if(i == 0) col = 0, row = 0, plane = 0;
-	if(i == 1) col = xp-1, row = 0, plane = 0;
-	if(i == 2) col = 0, row = yp-1, plane = 0;
-	if(i == 3) col = xp-1, row = yp-1, plane = 0;
-	if(i == 4) col = 0, row = 0, plane = zp-1;
-	if(i == 5) col = xp-1, row = 0, plane = zp-1;
-	if(i == 6) col = 0, row = yp-1, plane = zp-1;
-	if(i == 7) col = xp-1, row = yp-1, plane = zp-1;
-	coords[0] = col*xRes;
-	coords[1] = row*yRes;
-	coords[2] = plane*zRes;
-	MatrixMath::multiply3x3with3x1(rotMat,coords,newcoords);
-	if(newcoords[0] < xMin) xMin = newcoords[0];
-	if(newcoords[0] > xMax) xMax = newcoords[0];
-	if(newcoords[1] < yMin) yMin = newcoords[1];
-	if(newcoords[1] > yMax) yMax = newcoords[1];
-	if(newcoords[2] < zMin) zMin = newcoords[2];
-	if(newcoords[2] > zMax) zMax = newcoords[2];
+    if(i == 0) col = 0, row = 0, plane = 0;
+    if(i == 1) col = xp-1, row = 0, plane = 0;
+    if(i == 2) col = 0, row = yp-1, plane = 0;
+    if(i == 3) col = xp-1, row = yp-1, plane = 0;
+    if(i == 4) col = 0, row = 0, plane = zp-1;
+    if(i == 5) col = xp-1, row = 0, plane = zp-1;
+    if(i == 6) col = 0, row = yp-1, plane = zp-1;
+    if(i == 7) col = xp-1, row = yp-1, plane = zp-1;
+    coords[0] = col*xRes;
+    coords[1] = row*yRes;
+    coords[2] = plane*zRes;
+    MatrixMath::multiply3x3with3x1(rotMat,coords,newcoords);
+    if(newcoords[0] < xMin) xMin = newcoords[0];
+    if(newcoords[0] > xMax) xMax = newcoords[0];
+    if(newcoords[1] < yMin) yMin = newcoords[1];
+    if(newcoords[1] > yMax) yMax = newcoords[1];
+    if(newcoords[2] < zMin) zMin = newcoords[2];
+    if(newcoords[2] > zMax) zMax = newcoords[2];
   }
   float xAxis[3] = {1,0,0};
   float yAxis[3] = {0,1,0};
@@ -328,6 +332,9 @@ void RotateSampleRefFrame::execute()
 
   DataArray<size_t>::Pointer newIndiciesPtr = DataArray<size_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
   size_t* newindicies = newIndiciesPtr->GetPointer(0);
+  #error Mike - You need to initilize the newIndiciesPtr to something. Right now it will have junk in it and there is a possibility
+  #error that some of the values may NOT get filled in.
+  #error Also note that 'size_t' is an unsigned variable which causes problems below
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(),
@@ -357,17 +364,20 @@ void RotateSampleRefFrame::execute()
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
       newIndicies_I = newindicies[i];
-
-	  if(newIndicies_I >= 0)
-	  {
-	      source = p->GetVoidPointer((nComp * newIndicies_I));
-	      destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
-	      ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
-	  }
-	  else
-	  {
-		  data->InitializeTuple((data->GetNumberOfComponents() * i),0);
-	  }
+      #error newIndicies_T is an UNSIGNED integer which means it will NEVER be less than Zero (0). Either take out the if
+      #error statement or change the newIndiciesPtr type to "int32_t" or "int64_t" if the data set could be larger than
+      #error 32 bit addressing can handle, which is true for most voxel data sets that we deal with from the likes of Dave R.
+      #error Or should the if statement be Greater-Than ONLY and not Greater-Than or Equal-To
+      if(newIndicies_I >= 0)
+      {
+        source = p->GetVoidPointer((nComp * newIndicies_I));
+        destination = data->GetVoidPointer((data->GetNumberOfComponents() * i));
+        ::memcpy(destination, source, p->GetTypeSize() * data->GetNumberOfComponents());
+      }
+      else
+      {
+        data->InitializeTuple((data->GetNumberOfComponents() * i),0);
+      }
     }
     m->addCellData(*iter, data);
   }
