@@ -99,7 +99,7 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
                 << QString::fromStdString(DREAM3D::Comparison::Strings::GreaterThan)
                 << QString::fromStdString(DREAM3D::Comparison::Strings::Equal);
 
-      QComboBox* phaseCombo = NULL;
+      //QComboBox* phaseCombo = NULL;
       QStringList phases;
       for(int i = 0; i < m_NumberOfPhases; ++i)
       {

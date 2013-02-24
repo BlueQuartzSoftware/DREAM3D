@@ -231,18 +231,18 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 
       m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
 
-	  sampleTransAngle = h5Reader->getSampleTransformationAngle();
-	  sampleTransAxis = h5Reader->getSampleTransformationAxis();
-	  eulerTransAngle = h5Reader->getEulerTransformationAngle();
-	  eulerTransAxis = h5Reader->getEulerTransformationAxis();
+    sampleTransAngle = h5Reader->getSampleTransformationAngle();
+    sampleTransAxis = h5Reader->getSampleTransformationAxis();
+    eulerTransAngle = h5Reader->getEulerTransformationAngle();
+    eulerTransAxis = h5Reader->getEulerTransformationAxis();
 
-	  QString sampleTrans;
-	  QString eulerTrans;
-	  sampleTransAxis = h5Reader->getSampleTransformationAxis();
-	  eulerTransAxis = h5Reader->getEulerTransformationAxis();
-	  sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
-	  eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
-	  m_SampleTransformationLabel->setText(sampleTrans);
+    QString sampleTrans;
+    QString eulerTrans;
+    sampleTransAxis = h5Reader->getSampleTransformationAxis();
+    eulerTransAxis = h5Reader->getEulerTransformationAxis();
+    sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
+    eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
+    m_SampleTransformationLabel->setText(sampleTrans);
       m_EulerTransformationLabel->setText(eulerTrans);
 
       setOpenDialogLastDirectory( fi.path() );
@@ -324,14 +324,14 @@ void QReadH5EbsdWidget::readOptions(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  bool b;
+  //bool b;
 
   READ_FILEPATH_SETTING(prefs, m_, H5EbsdFile, "");
   on_m_H5EbsdFile_textChanged(QString(""));
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
   READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
 
-  
+
   QVariant UseTrans = prefs.value("UseTransformations");
   m_UseTransformations->setChecked(UseTrans.toBool());
 
