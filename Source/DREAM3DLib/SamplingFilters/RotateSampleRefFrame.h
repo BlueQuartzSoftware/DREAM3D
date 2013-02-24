@@ -55,8 +55,8 @@ class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
     virtual ~RotateSampleRefFrame();
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAxis)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RotationAngle)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
+    DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
 
     virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const std::string getHumanLabel() { return "Rotate Sample Reference Frame"; }

@@ -18,8 +18,6 @@
     <file>GenericFilters/GenerateIPFColors.html</file>
     <file>GenericFilters/IPFFilterLegend.jpg</file>
     <file>GenericFilters/RemoveArrays.html</file>
-    <file>GenericFilters/SingleThresholdCells.html</file>
-    <file>GenericFilters/MultiThresholdCells.html</file>
 
     <!-- ***** IOFilters ***** -->
     <file>IOFilters/AvizoRectilinearCoordinateWriter.html</file>
@@ -45,7 +43,6 @@
     <file>IOFilters/SurfaceMeshToNonconformalVtk.html</file>
     <file>IOFilters/VtkRectilinearGridWriter.html</file>
     <file>IOFilters/YSChoiAbaqusReader.html</file>
-    <file>IOFilters/RawBinaryReader.html</file>
     <file>IOFilters/VtkGrainIdReader.html</file>
     <file>IOFilters/SolidMeshToVtk.html</file>
 
@@ -61,6 +58,8 @@
     <file>ProcessingFilters/StandardizeEulerAngles.html</file>
     <file>ProcessingFilters/RotateEulerRefFrame.html</file>
     <file>ProcessingFilters/IdentifySample.html</file>
+    <file>ProcessingFilters/SingleThresholdCells.html</file>
+    <file>ProcessingFilters/MultiThresholdCells.html</file>
 
     <!-- ***** ReconstructionFilters ***** -->
     <file>ReconstructionFilters/AlignSectionsMisorientation.html</file>
@@ -126,4 +125,3 @@
     <file>SyntheticBuildingFilters/InitSynthVol.jpg</file>
   </qresource>
 </RCC>
-

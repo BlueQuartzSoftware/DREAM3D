@@ -26,3 +26,5 @@ ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles Standardi
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame RotateEulerRefFrame.html "" TRUE)
 
 ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} IdentifySample IdentifySample.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells SingleThresholdCells.html "" TRUE)
+ADD_DREAM3D_FILTER(${DREAM3D_FILTER_GROUP_NAME} MultiThresholdCells MultiThresholdCells.html "" TRUE)
