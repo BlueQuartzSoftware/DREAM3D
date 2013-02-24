@@ -407,7 +407,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   this->parseDataLine(buf, 0);
   int level = m_Level[0];
   float newEdgeLength = origEdgeLength/powf(2.0,float(level));
-  totalPossibleDataRows = static_cast<size_t>(6.0f*powf(4.0f,level));
+  totalPossibleDataRows = static_cast<size_t>(6.0f*powf(4.0f,float(level)));
   initPointers(totalPossibleDataRows);
   this->parseDataLine(buf, 0);
   ::memset(buf, 0, bufSize); // Clear the buffer
