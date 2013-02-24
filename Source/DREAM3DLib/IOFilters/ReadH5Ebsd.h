@@ -90,9 +90,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, UseTransformations)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

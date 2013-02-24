@@ -80,8 +80,8 @@ m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
 m_H5EbsdFile(""),
 m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
-m_SampleTransformationAngle(0.0), 
-m_EulerTransformationAngle(0.0), 
+m_SampleTransformationAngle(0.0),
+m_EulerTransformationAngle(0.0),
 m_ZStartIndex(0),
 m_ZEndIndex(0),
 m_UseTransformations(true),
@@ -94,13 +94,15 @@ tempypoints(0),
 totaltemppoints(0)
 {
  // Seed = MXA::getMilliSeconds();
-	m_SampleTransformationAxis[0] = 0.0; 
-	m_SampleTransformationAxis[1] = 0.0; 
-	m_SampleTransformationAxis[2] = 1.0; 
+  m_SampleTransformationAxis.resize(3);
+  m_SampleTransformationAxis[0] = 0.0;
+  m_SampleTransformationAxis[1] = 0.0;
+  m_SampleTransformationAxis[2] = 1.0;
 
-	m_EulerTransformationAxis[0] = 0.0; 
-	m_EulerTransformationAxis[1] = 0.0; 
-	m_EulerTransformationAxis[2] = 1.0; 
+  m_EulerTransformationAxis.resize(3);
+  m_EulerTransformationAxis[0] = 0.0;
+  m_EulerTransformationAxis[1] = 0.0;
+  m_EulerTransformationAxis[2] = 1.0;
 
 }
 
@@ -344,10 +346,10 @@ void ReadH5Ebsd::execute()
     m->setDimensions(dcDims);
     manufacturer = volumeInfoReader->getManufacturer();
     m_RefFrameZDir = volumeInfoReader->getStackingOrder();
-	m_SampleTransformationAngle = volumeInfoReader->getSampleTransformationAngle();
-	m_SampleTransformationAxis = volumeInfoReader->getSampleTransformationAxis();
-	m_EulerTransformationAngle = volumeInfoReader->getEulerTransformationAngle();
-	m_EulerTransformationAxis = volumeInfoReader->getEulerTransformationAxis();
+  m_SampleTransformationAngle = volumeInfoReader->getSampleTransformationAngle();
+  m_SampleTransformationAxis = volumeInfoReader->getSampleTransformationAxis();
+  m_EulerTransformationAngle = volumeInfoReader->getEulerTransformationAngle();
+  m_EulerTransformationAxis = volumeInfoReader->getEulerTransformationAxis();
     volumeInfoReader = H5EbsdVolumeInfo::NullPointer();
   }
   H5EbsdVolumeReader::Pointer ebsdReader;
@@ -601,28 +603,28 @@ void ReadH5Ebsd::execute()
 
   if(m_UseTransformations == true)
   {
-	FloatVec3Widget_t eulerAxis;
-	eulerAxis.x = m_EulerTransformationAxis[0];
-	eulerAxis.y = m_EulerTransformationAxis[1];
-	eulerAxis.z = m_EulerTransformationAxis[2];
-	  
-	RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
+  FloatVec3Widget_t eulerAxis;
+  eulerAxis.x = m_EulerTransformationAxis[0];
+  eulerAxis.y = m_EulerTransformationAxis[1];
+  eulerAxis.z = m_EulerTransformationAxis[2];
+
+  RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
     rot_Euler->setObservers(this->getObservers());
     rot_Euler->setVoxelDataContainer(getVoxelDataContainer());
-	rot_Euler->setRotationAngle(m_EulerTransformationAngle);
-	rot_Euler->setRotationAxis(eulerAxis);
+  rot_Euler->setRotationAngle(m_EulerTransformationAngle);
+  rot_Euler->setRotationAxis(eulerAxis);
     rot_Euler->execute();
 
-	FloatVec3Widget_t sampleAxis;
-	sampleAxis.x = m_SampleTransformationAxis[0];
-	sampleAxis.y = m_SampleTransformationAxis[1];
-	sampleAxis.z = m_SampleTransformationAxis[2];
-	  
-	RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
+  FloatVec3Widget_t sampleAxis;
+  sampleAxis.x = m_SampleTransformationAxis[0];
+  sampleAxis.y = m_SampleTransformationAxis[1];
+  sampleAxis.z = m_SampleTransformationAxis[2];
+
+  RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
     rot_Sample->setObservers(this->getObservers());
     rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
-	rot_Sample->setRotationAngle(m_SampleTransformationAngle);
-	rot_Sample->setRotationAxis(sampleAxis);
+  rot_Sample->setRotationAngle(m_SampleTransformationAngle);
+  rot_Sample->setRotationAxis(sampleAxis);
     rot_Sample->execute();
   }
 
