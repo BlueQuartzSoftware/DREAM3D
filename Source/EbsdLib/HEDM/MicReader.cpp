@@ -407,7 +407,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   this->parseDataLine(buf, 0);
   int level = m_Level[0];
   float newEdgeLength = origEdgeLength/powf(2.0,float(level));
-  totalPossibleDataRows = 6*powf(4,level);
+  totalPossibleDataRows = static_cast<size_t>(6.0f*powf(4.0f,level));
   initPointers(totalPossibleDataRows);
   this->parseDataLine(buf, 0);
   ::memset(buf, 0, bufSize); // Clear the buffer
@@ -431,18 +431,18 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   std::vector<int> up(totalDataRows,0);
   std::vector<float> xVal(totalDataRows,0.0);
   std::vector<float> yVal(totalDataRows,0.0);
-  float constant = 1.0/(2.0*sqrt(3.0));
+  float constant = static_cast<float>(1.0f/(2.0*sqrt(3.0)));
   float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     if(m_Up[i] == 1)
     {
-      x = m_X[i] + (newEdgeLength/2.0);
+      x = m_X[i] + (newEdgeLength/2.0f);
       y = m_Y[i] + (constant*newEdgeLength);
     }
     if(m_Up[i] == 2)
     {
-      x = m_X[i] + (newEdgeLength/2.0);
+      x = m_X[i] + (newEdgeLength/2.0f);
       y = m_Y[i] - (constant*newEdgeLength);
     }
     if(x > xMax) xMax = x;
@@ -460,8 +460,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   xDim = int((xMax-xMin)/newEdgeLength)+1;
   yDim = int((yMax-yMin)/newEdgeLength)+1;
-  xRes = newEdgeLength*1000.0;
-  yRes = newEdgeLength*1000.0;
+  xRes = newEdgeLength*1000.0f;
+  yRes = newEdgeLength*1000.0f;
 
   char buf_2[16];
   ::memset(buf_2, 0, 16);
@@ -486,13 +486,13 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   float xA, xB, xC, yA, yB, yC;
   int point;
-  float root3over2 = sqrt(3.0)/2.0;
+  float root3over2 = sqrtf(3.0f)/2.0f;
   int check1, check2, check3;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     xA = xVal[i]-xMin;
     xB = xA + newEdgeLength;
-    xC = xA + (newEdgeLength/2.0);
+    xC = xA + (newEdgeLength/2.0f);
     if(up[i] == 1)
     {
       yA = yVal[i]-yMin;
@@ -511,9 +511,9 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
       {
         x = float(j)*newEdgeLength;
         y = float(k)*newEdgeLength;
-        check1 = (x-xB)*(yA-yB)-(xA-xB)*(y-yB);
-        check2 = (x-xC)*(yB-yC)-(xB-xC)*(y-yC);
-        check3 = (x-xA)*(yC-yA)-(xC-xA)*(y-yA);
+        check1 = static_cast<int>((x-xB)*(yA-yB)-(xA-xB)*(y-yB));
+        check2 = static_cast<int>((x-xC)*(yB-yC)-(xB-xC)*(y-yC));
+        check3 = static_cast<int>((x-xA)*(yC-yA)-(xC-xA)*(y-yA));
         if((check1<=0 && check2<=0 && check3<=0) || (check1>=0 && check2>=0 && check3>=0))
         {
           point = (k*xDim) + j;
