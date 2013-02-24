@@ -88,11 +88,17 @@ m_ZEnd(0),
 m_StackingOrder(Ebsd::LowtoHigh),
 m_NumPhases(0),
 m_SampleTransformationAngle(0.0),
-m_SampleTransformationAxis(0.0),
-m_EulerTransformationAngle(0.0),
-m_EulerTransformationAxis(0.0)
+m_EulerTransformationAngle(0.0)
 {
     m_Manufacturer = "Unknown";
+
+	m_SampleTransformationAxis[0] = 0.0; 
+	m_SampleTransformationAxis[1] = 0.0; 
+	m_SampleTransformationAxis[2] = 1.0; 
+
+	m_EulerTransformationAxis[0] = 0.0; 
+	m_EulerTransformationAxis[1] = 0.0; 
+	m_EulerTransformationAxis[2] = 1.0; 
 }
 
 // -----------------------------------------------------------------------------

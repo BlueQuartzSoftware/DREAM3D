@@ -136,6 +136,7 @@ namespace DREAM3D
   namespace FieldData
   {
     const std::string Active("Active");
+    const std::string GoodFields("GoodFields");
     const std::string Phases("Phases");
     const std::string FieldPhases("Phases");
     const std::string EulerAngles("EulerAngles");
