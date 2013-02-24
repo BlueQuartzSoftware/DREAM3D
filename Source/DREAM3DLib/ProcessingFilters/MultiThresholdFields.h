@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _MultiThresholdCells_H_
-#define _MultiThresholdCells_H_
+#ifndef _MultiThresholdFields_H_
+#define _MultiThresholdFields_H_
 
 #include <string>
 
@@ -44,20 +44,20 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 /**
- * @class MultiThresholdCells MultiThresholdCells.h /GenericFilters/MultiThresholdCells.h
+ * @class MultiThresholdFields MultiThresholdFields.h /GenericFilters/MultiThresholdFields.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
+class DREAM3DLib_EXPORT MultiThresholdFields : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(MultiThresholdCells)
-    DREAM3D_STATIC_NEW_MACRO(MultiThresholdCells)
-    DREAM3D_TYPE_MACRO_SUPER(MultiThresholdCells, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(MultiThresholdFields)
+    DREAM3D_STATIC_NEW_MACRO(MultiThresholdFields)
+    DREAM3D_TYPE_MACRO_SUPER(MultiThresholdFields, AbstractFilter)
 
-    virtual ~MultiThresholdCells();
+    virtual ~MultiThresholdFields();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
@@ -70,13 +70,13 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Multi Threshold (Cell Data)"; }
+    virtual const std::string getHumanLabel() { return "Multi Threshold (Field Data)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     virtual void preflight();
 
   protected:
-    MultiThresholdCells();
+    MultiThresholdFields();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -117,8 +117,8 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
   private:
     bool* m_Output;
 
-    MultiThresholdCells(const MultiThresholdCells&); // Copy Constructor Not Implemented
-    void operator=(const MultiThresholdCells&); // Operator '=' Not Implemented
+    MultiThresholdFields(const MultiThresholdFields&); // Copy Constructor Not Implemented
+    void operator=(const MultiThresholdFields&); // Operator '=' Not Implemented
 };
 
-#endif /* _MultiThresholdCells_H_ */
+#endif /* _MultiThresholdFields_H_ */

@@ -33,58 +33,92 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef RotateEulerRefFrame_H_
-#define RotateEulerRefFrame_H_
+#ifndef _MultiThresholdCells_H_
+#define _MultiThresholdCells_H_
+
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 /**
- * @class RotateEulerRefFrame RotateEulerRefFrame.h DREAM3DLib/GenericFilters/RotateEulerRefFrame.h
- * @brief This filter will convert the Euler Angles. Simply enter the conversion
- * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
- * to Degrees use 57.2957785
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Apr 26, 2012
+ * @class MultiThresholdCells MultiThresholdCells.h /GenericFilters/MultiThresholdCells.h
+ * @brief
+ * @author
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT RotateEulerRefFrame : public AbstractFilter
+class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(RotateEulerRefFrame)
-    DREAM3D_STATIC_NEW_MACRO(RotateEulerRefFrame)
-    DREAM3D_TYPE_MACRO_SUPER(RotateEulerRefFrame, AbstractFilter)
-    virtual ~RotateEulerRefFrame();
+    DREAM3D_SHARED_POINTERS(MultiThresholdCells)
+    DREAM3D_STATIC_NEW_MACRO(MultiThresholdCells)
+    DREAM3D_TYPE_MACRO_SUPER(MultiThresholdCells, AbstractFilter)
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    virtual ~MultiThresholdCells();
 
-     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
-    DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 
-    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getHumanLabel() { return "Rotate Euler Reference Frame"; }
+    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
 
+
+    /**
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const std::string getHumanLabel() { return "Multi Threshold (Cell Data)"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-    virtual void preflight();
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
 
-  protected:
-    RotateEulerRefFrame();
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
+    virtual void preflight();
 
+  protected:
+    MultiThresholdCells();
+
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    float* m_CellEulerAngles;
+    bool* m_Output;
 
-    RotateEulerRefFrame(const RotateEulerRefFrame&); // Copy Constructor Not Implemented
-    void operator=(const RotateEulerRefFrame&); // Operator '=' Not Implemented
+    MultiThresholdCells(const MultiThresholdCells&); // Copy Constructor Not Implemented
+    void operator=(const MultiThresholdCells&); // Operator '=' Not Implemented
 };
 
-#endif /* RotateEulerRefFrame_H_ */
+#endif /* _MultiThresholdCells_H_ */

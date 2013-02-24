@@ -24,5 +24,8 @@ ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME}
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ConvertEulerAngles ConvertEulerAngles.html "" TRUE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles StandardizeEulerAngles.html "" FALSE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame RotateEulerRefFrame.html "" TRUE)
-
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} IdentifySample IdentifySample.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells SingleThresholdCells.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MultiThresholdCells MultiThresholdCells.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SingleThresholdFields SingleThresholdFields.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MultiThresholdFields MultiThresholdFields.html "" TRUE)

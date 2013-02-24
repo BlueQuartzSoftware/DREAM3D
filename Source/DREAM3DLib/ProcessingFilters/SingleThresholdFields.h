@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SingleThresholdCells_H_
-#define _SingleThresholdCells_H_
+#ifndef _SingleThresholdFields_H_
+#define _SingleThresholdFields_H_
 
 #include <string>
 
@@ -46,20 +46,20 @@
 
 
 /**
- * @brief The SingleThresholdCells class
+ * @brief The SingleThresholdFields class
  */
-class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
+class DREAM3DLib_EXPORT SingleThresholdFields : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SingleThresholdCells)
-    DREAM3D_STATIC_NEW_MACRO(SingleThresholdCells)
-    DREAM3D_TYPE_MACRO_SUPER(SingleThresholdCells, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SingleThresholdFields)
+    DREAM3D_STATIC_NEW_MACRO(SingleThresholdFields)
+    DREAM3D_TYPE_MACRO_SUPER(SingleThresholdFields, AbstractFilter)
 
-    virtual ~SingleThresholdCells();
+    virtual ~SingleThresholdFields();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
-    //------ Created Cell Data
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
+    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
@@ -68,8 +68,8 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getHumanLabel() { return "Single Threshold (Cell Data)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getHumanLabel() { return "Single Threshold (Field Data)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
 
 
   protected:
-      SingleThresholdCells();
+      SingleThresholdFields();
 
       void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
@@ -89,9 +89,9 @@ class DREAM3DLib_EXPORT SingleThresholdCells : public AbstractFilter
     bool* m_Output;
 
 
-    SingleThresholdCells(const SingleThresholdCells&); // Copy Constructor Not Implemented
-    void operator=(const SingleThresholdCells&); // Operator '=' Not Implemented
+    SingleThresholdFields(const SingleThresholdFields&); // Copy Constructor Not Implemented
+    void operator=(const SingleThresholdFields&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _SingleThresholdCells_H_ */
+#endif /* _SingleThresholdFields_H_ */

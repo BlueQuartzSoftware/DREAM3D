@@ -53,10 +53,10 @@ const static float m_pi = static_cast<float>(M_PI);
 class RotateEulerRefFrameImpl
 {
     float* m_CellEulerAngles;
-  uint32_t angle;
-  uint32_t axis;
+  float angle;
+  FloatVec3Widget_t axis;
   public:
-    RotateEulerRefFrameImpl(float* data, uint32_t rotAngle, uint32_t rotAxis) :
+    RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3Widget_t rotAxis) :
       m_CellEulerAngles(data),
     angle(rotAngle),
     axis(rotAxis)
@@ -65,86 +65,22 @@ class RotateEulerRefFrameImpl
 
     void convert(size_t start, size_t end) const
     {
-    float rotMat[3][3];
+      float rotMat[3][3];
   //  float degToRad = m_pi/180.0;
 
-
-	  if (axis == DREAM3D::EulerFrameRotationAxis::RD)
-	  {
-		  if (angle == DREAM3D::RefFrameRotationAngle::Ninety)
-		  {
-			rotMat[0][0] = 1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = 0, rotMat[1][2] = 1;
-			rotMat[2][0] = 0, rotMat[2][1] = -1, rotMat[2][2] = 0;
-		  }
-		  else if (angle == DREAM3D::RefFrameRotationAngle::oneEighty)
-		  {
-			rotMat[0][0] = 1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = -1, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = -1;
-		  }
-		  else if (angle == DREAM3D::RefFrameRotationAngle::twoSeventy)
-		  {
-			rotMat[0][0] = 1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = 0, rotMat[1][2] = -1;
-			rotMat[2][0] = 0, rotMat[2][1] = 1, rotMat[2][2] = 0;
-		  }
-	  }
-	  else if (axis == DREAM3D::EulerFrameRotationAxis::TD)
-	  {
-		  if (angle == DREAM3D::RefFrameRotationAngle::Ninety)
-		  {
-			rotMat[0][0] = 0, rotMat[0][1] = 0, rotMat[0][2] = -1;
-			rotMat[1][0] = 0, rotMat[1][1] = 1, rotMat[1][2] = 0;
-			rotMat[2][0] = 1, rotMat[2][1] = 0, rotMat[2][2] = 0;
-		  }
-		  else if (angle == DREAM3D::RefFrameRotationAngle::oneEighty)
-		  {
-			rotMat[0][0] = -1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = 1, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = -1;
-		  }
-		  else if (angle == DREAM3D::RefFrameRotationAngle::twoSeventy)
-		  {
-			rotMat[0][0] = 0, rotMat[0][1] = 0, rotMat[0][2] = 1;
-			rotMat[1][0] = 0, rotMat[1][1] = 1, rotMat[1][2] = 0;
-			rotMat[2][0] = -1, rotMat[2][1] = 0, rotMat[2][2] = 0;
-		  }
-	  }
-	  else if (axis == DREAM3D::EulerFrameRotationAxis::ND)
-	  {
-		  if (angle == DREAM3D::RefFrameRotationAngle::Ninety)
-		  {
-			rotMat[0][0] = 0, rotMat[0][1] = 1, rotMat[0][2] = 0;
-			rotMat[1][0] = -1, rotMat[1][1] = 0, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = 1;
-		  }
-		  else if (angle == DREAM3D::RefFrameRotationAngle::oneEighty)
-		  {
-			rotMat[0][0] = -1, rotMat[0][1] = 0, rotMat[0][2] = 0;
-			rotMat[1][0] = 0, rotMat[1][1] = -1, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = 1;
-		  }
-		  else if (angle == DREAM3D::RefFrameRotationAngle::twoSeventy)
-		  {
-			rotMat[0][0] = 0, rotMat[0][1] = -1, rotMat[0][2] = 0;
-			rotMat[1][0] = 1, rotMat[1][1] = 0, rotMat[1][2] = 0;
-			rotMat[2][0] = 0, rotMat[2][1] = 0, rotMat[2][2] = 1;
-		  }
-	  }
+	  OrientationMath::axisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
 	  float ea1=0, ea2=0, ea3=0;
 	  float ea1new=0, ea2new=0, ea3new=0;
 	  float g[3][3];
 	  float gNew[3][3];
 	  for (size_t i = start; i < end; i++)
-    for (size_t i = start; i < end; i++)
       {
-      ea1 = m_CellEulerAngles[3*i+0];
-      ea2 = m_CellEulerAngles[3*i+1];
-      ea3 = m_CellEulerAngles[3*i+2];
-    OrientationMath::eulertoMat(ea1, ea2, ea3, g);
-    MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
-    OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
+        ea1 = m_CellEulerAngles[3*i+0];
+        ea2 = m_CellEulerAngles[3*i+1];
+        ea3 = m_CellEulerAngles[3*i+2];
+		OrientationMath::eulertoMat(ea1, ea2, ea3, g);
+		MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
+		OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
         m_CellEulerAngles[3*i+0] = ea1new;
         m_CellEulerAngles[3*i+1] = ea2new;
         m_CellEulerAngles[3*i+2] = ea3new;
@@ -169,10 +105,13 @@ class RotateEulerRefFrameImpl
 RotateEulerRefFrame::RotateEulerRefFrame() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_RotationAxis(DREAM3D::EulerFrameRotationAxis::None),
-m_RotationAngle(DREAM3D::RefFrameRotationAngle::Zero),
-m_CellEulerAngles(NULL)
+m_CellEulerAngles(NULL),
+m_RotationAngle(0.0)
 {
+  m_RotationAxis.x = 0.0;
+  m_RotationAxis.y = 0.0;
+  m_RotationAxis.z = 1.0;
+
   setupFilterParameters();
 }
 
@@ -194,26 +133,19 @@ void RotateEulerRefFrame::setupFilterParameters()
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");
     option->setPropertyName("RotationAxis");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("RD");
-    choices.push_back("TD");
-    choices.push_back("ND");
-    option->setChoices(choices);
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("float");
+    option->setUnits("ijk");
     parameters.push_back(option);
   }
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Angle");
     option->setPropertyName("RotationAngle");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("90 Degrees");
-    choices.push_back("180 Degrees");
-    choices.push_back("270 Degrees");
-    option->setChoices(choices);
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+	option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
