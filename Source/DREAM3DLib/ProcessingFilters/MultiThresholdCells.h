@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
