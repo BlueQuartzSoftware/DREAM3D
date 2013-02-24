@@ -56,7 +56,6 @@
     <file>ProcessingFilters/OpenCloseBadData.html</file>
     <file>ProcessingFilters/OpenCloseCoordinationNumber.html</file>
     <file>ProcessingFilters/ConvertEulerAngles.html</file>
-    <file>ProcessingFilters/StandardizeEulerAngles.html</file>
     <file>ProcessingFilters/RotateEulerRefFrame.html</file>
     <file>ProcessingFilters/IdentifySample.html</file>
     <file>ProcessingFilters/SingleThresholdCells.html</file>

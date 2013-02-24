@@ -72,12 +72,12 @@ typedef struct {
 class RotateSampleRefFrameImpl
 {
 
-    DataArray<size_t>::Pointer newIndicesPtr;
+    DataArray<int64_t>::Pointer newIndicesPtr;
     RotateSampleRefFrameImplArg_t*  m_params;
     float rotMatrix[3][3];
 
   public:
-    RotateSampleRefFrameImpl(DataArray<size_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3]) :
+    RotateSampleRefFrameImpl(DataArray<int64_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3]) :
       newIndicesPtr(newindices),
       m_params(args)
     {
@@ -96,7 +96,7 @@ class RotateSampleRefFrameImpl
     void convert()
     {
 
-      size_t* newindicies = newIndicesPtr->GetPointer(0);
+      int64_t* newindicies = newIndicesPtr->GetPointer(0);
       int64_t index = 0;
       float rotMatrixInv[3][3];
       float coords[3];
@@ -124,10 +124,6 @@ class RotateSampleRefFrameImpl
             if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
             {
               newindicies[index] = (m_params->xp*m_params->yp*planeOld)+(m_params->xp*rowOld)+colOld;
-            }
-            else
-            {
-             #error Mike Fix this, what happens if the above if statement is false? If it can NEVER be false then you do not need the if statement
             }
           }
         }
@@ -330,11 +326,9 @@ void RotateSampleRefFrame::execute()
 
   size_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
-  DataArray<size_t>::Pointer newIndiciesPtr = DataArray<size_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
-  size_t* newindicies = newIndiciesPtr->GetPointer(0);
-  #error Mike - You need to initilize the newIndiciesPtr to something. Right now it will have junk in it and there is a possibility
-  #error that some of the values may NOT get filled in.
-  #error Also note that 'size_t' is an unsigned variable which causes problems below
+  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
+  newIndiciesPtr->initializeWithValues(-1);
+  int64_t* newindicies = newIndiciesPtr->GetPointer(0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(),
@@ -364,10 +358,6 @@ void RotateSampleRefFrame::execute()
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
       newIndicies_I = newindicies[i];
-      #error newIndicies_T is an UNSIGNED integer which means it will NEVER be less than Zero (0). Either take out the if
-      #error statement or change the newIndiciesPtr type to "int32_t" or "int64_t" if the data set could be larger than
-      #error 32 bit addressing can handle, which is true for most voxel data sets that we deal with from the likes of Dave R.
-      #error Or should the if statement be Greater-Than ONLY and not Greater-Than or Equal-To
       if(newIndicies_I >= 0)
       {
         source = p->GetVoidPointer((nComp * newIndicies_I));
