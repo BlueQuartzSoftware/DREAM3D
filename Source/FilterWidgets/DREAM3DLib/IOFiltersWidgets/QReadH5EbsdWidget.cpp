@@ -53,10 +53,10 @@
 //
 // -----------------------------------------------------------------------------
 QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
-    sampleTransAngle(0.0),
-    sampleTransAxis(0.0),
-    eulerTransAngle(0.0),
-    eulerTransAxis(0.0)
+  sampleTransAngle(0.0),
+  sampleTransAxis(0.0),
+  eulerTransAngle(0.0),
+  eulerTransAxis(0.0)
 {
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -81,7 +81,7 @@ QReadH5EbsdWidget::~QReadH5EbsdWidget()
 // -----------------------------------------------------------------------------
 QString QReadH5EbsdWidget::getFilterGroup()
 {
-    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 
@@ -108,7 +108,7 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 QFilterWidget* QReadH5EbsdWidget::createDeepCopy()
 {
-  #if 0
+#if 0
   QReadH5EbsdWidget* w = new QReadH5EbsdWidget();
   ReadH5Ebsd::Pointer f = ReadH5Ebsd::New();
 
@@ -119,7 +119,7 @@ QFilterWidget* QReadH5EbsdWidget::createDeepCopy()
 
   f->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
   return w;
-  #endif
+#endif
   return NULL;
 }
 
@@ -128,7 +128,7 @@ QFilterWidget* QReadH5EbsdWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -152,7 +152,7 @@ void QReadH5EbsdWidget::setupGui()
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
   m_H5EbsdFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
+                    this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
 
 }
 
@@ -162,8 +162,8 @@ void QReadH5EbsdWidget::setupGui()
 void QReadH5EbsdWidget::on_m_H5EbsdBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
-                                                 getOpenDialogLastDirectory(),
-                                                 tr("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)") );
+                                              getOpenDialogLastDirectory(),
+                                              tr("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
   m_H5EbsdFile->blockSignals(true);
@@ -231,19 +231,37 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 
       m_StackingOrder->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
 
-    sampleTransAngle = h5Reader->getSampleTransformationAngle();
-    sampleTransAxis = h5Reader->getSampleTransformationAxis();
-    eulerTransAngle = h5Reader->getEulerTransformationAngle();
-    eulerTransAxis = h5Reader->getEulerTransformationAxis();
 
-    QString sampleTrans;
-    QString eulerTrans;
-    sampleTransAxis = h5Reader->getSampleTransformationAxis();
-    eulerTransAxis = h5Reader->getEulerTransformationAxis();
-    sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
-    eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
-    m_SampleTransformationLabel->setText(sampleTrans);
-      m_EulerTransformationLabel->setText(eulerTrans);
+      if (h5Reader->getFileVersion() < 4)
+      {
+        QMessageBox msgBox;
+        msgBox.setText("H5Ebsd File Needs Updating");
+        msgBox.setInformativeText("The transformation information stored in the file does not meet the latest specification.\nShould DREAM3D update the file for you?\n  If you select NOT to do this operation DREAM3D can not use this file.");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        int ret = msgBox.exec();
+        if (QMessageBox::Ok == ret)
+        {
+         h5Reader->updateToLatestVersion();
+        }
+      }
+
+      // Now test again to see if we are at the correct file version
+      if (h5Reader->getFileVersion() < 4)
+      {
+        sampleTransAngle = h5Reader->getSampleTransformationAngle();
+        sampleTransAxis = h5Reader->getSampleTransformationAxis();
+        eulerTransAngle = h5Reader->getEulerTransformationAngle();
+        eulerTransAxis = h5Reader->getEulerTransformationAxis();
+        QString sampleTrans;
+        QString eulerTrans;
+        sampleTransAxis = h5Reader->getSampleTransformationAxis();
+        eulerTransAxis = h5Reader->getEulerTransformationAxis();
+        sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
+        eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
+        m_SampleTransformationLabel->setText(sampleTrans);
+        m_EulerTransformationLabel->setText(eulerTrans);
+      }
 
       setOpenDialogLastDirectory( fi.path() );
 
@@ -271,6 +289,12 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QReadH5EbsdWidget::populateCreatedRequiredLists(QString filePath)
 {
 #if 0
@@ -285,7 +309,7 @@ void QReadH5EbsdWidget::populateCreatedRequiredLists(QString filePath)
   {
     m_CreatedArrays->addItem(QString::fromStdString(*i));
   }
-  #endif
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -329,10 +353,10 @@ void QReadH5EbsdWidget::readOptions(QSettings &prefs)
   READ_FILEPATH_SETTING(prefs, m_, H5EbsdFile, "");
   on_m_H5EbsdFile_textChanged(QString(""));
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
-  READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
+      READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
 
 
-  QVariant UseTrans = prefs.value("UseTransformations");
+      QVariant UseTrans = prefs.value("UseTransformations");
   m_UseTransformations->setChecked(UseTrans.toBool());
 
 
@@ -348,7 +372,7 @@ void QReadH5EbsdWidget::writeOptions(QSettings &prefs)
   prefs.setValue("ZStartIndex", m_ZStartIndex->value());
   prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
   prefs.setValue("UseTransformations",m_UseTransformations->isChecked());
-//  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
+  //  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
 
 
 }
