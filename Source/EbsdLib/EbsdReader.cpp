@@ -41,10 +41,8 @@
 // -----------------------------------------------------------------------------
 EbsdReader::EbsdReader() :
 m_UserZDir(Ebsd::LowtoHigh),
-m_SampleTransformationAngle(0.0),
-m_SampleTransformationAxis(0.0),
-m_EulerTransformationAngle(0.0),
-m_EulerTransformationAxis(0.0),
+m_SampleTransformationAngle(0.0f),
+m_EulerTransformationAngle(0.0f),
 m_FileName(""),
 m_NumFields(0),
 m_OriginalHeader(""),
@@ -52,6 +50,8 @@ m_ManageMemory(true),
 m_HeaderIsComplete(false),
 m_NumberOfElements(0)
 {
+  m_EulerTransformationAxis.resize(3);
+  m_SampleTransformationAxis.resize(3);
 }
 
 // -----------------------------------------------------------------------------
