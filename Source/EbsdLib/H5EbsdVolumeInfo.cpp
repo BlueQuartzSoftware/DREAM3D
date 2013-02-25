@@ -92,10 +92,12 @@ m_EulerTransformationAngle(0.0)
 {
     m_Manufacturer = "Unknown";
 
+	m_SampleTransformationAxis.resize(3);
 	m_SampleTransformationAxis[0] = 0.0; 
 	m_SampleTransformationAxis[1] = 0.0; 
 	m_SampleTransformationAxis[2] = 1.0; 
 
+	m_EulerTransformationAxis.resize(3);
 	m_EulerTransformationAxis[0] = 0.0; 
 	m_EulerTransformationAxis[1] = 0.0; 
 	m_EulerTransformationAxis[2] = 1.0; 
