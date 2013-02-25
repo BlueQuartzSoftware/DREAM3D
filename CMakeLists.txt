@@ -211,7 +211,7 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
-
+file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
