@@ -62,6 +62,9 @@ typedef struct {
     float   xResNew;
     float   yResNew;
     float   zResNew;
+    float   xMinNew;
+    float   yMinNew;
+    float   zMinNew;
 
 } RotateSampleRefFrameImplArg_t;
 
@@ -98,6 +101,7 @@ class RotateSampleRefFrameImpl
 
       int64_t* newindicies = newIndicesPtr->GetPointer(0);
       int64_t index = 0;
+	  int64_t ktot, jtot;
       float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
@@ -106,17 +110,17 @@ class RotateSampleRefFrameImpl
       MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
       for (size_t k = 0; k <m_params->zpNew; k++)
       {
-        index = (m_params->xpNew*m_params->ypNew)*k;
+        ktot = (m_params->xpNew*m_params->ypNew)*k;
         for (size_t j = 0; j < m_params->ypNew; j++)
         {
-          index = index + (m_params->xpNew*j);
-          for (size_t i = 0; i < m_params->zpNew; i++)
+          jtot = (m_params->xpNew)*j;
+          for (size_t i = 0; i < m_params->xpNew; i++)
           {
-            index = index + i;
+			index = ktot + jtot + i;
             newindicies[index] = -1;
-            coords[2] = float(k)*m_params->zResNew;
-            coords[1] = float(j)*m_params->yResNew;
-            coords[0] = float(i)*m_params->xResNew;
+			coords[2] = (float(k)*m_params->zResNew)+m_params->zMinNew;
+            coords[1] = (float(j)*m_params->yResNew)+m_params->yMinNew;
+            coords[0] = (float(i)*m_params->xResNew)+m_params->xMinNew;
             MatrixMath::multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
             colOld = coordsNew[0]/m_params->xRes;
             rowOld = coordsNew[1]/m_params->yRes;
@@ -241,6 +245,8 @@ void RotateSampleRefFrame::execute()
     return;
   }
 
+  m_RotationAngle = m_RotationAngle*m_pi/180.0;
+
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;
   int32_t xpNew, ypNew, zpNew;
@@ -301,28 +307,31 @@ void RotateSampleRefFrame::execute()
   MatrixMath::multiply3x3with3x1(rotMat,zAxis,zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = MatrixMath::dotProduct(xAxis,xAxisNew);
-  if(MatrixMath::dotProduct(yAxis,xAxisNew) > closestAxis) xResNew = yRes, closestAxis = MatrixMath::dotProduct(yAxis,xAxisNew);
-  if(MatrixMath::dotProduct(zAxis,xAxisNew) > closestAxis) xResNew = zRes, closestAxis = MatrixMath::dotProduct(zAxis,xAxisNew);
+  closestAxis = fabs(MatrixMath::dotProduct(xAxis,xAxisNew));
+  if(fabs(MatrixMath::dotProduct(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,xAxisNew));
+  if(fabs(MatrixMath::dotProduct(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,xAxisNew));
   yResNew = yRes;
-  closestAxis = MatrixMath::dotProduct(yAxis,yAxisNew);
-  if(MatrixMath::dotProduct(xAxis,yAxisNew) > closestAxis) yResNew = xRes, closestAxis = MatrixMath::dotProduct(xAxis,yAxisNew);
-  if(MatrixMath::dotProduct(zAxis,yAxisNew) > closestAxis) yResNew = zRes, closestAxis = MatrixMath::dotProduct(zAxis,yAxisNew);
+  closestAxis = fabs(MatrixMath::dotProduct(yAxis,yAxisNew));
+  if(fabs(MatrixMath::dotProduct(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,yAxisNew));
+  if(fabs(MatrixMath::dotProduct(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,yAxisNew));
   zResNew = zRes;
-  closestAxis = MatrixMath::dotProduct(zAxis,zAxisNew);
-  if(MatrixMath::dotProduct(xAxis,zAxisNew) > closestAxis) zResNew = xRes, closestAxis = MatrixMath::dotProduct(xAxis,zAxisNew);
-  if(MatrixMath::dotProduct(yAxis,zAxisNew) > closestAxis) zResNew = yRes, closestAxis = MatrixMath::dotProduct(yAxis,zAxisNew);
+  closestAxis = fabs(MatrixMath::dotProduct(zAxis,zAxisNew));
+  if(fabs(MatrixMath::dotProduct(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,zAxisNew));
+  if(fabs(MatrixMath::dotProduct(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,zAxisNew));
 
-  xpNew = (xMax-xMin)/xResNew;
-  ypNew = (yMax-yMin)/yResNew;
-  zpNew = (zMax-zMin)/zResNew;
+  xpNew = ((xMax-xMin)/xResNew)+1;
+  ypNew = ((yMax-yMin)/yResNew)+1;
+  zpNew = ((zMax-zMin)/zResNew)+1;
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
+  params.xMinNew = xMin;
   params.ypNew = ypNew;
   params.yResNew = yResNew;
+  params.yMinNew = yMin;
   params.zpNew = zpNew;
   params.zResNew = zResNew;
+  params.zMinNew = zMin;
 
   size_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
@@ -353,7 +362,7 @@ void RotateSampleRefFrame::execute()
     IDataArray::Pointer data = p->createNewArray(newNumCellTuples, p->GetNumberOfComponents(), p->GetName());
     void* source = NULL;
     void* destination = NULL;
-    size_t newIndicies_I = 0;
+    int64_t newIndicies_I = 0;
     int nComp = data->GetNumberOfComponents();
     for (size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
@@ -366,7 +375,7 @@ void RotateSampleRefFrame::execute()
       }
       else
       {
-        data->InitializeTuple((data->GetNumberOfComponents() * i),0);
+        data->InitializeTuple(i,0);
       }
     }
     m->addCellData(*iter, data);
