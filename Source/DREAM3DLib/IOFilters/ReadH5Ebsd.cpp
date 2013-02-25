@@ -603,29 +603,35 @@ void ReadH5Ebsd::execute()
 
   if(m_UseTransformations == true)
   {
-  FloatVec3Widget_t eulerAxis;
-  eulerAxis.x = m_EulerTransformationAxis[0];
-  eulerAxis.y = m_EulerTransformationAxis[1];
-  eulerAxis.z = m_EulerTransformationAxis[2];
+	  if(m_EulerTransformationAngle > 0)
+	  {
+		FloatVec3Widget_t eulerAxis;
+		eulerAxis.x = m_EulerTransformationAxis[0];
+		eulerAxis.y = m_EulerTransformationAxis[1];
+		eulerAxis.z = m_EulerTransformationAxis[2];
 
-  RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
-    rot_Euler->setObservers(this->getObservers());
-    rot_Euler->setVoxelDataContainer(getVoxelDataContainer());
-  rot_Euler->setRotationAngle(m_EulerTransformationAngle);
-  rot_Euler->setRotationAxis(eulerAxis);
-    rot_Euler->execute();
+		RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
+		rot_Euler->setObservers(this->getObservers());
+		rot_Euler->setVoxelDataContainer(getVoxelDataContainer());
+		rot_Euler->setRotationAngle(m_EulerTransformationAngle);
+		rot_Euler->setRotationAxis(eulerAxis);
+		rot_Euler->execute();
+	  }
 
-  FloatVec3Widget_t sampleAxis;
-  sampleAxis.x = m_SampleTransformationAxis[0];
-  sampleAxis.y = m_SampleTransformationAxis[1];
-  sampleAxis.z = m_SampleTransformationAxis[2];
+	  if(m_EulerTransformationAngle > 0)
+	  {
+		FloatVec3Widget_t sampleAxis;
+		sampleAxis.x = m_SampleTransformationAxis[0];
+		sampleAxis.y = m_SampleTransformationAxis[1];
+		sampleAxis.z = m_SampleTransformationAxis[2];
 
-  RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
-    rot_Sample->setObservers(this->getObservers());
-    rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
-  rot_Sample->setRotationAngle(m_SampleTransformationAngle);
-  rot_Sample->setRotationAxis(sampleAxis);
-    rot_Sample->execute();
+		RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
+		rot_Sample->setObservers(this->getObservers());
+		rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
+		rot_Sample->setRotationAngle(m_SampleTransformationAngle);
+		rot_Sample->setRotationAxis(sampleAxis);
+		rot_Sample->execute();
+	  }
   }
 
   // If there is an error set this to something negative and also set a message
