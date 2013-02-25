@@ -64,11 +64,12 @@ class EbsdLib_EXPORT EbsdReader
 
     virtual ~EbsdReader();
 
-    EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage);
+    EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage)
+
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
     EBSD_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-	EBSD_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
     EBSD_INSTANCE_PROPERTY(float, EulerTransformationAngle)
     EBSD_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
 
