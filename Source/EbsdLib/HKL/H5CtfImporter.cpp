@@ -70,7 +70,8 @@ yDim(0),
 xRes(0),
 yRes(0),
 zRes(0),
-m_NumSlicesImported(1)
+m_NumSlicesImported(1),
+m_FileVersion(Ebsd::H5::FileVersion)
 {
 }
 
@@ -185,6 +186,18 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
+  }
+
+  // Write the fileversion attribute if it does not exist
+  std::vector<hsize_t> dims;
+  H5T_class_t type_class;
+  size_t type_size;
+  hid_t attr_type;
+  err = H5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
+  if (err < 0)
+  {
+    // The file version does not exist so write it to the file
+    err = H5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
   }
 
   bool multiSliceFile = false;
@@ -444,5 +457,14 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     err = H5Gclose(pid);
   }
   return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfImporter::setFileVersion(uint32_t version)
+{
+  m_FileVersion = version;
 }
 

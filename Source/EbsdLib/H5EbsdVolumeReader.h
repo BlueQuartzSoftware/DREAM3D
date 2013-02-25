@@ -128,7 +128,6 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     */
     virtual void deletePointers();
 
-
   protected:
     H5EbsdVolumeReader();
 

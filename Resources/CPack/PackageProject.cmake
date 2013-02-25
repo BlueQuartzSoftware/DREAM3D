@@ -7,7 +7,7 @@
 #///////////////////////////////////////////////////////////////////////////////
 
 
-# ------------------------------------------------------------------------------ 
+# ------------------------------------------------------------------------------
 # This CMake code sets up for CPack to be used to generate native installers
 # ------------------------------------------------------------------------------
 if (MSVC)
@@ -17,7 +17,7 @@ if (MSVC)
 
     # Gather the list of system level runtime libraries
     INCLUDE (InstallRequiredSystemLibraries)
-    
+
     # Our own Install rule for Release builds of the MSVC runtime libs
     IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
       INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
@@ -103,10 +103,10 @@ endif()
 
 set(DREAM3D_WEBSITE_SERVER "dream3d.bluequartz.net")
 set(DREAM3D_WEBSITE_SERVER_PATH "/var/www/dream3d.bluequartz.net/binaries/.")
-set(DREAM3D_WEBSITE_SCP_USERNAME "mjackson") 
+set(DREAM3D_WEBSITE_SCP_USERNAME "mjackson")
 #-- Create a bash script file that will upload the latest version to the web server
-configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in 
-            ${PROJECT_BINARY_DIR}/upload.sh)  
+configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
+            ${PROJECT_BINARY_DIR}/upload.sh)
 
 # Create an NSIS based installer for Windows Systems
 IF(WIN32 AND NOT UNIX)
@@ -124,7 +124,7 @@ ELSE(WIN32 AND NOT UNIX)
     SET(CPACK_BINARY_BUNDLE "OFF")
     SET(CPACK_BINARY_CYGWIN "OFF")
     SET(CPACK_BINARY_DEB "OFF")
-    if (NOT APPLE)
+    if(NOT APPLE)
         SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 1)
     else()
         SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
@@ -142,7 +142,7 @@ ELSE(WIN32 AND NOT UNIX)
 ENDIF(WIN32 AND NOT UNIX)
 
 
-               
+
 SET(CPACK_SOURCE_GENERATOR "TGZ")
 SET(CPACK_SOURCE_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-Source")
 

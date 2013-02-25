@@ -67,7 +67,8 @@ EbsdImporter(),
 xDim(0),
 yDim(0),
 xRes(0),
-yRes(0)
+yRes(0),
+m_FileVersion(Ebsd::H5::FileVersion)
 {
 }
 
@@ -188,10 +189,24 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
       ss << "H5AngImporter Error: Unknown error.";
     }
     setPipelineMessage(ss.str());
-    
+
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
+  }
+
+  // Write the file Version number to the file
+  {
+    std::vector<hsize_t> dims;
+    H5T_class_t type_class;
+    size_t type_size;
+    hid_t attr_type;
+    err = H5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
+    if (err < 0)
+    {
+      // The file version does not exist so write it to the file
+      err = H5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
+    }
   }
 
   // Start creating the HDF5 group structures for this file
@@ -420,5 +435,14 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
     status = H5Dclose (dset);
   }
   return status;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5AngImporter::setFileVersion(uint32_t version)
+{
+  m_FileVersion = version;
 }
 
