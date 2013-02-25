@@ -233,7 +233,7 @@ int INLWriter::writeFile()
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
-  IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+ // IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
@@ -246,7 +246,7 @@ int INLWriter::writeFile()
     return -1;
   }
   uint32_t symmetry = 0;
-  for(size_t i = 1; i < pDataPtr->GetNumberOfTuples(); ++i)
+  for(size_t i = 1; i < materialNamePtr->GetNumberOfTuples(); ++i)
   {
     symmetry = m_CrystalStructures[i];
     fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).c_str());
