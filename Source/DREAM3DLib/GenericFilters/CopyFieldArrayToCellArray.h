@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT CopyFieldArrayToCellArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
 
+
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
@@ -115,7 +116,7 @@ class DREAM3DLib_EXPORT CopyFieldArrayToCellArray : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-	int32_t*  m_GrainIds;
+  int32_t*  m_GrainIds;
 
     CopyFieldArrayToCellArray(const CopyFieldArrayToCellArray&); // Copy Constructor Not Implemented
     void operator=(const CopyFieldArrayToCellArray&); // Operator '=' Not Implemented
