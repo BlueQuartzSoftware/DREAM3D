@@ -71,7 +71,8 @@ const static float m_pi = static_cast<float>(M_PI);
 MergeTwins::MergeTwins() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -80,7 +81,8 @@ m_AxisTolerance(1.0f),
 m_AngleTolerance(1.0f),
 m_RandomizeParentIds(true),
 m_GrainIds(NULL),
-m_ParentIds(NULL),
+m_CellParentIds(NULL),
+m_FieldParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
@@ -157,7 +159,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
@@ -184,8 +186,8 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
@@ -288,7 +290,8 @@ void MergeTwins::execute()
     // Now adjust all the Grain Id values for each Voxel
     for(int64_t i = 0; i < totalPoints; ++i)
     {
-       m_ParentIds[i] = pid[ m_ParentIds[i] ];
+       m_CellParentIds[i] = pid[ m_CellParentIds[i] ];
+       m_FieldParentIds[m_GrainIds[i]] = m_CellParentIds[i];
     }
   }
 
@@ -376,7 +379,7 @@ void MergeTwins::merge_twins()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-  m_ParentIds[k] = parentnumbers[grainname];
+  m_CellParentIds[k] = parentnumbers[grainname];
   }
   numParents = parentcount+1;
 }

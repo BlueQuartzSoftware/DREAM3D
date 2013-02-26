@@ -204,8 +204,8 @@ void FindDeformationStatistics::execute()
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
-  float kam, gbdist, tjdist, qpdist, sf, sf2, sfmm, grm, ssap;
-  int gname, gname2, ss1, ss2;
+  float kam, gbdist, tjdist, qpdist, sf, sf2, sfmm, grm, mprime;
+  int gname, gname2;
   float q1[5], q2[5];
   int kmdist[25];
   int gamdist[25];
@@ -219,23 +219,23 @@ void FindDeformationStatistics::execute()
   float gamvsf[25][2];
   float kmvsfmm[25][2];
   float gamvsfmm[25][2];
-  float kmvssap[25][2];
-  float gamvssap[25][2];
+  float kmvmprime[25][2];
+  float gamvmprime[25][2];
   float kmvdis[25][2];
   float gamvdis[25][2];
   float kmvsfdistthresh[25][10][2];
   float gamvsfdistthresh[25][10][2];
   float kmvsfmmdistthresh[25][10][2];
   float gamvsfmmdistthresh[25][10][2];
-  float kmvssapdistthresh[25][10][2];
-  float gamvssapdistthresh[25][10][2];
+  float kmvmprimedistthresh[25][10][2];
+  float gamvmprimedistthresh[25][10][2];
   float kmvdisdistthresh[25][10][2];
   float gamvdisdistthresh[25][10][2];
-  float kmvsfmmssapthresh[25][10][2];
-  float gamvsfmmssapthresh[25][10][2];
+  float kmvsfmmmprimethresh[25][10][2];
+  float gamvsfmmmprimethresh[25][10][2];
   int kambin, grmbin;
   int gbbin, tjbin, qpbin;
-  int sfbin, ssapbin, sfmmbin, disbin;
+  int sfbin, mprimebin, sfmmbin, disbin;
  // int actualpoints = 0;
   for (int h = 0; h < 25; h++)
   {
@@ -248,14 +248,14 @@ void FindDeformationStatistics::execute()
       {
         for (int j = 0; j < 2; j++)
         {
-          kmvsfmmssapthresh[h][i][j] = 0;
-          gamvsfmmssapthresh[h][i][j] = 0;
+          kmvsfmmmprimethresh[h][i][j] = 0;
+          gamvsfmmmprimethresh[h][i][j] = 0;
           kmvsfdistthresh[h][i][j] = 0;
           gamvsfdistthresh[h][i][j] = 0;
-          kmvssapdistthresh[h][i][j] = 0;
-          gamvssapdistthresh[h][i][j] = 0;
-          kmvssapdistthresh[h][i][j] = 0;
-          gamvssapdistthresh[h][i][j] = 0;
+          kmvmprimedistthresh[h][i][j] = 0;
+          gamvmprimedistthresh[h][i][j] = 0;
+          kmvmprimedistthresh[h][i][j] = 0;
+          gamvmprimedistthresh[h][i][j] = 0;
           kmvsfmmdistthresh[h][i][j] = 0;
           gamvsfmmdistthresh[h][i][j] = 0;
           kmvdisdistthresh[h][i][j] = 0;
@@ -272,8 +272,8 @@ void FindDeformationStatistics::execute()
               gamvsf[i][j] = 0;
               kmvsfmm[i][j] = 0;
               gamvsfmm[i][j] = 0;
-              kmvssap[i][j] = 0;
-              gamvssap[i][j] = 0;
+              kmvmprime[i][j] = 0;
+              gamvmprime[i][j] = 0;
               kmvdis[i][j] = 0;
               gamvdis[i][j] = 0;
           }
@@ -288,7 +288,7 @@ void FindDeformationStatistics::execute()
   float avgQPdist = 0;
   float avgSF = 0;
   float avgSFMM = 0;
-  float avgSSAP = 0;
+  float avgmprime = 0;
   float avgDIS = 0;
   double counter = 0;
   float LD[3];
@@ -305,8 +305,6 @@ void FindDeformationStatistics::execute()
     avgSF = avgSF + m_Schmids[gname];
       gname2 = m_NearestNeighbors[i * 3 + 0];
     avgSFMM = avgSFMM + (m_Schmids[gname]/m_Schmids[gname2]);
-      ss1 = m_SlipSystems[gname];
-      ss2 = m_SlipSystems[gname2];
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname + j];
@@ -317,14 +315,14 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
       }
       else
       {
         w = 0;
-    ssap = 0;
+    mprime = 0;
       }
-    avgSSAP = avgSSAP + ssap;
+    avgmprime = avgmprime + mprime;
     avgDIS = avgDIS + w;
     counter++;
   }
@@ -336,7 +334,7 @@ void FindDeformationStatistics::execute()
   avgQPdist = avgQPdist/counter;
   avgSF = avgSF/counter;
   avgSFMM = avgSFMM/counter;
-  avgSSAP = avgSSAP/counter;
+  avgmprime = avgmprime/counter;
   avgDIS = avgDIS/counter;
   for (int i = 0; i < totalPoints; i++)
   {
@@ -352,8 +350,6 @@ void FindDeformationStatistics::execute()
       sf = m_Schmids[gname];
       sf2 = m_Schmids[gname2];
       sfmm = sf / sf2;
-      ss1 = m_SlipSystems[gname];
-      ss2 = m_SlipSystems[gname2];
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname + j];
@@ -364,12 +360,12 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, ssap);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
       }
       else
       {
         w = 0;
-    ssap = 0;
+    mprime = 0;
       }
       kambin = int((kam/avgKAM)/0.1);
       grmbin = int((grm/avgGRM)/0.1);
@@ -379,7 +375,7 @@ void FindDeformationStatistics::execute()
       sfbin = int((sf - 0.25) / 0.025);
       if(sfmm >= 1) sfmmbin = int((sfmm - 1.0) / 0.2) + 5;
       if(sfmm < 1) sfmmbin = 4 - int(((1.0 / sfmm) - 1.0) / 0.2);
-      ssapbin = int((ssap - 0.4) / 0.06);
+      mprimebin = int((mprime - 0.4) / 0.06);
       disbin = int((w) / 10.0);
       if(kambin < 0) kambin = 0;
       if(kambin > 24) kambin = 24;
@@ -395,8 +391,8 @@ void FindDeformationStatistics::execute()
       if(sfbin > 9) sfbin = 9;
       if(sfmmbin < 0) sfmmbin = 0;
       if(sfmmbin > 9) sfmmbin = 9;
-      if(ssapbin < 0) ssapbin = 0;
-      if(ssapbin > 9) ssapbin = 9;
+      if(mprimebin < 0) mprimebin = 0;
+      if(mprimebin > 9) mprimebin = 9;
       if(disbin < 0) disbin = 0;
       if(disbin > 9) disbin = 9;
       kmdist[kambin]++;
@@ -425,10 +421,10 @@ void FindDeformationStatistics::execute()
         kmvsfmm[kambin][1] = kmvsfmm[kambin][1] + (sfmm/avgSFMM);
         gamvsfmm[grmbin][0]++;
         gamvsfmm[grmbin][1] = gamvsfmm[grmbin][1] + (sfmm/avgSFMM);
-        kmvssap[kambin][0]++;
-        kmvssap[kambin][1] = kmvssap[kambin][1] + (ssap/avgSSAP);
-        gamvssap[grmbin][0]++;
-        gamvssap[grmbin][1] = gamvssap[grmbin][1] + (ssap/avgSSAP);
+        kmvmprime[kambin][0]++;
+        kmvmprime[kambin][1] = kmvmprime[kambin][1] + (mprime/avgmprime);
+        gamvmprime[grmbin][0]++;
+        gamvmprime[grmbin][1] = gamvmprime[grmbin][1] + (mprime/avgmprime);
         kmvdis[kambin][0]++;
         kmvdis[kambin][1] = kmvdis[kambin][1] + (w/avgDIS);
         gamvdis[grmbin][0]++;
@@ -442,22 +438,22 @@ void FindDeformationStatistics::execute()
       kmvsfmmdistthresh[distance][sfmmbin][1] = kmvsfmmdistthresh[distance][sfmmbin][1] + kam;
       gamvsfmmdistthresh[distance][sfmmbin][0]++;
       gamvsfmmdistthresh[distance][sfmmbin][1] = gamvsfmmdistthresh[distance][sfmmbin][1] + grm;
-      kmvssapdistthresh[distance][ssapbin][0]++;
-      kmvssapdistthresh[distance][ssapbin][1] = kmvssapdistthresh[distance][ssapbin][1] + kam;
-      gamvssapdistthresh[distance][ssapbin][0]++;
-      gamvssapdistthresh[distance][ssapbin][1] = gamvssapdistthresh[distance][ssapbin][1] + grm;
+      kmvmprimedistthresh[distance][mprimebin][0]++;
+      kmvmprimedistthresh[distance][mprimebin][1] = kmvmprimedistthresh[distance][mprimebin][1] + kam;
+      gamvmprimedistthresh[distance][mprimebin][0]++;
+      gamvmprimedistthresh[distance][mprimebin][1] = gamvmprimedistthresh[distance][mprimebin][1] + grm;
       kmvdisdistthresh[distance][disbin][0]++;
       kmvdisdistthresh[distance][disbin][1] = kmvdisdistthresh[distance][disbin][1] + kam;
       gamvdisdistthresh[distance][disbin][0]++;
       gamvdisdistthresh[distance][disbin][1] = gamvdisdistthresh[distance][disbin][1] + grm;
-      kmvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-      kmvsfmmssapthresh[sfmmbin][ssapbin][1] = kmvsfmmssapthresh[sfmmbin][ssapbin][1] + kam;
-      gamvsfmmssapthresh[sfmmbin][ssapbin][0]++;
-      gamvsfmmssapthresh[sfmmbin][ssapbin][1] = gamvsfmmssapthresh[sfmmbin][ssapbin][1] + grm;
+      kmvsfmmmprimethresh[sfmmbin][mprimebin][0]++;
+      kmvsfmmmprimethresh[sfmmbin][mprimebin][1] = kmvsfmmmprimethresh[sfmmbin][mprimebin][1] + kam;
+      gamvsfmmmprimethresh[sfmmbin][mprimebin][0]++;
+      gamvsfmmmprimethresh[sfmmbin][mprimebin][1] = gamvsfmmmprimethresh[sfmmbin][mprimebin][1] + grm;
     }
   }
   outFile << "Kernel Misorientation Data" << std::endl;
-  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
+  outFile << "GB		TJ		QP		SF		SFMM		mprime		DIS" << std::endl;
   for (int i = 0; i < 25; i++)
   {
     if (kmvgb[i][0] > 0) kmvgb[i][1] = kmvgb[i][1] / kmvgb[i][0];
@@ -465,20 +461,20 @@ void FindDeformationStatistics::execute()
     if (kmvqp[i][0] > 0) kmvqp[i][1] = kmvqp[i][1] / kmvqp[i][0];
     if (kmvsf[i][0] > 0) kmvsf[i][1] = kmvsf[i][1] / kmvsf[i][0];
     if (kmvsfmm[i][0] > 0) kmvsfmm[i][1] = kmvsfmm[i][1] / kmvsfmm[i][0];
-    if (kmvssap[i][0] > 0) kmvssap[i][1] = kmvssap[i][1] / kmvssap[i][0];
+    if (kmvmprime[i][0] > 0) kmvmprime[i][1] = kmvmprime[i][1] / kmvmprime[i][0];
     if (kmvdis[i][0] > 0) kmvdis[i][1] = kmvdis[i][1] / kmvdis[i][0];
     outFile << kmvgb[i][0] << "	" << kmvgb[i][1] << "	"
         << kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
         << kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
         << kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
         << kmvsfmm[i][0] << "	" << kmvsfmm[i][1] << "	"
-        << kmvssap[i][0] << "	" << kmvssap[i][1] << "	"
+        << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
         << kmvdis[i][0] << "	" << kmvdis[i][1] << std::endl;
   }
   outFile << std::endl;
   outFile << std::endl;
   outFile << "Grain Average Misorientation Data" << std::endl;
-  outFile << "GB		TJ		QP		SF		SFMM		SSAP		DIS" << std::endl;
+  outFile << "GB		TJ		QP		SF		SFMM		mprime		DIS" << std::endl;
   for (int i = 0; i < 25; i++)
   {
     if (gamvgb[i][0] > 0) gamvgb[i][1] = gamvgb[i][1] / gamvgb[i][0];
@@ -486,14 +482,14 @@ void FindDeformationStatistics::execute()
     if (gamvqp[i][0] > 0) gamvqp[i][1] = gamvqp[i][1] / gamvqp[i][0];
     if (gamvsf[i][0] > 0) gamvsf[i][1] = gamvsf[i][1] / gamvsf[i][0];
     if (gamvsfmm[i][0] > 0) gamvsfmm[i][1] = gamvsfmm[i][1] / gamvsfmm[i][0];
-    if (gamvssap[i][0] > 0) gamvssap[i][1] = gamvssap[i][1] / gamvssap[i][0];
+    if (gamvmprime[i][0] > 0) gamvmprime[i][1] = gamvmprime[i][1] / gamvmprime[i][0];
     if (gamvdis[i][0] > 0) gamvdis[i][1] = gamvdis[i][1] / gamvdis[i][0];
     outFile << gamvgb[i][0] << "	" << gamvgb[i][1] << "	"
         << gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
         << gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
         << gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
         << gamvsfmm[i][0] << "	" << gamvsfmm[i][1] << "	"
-        << gamvssap[i][0] << "	" << gamvssap[i][1] << "	"
+        << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
         << gamvdis[i][0] << "	" << gamvdis[i][1] << std::endl;
   }
   outFile << std::endl;
@@ -521,14 +517,14 @@ void FindDeformationStatistics::execute()
       }
       outFile << std::endl;
   }
-  outFile << "SSAP KAM" << std::endl;
+  outFile << "mprime KAM" << std::endl;
   outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
       for (int j = 0; j < 10; j++)
       {
-        if (kmvssapdistthresh[j][i][0] > 0) kmvssapdistthresh[j][i][1] = kmvssapdistthresh[j][i][1] / kmvssapdistthresh[j][i][0];
-        outFile << kmvssapdistthresh[j][i][0] << "	" << kmvssapdistthresh[j][i][1] << "	";
+        if (kmvmprimedistthresh[j][i][0] > 0) kmvmprimedistthresh[j][i][1] = kmvmprimedistthresh[j][i][1] / kmvmprimedistthresh[j][i][0];
+        outFile << kmvmprimedistthresh[j][i][0] << "	" << kmvmprimedistthresh[j][i][1] << "	";
       }
       outFile << std::endl;
   }
@@ -565,14 +561,14 @@ void FindDeformationStatistics::execute()
       }
       outFile << std::endl;
   }
-  outFile << "SSAP GAM" << std::endl;
+  outFile << "mprime GAM" << std::endl;
   outFile << "0		1		2		3		4		5		6		7		8		9" << std::endl;
   for (int i = 0; i < 10; i++)
   {
       for (int j = 0; j < 10; j++)
       {
-        if (gamvssapdistthresh[j][i][0] > 0) gamvssapdistthresh[j][i][1] = gamvssapdistthresh[j][i][1] / gamvssapdistthresh[j][i][0];
-        outFile << gamvssapdistthresh[j][i][0] << "	" << gamvssapdistthresh[j][i][1] << "	";
+        if (gamvmprimedistthresh[j][i][0] > 0) gamvmprimedistthresh[j][i][1] = gamvmprimedistthresh[j][i][1] / gamvmprimedistthresh[j][i][0];
+        outFile << gamvmprimedistthresh[j][i][0] << "	" << gamvmprimedistthresh[j][i][1] << "	";
       }
       outFile << std::endl;
   }
@@ -587,25 +583,25 @@ void FindDeformationStatistics::execute()
       }
       outFile << std::endl;
   }
-  outFile << "SFMM SSAP KAM" << std::endl;
+  outFile << "SFMM mprime KAM" << std::endl;
   outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << std::endl;
   for (int i = 0; i < 10; i++)
   {
       for (int j = 0; j < 10; j++)
       {
-        if (kmvsfmmssapthresh[i][j][0] > 0) kmvsfmmssapthresh[i][j][1] = kmvsfmmssapthresh[i][j][1] / kmvsfmmssapthresh[i][j][0];
-        outFile << kmvsfmmssapthresh[i][j][0] << "	" << kmvsfmmssapthresh[i][j][1] << "	";
+        if (kmvsfmmmprimethresh[i][j][0] > 0) kmvsfmmmprimethresh[i][j][1] = kmvsfmmmprimethresh[i][j][1] / kmvsfmmmprimethresh[i][j][0];
+        outFile << kmvsfmmmprimethresh[i][j][0] << "	" << kmvsfmmmprimethresh[i][j][1] << "	";
       }
       outFile << std::endl;
   }
-  outFile << "SFMM SSAP GAM" << std::endl;
+  outFile << "SFMM mprime GAM" << std::endl;
   outFile << "0.43		0.49		0.55		0.61		0.67		0.73		0.79		0.85		0.91		0.97" << std::endl;
   for (int i = 0; i < 10; i++)
   {
       for (int j = 0; j < 10; j++)
       {
-        if (gamvsfmmssapthresh[i][j][0] > 0) gamvsfmmssapthresh[i][j][1] = gamvsfmmssapthresh[i][j][1] / gamvsfmmssapthresh[i][j][0];
-        outFile << gamvsfmmssapthresh[i][j][0] << "	" << gamvsfmmssapthresh[i][j][1] << "	";
+        if (gamvsfmmmprimethresh[i][j][0] > 0) gamvsfmmmprimethresh[i][j][1] = gamvsfmmmprimethresh[i][j][1] / gamvsfmmmprimethresh[i][j][0];
+        outFile << gamvsfmmmprimethresh[i][j][0] << "	" << gamvsfmmmprimethresh[i][j][1] << "	";
       }
       outFile << std::endl;
   }
