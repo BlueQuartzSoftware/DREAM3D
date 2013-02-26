@@ -103,9 +103,9 @@ int main(int argc, char** argv)
 
   START_CLOCK;
   LaplacianSmoothing::Pointer filter = LaplacianSmoothing::New();
-  filter->setLambda(0.25);
-  filter->setTripleLineLambda(0.125);
-  filter->setQuadPointLambda(0.65);
+  filter->setLambda(0.25f);
+  filter->setTripleLineLambda(0.125f);
+  filter->setQuadPointLambda(0.65f);
 
   filter->setSurfaceMeshDataContainer(sm.get());
   filter->setMessagePrefix(filter->getNameOfClass());

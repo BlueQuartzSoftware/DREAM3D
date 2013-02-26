@@ -25,20 +25,32 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <body>
 <h1 class="pHeading1">Multi Threshold (Cell Data) Filter</h1>
 <p class="pCellBody">
-<a href="../Filters/MultiThresholdCells.html#wp2">Description</a>
-| <a href="../Filters/MultiThresholdCells.html#wp3">Options</a>
-| <a href="../Filters/MultiThresholdCells.html#wp4">Required Arrays</a>
-| <a href="../Filters/MultiThresholdCells.html#wp5">Created Arrays</a>
-| <a href="../Filters/MultiThresholdCells.html#wp1">Authors</a> </p>
+<a href="../GenericFilters/MultiThresholdCells.html#wp2">Description</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp3">Options</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp4">Required Arrays</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp5">Created Arrays</a>
+| <a href="../GenericFilters/MultiThresholdCells.html#wp1">Authors</a> </p>
 
 <a name="wp7"></a>
 <h2 class="pHeading2">Group</h2>
-<p class="pBody"></p>
+<p class="pBody">Generic</p>
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <!-- Write all your documentation here -->
 
 <p class="pBody">
+This filter is similar to the <a href="SingleThresholdCells.html">SingleThresholdCells</a> filter but allows the user
+ to input more than a single cell array. Internally the algorithm creates the output boolean arrays for each comparison
+ that the user creates. Then all the output arrays are compared and if <b>any</b> of the values for a specific cell voxel
+ is <b>false</b> then the corresponding voxel cell in the final output array is marked as false. This is considered a
+ logical 'or' operation.
+</p>
+
+<p class="pBody">
+  An exmaple of this filter's use would be after EBSD data is read into DREAM3D and the user wants to have DREAM3D consider
+ voxels that the user considers 'good'. The user would insert this filter and select the criteria that makes a voxel 'good'.
+ For the <i>Small IN100</i> example data set the typical values are a <i>Confidence Index</i> &gt 0.1 and an <i>Image Quality</i>
+ &gt 120.
 </p>
 
 <!-- Do NOT write documentation below this line -->
@@ -49,9 +61,7 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
 <tr bgcolor="#E2E2E2">
-<td>Output Array Name</td><td>Unknown Type</td></tr>
-<tr bgcolor="#E2E2E2">
-<td>Select Arrays to Threshold</td><td>Unknown Type</td></tr>
+<td>Select Arrays to Compare</td><td>Defined by the user</td></tr>
 </table>
 
 <!-- A table of Required Data for your filter -->
@@ -64,15 +74,15 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp5"> </a><h2 class="pHeading2">Created Arrays</h2>
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Comment</th></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>Output</td><td></td></tr>
+<tr bgcolor="#E2E2E2"><td>Cell</td><td>User Defined</td><td>Boolean Array</td></tr>
 </table>
 
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">
-Copyright [INSERT YOUR NAME HERE]<br />
-Contact Info:[INSERT EMAIL ADDRESS HERE]<br />
-Version: 1.0.0<br />
-License: See the License.txt file that came with DREAM3D.<br />
+<b>Copyright:</b> 2012 Michael A. Groeber (AFRL),<br />&nbsp;&nbsp;2012 Michael A. Jackson (BlueQuartz Software)<br />
+<b>Contact Info:</b> dream3d@bluequartz.net<br />
+<b>Version:</b> 1.0.0<br />
+<b>License:</b> See the License.txt file that came with DREAM3D.<br />
 </p>
 <!-- DREAM3D AUTO-GENERATED DOCUMENTATION END -->
 <div>        <table width="98%" border="0" bgcolor="#CCCCCC"><tr><td><a href="../index.html">Index</a></td></tr></table>    </div>

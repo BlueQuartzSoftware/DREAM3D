@@ -67,7 +67,8 @@ H5MicImporter::H5MicImporter() :
   xDim(0),
   yDim(0),
   xRes(0),
-  yRes(0)
+  yRes(0),
+m_FileVersion(Ebsd::H5::FileVersion)
 {
 }
 
@@ -192,6 +193,20 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
     return -1;
+  }
+
+  // Write the fileversion attribute if it does not exist
+  {
+    std::vector<hsize_t> dims;
+    H5T_class_t type_class;
+    size_t type_size;
+    hid_t attr_type;
+    err = H5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
+    if (err < 0)
+    {
+      // The file version does not exist so write it to the file
+      err = H5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
+    }
   }
 
   // Start creating the HDF5 group structures for this file
@@ -404,7 +419,7 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, BasisAtoms, Ebsd::Mic::BasisAtoms)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Symmetry, Ebsd::Mic::Symmetry)
 
-        if (p->getZandCoordinates().size() > 0) {
+    if (p->getZandCoordinates().size() > 0) {
       hid_t ZandCGid = H5Utilities::createGroup(pid, Ebsd::Mic::ZandCoordinates);
       err = writeZandCoordinates(p, ZandCGid);
       if (err < 0) {
@@ -441,3 +456,10 @@ int H5MicImporter::writeZandCoordinates(MicPhase* p, hid_t ZandCGid)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5MicImporter::setFileVersion(uint32_t version)
+{
+  m_FileVersion = version;
+}

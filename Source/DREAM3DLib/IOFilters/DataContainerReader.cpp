@@ -44,7 +44,7 @@
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
-#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 // -----------------------------------------------------------------------------
 //

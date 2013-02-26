@@ -84,6 +84,9 @@ namespace Ebsd
     // allows us to store slices that have different XY voxel dimensions.
     const std::string XPoints("Max X Points");
     const std::string YPoints("Max Y Points");
+
+    const std::string FileVersionStr("FileVersion");
+    const unsigned int FileVersion = 4;
   }
 
   /** @brief Constants defined for the 5 orientation options */

@@ -43,7 +43,7 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
-#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 
 

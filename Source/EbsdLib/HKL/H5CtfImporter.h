@@ -105,6 +105,13 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      */
     virtual int numberOfSlicesImported();
 
+    /**
+     * @brief This function sets the version of the H5Ebsd file that will be written.
+     * @param version
+     * @return
+     */
+    virtual void setFileVersion(uint32_t version);
+
   protected:
     H5CtfImporter();
 
@@ -118,6 +125,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     float yRes;
     float zRes;
     int m_NumSlicesImported;
+    int   m_FileVersion;
 
     H5CtfImporter(const H5CtfImporter&); // Copy Constructor Not Implemented
     void operator=(const H5CtfImporter&); // Operator '=' Not Implemented

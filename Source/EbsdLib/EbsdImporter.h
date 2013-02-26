@@ -114,6 +114,13 @@ class EbsdLib_EXPORT EbsdImporter
      */
     virtual int numberOfSlicesImported() = 0;
 
+    /**
+     * @brief This function sets the version of the H5Ebsd file that will be written.
+     * @param version
+     * @return
+     */
+    virtual void setFileVersion(uint32_t version) = 0;
+
   protected:
     EbsdImporter() :
       m_ErrorCondition(0),

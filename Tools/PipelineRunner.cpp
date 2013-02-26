@@ -46,6 +46,8 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
+// Boost includes
+#include <boost/assert.hpp>
 
 // Qt Includes
 #include "QtCore/QSettings"
@@ -56,7 +58,6 @@
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
-
 //#include "PipelineBuilder/PipelineViewWidget.h"
 //#include "PipelineBuilder/QFilterWidget.h"
 
