@@ -126,7 +126,8 @@ MergeColonies::MergeColonies() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
 m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
@@ -138,7 +139,8 @@ m_RandomizeParentIds(true),
 m_IdentifyGlobAlpha(false),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
-m_ParentIds(NULL),
+m_CellParentIds(NULL),
+m_FieldParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
@@ -222,7 +224,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   if(m_IdentifyGlobAlpha == true)
   {
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -254,6 +256,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
@@ -357,7 +360,8 @@ void MergeColonies::execute()
 
     for(int64_t i = 0; i < totalPoints; ++i)
     {
-       m_ParentIds[i] = pid[ m_ParentIds[i] ];
+       m_CellParentIds[i] = pid[ m_CellParentIds[i] ];
+	   m_FieldParentIds[m_GrainIds[i]] = m_CellParentIds[i];
     }
   }
 
@@ -488,8 +492,8 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-  if(grainname > 0) m_ParentIds[k] = parentnumbers[grainname];
-  else m_ParentIds[k] = 0;
+  if(grainname > 0) m_CellParentIds[k] = parentnumbers[grainname];
+  else m_CellParentIds[k] = 0;
   }
   numParents = parentcount+1;
 }
@@ -578,13 +582,13 @@ void MergeColonies::identify_globAlpha()
   std::vector<int> totalSize(numParents,0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
-  int pnum = m_ParentIds[i];
+  int pnum = m_CellParentIds[i];
   totalSize[pnum]++;
   if(m_CrystalStructures[m_CellPhases[i]] == Ebsd::CrystalStructure::Cubic) betaSize[pnum]++;
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-    int pnum = m_ParentIds[i];
+    int pnum = m_CellParentIds[i];
     float ratio = float(betaSize[pnum])/float(totalSize[pnum]);
     if(ratio > 0.0) m_GlobAlpha[i] = 0;
     else m_GlobAlpha[i] = 1;

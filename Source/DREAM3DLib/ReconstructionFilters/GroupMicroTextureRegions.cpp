@@ -66,14 +66,16 @@ const static float m_pi = static_cast<float>(M_PI);
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
-m_ParentIds(NULL),
+m_CellParentIds(NULL),
+m_FieldParentIds(NULL),
 m_AvgQuats(NULL),
 m_Active(NULL),
 m_FieldPhases(NULL),
@@ -137,7 +139,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
@@ -156,6 +158,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
@@ -317,7 +320,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    m_ParentIds[k] = parentnumbers[grainname];
+    m_CellParentIds[k] = parentnumbers[grainname];
+    m_FieldParentIds[grainname] = m_CellParentIds[k];
   }
 }
 

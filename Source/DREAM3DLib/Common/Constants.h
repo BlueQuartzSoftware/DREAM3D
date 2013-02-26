@@ -149,6 +149,7 @@ namespace DREAM3D
     const std::string RGBs("RGBs");
     const std::string Centroids("Centroids");
     const std::string NumCells("NumCells");
+    const std::string ParentIds("ParentIds");
     const std::string Volumes("Volumes");
     const std::string EquivalentDiameters("EquivalentDiameters");
     const std::string Schmids("Schmids");
