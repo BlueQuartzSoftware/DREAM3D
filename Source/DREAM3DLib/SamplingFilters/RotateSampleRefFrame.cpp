@@ -103,7 +103,7 @@ class RotateSampleRefFrameImpl
       int64_t* newindicies = newIndicesPtr->GetPointer(0);
       int64_t index = 0;
 	  int64_t ktot, jtot;
-      float rotMatrixInv[3][3];
+//      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
       int colOld, rowOld, planeOld;
@@ -123,7 +123,9 @@ class RotateSampleRefFrameImpl
             coords[2] = (float(k)*m_params->zResNew)+m_params->zMinNew;
             coords[1] = (float(j)*m_params->yResNew)+m_params->yMinNew;
             coords[0] = (float(i)*m_params->xResNew)+m_params->xMinNew;
-            MatrixMath::multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
+            coordsNew[0] = rotMatrixInv[0][0]*coords[0]+rotMatrixInv[0][1]*coords[1]+rotMatrixInv[0][2]*coords[2];
+            coordsNew[1] = rotMatrixInv[1][0]*coords[0]+rotMatrixInv[1][1]*coords[1]+rotMatrixInv[1][2]*coords[2];
+            coordsNew[2] = rotMatrixInv[2][0]*coords[0]+rotMatrixInv[2][1]*coords[1]+rotMatrixInv[2][2]*coords[2];
             colOld = coordsNew[0]/m_params->xRes;
             rowOld = coordsNew[1]/m_params->yRes;
             planeOld = coordsNew[2]/m_params->zRes;
