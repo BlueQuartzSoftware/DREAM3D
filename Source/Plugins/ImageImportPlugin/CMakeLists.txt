@@ -210,6 +210,13 @@ set(ImageImportPlugin_Project_SRCS
    ${ImageImportPlugin_Generated_RC_SRCS}
    )
 
+
+# --------------------------------------------------------------------
+# On Linux we need -fPIC for linking static and shared libraries
+if (UNIX AND NOT APPLE)
+set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
+endif()
+
 # --------------------------------------------------------------------
 # Setup output Directory for the plugin
 if(NOT MSVC)
