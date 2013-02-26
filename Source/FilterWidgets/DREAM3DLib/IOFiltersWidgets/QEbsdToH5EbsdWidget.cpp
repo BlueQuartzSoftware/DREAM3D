@@ -65,15 +65,10 @@
 //
 // -----------------------------------------------------------------------------
 QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
-  QFilterWidget(parent),
-  m_SampleTransformationAngle(0.0),
-  m_EulerTransformationAngle(0.0)
+QFilterWidget(parent),
+m_SampleTransformationAngle(0.0),
+m_EulerTransformationAngle(0.0)
 {
-
-  if ( getOpenDialogLastDirectory().isEmpty() )
-  {
-    setOpenDialogLastDirectory( QDir::homePath() );
-  }
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
   m_SampleTransformationAxis[1] = 0.0;
@@ -83,7 +78,11 @@ QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   m_EulerTransformationAxis[0] = 0.0;
   m_EulerTransformationAxis[1] = 0.0;
   m_EulerTransformationAxis[2] = 1.0;
-
+  
+  if ( getOpenDialogLastDirectory().isEmpty() )
+  {
+    setOpenDialogLastDirectory( QDir::homePath() );
+  }
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   setupGui();
@@ -104,7 +103,7 @@ QEbsdToH5EbsdWidget::~QEbsdToH5EbsdWidget()
 // -----------------------------------------------------------------------------
 QString QEbsdToH5EbsdWidget::getFilterGroup()
 {
-  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -159,7 +158,7 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
 {
-#if 0
+  #if 0
   QFilterWidget* w = new QFilterWidget();
 
   bool ok = false;
@@ -167,8 +166,8 @@ QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+    .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+    .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -181,7 +180,7 @@ QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
   w->setEbsdFileList(fileList);
 
   return w;
-#endif
+  #endif
   return NULL;
 }
 
@@ -208,12 +207,12 @@ void QEbsdToH5EbsdWidget::setupGui()
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputDir_textChanged(const QString &)));
+           this, SLOT(on_m_InputDir_textChanged(const QString &)));
 
   QR3DFileCompleter* com1 = new QR3DFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
   QObject::connect( com1, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_OutputFile_textChanged(const QString &)));
+           this, SLOT(on_m_OutputFile_textChanged(const QString &)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
@@ -265,14 +264,14 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
 {
   prefs.setValue("Filter_Name", "EbsdToH5Ebsd");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
-      WRITE_STRING_SETTING(prefs, m_, FilePrefix)
-      WRITE_STRING_SETTING(prefs, m_, FileSuffix)
-      WRITE_STRING_SETTING(prefs, m_, FileExt)
-      WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
-      WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
-      WRITE_STRING_SETTING(prefs, m_, zSpacing)
-      WRITE_STRING_SETTING(prefs, m_, TotalDigits)
-      WRITE_STRING_SETTING(prefs, m_, OutputFile)
+  WRITE_STRING_SETTING(prefs, m_, FilePrefix)
+  WRITE_STRING_SETTING(prefs, m_, FileSuffix)
+  WRITE_STRING_SETTING(prefs, m_, FileExt)
+  WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
+  WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
+  WRITE_STRING_SETTING(prefs, m_, zSpacing)
+  WRITE_STRING_SETTING(prefs, m_, TotalDigits)
+  WRITE_STRING_SETTING(prefs, m_, OutputFile)
 }
 
 // -----------------------------------------------------------------------------
@@ -293,7 +292,7 @@ void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 bool QEbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -312,9 +311,9 @@ bool QEbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineE
 void QEbsdToH5EbsdWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
-  {
-    m_findEbsdMaxSliceAndPrefix();
-  }
+   {
+     m_findEbsdMaxSliceAndPrefix();
+   }
 }
 
 // -----------------------------------------------------------------------------
@@ -323,8 +322,8 @@ void QEbsdToH5EbsdWidget::checkIOFiles()
 void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 {
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
-                                              getOpenDialogLastDirectory(),
-                                              tr("HDF5 EBSD Files (*.h5ebsd)") );
+                                                 getOpenDialogLastDirectory(),
+                                                 tr("HDF5 EBSD Files (*.h5ebsd)") );
   if ( true == file.isEmpty() ){ return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
@@ -383,8 +382,8 @@ void QEbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
-  if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
+    if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
+    if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
   return Ebsd::UnknownRefFrameZDirection;
 }
 
@@ -395,7 +394,7 @@ Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
 void QEbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 {
   m_generateExampleEbsdInputFile();
-  emit parametersChanged();
+    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -404,7 +403,7 @@ void QEbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 void QEbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
-  emit parametersChanged();
+    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -413,7 +412,7 @@ void QEbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 void QEbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
-  emit parametersChanged();
+    emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -421,8 +420,8 @@ void QEbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
-  emit parametersChanged();
+    m_generateExampleEbsdInputFile();
+      emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -456,28 +455,28 @@ void QEbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
 //
 // -----------------------------------------------------------------------------
 std::vector<std::string> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool &hasMissingFiles,
-                                                               bool stackLowToHigh, QString filename)
+                                               bool stackLowToHigh, QString filename)
 {
   int index = 0;
   std::vector<std::string> fileList;
 
   for (int i = 0; i < (end-start)+1; ++i)
-  {
-    if (stackLowToHigh)
     {
-      index = start + i;
+      if (stackLowToHigh)
+      {
+         index = start + i;
+      }
+      else
+      {
+        index = end - i;
+      }
+      filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+          .arg(QString::number(index), m_TotalDigits->value(), '0')
+          .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+      QString filePath = m_InputDir->text() + QDir::separator() + filename;
+      filePath = QDir::toNativeSeparators(filePath);
+      fileList.push_back(filePath.toStdString());
     }
-    else
-    {
-      index = end - i;
-    }
-    filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-        .arg(QString::number(index), m_TotalDigits->value(), '0')
-        .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-    QString filePath = m_InputDir->text() + QDir::separator() + filename;
-    filePath = QDir::toNativeSeparators(filePath);
-    fileList.push_back(filePath.toStdString());
-  }
   return fileList;
 }
 
@@ -562,52 +561,52 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   {
 
     Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
-    m_SampleTransformationAxis.resize(3);
-    m_EulerTransformationAxis.resize(3);
-    if (mapping == Ebsd::TSLdefault)
-    {
-      m_SampleTransformationAngle = 90.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 1.0;
-      m_SampleTransformationAxis[2] = 0.0;
-      m_EulerTransformationAngle = 270.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
+	m_SampleTransformationAxis.resize(3);
+	m_EulerTransformationAxis.resize(3);
+	if (mapping == Ebsd::TSLdefault)
+	{ 
+		m_SampleTransformationAngle = 180.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 1.0; 
+		m_SampleTransformationAxis[2] = 0.0; 
+		m_EulerTransformationAngle = 270.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
     else if (mapping == Ebsd::HKLdefault)
-    {
-      m_SampleTransformationAngle = 90.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 1.0;
-      m_SampleTransformationAxis[2] = 0.0;
-      m_EulerTransformationAngle = 0.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
+	{ 
+		m_SampleTransformationAngle = 180.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 1.0; 
+		m_SampleTransformationAxis[2] = 0.0; 
+		m_EulerTransformationAngle = 0.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
     else if (mapping == Ebsd::HEDMdefault)
-    {
-      m_SampleTransformationAngle = 0.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 0.0;
-      m_SampleTransformationAxis[2] = 1.0;
-      m_EulerTransformationAngle = 0.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
-    else if (mapping == Ebsd::UnknownCoordinateMapping)
-    {
-      m_SampleTransformationAngle = 0.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 0.0;
-      m_SampleTransformationAxis[2] = 1.0;
-      m_EulerTransformationAngle = 0.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
+	{ 
+		m_SampleTransformationAngle = 0.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 0.0; 
+		m_SampleTransformationAxis[2] = 1.0; 
+		m_EulerTransformationAngle = 0.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
+	else if (mapping == Ebsd::UnknownCoordinateMapping)
+	{
+		m_SampleTransformationAngle = 0.0; 
+		m_SampleTransformationAxis[0] = 0.0; 
+		m_SampleTransformationAxis[1] = 0.0; 
+		m_SampleTransformationAxis[2] = 1.0; 
+		m_EulerTransformationAngle = 0.0; 
+		m_EulerTransformationAxis[0] = 0.0; 
+		m_EulerTransformationAxis[1] = 0.0; 
+		m_EulerTransformationAxis[2] = 1.0; 
+	}
   }
 
 #if 0
@@ -670,9 +669,9 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
 
   // Final check to make sure we have a valid file extension
   if (m_FileExt->text().isEmpty() == true)
-  {
+   {
     return;
-  }
+   }
 
   QString ext = "." + m_FileExt->text();
   QStringList filters;
@@ -737,6 +736,6 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
   this->m_FilePrefix->setText(fPrefix);
   this->m_ZStartIndex->setValue(minSlice);
   this->m_ZEndIndex->setValue(maxSlice);
-  //  this->m_ZStartIndex->setRange(minSlice, maxSlice);
-  //  this->m_ZEndIndex->setRange(minSlice, maxSlice);
+//  this->m_ZStartIndex->setRange(minSlice, maxSlice);
+//  this->m_ZEndIndex->setRange(minSlice, maxSlice);
 }
