@@ -123,7 +123,7 @@ if(DREAM3D_USE_MULTITHREADED_ALGOS)
         include_directories(${TBB_INCLUDE_DIRS} )
         CMP_COPY_DEPENDENT_LIBRARIES("tbb;tbb_malloc")
         # Append the locations of the TBB libraries to our Library Search Paths
-        list(APPEND CMP_LIB_SEARCH_DIRS ${TBB_BINARY_DIR} ${TBBG_LIBRARY_DIR} )
+        list(APPEND CMP_LIB_SEARCH_DIRS ${TBB_BINARY_DIR} ${TBB_LIBRARY_DIR} )
         # Create an install rule to copy the dependent shared library over to the installed location
         CMP_LIBRARIES_INSTALL_RULES("tbb;tbb_malloc" ".")
     else()
