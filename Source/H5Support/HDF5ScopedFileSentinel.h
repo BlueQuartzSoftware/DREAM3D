@@ -34,37 +34,31 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "HDF5ScopedFileSentinel.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
+#include "H5Support/H5Support.h"
+#include "H5Support/H5SupportDLLExport.h"
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-HDF5ScopedFileSentinel::HDF5ScopedFileSentinel(hid_t* fileId, bool turnOffErrors) :
-    m_FileId(fileId),
-    m_TurnOffErrors(turnOffErrors)
+/**
+ * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
+ * is closed when the variable goes out of Scope
+ */
+class H5Support_EXPORT HDF5ScopedFileSentinel
 {
-  if (m_TurnOffErrors == true)
-  {
-    H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
-    H5Eset_auto(H5E_DEFAULT, NULL, NULL);
-  }
+  public:
+    HDF5ScopedFileSentinel(hid_t* fileId, bool turnOffErrors);
+    virtual ~HDF5ScopedFileSentinel();
 
-}
+    void setFileId(hid_t* fileId);
+    hid_t* getFileId();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-HDF5ScopedFileSentinel::~HDF5ScopedFileSentinel()
-{
-  if (m_TurnOffErrors == true)
-  {
-    H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
-  }
-  if (*m_FileId > 0) {
-    H5Utilities::closeFile(*m_FileId);
-    *m_FileId = -1;
-  }
+    private:
+      hid_t* m_FileId;
+      bool m_TurnOffErrors;
 
-}
+      herr_t (*_oldHDF_error_func)(hid_t, void *);
+      void* _oldHDF_error_client_data;
+};
+
+

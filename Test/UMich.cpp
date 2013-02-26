@@ -122,9 +122,9 @@ int main (int argc, char** argv)
     return EXIT_FAILURE;
   }
   // Gather the arguments from the command line and convert them into floating point values
-  float ea0 = atof(argv[1]);
-  float ea1 = atof(argv[2]);
-  float ea2 = atof(argv[3]);
+  float ea0 = static_cast<float>(atof(argv[1]));
+  float ea1 = static_cast<float>(atof(argv[2]));
+  float ea2 = static_cast<float>(atof(argv[3]));
 
   std::cout << "Input Angle:\n  ";
   std::cout << ea0 << ", " << ea1 << ", " << ea2 << std::endl;

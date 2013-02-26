@@ -48,7 +48,7 @@
 #include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"
-#include "DREAM3DLib/HDF5/HDF5ScopedFileSentinel.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
@@ -61,9 +61,9 @@ DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
   m_WritePipeline(true),
   m_WriteVoxelData(true),
-  m_WriteSurfaceMeshData(true),
-  m_WriteSolidMeshData(true),
-  m_WriteXdmfFile(false),
+  m_WriteSurfaceMeshData(false),
+  m_WriteSolidMeshData(false),
+  m_WriteXdmfFile(true),
   m_FileId(-1)
 {
   setupFilterParameters();
@@ -164,6 +164,11 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
     ss.str("");
     ss <<  "The directory path for the output file does not exist.";
     addWarningMessage(getHumanLabel(), ss.str(), -1);
+  }
+
+  if (MXAFileInfo::extension(m_OutputFile).compare("") == 0)
+  {
+    m_OutputFile.append(".dream3d");
   }
 
 }

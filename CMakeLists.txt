@@ -162,7 +162,9 @@ include_directories(${PROJECT_BINARY_DIR})
 # --------------------------------------------------------------------
 IF ( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-DDEBUG)
-#  ADD_DEFINITIONS(-Wall)
+  if(NOT MSVC)
+  ADD_DEFINITIONS(-Wall)
+  endif()
 ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
 
 # On linux we need to set this because some of the libraries are Static
@@ -254,7 +256,7 @@ endif()
 
 # Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks
 if (NOT DREAM3D_BUILD_QT_APPS)
-    set(DREAM3D_BUILD_GUI "OFF" CACHE BOOL "" FORCE)
+    set(DREAM3D_BUILD_DREAM3D "OFF" CACHE BOOL "" FORCE)
     set(DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
@@ -263,6 +265,7 @@ OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if (DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
 endif()
+
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
 # This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
@@ -282,25 +285,28 @@ function(DREAM3D_COMPILE_PLUGIN)
     else()
         message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
     endif()
-
 endfunction()
 
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-#    SurfaceMeshingPlugin
+    ImageImportPlugin
 )
 
+# Clear this file out before we go any further
+file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt "")
  # Build the DREAM3D Application
-option(DREAM3D_BUILD_GUI "Compile the DREAM3D GUI Application" ON)
+option(DREAM3D_BUILD_DREAM3D "Compile the DREAM3D GUI Application" ON)
 
+#-------------------------------------------------------------------------------
+# Build the "Built in" Plugins
 foreach(p ${DREAM3D_PLUGIN_LIST})
     DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p}
                            PLUGIN_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${p})
 endforeach()
 
 
-if (DREAM3D_BUILD_GUI AND DREAM3D_BUILD_QT_APPS)
+if (DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
     #- Add in the Main DREAM.3D Application
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
     #- Now set up the dependency between the main application and each of the plugins so that
@@ -332,14 +338,14 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
   if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
       set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
       if(EXISTS ${pluginSearchDir})
-  set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-  message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
+        set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+        message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
       else()
-  set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/../${userPlugin})
-  if(EXISTS ${pluginSearchDir})
-    set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-    message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
-  endif()
+        set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/../${userPlugin})
+        if(EXISTS ${pluginSearchDir})
+            set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+            message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
+        endif()
       endif()
   endif()
 

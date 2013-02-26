@@ -152,15 +152,15 @@ cmp_IDE_SOURCE_PROPERTIES( "ImageImport/" "${ImageImportPlugin_HDRS}" "${ImageIm
 # This section is for a Custom GUI for a Filter. We need to add the Header, Source and UI file here so that
 # they do not get auto generated during cmake and build time.
 set(ImageImportPlugin_CustomWidgets_HDRS
-  ${PROJECT_SOURCE_DIR}/ImageImport/ImageImportFiltersWidgets/QImportImageStackWidget.h
+  ${PROJECT_SOURCE_DIR}/ImageImportPlugin/ImageImportFiltersWidgets/QImportImageStackWidget.h
 )
 
 set(ImageImportPlugin_CustomWidgets_SRCS
-  ${PROJECT_SOURCE_DIR}/ImageImport/ImageImportFiltersWidgets/QImportImageStackWidget.cpp
+  ${PROJECT_SOURCE_DIR}/ImageImportPlugin/ImageImportFiltersWidgets/QImportImageStackWidget.cpp
 )
 
 QT4_WRAP_UI( ImageImportPlugin_Generated_UI_HDRS
-  ${PROJECT_SOURCE_DIR}/ImageImport/ImageImportFiltersWidgets/QImportImageStackWidget.ui
+  ${PROJECT_SOURCE_DIR}/ImageImportPlugin/ImageImportFiltersWidgets/QImportImageStackWidget.ui
 )
 
 
@@ -229,6 +229,17 @@ target_link_libraries(${PLUGIN_NAME}
                     QtSupport
                     PipelineBuilderLib
                     )
+
+# --------------------------------------------------------------------
+# This is a special section for this plugin which requires the Qt based
+# image plugins so we need to make sure those are deployed with the Application
+# Clear the file first otherwise we get duplicates
+file(WRITE ${PROJECT_BINARY_DIR}/Qt_Plugins.txt "")
+FindQt4Plugins("qgif;qjpeg;qtiff" "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt"
+                "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
+                "imageformats" )
+
+
 # --------------------------------------------------------------------
 # Add a dependency on the code generation step to make sure the code is
 # generated before we try to compile the plugin

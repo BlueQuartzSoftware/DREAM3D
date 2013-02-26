@@ -77,26 +77,27 @@ class RotateSampleRefFrameImpl
 
     DataArray<int64_t>::Pointer newIndicesPtr;
     RotateSampleRefFrameImplArg_t*  m_params;
-    float rotMatrix[3][3];
+    float rotMatrixInv[3][3];
 
   public:
     RotateSampleRefFrameImpl(DataArray<int64_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3]) :
       newIndicesPtr(newindices),
       m_params(args)
     {
-      rotMatrix[0][0] = rotMat[0][0];
-      rotMatrix[0][1] = rotMat[0][1];
-      rotMatrix[0][2] = rotMat[0][2];
-      rotMatrix[1][0] = rotMat[1][0];
-      rotMatrix[1][1] = rotMat[1][1];
-      rotMatrix[1][2] = rotMat[1][2];
-      rotMatrix[2][0] = rotMat[2][0];
-      rotMatrix[2][1] = rotMat[2][1];
-      rotMatrix[2][2] = rotMat[2][2];
+      // We have to inline the 3x3 Maxtrix transpose here because of the "const" nature of the 'convert' function
+      rotMatrixInv[0][0] = rotMat[0][0];
+      rotMatrixInv[0][1] = rotMat[1][0];
+      rotMatrixInv[0][2] = rotMat[2][0];
+      rotMatrixInv[1][0] = rotMat[0][1];
+      rotMatrixInv[1][1] = rotMat[1][1];
+      rotMatrixInv[1][2] = rotMat[2][1];
+      rotMatrixInv[2][0] = rotMat[0][2];
+      rotMatrixInv[2][1] = rotMat[1][2];
+      rotMatrixInv[2][2] = rotMat[2][2];
     }
     virtual ~RotateSampleRefFrameImpl(){}
 
-    void convert()
+    void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
     {
 
       int64_t* newindicies = newIndicesPtr->GetPointer(0);
@@ -107,8 +108,9 @@ class RotateSampleRefFrameImpl
       float coordsNew[3];
       int colOld, rowOld, planeOld;
 
-      MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
-      for (size_t k = 0; k <m_params->zpNew; k++)
+      //MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
+
+      for (size_t k = zStart; k < zEnd; k++)
       {
         ktot = (m_params->xpNew*m_params->ypNew)*k;
         for (size_t j = 0; j < m_params->ypNew; j++)
@@ -116,9 +118,9 @@ class RotateSampleRefFrameImpl
           jtot = (m_params->xpNew)*j;
           for (size_t i = 0; i < m_params->xpNew; i++)
           {
-			index = ktot + jtot + i;
+            index = ktot + jtot + i;
             newindicies[index] = -1;
-			coords[2] = (float(k)*m_params->zResNew)+m_params->zMinNew;
+            coords[2] = (float(k)*m_params->zResNew)+m_params->zMinNew;
             coords[1] = (float(j)*m_params->yResNew)+m_params->yMinNew;
             coords[0] = (float(i)*m_params->xResNew)+m_params->xMinNew;
             MatrixMath::multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
@@ -137,7 +139,7 @@ class RotateSampleRefFrameImpl
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     void operator()(const tbb::blocked_range3d<size_t, size_t, size_t> &r) const
     {
-      convert();
+      convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
 #endif
 
@@ -335,17 +337,18 @@ void RotateSampleRefFrame::execute()
 
   size_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
+
   DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
   newIndiciesPtr->initializeWithValues(-1);
   int64_t* newindicies = newIndiciesPtr->GetPointer(0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(),
-                    RotateSampleRefFrameImpl(newIndiciesPtr, &params), tbb::auto_partitioner());
+  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
+                    RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
 
 #else
   RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat);
-  serial.convert();
+  serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
 #endif
 
 

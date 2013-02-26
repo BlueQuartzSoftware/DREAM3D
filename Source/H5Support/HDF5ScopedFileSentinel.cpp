@@ -34,28 +34,48 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "HDF5ScopedFileSentinel.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-/**
- * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
- * is closed when the variable goes out of Scope
- */
-class DREAM3DLib_EXPORT HDF5ScopedFileSentinel
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+HDF5ScopedFileSentinel::HDF5ScopedFileSentinel(hid_t* fileId, bool turnOffErrors) :
+    m_FileId(fileId),
+    m_TurnOffErrors(turnOffErrors)
 {
-  public:
-    HDF5ScopedFileSentinel(hid_t* fileId, bool turnOffErrors);
-    virtual ~HDF5ScopedFileSentinel();
+  if (m_TurnOffErrors == true)
+  {
+    H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
+    H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+  }
 
-    DREAM3D_INSTANCE_PROPERTY(hid_t*, FileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, TurnOffErrors)
+}
 
-    private:
-      herr_t (*_oldHDF_error_func)(hid_t, void *);
-      void* _oldHDF_error_client_data;
-};
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+HDF5ScopedFileSentinel::~HDF5ScopedFileSentinel()
+{
+  if (m_TurnOffErrors == true)
+  {
+    H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
+  }
+  if (*m_FileId > 0) {
+    H5Utilities::closeFile(*m_FileId);
+    *m_FileId = -1;
+  }
 
+}
+
+    void HDF5ScopedFileSentinel::setFileId(hid_t* fileId)
+    {
+      m_FileId = fileId;
+    }
+
+    hid_t* HDF5ScopedFileSentinel::getFileId()
+    {
+      return m_FileId;
+    }
 

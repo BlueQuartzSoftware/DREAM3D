@@ -77,6 +77,13 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     virtual void invalidateCache();
 
     /**
+     * @brief Returns the file version of the H5Ebsd file. This is an attribute attached
+     * to the root "/" data set.
+     * @return
+     */
+    virtual uint32_t getFileVersion();
+
+    /**
      * @brief This method gathers the number of points in each of the 3 axis directions
      * and also the resolution in each of the axis directions where each of the
      * arguments are "output" parameters, ie, they will be over written with the
@@ -146,13 +153,21 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     virtual float getSampleTransformationAngle();
     virtual std::vector<float> getSampleTransformationAxis();
     virtual float getEulerTransformationAngle();
-	virtual std::vector<float> getEulerTransformationAxis();
+    virtual std::vector<float> getEulerTransformationAxis();
+
+    /**
+     * @brief updateToLatestVersion This will apply various attribute and data set updates to bring the
+     * file up to current API standards
+     */
+    virtual int updateToLatestVersion();
+
 
   protected:
     H5EbsdVolumeInfo();
 
   private:
     bool m_ValuesAreCached;
+    uint32_t m_FileVersion;
     int m_XDim;
     int m_YDim;
     int m_ZDim;
@@ -164,9 +179,9 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     Ebsd::RefFrameZDir   m_StackingOrder;
     int m_NumPhases;
     float m_SampleTransformationAngle;
-	std::vector<float> m_SampleTransformationAxis;
+    std::vector<float> m_SampleTransformationAxis;
     float m_EulerTransformationAngle;
-	std::vector<float> m_EulerTransformationAxis;
+    std::vector<float> m_EulerTransformationAxis;
 
     std::string m_Manufacturer;
 

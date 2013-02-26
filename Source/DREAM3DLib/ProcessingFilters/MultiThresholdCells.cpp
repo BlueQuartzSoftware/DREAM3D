@@ -96,7 +96,7 @@ void MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
   int numQFilters = static_cast<int>( m_ComparisonInputs.size() );
   writer->writeValue("NumComparisons",  numQFilters);
   std::stringstream ss;
-  for(size_t i = 0; i < numQFilters; i++)
+  for(int i = 0; i < numQFilters; i++)
   {
     ss << "Comparison-" << i;
     writer->writeValue(ss.str(), m_ComparisonInputs[i]);

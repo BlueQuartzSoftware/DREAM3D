@@ -36,8 +36,8 @@
 %\newfontfamily\sectionfont[Color=MSLightBlue]{Helvetica}
 % Set formats for each heading level
 
-\titleformat*{\section}{\Large\bfseries\sffamily\color{Black}}
-\titleformat*{\subsection}{\large\bfseries\sffamily\color{Black}}
+\titleformat*{\section}{\large\bfseries\sffamily\color{Black}}
+\titleformat*{\subsection}{\small\bfseries\sffamily\color{Black}}
 \titleformat*{\subsubsection}{\small\bfseries\sffamily\color{black}}
 
 \begin{document}
@@ -66,7 +66,13 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
 %\newpage
 \section{Intro (or why this file)}
   This is just a dumping ground for ideas that I (mike jackson) am working on.
-
+   
+\section{Deploying Qt Image Plugins with DREAM3D}
+  Figure out how to deploy the Qt Image Plugins with DREAM3D.
+  
+\section{Xdmf File}
+  Explain what the Xdmf file is and how it can be used.
+  
 \section{PipelineRunner Program}
   This program should be able to use as an input a Pipeline text file saved from the GUI. The requires the use of Qt libraries to read the .ini style file and the sometimes specially encoded QVariant class within the .ini file. In order to do this I tried linking against the generated widgets library and simply invoking a PipelineBuilderWidget class but Qt borked on that saying that we needed to have a QApplication running which is will probably start popping up QWidgets on the screen which is not really what we want.\\
   
@@ -83,8 +89,13 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
   We should be able to export any of the arrays into a raw binary file for import into other analysis programs. 
   
 \section{DREAM3D Reader}
-  This custom gui filter should be improved to show the dimensions, resolution and origin of the data. Currently there are times when this information is needed, like when cropping a volume, and it is nowhere to be found. Even just a filter that does nothing but display that information for the current pipeline would be nice.\\
-   What about adding this information to the QFilterWidget and a "pop-up" window or "disclosable" piece of information?
+ Allow the data being read into DREAM3D to be appended to the data container if it does not already exist. Currently when reading the DREAM3D file the entire data containers are wiped out. If the same array is read then the user could have the option to over write the existing array with the data from the file. This opens up the ability to append files together or get data from several different sources.
+\\
+  This custom gui filter should be improved to show the dimensions, resolution and origin of the data. Currently there are times when this information is needed, like when cropping a volume, and it is nowhere to be found. Even just a filter that does nothing but display that information for the current pipeline would be nice.
+   
+   
+\section{Voxel Dimensions During Pipelin}
+What about adding this information to the QFilterWidget and a "pop-up" window or "disclosable" piece of information?
 
 \section{Documentation}
   As always the documentation for each filter is woefully underdone.
@@ -117,7 +128,6 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
 
 \section{Image Processing Library Addition}
    We need to probably include ITK, VTK, OpenCV or some other image processing library in DREAM3D if possible rather than writing each filter individually. Lets ride on the coat-tails of someone else.
-   
-   
+
    
 \end{document}

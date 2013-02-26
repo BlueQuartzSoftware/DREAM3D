@@ -98,7 +98,7 @@ void FieldDataCSVWriter::preflight()
   if (getFieldDataFile().empty() == true)
   {
     std::stringstream ss;
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    ss << ClassName() << " needs the Output File Set and it was not.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }

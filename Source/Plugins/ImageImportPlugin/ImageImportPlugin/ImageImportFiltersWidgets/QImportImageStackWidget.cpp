@@ -58,9 +58,9 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 
 // Our own plugin headers
-#include "ImageImport/ImageImportFilters/ImportImageStack.h"
+#include "ImageImportPlugin/ImageImportFilters/ImportImageStack.h"
 
-#include "ImageImport/ImageImportFiltersWidgets/moc_QImportImageStackWidget.cxx"
+#include "ImageImportPlugin/ImageImportFiltersWidgets/moc_QImportImageStackWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
@@ -101,7 +101,7 @@ QString QImportImageStackWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer QImportImageStackWidget::getFilter()
 {
-  bool ok = false;
+  //bool ok = false;
   ImportImageStack::Pointer filter =  ImportImageStack::New();
 
   filter->setZStartIndex(m_ZStartIndex->value());

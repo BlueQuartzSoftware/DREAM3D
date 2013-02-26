@@ -38,34 +38,36 @@
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 #include "MXA/Utilities/StringUtils.h"
 
 #define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
-    err = H5Lite::readScalarDataset(fileId, path, var);\
-    if (err < 0) {\
-      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
-      err = H5Utilities::closeFile(fileId);\
-      return err;\
-    }
+  err = H5Lite::readScalarDataset(fileId, path, var);\
+  if (err < 0) {\
+  std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
+  err = H5Utilities::closeFile(fileId);\
+  return err;\
+  }
 
 #define EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, path, var)\
-    err = H5Lite::readVectorDataset(fileId, path, var);\
-    if (err < 0) {\
-      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
-      err = H5Utilities::closeFile(fileId);\
-      return err;\
-    }
+  err = H5Lite::readVectorDataset(fileId, path, var);\
+  if (err < 0) {\
+  std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
+  err = H5Utilities::closeFile(fileId);\
+  return err;\
+  }
 
 
 #define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
-    { cast t;\
-    err = H5Lite::readScalarDataset(fileId, path, t);\
-    if (err < 0) {\
-      std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
-      err = H5Utilities::closeFile(fileId);\
-      return err;\
-    }\
-    var = static_cast<m_msgType>(t); }
+{ cast t;\
+  err = H5Lite::readScalarDataset(fileId, path, t);\
+  if (err < 0) {\
+  std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << path << std::endl;\
+  err = H5Utilities::closeFile(fileId);\
+  return err;\
+  }\
+  var = static_cast<m_msgType>(t); }
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
@@ -76,31 +78,32 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5EbsdVolumeInfo::H5EbsdVolumeInfo() :
-m_ValuesAreCached(false),
-m_XDim(0),
-m_YDim(0),
-m_ZDim(0),
-m_XRes(0.0f),
-m_YRes(0.0f),
-m_ZRes(0.0f),
-m_ZStart(0),
-m_ZEnd(0),
-m_StackingOrder(Ebsd::LowtoHigh),
-m_NumPhases(0),
-m_SampleTransformationAngle(0.0),
-m_EulerTransformationAngle(0.0)
+  m_ValuesAreCached(false),
+  m_FileVersion(0),
+  m_XDim(0),
+  m_YDim(0),
+  m_ZDim(0),
+  m_XRes(0.0f),
+  m_YRes(0.0f),
+  m_ZRes(0.0f),
+  m_ZStart(0),
+  m_ZEnd(0),
+  m_StackingOrder(Ebsd::LowtoHigh),
+  m_NumPhases(0),
+  m_SampleTransformationAngle(0.0),
+  m_EulerTransformationAngle(0.0)
 {
-    m_Manufacturer = "Unknown";
+  m_Manufacturer = "Unknown";
 
-	m_SampleTransformationAxis.resize(3);
-	m_SampleTransformationAxis[0] = 0.0; 
-	m_SampleTransformationAxis[1] = 0.0; 
-	m_SampleTransformationAxis[2] = 1.0; 
+  m_SampleTransformationAxis.resize(3);
+  m_SampleTransformationAxis[0] = 0.0;
+  m_SampleTransformationAxis[1] = 0.0;
+  m_SampleTransformationAxis[2] = 1.0;
 
-	m_EulerTransformationAxis.resize(3);
-	m_EulerTransformationAxis[0] = 0.0; 
-	m_EulerTransformationAxis[1] = 0.0; 
-	m_EulerTransformationAxis[2] = 1.0; 
+  m_EulerTransformationAxis.resize(3);
+  m_EulerTransformationAxis[0] = 0.0;
+  m_EulerTransformationAxis[1] = 0.0;
+  m_EulerTransformationAxis[2] = 1.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -133,6 +136,28 @@ void H5EbsdVolumeInfo::invalidateCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int H5EbsdVolumeInfo::updateToLatestVersion()
+{
+  invalidateCache();
+  // Open the file with Read/Write access
+  hid_t fileId = H5Utilities::openFile(m_FileName, false);
+  if (fileId < 0)
+  {
+    //std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
+    return -1;
+  }
+  // This sentinel will make sure the file is closed and the errors turned back on when we
+  // exit the function
+  HDF5ScopedFileSentinel sentinel(&fileId, true);
+
+  // Update any existing datasets/attributes with new datasets/attributes/
+
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5EbsdVolumeInfo::readVolumeInfo()
 {
   int err = -1;
@@ -144,6 +169,12 @@ int H5EbsdVolumeInfo::readVolumeInfo()
     //std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
     return -1;
   }
+  HDF5ScopedFileSentinel sentinel(&fileId, true);
+
+  m_FileVersion = 0;
+  // Attempt to read the file version number. If it is not there that is OK as early h5ebsd
+  // files did not have this information written.
+  err = H5Lite::readScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
 
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZStartIndex, m_ZStart);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZEndIndex, m_ZEnd);
@@ -198,14 +229,30 @@ int H5EbsdVolumeInfo::readVolumeInfo()
 
   m_ValuesAreCached = true;
   err = H5Utilities::closeFile(fileId);
+  fileId = -1;
   return retErr;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+uint32_t H5EbsdVolumeInfo::getFileVersion()
+{
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+  err = readVolumeInfo();
+  if (err < 0) { return 0; }
+  }
+  return m_FileVersion;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int H5EbsdVolumeInfo::getDimsAndResolution(int64_t &xDim, int64_t &yDim, int64_t &zDim,
-                                             float &xRes, float &yRes, float &zRes)
+                                           float &xRes, float &yRes, float &zRes)
 {
   int err = -1;
   if (m_ValuesAreCached == false)
@@ -375,14 +422,14 @@ std::vector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) 
-	{ 
-		std::vector<float> axis(3);
-		axis[0] = 0.0;
-		axis[1] = 0.0;
-		axis[2] = 1.0;
-		return axis; 
-	}
+    if (err < 0)
+    {
+      std::vector<float> axis(3);
+      axis[0] = 0.0;
+      axis[1] = 0.0;
+      axis[2] = 1.0;
+      return axis;
+    }
   }
   return m_SampleTransformationAxis;
 }
@@ -408,14 +455,14 @@ std::vector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
   if (m_ValuesAreCached == false)
   {
     err = readVolumeInfo();
-    if (err < 0) 
-	{ 
-		std::vector<float> axis(3);
-		axis[0] = 0.0;
-		axis[1] = 0.0;
-		axis[2] = 1.0;
-		return axis; 
-	}
+    if (err < 0)
+    {
+      std::vector<float> axis(3);
+      axis[0] = 0.0;
+      axis[1] = 0.0;
+      axis[2] = 1.0;
+      return axis;
+    }
   }
   return m_EulerTransformationAxis;
 }
