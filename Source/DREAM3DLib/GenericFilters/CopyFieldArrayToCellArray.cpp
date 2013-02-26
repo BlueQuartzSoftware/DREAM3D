@@ -94,7 +94,7 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
 
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  if(m_SelectedFieldArrayName.empty() == true)
+      if(m_SelectedFieldArrayName.empty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
@@ -112,6 +112,47 @@ void CopyFieldArrayToCellArray::preflight()
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck(true, 1, 1, 1);
 }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int32_t* grainIds)
+{
+
+
+  std::string cellArrayName = inputData->GetName();
+
+  DataArray<T>* field = DataArray<T>::SafePointerDownCast(inputData.get());
+  if (NULL == field)
+  {
+    return IDataArray::NullPointer();
+  }
+  typename DataArray<T>::Pointer cell = DataArray<T>::CreateArray(voxels, inputData->GetNumberOfComponents(), cellArrayName);
+
+  T* fPtr = field->GetPointer(0);
+  T* cPtr = cell->GetPointer(0);
+
+  int32_t numComp = field->GetNumberOfComponents();
+  int32_t grainIdx = 0;
+
+  for(int64_t i = 0; i < voxels; ++i)
+  {
+    // Get the grain id (or what ever the user has selected as their "Grain" identifier
+    grainIdx = grainIds[i];
+    // Now get the pointer to the start of the tuple for the Field Array at the give Grain Id Index value
+    T* fSourcePtr = fPtr + (numComp * grainIdx);
+    // Now get the pointer to the start of the tuple for the Cell Array at the proper index
+    T* cDestPtr = cPtr + (numComp * i);
+
+    // Now just raw copy the bytes from the source to the destination
+    ::memcpy(cDestPtr, fSourcePtr, sizeof(T) * numComp);
+  }
+  return cell;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -150,56 +191,55 @@ void CopyFieldArrayToCellArray::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t"))
   {
-	  p = Int8ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<int8_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("uint8_t"))
   {
-      p = UInt8ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<uint8_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("int16_t"))
   {
-      p = Int16ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<int16_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("uint16_t"))
   {
-      p = UInt16ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<uint16_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("int32_t"))
   {
-      p = Int32ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<int32_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("uint32_t"))
   {
-      p = UInt32ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<uint32_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("int64_t"))
   {
-      p = Int64ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<int64_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("uint64_t"))
   {
-      p = UInt64ArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<uint64_t>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("float"))
   {
-      p = FloatArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<float>(inputData, voxels, m_GrainIds);
   }
   else if (dType.compare("double"))
   {
-      p = DoubleArrayType::CreateArray(voxels, inputData->GetNumberOfComponents(), m_SelectedFieldArrayName);
+    p = copyData<double>(inputData, voxels, m_GrainIds);
   }
 
-  for(size_t i=0;i<voxels;i++)
+  if (p.get() != NULL)
   {
-	  
+    m->addCellData(p->GetName(), p);
+
   }
-
-  m->addCellData(p->GetName(), p);
-  addCreatedCellData(p->GetName());
-
+  else
+  {
+    setErrorCondition(-14000);
+    notifyErrorMessage("There was an issue creating a cell data array from a field data array. Either the types did not match or we could not cast the input array to the expected output type", getErrorCondition());
+  }
   notifyStatusMessage("Complete");
 }
-
-
-
 
