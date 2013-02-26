@@ -405,8 +405,7 @@ void RawBinaryReader::execute()
     Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     ReadBinaryFile<int16_t>(p, m_InputFile);
     SWAP_ARRAY(p)
-        SWAP_ARRAY(p)
-        array = p;
+    array = p;
   }
   else if (m_ScalarType == Detail::UInt16)
   {

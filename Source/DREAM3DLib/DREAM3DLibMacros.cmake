@@ -56,8 +56,7 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocFil
     file(APPEND ${AllFiltersHeaderFile} "#include \"${FilterLib}/${filterGroup}/${filterName}.h\"\n")
 
     if( ${publicFilter} STREQUAL TRUE)
-        #message(STATUS "    ${filterName}")
-
+        message(STATUS "    ${filterName}")
         file(APPEND ${CodeGeneratorFile} "  ${filterName}::Pointer _${filterName} = ${filterName}::New();\n")
 
         if(NOT EXISTS ${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h )
