@@ -852,7 +852,6 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
    hid_t      obj_id;
    H5O_info_t statbuf;
    hid_t      attr_id;
- //  hid_t      tid;
    herr_t err = 0;
    herr_t retErr = 0;
    hid_t sid;
@@ -906,11 +905,13 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
             }
           }
           CloseH5S(sid, err, retErr);
+          sid = 0;
         }
-        //CloseH5T(tid, err, retErr); We are passing back the tid so don't close it
       }
       CloseH5A(attr_id, err, retErr);
+      attr_id = 0;
     }
+    else { retErr = -1; }
     err = H5Lite::closeId( obj_id, statbuf.type );
     if (err<0) {
       std::cout << "Error Closing Object ID" << std::endl;
