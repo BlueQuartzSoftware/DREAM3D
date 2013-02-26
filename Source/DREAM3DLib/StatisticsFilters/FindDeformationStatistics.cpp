@@ -60,11 +60,9 @@ m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_PolesArrayName(DREAM3D::FieldData::Poles),
 m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
 m_GrainIds(NULL),
 m_FieldPhases(NULL),
 m_NearestNeighbors(NULL),
-m_SlipSystems(NULL),
 m_GrainReferenceMisorientations(NULL),
 m_KernelAverageMisorientations(NULL),
 m_AvgQuats(NULL),
@@ -143,7 +141,6 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1)
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
   if(err == -302)

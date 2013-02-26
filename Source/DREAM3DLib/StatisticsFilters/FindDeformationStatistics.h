@@ -93,7 +93,6 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SlipSystemsArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
@@ -123,7 +122,6 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_FieldPhases;
     int32_t* m_NearestNeighbors;
-    int32_t* m_SlipSystems;
     float* m_GrainReferenceMisorientations;
     float* m_KernelAverageMisorientations;
     float* m_AvgQuats;
