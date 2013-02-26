@@ -89,22 +89,31 @@ function(gp_item_default_embedded_path_override item default_embedded_path_var)
 endfunction()
 
 # -- Run the BundleUtilities cmake code
+# -- These are DREAM3D Plugins
 file(READ "@QAB_PLUGIN_LIST_FILE@" DREAM3D_PLUGINS)
 set(d3d_plugins "")
-
+# -- Loop on each DREAM3D Plugin to make it is fixed up
 foreach(plugin ${DREAM3D_PLUGINS})
   message(STATUS "Copying file ${plugin} into ${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Plugins")
   file(COPY ${plugin} DESTINATION "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Plugins")
-  get_filename_component(qt_plugin_name "${plugin}" NAME)
-  set(d3d_plugins "${d3d_plugins};${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Plugins/${qt_plugin_name}")
+  get_filename_component(d3d_plugin_name "${plugin}" NAME)
+  set(d3d_plugins "${d3d_plugins};${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/Plugins/${d3d_plugin_name}")
 endforeach(plugin $DREAM3D_PLUGINS)
  
-#message(STATUS "d3d_plugins: ${d3d_plugins}")
+# -- These are actual Qt ImageFormat Plugins
+file(READ "@DREAM3DProj_BINARY_DIR@/Qt_Plugins.txt" DREAM3D_QT_PLUGINS)
+set(d3d_qt_plugins "")
+foreach(plugin ${DREAM3D_QT_PLUGINS})
+  message(STATUS "Copying file ${plugin} into ${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/plugins/imageformats/")
+  file(COPY ${plugin} DESTINATION "${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/plugins/imageformats")
+  get_filename_component(d3d_plugin_name "${plugin}" NAME)
+  set(d3d_qt_plugins "${d3d_qt_plugins};${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app/Contents/plugins/imageformats/${d3d_plugin_name}")
+endforeach(plugin $DREAM3D_QT_PLUGINS)
 
 include(BundleUtilities)
 fixup_bundle("${CMAKE_INSTALL_PREFIX}/@osx_app_name@.app" 
              # Plugins to Install
-             "${d3d_plugins}"
+             "${d3d_plugins};${d3d_qt_plugins}"
              # Directories to Search for Libraries
              "@lib_search_dirs@")
 
