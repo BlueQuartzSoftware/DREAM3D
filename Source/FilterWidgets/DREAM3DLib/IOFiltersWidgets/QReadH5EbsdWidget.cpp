@@ -54,10 +54,17 @@
 // -----------------------------------------------------------------------------
 QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
   sampleTransAngle(0.0),
-  sampleTransAxis(0.0),
-  eulerTransAngle(0.0),
-  eulerTransAxis(0.0)
+  eulerTransAngle(0.0)
 {
+	sampleTransAxis.resize(3);
+  sampleTransAxis[0] = 0.0;
+  sampleTransAxis[1] = 0.0;
+  sampleTransAxis[2] = 1.0;
+
+  eulerTransAxis.resize(3);
+  eulerTransAxis[0] = 0.0;
+  eulerTransAxis[1] = 0.0;
+  eulerTransAxis[2] = 1.0;
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
     setOpenDialogLastDirectory( QDir::homePath() );
@@ -247,7 +254,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
       }
 
       // Now test again to see if we are at the correct file version
-      if (h5Reader->getFileVersion() < 4)
+      if (h5Reader->getFileVersion() >= 4)
       {
         sampleTransAngle = h5Reader->getSampleTransformationAngle();
         sampleTransAxis = h5Reader->getSampleTransformationAxis();
