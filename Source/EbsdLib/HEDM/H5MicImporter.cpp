@@ -199,13 +199,17 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   {
     std::vector<hsize_t> dims;
     H5T_class_t type_class;
-    size_t type_size;
-    hid_t attr_type;
+    size_t type_size = 0;
+    hid_t attr_type = -1;
     err = H5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
-    if (err < 0)
+    if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
       err = H5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
+    }
+    else
+    {
+      H5Aclose(attr_type);
     }
   }
 
