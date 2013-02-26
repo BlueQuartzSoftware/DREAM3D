@@ -11,3 +11,5 @@ Source/Plugins/CMUSurfaceMeshing
 /x64/
 /i386/
 /qtcreator/
+Documentation/Filters/Generated_FilterDocs.qrc
+Source/Plugins/ImageImportPlugin/Documentation/Filters/FilterDocs.qrc
