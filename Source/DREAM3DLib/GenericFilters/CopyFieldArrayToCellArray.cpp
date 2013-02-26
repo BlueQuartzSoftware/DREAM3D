@@ -189,43 +189,43 @@ void CopyFieldArrayToCellArray::execute()
 
   std::string dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
-  if (dType.compare("int8_t"))
+  if (dType.compare("int8_t") == 0)
   {
     p = copyData<int8_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("uint8_t"))
+  else if (dType.compare("uint8_t") == 0)
   {
     p = copyData<uint8_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("int16_t"))
+  else if (dType.compare("int16_t") == 0)
   {
     p = copyData<int16_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("uint16_t"))
+  else if (dType.compare("uint16_t") == 0)
   {
     p = copyData<uint16_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("int32_t"))
+  else if (dType.compare("int32_t") == 0)
   {
     p = copyData<int32_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("uint32_t"))
+  else if (dType.compare("uint32_t") == 0)
   {
     p = copyData<uint32_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("int64_t"))
+  else if (dType.compare("int64_t") == 0)
   {
     p = copyData<int64_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("uint64_t"))
+  else if (dType.compare("uint64_t") == 0)
   {
     p = copyData<uint64_t>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("float"))
+  else if (dType.compare("float") == 0)
   {
     p = copyData<float>(inputData, voxels, m_GrainIds);
   }
-  else if (dType.compare("double"))
+  else if (dType.compare("double") == 0)
   {
     p = copyData<double>(inputData, voxels, m_GrainIds);
   }
