@@ -114,6 +114,13 @@ file(MAKE_DIRECTORY ${ImageImportPlugin_BINARY_DIR}/Temp)
 configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
                 ${ImageImportPlugin_BINARY_DIR}/FilterWidgetCodeGen.h)
 
+# --------------------------------------------------------------------
+# On Linux we need -fPIC for linking static and shared libraries
+if (UNIX AND NOT APPLE)
+  set_source_files_properties(${ImageImportPlugin_Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
+  set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.h PROPERTIES COMPILE_FLAGS -fPIC)
+  set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp PROPERTIES COMPILE_FLAGS -fPIC)
+endif()
 
 add_executable(ImageImportWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                             ${ImageImportPlugin_BINARY_DIR}/FilterWidgetCodeGen.h
@@ -209,13 +216,6 @@ set(ImageImportPlugin_Project_SRCS
    ${ImageImportPlugin_MOC_SRCS}
    ${ImageImportPlugin_Generated_RC_SRCS}
    )
-
-
-# --------------------------------------------------------------------
-# On Linux we need -fPIC for linking static and shared libraries
-if (UNIX AND NOT APPLE)
-set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
-endif()
 
 # --------------------------------------------------------------------
 # Setup output Directory for the plugin

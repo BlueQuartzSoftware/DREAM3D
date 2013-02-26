@@ -200,10 +200,10 @@ function(BuildQtAppBundle)
         get_filename_component(qt_plugin_name "${pi}" NAME)
         get_filename_component(qt_plugin_type_path "${pi}" PATH)
         get_filename_component(qt_plugin_type "${qt_plugin_type_path}" NAME)
-        install(PROGRAMS ${pi}
-                DESTINATION "${pi_dest}/${qt_plugin_type}"
-                COMPONENT ${QAB_COMPONENT}
-        )
+        #install(PROGRAMS ${pi}
+        #        DESTINATION "${pi_dest}/${qt_plugin_type}"
+        #        COMPONENT ${QAB_COMPONENT}
+        #)
         list(APPEND app_plugin_list "\${CMAKE_INSTALL_PREFIX}/${pi_dest}/${qt_plugin_type}/${qt_plugin_name}")
     endforeach()
     list(REMOVE_DUPLICATES lib_search_dirs)
@@ -262,7 +262,25 @@ function(BuildQtAppBundle)
                 "${LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT}" @ONLY IMMEDIATE)
         install(PROGRAMS "${LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT}"
                 DESTINATION "bin"
-                COMPONENT ${QAB_COMPONENT} )
+                COMPONENT ${QAB_COMPONENT})
+        set(lib_suffix "")
+        set(build_type "@CMAKE_BUILD_TYPE@")
+        if (${build_type} STREQUAL "Debug")
+            set(lib_suffix "_debug")
+        endif()
+
+	    set(LINUX_INSTALL_LIBS_CMAKE_SCRIPT
+                "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
+        set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
+                "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_InstallLibraries.sh")
+
+	    CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
+			"${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
+        set(PROJECT_INSTALL_DIR ${linux_app_name}.app)
+        CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/InstallLibraries.sh.in"
+                "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
+
+        install(SCRIPT "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
     endif()
 
 
