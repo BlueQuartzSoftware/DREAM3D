@@ -36,6 +36,9 @@
 #include "EbsdToH5Ebsd.h"
 
 #include "H5Support/H5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
+
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/StringUtils.h"
@@ -208,6 +211,8 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
     return;
   }
+
+  HDF5ScopedFileSentinel sentinel(&fileId, true);
 
   err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
   if(err < 0)
@@ -461,6 +466,7 @@ void EbsdToH5Ebsd::execute()
     err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
   }
   err = H5Utilities::closeFile(fileId);
+  fileId = -1;
   notifyStatusMessage("Import Complete");
 }
 
