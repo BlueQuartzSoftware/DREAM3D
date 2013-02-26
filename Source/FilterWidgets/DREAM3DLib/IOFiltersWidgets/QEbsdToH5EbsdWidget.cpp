@@ -558,7 +558,7 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 	m_EulerTransformationAxis.resize(3);
 	if (mapping == Ebsd::TSLdefault)
 	{ 
-		m_SampleTransformationAngle = 90.0; 
+		m_SampleTransformationAngle = 180.0; 
 		m_SampleTransformationAxis[0] = 0.0; 
 		m_SampleTransformationAxis[1] = 1.0; 
 		m_SampleTransformationAxis[2] = 0.0; 
@@ -569,7 +569,7 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 	}
     else if (mapping == Ebsd::HKLdefault)
 	{ 
-		m_SampleTransformationAngle = 90.0; 
+		m_SampleTransformationAngle = 180.0; 
 		m_SampleTransformationAxis[0] = 0.0; 
 		m_SampleTransformationAxis[1] = 1.0; 
 		m_SampleTransformationAxis[2] = 0.0; 
