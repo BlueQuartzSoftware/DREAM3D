@@ -160,9 +160,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-      if(m_InputFile.empty() == true)
+  if(m_InputFile.empty() == true)
   {
     ss << "The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
@@ -256,6 +256,7 @@ void InitializeSyntheticVolume::execute()
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
+  read_data->setReadAllArrays(true);
   read_data->setVoxelDataContainer(getVoxelDataContainer());
   read_data->execute();
 
