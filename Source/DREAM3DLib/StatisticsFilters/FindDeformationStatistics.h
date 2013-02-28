@@ -80,6 +80,10 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     virtual ~FindDeformationStatistics();
 
 	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)	
+	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
@@ -125,6 +129,9 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     float* m_GrainReferenceMisorientations;
     float* m_KernelAverageMisorientations;
     float* m_AvgQuats;
+    float* m_F1;
+    float* m_F1spt;
+    float* m_F7;
     float* m_GrainAvgMisorientations;
     int32_t* m_Poles;
     float* m_Schmids;
