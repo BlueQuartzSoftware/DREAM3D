@@ -102,7 +102,7 @@ class RotateSampleRefFrameImpl
 
       int64_t* newindicies = newIndicesPtr->GetPointer(0);
       int64_t index = 0;
-	  int64_t ktot, jtot;
+    int64_t ktot, jtot;
 //      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
@@ -113,10 +113,10 @@ class RotateSampleRefFrameImpl
       for (size_t k = zStart; k < zEnd; k++)
       {
         ktot = (m_params->xpNew*m_params->ypNew)*k;
-        for (size_t j = 0; j < m_params->ypNew; j++)
+        for (size_t j = yStart; j < yEnd; j++)
         {
           jtot = (m_params->xpNew)*j;
-          for (size_t i = 0; i < m_params->xpNew; i++)
+          for (size_t i = xStart; i < xEnd; i++)
           {
             index = ktot + jtot + i;
             newindicies[index] = -1;
