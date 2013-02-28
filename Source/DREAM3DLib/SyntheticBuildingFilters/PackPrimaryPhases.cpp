@@ -60,7 +60,7 @@
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
-
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -86,6 +86,7 @@ class AssignGapsImpl
     DimType dims[3];
     float radcur[3];
     float res[3];
+    float size[3];
     int32_t* m_GrainIds;
     float xc;
     float yc;
@@ -100,7 +101,7 @@ class AssignGapsImpl
   public:
     AssignGapsImpl(DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
                    float* xx, std::map<unsigned int, ShapeOps*>* shapeOps,
-                   unsigned int shapeClass, float gA[3][3], int cur_grain,
+                   unsigned int shapeClass, float gA[3][3], float* size, int cur_grain,
     Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_GrainIds(grainIds),
       m_ShapeOps(shapeOps),
@@ -119,13 +120,13 @@ class AssignGapsImpl
       zc = xx[2];
 
       ga[0][0] = gA[0][0];
-      ga[0][1] = gA[1][0];
-      ga[0][2] = gA[2][0];
-      ga[1][0] = gA[0][1];
+      ga[0][1] = gA[0][1];
+      ga[0][2] = gA[0][2];
+      ga[1][0] = gA[1][0];
       ga[1][1] = gA[1][1];
-      ga[1][2] = gA[2][1];
-      ga[2][0] = gA[0][2];
-      ga[2][1] = gA[1][2];
+      ga[1][2] = gA[1][2];
+      ga[2][0] = gA[2][0];
+      ga[2][1] = gA[2][1];
       ga[2][2] = gA[2][2];
 
       newownersPtr = newowners;
@@ -137,12 +138,12 @@ class AssignGapsImpl
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
+    void convert(int zStart, int zEnd, int yStart, int yEnd, int xStart, int xEnd) const
     {
 
-      size_t column = 0;
-      size_t row = 0;
-      size_t plane = 0;
+      int column = 0;
+      int row = 0;
+      int plane = 0;
       int index = 0;
       float coords[3] = {0.0f, 0.0f, 0.0f};
       float inside = 0.0f;
@@ -152,11 +153,66 @@ class AssignGapsImpl
       std::map<unsigned int, ShapeOps*>& shapeOps = *m_ShapeOps;
       int32_t* newowners = newownersPtr->GetPointer(0);
       float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
+      DimType dim0_dim_1 = dims[0] * dims[1];
+      for (DimType iter1 = xStart; iter1 < xEnd; iter1++)
+      {
+        column = iter1;
+        if (iter1 < 0) column = iter1 + dims[0];
+        else if (iter1 > dims[0] - 1) column = iter1 - dims[0];
 
+        for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
+        {
+          row = iter2;
+          size_t row_dim = row * dims[0];
+          if (iter2 < 0) row = iter2 + dims[1];
+          else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
+          {
+            plane = iter3;
+
+            if (iter3 < 0) plane = iter3 + dims[2];
+            else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+
+            index = static_cast<int>( (plane * dim0_dim_1) + (row_dim) + column );
+            if(m_GrainIds[index] <= 0)
+            {
+              inside = -1;
+              coords[0] = float(column) * res[0];
+              coords[1] = float(row) * res[1];
+              coords[2] = float(plane) * res[2];
+              if (iter1 < 0) coords[0] = coords[0] - size[0];
+              else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
+
+              if (iter2 < 0) coords[1] = coords[1] - size[1];
+              else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
+              if (iter3 < 0) coords[2] = coords[2] - size[2];
+              else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
+
+              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+              if (dist < radcur1squared)
+              {
+                coords[0] = coords[0] - xc;
+                coords[1] = coords[1] - yc;
+                coords[2] = coords[2] - zc;
+                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+                float axis1comp = coordsRotated[0] / radcur[0];
+                float axis2comp = coordsRotated[1] / radcur[1];
+                float axis3comp = coordsRotated[2] / radcur[2];
+                inside = shapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+                if (inside >= 0 && inside > ellipfuncs[index])
+                {
+                  newowners[index] = curGrain;
+                  ellipfuncs[index] = inside;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range3d<size_t, size_t, size_t> &r) const
+    void operator()(const tbb::blocked_range3d<int, int, int> &r) const
     {
       convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
     }
@@ -276,25 +332,25 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  //Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+      //Field Data
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
-  //Ensemble Data
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
+      //Ensemble Data
+      typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
+      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss.str("");
@@ -1507,7 +1563,7 @@ void PackPrimaryPhases::assign_voxels()
       if (zmin < 0) zmin = 0;
       if (zmax > dims[2] - 1) zmax = dims[2] - 1;
     }
-	float radcur1squared = radcur1*radcur1;
+    float radcur1squared = radcur1*radcur1;
     for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
     {
       for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
@@ -1609,12 +1665,14 @@ void PackPrimaryPhases::assign_gaps()
   float coordsRotated[3];
   float dist;
   float coords[3];
+  float size[3] = {sizex, sizey, sizez};
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
+  float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "newowners");
   int32_t* newowners = newownersPtr->GetPointer(0);
@@ -1624,12 +1682,28 @@ void PackPrimaryPhases::assign_gaps()
   float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
 
+  float grainsPerTime = 0;
+  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t currentMillis = millis;
+  int cycle = 0;
+  int lastUnassignedCount = 0;
+  bool sanityFailed = false;
   while (unassignedcount != 0)
   {
     unassignedcount = 0;
     timestep = timestep + 50;
+    cycle++;
     for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
     {
+      grainsPerTime++;
+      currentMillis = MXA::getMilliSeconds();
+      if (currentMillis - millis > 1000)
+      {
+        float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
+        std::cout << "Cycle: " << cycle << "  Grains/Second: " << rate << "  Unassigned Count: " << lastUnassignedCount <<  std::endl;
+        grainsPerTime = 0;
+        millis = MXA::getMilliSeconds();
+      }
       float volcur = m_Volumes[i];
       float bovera = m_AxisLengths[3*i+1];
       float covera = m_AxisLengths[3*i+2];
@@ -1670,10 +1744,11 @@ void PackPrimaryPhases::assign_gaps()
       plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
       xmin = int(column - ((radcur1 / xRes) + 1));
       xmax = int(column + ((radcur1 / xRes) + 1));
-      ymin = int(row - ((radcur1 / yRes) + 1));
-      ymax = int(row + ((radcur1 / yRes) + 1));
-      zmin = int(plane - ((radcur1 / zRes) + 1));
-      zmax = int(plane + ((radcur1 / zRes) + 1));
+      ymin = int(row - ((radcur2 / yRes) + 1)); // <======================
+      ymax = int(row + ((radcur2 / yRes) + 1)); // <======================
+      zmin = int(plane - ((radcur3 / zRes) + 1)); // <======================
+      zmax = int(plane + ((radcur3 / zRes) + 1)); // <======================
+
       if (m_PeriodicBoundaries == true)
       {
         if (xmin < -dims[0]) xmin = -dims[0];
@@ -1693,72 +1768,43 @@ void PackPrimaryPhases::assign_gaps()
         if (zmax > dims[2] - 1) zmax = dims[2] - 1;
       }
 
+      if (i == 1)
+      {
+        std::cout << xmin << " " << xmax << " " << ymin << " " << ymax << " " << zmin << " " << zmax << std::endl;
+      }
+      // Sanity Check the size of the grains:
+      // Just check the first grain
+      if (xmin == 0 && xmax == dims[0] - 1
+          && ymin == 0 && ymax == dims[1] - 1
+          && zmin == 0 && zmax == dims[2] - 1 )
+      {
+        sanityFailed = true;
+        break;
+      }
+
       float radCur[3] = { radcur1, radcur2, radcur3 };
       float xx[3] = {xc, yc, zc };
 
-#if 0
+//#if 0
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-      tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1),
-                        AssignGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1),
+                        AssignGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
 #else
-      AssignGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, i, newownersPtr, ellipfuncsPtr);
+      AssignGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1);
 #endif
-#endif
 
 
-	  float radcur1squared = radcur1*radcur1;
-      for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
-      {
-        for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
-        {
-          for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
-          {
-            column = iter1;
-            row = iter2;
-            plane = iter3;
-            if (iter1 < 0) column = iter1 + dims[0];
-            if (iter1 > dims[0] - 1) column = iter1 - dims[0];
-            if (iter2 < 0) row = iter2 + dims[1];
-            if (iter2 > dims[1] - 1) row = iter2 - dims[1];
-            if (iter3 < 0) plane = iter3 + dims[2];
-            if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-            index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
-            if(m_GrainIds[index] <= 0)
-            {
-              inside = -1;
-              coords[0] = float(column) * xRes;
-              coords[1] = float(row) * yRes;
-              coords[2] = float(plane) * zRes;
-              if (iter1 < 0) coords[0] = coords[0] - sizex;
-              if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
-              if (iter2 < 0) coords[1] = coords[1] - sizey;
-              if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
-              if (iter3 < 0) coords[2] = coords[2] - sizez;
-              if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
-              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              if (dist < radcur1squared)
-              {
-                coords[0] = coords[0] - xc;
-                coords[1] = coords[1] - yc;
-                coords[2] = coords[2] - zc;
-                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] / radcur1;
-                float axis2comp = coordsRotated[1] / radcur2;
-                float axis3comp = coordsRotated[2] / radcur3;
-                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-                if (inside >= 0 && inside > ellipfuncs[index])
-                {
-                  newowners[index] = i;
-                  ellipfuncs[index] = inside;
-                }
-              }
-            }
-          }
-        }
-      }
     }
+    // END OF THE GRAIN LOOP
+    if (sanityFailed == true)
+    {
+      setErrorCondition(-6666);
+      notifyErrorMessage("Packing Primary Phases Failed to set all the grains correctly.", getErrorCondition());
+      break;
+    }
+
     for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
     {
       if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
@@ -1766,6 +1812,22 @@ void PackPrimaryPhases::assign_gaps()
       newowners[i] = -1;
       ellipfuncs[i] = -1.0;
     }
+
+    lastUnassignedCount = unassignedcount;
+#if 0
+    std::stringstream ss ;
+    ss << "/tmp/PackPrimaryPhase_" << cycle << ".dream3d";
+    DataContainerWriter::Pointer writer = DataContainerWriter::New();
+    writer->setVoxelDataContainer(getVoxelDataContainer());
+
+    writer->setOutputFile(ss.str());
+    writer->setWriteXdmfFile(true);
+    writer->setWriteSolidMeshData(false);
+    writer->setWriteSurfaceMeshData(false);
+    writer->setWriteVoxelData(true);
+    writer->execute();
+#endif
+
   }
   for (int i = 0; i < totpoints; i++)
   {

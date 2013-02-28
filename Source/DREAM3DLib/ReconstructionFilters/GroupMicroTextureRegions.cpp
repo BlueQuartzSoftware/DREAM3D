@@ -67,10 +67,10 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
+m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_CAxisTolerance(1.0f),
 m_GrainIds(NULL),
@@ -269,17 +269,17 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         q1[3] = m_AvgQuats[5*firstgrain+3];
         q1[4] = m_AvgQuats[5*firstgrain+4];
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-	    OrientationMath::QuattoMat(q1, g1);
-		//transpose the g matrix so when caxis is multiplied by it
-		//it will give the sample direction that the caxis is along
-		MatrixMath::transpose3x3(g1, g1t);
-		MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
-		//normalize so that the dot product can be taken below without
-		//dividing by the magnitudes (they would be 1)
-		MatrixMath::normalize3x1(c1);
+      OrientationMath::QuattoMat(q1, g1);
+    //transpose the g matrix so when caxis is multiplied by it
+    //it will give the sample direction that the caxis is along
+    MatrixMath::transpose3x3(g1, g1t);
+    MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+    //normalize so that the dot product can be taken below without
+    //dividing by the magnitudes (they would be 1)
+    MatrixMath::normalize3x1(c1);
 
-		
-		for (int l = 0; l < size; l++)
+
+    for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           size_t neigh = neighborlist[firstgrain][l];
@@ -293,16 +293,16 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
               q2[2] = m_AvgQuats[5*neigh+2];
               q2[3] = m_AvgQuats[5*neigh+3];
               q2[4] = m_AvgQuats[5*neigh+4];
-			  OrientationMath::QuattoMat(q2, g2);
-			  //transpose the g matrix so when caxis is multiplied by it
-			  //it will give the sample direction that the caxis is along
-			  MatrixMath::transpose3x3(g2, g2t);
-			  MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
-			  //normalize so that the dot product can be taken below without
-			  //dividing by the magnitudes (they would be 1)
-			  MatrixMath::normalize3x1(c2);
+        OrientationMath::QuattoMat(q2, g2);
+        //transpose the g matrix so when caxis is multiplied by it
+        //it will give the sample direction that the caxis is along
+        MatrixMath::transpose3x3(g2, g2t);
+        MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
+        //normalize so that the dot product can be taken below without
+        //dividing by the magnitudes (they would be 1)
+        MatrixMath::normalize3x1(c2);
 
-			  w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+        w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
               w = acosf(w);
               if (w <= m_CAxisTolerance || (m_pi-w) <= m_CAxisTolerance)
               {
