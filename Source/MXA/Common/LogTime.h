@@ -37,16 +37,16 @@
 void __stdcall GetSystemTimeAsFileTime(FILETIME*);
 
 inline void CMP_gettimeofday(struct timeval* p, void* tz /* IGNORED */)
- {
+{
   union {
-     long long ns100; /*time since 1 Jan 1601 in 100ns units */
-   FILETIME ft;
+      long long ns100; /*time since 1 Jan 1601 in 100ns units */
+      FILETIME ft;
   } now;
 
-    GetSystemTimeAsFileTime( &(now.ft) );
-    p->tv_usec=(long)((now.ns100 / 10LL) % 1000000LL );
-    p->tv_sec= (long)((now.ns100-(116444736000000000LL))/10000000LL);
- }
+  GetSystemTimeAsFileTime( &(now.ft) );
+  p->tv_usec=(long)((now.ns100 / 10LL) % 1000000LL );
+  p->tv_sec= (long)((now.ns100-(116444736000000000LL))/10000000LL);
+}
 
 #define CMP_GET_TIME_OF_DAY CMP_gettimeofday
 #endif /*  GET_TIME_OF_DAY_WARNING */
@@ -88,25 +88,25 @@ inline std::string logTime() {
 
 #ifdef _MSC_VER
 #if _MSC_VER < 1400
-	t = _localtime64(&long_time);
+  t = _localtime64(&long_time);
 #else
   tm time;
   t = &time;
   errno_t tError = _localtime64_s(&time, &long_time);
 #endif
 #else  // Non windows platforms
-	t = localtime(&long_time);
+  t = localtime(&long_time);
 #endif
 
   std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss  << "[" << std::setw(4) << t->tm_year + 1900 << ":"
-    << std::setw(2) << t->tm_mon + 1 << ":"
-    << std::setw(2) << t->tm_mday << " "
-    << std::setw(2) << t->tm_hour << ":"
-    << std::setw(2) << t->tm_min << ":"
-    << std::setw(2) << t->tm_sec << "] ";
+      << std::setw(2) << t->tm_mon + 1 << ":"
+      << std::setw(2) << t->tm_mday << " "
+      << std::setw(2) << t->tm_hour << ":"
+      << std::setw(2) << t->tm_min << ":"
+      << std::setw(2) << t->tm_sec << "] ";
   return ss.str();
 }
 
@@ -135,11 +135,11 @@ inline std::string tifDateTime() {
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss   << std::setw(4) << t->tm_year + 1900 << ":"
-    << std::setw(2) << t->tm_mon + 1 << ":"
-    << std::setw(2) << t->tm_mday << " "
-    << std::setw(2) << t->tm_hour << ":"
-    << std::setw(2) << t->tm_min << ":"
-    << std::setw(2) << t->tm_sec;
+       << std::setw(2) << t->tm_mon + 1 << ":"
+       << std::setw(2) << t->tm_mday << " "
+       << std::setw(2) << t->tm_hour << ":"
+       << std::setw(2) << t->tm_min << ":"
+       << std::setw(2) << t->tm_sec;
   return ss.str();
 }
 
@@ -170,30 +170,44 @@ inline std::string MXAVersionString()
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss << std::setw(4) << t->tm_year + 1900 << "."
-    << std::setw(2) << t->tm_mon + 1 << "."
-    << std::setw(2) << t->tm_mday << " ";;
+     << std::setw(2) << t->tm_mon + 1 << "."
+     << std::setw(2) << t->tm_mday << " ";;
   return ss.str();
 }
 
 namespace MXA {
 
-/**
+  /**
  * @brief returns the number of milliseconds from a platform specified time.
  */
-inline unsigned long long int getMilliSeconds()
-{
+  inline unsigned long long int getMilliSeconds()
+  {
 #ifdef _MSC_VER
-  return (unsigned long long int)(::clock());
+    return (unsigned long long int)(::clock());
 #else
-  struct timeval t1;
-  CMP_GET_TIME_OF_DAY(&t1, NULL);
-  unsigned long long int seconds ( t1.tv_sec );
-  unsigned long long int microSec ( t1.tv_usec );
-  seconds *= 1000;
-  microSec /= 1000;
-  return seconds + microSec; // Both in milliseconds at this point.
+    struct timeval t1;
+    CMP_GET_TIME_OF_DAY(&t1, NULL);
+    unsigned long long int seconds ( t1.tv_sec );
+    unsigned long long int microSec ( t1.tv_usec );
+    seconds *= 1000;
+    microSec /= 1000;
+    return seconds + microSec; // Both in milliseconds at this point.
 #endif
-}
+  }
+
+  inline std::string convertMillisToHrsMinSecs(unsigned long long int millis)
+  {
+    unsigned long long int Hours = millis / (1000*60*60);
+    unsigned long long intMinutes = (millis % (1000*60*60)) / (1000*60);
+    unsigned long long intSeconds = ((millis % (1000*60*60)) % (1000*60)) / 1000;
+    std::stringstream ss;
+    ss.setf(std::ios::fixed);
+    ss.fill('0');
+    ss << std::setw(2) << Hours << ":"
+       << std::setw(2) << intMinutes << ":"
+       << std::setw(2) << intSeconds;
+    return ss.str();
+  }
 
 
 } // end Namespace MXA

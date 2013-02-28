@@ -369,8 +369,7 @@ void PipelineBuilderWidget::setupGui()
     presetFilter->setText(0, "Ebsd 3D Reconstruction");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "ReadH5Ebsd" << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "DataContainerWriter"
-        << "VtkRectilinearGridWriter";
+    presetFilterList << "ReadH5Ebsd" << "MultiThresholdCells"  << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "GenerateIPFColors" << "DataContainerWriter";
     m_presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
   }
 
@@ -385,19 +384,19 @@ void PipelineBuilderWidget::setupGui()
   }
   {
     QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-    presetFilter->setText(0, "Synthetic(Single Phases)");
+    presetFilter->setText(0, "Synthetic(Single Phase)");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases" << "MatchCrystallography" << "DataContainerWriter" << "VtkRectilinearGridWriter";
-    m_presetMap["Synthetic(Single Phases)"] = presetFilterList;
+    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter";
+    m_presetMap["Synthetic(Single Phase)"] = presetFilterList;
   }
   {
     QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-    presetFilter->setText(0, "Synthetic(Two Phases)");
+    presetFilter->setText(0, "Synthetic(Primary + Precipitate)");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "DataContainerWriter" << "VtkRectilinearGridWriter";
-    m_presetMap["Synthetic(Two Phases)"] = presetFilterList;
+    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter";
+    m_presetMap["Synthetic(Primary + Precipitate)"] = presetFilterList;
   }
 
 

@@ -85,38 +85,38 @@
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
-    if (err < 0) {\
-      QMessageBox::critical(this, tr("StatsGenerator"),\
-      tr("There was an error writing the " msg " to the HDF5 file"),\
-      QMessageBox::Ok,\
-      QMessageBox::Ok);\
-      return err;\
-      }
+  if (err < 0) {\
+  QMessageBox::critical(this, tr("StatsGenerator"),\
+  tr("There was an error writing the " msg " to the HDF5 file"),\
+  QMessageBox::Ok,\
+  QMessageBox::Ok);\
+  return err;\
+  }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
+  if (err < 0) {\
   std::cout << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
   std::cout << "  File: " << __FILE__ << std::endl;\
   std::cout << "  Line: " << __LINE__ << std::endl;\
   return err;\
-}
+  }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget *parent) :
-SGWidget(parent),
-m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
-m_PhaseFraction(1.0),
-m_TotalPhaseFraction(1.0),
-m_DataHasBeenGenerated(false),
-m_PhaseIndex(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
-m_SizeDistributionCurve(NULL),
-m_CutOffMin(NULL),
-m_CutOffMax(NULL),
-m_grid(NULL)
+  SGWidget(parent),
+  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_PhaseFraction(1.0),
+  m_TotalPhaseFraction(1.0),
+  m_DataHasBeenGenerated(false),
+  m_PhaseIndex(0),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
+  m_SizeDistributionCurve(NULL),
+  m_CutOffMin(NULL),
+  m_CutOffMax(NULL),
+  m_grid(NULL)
 {
   setupUi(this);
   setupGui();
@@ -182,7 +182,7 @@ void PrimaryPhaseWidget::setupGui()
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
   // Register the Recrystallized Preset
-//  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
+  //  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
@@ -197,69 +197,69 @@ void PrimaryPhaseWidget::setupGui()
 
   StatsGenPlotWidget* w = m_Omega3Plot;
 
-   w->setPlotTitle(QString("Size Vs. Omega 3"));
-   w->setXAxisName(QString("Omega 3"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVOmega3);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_Omega3Plot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w->setPlotTitle(QString("Size Vs. Omega 3"));
+  w->setXAxisName(QString("Omega 3"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::Beta);
+  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVOmega3);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_Omega3Plot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
 
-   w = m_BOverAPlot;
-   w->setPlotTitle(QString("B/A Shape Distribution"));
-   w->setXAxisName(QString("B/A"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVBoverA);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_BOverAPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w = m_BOverAPlot;
+  w->setPlotTitle(QString("B/A Shape Distribution"));
+  w->setXAxisName(QString("B/A"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::Beta);
+  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVBoverA);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_BOverAPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
-   w = m_COverAPlot;
-   w->setPlotTitle(QString("C/A Shape Distribution"));
-   w->setXAxisName(QString("C/A"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverA);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_COverAPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w = m_COverAPlot;
+  w->setPlotTitle(QString("C/A Shape Distribution"));
+  w->setXAxisName(QString("C/A"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::Beta);
+  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVCoverA);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_COverAPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
-   w = m_NeighborPlot;
-   w->setPlotTitle(QString("Neighbors Distributions"));
-   w->setXAxisName(QString("Number of Grains (within 1 diameter)"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-   w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_NeighborPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w = m_NeighborPlot;
+  w->setPlotTitle(QString("Neighbors Distributions"));
+  w->setXAxisName(QString("Number of Grains (within 1 diameter)"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  w->setStatisticsType(DREAM3D::StatisticsType::Grain_SizeVNeighbors);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_NeighborPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
@@ -372,10 +372,10 @@ int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float &mu, float &sigma, f
   }
 
   maxCutOff = m_MaxSigmaCutOff->text().toFloat(&ok);
-   if (ok == false)
-   {
-     return 0;
-   }
+  if (ok == false)
+  {
+    return 0;
+  }
 
   stepSize = m_BinStepSize->text().toFloat(&ok);
   if (ok == false)
@@ -412,9 +412,9 @@ void PrimaryPhaseWidget::dataWasEdited()
 void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList)
-    {
-      w->setEnabled(b);
-    }
+  {
+    w->setEnabled(b);
+  }
 }
 
 
@@ -524,14 +524,14 @@ int PrimaryPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCu
 //
 // -----------------------------------------------------------------------------
 int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
-                                     float minCutOff, float maxCutOff,
-                                     float binStepSize,
-                                     QwtArray<float> &binsizes,
-                                     QwtArray<float> &xCo,
-                                     QwtArray<float> &yCo,
-                                     float &xMax, float &yMax,
-                                     QwtArray<float> &x,
-                                     QwtArray<float> &y)
+                                               float minCutOff, float maxCutOff,
+                                               float binStepSize,
+                                               QwtArray<float> &binsizes,
+                                               QwtArray<float> &xCo,
+                                               QwtArray<float> &yCo,
+                                               float &xMax, float &yMax,
+                                               QwtArray<float> &x,
+                                               QwtArray<float> &y)
 {
   int err = 0;
   int size = 250;
@@ -544,8 +544,8 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
     return -1;
   }
 
-//  float xMax = std::numeric_limits<float >::min();
-//  float yMax = std::numeric_limits<float >::min();
+  //  float xMax = std::numeric_limits<float >::min();
+  //  float yMax = std::numeric_limits<float >::min();
   for (int i = 0; i < size; ++i)
   {
     //   std::cout << x[i] << "  " << y[i] << std::endl;
@@ -703,15 +703,15 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
-    if (err < 0)  {\
-      QString msg ("Error Writing Data ");\
-      msg.append(QString::fromStdString(var));\
-      msg.append(" to the HDF5 file");\
-      QMessageBox::critical(this, tr("StatsGenerator"),\
-                                    msg,\
-                                    QMessageBox::Default);\
-      retErr = -1;\
-    }
+  if (err < 0)  {\
+  QString msg ("Error Writing Data ");\
+  msg.append(QString::fromStdString(var));\
+  msg.append(" to the HDF5 file");\
+  QMessageBox::critical(this, tr("StatsGenerator"),\
+  msg,\
+  QMessageBox::Default);\
+  retErr = -1;\
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -721,8 +721,8 @@ int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   if (m_PhaseIndex < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-                                  tr("The Phase Index is Less than 1. This is not allowed."),
-                                  QMessageBox::Default);
+                          tr("The Phase Index is Less than 1. This is not allowed."),
+                          QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
@@ -731,7 +731,7 @@ int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   float sigma = 1.0f;
   float minCutOff = 1.0f;
   float maxCutOff = 1.0f;
- // float stepSize = 1.0f;
+  // float stepSize = 1.0f;
   float binStep = 1.0f;
   gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
@@ -756,7 +756,7 @@ int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   float sdlogdiam = sigma;
   float stepSize = binStep;
 
- // size_t nBins = 0;
+  // size_t nBins = 0;
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -819,7 +819,7 @@ int PrimaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
     primaryStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
   }
 
- // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+  // err = m_NeighborPlot->writeDataToHDF5(writer, DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
   {
     VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
     primaryStatsData->setGrainSize_Neighbors(data);
@@ -877,7 +877,7 @@ void PrimaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int ind
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
   m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
- // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
+  // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
 
   /* SEt the BinNumbers data set */
