@@ -48,10 +48,10 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
 AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_F1ArrayName("F1"),
 m_F1sptArrayName("F1spt"),
 m_F7ArrayName("F7"),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
@@ -64,14 +64,14 @@ m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_PolesArrayName(DREAM3D::FieldData::Poles),
 m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
 m_GrainIds(NULL),
-m_F1(NULL),
-m_F1spt(NULL),
-m_F7(NULL),
 m_FieldPhases(NULL),
 m_NearestNeighbors(NULL),
 m_GrainReferenceMisorientations(NULL),
 m_KernelAverageMisorientations(NULL),
 m_AvgQuats(NULL),
+m_F1(NULL),
+m_F1spt(NULL),
+m_F7(NULL),
 m_GrainAvgMisorientations(NULL),
 m_Poles(NULL),
 m_Schmids(NULL),
@@ -234,20 +234,20 @@ void FindDeformationStatistics::execute()
   float gamvmprime[20][2];
   float kmvdis[20][2];
   float gamvdis[20][2];
-  float kmvsfdistthresh[20][2];
-  float gamvsfdistthresh[20][2];
-  float kmvF1distthresh[20][2];
-  float gamvF1distthresh[20][2];
-  float kmvF1sptdistthresh[20][2];
-  float gamvF1sptdistthresh[20][2];
-  float kmvF7distthresh[20][2];
-  float gamvF7distthresh[20][2];
-  float kmvmprimedistthresh[20][2];
-  float gamvmprimedistthresh[20][2];
-  float kmvdisdistthresh[20][2];
-  float gamvdisdistthresh[20][2];
-  float kmvsfmmmprimethresh[20][2];
-  float gamvsfmmmprimethresh[20][2];
+//  float kmvsfdistthresh[20][2];
+//  float gamvsfdistthresh[20][2];
+//  float kmvF1distthresh[20][2];
+//  float gamvF1distthresh[20][2];
+//  float kmvF1sptdistthresh[20][2];
+//  float gamvF1sptdistthresh[20][2];
+//  float kmvF7distthresh[20][2];
+//  float gamvF7distthresh[20][2];
+//  float kmvmprimedistthresh[20][2];
+//  float gamvmprimedistthresh[20][2];
+//  float kmvdisdistthresh[20][2];
+//  float gamvdisdistthresh[20][2];
+//  float kmvsfmmmprimethresh[20][2];
+//  float gamvsfmmmprimethresh[20][2];
   int kambin, grmbin;
   int gbbin, tjbin, qpbin;
   int sfbin, mprimebin, F1bin, F1sptbin, F7bin, disbin;
@@ -322,12 +322,12 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
       }
       else
       {
         w = 0;
-		mprime = 0;
+    mprime = 0;
       }
       avgmprime = avgmprime + mprime;
       avgDIS = avgDIS + w;
@@ -357,9 +357,9 @@ void FindDeformationStatistics::execute()
       qpdist = m_QPEuclideanDistances[i];
       gname2 = m_NearestNeighbors[i * 3 + 0];
       sf = m_Schmids[gname];
-	  F1 = m_F1[i];
-	  F1spt = m_F1spt[i];
-	  F7 = m_F7[i];
+    F1 = m_F1[i];
+    F1spt = m_F1spt[i];
+    F7 = m_F7[i];
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname + j];
@@ -369,32 +369,32 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
       }
       else
       {
         w = 0;
-		mprime = 0;
+    mprime = 0;
       }
       if((kam/avgKAM) >= 1) kambin = 10+int(((kam/avgKAM)-1.0)/0.25);
-	  else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
+    else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
       if((grm/avgGRM) >= 1) grmbin = 10+int(((grm/avgGRM)-1.0)/0.25);
-	  else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
+    else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
       if((sf/avgSF) >= 1) sfbin = 10+int(((sf/avgSF)-1.0)/0.25);
-	  else sfbin = 9-int(((avgSF/sf)-1.0)/0.25);
+    else sfbin = 9-int(((avgSF/sf)-1.0)/0.25);
       if((w/avgDIS) >= 1) disbin = 10+int(((w/avgDIS)-1.0)/0.25);
-	  else disbin = 9-int(((avgDIS/w)-1.0)/0.25);
+    else disbin = 9-int(((avgDIS/w)-1.0)/0.25);
       if((mprime/avgmprime) >= 1) mprimebin = 10+int(((mprime/avgmprime)-1.0)/0.25);
-	  else mprimebin = 9-int(((avgmprime/mprime)-1.0)/0.25);
+    else mprimebin = 9-int(((avgmprime/mprime)-1.0)/0.25);
       if((F1/avgF1) >= 1) F1bin = 10+int(((F1/avgF1)-1.0)/0.25);
-	  else F1bin = 9-int(((avgF1/F1)-1.0)/0.25);
+    else F1bin = 9-int(((avgF1/F1)-1.0)/0.25);
       if((F1spt/avgF1) >= 1) F1sptbin = 10+int(((F1spt/avgF1spt)-1.0)/0.25);
-	  else F1sptbin = 9-int(((avgF1spt/F1spt)-1.0)/0.25);
+    else F1sptbin = 9-int(((avgF1spt/F1spt)-1.0)/0.25);
       if((F7/avgF7) >= 1) F7bin = 10+int(((F7/avgF7)-1.0)/0.25);
-	  else F7bin = 9-int(((avgF7/F7)-1.0)/0.25);
+    else F7bin = 9-int(((avgF7/F7)-1.0)/0.25);
       if(kambin < 0) kambin = 0;
       if(kambin > 19) kambin = 19;
       if(grmbin < 0) grmbin = 0;

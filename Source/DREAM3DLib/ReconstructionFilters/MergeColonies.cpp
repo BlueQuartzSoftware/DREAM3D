@@ -127,10 +127,10 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
 m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_AxisTolerance(1.0f),
@@ -361,7 +361,7 @@ void MergeColonies::execute()
     for(int64_t i = 0; i < totalPoints; ++i)
     {
        m_CellParentIds[i] = pid[ m_CellParentIds[i] ];
-	   m_FieldParentIds[m_GrainIds[i]] = m_CellParentIds[i];
+     m_FieldParentIds[m_GrainIds[i]] = m_CellParentIds[i];
     }
   }
 
