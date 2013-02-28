@@ -146,9 +146,7 @@ class RotateSampleRefFrameImpl
 #endif
 
   private:
-    //    VoxelDataContainer* m;
-    //    uint32_t angle;
-    //    uint32_t axis;
+
 
 };
 
