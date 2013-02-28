@@ -45,7 +45,7 @@
 %\begin{titlepage}
 \begin{center}
 % Upper part of the page
-\textsc{\huge Working with Images in DREAM3D}\\[1.5cm]
+\textsc{\huge Development Notes for DREAM3D}\\[1.5cm]
 \textsc{\large DREAM3D Development Team\\
 Email: dream3d@bluequartz.net}\\[1.5cm]
 %\vfill
@@ -66,9 +66,6 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
 %\newpage
 \section{Intro (or why this file)}
   This is just a dumping ground for ideas that I (mike jackson) am working on.
-   
-\section{Deploying Qt Image Plugins with DREAM3D}
-  Figure out how to deploy the Qt Image Plugins with DREAM3D.
   
 \section{Xdmf File}
   Explain what the Xdmf file is and how it can be used.
@@ -79,9 +76,7 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
   
  One idea was to further break apart the QFilterWidget and to have something like a QFilterProxy object that holds the values from the gui but before the gui stuffs those values into the actual Filter instance object. The QFilterProxy would simply inherit from the QObject class so that we can use the QObject's property system which reading from the QSettings file is going to require. Either that or we generate a QFilterProxy file for each filter like we do for the QFilterWidgets which will add to the amount of code that needs to be compiled but should work in the long run.
 
-\section{Image Filters}
-   Now that we can import an image we should create a filter that can export a volume as a stack of images and do the coloring based on one of the arrays in the Cell Data like grain Ids or IPF Colors.
-   
+
 \section{Execute External Program Filter}
 	We should be able to write a filter that takes the location of a program and the arguments to that program and then DREAM3D will execute that program with the given arguments. Pair this up with the export/import of binary data or images and you now have a way to do somethings in DREAM3D, fork to MatLab or IDL and the bring the output data back into DREAM3D. If enough time we given I would use the Widget for "Comparison" Threshold filter so clicking the "+" button would add another argument. This may make it easier for the user to group their arguments together if the argument list is very long. The preflight would make sure the program is available and maybe show the output from the program?
 
@@ -89,12 +84,9 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
   We should be able to export any of the arrays into a raw binary file for import into other analysis programs. 
   
 \section{DREAM3D Reader}
- Allow the data being read into DREAM3D to be appended to the data container if it does not already exist. Currently when reading the DREAM3D file the entire data containers are wiped out. If the same array is read then the user could have the option to over write the existing array with the data from the file. This opens up the ability to append files together or get data from several different sources.
-\\
-  This custom gui filter should be improved to show the dimensions, resolution and origin of the data. Currently there are times when this information is needed, like when cropping a volume, and it is nowhere to be found. Even just a filter that does nothing but display that information for the current pipeline would be nice.
+ Allow the data being read into DREAM3D to be appended to the data container if it does not already exist. Currently when reading the DREAM3D file the entire data containers are wiped out. If the same array is read then the user could have the option to over write the existing array with the data from the file. This opens up the ability to append files together or get data from several different sources.   
    
-   
-\section{Voxel Dimensions During Pipelin}
+\section{Voxel Dimensions During Pipeline}
 What about adding this information to the QFilterWidget and a "pop-up" window or "disclosable" piece of information?
 
 \section{Documentation}
@@ -123,11 +115,16 @@ What about adding this information to the QFilterWidget and a "pop-up" window or
   \item Python Bindings
   \end{itemize}
   
-\section{Pythong Bindings}
+\section{Python Bindings}
   We need to figure out if it is possible to auto generate python bindings for DREAM3D. This would come in very handy for writing python scripts for processing of data and using other python frameworks like PyQt and Image processing libraries written in python.
+
+\section{Image Filters}
+   Now that we can import an image we should create a filter that can export a volume as a stack of images and do the coloring based on one of the arrays in the Cell Data like grain Ids or IPF Colors.
 
 \section{Image Processing Library Addition}
    We need to probably include ITK, VTK, OpenCV or some other image processing library in DREAM3D if possible rather than writing each filter individually. Lets ride on the coat-tails of someone else.
 
+\section{GUI Enhancements}
+   Be able to "right click" on a "Favorite" filter and Delete/Rename/export it
    
 \end{document}
