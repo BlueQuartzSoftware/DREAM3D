@@ -213,7 +213,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 Stats Files (*.h5 *.hdf5 *.h5stats)") );
+                                                 tr("HDF5 Stats Files (*.h5 *.hdf5 *.h5stats);;All Files(*.*)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
   m_InputFile->blockSignals(true);
