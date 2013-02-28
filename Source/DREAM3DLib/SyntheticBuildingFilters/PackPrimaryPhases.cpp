@@ -1570,42 +1570,35 @@ void PackPrimaryPhases::assign_gaps()
           if (zmin < 0) zmin = 0;
           if (zmax > dims[2] - 1) zmax = dims[2] - 1;
         }
+		float radcur1squared = radcur1*radcur1;
         for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
         {
-          for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
+          column = iter1;
+          coords[0] = float(column) * xRes;
+          if (iter1 < 0) column = iter1 + dims[0];
+          else if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+		  for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
           {
+            row = iter2;
+            if (iter2 < 0) row = iter2 + dims[1];
+            else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
             for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
             {
-              column = iter1;
-              row = iter2;
               plane = iter3;
-              if (iter1 < 0) column = iter1 + dims[0];
-              if (iter1 > dims[0] - 1) column = iter1 - dims[0];
-              if (iter2 < 0) row = iter2 + dims[1];
-              if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+              coords[2] = float(plane) * zRes;
               if (iter3 < 0) plane = iter3 + dims[2];
-              if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+              else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
               index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
               if(m_GrainIds[index] <= 0)
               {
                   inside = -1;
-                  coords[0] = float(column) * xRes;
-                  coords[1] = float(row) * yRes;
-                  coords[2] = float(plane) * zRes;
-                  if (iter1 < 0) coords[0] = coords[0] - sizex;
-                  if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
-                  if (iter2 < 0) coords[1] = coords[1] - sizey;
-                  if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
-                  if (iter3 < 0) coords[2] = coords[2] - sizez;
-                  if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
                   dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-                  dist = sqrtf(dist);
-                  if (dist < radcur1)
+                  if (dist < radcur1squared)
                   {
                     coords[0] = coords[0] - xc;
                     coords[1] = coords[1] - yc;
-                    coords[2] = coords[2] - zc;
-          MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+                    coords[2] = coords[2] - zc;                        
+					MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
                     float axis1comp = coordsRotated[0] / radcur1;
                     float axis2comp = coordsRotated[1] / radcur2;
                     float axis3comp = coordsRotated[2] / radcur3;
