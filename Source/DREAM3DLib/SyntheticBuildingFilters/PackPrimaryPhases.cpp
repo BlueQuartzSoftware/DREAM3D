@@ -175,25 +175,25 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-      //Field Data
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  //Field Data
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
-      //Ensemble Data
-      typedef DataArray<unsigned int> PhaseTypeArrayType;
+  //Ensemble Data
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
-      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss.str("");
@@ -230,9 +230,9 @@ void PackPrimaryPhases::execute()
   int err = 0;
   setErrorCondition(err);
   unsigned long long int Seed = MXA::getMilliSeconds();
-  DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
+  DREAM3D_RANDOMNG_NEW_SEEDED(Seed);
 
-      int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getTotalPoints();
   //size_t totalFields = m->getNumFieldTuples();
   dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -497,11 +497,18 @@ void PackPrimaryPhases::execute()
   planelist.resize(numgrains);
   packqualities.resize(numgrains);
   fillingerror = 1;
+
+  int progGrain = 0;
+  int progGrainInc = numgrains * .01;
   for (size_t i = firstPrimaryField; i < numgrains; i++)
   {
-    std::stringstream ss;
-    ss << "Packing Grains - Placing Grain #" << i;
-    notifyStatusMessage(ss.str());
+    if ((int)i > progGrain + progGrainInc)
+    {
+      ss.str("");
+      ss << "Packing Grains - Placing Grain #" << i << "/" << numgrains;
+      notifyStatusMessage(ss.str());
+      progGrain = i;
+    }
 
     xc = sizex / 2.0f;
     yc = sizey / 2.0f;
@@ -542,14 +549,27 @@ void PackPrimaryPhases::execute()
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
   int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+  progGrain = 0;
+  progGrainInc = totalAdjustments * .01;
+  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t currentMillis = millis;
+  uint64_t startMillis = millis;
+  uint64_t estimatedTime = 0;
+
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    std::stringstream ss;
-    ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration%100 == 0) notifyStatusMessage(ss.str());
+    currentMillis = MXA::getMilliSeconds();
+    if (currentMillis - millis > 1000)
+    {
+      ss.str("");
+      ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
 
-    //    change1 = 0;
-    //    change2 = 0;
+      estimatedTime = (totalAdjustments - iteration) / (iteration / (currentMillis - startMillis));
+
+      ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      notifyStatusMessage(ss.str());
+      millis = MXA::getMilliSeconds();
+    }
     int option = iteration % 2;
 
     if(writeErrorFile == true && iteration % 25 == 0)
@@ -583,14 +603,11 @@ void PackPrimaryPhases::execute()
       move_grain(randomgrain, xc, yc, zc);
       fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
-      //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
-      //      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
       if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
         acceptedmoves++;
       }
-      //      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
       else if(fillingerror > oldfillingerror)
       {
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
@@ -1457,6 +1474,9 @@ void PackPrimaryPhases::assign_voxels()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::assign_gaps()
 {
   notifyStatusMessage("Assigning Gaps");
@@ -1561,7 +1581,7 @@ void PackPrimaryPhases::assign_gaps()
         if (zmin < -dims[2]) zmin = -dims[2];
         if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
       }
-      if (m_PeriodicBoundaries == false)
+      else
       {
         if (xmin < 0) xmin = 0;
         if (xmax > dims[0] - 1) xmax = dims[0] - 1;

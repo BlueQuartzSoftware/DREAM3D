@@ -387,16 +387,16 @@ void PipelineBuilderWidget::setupGui()
     presetFilter->setText(0, "Synthetic(Single Phase)");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter" << "VtkRectilinearGridWriter";
-    m_presetMap["Synthetic(Single Phases)"] = presetFilterList;
+    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter";
+    m_presetMap["Synthetic(Single Phase)"] = presetFilterList;
   }
   {
     QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
     presetFilter->setText(0, "Synthetic(Primary + Precipitate)");
     presetFilter->setIcon(0, QIcon(":/scroll.png"));
     QStringList presetFilterList;
-    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter" << "VtkRectilinearGridWriter";
-    m_presetMap["Synthetic(Two Phases)"] = presetFilterList;
+    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter";
+    m_presetMap["Synthetic(Primary + Precipitate)"] = presetFilterList;
   }
 
 
