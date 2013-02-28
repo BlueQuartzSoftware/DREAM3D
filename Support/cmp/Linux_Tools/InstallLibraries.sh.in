@@ -1,0 +1,52 @@
+#!/bin/bash
+
+InstallPrefix="${1}"
+
+if [ "x@HDF5_IS_SHARED@" = "x1" ]; then
+  echo "Installing into ${1}" 
+fi
+
+if [ "x@HDF5_IS_SHARED@" = "x1" ]; then 
+
+cd "@HDF5_INSTALL@"/lib
+libs=`ls libhdf5@lib_suffix@.s*`
+for l in ${libs}
+do
+    echo "Copy ${l} into Deployment Lib Directory"  
+     cp -d ${l} ${InstallPrefix}/lib/.
+done
+fi
+# We are done with the HDF5 portion.
+
+# Now we need to get the TBB if needed.
+
+#Only copy TBB Libraries if needed
+if [ "@DREAM3D_USE_MULTITHREADED_ALGOS@" = "ON" ]; then
+
+cd "@TBB_LIBRARY_DIR@"
+# Copy the libtbb libraries
+libs=`ls libtbb@lib_suffix@.s*`
+for l in ${libs}
+do
+    echo "Copy ${l} into Deployment Lib Directory"  
+   cp -d ${l} ${InstallPrefix}/lib/.
+done
+
+# Copy the libtbbmalloc libraries
+libs=`ls libtbbmalloc@lib_suffix@.s*`
+for l in ${libs}
+do
+    echo "Copy ${l} into Deployment Lib Directory"  
+     cp -d ${l} ${InstallPrefix}/lib/.
+done
+fi
+
+# We are done with the TBB libraries
+
+# Write a qt.conf file into the bin directory to make sure we load the Qt plugins
+# from the proper location
+echo "[Paths]" > "${InstallPrefix}/bin/qt.conf"
+echo "Plugins = ../plugins" >> "${InstallPrefix}/bin/qt.conf"
+
+
+

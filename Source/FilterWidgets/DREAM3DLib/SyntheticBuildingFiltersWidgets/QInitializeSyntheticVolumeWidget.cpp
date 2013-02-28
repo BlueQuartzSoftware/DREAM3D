@@ -45,6 +45,7 @@
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -212,7 +213,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
                                                  m_OpenDialogLastDirectory,
-                                                 tr("HDF5 Stats Files (*.h5 *.hdf5 *.h5stats)") );
+                                                 tr("HDF5 Stats Files (*.h5 *.hdf5 *.h5stats);;All Files(*.*)") );
   if ( true == file.isEmpty() ){ return; }
   QFileInfo fi (file);
   m_InputFile->blockSignals(true);
@@ -248,6 +249,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         ss << ": Error opening input file '" << m_InputFile->text().toStdString() << "'";
         return;
       }
+      HDF5ScopedFileSentinel sentinel(&fileId, true);
 
       VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
       reader->setHdfFileId(fileId);
@@ -255,6 +257,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       reader->setReadCellData(false);
       reader->setReadFieldData(false);
       reader->setReadEnsembleData(true);
+      reader->setReadAllArrays(true); // THIS IS VERY IMPORTANT to set otherwise nothing gets read.
       reader->execute();
       int err = reader->getErrorCondition();
       if(err < 0)
@@ -265,11 +268,14 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       }
 
       IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+      if (NULL == iPtr.get())
+      {
+        m_DataContainer = VoxelDataContainer::NullPointer();
+        QMessageBox::critical(this, tr("DREAM.3D"), tr("The Ensemble Array 'PhaseTypes' was not found in the File"), QMessageBox::Ok, QMessageBox::Ok);
+        return;
+      }
       // Get the Phases
       DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
-
-    //  iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures);
-    //  DataArray<uint32_t>* xtals = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
       int size = static_cast<int>(phases->GetNumberOfTuples());
       std::vector<std::string> shapeTypeStrings;

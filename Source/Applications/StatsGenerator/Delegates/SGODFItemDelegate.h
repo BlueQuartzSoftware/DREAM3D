@@ -46,6 +46,8 @@
 #include <QtGui/QDoubleValidator>
 #include <QtGui/QStyledItemDelegate>
 
+#include "EbsdLib/EbsdConstants.h"
+
 #include "DREAM3DLib/Common/StatsGen.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
@@ -58,11 +60,12 @@
  */
 class SGODFItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    explicit SGODFItemDelegate(QObject *parent = 0) :
-      QStyledItemDelegate(parent)
+    explicit SGODFItemDelegate(unsigned int crystalStructure, QObject *parent = 0) :
+      QStyledItemDelegate(parent),
+      m_CrystalStructure(crystalStructure)
     {
     }
 
@@ -81,15 +84,24 @@ class SGODFItemDelegate : public QStyledItemDelegate
     {
       QLineEdit* editor;
       QDoubleValidator* validator;
-
+      unsigned int sigma_top = 1;
+      if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
+      {
+        sigma_top = 18;
+      }
+      else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+      {
+        sigma_top = 36;
+      }
       qint32 col = index.column();
       if (col == SGODFTableModel::Sigma)
       {
         editor = new QLineEdit(parent);
         editor->setFrame(false);
         validator = new QDoubleValidator(editor);
-        validator->setDecimals(4);
-        validator->setBottom(1.0);
+        validator->setDecimals(0);
+        validator->setBottom(1);
+        validator->setTop(sigma_top);
         editor->setValidator(validator);
         return editor;
       }
@@ -139,8 +151,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
 
   private:
     QModelIndex m_Index;
-   // QWidget* m_Widget;
-  //  QAbstractItemModel* m_Model;
+    unsigned int m_CrystalStructure;
 
 };
 
