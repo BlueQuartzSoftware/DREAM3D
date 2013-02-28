@@ -65,6 +65,102 @@ const static float m_pi = static_cast<float>(M_PI);
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
   for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+
+/**
+ * @brief
+ */
+class AssignGapsImpl
+{
+    DimType dims[3];
+  public:
+    RotateSampleRefFrameImpl(DimType* dimensions)
+    {
+      dims[0] = dimensions[0];
+      dims[0] = dimensions[0];
+      dims[0] = dimensions[0];
+    }
+    virtual ~RotateSampleRefFrameImpl(){}
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
+    {
+      size_t column;
+      size_t row;
+      size_t plane;
+      for (size_t iter1 = xStart; iter1 < xEnd + 1; iter1++)
+      {
+        column = iter1;
+        for (size_t iter2 = yStart; iter2 < yEnd + 1; iter2++)
+        {
+          row = iter2;
+          for (size_t iter3 = zStart; iter3 < zEnd; iter3++)
+          {
+
+
+            plane = iter3;
+            if (iter1 < 0) column = iter1 + dims[0];
+            if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+            if (iter2 < 0) row = iter2 + dims[1];
+            if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+            if (iter3 < 0) plane = iter3 + dims[2];
+            if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+            index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
+            if(m_GrainIds[index] <= 0)
+            {
+              inside = -1;
+              coords[0] = float(column) * xRes;
+              coords[1] = float(row) * yRes;
+              coords[2] = float(plane) * zRes;
+              if (iter1 < 0) coords[0] = coords[0] - sizex;
+              if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
+              if (iter2 < 0) coords[1] = coords[1] - sizey;
+              if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
+              if (iter3 < 0) coords[2] = coords[2] - sizez;
+              if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
+              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+              dist = sqrtf(dist);
+              if (dist < radcur1)
+              {
+                coords[0] = coords[0] - xc;
+                coords[1] = coords[1] - yc;
+                coords[2] = coords[2] - zc;
+                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+                float axis1comp = coordsRotated[0] / radcur1;
+                float axis2comp = coordsRotated[1] / radcur2;
+                float axis3comp = coordsRotated[2] / radcur3;
+                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+                if (inside >= 0 && inside > ellipfuncs[index])
+                {
+                  newowners[index] = i;
+                  ellipfuncs[index] = inside;
+                }
+              }
+            }
+          }
+        }
+      }
+
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range3d<size_t, size_t, size_t> &r) const
+    {
+      convert(r.pages().begin(), r.pages().end(), r.rows().begin(), r.rows().end(), r.cols().begin(), r.cols().end());
+    }
+#endif
+
+  private:
+
+};
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1486,11 +1582,7 @@ void PackPrimaryPhases::assign_gaps()
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
+
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
@@ -1521,13 +1613,17 @@ void PackPrimaryPhases::assign_gaps()
   FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "ellipfuncs");
   float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
-
+  int cycle = 0;
   while (unassignedcount != 0)
   {
     unassignedcount = 0;
     timestep = timestep + 50;
+
+    std::cout << "cycle: " << cycle++  << "unassignedcount: " << unassignedcount << std::endl;
+
     for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
     {
+      std::cout << "   Grain #: " << i << std::endl;
       float volcur = m_Volumes[i];
       float bovera = m_AxisLengths[3*i+1];
       float covera = m_AxisLengths[3*i+2];
@@ -1590,56 +1686,17 @@ void PackPrimaryPhases::assign_gaps()
         if (zmin < 0) zmin = 0;
         if (zmax > dims[2] - 1) zmax = dims[2] - 1;
       }
-      for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
-      {
-        for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
-        {
-          for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
-          {
-            column = iter1;
-            row = iter2;
-            plane = iter3;
-            if (iter1 < 0) column = iter1 + dims[0];
-            if (iter1 > dims[0] - 1) column = iter1 - dims[0];
-            if (iter2 < 0) row = iter2 + dims[1];
-            if (iter2 > dims[1] - 1) row = iter2 - dims[1];
-            if (iter3 < 0) plane = iter3 + dims[2];
-            if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-            index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
-            if(m_GrainIds[index] <= 0)
-            {
-              inside = -1;
-              coords[0] = float(column) * xRes;
-              coords[1] = float(row) * yRes;
-              coords[2] = float(plane) * zRes;
-              if (iter1 < 0) coords[0] = coords[0] - sizex;
-              if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
-              if (iter2 < 0) coords[1] = coords[1] - sizey;
-              if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
-              if (iter3 < 0) coords[2] = coords[2] - sizez;
-              if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
-              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              dist = sqrtf(dist);
-              if (dist < radcur1)
-              {
-                coords[0] = coords[0] - xc;
-                coords[1] = coords[1] - yc;
-                coords[2] = coords[2] - zc;
-                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] / radcur1;
-                float axis2comp = coordsRotated[1] / radcur2;
-                float axis3comp = coordsRotated[2] / radcur3;
-                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-                if (inside >= 0 && inside > ellipfuncs[index])
-                {
-                  newowners[index] = i;
-                  ellipfuncs[index] = inside;
-                }
-              }
-            }
-          }
-        }
-      }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1),
+                    AssignGapsImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
+
+#else
+  AssignGapsImpl serial(newIndiciesPtr, &params, rotMat);
+  serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
+#endif
+
+
     }
     for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
     {
@@ -1801,6 +1858,7 @@ void PackPrimaryPhases::cleanup_grains()
       currentvlist.clear();
     }
   }
+
   assign_gaps();
   for (int i = 0; i < totpoints; i++)
   {
