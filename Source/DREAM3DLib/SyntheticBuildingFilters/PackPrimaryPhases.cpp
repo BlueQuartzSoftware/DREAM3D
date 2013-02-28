@@ -37,23 +37,30 @@
 #include "PackPrimaryPhases.h"
 
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+
+
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-
+#include "DREAM3DLib/Common/PrimaryStatsData.h"
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
-
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -66,9 +73,9 @@ const static float m_pi = static_cast<float>(M_PI);
   for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
 #if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
+typedef int32_t DimType;
 #else
-  typedef int64_t DimType;
+typedef int64_t DimType;
 #endif
 
 /**
@@ -77,68 +84,109 @@ const static float m_pi = static_cast<float>(M_PI);
 class AssignGapsImpl
 {
     DimType dims[3];
+    float radcur[3];
+    float res[3];
+    int32_t* m_GrainIds;
+    float xc;
+    float yc;
+    float zc;
+    std::map<unsigned int, ShapeOps*>* m_ShapeOps;
+    unsigned int shapeclass;
+    float ga[3][3];
+    int curGrain;
+    Int32ArrayType::Pointer newownersPtr;
+    FloatArrayType::Pointer ellipfuncsPtr;
+
   public:
-    RotateSampleRefFrameImpl(DimType* dimensions)
+    AssignGapsImpl(DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
+                   float* xx, std::map<unsigned int, ShapeOps*>* shapeOps,
+                   unsigned int shapeClass, float gA[3][3], int cur_grain,
+    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
+      m_GrainIds(grainIds),
+      m_ShapeOps(shapeOps),
+      shapeclass(shapeClass),
+      curGrain(cur_grain)
     {
       dims[0] = dimensions[0];
-      dims[0] = dimensions[0];
-      dims[0] = dimensions[0];
+      dims[1] = dimensions[1];
+      dims[2] = dimensions[2];
+      radcur[0] = radCur[0];
+      radcur[1] = radCur[1];
+      radcur[2] = radCur[2];
+
+      xc = xx[0];
+      yc = xx[1];
+      zc = xx[2];
+
+      ga[0][0] = gA[0][0];
+      ga[0][1] = gA[1][0];
+      ga[0][2] = gA[2][0];
+      ga[1][0] = gA[0][1];
+      ga[1][1] = gA[1][1];
+      ga[1][2] = gA[2][1];
+      ga[2][0] = gA[0][2];
+      ga[2][1] = gA[1][2];
+      ga[2][2] = gA[2][2];
+
+      newownersPtr = newowners;
+      ellipfuncsPtr = ellipfuncs;
+
     }
-    virtual ~RotateSampleRefFrameImpl(){}
+    virtual ~AssignGapsImpl(){}
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
     void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
     {
-      size_t column;
-      size_t row;
-      size_t plane;
-      for (size_t iter1 = xStart; iter1 < xEnd + 1; iter1++)
+
+      size_t column = 0;
+      size_t row = 0;
+      size_t plane = 0;
+      int index = 0;
+      float coords[3] = {0.0f, 0.0f, 0.0f};
+      float inside = 0.0f;
+      float dist = 0.0f;
+      float radcur1squared = radcur[0]*radcur[0];
+      float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
+      std::map<unsigned int, ShapeOps*>& shapeOps = *m_ShapeOps;
+      int32_t* newowners = newownersPtr->GetPointer(0);
+      float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
+      for (DimType iter1 = xStart; iter1 < xEnd; iter1++)
       {
         column = iter1;
-        for (size_t iter2 = yStart; iter2 < yEnd + 1; iter2++)
+        coords[0] = float(column) * res[0];
+        if (iter1 < 0) column = iter1 + dims[0];
+        else if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+        for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
         {
           row = iter2;
-          for (size_t iter3 = zStart; iter3 < zEnd; iter3++)
+          if (iter2 < 0) row = iter2 + dims[1];
+          else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
-
-
             plane = iter3;
-            if (iter1 < 0) column = iter1 + dims[0];
-            if (iter1 > dims[0] - 1) column = iter1 - dims[0];
-            if (iter2 < 0) row = iter2 + dims[1];
-            if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+            coords[2] = float(plane) * res[2];
             if (iter3 < 0) plane = iter3 + dims[2];
-            if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+            else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
             index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
             if(m_GrainIds[index] <= 0)
             {
               inside = -1;
-              coords[0] = float(column) * xRes;
-              coords[1] = float(row) * yRes;
-              coords[2] = float(plane) * zRes;
-              if (iter1 < 0) coords[0] = coords[0] - sizex;
-              if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
-              if (iter2 < 0) coords[1] = coords[1] - sizey;
-              if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
-              if (iter3 < 0) coords[2] = coords[2] - sizez;
-              if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
               dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              dist = sqrtf(dist);
-              if (dist < radcur1)
+              if (dist < radcur1squared)
               {
                 coords[0] = coords[0] - xc;
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
-                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] / radcur1;
-                float axis2comp = coordsRotated[1] / radcur2;
-                float axis3comp = coordsRotated[2] / radcur3;
-                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+                MatrixMath::multiply3x3with3x1(const_cast<float(*)[3]>(ga), coords, coordsRotated);
+                float axis1comp = coordsRotated[0] / radcur[0];
+                float axis2comp = coordsRotated[1] / radcur[1];
+                float axis3comp = coordsRotated[2] / radcur[2];
+                inside = shapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
                 if (inside >= 0 && inside > ellipfuncs[index])
                 {
-                  newowners[index] = i;
+                  newowners[index] = curGrain;
                   ellipfuncs[index] = inside;
                 }
               }
@@ -146,7 +194,6 @@ class AssignGapsImpl
           }
         }
       }
-
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -159,7 +206,6 @@ class AssignGapsImpl
   private:
 
 };
-
 
 
 // -----------------------------------------------------------------------------
@@ -271,25 +317,25 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  //Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+      //Field Data
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
-  //Ensemble Data
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
+      //Ensemble Data
+      typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
+      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss.str("");
@@ -648,9 +694,10 @@ void PackPrimaryPhases::execute()
   progGrain = 0;
   progGrainInc = totalAdjustments * .01;
   uint64_t millis = MXA::getMilliSeconds();
-  uint64_t currentMillis = millis;
+  uint64_t currentMillis = millis + 1;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
+  float timeDiff = 1.0f;
 
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
@@ -659,8 +706,9 @@ void PackPrimaryPhases::execute()
     {
       ss.str("");
       ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-
-      estimatedTime = (totalAdjustments - iteration) / (iteration / (currentMillis - startMillis));
+      timeDiff = (float)iteration / (float)(currentMillis - startMillis);
+      if (timeDiff == 0) { timeDiff = 1; }
+      estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
       ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
       notifyStatusMessage(ss.str());
@@ -1582,7 +1630,11 @@ void PackPrimaryPhases::assign_gaps()
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
-
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
@@ -1590,18 +1642,19 @@ void PackPrimaryPhases::assign_gaps()
   };
 
 
-  int index;
+  //int index;
   int timestep = 100;
   int unassignedcount = 1;
   DimType column, row, plane;
-  float inside;
+  //  float inside;
   float xc, yc, zc;
-  float coordsRotated[3];
-  float dist;
-  float coords[3];
+  //  float coordsRotated[3];
+  //  float dist;
+  // float coords[3];
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
-
+  float res[3];
+  m->getResolution(res);
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
@@ -1614,16 +1667,33 @@ void PackPrimaryPhases::assign_gaps()
   float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
   int cycle = 0;
+
+  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t currentMillis = millis + 1;
+  uint64_t startMillis = millis;
+  uint64_t estimatedTime = 0;
+  float timeDiff = 1.0f;
+  std::stringstream ss;
+  size_t lastIteration = firstPrimaryField;
+
+
   while (unassignedcount != 0)
   {
     unassignedcount = 0;
     timestep = timestep + 50;
-
-    std::cout << "cycle: " << cycle++  << "unassignedcount: " << unassignedcount << std::endl;
+    cycle++;
 
     for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
     {
-      std::cout << "   Grain #: " << i << std::endl;
+      currentMillis = MXA::getMilliSeconds();
+      if (currentMillis - millis > 1000)
+      {
+        std::cout << "Cycle = " << cycle << "   Grains/Sec: " << (i - lastIteration)/(currentMillis/1000 - millis/1000) << std::endl;
+        millis = MXA::getMilliSeconds();
+        lastIteration = i;
+      }
+
+
       float volcur = m_Volumes[i];
       float bovera = m_AxisLengths[3*i+1];
       float covera = m_AxisLengths[3*i+2];
@@ -1635,7 +1705,6 @@ void PackPrimaryPhases::assign_gaps()
       //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
       unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
-      // init any values for each of the Shape Ops
       for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
       {
         (*ops).second->init();
@@ -1677,7 +1746,7 @@ void PackPrimaryPhases::assign_gaps()
         if (zmin < -dims[2]) zmin = -dims[2];
         if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
       }
-      else
+      if (m_PeriodicBoundaries == false)
       {
         if (xmin < 0) xmin = 0;
         if (xmax > dims[0] - 1) xmax = dims[0] - 1;
@@ -1686,18 +1755,65 @@ void PackPrimaryPhases::assign_gaps()
         if (zmin < 0) zmin = 0;
         if (zmax > dims[2] - 1) zmax = dims[2] - 1;
       }
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1),
-                    AssignGapsImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
+      float radCur[3] = { radcur1, radcur2, radcur3 };
+      float xx[3] = {xc, yc, zc };
+#if 0
+      //#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+      tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1),
+                        AssignGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
 #else
-  AssignGapsImpl serial(newIndiciesPtr, &params, rotMat);
-  serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
+      AssignGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, i, newownersPtr, ellipfuncsPtr);
+      serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1);
 #endif
 
+#if 0
+      float radcur1squared = radcur1*radcur1;
+      for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
+      {
+        column = iter1;
+        coords[0] = float(column) * xRes;
+        if (iter1 < 0) column = iter1 + dims[0];
+        else if (iter1 > dims[0] - 1) column = iter1 - dims[0];
+        for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
+        {
+          row = iter2;
+          if (iter2 < 0) row = iter2 + dims[1];
+          else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
+          {
+            plane = iter3;
+            coords[2] = float(plane) * zRes;
+            if (iter3 < 0) plane = iter3 + dims[2];
+            else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
+            index = static_cast<int>( (plane * dims[0] * dims[1]) + (row * dims[0]) + column );
+            if(m_GrainIds[index] <= 0)
+            {
+              inside = -1;
+              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+              if (dist < radcur1squared)
+              {
+                coords[0] = coords[0] - xc;
+                coords[1] = coords[1] - yc;
+                coords[2] = coords[2] - zc;
+                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+                float axis1comp = coordsRotated[0] / radcur1;
+                float axis2comp = coordsRotated[1] / radcur2;
+                float axis3comp = coordsRotated[2] / radcur3;
+                inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+                if (inside >= 0 && inside > ellipfuncs[index])
+                {
+                  newowners[index] = i;
+                  ellipfuncs[index] = inside;
+                }
+              }
+            }
+          }
+        }
+      }
+#endif
+    } // END Looping over each Grain
 
-    }
     for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
     {
       if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
@@ -1705,6 +1821,7 @@ void PackPrimaryPhases::assign_gaps()
       newowners[i] = -1;
       ellipfuncs[i] = -1.0;
     }
+    std::cout << "unassignedcount: " << unassignedcount << std::endl;
   }
   for (int i = 0; i < totpoints; i++)
   {
@@ -1858,7 +1975,6 @@ void PackPrimaryPhases::cleanup_grains()
       currentvlist.clear();
     }
   }
-
   assign_gaps();
   for (int i = 0; i < totpoints; i++)
   {
