@@ -42,8 +42,8 @@
 //
 // -----------------------------------------------------------------------------
 TextureDialog::TextureDialog(unsigned int xtal, QWidget *parent) :
-QDialog(parent),
-m_CrystalStructure(xtal)
+  QDialog(parent),
+  m_CrystalStructure(xtal)
 {
   setupUi(this);
   setupGui();
@@ -101,10 +101,15 @@ void TextureDialog::setupGui()
     weight->setValidator(validator);
   }
   {
-//    QDoubleValidator* validator = new QDoubleValidator(sigma);
-//    validator->setBottom(1.0);
-//    validator->setDecimals(4);
-//    sigma->setValidator(validator);
+    sigma->setRange(1.0, 1.0);
+    if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
+    {
+      sigma->setRange(1.0, 18.0);
+    }
+    else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+    {
+      sigma->setRange(1.0, 36.0);
+    }
   }
 }
 
