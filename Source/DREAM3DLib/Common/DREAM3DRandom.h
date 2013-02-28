@@ -42,7 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 
 #define MERSENNNE_TWISTER_N 624
-#define M 397
+#define MERSENNNE_TWISTER_M 397
 
 /**
  * @file DREAM3DRandom
