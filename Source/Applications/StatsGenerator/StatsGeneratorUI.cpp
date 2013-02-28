@@ -191,8 +191,6 @@ void StatsGeneratorUI::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_addPhase_clicked()
 {
- // std::cout << "on_addPhase_clicked" << std::endl;
-
   // Ensure the Current SGWidget has generated its data first:
   SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->currentWidget());
   if (false == sgwidget->getDataHasBeenGenerated())
@@ -295,6 +293,11 @@ void StatsGeneratorUI::on_addPhase_clicked()
       bpw->setObjectName(cName);
       setWindowModified(true);
     }
+
+    // Make sure the new tab is the active tab
+    phaseTabs->setCurrentIndex(phaseTabs->count() - 1);
+
+
   }
 }
 

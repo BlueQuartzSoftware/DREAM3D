@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -47,7 +47,8 @@
 // -----------------------------------------------------------------------------
 SGODFTableModel::SGODFTableModel(QObject* parent) :
 QAbstractTableModel(parent),
-m_RowCount(0)
+m_RowCount(0),
+m_CrystalStructure(Ebsd::CrystalStructure::Cubic)
 {
   m_ColumnCount = ColumnCount;
 }
@@ -379,7 +380,7 @@ void SGODFTableModel::setRowData(int row, float e1, float e2, float e3, float we
 // -----------------------------------------------------------------------------
 QAbstractItemDelegate* SGODFTableModel::getItemDelegate()
 {
-  return new SGODFItemDelegate;
+  return new SGODFItemDelegate(m_CrystalStructure);
 }
 
 #define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
@@ -426,3 +427,26 @@ void SGODFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
   }
   emit dataChanged(topLeft, botRight);
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SGODFTableModel::setCrystalStructure(unsigned int value)
+{
+  if (m_CrystalStructure != value)
+  {
+    this->m_CrystalStructure = value;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int SGODFTableModel::getCrystalStructure()
+{
+  return m_CrystalStructure;
+}
+
+
+
