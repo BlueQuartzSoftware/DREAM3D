@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
 {
   public:
     CalculateTriangleGroupCurvatures(int nring,
-                                     std::vector<int> triangleIds,
+                                     std::vector<int> triangleIds, bool useNormalsForCurveFitting,
                                      DoubleArrayType::Pointer principleCurvature1,
                                      DoubleArrayType::Pointer principleCurvature2,
                                      DoubleArrayType::Pointer principleDirection1,
@@ -90,6 +90,7 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
   private:
     int m_NRing;
     std::vector<int> m_TriangleIds;
+    bool m_UseNormalsForCurveFitting;
     DoubleArrayType::Pointer m_PrincipleCurvature1;
     DoubleArrayType::Pointer m_PrincipleCurvature2;
     DoubleArrayType::Pointer m_PrincipleDirection1;
