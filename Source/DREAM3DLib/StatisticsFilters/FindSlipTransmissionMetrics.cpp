@@ -48,25 +48,25 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
 AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_F1ArrayName(DREAM3D::CellData::F1),
 m_F1sptArrayName(DREAM3D::CellData::F1spt),
 m_F7ArrayName(DREAM3D::CellData::F7),
 m_mPrimeArrayName(DREAM3D::CellData::mPrime),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
 m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
 m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
 m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_GrainIds(NULL),
+m_FieldPhases(NULL),
+m_NearestNeighbors(NULL),
+m_AvgQuats(NULL),
 m_F1(NULL),
 m_F1spt(NULL),
 m_F7(NULL),
 m_mPrime(NULL),
-m_FieldPhases(NULL),
-m_NearestNeighbors(NULL),
-m_AvgQuats(NULL),
 m_GBEuclideanDistances(NULL),
 m_TJEuclideanDistances(NULL),
 m_QPEuclideanDistances(NULL)
@@ -178,7 +178,7 @@ void FindSlipTransmissionMetrics::execute()
   int gname, gname2;
   float q1[5], q2[5];
 
-  int mprimebin, F1bin, F1sptbin, F7bin, disbin;
+//  int mprimebin, F1bin, F1sptbin, F7bin, disbin;
  // int actualpoints = 0;
 
   float LD[3];
@@ -198,22 +198,22 @@ void FindSlipTransmissionMetrics::execute()
       }
       if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2]) && m_FieldPhases[gname] > 0)
       {
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1(q1, q2, LD, true, F1);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1spt(q1, q2, LD, true, F1spt);
-		m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF7(q1, q2, LD, true, F7);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1(q1, q2, LD, true, F1);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1spt(q1, q2, LD, true, F1spt);
+    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF7(q1, q2, LD, true, F7);
       }
       else
       {
-		mprime = 0;
-		F1 = 0;
-		F1spt = 0;
-		F7 = 0;
+    mprime = 0;
+    F1 = 0;
+    F1spt = 0;
+    F7 = 0;
       }
-	  m_mPrime[i] = mprime;
-	  m_F1[i] = F1;
-	  m_F1spt[i] = F1spt;
-	  m_F7[i] = F7;
+    m_mPrime[i] = mprime;
+    m_F1[i] = F1;
+    m_F1spt[i] = F1spt;
+    m_F7[i] = F7;
     }
   }
 

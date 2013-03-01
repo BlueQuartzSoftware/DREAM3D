@@ -214,7 +214,7 @@ void FindDeformationStatistics::execute()
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
-  float kam, gbdist, tjdist, qpdist, sf, sf2, sfmm, grm, mprime, F1, F1spt, F7;
+  float kam, gbdist, tjdist, qpdist, sf, grm, mprime, F1, F1spt, F7;
   int gname, gname2;
   float q1[5], q2[5];
   int kmdist[20];
@@ -315,7 +315,7 @@ void FindDeformationStatistics::execute()
       avgF1 = avgF1 + m_F1[i];
       avgF1spt = avgF1spt + m_F1spt[i];
       avgF7 = avgF7 + m_F7[i];
-	  avgmprime = avgmprime + m_mPrime[i];
+    avgmprime = avgmprime + m_mPrime[i];
       gname2 = m_NearestNeighbors[i * 3 + 0];
       for (int j = 0; j < 5; j++)
       {
@@ -361,7 +361,7 @@ void FindDeformationStatistics::execute()
     F1 = m_F1[i];
     F1spt = m_F1spt[i];
     F7 = m_F7[i];
-	mprime = m_mPrime[i];
+  mprime = m_mPrime[i];
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname + j];
