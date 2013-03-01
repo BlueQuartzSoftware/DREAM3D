@@ -79,30 +79,30 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 
     virtual ~FindSlipTransmissionMetrics();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)	
-	DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)	
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getHumanLabel() { return "Find Slip Transmission Metrics"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
-	/**
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
