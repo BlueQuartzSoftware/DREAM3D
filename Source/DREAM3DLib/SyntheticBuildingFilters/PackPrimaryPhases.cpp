@@ -115,9 +115,9 @@ class AssignVoxelsGapsImpl
       radcur[1] = radCur[1];
       radcur[2] = radCur[2];
 
-	  res[0] = resolution[0];
-	  res[1] = resolution[1];
-	  res[2] = resolution[2];
+    res[0] = resolution[0];
+    res[1] = resolution[1];
+    res[2] = resolution[2];
 
       xc = xx[0];
       yc = xx[1];
@@ -170,8 +170,8 @@ class AssignVoxelsGapsImpl
           size_t row_dim = row * dims[0];
           if (iter2 < 0) row = iter2 + dims[1];
           else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
-          
-		  for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
+
+      for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
             plane = iter3;
             if (iter3 < 0) plane = iter3 + dims[2];
@@ -184,7 +184,7 @@ class AssignVoxelsGapsImpl
             coords[2] = float(plane) * res[2];
             if (iter1 < 0) coords[0] = coords[0] - size[0];
             else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
-			if (iter2 < 0) coords[1] = coords[1] - size[1];
+      if (iter2 < 0) coords[1] = coords[1] - size[1];
             else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
             if (iter3 < 0) coords[2] = coords[2] - size[2];
             else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
@@ -1469,11 +1469,7 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
+
   DimType dims[3] = {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
@@ -1481,15 +1477,15 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
   };
 
 
-  int index;
+ // int index;
   int timestep = 100;
   int unassignedcount = 1;
   DimType column, row, plane;
-  float inside;
+//  float inside;
   float xc, yc, zc;
-  float coordsRotated[3];
-  float dist;
-  float coords[3];
+//  float coordsRotated[3];
+//  float dist;
+//  float coords[3];
   float size[3] = {sizex, sizey, sizez};
 
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
@@ -1513,6 +1509,8 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
   int cycle = 0;
   int lastUnassignedCount = 0;
   bool sanityFailed = false;
+  std::stringstream ss;
+
   while (unassignedcount != 0)
   {
     unassignedcount = 0;
@@ -1525,7 +1523,9 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
       if (currentMillis - millis > 1000)
       {
         float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
-        std::cout << "Cycle: " << cycle << "  Grains/Second: " << rate << "  Unassigned Count: " << lastUnassignedCount <<  std::endl;
+        ss.str("");
+        ss << "Cycle: " << cycle << "  Grains Checked: " << i << "  Grains/Second: " << (int)rate << "  Unassigned Count: " << lastUnassignedCount;
+        notifyStatusMessage(ss.str());
         grainsPerTime = 0;
         millis = MXA::getMilliSeconds();
       }
@@ -1592,11 +1592,12 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
         if (zmin < 0) zmin = 0;
         if (zmax > dims[2] - 1) zmax = dims[2] - 1;
       }
-
+#if 0
       if (i == 1)
       {
         std::cout << xmin << " " << xmax << " " << ymin << " " << ymax << " " << zmin << " " << zmax << std::endl;
       }
+#endif
       // Sanity Check the size of the grains:
       // Just check the first grain
       if (xmin == 0 && xmax == dims[0] - 1
@@ -1652,7 +1653,15 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
     writer->setWriteVoxelData(true);
     writer->execute();
 #endif
-
+    if (getCancel() == true)
+    {
+      unassignedcount = 0;
+      ss.str("");
+      ss << "Filter Cancelled.";
+      notifyWarningMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return;
+    }
   }
   for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
@@ -1663,10 +1672,10 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
   {
     gnum = m_GrainIds[i];
     if(gnum >= 0)
-	{
-		m_Active[gnum] = true;
-		m_CellPhases[i] = m_FieldPhases[gnum];
-	}
+    {
+      m_Active[gnum] = true;
+      m_CellPhases[i] = m_FieldPhases[gnum];
+    }
   }
 }
 
