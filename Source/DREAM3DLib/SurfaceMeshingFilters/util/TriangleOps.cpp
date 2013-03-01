@@ -43,7 +43,7 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer
   if (count < 3)
   {
     std::cout << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3." << std::endl;
-    assert(false);
+    BOOST_ASSERT(false);
   }
   else if (count == 3) // This triangle only has 3 neighbors so we are assuming all three have the same label set.
   {

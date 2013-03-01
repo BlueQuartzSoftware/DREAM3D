@@ -592,7 +592,7 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
 
 void HexagonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
 {
-  assert(false);
+  BOOST_ASSERT(false);
   /* I am asserting here because this code will simply give junk results and if someone uses it
    * they could unknowningly get really bad results
    */
@@ -629,7 +629,7 @@ void HexagonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrim
 
 void HexagonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1)
 {
-  assert(false);
+  BOOST_ASSERT(false);
   /* I am asserting here because this code will simply give junk results and if someone uses it
    * they could unknowningly get really bad results
    */

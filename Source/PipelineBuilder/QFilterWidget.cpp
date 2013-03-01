@@ -1227,7 +1227,7 @@ void QFilterWidget::updateQLineEditStringValue(const QString &v)
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateQSpinBoxValue(int v)
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 
@@ -1236,7 +1236,7 @@ void QFilterWidget::updateQSpinBoxValue(int v)
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -1262,7 +1262,7 @@ void QFilterWidget::updateLineEdit(const QString &v)
   QObject* whoSent = sender();
   std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
             << " via QLineEdit." <<  std::endl;
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

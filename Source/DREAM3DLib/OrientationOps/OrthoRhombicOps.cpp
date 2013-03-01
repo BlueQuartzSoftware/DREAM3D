@@ -272,7 +272,7 @@ void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz
 // -----------------------------------------------------------------------------
 void OrthoRhombicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
 {
-  assert(false);
+  BOOST_ASSERT(false);
   float g1[3][3];
   float g2[3][3];
   float h1, k1, l1, u1, v1, w1;
