@@ -257,7 +257,7 @@ int H5CtfReader::readData(hid_t parId)
       int32_t* dataPtr = allocateArray<int32_t>(totalDataRows);
       if(NULL == dataPtr)
       {
-        assert(false);
+        BOOST_ASSERT(false);
       } // We are going to crash here. I would rather crash than have bad data
       err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
       setPointerByName(*iter, dataPtr);
@@ -267,14 +267,14 @@ int H5CtfReader::readData(hid_t parId)
       float* dataPtr = allocateArray<float>(totalDataRows);
       if(NULL == dataPtr)
       {
-        assert(false);
+        BOOST_ASSERT(false);
       } // We are going to crash here. I would rather crash than have bad data
       err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
       setPointerByName(*iter, dataPtr);
     }
     else
     {
-      assert(false);
+      BOOST_ASSERT(false);
       // We are going to crash here because I would rather crash than have bad data
     }
   }

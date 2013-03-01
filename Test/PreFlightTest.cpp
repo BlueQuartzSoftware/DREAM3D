@@ -144,7 +144,7 @@ void SyntheticBuilder_PreFlight()
   }
   else if(m_AlreadyFormed == true)
   {
-    assert(false);
+    BOOST_ASSERT(false);
   }
 
   if(m_AlreadyFormed == false)

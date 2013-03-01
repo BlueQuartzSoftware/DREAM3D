@@ -344,7 +344,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
       int32_t* dataPtr = static_cast<int32_t*>(reader.getPointerByName(columnNames[i]));
       if(NULL == dataPtr)
       {
-        assert(false);
+        BOOST_ASSERT(false);
       } // We are going to crash here. I would rather crash than have bad data
       dataPtr = dataPtr + (actualSlice * dims[0]); // Put the pointer at the proper offset into the larger array
       WRITE_EBSD_DATA_ARRAY(reader, int, gid, columnNames[i]);
@@ -354,14 +354,14 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
       float* dataPtr = static_cast<float*>(reader.getPointerByName(columnNames[i]));
       if(NULL == dataPtr)
       {
-        assert(false);
+        BOOST_ASSERT(false);
       } // We are going to crash here. I would rather crash than have bad data
       dataPtr = dataPtr + (actualSlice * dims[0]); // Put the pointer at the proper offset into the larger array
       WRITE_EBSD_DATA_ARRAY(reader, float, gid, columnNames[i]);
     }
     else
     {
-      assert(false);
+      BOOST_ASSERT(false);
       // We are going to crash here because I would rather crash than have bad data
     }
   }

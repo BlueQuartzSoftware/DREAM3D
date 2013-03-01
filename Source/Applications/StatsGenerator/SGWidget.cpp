@@ -57,7 +57,7 @@ SGWidget::~SGWidget()
 // -----------------------------------------------------------------------------
 void SGWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ int SGWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 void SGWidget::on_m_GenerateDefaultData_clicked()
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -89,7 +89,7 @@ void SGWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 void SGWidget::dataWasEdited()
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

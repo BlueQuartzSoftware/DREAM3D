@@ -103,7 +103,7 @@ void readSettings(QSettings &prefs)
 int main (int argc, char const *argv[])
 {
    // This code is NOT READY to run AT ALL. IT was just a PLACE TO START
-  assert(false);
+  BOOST_ASSERT(false);
   QString configFile;
 
   try
