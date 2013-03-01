@@ -65,11 +65,14 @@ Email: dream3d@bluequartz.net}\\[1.5cm]
 %\pagenumbering{arabic}
 %\newpage
 \section{Intro (or why this file)}
-  This is just a dumping ground for ideas that I (mike jackson) am working on.
+  This is just a dumping ground for ideas that we are working on.
   
 \section{Xdmf File}
   Explain what the Xdmf file is and how it can be used.
-  
+
+\section{Parallelize Synthetic Generators}
+   Initial threading of PackPrimaryGrains was performed using the parallel\_for() construct from the Threading Building Blocks (TBB) package. We are achieving a decent speed up on multi-core hardware. We could probably realize more speed ups just using more efficient algorithms.
+
 \section{PipelineRunner Program}
   This program should be able to use as an input a Pipeline text file saved from the GUI. The requires the use of Qt libraries to read the .ini style file and the sometimes specially encoded QVariant class within the .ini file. In order to do this I tried linking against the generated widgets library and simply invoking a PipelineBuilderWidget class but Qt borked on that saying that we needed to have a QApplication running which is will probably start popping up QWidgets on the screen which is not really what we want.\\
   
