@@ -55,10 +55,10 @@ class IFilterWidgetFactory
     /** @brief This function should NEVER get called. The subclass should ALWAYS implement
      * this method so we are going to crash the program.
      */
-    virtual QFilterWidget* createWidget() { assert(false); return NULL;}
-    virtual std::string getFilterGroup() { assert(false); return ""; }
-    virtual std::string getFilterHumanLabel() { assert(false); return ""; }
-    virtual AbstractFilter::Pointer getFilterInstance() { assert(false); return AbstractFilter::NullPointer(); }
+    virtual QFilterWidget* createWidget() { BOOST_ASSERT(false); return NULL;}
+    virtual std::string getFilterGroup() { BOOST_ASSERT(false); return ""; }
+    virtual std::string getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
+    virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 
   protected:
     IFilterWidgetFactory(){}

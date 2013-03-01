@@ -869,7 +869,7 @@ class DataArray : public IDataArray
           || MUD_FLAP_4 != 0xABABABABABABABABul
           || MUD_FLAP_5 != 0xABABABABABABABABul)
       {
-        assert(false);
+        BOOST_ASSERT(false);
       }
 #endif
 

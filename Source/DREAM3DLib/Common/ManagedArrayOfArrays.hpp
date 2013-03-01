@@ -460,7 +460,7 @@ class ManagedArrayOfArrays : public IDataArray
 #ifndef NDEBUG
       if (Size > 0) { assert(i < Size);}
 #endif
-      assert(false);
+      BOOST_ASSERT(false);
       //T c = static_cast<T>(p);
       //for (int j = 0; j < this->NumberOfComponents; ++j)
       {
@@ -493,7 +493,7 @@ class ManagedArrayOfArrays : public IDataArray
 
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
-      assert(false);
+      BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
       //        {
       //          if (j != 0) { out << delimiter; }
@@ -502,7 +502,7 @@ class ManagedArrayOfArrays : public IDataArray
     }
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
-      assert(false);
+      BOOST_ASSERT(false);
       //        out << Array[i + j];
     }
 
@@ -514,7 +514,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-      assert(false);
+      BOOST_ASSERT(false);
       return -1;
       //   return H5ManagedArrayOfArraysWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
@@ -526,7 +526,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     virtual int readH5Data(hid_t parentId)
     {
-      assert(false);
+      BOOST_ASSERT(false);
       int err = -1;
 
       //      this->Resize(0);
@@ -589,7 +589,7 @@ class ManagedArrayOfArrays : public IDataArray
           || MUD_FLAP_4 != 0xABABABABABABABABul
           || MUD_FLAP_5 != 0xABABABABABABABABul)
       {
-        assert(false);
+        BOOST_ASSERT(false);
       }
 #endif
     // Free each Pointer in each of the structures first
