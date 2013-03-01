@@ -115,6 +115,10 @@ class AssignGapsImpl
       radcur[1] = radCur[1];
       radcur[2] = radCur[2];
 
+	  res[0] = resolution[0];
+	  res[1] = resolution[1];
+	  res[2] = resolution[2];
+
       xc = xx[0];
       yc = xx[1];
       zc = xx[2];
@@ -1778,8 +1782,8 @@ void PackPrimaryPhases::assign_gaps()
           && ymin == 0 && ymax == dims[1] - 1
           && zmin == 0 && zmax == dims[2] - 1 )
       {
-        sanityFailed = true;
-        break;
+//        sanityFailed = true;
+//        break;
       }
 
       float radCur[3] = { radcur1, radcur2, radcur3 };
@@ -1792,7 +1796,7 @@ void PackPrimaryPhases::assign_gaps()
 
 #else
       AssignGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr);
-      serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1);
+      serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1);
 #endif
 
 
