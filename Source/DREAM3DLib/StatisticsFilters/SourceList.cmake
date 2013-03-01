@@ -31,3 +31,4 @@ ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME}
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindShapes FindShapes.html "" TRUE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSizes FindSizes.html "" TRUE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSlicetoSliceRotations FindSlicetoSliceRotations.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSlipTransmissionMetrics FindSlipTransmissionMetrics.html "" TRUE)
