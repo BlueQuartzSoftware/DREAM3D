@@ -47,29 +47,29 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
-AbstractFilter(),
-m_F1ArrayName(DREAM3D::CellData::F1),
-m_F1sptArrayName(DREAM3D::CellData::F1spt),
-m_F7ArrayName(DREAM3D::CellData::F7),
-m_mPrimeArrayName(DREAM3D::CellData::mPrime),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
-m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_GrainIds(NULL),
-m_FieldPhases(NULL),
-m_NearestNeighbors(NULL),
-m_AvgQuats(NULL),
-m_F1(NULL),
-m_F1spt(NULL),
-m_F7(NULL),
-m_mPrime(NULL),
-m_GBEuclideanDistances(NULL),
-m_TJEuclideanDistances(NULL),
-m_QPEuclideanDistances(NULL)
+  AbstractFilter(),
+  m_F1ArrayName(DREAM3D::CellData::F1),
+  m_F1sptArrayName(DREAM3D::CellData::F1spt),
+  m_F7ArrayName(DREAM3D::CellData::F7),
+  m_mPrimeArrayName(DREAM3D::CellData::mPrime),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
+  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_GrainIds(NULL),
+  m_FieldPhases(NULL),
+  m_NearestNeighbors(NULL),
+  m_AvgQuats(NULL),
+  m_F1(NULL),
+  m_F1spt(NULL),
+  m_F7(NULL),
+  m_mPrime(NULL),
+  m_GBEuclideanDistances(NULL),
+  m_TJEuclideanDistances(NULL),
+  m_QPEuclideanDistances(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -113,14 +113,14 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-  if(err == -302)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+      TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
+      if(err == -302)
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
@@ -131,10 +131,10 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F1, ss, float, FloatArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F1spt, ss, float, FloatArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, float, FloatArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, float, FloatArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F1, ss, float, FloatArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F1spt, ss, float, FloatArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, float, FloatArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, float, FloatArrayType, 0, voxels, 1)
 
 }
 
@@ -171,15 +171,15 @@ void FindSlipTransmissionMetrics::execute()
   XTalType* crystruct
       = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
 
-//  size_t numXTals = crystruct->GetNumberOfTuples();
+  //  size_t numXTals = crystruct->GetNumberOfTuples();
 
 
   float mprime, F1, F1spt, F7;
   int gname, gname2;
   float q1[5], q2[5];
 
-//  int mprimebin, F1bin, F1sptbin, F7bin, disbin;
- // int actualpoints = 0;
+  //  int mprimebin, F1bin, F1sptbin, F7bin, disbin;
+  // int actualpoints = 0;
 
   float LD[3];
   LD[0] = 0;
@@ -198,24 +198,24 @@ void FindSlipTransmissionMetrics::execute()
       }
       if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2]) && m_FieldPhases[gname] > 0)
       {
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1(q1, q2, LD, true, F1);
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1spt(q1, q2, LD, true, F1spt);
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF7(q1, q2, LD, true, F7);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1(q1, q2, LD, true, F1);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1spt(q1, q2, LD, true, F1spt);
+        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF7(q1, q2, LD, true, F7);
       }
       else
       {
-    mprime = 0;
-    F1 = 0;
-    F1spt = 0;
-    F7 = 0;
+        mprime = 0;
+        F1 = 0;
+        F1spt = 0;
+        F7 = 0;
       }
-    m_mPrime[i] = mprime;
-    m_F1[i] = F1;
-    m_F1spt[i] = F1spt;
-    m_F7[i] = F7;
+      m_mPrime[i] = mprime;
+      m_F1[i] = F1;
+      m_F1spt[i] = F1spt;
+      m_F7[i] = F7;
     }
   }
 
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }
