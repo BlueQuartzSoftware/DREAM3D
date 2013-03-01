@@ -24,6 +24,6 @@ ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME}
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} CopyFieldArrayToCellArray CopyFieldArrayToCellArray.html "" TRUE)
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateIPFColors GenerateIPFColors.html "IPFFilterLegend.jpg" TRUE)
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" FALSE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" TRUE)
 
 ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RemoveArrays RemoveArrays.html "" TRUE)
