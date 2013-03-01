@@ -91,6 +91,7 @@ class AssignVoxelsGapsImpl
     float xc;
     float yc;
     float zc;
+	int32_t iteration;
     std::map<unsigned int, ShapeOps*>* m_ShapeOps;
     unsigned int shapeclass;
     float ga[3][3];
@@ -99,7 +100,7 @@ class AssignVoxelsGapsImpl
     FloatArrayType::Pointer ellipfuncsPtr;
 
   public:
-    AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
+    AssignVoxelsGapsImpl(int32_t cycle, DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
                    float* xx, std::map<unsigned int, ShapeOps*>* shapeOps,
                    unsigned int shapeClass, float gA[3][3], float* size, int cur_grain,
     Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
@@ -122,6 +123,8 @@ class AssignVoxelsGapsImpl
       xc = xx[0];
       yc = xx[1];
       zc = xx[2];
+
+	  iteration = cycle;
 
       ga[0][0] = gA[0][0];
       ga[0][1] = gA[0][1];
@@ -178,34 +181,53 @@ class AssignVoxelsGapsImpl
             else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
 
             index = static_cast<int>( (plane * dim0_dim_1) + (row_dim) + column );
-            inside = -1;
-            coords[0] = float(column) * res[0];
-            coords[1] = float(row) * res[1];
-            coords[2] = float(plane) * res[2];
-            if (iter1 < 0) coords[0] = coords[0] - size[0];
-            else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
-			if (iter2 < 0) coords[1] = coords[1] - size[1];
-            else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
-            if (iter3 < 0) coords[2] = coords[2] - size[2];
-            else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
+			if(m_GrainIds[index] <= 0)
+			{
+				inside = -1;
+				coords[0] = float(column) * res[0];
+				coords[1] = float(row) * res[1];
+				coords[2] = float(plane) * res[2];
+				if (iter1 < 0) coords[0] = coords[0] - size[0];
+				else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
+				if (iter2 < 0) coords[1] = coords[1] - size[1];
+				else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
+				if (iter3 < 0) coords[2] = coords[2] - size[2];
+				else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
 
-            dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-            if (dist < radcur1squared)
-            {
-                coords[0] = coords[0] - xc;
-                coords[1] = coords[1] - yc;
-                coords[2] = coords[2] - zc;
-                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] / radcur[0];
-                float axis2comp = coordsRotated[1] / radcur[1];
-                float axis3comp = coordsRotated[2] / radcur[2];
-                inside = shapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-                if (inside >= 0 && inside > ellipfuncs[index])
-                {
-                  newowners[index] = curGrain;
-                  ellipfuncs[index] = inside;
-                }
-            }
+				dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+				if (dist < radcur1squared)
+				{
+					coords[0] = coords[0] - xc;
+					coords[1] = coords[1] - yc;
+					coords[2] = coords[2] - zc;
+					MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+					float axis1comp = coordsRotated[0] / radcur[0];
+					float axis2comp = coordsRotated[1] / radcur[1];
+					float axis3comp = coordsRotated[2] / radcur[2];
+					inside = shapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+					if(iteration == 0)
+					{
+						if (inside >= 0 && newowners[index] > 0)
+						{
+							newowners[index] = -2;
+							ellipfuncs[index] = inside;
+						}
+						else if (inside >= 0 && newowners[index] == -1)
+						{
+							newowners[index] = curGrain;
+							ellipfuncs[index] = inside;
+						}
+					}
+					else
+					{
+						if (inside >= 0 && inside > ellipfuncs[index])
+						{
+							newowners[index] = curGrain;
+							ellipfuncs[index] = inside;
+						}
+					}
+				}
+			}
           }
         }
       }
@@ -827,21 +849,6 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage("Packing Grains - Assigning Voxels");
   assign_voxels_and_gaps();
 
-  notifyStatusMessage("Packing Grains - Renumbering Grains");
-  RenumberGrains::Pointer renumber_grains1 = RenumberGrains::New();
-  renumber_grains1->setObservers(this->getObservers());
-  renumber_grains1->setVoxelDataContainer(m);
-  renumber_grains1->execute();
-  err = renumber_grains1->getErrorCondition();
-  if (err < 0)
-  {
-    setErrorCondition(renumber_grains1->getErrorCondition());
-    addErrorMessages(renumber_grains1->getPipelineMessages());
-    return;
-  }
-
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
   notifyStatusMessage("Packing Grains - Cleaning Up Volume");
   cleanup_grains();
 
@@ -1462,10 +1469,12 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::assign_voxels_and_gaps()
 {
-  notifyStatusMessage("Assigning Gaps");
+  notifyStatusMessage("Assigning Voxels and Gaps");
 
   VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totpoints = m->getTotalPoints();
+
+  std::stringstream ss;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1482,7 +1491,7 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
 
 
   int index;
-  int timestep = 100;
+  int timestep = 50;
   int unassignedcount = 1;
   DimType column, row, plane;
   float inside;
@@ -1613,10 +1622,10 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
 //#if 0
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
       tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1),
-                        AssignVoxelsGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+                        AssignVoxelsGapsImpl(cycle, dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
 #else
-      AssignVoxelsGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr);
+      AssignVoxelsGapsImpl serial(cycle, dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1);
 #endif
 
@@ -1630,13 +1639,44 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
       break;
     }
 
+	int gnum;
+    for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
+    {
+		m_Active[i] = false;
+	}
     for (size_t i = 0; i < static_cast<size_t>(totpoints); i++)
     {
       if(ellipfuncs[i] >= 0) m_GrainIds[i] = newowners[i];
-      if(m_GrainIds[i] <= 0) unassignedcount++;
+      gnum = m_GrainIds[i];
+	  if(gnum <= 0) unassignedcount++;
+	  if(gnum >= 0) m_Active[gnum] = true;
       newowners[i] = -1;
       ellipfuncs[i] = -1.0;
     }
+
+	if(cycle == 0)
+	{
+
+	  notifyStatusMessage("Assigning Voxels and Gaps - Removing Included Grains");
+	  RenumberGrains::Pointer renumber_grains1 = RenumberGrains::New();
+	  renumber_grains1->setObservers(this->getObservers());
+	  renumber_grains1->setVoxelDataContainer(m);
+	  renumber_grains1->execute();
+	  int err = renumber_grains1->getErrorCondition();
+	  if (err < 0)
+	  {
+		setErrorCondition(renumber_grains1->getErrorCondition());
+		addErrorMessages(renumber_grains1->getPipelineMessages());
+		return;
+	  }
+
+	  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+	}
+
+      ss.str("");
+      ss << "Assigning Voxels " << cycle << " - " << unassignedcount << " Voxels Left";
+
+      notifyStatusMessage(ss.str());
 
     lastUnassignedCount = unassignedcount;
 #if 0
