@@ -128,7 +128,7 @@ void StatsDataArray::SetNumberOfComponents(int nc)
 {
   if (nc != 1)
   {
-    assert(false);
+    BOOST_ASSERT(false);
   }
 }
 
@@ -188,7 +188,7 @@ int StatsDataArray::CopyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 void StatsDataArray::InitializeTuple(size_t i, double p)
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -226,14 +226,14 @@ int32_t StatsDataArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 void StatsDataArray::printTuple(std::ostream &out, size_t i, char delimiter)
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsDataArray::printComponent(std::ostream &out, size_t i, int j)
 {
-  assert(false);
+  BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

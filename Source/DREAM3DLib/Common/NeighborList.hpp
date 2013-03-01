@@ -131,7 +131,7 @@ class NeighborList : public IDataArray
      */
     void InitializeTuple(size_t i, double p)
     {
-      assert(false);
+      BOOST_ASSERT(false);
     }
 
 
@@ -170,11 +170,11 @@ class NeighborList : public IDataArray
     //FIXME: These need to be implemented
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
-        assert(false);
+        BOOST_ASSERT(false);
     }
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
-      assert(false);
+      BOOST_ASSERT(false);
     }
 
     /**
