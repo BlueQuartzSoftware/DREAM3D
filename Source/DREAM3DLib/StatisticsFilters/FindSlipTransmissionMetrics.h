@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDDEFORMATIONSTATISTICS_H_
-#define FINDDEFORMATIONSTATISTICS_H_
+#ifndef FindSlipTransmissionMetrics_H_
+#define FindSlipTransmissionMetrics_H_
 
 #include <assert.h>
 #include <stdio.h>
@@ -64,20 +64,20 @@
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
- * @class FindDeformationStatistics FindDeformationStatistics.h DREAM3DLib/GenericFilters/FindDeformationStatistics.h
+ * @class FindSlipTransmissionMetrics FindSlipTransmissionMetrics.h DREAM3DLib/GenericFilters/FindSlipTransmissionMetrics.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
+class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindDeformationStatistics)
-    DREAM3D_STATIC_NEW_MACRO(FindDeformationStatistics)
-    DREAM3D_TYPE_MACRO_SUPER(FindDeformationStatistics, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindSlipTransmissionMetrics)
+    DREAM3D_STATIC_NEW_MACRO(FindSlipTransmissionMetrics)
+    DREAM3D_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
 
-    virtual ~FindDeformationStatistics();
+    virtual ~FindSlipTransmissionMetrics();
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
@@ -86,24 +86,17 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)	
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)	
 	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
 	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getHumanLabel() { return "Find Deformation Statistics"; }
+    virtual const std::string getHumanLabel() { return "Find Slip Transmission Metrics"; }
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -116,7 +109,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     virtual void preflight();
 
   protected:
-    FindDeformationStatistics();
+    FindSlipTransmissionMetrics();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
@@ -127,24 +120,19 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_FieldPhases;
     int32_t* m_NearestNeighbors;
-    float* m_GrainReferenceMisorientations;
-    float* m_KernelAverageMisorientations;
     float* m_AvgQuats;
     float* m_F1;
     float* m_F1spt;
     float* m_F7;
     float* m_mPrime;
-    float* m_GrainAvgMisorientations;
-    int32_t* m_Poles;
-    float* m_Schmids;
     float* m_GBEuclideanDistances;
     float* m_TJEuclideanDistances;
     float* m_QPEuclideanDistances;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindDeformationStatistics(const FindDeformationStatistics&); // Copy Constructor Not Implemented
-    void operator=(const FindDeformationStatistics&); // Operator '=' Not Implemented
+    FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&); // Copy Constructor Not Implemented
+    void operator=(const FindSlipTransmissionMetrics&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDDEFORMATIONSTATISTICS_H_ */
+#endif /* FindSlipTransmissionMetrics_H_ */

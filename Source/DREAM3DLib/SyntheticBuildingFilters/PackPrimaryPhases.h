@@ -138,8 +138,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     float check_neighborhooderror(int gadd, int gremove);
 
     float check_fillingerror(int gadd, int gremove);
-    void assign_voxels();
-    void assign_gaps();
+    void assign_voxels_and_gaps();
     void cleanup_grains();
 
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);

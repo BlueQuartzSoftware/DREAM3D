@@ -115,6 +115,7 @@ namespace DREAM3D
     const std::string F1("F1");
     const std::string F1spt("F1spt");
     const std::string F7("F7");
+    const std::string mPrime("mPrime");
     const std::string GoodVoxels("GoodVoxels");
     const std::string NearestNeighbors("NearestNeighbors");
     const std::string GBEuclideanDistances("GBEuclideanDistances");

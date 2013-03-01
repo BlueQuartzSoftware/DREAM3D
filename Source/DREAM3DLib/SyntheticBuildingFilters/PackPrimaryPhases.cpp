@@ -81,7 +81,7 @@ typedef int64_t DimType;
 /**
  * @brief
  */
-class AssignGapsImpl
+class AssignVoxelsGapsImpl
 {
     DimType dims[3];
     float radcur[3];
@@ -99,7 +99,7 @@ class AssignGapsImpl
     FloatArrayType::Pointer ellipfuncsPtr;
 
   public:
-    AssignGapsImpl(DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
+    AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* grainIds, float* radCur,
                    float* xx, std::map<unsigned int, ShapeOps*>* shapeOps,
                    unsigned int shapeClass, float gA[3][3], float* size, int cur_grain,
     Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
@@ -137,7 +137,7 @@ class AssignGapsImpl
       ellipfuncsPtr = ellipfuncs;
 
     }
-    virtual ~AssignGapsImpl(){}
+    virtual ~AssignVoxelsGapsImpl(){}
 
     // -----------------------------------------------------------------------------
     //
@@ -170,31 +170,28 @@ class AssignGapsImpl
           size_t row_dim = row * dims[0];
           if (iter2 < 0) row = iter2 + dims[1];
           else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
-          for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
+          
+		  for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
             plane = iter3;
-
             if (iter3 < 0) plane = iter3 + dims[2];
             else if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
 
             index = static_cast<int>( (plane * dim0_dim_1) + (row_dim) + column );
-            if(m_GrainIds[index] <= 0)
+            inside = -1;
+            coords[0] = float(column) * res[0];
+            coords[1] = float(row) * res[1];
+            coords[2] = float(plane) * res[2];
+            if (iter1 < 0) coords[0] = coords[0] - size[0];
+            else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
+			if (iter2 < 0) coords[1] = coords[1] - size[1];
+            else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
+            if (iter3 < 0) coords[2] = coords[2] - size[2];
+            else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
+
+            dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+            if (dist < radcur1squared)
             {
-              inside = -1;
-              coords[0] = float(column) * res[0];
-              coords[1] = float(row) * res[1];
-              coords[2] = float(plane) * res[2];
-              if (iter1 < 0) coords[0] = coords[0] - size[0];
-              else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
-
-              if (iter2 < 0) coords[1] = coords[1] - size[1];
-              else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
-              if (iter3 < 0) coords[2] = coords[2] - size[2];
-              else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
-
-              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              if (dist < radcur1squared)
-              {
                 coords[0] = coords[0] - xc;
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
@@ -208,7 +205,6 @@ class AssignGapsImpl
                   newowners[index] = curGrain;
                   ellipfuncs[index] = inside;
                 }
-              }
             }
           }
         }
@@ -829,7 +825,7 @@ void PackPrimaryPhases::execute()
   }
 
   notifyStatusMessage("Packing Grains - Assigning Voxels");
-  assign_voxels();
+  assign_voxels_and_gaps();
 
   notifyStatusMessage("Packing Grains - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains1 = RenumberGrains::New();
@@ -845,9 +841,6 @@ void PackPrimaryPhases::execute()
   }
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-
-  notifyStatusMessage("Packing Grains - Filling Gaps");
-  assign_gaps();
 
   notifyStatusMessage("Packing Grains - Cleaning Up Volume");
   cleanup_grains();
@@ -1464,182 +1457,10 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   }
 }
 
-void PackPrimaryPhases::assign_voxels()
-{
-  notifyStatusMessage("Assigning Voxels");
-
-  VoxelDataContainer* m = getVoxelDataContainer();
-  int index;
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-
-  DimType neighpoints[6];
-  neighpoints[0] = -dims[0]*dims[1];
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = dims[0]*dims[1];
-
-  float totalPoints = dims[0]*dims[1]*dims[2];
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-
-  int oldname;
-  size_t column, row, plane;
-  float inside;
-  float xc, yc, zc;
-  float coordsRotated[3];
-  float dist;
-  float coords[3];
-  DimType xmin, xmax, ymin, ymax, zmin, zmax;
-  // int64_t totpoints = m->totalPoints();
-
-  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
-  {
-    float volcur = m_Volumes[i];
-    float bovera = m_AxisLengths[3*i+1];
-    float covera = m_AxisLengths[3*i+2];
-    float omega3 = m_Omega3s[i];
-    xc = m_Centroids[3*i];
-    yc = m_Centroids[3*i+1];
-    zc = m_Centroids[3*i+2];
-    float radcur1 = 0.0f;
-    //Unbounded Check for the size of shapeTypes. We assume a 1:1 with phase
-    unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
-
-    // init any values for each of the Shape Ops
-    for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
-    {
-      (*ops).second->init();
-    }
-    // Create our Argument Map
-    std::map<ShapeOps::ArgName, float> shapeArgMap;
-    shapeArgMap[ShapeOps::Omega3] = omega3;
-    shapeArgMap[ShapeOps::VolCur] = volcur;
-    shapeArgMap[ShapeOps::B_OverA] = bovera;
-    shapeArgMap[ShapeOps::C_OverA] = covera;
-
-    radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
-
-    float radcur2 = (radcur1 * bovera);
-    float radcur3 = (radcur1 * covera);
-    float phi1 = m_AxisEulerAngles[3*i];
-    float PHI = m_AxisEulerAngles[3*i+1];
-    float phi2 = m_AxisEulerAngles[3*i+2];
-    float ga[3][3];
-    OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
-    column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
-    row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
-    plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
-    xmin = int(column - ((radcur1 / xRes) + 1));
-    xmax = int(column + ((radcur1 / xRes) + 1));
-    ymin = int(row - ((radcur1 / yRes) + 1));
-    ymax = int(row + ((radcur1 / yRes) + 1));
-    zmin = int(plane - ((radcur1 / zRes) + 1));
-    zmax = int(plane + ((radcur1 / zRes) + 1));
-    if (m_PeriodicBoundaries == true)
-    {
-      if (xmin < -dims[0]) xmin = -dims[0];
-      if (xmax > 2 * dims[0] - 1) xmax = (2 * dims[0] - 1);
-      if (ymin < -dims[1]) ymin = -dims[1];
-      if (ymax > 2 * dims[1] - 1) ymax = (2 * dims[1] - 1);
-      if (zmin < -dims[2]) zmin = -dims[2];
-      if (zmax > 2 * dims[2] - 1) zmax = (2 * dims[2] - 1);
-    }
-    if (m_PeriodicBoundaries == false)
-    {
-      if (xmin < 0) xmin = 0;
-      if (xmax > dims[0] - 1) xmax = dims[0] - 1;
-      if (ymin < 0) ymin = 0;
-      if (ymax > dims[1] - 1) ymax = dims[1] - 1;
-      if (zmin < 0) zmin = 0;
-      if (zmax > dims[2] - 1) zmax = dims[2] - 1;
-    }
-    float radcur1squared = radcur1*radcur1;
-    for (DimType iter1 = xmin; iter1 < xmax + 1; iter1++)
-    {
-      for (DimType iter2 = ymin; iter2 < ymax + 1; iter2++)
-      {
-        for (DimType iter3 = zmin; iter3 < zmax + 1; iter3++)
-        {
-          column = iter1;
-          row = iter2;
-          plane = iter3;
-          if (iter1 < 0) column = iter1 + dims[0];
-          if (iter1 > dims[0] - 1) column = iter1 - dims[0];
-          if (iter2 < 0) row = iter2 + dims[1];
-          if (iter2 > dims[1] - 1) row = iter2 - dims[1];
-          if (iter3 < 0) plane = iter3 + dims[2];
-          if (iter3 > dims[2] - 1) plane = iter3 - dims[2];
-          index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
-          inside = -1;
-          coords[0] = float(column) * xRes;
-          coords[1] = float(row) * yRes;
-          coords[2] = float(plane) * zRes;
-          if (iter1 < 0) coords[0] = coords[0] - sizex;
-          if (iter1 > dims[0] - 1) coords[0] = coords[0] + sizex;
-          if (iter2 < 0) coords[1] = coords[1] - sizey;
-          if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
-          if (iter3 < 0) coords[2] = coords[2] - sizez;
-          if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
-          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-          if (dist < radcur1squared)
-          {
-            coords[0] = coords[0] - xc;
-            coords[1] = coords[1] - yc;
-            coords[2] = coords[2] - zc;
-            MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-            float axis1comp = coordsRotated[0] / radcur1;
-            float axis2comp = coordsRotated[1] / radcur2;
-            float axis3comp = coordsRotated[2] / radcur3;
-            inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-            if (inside >= 0)
-            {
-              int currentpoint = index;
-
-              if (m_GrainIds[currentpoint] > 0)
-              {
-                oldname = m_GrainIds[currentpoint];
-                m_GrainIds[currentpoint] = -2;
-              }
-              if (m_GrainIds[currentpoint] == -1)
-              {
-                m_GrainIds[currentpoint] = static_cast<int32_t>(i);
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
-  {
-    m_Active[i] = false;
-  }
-  int gnum;
-  for(size_t i=0;i<totalPoints;i++)
-  {
-    gnum = m_GrainIds[i];
-    if(gnum >= 0) m_Active[gnum] = true;
-  }
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::assign_gaps()
+void PackPrimaryPhases::assign_voxels_and_gaps()
 {
   notifyStatusMessage("Assigning Gaps");
 
@@ -1792,10 +1613,10 @@ void PackPrimaryPhases::assign_gaps()
 //#if 0
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
       tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1),
-                        AssignGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+                        AssignVoxelsGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
 #else
-      AssignGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr);
+      AssignVoxelsGapsImpl serial(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1);
 #endif
 
@@ -1833,9 +1654,19 @@ void PackPrimaryPhases::assign_gaps()
 #endif
 
   }
-  for (int i = 0; i < totpoints; i++)
+  for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
-    if(m_GrainIds[i] > 0) m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]];
+    m_Active[i] = false;
+  }
+  int gnum;
+  for(size_t i=0;i<totpoints;i++)
+  {
+    gnum = m_GrainIds[i];
+    if(gnum >= 0)
+	{
+		m_Active[gnum] = true;
+		m_CellPhases[i] = m_FieldPhases[gnum];
+	}
   }
 }
 
@@ -1985,7 +1816,7 @@ void PackPrimaryPhases::cleanup_grains()
       currentvlist.clear();
     }
   }
-  assign_gaps();
+  assign_voxels_and_gaps();
   for (int i = 0; i < totpoints; i++)
   {
     if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
