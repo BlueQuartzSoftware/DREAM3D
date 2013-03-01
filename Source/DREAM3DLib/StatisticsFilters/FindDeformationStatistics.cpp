@@ -48,9 +48,10 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
 AbstractFilter(),
-m_F1ArrayName("F1"),
-m_F1sptArrayName("F1spt"),
-m_F7ArrayName("F7"),
+m_F1ArrayName(DREAM3D::CellData::F1),
+m_F1sptArrayName(DREAM3D::CellData::F1spt),
+m_F7ArrayName(DREAM3D::CellData::F7),
+m_mPrimeArrayName(DREAM3D::CellData::mPrime),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
@@ -72,6 +73,7 @@ m_AvgQuats(NULL),
 m_F1(NULL),
 m_F1spt(NULL),
 m_F7(NULL),
+m_mPrime(NULL),
 m_GrainAvgMisorientations(NULL),
 m_Poles(NULL),
 m_Schmids(NULL),
@@ -167,6 +169,7 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, CellData, F1, ss, -307, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, -309, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
 
 }
 
@@ -312,6 +315,7 @@ void FindDeformationStatistics::execute()
       avgF1 = avgF1 + m_F1[i];
       avgF1spt = avgF1spt + m_F1spt[i];
       avgF7 = avgF7 + m_F7[i];
+	  avgmprime = avgmprime + m_mPrime[i];
       gname2 = m_NearestNeighbors[i * 3 + 0];
       for (int j = 0; j < 5; j++)
       {
@@ -322,14 +326,11 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
       }
       else
       {
         w = 0;
-    mprime = 0;
       }
-      avgmprime = avgmprime + mprime;
       avgDIS = avgDIS + w;
       counter++;
     }
@@ -360,6 +361,7 @@ void FindDeformationStatistics::execute()
     F1 = m_F1[i];
     F1spt = m_F1spt[i];
     F7 = m_F7[i];
+	mprime = m_mPrime[i];
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname + j];
@@ -369,12 +371,10 @@ void FindDeformationStatistics::execute()
       {
         w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
-    m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
       }
       else
       {
         w = 0;
-    mprime = 0;
       }
       if((kam/avgKAM) >= 1) kambin = 10+int(((kam/avgKAM)-1.0)/0.25);
     else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);

@@ -175,7 +175,7 @@ class FindEuclideanMap
         }
         for (int j = 0; j < (totalPoints); ++j)
         {
-          if(voxel_NearestNeighbor[j] != -1 && voxel_EuclideanDistance[j] == -1)
+          if(voxel_NearestNeighbor[j] != -1 && voxel_EuclideanDistance[j] == -1 && m_GrainIds[j] > 0)
           {
             voxel_EuclideanDistance[j] = euclideanDistance;
           }
