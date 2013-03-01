@@ -281,7 +281,7 @@ void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Poi
 {
   // This would only really make sense if the Reader were in the middle of a pipeline then the list
   // would show what is currently in the pipeline
-//  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
+  //  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
 }
 
 // -----------------------------------------------------------------------------
@@ -292,22 +292,10 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
   arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
   arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
 
-
   // -- This section fills in the GUI elements for the Dims, Res and Origin
-  int64_t dims[3];
-  float res[3];
-  float origin[3];
-
-  hid_t fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true);
-  if (fileId < 0) { return; }
-
-  HDF5ScopedFileSentinel sentinel(&fileId, true);
-
-  VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
-  int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
-  if (err < 0) { return; }
-  H5Utilities::closeFile(fileId);
-
+  int64_t dims[3] = {0, 0, 0};
+  float res[3] = {0.0f, 0.0f, 0.0f};
+  float origin[3] = {0.0f, 0.0f, 0.0f};
   m_XDim->setText(QString::number(dims[0]));
   m_YDim->setText(QString::number(dims[1]));
   m_ZDim->setText(QString::number(dims[2]));
@@ -319,6 +307,37 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
   m_XOrigin->setText(QString::number(origin[0]));
   m_YOrigin->setText(QString::number(origin[1]));
   m_ZOrigin->setText(QString::number(origin[2]));
+
+  if (m_ReadVoxelData->isChecked() == true)
+  {
+
+    hid_t fileId = -1;
+    fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true);
+    if (fileId < 0) {
+      return;
+    }
+
+    // This should automatically close the file when we leave this function
+    HDF5ScopedFileSentinel sentinel(&fileId, true);
+
+    VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+    int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
+    if (err < 0) {
+      return;
+    }
+    m_XDim->setText(QString::number(dims[0]));
+    m_YDim->setText(QString::number(dims[1]));
+    m_ZDim->setText(QString::number(dims[2]));
+
+    m_XRes->setText(QString::number(res[0]));
+    m_YRes->setText(QString::number(res[1]));
+    m_ZRes->setText(QString::number(res[2]));
+
+    m_XOrigin->setText(QString::number(origin[0]));
+    m_YOrigin->setText(QString::number(origin[1]));
+    m_ZOrigin->setText(QString::number(origin[2]));
+  }
+
 
 }
 
