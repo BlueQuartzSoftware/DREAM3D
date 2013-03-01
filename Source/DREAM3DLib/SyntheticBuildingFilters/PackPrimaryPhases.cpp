@@ -1748,10 +1748,10 @@ void PackPrimaryPhases::assign_gaps()
       plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
       xmin = int(column - ((radcur1 / xRes) + 1));
       xmax = int(column + ((radcur1 / xRes) + 1));
-      ymin = int(row - ((radcur2 / yRes) + 1)); // <======================
-      ymax = int(row + ((radcur2 / yRes) + 1)); // <======================
-      zmin = int(plane - ((radcur3 / zRes) + 1)); // <======================
-      zmax = int(plane + ((radcur3 / zRes) + 1)); // <======================
+      ymin = int(row - ((radcur1 / yRes) + 1)); // <======================
+      ymax = int(row + ((radcur1 / yRes) + 1)); // <======================
+      zmin = int(plane - ((radcur1 / zRes) + 1)); // <======================
+      zmax = int(plane + ((radcur1 / zRes) + 1)); // <======================
 
       if (m_PeriodicBoundaries == true)
       {
@@ -1791,7 +1791,7 @@ void PackPrimaryPhases::assign_gaps()
 
 //#if 0
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-      tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax+1, ymin, ymax+1, xmin, xmin+1),
+      tbb::parallel_for(tbb::blocked_range3d<int, int, int>(zmin, zmax+1, ymin, ymax+1, xmin, xmax+1),
                         AssignGapsImpl(dims, res, m_GrainIds, radCur, xx, &m_ShapeOps, shapeclass, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
 
 #else
