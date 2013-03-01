@@ -1521,7 +1521,6 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
   int cycle = 0;
   int lastUnassignedCount = 0;
   bool sanityFailed = false;
-  std::stringstream ss;
 
   while (unassignedcount != 0)
   {
@@ -1676,11 +1675,6 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
 
 	  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 	}
-
-      ss.str("");
-      ss << "Assigning Voxels " << cycle << " - " << unassignedcount << " Voxels Left";
-
-      notifyStatusMessage(ss.str());
 
     lastUnassignedCount = unassignedcount;
 #if 0
