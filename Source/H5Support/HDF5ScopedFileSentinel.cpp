@@ -42,8 +42,8 @@
 //
 // -----------------------------------------------------------------------------
 HDF5ScopedFileSentinel::HDF5ScopedFileSentinel(hid_t* fileId, bool turnOffErrors) :
-    m_FileId(fileId),
-    m_TurnOffErrors(turnOffErrors)
+  m_FileId(fileId),
+  m_TurnOffErrors(turnOffErrors)
 {
   if (m_TurnOffErrors == true)
   {
@@ -69,13 +69,13 @@ HDF5ScopedFileSentinel::~HDF5ScopedFileSentinel()
 
 }
 
-    void HDF5ScopedFileSentinel::setFileId(hid_t* fileId)
-    {
-      m_FileId = fileId;
-    }
+void HDF5ScopedFileSentinel::setFileId(hid_t* fileId)
+{
+  m_FileId = fileId;
+}
 
-    hid_t* HDF5ScopedFileSentinel::getFileId()
-    {
-      return m_FileId;
-    }
+hid_t* HDF5ScopedFileSentinel::getFileId()
+{
+  return m_FileId;
+}
 
