@@ -251,7 +251,7 @@ void FindDeformationStatistics::execute()
 //  float gamvdisdistthresh[20][2];
 //  float kmvsfmmmprimethresh[20][2];
 //  float gamvsfmmmprimethresh[20][2];
-  int kambin, grmbin;
+  int kambin, grmbin, kambin2, grmbin2;
   int gbbin, tjbin, qpbin;
   int sfbin, mprimebin, F1bin, F1sptbin, F7bin, disbin;
  // int actualpoints = 0;
@@ -380,6 +380,8 @@ void FindDeformationStatistics::execute()
     else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
       if((grm/avgGRM) >= 1) grmbin = 10+int(((grm/avgGRM)-1.0)/0.25);
     else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
+	  kambin2 = int(kam/0.25);
+	  grmbin2 = int(grm/0.5);
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
@@ -417,20 +419,20 @@ void FindDeformationStatistics::execute()
       if(mprimebin > 19) mprimebin = 19;
       if(disbin < 0) disbin = 0;
       if(disbin > 19) disbin = 19;
-      kmdist[kambin]++;
-      gamdist[grmbin]++;
-      kmvgb[kambin][0]++;
-      kmvgb[kambin][1] = kmvgb[kambin][1] + (gbdist/avgGBdist);
-      gamvgb[grmbin][0]++;
-      gamvgb[grmbin][1] = gamvgb[grmbin][1] + (gbdist/avgGBdist);
-      kmvtj[kambin][0]++;
-      kmvtj[kambin][1] = kmvtj[kambin][1] + (tjdist/avgTJdist);
-      gamvtj[grmbin][0]++;
-      gamvtj[grmbin][1] = gamvtj[grmbin][1] + (tjdist/avgTJdist);
-      kmvqp[kambin][0]++;
-      kmvqp[kambin][1] = kmvqp[kambin][1] + (qpdist/avgQPdist);
-      gamvqp[grmbin][0]++;
-      gamvqp[grmbin][1] = gamvqp[grmbin][1] + (qpdist/avgQPdist);
+      kmdist[kambin2]++;
+      gamdist[grmbin2]++;
+      kmvgb[gbbin][0]++;
+      kmvgb[gbbin][1] = kmvgb[gbbin][1] + (kam/avgKAM);
+      gamvgb[gbbin][0]++;
+      gamvgb[gbbin][1] = gamvgb[gbbin][1] + (grm/avgGRM);
+      kmvtj[tjbin][0]++;
+      kmvtj[tjbin][1] = kmvtj[tjbin][1] + (kam/avgKAM);
+      gamvtj[tjbin][0]++;
+      gamvtj[tjbin][1] = gamvtj[tjbin][1] + (grm/avgGRM);
+      kmvqp[qpbin][0]++;
+      kmvqp[qpbin][1] = kmvqp[qpbin][1] + (kam/avgKAM);
+      gamvqp[qpbin][0]++;
+      gamvqp[qpbin][1] = gamvqp[qpbin][1] + (grm/avgGRM);
       distance = int(m_GBEuclideanDistances[i]);
       if(distance > 19) distance = 19;
       if(distance <= 5)
@@ -538,12 +540,39 @@ void FindDeformationStatistics::execute()
 
   size_t size = m->getNumFieldTuples();
 
+  float x, y, z;
+  float xtemp, ytemp, ztemp;
+  float xFZ, yFZ, zFZ;
   for(size_t i=1;i<size;i++)
   {
-        float x = static_cast<float>( m_Poles[3*i] - (m_Poles[3*i] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1.0))) );
-        float y = static_cast<float>( m_Poles[3*i+1] - (m_Poles[3*i+1] * (m_Poles[3*i+2] / (m_Poles[3*i+2] + 1.0))) );
-        float z = 0.0;
-        fprintf(vtkFile, "%f %f %f\n", x, y, z);
+	  xtemp = m_Poles[3*i];
+	  ytemp = m_Poles[3*i+1];
+	  ztemp = m_Poles[3*i+2];
+	  
+	  if(ztemp<0) xtemp = -xtemp, ytemp = -ytemp, ztemp = -ztemp;
+	  if(xtemp >= ytemp && xtemp >= ztemp)
+	  {
+		  z = xtemp;
+		  if(ytemp >= ztemp) x = ytemp, y = ztemp;
+		  else x = ztemp, y = ytemp;
+	  }
+	  if(ytemp >= xtemp && ytemp >= ztemp)
+	  {
+		  z = ytemp;
+		  if(xtemp >= ztemp) x = xtemp, y = ztemp;
+		  else x = ztemp, y = xtemp;
+	  }
+	  if(ztemp >= xtemp && ztemp >= ytemp)
+	  {
+		  z = ztemp;
+		  if(xtemp >= ytemp) x = xtemp, y = ytemp;
+		  else x = ytemp, y = xtemp;
+	  }
+      
+	  xFZ = static_cast<float>( x - (x * (z / (z + 1.0))) );
+      yFZ = static_cast<float>( y - (y * (z / (z + 1.0))) );
+      zFZ = 0.0;
+      fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
   fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumFieldTuples()-1, ((m->getNumFieldTuples()-1)*2));
