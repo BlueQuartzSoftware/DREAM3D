@@ -60,7 +60,6 @@ class GrainFaceCurvatureFilter : public SurfaceMeshFilter
     virtual ~GrainFaceCurvatureFilter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
- //   DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection1ArrayName)
@@ -75,6 +74,7 @@ class GrainFaceCurvatureFilter : public SurfaceMeshFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ComputePrincipalDirectionVectors)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeMeanCurvature)
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeGaussianCurvature)
+    DREAM3D_INSTANCE_PROPERTY(bool, UseNormalsForCurveFitting)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

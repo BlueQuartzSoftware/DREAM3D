@@ -67,6 +67,7 @@ GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
   m_ComputePrincipalDirectionVectors(true),
   m_ComputeMeanCurvature(false),
   m_ComputeGaussianCurvature(false),
+  m_UseNormalsForCurveFitting(true),
   m_SurfaceMeshUniqueEdges(NULL),
   m_SurfaceMeshTriangleEdges(NULL),
   m_TotalGrainFaces(0),
@@ -122,6 +123,14 @@ void GrainFaceCurvatureFilter::setupFilterParameters()
     option->setValueType("bool");
     options.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Use Triangle Normals for Curve Fitting");
+    option->setPropertyName("UseNormalsForCurveFitting");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
   setFilterParameters(options);
 }
 
@@ -136,6 +145,7 @@ void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors());
   writer->writeValue("ComputeGaussianCurvature", getComputeGaussianCurvature() );
   writer->writeValue("ComputeMeanCurvature", getComputeMeanCurvature() );
+  writer->writeValue("UseNormalsForCurveFitting", getUseNormalsForCurveFitting() );
 }
 
 // -----------------------------------------------------------------------------
@@ -166,12 +176,7 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
       setErrorCondition(-384);
     }
-//    else
-//    {
-//      // This depends on the triangles array already being created
-//      int size = sm->getFaces()->GetNumberOfTuples();
-//      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EdgeData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
-//    }
+
 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
@@ -384,7 +389,7 @@ void GrainFaceCurvatureFilter::execute()
   {
     SharedGrainFaceFilter::TriangleIds_t& triangleIds = (*iter).second;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds,
+    g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
                                             principalCurvature1, principalCurvature2,
                                             principalDirection1, principalDirection2,
                                             gaussianCurvature, meanCurvature,
