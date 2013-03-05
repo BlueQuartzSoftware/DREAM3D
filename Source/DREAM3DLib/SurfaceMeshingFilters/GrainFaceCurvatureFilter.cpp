@@ -398,7 +398,7 @@ void GrainFaceCurvatureFilter::execute()
 
 
 
-    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, false,
+    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
                                                principalCurvature1, principalCurvature2,
                                                principalDirection1, principalDirection2,
                                                gaussianCurvature, meanCurvature,
