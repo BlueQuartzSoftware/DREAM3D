@@ -410,8 +410,9 @@ void PackPrimaryPhases::execute()
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed);
 
   int64_t totalPoints = m->getTotalPoints();
-  //size_t totalFields = m->getNumFieldTuples();
-  dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+  size_t totalFields = m->getNumFieldTuples();
+  if(totalFields == 0) totalFields = 1;  
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
