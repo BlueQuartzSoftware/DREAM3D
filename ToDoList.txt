@@ -1,0 +1,117 @@
+STILL TO DO
+
+Change Field to Region in all codes
+Provide better feedback on 3D .ctf files
+Fix calculation+storage of real stats for reading into synthetic builder
+Add advanced button on import filter to allow any recommended transformation
+Add filter to segment features by “intensity”
+Add filter to dump ensemble stats/info
+Add filter to read .edf data
+Add/Modify filter to note if grain is a twin, parent or untwinned
+Add ability to define twins of interest on merge twin filter
+Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
+Add ability to flag regions as 'defects' or a new phase in the fill bad data filter
+Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
+Look into deleting field arrays after packing in synthetic structures
+Add filter to write out 2D slices as .ang, .ctf or .mic files
+Look into incorporating genetic algorithms in the packing algorithms of the synthetic builder
+Include a filter to calculate 2-pt statistics
+Look into using 2-pt statistics to advance the packing algorithms in the synthetic builder
+Add a filter to calculate Kearn's number
+Look into matching the Kearn's number when matching cystallography in the synthetic builder
+Add a cleanup filter that considers the orientation (nearest) or kikuchi pattern of neighboring voxels when assigning bad voxels
+Add GBCD calculation filters from G. Rohrer
+Add a filter to calculate 'clustering' statistics on 'marked' features
+Look into creating multiple maps at each level (i.e. parent and grain filed maps)
+Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
+Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
+Fix reference frame button on import filter to not reset to default
+Modify all stats filters to check for 2D in all directions
+Add filter to calculate microtexture function or equivalent
+Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
+Fix synthetic builder to note if volume is 2D and actually pack slices
+Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
+Break out all stats filters to just calculate stats
+Add filter to calculate ensemble stats (fit distributions to arrays)
+Add filter to merge twins using surface mesh (5 parameter)
+Add virtual sectioning filter
+Add/Finish filter to 'standardize' euler angles within a grain
+Add ability to "add filter" to plugin maker
+Add "help" button to each filter
+Fix issue with writing euler angles to binary vtk file
+Fix stats generator to display new phase when new phase added
+Look into creating a filter to color orientations using C. Shuh's color scale
+Create filter to generate Abaqus input files
+Update documentation file structure now that users can specify array names
+Add mesh quantification filter (code from Tony)
+Create filter to generate surface mesh from volume mesh
+Add mesh decimation filter (surface or volume)
+Add 3D linear intercept calculation filter (C. Hartley filter)
+Design protocol to learn user's 'ontology'
+Add filter to perform Tony's hot spot analysis
+Update file type stats generator can read (.dream3d)
+Work through all IO filters to have extensions in the save and open popup box
+Check error causing crash in the find mdf filter
+Add ability to read list of ellipsoids into packing algorithms
+Look into bias near outside of box during synthetic building
+Write documentation for filters
+Add filter to combine far field data with near field data from HEDM
+Look into adding subgroups for further organizing filters
+Remove all "under-the-hood" calls to ther filters
+Allow the user to specify the phase for minimum neighbors filter
+Add node type calculation during quick mesh
+Design batch processing capability through using pipeline files
+Create a filter to "link" field map to cell array
+Fix data check in find kernel average misorientation filter (crystal structures)
+Fix data check in deformation statistics filter (crystal structures)
+Fix data check in slip transmission metrics filter (crystal structures)
+Add filter to write out slices as images of any array
+Look at adding a mirror option to the rotate sample reference frame filter
+Add the option for the user to set the name of a copied array (from field to cell)
+Add filter to determine spherical correlation length from each grain centroid
+Add filter or option to write out misorientation values
+Add ability to open a previously saved stats file back into the stats generator
+
+
+DONE
+
+Add option to choose IPF coloring direction
+Add ability to sort through filters by name
+Add helper code to populate edge table in surface meshes
+Update import filter to have default manufacturer transformation options
+Add filter abilities to read .tif or other image types into array
+Add surface mesh data container writer
+Add framework to pass contents of data continer to filters for display on GUIs in real-time
+Add single threshold filter for cells
+Add multi parameter threshold filter for cells
+Add single threshold filter for fields
+Add multi parameter threshold filter for fields
+Add ability to remove arrays out of maps
+Fix the scaling of the axes in the stats generator when values are changed
+Add import and reading capability for .mic files from HEDM data
+Modify read dream3d filter to allow user to specify arrays to read
+Add grain reference misorientation filter for c-axis
+Add orientation jumble filter
+Add filter to determine average c-axis orientation for fields
+Add clear data filter to delete data from user defined subsets
+Add filter to reconstruct prior beta grain during initial segmentation
+Fix crashing bug in insert precipitates filter
+Confirm functionality of orientation ops functions (FZ specifically)
+Add quick mesh filter
+Add option to align feature centroid filter to use reference slice
+Add coordination number based erode/dilate filter
+Add filter to create "noise" in orientations in synthetic structures
+Add filter to insert "bad data" in synthetic structures (based on location)
+Add filter to "identify sample" (operates on good voxels)
+Rework deformation statistics filter
+Add filter to calculate boundary transmission paraters
+Create a raw binary reader
+Move reference frame transformations to readh5ebsd filter by calling out to rotation filters
+Generalize possible rotations in the reference rotation filters
+Add ability to store parent id at the field level
+Add filter to create a cell array from a field array
+
+
+NO LONGER WANTED
+
+Add structured grid writer
