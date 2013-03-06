@@ -54,7 +54,9 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FieldDataCSVWriter::FieldDataCSVWriter() :
-AbstractFilter()
+AbstractFilter(),
+m_FieldDataFile(""),
+m_WriteNeighborListData(false)
 {
   setupFilterParameters();
 }
@@ -81,6 +83,14 @@ void FieldDataCSVWriter::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Neighbor Data");
+    option->setPropertyName("WriteNeighborListData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -90,6 +100,7 @@ void FieldDataCSVWriter::setupFilterParameters()
 void FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("FieldDataFile", getFieldDataFile() );
+  writer->writeValue("WriteNeighborData", getWriteNeighborListData() );
 }
 
 // -----------------------------------------------------------------------------
@@ -204,30 +215,32 @@ void FieldDataCSVWriter::execute()
     outFile << std::endl;
   }
 
-
-  // Print the GrainIds Header before the rest of the headers
-  // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  if(m_WriteNeighborListData == true)
   {
-    // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getFieldData(*iter);
-	if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
-	{
-	  outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
-	  size_t numTuples = p->GetNumberOfTuples();
-	  float threshold = 0.0f;
-
-	  // Skip the first grain
-	  for(size_t i = 1; i < numTuples; ++i)
+	  // Print the GrainIds Header before the rest of the headers
+	  // Loop throught the list and print the rest of the headers, ignoring those we don't want
+	  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
 	  {
-		// Print the grain id
-		outFile << i;
-		// Print a row of data
-		outFile << space;
-		p->printTuple(outFile, i, space);
-		outFile << std::endl;
+		// Only get the array if the name does NOT match those listed
+		IDataArray::Pointer p = m->getFieldData(*iter);
+		if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
+		{
+		  outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
+		  size_t numTuples = p->GetNumberOfTuples();
+		  float threshold = 0.0f;
+
+		  // Skip the first grain
+		  for(size_t i = 1; i < numTuples; ++i)
+		  {
+			// Print the grain id
+			outFile << i;
+			// Print a row of data
+			outFile << space;
+			p->printTuple(outFile, i, space);
+			outFile << std::endl;
+		  }
+		}
 	  }
-	}
   }
   outFile.close();
 
