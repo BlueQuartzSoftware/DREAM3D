@@ -101,6 +101,25 @@ namespace DREAM3D
     const std::string SolidMeshingFilters("SolidMeshing");
   }
 
+  namespace FilterSubGroups
+  {
+    const std::string OutputFilters("(Output)");
+    const std::string InputFilters("(Input)");
+    const std::string ImageFilters("(Image)");
+    const std::string CleanupFilters("(Cleanup)");
+    const std::string AlignmentFilters("(Alignment)");
+    const std::string SegmentationFilters("(Segmentation)");
+    const std::string GroupingFilters("(Grouping)");
+    const std::string CropFilters("Croping");
+    const std::string ResolutionFilters("Resolution");
+    const std::string MorphologicalFilters("Morphological");
+    const std::string CrystallographicFilters("Crystallographic");
+    const std::string PackingFilters("Packing");
+    const std::string CrystallographyFilters("Crystallography");
+    const std::string GenerationFilters("Generation");
+    const std::string SmoothingFilters("Smoothing");
+  }
+
   namespace CellData
   {
     const std::string GrainIds("GrainIds");
