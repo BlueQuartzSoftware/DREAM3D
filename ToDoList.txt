@@ -71,6 +71,11 @@ Add the option for the user to set the name of a copied array (from field to cel
 Add filter to determine spherical correlation length from each grain centroid
 Add filter or option to write out misorientation values
 Add ability to open a previously saved stats file back into the stats generator
+Add filter to flatten color image to grayscale
+Add mean filter in orientation space
+Add mean filter on scalar array
+Add median filter on scalar array
+Add option to write neighborlist data to csv field data file
 
 
 DONE
@@ -110,6 +115,8 @@ Move reference frame transformations to readh5ebsd filter by calling out to rota
 Generalize possible rotations in the reference rotation filters
 Add ability to store parent id at the field level
 Add filter to create a cell array from a field array
+Add storage of misorientations as list at field level for each grain in find mdf filter
+Add writing of neighborlist field level arrays to csv file
 
 
 NO LONGER WANTED

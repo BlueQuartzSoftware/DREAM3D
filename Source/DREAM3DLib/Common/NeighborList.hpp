@@ -170,7 +170,14 @@ class NeighborList : public IDataArray
     //FIXME: These need to be implemented
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
-        BOOST_ASSERT(false);
+		SharedVectorType sharedVec = _data[i];
+		VectorType* vec = sharedVec.get();
+		size_t size = vec->size();
+		out << size;
+		for(size_t i=0;i<size;i++)
+		{
+			out << delimiter << vec->at(i);
+		}
     }
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {

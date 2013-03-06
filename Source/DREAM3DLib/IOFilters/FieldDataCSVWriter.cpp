@@ -43,6 +43,8 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
+
 
 
 const static float m_pi = static_cast<float>(M_PI);
@@ -145,15 +147,18 @@ void FieldDataCSVWriter::execute()
 
   std::vector<IDataArray::Pointer> data;
 
+  //For checking if an array is a neighborlist
+  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+
   // Print the GrainIds Header before the rest of the headers
   outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    if ( (*iter).compare(DREAM3D::FieldData::NeighborList) && (*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) )
-    {
-      IDataArray::Pointer p = m->getFieldData(*iter);
+    IDataArray::Pointer p = m->getFieldData(*iter);
+	if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+	{
       if (p->GetNumberOfComponents() == 1) {
         outFile << space << (*iter);
       }
@@ -199,6 +204,31 @@ void FieldDataCSVWriter::execute()
     outFile << std::endl;
   }
 
+
+  // Print the GrainIds Header before the rest of the headers
+  // Loop throught the list and print the rest of the headers, ignoring those we don't want
+  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  {
+    // Only get the array if the name does NOT match those listed
+    IDataArray::Pointer p = m->getFieldData(*iter);
+	if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
+	{
+	  outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
+	  size_t numTuples = p->GetNumberOfTuples();
+	  float threshold = 0.0f;
+
+	  // Skip the first grain
+	  for(size_t i = 1; i < numTuples; ++i)
+	  {
+		// Print the grain id
+		outFile << i;
+		// Print a row of data
+		outFile << space;
+		p->printTuple(outFile, i, space);
+		outFile << std::endl;
+	  }
+	}
+  }
   outFile.close();
 
   // If there is an error set this to something negative and also set a message
