@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT FindGrainPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Phases"; }
 
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

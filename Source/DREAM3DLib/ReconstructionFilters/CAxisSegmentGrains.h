@@ -82,6 +82,7 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const std::string getHumanLabel() { return "Segment Grains (C-Axis Misorientation)"; }
 
     virtual void setupFilterParameters();

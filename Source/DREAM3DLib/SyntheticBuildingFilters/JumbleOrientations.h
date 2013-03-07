@@ -81,14 +81,9 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, Iterations)
 
-    virtual const std::string getGroupName()
-    {
-      return DREAM3D::FilterGroups::SyntheticBuildingFilters;
-    }
-    virtual const std::string getHumanLabel()
-    {
-      return "Jumble Orientations";
-    }
+    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getHumanLabel() {return "Jumble Orientations";}
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

@@ -57,6 +57,7 @@ class IFilterWidgetFactory
      */
     virtual QFilterWidget* createWidget() { BOOST_ASSERT(false); return NULL;}
     virtual std::string getFilterGroup() { BOOST_ASSERT(false); return ""; }
+    virtual std::string getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
     virtual std::string getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
     virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 

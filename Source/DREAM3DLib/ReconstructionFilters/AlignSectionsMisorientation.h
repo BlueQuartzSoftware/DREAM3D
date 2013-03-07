@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const std::string getHumanLabel() { return "Align Sections (Misorientation)"; }
 
     virtual void setupFilterParameters();

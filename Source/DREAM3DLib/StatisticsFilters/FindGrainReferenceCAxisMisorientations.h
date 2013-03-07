@@ -79,6 +79,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgCAxisMisorientationsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Grain Reference C-Axis Misorientations"; }
 
     virtual void setupFilterParameters();

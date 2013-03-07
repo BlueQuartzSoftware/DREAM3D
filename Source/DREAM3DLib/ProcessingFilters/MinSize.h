@@ -78,6 +78,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const std::string getHumanLabel() { return "Minimum Size Filter (All Phases)"; }
 
     virtual void setupFilterParameters();

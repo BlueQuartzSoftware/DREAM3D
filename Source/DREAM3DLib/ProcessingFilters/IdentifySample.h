@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const std::string getHumanLabel() { return "Identify Sample"; }
 
     virtual void setupFilterParameters();

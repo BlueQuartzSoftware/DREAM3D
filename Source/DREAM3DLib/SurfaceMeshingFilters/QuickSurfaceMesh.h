@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
   DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
      virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
 
   virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

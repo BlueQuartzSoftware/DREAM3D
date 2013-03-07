@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const std::string getHumanLabel() { return "Add Bad Data"; }
 
     DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)

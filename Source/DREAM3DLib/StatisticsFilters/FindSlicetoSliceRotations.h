@@ -78,6 +78,7 @@ class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SlicetoSliceRotationsFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Slice to Slice Crystallographic Misalignments"; }
 
     virtual void setupFilterParameters();

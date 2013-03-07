@@ -103,14 +103,20 @@ namespace DREAM3D
 
   namespace FilterSubGroups
   {
-    const std::string OutputFilters("(Output)");
-    const std::string InputFilters("(Input)");
-    const std::string ImageFilters("(Image)");
-    const std::string CleanupFilters("(Cleanup)");
-    const std::string AlignmentFilters("(Alignment)");
-    const std::string SegmentationFilters("(Segmentation)");
-    const std::string GroupingFilters("(Grouping)");
-    const std::string CropFilters("Croping");
+    const std::string MemoryManagementFilters("Memory/Management");
+    const std::string SpatialFilters("Spatial");
+    const std::string OutputFilters("Output");
+    const std::string InputFilters("Input");
+    const std::string ImageFilters("Image");
+    const std::string CleanupFilters("Cleanup");
+    const std::string ThresholdFilters("Threshold");
+    const std::string RegularizationFilters("Regularization");
+    const std::string ConversionFilters("Conversion");
+    const std::string AlignmentFilters("Alignment");
+    const std::string SegmentationFilters("Segmentation");
+    const std::string GroupingFilters("Grouping");
+    const std::string CropCutFilters("Croping/Cutting");
+    const std::string RotationTransformationFilters("Rotating/Transforming");
     const std::string ResolutionFilters("Resolution");
     const std::string MorphologicalFilters("Morphological");
     const std::string CrystallographicFilters("Crystallographic");
@@ -118,6 +124,9 @@ namespace DREAM3D
     const std::string CrystallographyFilters("Crystallography");
     const std::string GenerationFilters("Generation");
     const std::string SmoothingFilters("Smoothing");
+    const std::string CurvatureFilters("Curvature");
+    const std::string ConnectivityArrangementFilters("Connectivity/Arrangement");
+    const std::string MiscFilters("Misc");
   }
 
   namespace CellData

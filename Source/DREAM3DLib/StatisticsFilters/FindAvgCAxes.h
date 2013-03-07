@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Average C-Axis Orientations"; }
 
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

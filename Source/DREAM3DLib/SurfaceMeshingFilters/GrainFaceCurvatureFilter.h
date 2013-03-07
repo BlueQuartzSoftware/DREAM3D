@@ -82,6 +82,7 @@ class GrainFaceCurvatureFilter : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CurvatureFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

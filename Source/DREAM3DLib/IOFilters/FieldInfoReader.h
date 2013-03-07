@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read Field Info File"; }
 
     virtual void setupFilterParameters();

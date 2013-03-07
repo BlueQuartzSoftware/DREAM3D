@@ -80,6 +80,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find MDF"; }
 
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

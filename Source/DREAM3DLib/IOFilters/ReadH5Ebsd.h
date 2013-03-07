@@ -96,6 +96,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read H5Ebsd File"; }
 
   virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

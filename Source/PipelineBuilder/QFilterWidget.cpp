@@ -133,6 +133,14 @@ QString QFilterWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString QFilterWidget::getFilterSubGroup()
+{
+	return QString::fromStdString(DREAM3D::FilterSubGroups::MiscFilters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 //QFilterWidget* QFilterWidget::createDeepCopy()
 //{
 //  QFilterWidget* widget = new QFilterWidget();

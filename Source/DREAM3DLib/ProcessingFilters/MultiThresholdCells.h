@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

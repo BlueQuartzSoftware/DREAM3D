@@ -75,6 +75,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     // These should be implemented by the subclass
     virtual const std::string getGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+    virtual const std::string getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const std::string getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
 
     virtual const std::string getFilterVersion() { return DREAM3DLib::Version::Complete(); }
