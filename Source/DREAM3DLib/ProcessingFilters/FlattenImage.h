@@ -33,96 +33,62 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ImportImageStack_H_
-#define ImportImageStack_H_
-
-#include <string>
+#ifndef FlattenImage_H_
+#define FlattenImage_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
 /**
- * @class ImportImageStack ImportImageStack.h ImageImport/Code/ImageImportFilters/ImportImageStack.h
- * @brief
- * @author
- * @date
+ * @class FlattenImage FlattenImage.h DREAM3DLib/GenericFilters/FlattenImage.h
+ * @brief This filter will convert the Euler Angles. Simply enter the conversion
+ * factor that you want to use. For Degrees to Radians 0.01745329 and for Radians
+ * to Degrees use 57.2957785
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Apr 26, 2012
  * @version 1.0
  */
-class ImportImageStack : public AbstractFilter
+class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ImportImageStack)
-    DREAM3D_STATIC_NEW_MACRO(ImportImageStack)
-    DREAM3D_TYPE_MACRO_SUPER(ImportImageStack, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FlattenImage)
+    DREAM3D_STATIC_NEW_MACRO(FlattenImage)
+    DREAM3D_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
+    virtual ~FlattenImage();
 
-    virtual ~ImportImageStack();
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Spacing)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FlatImageDataArrayName)
 
 
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, FlattenMethod)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const std::string getGroupName() { return "ImageImport"; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const std::string getHumanLabel() { return "Import Images (3D Stack)"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
-    virtual void execute();
-
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
     virtual void preflight();
 
-  protected:
-    ImportImageStack();
+    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
+    virtual const std::string getHumanLabel() { return "Flatten Image"; }
+
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param fields The number of fields
-    * @param ensembles The number of ensembles
-    */
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
+
+  protected:
+    FlattenImage();
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_Output;
+    unsigned char* m_ImageData;
+    int32_t* m_FlatImageData;
 
-    ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
-    void operator=(const ImportImageStack&); // Operator '=' Not Implemented
+    FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
+    void operator=(const FlattenImage&); // Operator '=' Not Implemented
 };
 
-#endif /* ImportImageStack_H_ */
+#endif /* FlattenImage_H_ */
