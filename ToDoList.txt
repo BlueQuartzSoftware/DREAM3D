@@ -1,7 +1,11 @@
 STILL TO DO
 
+Blockers
 Change Field to Region in all codes
 Provide better feedback on 3D .ctf files
+Write documentation for filters
+Add node type calculation during quick mesh
+
 Fix calculation+storage of real stats for reading into synthetic builder
 Add advanced button on import filter to allow any recommended transformation
 Add filter to segment features by “intensity”
@@ -31,15 +35,16 @@ Add filter to calculate microtexture function or equivalent
 Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
 Fix synthetic builder to note if volume is 2D and actually pack slices
 Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
-Break out all stats filters to just calculate stats
+** Break out all stats filters to just calculate stats
 Add filter to calculate ensemble stats (fit distributions to arrays)
 Add filter to merge twins using surface mesh (5 parameter)
 Add virtual sectioning filter
 Add/Finish filter to 'standardize' euler angles within a grain
-Add ability to "add filter" to plugin maker
+
+
+
 Add "help" button to each filter
-Fix issue with writing euler angles to binary vtk file
-Fix stats generator to display new phase when new phase added
+
 Look into creating a filter to color orientations using C. Shuh's color scale
 Create filter to generate Abaqus input files
 Update documentation file structure now that users can specify array names
@@ -50,15 +55,15 @@ Add 3D linear intercept calculation filter (C. Hartley filter)
 Design protocol to learn user's 'ontology'
 Add filter to perform Tony's hot spot analysis
 Update file type stats generator can read (.dream3d)
-Work through all IO filters to have extensions in the save and open popup box
+
 Check error causing crash in the find mdf filter
 Add ability to read list of ellipsoids into packing algorithms
 Look into bias near outside of box during synthetic building
-Write documentation for filters
+
 Add filter to combine far field data with near field data from HEDM
-Remove all "under-the-hood" calls to ther filters
+Remove all "under-the-hood" calls to other filters
 Allow the user to specify the phase for minimum neighbors filter
-Add node type calculation during quick mesh
+
 Design batch processing capability through using pipeline files
 Create a filter to "link" field map to cell array
 Fix data check in find kernel average misorientation filter (crystal structures)
@@ -77,7 +82,10 @@ Add median filter on scalar array
 
 
 DONE
-
+Add ability to "add filter" to plugin maker
+Work through all IO filters to have extensions in the save and open popup box
+Fix issue with writing euler angles to binary vtk file
+Fix stats generator to display new phase when new phase added
 Add option to choose IPF coloring direction
 Add ability to sort through filters by name
 Add helper code to populate edge table in surface meshes
