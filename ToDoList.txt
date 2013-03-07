@@ -56,7 +56,6 @@ Add ability to read list of ellipsoids into packing algorithms
 Look into bias near outside of box during synthetic building
 Write documentation for filters
 Add filter to combine far field data with near field data from HEDM
-Look into adding subgroups for further organizing filters
 Remove all "under-the-hood" calls to ther filters
 Allow the user to specify the phase for minimum neighbors filter
 Add node type calculation during quick mesh
@@ -117,6 +116,7 @@ Add filter to create a cell array from a field array
 Add storage of misorientations as list at field level for each grain in find mdf filter
 Add writing of neighborlist field level arrays to csv file
 Add option to write neighborlist data to csv field data file
+Add subgroups for further organizing filters
 
 
 NO LONGER WANTED
