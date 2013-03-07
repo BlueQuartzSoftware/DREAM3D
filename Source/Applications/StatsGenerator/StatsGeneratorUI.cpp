@@ -94,7 +94,7 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   m_HelpDialog(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
-  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
+  m_FilePath = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
   setupUi(this);
   setupGui();
 
@@ -178,7 +178,7 @@ void StatsGeneratorUI::setupGui()
   ppw->setTotalPhaseFraction(1.0);
   phaseTabs->addTab(ppw, "Primary Phase");
 
-  setWindowTitle("[*] - Untitled.h5stats");
+  setWindowTitle("[*] - Untitled.dream3d");
   setWindowModified(true);
 
   m_HelpDialog = new HelpDialog(this);
@@ -600,9 +600,9 @@ void StatsGeneratorUI::on_actionSave_triggered()
   if (m_FileSelected == false)
   {
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
-    QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
+    QString h5file = QFileDialog::getSaveFileName(this, tr("Save Statistics File"),
                                                   m_FilePath,
-                                                   tr("HDF5 Files (*.h5stats)") );
+                                                   tr("DREAM3D Files (*.dream3d)") );
     if ( true == h5file.isEmpty() ){ return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);
@@ -714,8 +714,8 @@ void StatsGeneratorUI::on_actionNew_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionOpen_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
-  QString h5file = QFileDialog::getOpenFileName(this, tr("Open HDF5 Statistics File"), proposedFile, tr("HDF5 Files (*.h5stats *.h5 )"));
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
+  QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d)"));
   if(true == h5file.isEmpty())
   {
     return;

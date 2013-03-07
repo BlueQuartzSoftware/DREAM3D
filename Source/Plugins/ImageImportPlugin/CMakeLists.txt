@@ -63,7 +63,7 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 set(Project_SRCS "")
 
 # Add in our Filter classes
-include(${ImageImportPlugin_SOURCE_DIR}/ImageImportFilters/SourceList.cmake)
+include(${ImageImportPlugin_SOURCE_DIR}/IOFilters/SourceList.cmake)
 
 
 set(ImageImportPlugin_Project_SRCS ${Project_SRCS})
