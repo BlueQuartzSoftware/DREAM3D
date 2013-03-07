@@ -68,9 +68,7 @@ Add filter to write out slices as images of any array
 Look at adding a mirror option to the rotate sample reference frame filter
 Add the option for the user to set the name of a copied array (from field to cell)
 Add filter to determine spherical correlation length from each grain centroid
-Add filter or option to write out misorientation values
 Add ability to open a previously saved stats file back into the stats generator
-Add filter to flatten color image to grayscale
 Add mean filter in orientation space
 Add mean filter on scalar array
 Add median filter on scalar array
@@ -115,8 +113,10 @@ Add ability to store parent id at the field level
 Add filter to create a cell array from a field array
 Add storage of misorientations as list at field level for each grain in find mdf filter
 Add writing of neighborlist field level arrays to csv file
+Add filter or option to write out misorientation values
 Add option to write neighborlist data to csv field data file
 Add subgroups for further organizing filters
+Add filter to flatten color image to grayscale
 
 
 NO LONGER WANTED
