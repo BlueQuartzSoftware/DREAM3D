@@ -161,6 +161,7 @@ namespace DREAM3D
     const std::string GlobAlpha("GlobAlpha");
     const std::string BC("BandContrasts");
     const std::string ImageData("ImageData");
+    const std::string FlatImageData("FlatImageData");
 
     const std::string SolidMeshNodes("SolidMeshNodes");
     const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
@@ -386,6 +387,13 @@ namespace DREAM3D
   {
     const unsigned int DegreesToRadians = 0; //!<
     const unsigned int RadiansToDegrees = 1; //!<
+  }
+
+  namespace FlattenImageMethod
+  {
+    const unsigned int Lightness = 0; //!<
+    const unsigned int Average = 1; //!<
+    const unsigned int Luminosity = 2; //!<
   }
 
   namespace EulerFrameRotationAxis
