@@ -63,6 +63,11 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
       return m_GroupName;
     }
 
+    std::string getFilterSubGroup()
+    {
+      return m_SubGroupName;
+    }
+
     std::string getFilterHumanLabel()
     {
       return m_HumanName;
@@ -78,11 +83,13 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
     QFilterWidgetFactory() {
       Widget w;
       m_GroupName = w.getFilter()->getGroupName();
+      m_SubGroupName = w.getFilter()->getSubGroupName();
       m_HumanName = w.getFilter()->getHumanLabel();
     }
 
   private:
     std::string m_GroupName;
+    std::string m_SubGroupName;
     std::string m_HumanName;
     
     QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented

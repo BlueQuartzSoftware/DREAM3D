@@ -95,6 +95,13 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
     Collection getFactories(const std::string &groupName);
 
     /**
+     * @brief Returns the mapping of names to the Factory instances for a given filter subgroup
+     * @param subGroupName The name of the subgroup.
+     * @return
+     */
+    Collection getFactories(const std::string &groupName, const std::string &subGroupName);
+
+	/**
      * @brief Adds a Factory that creates QFilterWidgets
      * @param name
      * @param factory
@@ -102,6 +109,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
     void addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
 
     std::set<std::string> getGroupNames();
+    std::set<std::string> getSubGroupNames(const std::string &groupName);
 
 
 

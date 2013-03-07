@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
 	DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const std::string getHumanLabel() { return "Align Sections (List)"; }
 
     virtual void setupFilterParameters();

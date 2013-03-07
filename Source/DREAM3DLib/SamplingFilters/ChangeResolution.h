@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+	virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const std::string getHumanLabel() { return "Change Resolution"; }
 
     virtual void setupFilterParameters();

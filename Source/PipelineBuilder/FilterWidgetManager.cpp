@@ -105,6 +105,24 @@ FilterWidgetManager::Collection FilterWidgetManager::getFactories(const std::str
   return groupFactories;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterWidgetManager::Collection FilterWidgetManager::getFactories(const std::string &groupName, const std::string &subGroupName)
+{
+  FilterWidgetManager::Collection groupFactories;
+
+
+  for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
+  {
+    IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
+	if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0 && (*factory).second->getFilterSubGroup().compare(subGroupName) == 0)
+    {
+      groupFactories[(*factory).first] = (*factory).second;
+    }
+  }
+  return groupFactories;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -131,6 +149,27 @@ std::set<std::string> FilterWidgetManager::getGroupNames()
   //  std::cout << (*factory).second->getFilterGroup() << std::endl;
   }
   return groupNames;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::set<std::string> FilterWidgetManager::getSubGroupNames(const std::string &groupName)
+{
+ // std::cout << "FilterWidgetManager::getGroupNames" << std::endl;
+  // Get all the Widget Factories and loop over each one we know about and instantiate a new one
+  FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
+  FilterWidgetManager::Collection factories = fm->getFactories();
+  std::set<std::string> subGroupNames;
+  for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
+  {
+    IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
+	if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
+    {
+	    subGroupNames.insert((*factory).second->getFilterSubGroup());
+	}
+  }
+  return subGroupNames;
 }
 
 // -----------------------------------------------------------------------------

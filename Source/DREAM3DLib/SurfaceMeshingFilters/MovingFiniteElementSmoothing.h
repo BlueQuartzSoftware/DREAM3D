@@ -81,6 +81,7 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

@@ -25,5 +25,4 @@ ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME}
                                                                                               InitializeSyntheticVolume.html
                                                                                               "InitSynthVol.jpg"
                                                                                               TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} AdjustVolume AdjustVolume.html "" FALSE)
 

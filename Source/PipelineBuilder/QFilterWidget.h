@@ -118,6 +118,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
    // virtual QFilterWidget* createDeepCopy();
 
     virtual QString  getFilterGroup();
+    virtual QString  getFilterSubGroup();
 
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }

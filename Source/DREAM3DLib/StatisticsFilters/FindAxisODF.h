@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Axis ODF"; }
 
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

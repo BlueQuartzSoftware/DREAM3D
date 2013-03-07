@@ -102,6 +102,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const std::string getHumanLabel() { return "Pack Primary Phases"; }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)

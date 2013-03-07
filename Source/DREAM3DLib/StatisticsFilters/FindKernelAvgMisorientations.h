@@ -75,6 +75,7 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Kernel Average Misorientations"; }
 
     DREAM3D_INSTANCE_PROPERTY(int, KernelXSize)

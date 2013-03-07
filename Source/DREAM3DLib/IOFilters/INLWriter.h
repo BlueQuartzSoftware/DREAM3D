@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const std::string getHumanLabel() { return "Write INL File"; }
 
     virtual void setupFilterParameters();

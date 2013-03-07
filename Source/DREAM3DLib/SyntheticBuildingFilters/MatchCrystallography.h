@@ -95,14 +95,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-    virtual const std::string getGroupName()
-    {
-      return DREAM3D::FilterGroups::SyntheticBuildingFilters;
-    }
-    virtual const std::string getHumanLabel()
-    {
-      return "Match Crystallography";
-    }
+	virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getHumanLabel() {return "Match Crystallography";}
 
     virtual void setupFilterParameters();
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

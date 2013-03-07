@@ -337,6 +337,12 @@ void PipelineBuilderWidget::setupGui()
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
     filterGroup->setIcon(0, icon);
+    std::set<std::string> subGroupNames = fm->getSubGroupNames(*iter);
+    for(std::set<std::string>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
+    {
+      QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
+      filterSubGroup->setText(0, QString::fromStdString(*iter2));
+	}
   }
   library->setExpanded(true);
 
@@ -437,6 +443,11 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
     factories = fm->getFactories(item->text(0).toStdString());
     updateFilterGroupList(factories);
   }
+  else if (NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  {
+    factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
+    updateFilterGroupList(factories);
+  }
   else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::PrebuiltPipelines) == 0)
   {
       QString text = item->text(0);
@@ -470,7 +481,11 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
     factories = fm->getFactories(item->text(0).toStdString());
     updateFilterGroupList(factories);
   }
-}
+  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  {
+    factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
+    updateFilterGroupList(factories);
+  }}
 
 // -----------------------------------------------------------------------------
 //
@@ -593,6 +608,10 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories(item->text(0).toStdString());
+  }
+  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  {
+    factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
   }
 
   // Nothing was in the search Field so just reset to what was listed before
