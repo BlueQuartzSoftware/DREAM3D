@@ -998,6 +998,8 @@ class DataArray : public IDataArray
 
 typedef DataArray<bool> BoolArrayType;
 
+typedef DataArray<unsigned char> UCharArrayType;
+
 typedef DataArray<int8_t>  Int8ArrayType;
 typedef DataArray<uint8_t>  UInt8ArrayType;
 
