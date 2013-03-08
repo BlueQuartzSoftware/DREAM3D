@@ -9,16 +9,23 @@ so it can be integrated with the other documentation pages.
 @section blockers Show Stopping Bugs
 
 
+
 @section todo_high_priority High Priority
+@li Write documentation for filters
+
+
+@section mike_jackson Mike Jackson ToDo List
+@li Create filter to generate Abaqus input files, Albert Cerrone to help with this
+@li Users can not open .h5stats in StatsGenerator
+
+
 
 
 @section STILL_TO_DO Still To Do
 @li Change Field to Region in all codes
 @li Provide better feedback on 3D .ctf files
-@li Write documentation for filters
 @li Add node type calculation during quick mesh
 @li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
-
 @li Fix calculation+storage of real stats for reading into synthetic builder
 @li Add advanced button on import filter to allow any recommended transformation
 @li Add filter to segment features by ìintensityî
@@ -55,7 +62,7 @@ so it can be integrated with the other documentation pages.
 @li Add/Finish filter to 'standardize' euler angles within a grain
 @li Add "help" button to each filter
 @li Look into creating a filter to color orientations using C. Shuh's color scale
-@li Create filter to generate Abaqus input files
+
 @li Update documentation file structure now that users can specify array names
 @li Add mesh quantification filter (code from Tony)
 @li Create filter to generate surface mesh from volume mesh
@@ -83,6 +90,48 @@ so it can be integrated with the other documentation pages.
 @li Add mean filter in orientation space
 @li Add mean filter on scalar array
 @li Add median filter on scalar array
+
+
+
+@section todo_GUI_Pipeline Add to the Pipeline Gui
+@li Add a 'Rename Favorite' menu
+@li allow user to right-click on a favorite and "delete, rename, ..." the favorite
+@li allow user to right-click on a filter and display help in a separate window
+@li Add in a "Search Box" to top of Filter list to filter out the list based on keywords
+
+@section todo_low_priority Low Priority
+@li Add splash Screen similar to ParaView where the various entities that have donated
+code or Funding are shown with their logos.
+@li Update/Create a user manual for the stats generator - last parts need pasting
+@li Add menu for displaying help
+@li Combine the threshold_points and DetermineGoodVoxels into a single filter
+@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
+@li Reorganize the .h5ebsd file to include Images
+@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
+
+@section todo_feature Feature Request
+@li A filter that finds all the twins in the microstructure and assigns them
+to another phase (phase 3), so that they can be visualised differently to the surrouding
+grains (phase 2) and grains that are untwinned (phase 1).
+
+
+@section todo_documentation Documentation Issues
+@li Add documentation on how to add new filter directly into DREAM3D
+@li Add documentation on how to add new filter group directly into DREAM3D
+
+
+@section cmu_meshing CMU Surface Meshing
+@li bug in edges file is stopping the use in the smoothing filter
+
+@section mfe_smoothing MFE Smoothing
+@li add ability to stop the smoothing
+
+
+@section todo_bruker_support Bruker EBSD System Support
+@li BASE64 decoder
+@li XML Parser for the SEM Image file
+@li Create XML Parsing code for each file from the Bruker File Archive
+@li Include Expat as part of the DREAM3D Compile
 
 
 @section done Items Completed
@@ -134,55 +183,7 @@ so it can be integrated with the other documentation pages.
 
 
 @section NO_LONGER_WANTED No Longer Wanted
-
 @li Add structured grid writer
-
-@section todo_GUI_Pipeline Add to the Pipeline Gui
-@li Add a 'Rename Favorite' menu
-@li allow user to right-click on a favorite and "delete, rename, ..." the favorite
-@li allow user to right-click on a filter and display help in a separate window
-@li Add in a "Search Box" to top of Filter list to filter out the list based on keywords
-
-@section todo_low_priority Low Priority
-@li Add splash Screen similar to ParaView where the various entities that have donated
-code or Funding are shown with their logos.
-@li Update/Create a user manual for the stats generator - last parts need pasting
-@li Add menu for displaying help
-@li Combine the threshold_points and DetermineGoodVoxels into a single filter
-@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
-@li Reorganize the .h5ebsd file to include Images
-@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
-
-@section todo_feature Feature Request
-@li A filter that finds all the twins in the microstructure and assigns them
-to another phase (phase 3), so that they can be visualised differently to the surrouding
-grains (phase 2) and grains that are untwinned (phase 1).
-@li Add Kearns Factors for Hexagonal lattice presets.
-@li Add button in each filter widget to pop up the Help for that filter
-
-
-@section todo_documentation Documentation Issues
-@li Add documentation on how to add new filter directly into DREAM3D
-@li Add documentation on how to add new filter group directly into DREAM3D
-
-
-@section bugs Bugs
-
-
-@subsection statsgen StatsGenerator
-
-@section cmu_meshing CMU Surface Meshing
-@li bug in edges file is stopping the use in the smoothing filter
-
-@section mfe_smoothing MFE Smoothing
-@li add ability to stop the smoothing
-
-
-@section todo_bruker_support Bruker EBSD System Support
-@li BASE64 decoder
-@li XML Parser for the SEM Image file
-@li Create XML Parsing code for teach file from the Bruker File Archive
-@li Include Expat as part of the DREAM3D Compile
 
 
 */
