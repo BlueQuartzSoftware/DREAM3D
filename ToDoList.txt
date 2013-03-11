@@ -26,12 +26,10 @@ Look into creating multiple maps at each level (i.e. parent and grain filed maps
 Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
 Fix reference frame button on import filter to not reset to default
-Modify all stats filters to check for 2D in all directions
 Add filter to calculate microtexture function or equivalent
 Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
 Fix synthetic builder to note if volume is 2D and actually pack slices
 Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
-Break out all stats filters to just calculate stats
 Add filter to calculate ensemble stats (fit distributions to arrays)
 Add filter to merge twins using surface mesh (5 parameter)
 Add virtual sectioning filter
@@ -72,6 +70,7 @@ Add ability to open a previously saved stats file back into the stats generator
 Add mean filter in orientation space
 Add mean filter on scalar array
 Add median filter on scalar array
+Fix the issue of boundary curvature in new version of packing codes
 
 
 DONE
@@ -117,6 +116,8 @@ Add filter or option to write out misorientation values
 Add option to write neighborlist data to csv field data file
 Add subgroups for further organizing filters
 Add filter to flatten color image to grayscale
+Break out all stats filters to just calculate stats
+Modify all stats filters to check for 2D in all directions
 
 
 NO LONGER WANTED
