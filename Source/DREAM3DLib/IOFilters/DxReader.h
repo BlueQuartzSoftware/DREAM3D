@@ -61,6 +61,8 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
     virtual ~DxReader();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
@@ -69,7 +71,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read Dx File (Grain Ids)"; }
 
     virtual void setupFilterParameters();

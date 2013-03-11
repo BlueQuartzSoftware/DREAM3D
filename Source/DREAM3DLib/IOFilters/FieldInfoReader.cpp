@@ -41,24 +41,26 @@
 #include <fstream>
 #include <sstream>
 
+#include "MXA/Utilities/MXAFileInfo.h"
+
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FieldInfoReader::FieldInfoReader() :
-FileReader(),
-  m_InputInfoFile(""),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  FileReader(),
+  m_InputFile(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_CellEulerAngles(NULL),
-m_FieldPhases(NULL),
-m_FieldEulerAngles(NULL)
+  m_CellPhases(NULL),
+  m_CellEulerAngles(NULL),
+  m_FieldPhases(NULL),
+  m_FieldEulerAngles(NULL)
 {
   setupFilterParameters();
 }
@@ -80,9 +82,10 @@ void FieldInfoReader::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Field Info File");
-    option->setPropertyName("InputInfoFile");
+    option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
     option->setValueType("string");
+    option->setFileExtension("*.txt");
     parameters.push_back(option);
   }
 
@@ -94,7 +97,7 @@ void FieldInfoReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FieldInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("InputInfoFile", getInputInfoFile() );
+  writer->writeValue("InputFile", getInputFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -107,19 +110,25 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputInfoFile().empty() == true)
+  if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
-    ss << ClassName() << " needs the Input Grain Info File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -158,11 +167,11 @@ int  FieldInfoReader::readFile()
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
 
   std::ifstream inFile;
-  inFile.open(getInputInfoFile().c_str(), std::ios_base::binary);
+  inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
     std::stringstream ss;
-    ss << "Failed to open: " << getInputInfoFile();
+    ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

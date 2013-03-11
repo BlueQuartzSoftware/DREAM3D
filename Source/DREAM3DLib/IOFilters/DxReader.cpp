@@ -38,11 +38,14 @@
 #include <iostream>
 #include <fstream>
 
+#include "MXA/Utilities/MXAFileInfo.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
 FileReader(),
+m_InputFile(""),
 m_XRes(1.0f),
 m_YRes(1.0f),
 m_ZRes(1.0f),
@@ -121,9 +124,14 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)

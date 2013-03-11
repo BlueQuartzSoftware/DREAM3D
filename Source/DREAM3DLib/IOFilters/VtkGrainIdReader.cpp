@@ -33,6 +33,7 @@
 #include <map>
 
 #include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -44,6 +45,7 @@
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
 FileReader(),
+m_InputFile(""),
 m_Comment("DREAM3D Generated File"),
 m_DatasetType(""),
 m_FileIsBinary(true),
@@ -107,11 +109,17 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 }
 
