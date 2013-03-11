@@ -51,6 +51,7 @@
 FieldInfoReader::FieldInfoReader() :
   FileReader(),
   m_InputFile(""),
+  m_CreateCellLevelArrays(true),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -88,7 +89,14 @@ void FieldInfoReader::setupFilterParameters()
     option->setFileExtension("*.txt");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Create Cell Level Arrays");
+    option->setPropertyName("CreateCellLevelArrays");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -98,6 +106,7 @@ void FieldInfoReader::setupFilterParameters()
 void FieldInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("CreateCellLevelArrays", getCreateCellLevelArrays() );
 }
 
 // -----------------------------------------------------------------------------
@@ -124,11 +133,14 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  if (m_CreateCellLevelArrays)
+  {
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  }
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -161,10 +173,7 @@ int  FieldInfoReader::readFile()
     return -1;
   }
 
-  int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
-  dataCheck(false, totalPoints, totalFields, totalEnsembles);
+
 
   std::ifstream inFile;
   inFile.open(getInputFile().c_str(), std::ios_base::binary);
@@ -181,40 +190,50 @@ int  FieldInfoReader::readFile()
   int maxphase = 0;
   float ea1, ea2, ea3;
   inFile >> numgrains;
-  FloatArrayType::Pointer m_FieldEulerData = FloatArrayType::CreateArray(3*(numgrains+1), DREAM3D::FieldData::EulerAngles);
-  m_FieldEulerData->SetNumberOfComponents(3);
-  m_FieldEulerData->initializeWithZeros();
+
+  // Now that we know how many unique grains are in the file initialize the Field Map to the proper size:
+  int64_t totalPoints = m->getTotalPoints();
+  //size_t totalFields = m->getNumFieldTuples();
+  size_t totalEnsembles = m->getNumEnsembleTuples();
+  dataCheck(false, totalPoints, numgrains + 1, totalEnsembles);
+
+  // Initialize arrays to hold the data for the Euler Data
+  FloatArrayType::Pointer fieldEulerData = FloatArrayType::CreateArray(numgrains+1, 3, DREAM3D::FieldData::EulerAngles);
+  fieldEulerData->SetNumberOfComponents(3);
+  fieldEulerData->initializeWithZeros();
 
   // Create and initialize the Field Phase Array with a default value of the "Unkown Phase Type"
-  Int32ArrayType::Pointer m_FieldPhaseData = Int32ArrayType::CreateArray(numgrains+1, DREAM3D::FieldData::Phases);
-  m_FieldPhaseData->initializeWithValues(999);
+  Int32ArrayType::Pointer fieldPhaseData = Int32ArrayType::CreateArray(numgrains+1, DREAM3D::FieldData::Phases);
+  fieldPhaseData->initializeWithValues(999);
   for(int i=0;i<numgrains;i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    m_FieldEulerData->SetValue(3*gnum, ea1);
-    m_FieldEulerData->SetValue(3*gnum+1, ea2);
-    m_FieldEulerData->SetValue(3*gnum+2, ea3);
-    m_FieldPhaseData->SetValue(gnum, phase);
+    fieldEulerData->SetValue(3*gnum, ea1);
+    fieldEulerData->SetValue(3*gnum+1, ea2);
+    fieldEulerData->SetValue(3*gnum+2, ea3);
+    fieldPhaseData->SetValue(gnum, phase);
     if(phase > maxphase) maxphase = phase;
   }
-  m->addFieldData(DREAM3D::FieldData::EulerAngles, m_FieldEulerData);
-  m->addFieldData(DREAM3D::FieldData::Phases, m_FieldPhaseData);
+  m->addFieldData(DREAM3D::FieldData::EulerAngles, fieldEulerData);
+  m->addFieldData(DREAM3D::FieldData::Phases, fieldPhaseData);
 
-  FloatArrayType::Pointer m_CellEulerData = FloatArrayType::CreateArray(3*totalPoints, DREAM3D::FieldData::EulerAngles);
-  m_CellEulerData->SetNumberOfComponents(3);
-  m_CellEulerData->initializeWithZeros();
-  Int32ArrayType::Pointer m_CellPhaseData = Int32ArrayType::CreateArray(totalPoints, DREAM3D::FieldData::Phases);
-  for(int i=0;i<totalPoints;i++)
+  if (m_CreateCellLevelArrays == true)
   {
-    gnum = m_GrainIds[i];
-    m_CellEulerData->SetValue(3*i, m_FieldEulerData->GetValue(3*gnum));
-    m_CellEulerData->SetValue(3*i+1, m_FieldEulerData->GetValue(3*gnum+1));
-    m_CellEulerData->SetValue(3*i+2, m_FieldEulerData->GetValue(3*gnum+2));
-    m_CellPhaseData->SetValue(i, m_FieldPhaseData->GetValue(gnum));
+    FloatArrayType::Pointer cellEulerData = FloatArrayType::CreateArray(totalPoints, 3, DREAM3D::FieldData::EulerAngles);
+    cellEulerData->initializeWithZeros();
+    Int32ArrayType::Pointer cellPhaseData = Int32ArrayType::CreateArray(totalPoints, DREAM3D::FieldData::Phases);
+    cellPhaseData->initializeWithValues(999);
+    for(int i=0;i<totalPoints;i++)
+    {
+      gnum = m_GrainIds[i];
+      cellEulerData->SetValue(3*i, fieldEulerData->GetValue(3*gnum));
+      cellEulerData->SetValue(3*i+1, fieldEulerData->GetValue(3*gnum+1));
+      cellEulerData->SetValue(3*i+2, fieldEulerData->GetValue(3*gnum+2));
+      cellPhaseData->SetValue(i, fieldPhaseData->GetValue(gnum));
+    }
+    m->addCellData(DREAM3D::CellData::EulerAngles, cellEulerData);
+    m->addCellData(DREAM3D::CellData::Phases, cellPhaseData);
   }
-  m->addCellData(DREAM3D::CellData::EulerAngles, m_CellEulerData);
-  m->addCellData(DREAM3D::CellData::Phases, m_CellPhaseData);
-
   notifyStatusMessage("Complete");
   return 0;
 }
