@@ -33,12 +33,13 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "ReadH5Ebsd.h"
 
 #include <limits>
 #include <vector>
 #include <sstream>
-#include "ReadH5Ebsd.h"
 
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
@@ -182,6 +183,12 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
+  }
+  else if (MXAFileInfo::exists(m_H5EbsdFile) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else if (m_H5EbsdFile.empty() == false)
   {
@@ -603,35 +610,35 @@ void ReadH5Ebsd::execute()
 
   if(m_UseTransformations == true)
   {
-	  if(m_EulerTransformationAngle > 0)
-	  {
-		FloatVec3Widget_t eulerAxis;
-		eulerAxis.x = m_EulerTransformationAxis[0];
-		eulerAxis.y = m_EulerTransformationAxis[1];
-		eulerAxis.z = m_EulerTransformationAxis[2];
+    if(m_EulerTransformationAngle > 0)
+    {
+    FloatVec3Widget_t eulerAxis;
+    eulerAxis.x = m_EulerTransformationAxis[0];
+    eulerAxis.y = m_EulerTransformationAxis[1];
+    eulerAxis.z = m_EulerTransformationAxis[2];
 
-		RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
-		rot_Euler->setObservers(this->getObservers());
-		rot_Euler->setVoxelDataContainer(getVoxelDataContainer());
-		rot_Euler->setRotationAngle(m_EulerTransformationAngle);
-		rot_Euler->setRotationAxis(eulerAxis);
-		rot_Euler->execute();
-	  }
+    RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
+    rot_Euler->setObservers(this->getObservers());
+    rot_Euler->setVoxelDataContainer(getVoxelDataContainer());
+    rot_Euler->setRotationAngle(m_EulerTransformationAngle);
+    rot_Euler->setRotationAxis(eulerAxis);
+    rot_Euler->execute();
+    }
 
-	  if(m_EulerTransformationAngle > 0)
-	  {
-		FloatVec3Widget_t sampleAxis;
-		sampleAxis.x = m_SampleTransformationAxis[0];
-		sampleAxis.y = m_SampleTransformationAxis[1];
-		sampleAxis.z = m_SampleTransformationAxis[2];
+    if(m_EulerTransformationAngle > 0)
+    {
+    FloatVec3Widget_t sampleAxis;
+    sampleAxis.x = m_SampleTransformationAxis[0];
+    sampleAxis.y = m_SampleTransformationAxis[1];
+    sampleAxis.z = m_SampleTransformationAxis[2];
 
-		RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
-		rot_Sample->setObservers(this->getObservers());
-		rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
-		rot_Sample->setRotationAngle(m_SampleTransformationAngle);
-		rot_Sample->setRotationAxis(sampleAxis);
-		rot_Sample->execute();
-	  }
+    RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
+    rot_Sample->setObservers(this->getObservers());
+    rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
+    rot_Sample->setRotationAngle(m_SampleTransformationAngle);
+    rot_Sample->setRotationAxis(sampleAxis);
+    rot_Sample->execute();
+    }
   }
 
   // If there is an error set this to something negative and also set a message

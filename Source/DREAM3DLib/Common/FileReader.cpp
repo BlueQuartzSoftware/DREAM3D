@@ -64,14 +64,7 @@ FileReader::~FileReader()
 // -----------------------------------------------------------------------------
 void FileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  setErrorCondition(0);
-  std::stringstream ss;
 
-  if(getInputFile().empty() == true)
-  {
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), "The input file must be set before executing this filter.", -1);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -100,15 +93,6 @@ int FileReader::readFile()
 // -----------------------------------------------------------------------------
 void FileReader::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NOT set correctly.", -999);
-    return;
-  }
-  setErrorCondition(0);
-  dataCheck(false, 1, 1, 1);
   int err = 0;
 
   err = readHeader();
