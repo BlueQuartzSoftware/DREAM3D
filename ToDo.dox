@@ -4,8 +4,93 @@
 This is the list of things to do. It is written with the DOxygen style
 so it can be integrated with the other documentation pages.
 
+
+
+@section blockers Show Stopping Bugs
+
+
+
 @section todo_high_priority High Priority
+@li Write documentation for filters
+
+
+@section mike_jackson Mike Jackson ToDo List
+@li Create filter to generate Abaqus input files, Albert Cerrone to help with this
+@li Users can not open .h5stats in StatsGenerator
+
+
+
+
+@section STILL_TO_DO Still To Do
+@li Change Field to Region in all codes
+@li Provide better feedback on 3D .ctf files
+@li Add node type calculation during quick mesh
 @li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
+@li Fix calculation+storage of real stats for reading into synthetic builder
+@li Add advanced button on import filter to allow any recommended transformation
+@li Add filter to segment features by ìintensityî
+@li Add filter to dump ensemble stats/info
+@li Add filter to read .edf data
+@li Add/Modify filter to note if grain is a twin, parent or untwinned
+@li Add ability to define twins of interest on merge twin filter
+@li Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
+@li Add ability to flag regions as 'defects' or a new phase in the fill bad data filter
+@li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
+@li Look into deleting field arrays after packing in synthetic structures
+@li Add filter to write out 2D slices as .ang, .ctf or .mic files
+@li Look into incorporating genetic algorithms in the packing algorithms of the synthetic builder
+@li Include a filter to calculate 2-pt statistics
+@li Look into using 2-pt statistics to advance the packing algorithms in the synthetic builder
+@li Add a filter to calculate Kearn's number
+@li Look into matching the Kearn's number when matching cystallography in the synthetic builder
+@li Add a cleanup filter that considers the orientation (nearest) or kikuchi pattern of neighboring voxels when assigning bad voxels
+@li Add GBCD calculation filters from G. Rohrer
+@li Add a filter to calculate 'clustering' statistics on 'marked' features
+@li Look into creating multiple maps at each level (i.e. parent and grain filed maps)
+@li Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
+@li Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
+@li Fix reference frame button on import filter to not reset to default
+@li Modify all stats filters to check for 2D in all directions
+@li Add filter to calculate microtexture function or equivalent
+@li Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
+@li Fix synthetic builder to note if volume is 2D and actually pack slices
+@li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
+@li Break out all stats filters to just calculate stats
+@li Add filter to calculate ensemble stats (fit distributions to arrays)
+@li Add filter to merge twins using surface mesh (5 parameter)
+@li Add virtual sectioning filter
+@li Add/Finish filter to 'standardize' euler angles within a grain
+@li Add "help" button to each filter
+@li Look into creating a filter to color orientations using C. Shuh's color scale
+
+@li Update documentation file structure now that users can specify array names
+@li Add mesh quantification filter (code from Tony)
+@li Create filter to generate surface mesh from volume mesh
+@li Add mesh decimation filter (surface or volume)
+@li Add 3D linear intercept calculation filter (C. Hartley filter)
+@li Design protocol to learn user's 'ontology'
+@li Add filter to perform Tony's hot spot analysis
+@li Update file type stats generator can read (.dream3d)
+@li Check error causing crash in the find mdf filter
+@li Add ability to read list of ellipsoids into packing algorithms
+@li Look into bias near outside of box during synthetic building
+@li Add filter to combine far field data with near field data from HEDM
+@li Remove all "under-the-hood" calls to other filters
+@li Allow the user to specify the phase for minimum neighbors filter
+@li Design batch processing capability through using pipeline files
+@li Create a filter to "link" field map to cell array
+@li Fix data check in find kernel average misorientation filter (crystal structures)
+@li Fix data check in deformation statistics filter (crystal structures)
+@li Fix data check in slip transmission metrics filter (crystal structures)
+@li Add filter to write out slices as images of any array
+@li Look at adding a mirror option to the rotate sample reference frame filter
+@li Add the option for the user to set the name of a copied array (from field to cell)
+@li Add filter to determine spherical correlation length from each grain centroid
+@li Add ability to open a previously saved stats file back into the stats generator
+@li Add mean filter in orientation space
+@li Add mean filter on scalar array
+@li Add median filter on scalar array
+
 
 
 @section todo_GUI_Pipeline Add to the Pipeline Gui
@@ -28,19 +113,12 @@ code or Funding are shown with their logos.
 @li A filter that finds all the twins in the microstructure and assigns them
 to another phase (phase 3), so that they can be visualised differently to the surrouding
 grains (phase 2) and grains that are untwinned (phase 1).
-@li Add Kearns Factors for Hexagonal lattice presets.
-@li Add button in each filter widget to pop up the Help for that filter
 
 
 @section todo_documentation Documentation Issues
 @li Add documentation on how to add new filter directly into DREAM3D
 @li Add documentation on how to add new filter group directly into DREAM3D
 
-
-@section bugs Bugs
-
-
-@subsection statsgen StatsGenerator
 
 @section cmu_meshing CMU Surface Meshing
 @li bug in edges file is stopping the use in the smoothing filter
@@ -52,8 +130,60 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @section todo_bruker_support Bruker EBSD System Support
 @li BASE64 decoder
 @li XML Parser for the SEM Image file
-@li Create XML Parsing code for teach file from the Bruker File Archive
+@li Create XML Parsing code for each file from the Bruker File Archive
 @li Include Expat as part of the DREAM3D Compile
+
+
+@section done Items Completed
+@li Add ability to "add filter" to plugin maker
+@li Work through all IO filters to have extensions in the save and open popup box
+@li Fix issue with writing euler angles to binary vtk file
+@li Fix stats generator to display new phase when new phase added
+@li Add option to choose IPF coloring direction
+@li Add ability to sort through filters by name
+@li Add helper code to populate edge table in surface meshes
+@li Update import filter to have default manufacturer transformation options
+@li Add filter abilities to read .tif or other image types into array
+@li Add surface mesh data container writer
+@li Add framework to pass contents of data continer to filters for display on GUIs in real-time
+@li Add single threshold filter for cells
+@li Add multi parameter threshold filter for cells
+@li Add single threshold filter for fields
+@li Add multi parameter threshold filter for fields
+@li Add ability to remove arrays out of maps
+@li Fix the scaling of the axes in the stats generator when values are changed
+@li Add import and reading capability for .mic files from HEDM data
+@li Modify read dream3d filter to allow user to specify arrays to read
+@li Add grain reference misorientation filter for c-axis
+@li Add orientation jumble filter
+@li Add filter to determine average c-axis orientation for fields
+@li Add clear data filter to delete data from user defined subsets
+@li Add filter to reconstruct prior beta grain during initial segmentation
+@li Fix crashing bug in insert precipitates filter
+@li Confirm functionality of orientation ops functions (FZ specifically)
+@li Add quick mesh filter
+@li Add option to align feature centroid filter to use reference slice
+@li Add coordination number based erode/dilate filter
+@li Add filter to create "noise" in orientations in synthetic structures
+@li Add filter to insert "bad data" in synthetic structures (based on location)
+@li Add filter to "identify sample" (operates on good voxels)
+@li Rework deformation statistics filter
+@li Add filter to calculate boundary transmission paraters
+@li Create a raw binary reader
+@li Move reference frame transformations to readh5ebsd filter by calling out to rotation filters
+@li Generalize possible rotations in the reference rotation filters
+@li Add ability to store parent id at the field level
+@li Add filter to create a cell array from a field array
+@li Add storage of misorientations as list at field level for each grain in find mdf filter
+@li Add writing of neighborlist field level arrays to csv file
+@li Add filter or option to write out misorientation values
+@li Add option to write neighborlist data to csv field data file
+@li Add subgroups for further organizing filters
+@li Add filter to flatten color image to grayscale
+
+
+@section NO_LONGER_WANTED No Longer Wanted
+@li Add structured grid writer
 
 
 */
