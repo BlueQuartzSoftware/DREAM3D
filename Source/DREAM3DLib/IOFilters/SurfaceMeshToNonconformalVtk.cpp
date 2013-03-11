@@ -616,6 +616,8 @@ void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataNa
         if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
         // Get the data
         T s0 = static_cast<T>(m[j]);
+        if (faceLabels[j*2+1] == gid)
+         { s0 = s0 * -1; }
 
 
         // Write the values to the buffer after an Endian swap.
