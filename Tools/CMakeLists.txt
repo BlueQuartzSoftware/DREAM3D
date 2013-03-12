@@ -15,7 +15,7 @@ cmake_minimum_required(VERSION 2.8.9)
 # --------------------------------------------------------------------
 # Setup the install rules for the various platforms
 set(install_dir "tools")
-if (WIN32)
+if(WIN32)
     set(install_dir ".")
 endif()
 
@@ -29,7 +29,7 @@ function(COMPILE_TOOL)
     set(multiValueArgs SOURCES LINK_LIBRARIES)
     cmake_parse_arguments(D3DTOOL "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    if ( ${D3DTOOL_DEFINITION} )
+    if( ${D3DTOOL_DEFINITION} )
     add_definitions(-D${DEFINITION})
     endif()
 
@@ -139,7 +139,7 @@ COMPILE_TOOL(
 
 
 option (COMPILE_EBSD_TO_TIFF "Compile the EbsdToTiff program" OFF)
-if (COMPILE_EBSD_TO_TIFF)
+if(COMPILE_EBSD_TO_TIFF)
      # Prepend our own "FindTiff" code in front of what CMake itself provides
         set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
         FIND_PACKAGE(Tiff)
@@ -148,7 +148,7 @@ if (COMPILE_EBSD_TO_TIFF)
         ENDIF (NOT TIFF_FOUND)
         INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
       # Copy DLL libraries into the correct build location on MSVC platforms
-      if (HAVE_TIFF_DLL)
+      if(HAVE_TIFF_DLL)
         CMP_COPY_DEPENDENT_LIBRARIES ("tiff")
         CMP_LIBRARIES_INSTALL_RULES ("tiff" "." )
       endif()

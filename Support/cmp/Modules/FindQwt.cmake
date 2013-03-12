@@ -13,12 +13,12 @@
 
 
 set(QWT_CMAKE_DEBUG 0)
-if (QWT_CMAKE_DEBUG)
+if(QWT_CMAKE_DEBUG)
     MESSAGE (STATUS "Finding Qwt library and headers..." )
 endif()
 
 # Only set QWT_INSTALL to the environment variable if it is blank
-if ("${QWT_INSTALL}" STREQUAL "")
+if("${QWT_INSTALL}" STREQUAL "")
 set(QWT_INSTALL  $ENV{QWT_INSTALL})
 endif()
 
@@ -64,7 +64,7 @@ FIND_LIBRARY(QWT_LIBRARY_RELEASE
   NO_DEFAULT_PATH
   )
 
-if ( QWT_CMAKE_DEBUG )
+if( QWT_CMAKE_DEBUG )
 message(STATUS "QWT_INCLUDE_SEARCH_DIRS: ${QWT_INCLUDE_SEARCH_DIRS}")
 message(STATUS "QWT_LIB_SEARCH_DIRS: ${QWT_LIB_SEARCH_DIRS}")
 message(STATUS "QWT_BIN_SEARCH_DIRS: ${QWT_BIN_SEARCH_DIRS}")

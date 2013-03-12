@@ -20,7 +20,7 @@ IF (MSVC)
 endif()
 cmp_IDE_SOURCE_PROPERTIES( "MXA/Utilities" "${MXA_Utilities_HDRS}" "${MXA_Utilities_SRCS}" "0")
 
-if ( ${MXA_INSTALL_FILES} EQUAL 1 )
+if( ${MXA_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${MXA_Utilities_HDRS}
             DESTINATION include/MXA/Utilities
             COMPONENT Headers   )

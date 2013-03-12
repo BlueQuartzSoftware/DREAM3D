@@ -2,7 +2,7 @@
 set(install_files "0")
 
 
-if (MSVC)
+if(MSVC)
     set(MXA_WIN_Common_SRCS
       ${MXA_SOURCE_DIR}/Common/IO/Private/MXAPrivateWindowsFileReader.cpp
       ${MXA_SOURCE_DIR}/Common/IO/Private/MXAPrivateWindowsFileWriter.cpp
@@ -71,7 +71,7 @@ set(MXA_Common_HDRS
     ${MXA_Cast_HDRS}
 )
 
-if ( ${MXA_INSTALL_FILES} EQUAL 1 )
+if( ${MXA_INSTALL_FILES} EQUAL 1 )
 
     INSTALL (FILES  ${MXA_SOURCE_DIR}/Common/IO/MXAFileReader64.h
                     ${MXA_SOURCE_DIR}/Common/IO/MXAFileWriter64.h

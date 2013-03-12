@@ -28,7 +28,7 @@ set(TSL_HDRS
     ${EbsdLib_SOURCE_DIR}/TSL/AngFields.h
 )
 
-if (EbsdLib_ENABLE_HDF5)
+if(EbsdLib_ENABLE_HDF5)
     add_definitions(-DEbsdLib_HAVE_HDF5)
     set(TSL_SRCS ${TSL_SRCS}
         ${EbsdLib_SOURCE_DIR}/TSL/H5AngImporter.cpp
@@ -44,7 +44,7 @@ if (EbsdLib_ENABLE_HDF5)
 endif()
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/TSL" "${TSL_HDRS}" "${TSL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-if ( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
+if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${TSL_HDRS}
             DESTINATION include/EbsdLib/TSL
             COMPONENT Headers   )

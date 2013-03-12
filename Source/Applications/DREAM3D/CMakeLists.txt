@@ -126,7 +126,7 @@ IF(Q_WS_WIN)
 ENDIF(Q_WS_WIN)
 
 set(DEST_DIR ".")
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     set(DEST_DIR "bin")
 endif()
 

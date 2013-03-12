@@ -26,7 +26,7 @@ set(HKL_HDRS
     ${EbsdLib_SOURCE_DIR}/HKL/CtfFields.h
 )
 
-if (EbsdLib_ENABLE_HDF5)
+if(EbsdLib_ENABLE_HDF5)
     add_definitions(-DEbsdLib_HAVE_HDF5)
     set(HKL_SRCS ${HKL_SRCS}
         ${EbsdLib_SOURCE_DIR}/HKL/H5CtfImporter.cpp
@@ -42,7 +42,7 @@ if (EbsdLib_ENABLE_HDF5)
 endif()
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/HKL" "${HKL_HDRS}" "${HKL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-if ( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
+if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${HKL_HDRS}
             DESTINATION include/EbsdLib/HKL
             COMPONENT Headers   )

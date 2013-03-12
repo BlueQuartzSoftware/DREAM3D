@@ -31,7 +31,7 @@ IF (MSVC)
 endif()
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/Utilities" "${EbsdLib_Utilities_HDRS}" "${EbsdLib_Utilities_SRCS}" "0")
 
-if ( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
+if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${EbsdLib_Utilities_HDRS}
             DESTINATION include/EbsdLib/Utilities
             COMPONENT Headers   )
