@@ -168,8 +168,8 @@ void FieldDataCSVWriter::execute()
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getFieldData(*iter);
-	if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
-	{
+  if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+  {
       if (p->GetNumberOfComponents() == 1) {
         outFile << space << (*iter);
       }
@@ -217,30 +217,30 @@ void FieldDataCSVWriter::execute()
 
   if(m_WriteNeighborListData == true)
   {
-	  // Print the GrainIds Header before the rest of the headers
-	  // Loop throught the list and print the rest of the headers, ignoring those we don't want
-	  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
-	  {
-		// Only get the array if the name does NOT match those listed
-		IDataArray::Pointer p = m->getFieldData(*iter);
-		if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
-		{
-		  outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
-		  size_t numTuples = p->GetNumberOfTuples();
-		  float threshold = 0.0f;
+    // Print the GrainIds Header before the rest of the headers
+    // Loop throught the list and print the rest of the headers, ignoring those we don't want
+    for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    {
+    // Only get the array if the name does NOT match those listed
+    IDataArray::Pointer p = m->getFieldData(*iter);
+    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
+    {
+      outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
+      size_t numTuples = p->GetNumberOfTuples();
+  //	  float threshold = 0.0f;
 
-		  // Skip the first grain
-		  for(size_t i = 1; i < numTuples; ++i)
-		  {
-			// Print the grain id
-			outFile << i;
-			// Print a row of data
-			outFile << space;
-			p->printTuple(outFile, i, space);
-			outFile << std::endl;
-		  }
-		}
-	  }
+      // Skip the first grain
+      for(size_t i = 1; i < numTuples; ++i)
+      {
+      // Print the grain id
+      outFile << i;
+      // Print a row of data
+      outFile << space;
+      p->printTuple(outFile, i, space);
+      outFile << std::endl;
+      }
+    }
+    }
   }
   outFile.close();
 

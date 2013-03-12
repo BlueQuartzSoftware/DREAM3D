@@ -39,6 +39,7 @@
 
 
 #include "MXA/MXA.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Common/IO/MXAFileReader64.h"
 
 
@@ -271,9 +272,14 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   if (getInputFile().empty() == true)
   {
-    ss.str("");
-    ss << "The input file was not set.";
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 

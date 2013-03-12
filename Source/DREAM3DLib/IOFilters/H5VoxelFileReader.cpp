@@ -36,6 +36,8 @@
 
 #include "H5VoxelFileReader.h"
 
+#include "MXA/Utilities/MXAFileInfo.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -53,7 +55,7 @@ m_CellEulerAngles(NULL),
 m_CrystalStructures(NULL),
 m_PhaseTypes(NULL)
 {
-	setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -96,10 +98,15 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
@@ -186,8 +193,8 @@ void H5VoxelFileReader::execute()
   size_t maxId = 0;
   for(size_t i= 0; i < totalpoints; i++)
   {
-	  gnum = size_t(grainIds->GetValue(i));
-	  if(gnum > maxId) maxId = gnum;
+    gnum = size_t(grainIds->GetValue(i));
+    if(gnum > maxId) maxId = gnum;
   }
   getVoxelDataContainer()->resizeFieldDataArrays(maxId+1);
 
@@ -214,8 +221,8 @@ void H5VoxelFileReader::execute()
 
   for (size_t i = 0; i < crystruct.size(); i++)
   {
-	  crystructs->SetValue(i,crystruct[i]);
-	  phaseTypes->SetValue(i,phaseType[i]);
+    crystructs->SetValue(i,crystruct[i]);
+    phaseTypes->SetValue(i,phaseType[i]);
   }
   getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
   getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);

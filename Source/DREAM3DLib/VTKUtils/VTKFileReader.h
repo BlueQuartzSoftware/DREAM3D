@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
 
     virtual ~VTKFileReader();
 
-   // DREAM3D_INSTANCE_STRING_PROPERTY(InputFileName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)

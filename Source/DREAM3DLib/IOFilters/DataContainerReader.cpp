@@ -137,18 +137,17 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   int32_t err = 0;
 
-  if(m_InputFile.empty() == true)
+  if (getInputFile().empty() == true)
   {
-    ss << "The input file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), 1);
-    setErrorCondition(-1);
+    ss << ClassName() << " needs the Input File Set and it was not.";
+    setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(m_InputFile) == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
-    PipelineMessage em (getHumanLabel(), ss.str(), -1);
-    addErrorMessage(em);
-    setErrorCondition(-1);
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
