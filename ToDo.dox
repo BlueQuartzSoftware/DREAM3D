@@ -28,7 +28,6 @@ so it can be integrated with the other documentation pages.
 @li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
 @li Fix calculation+storage of real stats for reading into synthetic builder
 @li Add advanced button on import filter to allow any recommended transformation
-@li Add filter to segment features by ìintensityî
 @li Add filter to dump ensemble stats/info
 @li Add filter to read .edf data
 @li Add/Modify filter to note if grain is a twin, parent or untwinned
@@ -180,7 +179,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Add option to write neighborlist data to csv field data file
 @li Add subgroups for further organizing filters
 @li Add filter to flatten color image to grayscale
-
+@li Add filter to segment features by scalar tolerance value
 
 @section NO_LONGER_WANTED No Longer Wanted
 @li Add structured grid writer
