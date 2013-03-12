@@ -49,19 +49,16 @@ so it can be integrated with the other documentation pages.
 @li Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 @li Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
 @li Fix reference frame button on import filter to not reset to default
-@li Modify all stats filters to check for 2D in all directions
 @li Add filter to calculate microtexture function or equivalent
 @li Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
 @li Fix synthetic builder to note if volume is 2D and actually pack slices
 @li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
-@li Break out all stats filters to just calculate stats
 @li Add filter to calculate ensemble stats (fit distributions to arrays)
 @li Add filter to merge twins using surface mesh (5 parameter)
 @li Add virtual sectioning filter
 @li Add/Finish filter to 'standardize' euler angles within a grain
 @li Add "help" button to each filter
 @li Look into creating a filter to color orientations using C. Shuh's color scale
-
 @li Update documentation file structure now that users can specify array names
 @li Add mesh quantification filter (code from Tony)
 @li Create filter to generate surface mesh from volume mesh
@@ -180,6 +177,9 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Add subgroups for further organizing filters
 @li Add filter to flatten color image to grayscale
 @li Add filter to segment features by scalar tolerance value
+@li Modify all stats filters to check for 2D in all directions
+@li Break out all stats filters to just calculate stats
+
 
 @section NO_LONGER_WANTED No Longer Wanted
 @li Add structured grid writer

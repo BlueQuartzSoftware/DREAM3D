@@ -130,8 +130,8 @@ void FindBoundingBoxGrains::execute()
     return;
   }
 
-  if(m->getZPoints() > 1) find_boundingboxgrains();
-  if(m->getZPoints() == 1) find_boundingboxgrains2D();
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_boundingboxgrains();
+  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) find_boundingboxgrains2D();
 
  notifyStatusMessage("FindBoundingBoxGrains Completed");
 }
@@ -208,10 +208,36 @@ void FindBoundingBoxGrains::find_boundingboxgrains2D()
   float dist[5];
   float mindist;
   int sidetomove, move;
+
+  int xPoints, yPoints;
+  float xRes, yRes;
+
+  if(m->getXPoints() == 1)
+  {
+	  xPoints = m->getYPoints();
+	  xRes = m->getYRes();
+	  yPoints = m->getZPoints();
+	  yRes = m->getZRes();
+  }
+  if(m->getYPoints() == 1)
+  {
+	  xPoints = m->getXPoints();
+	  xRes = m->getXRes();
+	  yPoints = m->getZPoints();
+	  yRes = m->getZRes();
+  }
+  if(m->getZPoints() == 1)
+  {
+	  xPoints = m->getXPoints();
+	  xRes = m->getXRes();
+	  yPoints = m->getYPoints();
+	  yRes = m->getYRes();
+  }
+
   boundbox[1] = 0;
-  boundbox[2] = m->getXPoints()*m->getXRes();
+  boundbox[2] = xPoints*xRes;
   boundbox[3] = 0;
-  boundbox[4] = m->getYPoints()*m->getYRes();
+  boundbox[4] = yPoints*yRes;
   for (size_t i = 1; i < size; i++)
   {
 	  if(m_SurfaceFields[i] == true)
