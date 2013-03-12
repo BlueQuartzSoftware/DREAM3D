@@ -675,7 +675,7 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 {
-  QString s = "DREAM3D/Filters/index.html";
+  QString s = "DREAM3D/index.html";
   return QUrl(s);
 }
 
