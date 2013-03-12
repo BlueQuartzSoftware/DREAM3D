@@ -62,7 +62,8 @@
 #include "StatsGenerator/TextureDialog.h"
 #include "DREAM3DLib/Common/StatsGen.h"
 
-#define MAKE_COLOR_POLE_FIGURES 1
+#define SHOW_POLE_FIGURES 1
+#define COLOR_POLE_FIGURES 1
 
 
 // -----------------------------------------------------------------------------
@@ -338,7 +339,7 @@ void StatsGenODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
 
 
-#if MAKE_COLOR_POLE_FIGURES
+#if SHOW_POLE_FIGURES
   m_PoleFigureFuture = new QFutureWatcher<QImage>(this);
   connect(m_PoleFigureFuture, SIGNAL(resultReadyAt(int)),
           this, SLOT(showPoleFigure(int)));
@@ -512,9 +513,9 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
 {
   PoleFigureMaker colorPoleFigure;
 #if COLOR_POLE_FIGURES
-  return colorPoleFigure.generatePoleFigureImage(data);
-#else
   return colorPoleFigure.generateColorPoleFigureImage(data);
+#else
+    return colorPoleFigure.generatePoleFigureImage(data);
 #endif
 }
 
@@ -579,7 +580,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
-#if MAKE_COLOR_POLE_FIGURES
+#if SHOW_POLE_FIGURES
   // This is multi-threaded on appropriate hardware.
   qint32 kRad[2] = {5, 5};
   qint32 pfSize[2] = {226, 226};
