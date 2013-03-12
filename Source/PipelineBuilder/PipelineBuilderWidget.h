@@ -53,7 +53,7 @@ class QListWidgetItem;
 class QTreeWidgetItem;
 class QFilterWidget;
 class QMenu;
-
+class HelpDialog;
 
 /**
  * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
@@ -140,6 +140,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
+    QUrl htmlHelpIndexFile();
+
   protected slots:
     void actionClearPipeline_triggered();
     void actionAddFavorite_triggered();
@@ -160,8 +162,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_showErrors_clicked();
 
 
-    void on_helpText_anchorClicked ( const QUrl & link );
-    void setDocsToIndexFile();
+   // void on_helpText_anchorClicked ( const QUrl & link );
 
 #if 0
     void on_filterUp_clicked();
@@ -200,6 +201,7 @@ signals:
     QTreeWidgetItem*            m_favorites;
     bool                        m_hasErrors;
     bool                        m_hasWarnings;
+    HelpDialog*                 m_HelpDialog;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented

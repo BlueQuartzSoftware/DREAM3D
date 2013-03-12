@@ -58,7 +58,7 @@ set(LATEX_AUTHOR "DREAM3D Development Team")
 
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
-set (DOCUMENTATION_SOURCE_FILES
+set(DOCUMENTATION_SOURCE_FILES
   ${DREAM3DProj_SOURCE_DIR}/ToDo.dox
   ${PROJECT_SOURCE_DIR}/Compiling.dox
   ${PROJECT_SOURCE_DIR}/AddingFilters.dox

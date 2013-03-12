@@ -5,7 +5,7 @@
 macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup)
     file(APPEND ${AllFiltersHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
     file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
-    file(APPEND ${HtmlDocQrcFile} "\n    <!-- ***** ${filterGroup} ***** -->\n")
+ #   file(APPEND ${HtmlDocQrcFile} "\n    <!-- ***** ${filterGroup} ***** -->\n")
     file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
     file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
  #   file(MAKE_DIRECTORY ${${WidgetLib}_BINARY_DIR}/${filterGroup}Widgets)
@@ -38,7 +38,7 @@ endmacro()
 
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_FILTER
-macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocFile filterDocImages publicFilter)
+macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter)
 
     set(Project_SRCS ${Project_SRCS}
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
@@ -61,6 +61,8 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocFil
 
         if(NOT EXISTS ${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h )
           #  message(STATUS "${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h")
+          #  set(FILTER_WIDGET_HDR_FILE ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
+          #  set(FILTER_WIDGET_SRC_FILE ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
             file(APPEND ${FilterWidget_GEN_HDRS_File} "${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h;")
             file(APPEND ${FilterWidget_GEN_SRCS_File} "${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp;")
             if( NOT EXISTS ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
@@ -71,18 +73,13 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocFil
                               ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
             endif()
 
-            file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
-            file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters());\n")
+            file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${filterGroup}Widgets/Q${filterName}Widget.h\");\n")
+            file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${filterGroup}Widgets/Q${filterName}Widget.cpp\");\n")
         endif()
 
-        file(APPEND ${CodeGeneratorFile} "  createHTMLFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get());\n\n")
-
+     #   file(APPEND ${CodeGeneratorFile} "  createHTMLFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get());\n\n")
+     #   file(APPEND ${HtmlDocQrcFile} "${filterGroup}/${filterName}.html\n")
         file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
-
-        file(APPEND ${HtmlDocQrcFile} "    <file>${filterGroup}/${filterName}.html</file>\n")
-        foreach(resource ${filterDocImages})
-            file(APPEND ${HtmlDocQrcFile} "    <file>${filterGroup}/${resource}</file>\n")
-        endforeach()
 
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${filterName}Widget>::Pointer q${filterName}WidgetFactory = QFilterWidgetFactory<Q${filterName}Widget>::New(); \n")
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory); \n\n")
