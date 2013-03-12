@@ -330,9 +330,10 @@ QImage PoleFigureMaker::paintImage(const PoleFigureData &config, QImage image)
   painter.drawText(2, pxHigh, config.label);
 
   // Draw slightly transparent lines
+  penWidth = 1;
   painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-  painter.drawLine(pImageWidth / 2, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
-  painter.drawLine(pImageWidth / 2, pImageHeight / 2, pImageWidth / 2, pImageHeight - pyOffset);
+  painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
+  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
 
   painter.end();
   // Scale the image down to 225 pixels
@@ -353,13 +354,17 @@ void PoleFigureMaker::getColorCorrespondingTovalue(float val,
                                                      float &r, float &g, float &b,
                                                      float max, float min)
 {
-  static const int numColorNodes = 4;
+  static const int numColorNodes = 8;
   float color[numColorNodes][3] =
   {
-        {0.25f, 0.2549f, 0.7961f},    // blue
-        {0.8274f, 0.8039f, 0.0941f},    // yellow
-        {0.1803f, 0.6655f, 0.1490f},    // Green
-        {1.0f, 0.0f, 0.0f}     // red
+        {0.0f, 1.0f/255.0f, 253.0f/255.0f},    // blue
+        {105.0f/255.0f, 145.0f/255.0f, 2.0f/255.0f},    // yellow
+        {1.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
+        {180.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f},
+        {255.0f/255.0f, 215.0f/255.0f, 6.0f/255.0f},
+        {255.0f/255.0f, 143.0f/255.0f, 1.0f/255.0f},
+        {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
+        {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
   };
   float range = max - min;
   for (int i = 0; i < (numColorNodes - 1); i++)
