@@ -181,15 +181,15 @@ class AssignVoxelsGapsImpl
             if(m_GrainIds[index] <= 0)
             {
               inside = -1;
-              coords[0] = float(column) * res[0];
-              coords[1] = float(row) * res[1];
-              coords[2] = float(plane) * res[2];
-              if (iter1 < 0) coords[0] = coords[0] - size[0];
-              else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
-              if (iter2 < 0) coords[1] = coords[1] - size[1];
-              else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
-              if (iter3 < 0) coords[2] = coords[2] - size[2];
-              else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
+              coords[0] = float(iter1) * res[0];
+              coords[1] = float(iter2) * res[1];
+              coords[2] = float(iter3) * res[2];
+              //if (iter1 < 0) coords[0] = coords[0] - size[0];
+              //else if (iter1 > dims[0] - 1) coords[0] = coords[0] + size[0];
+              //if (iter2 < 0) coords[1] = coords[1] - size[1];
+              //else if (iter2 > dims[1] - 1) coords[1] = coords[1] + size[1];
+              //if (iter3 < 0) coords[2] = coords[2] - size[2];
+              //else if (iter3 > dims[2] - 1) coords[2] = coords[2] + size[2];
 
               dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
               if (dist < radcur1squared)
@@ -261,8 +261,8 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_VolumesArrayName(DREAM3D::FieldData::Volumes),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-  m_ErrorOutputFile(""),
-  m_VtkOutputFile(""),
+  m_ErrorOutputFile("test.txt"),
+  m_VtkOutputFile("test.vtk"),
   m_PeriodicBoundaries(false),
   m_NeighborhoodErrorWeight(1.0f),
   m_GrainIds(NULL),
@@ -734,7 +734,7 @@ void PackPrimaryPhases::execute()
     m_Centroids[3 * i + 2] = zc;
     insert_grain(i);
     fillingerror = check_fillingerror(i, -1000);
-    for (int iter = 0; iter < 10; iter++)
+    for (int iter = 0; iter < 250; iter++)
     {
       xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
       yc = static_cast<float>(rg.genrand_res53() * (dims[1] * yRes));
