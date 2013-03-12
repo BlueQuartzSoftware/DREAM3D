@@ -36,6 +36,7 @@
 
 #include "GoldfeatherReader.h"
 
+#include "MXA/Utilities/MXAFileInfo.h"
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -118,11 +119,17 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
     ss << ClassName() << " needs the Input File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+
 
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodes);
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangles);

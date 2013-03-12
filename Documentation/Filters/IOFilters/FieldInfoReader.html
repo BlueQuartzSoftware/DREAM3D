@@ -60,7 +60,14 @@ For example if you have a file with 123 grains and 2 phases then the file would 
 123 2 1.0  1.1  0.03<br />
 </pre>
 
-<b>Note the arrays that are being created</b> Any existing arrays will be OVER WRITTEN with incoming data.
+
+<b>Note the arrays that are being created</b>. <br>
+If the option to <i>Create Cell Level Arrays</i> is selected then any existing
+ arrays will be OVER WRITTEN with new data derived from the field data being written. In plain if the user uses this filter
+ to read in Phase and Euler Angle data for their data set and the <i>Create Cell Level Arrays</i> is <b>ON/True</b> then
+ any existing EulerAngles and Phase Arrays at the Cell level will be over written with data derived from these new Field
+ level arrays. If you have the <i>Create Cell Level Arrays</i> set to <b>OFF/False</b> then those cell level arrays will
+ not be created.
 <!-- Do NOT write documentation below this line -->
 </p>
 
@@ -71,6 +78,8 @@ For example if you have a file with 123 grains and 2 phases then the file would 
 <tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
 <tr bgcolor="#E2E2E2">
 <td>Input Field Info File</td><td>Input File</td></tr>
+<tr bgcolor="#F5F5F5">
+<td>Create Cell Level Arrays</td><td>Boolean</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
@@ -83,9 +92,9 @@ For example if you have a file with 123 grains and 2 phases then the file would 
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Type</th><th>Name</th><th>Description</th><th>Comment</th></tr>
 <tr bgcolor="#E2E2E2"><td>Cell</td><td>CellEulerAngles</td><td>Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z)</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Cell</td><td>CellPhases</td><td>Phase Id (int) specifying the phase of the voxel/datapoint</td><td></td></tr>
+<tr bgcolor="#F5F5F5"><td>Cell</td><td>CellPhases</td><td>Phase Id (int) specifying the phase of the voxel/datapoint</td><td></td></tr>
 <tr bgcolor="#E2E2E2"><td>Field</td><td>FieldEulerAngles</td><td>Three (3) angles (floats) defining the orientation of each feature/grain in Bunge convention (Z-X-Z)</td><td></td></tr>
-<tr bgcolor="#E2E2E2"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td></td></tr>
+<tr bgcolor="#F5F5F5"><td>Field</td><td>FieldPhases</td><td>Phase Id (int) specifying the phase of the feature/grain</td><td></td></tr>
 </table>
 <a name="wp1"> </a><h2 class="pHeading2">Authors</h2>
 <p class="pBody">

@@ -41,6 +41,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "MXA/Utilities/MXAFileInfo.h"
+
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
@@ -48,7 +50,7 @@
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader() :
 FileReader(),
-  m_InputInfoFile(""),
+m_InputFile(""),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_CrystalStructures(NULL),
@@ -74,8 +76,9 @@ void EnsembleInfoReader::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Ensemble Info File");
-    option->setPropertyName("InputInfoFile");
+    option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setFileExtension("*.txt");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -88,7 +91,7 @@ void EnsembleInfoReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("InputInfoFile", getInputInfoFile() );
+  writer->writeValue("InputFile", getInputFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -101,12 +104,17 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputInfoFile().empty() == true)
+  if (getInputFile().empty() == true)
   {
-    std::stringstream ss;
-    ss << ClassName() << " needs the Input Grain Info File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+  else if (MXAFileInfo::exists(getInputFile()) == false)
+  {
+    ss << "The input file does not exist.";
+    setErrorCondition(-388);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -147,11 +155,11 @@ int  EnsembleInfoReader::readFile()
   }
 
   std::ifstream inFile;
-  inFile.open(getInputInfoFile().c_str(), std::ios_base::binary);
+  inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
     std::stringstream ss;
-    ss << "Failed to open: " << getInputInfoFile();
+    ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

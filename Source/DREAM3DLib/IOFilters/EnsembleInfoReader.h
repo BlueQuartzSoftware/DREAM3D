@@ -62,14 +62,14 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 
     virtual ~EnsembleInfoReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputInfoFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read Ensemble Info File"; }
 
     virtual void setupFilterParameters();
