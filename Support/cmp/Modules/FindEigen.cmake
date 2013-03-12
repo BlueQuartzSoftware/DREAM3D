@@ -9,7 +9,7 @@
 set(EIGEN_DEBUG 0)
 
 
-if ("${EIGEN_INSTALL}" STREQUAL "")
+if("${EIGEN_INSTALL}" STREQUAL "")
     set(EIGEN_INSTALL  $ENV{EIGEN_INSTALL})
 endif()
 

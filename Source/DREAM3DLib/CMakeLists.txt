@@ -167,13 +167,13 @@ LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
 set(lib_install_dir "lib")
-if (WIN32)
+if(WIN32)
     set(install_dir ".")
     set(lib_install_dir "")
 endif()
 
 
-if (BUILD_SHARED_LIBS  AND NOT APPLE)
+if(BUILD_SHARED_LIBS  AND NOT APPLE)
     INSTALL(TARGETS ${PROJECT_NAME}
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}

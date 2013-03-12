@@ -39,7 +39,7 @@ set(PipelineBuilder_SRCS
 cmp_IDE_SOURCE_PROPERTIES( "PipelineBuilderLib" "${PipelineBuilder_HDRS}" "${PipelineBuilder_SRCS}" "0")
 
 
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
+if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${PipelineBuilder_HDRS}
             DESTINATION include/DREAM3D/PipelineBuilderLib
             COMPONENT Headers   )
@@ -104,7 +104,7 @@ set(PipelineBuilderLib_PROJECT_SRCS
 # ---------- Setup output Directories -------------------------
 # This library MUST be shared because there is a singleton instance
 # variable that ALL plugins should use.
-if (LINUX)
+if(LINUX)
   set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-fPIC")
 endif()
 add_library(${PROJECT_NAME} SHARED ${PipelineBuilderLib_PROJECT_SRCS})
@@ -119,14 +119,14 @@ LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")
 set(lib_install_dir "lib")
-if (WIN32)
+if(WIN32)
     set(install_dir ".")
     set(lib_install_dir "")
 endif()
 
 
 
-if ( NOT APPLE)
+if( NOT APPLE)
     INSTALL(TARGETS ${PROJECT_NAME}
         COMPONENT Applications
         RUNTIME DESTINATION ${install_dir}

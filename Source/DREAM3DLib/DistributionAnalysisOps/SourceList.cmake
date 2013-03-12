@@ -23,7 +23,7 @@ set(DREAM3DLib_DistributionAnalysisOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DistributionAnalysisOps/PowerLawOps.cpp
   )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DistributionAnalysisOps" "${DREAM3DLib_DistributionAnalysisOps_HDRS}" "${DREAM3DLib_DistributionAnalysisOps_SRCS}" "0")
-if ( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
+if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_DistributionAnalysisOps_HDRS}
             DESTINATION include/DREAM3D/DistributionAnalysisOps
             COMPONENT Headers   )

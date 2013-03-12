@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -65,20 +65,6 @@ HelpDialog::~HelpDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//HelpDialog*  HelpDialog::Instance()
-//{
-//  static HelpDialog* singleton;
-//
-//  if (singleton == NULL)
-//  {
-//    singleton = new HelpDialog();
-//  }
-//  return singleton;
-//}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void HelpDialog::setContentFile(QUrl sourceLocation)
 {
   QDir aPluginDir = QDir(qApp->applicationDirPath());
@@ -113,8 +99,48 @@ void HelpDialog::setContentFile(QUrl sourceLocation)
 //  std::cout << "Help File Path:" << thePath.toStdString() << std::endl;
 
   helpBrowser->setSource(QUrl(thePath));
+  // Set the Home Page File
+  m_HomeUrl = QUrl(thePath);
   this->show();
 }
 
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HelpDialog::on_backBtn_clicked()
+{
+  if (helpBrowser->isBackwardAvailable() )
+  {
+    helpBrowser->backward();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HelpDialog::on_forwardBtn_clicked()
+{
+  if (helpBrowser->isForwardAvailable() )
+  {
+    helpBrowser->forward();
+  }
+}
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HelpDialog::on_reloadBtn_clicked()
+{
+  helpBrowser->reload();
+}
+#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void HelpDialog::on_homeBtn_clicked()
+{
+  helpBrowser->setSource(m_HomeUrl);
+}

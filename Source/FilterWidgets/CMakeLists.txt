@@ -169,7 +169,7 @@ set(Project_SRCS
 
 
 
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
