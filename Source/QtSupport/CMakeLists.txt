@@ -27,7 +27,9 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QFilterListWidget.cpp
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
     ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
+    ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.cpp
 )
+
 set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/AIMImageGraphicsDelegate.h
     ${QtSupport_SOURCE_DIR}/DREAM3DPluginFrame.h
@@ -40,6 +42,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/QFilterListWidget.h
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.h
     ${QtSupport_SOURCE_DIR}/HelpDialog.h
+    ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 
@@ -49,6 +52,7 @@ cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0
 SET( DREAM3D_QT_UI_FILES
   ${QtSupport_SOURCE_DIR}/UI_Files/ApplicationAboutBoxDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/HelpDialog.ui
+  ${QtSupport_SOURCE_DIR}/UI_Files/DistributionTypeWidget.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupport/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 
