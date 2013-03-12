@@ -2,8 +2,8 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-set (DREAM3D_FILTER_GROUP_NAME ImageImportFilters)
-set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+set(DREAM3D_FILTER_GROUP_NAME ImageImportFilters)
+set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
 START_FILTER_GROUP(${ImageImportPlugin_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}")
 

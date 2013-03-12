@@ -57,6 +57,8 @@
 #include <QtGui/QKeySequence>
 #include <QtGui/QSortFilterProxyModel>
 
+#include "QtSupport/HelpDialog.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
@@ -79,7 +81,8 @@ DREAM3DPluginFrame(parent),
 m_FilterPipeline(NULL),
 m_MenuPipeline(NULL),
 m_WorkerThread(NULL),
-m_DocErrorTabsIsOpen(false)
+m_DocErrorTabsIsOpen(false),
+m_HelpDialog(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
@@ -342,7 +345,7 @@ void PipelineBuilderWidget::setupGui()
     {
       QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
       filterSubGroup->setText(0, QString::fromStdString(*iter2));
-	}
+  }
   }
   library->setExpanded(true);
 
@@ -360,13 +363,8 @@ void PipelineBuilderWidget::setupGui()
   toggleDocs->setChecked(false);
   showErrors->setChecked(false);
 
-
-  setDocsToIndexFile();
-
-
-
-  on_toggleDocs_clicked();
-  //on_showErrors_clicked();
+  m_HelpDialog = new HelpDialog(this);
+  m_HelpDialog->setWindowModality(Qt::NonModal);
 
   on_filterLibraryTree_itemClicked(library, 0);
 
@@ -406,21 +404,6 @@ void PipelineBuilderWidget::setupGui()
   }
 
 
-}
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::setDocsToIndexFile()
-{
-
-  QString html;
-  QString resName = QString(":/index.html");
-  QFile f(resName);
-  if ( f.open(QIODevice::ReadOnly) )
-  {
-    html = QLatin1String(f.readAll());
-  }
-  helpText->setHtml(html);
 }
 
 // -----------------------------------------------------------------------------
@@ -564,10 +547,10 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
   AbstractFilter::Pointer filter = wf->getFilterInstance();
   if (NULL == filter.get())
   {
-    helpText->setHtml("");
     return;
   }
 
+#if 0
   QString html;
   QString resName = QString(":/%1Filters/%2.html").arg(filter->getGroupName().c_str()).arg(filter->getNameOfClass().c_str());
   QFile f(resName);
@@ -588,8 +571,8 @@ void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem *
     html.append(resName);
     html.append("</body></html>\n");
   }
+#endif
 
-  helpText->setHtml(html);
 }
 
 // -----------------------------------------------------------------------------
@@ -669,16 +652,14 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::on_helpText_anchorClicked ( const QUrl & link )
-{
-//  std::cout << "PipelineBuilderWidget::on_helpText_anchorClicked()" << std::endl;
-  QUrl u(link);
-  u.setScheme("qrc");
-//  std::cout << "URL: " << u.scheme().toStdString()<< "  " << u.path().toStdString() << std::endl;
-  helpText->blockSignals(true);
-  helpText->setSource(u);
-  helpText->blockSignals(false);
-}
+//void PipelineBuilderWidget::on_helpText_anchorClicked ( const QUrl & link )
+//{
+//  QUrl u(link);
+//  u.setScheme("qrc");
+//  helpText->blockSignals(true);
+//  helpText->setSource(u);
+//  helpText->blockSignals(false);
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -692,41 +673,19 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QUrl PipelineBuilderWidget::htmlHelpIndexFile()
+{
+  QString s = "DREAM3D/Filters/index.html";
+  return QUrl(s);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-
-  if(docErrorTabs->currentIndex() == 0 || (m_DocErrorTabsIsOpen == false))
-  {
-    docErrorTabs->setCurrentIndex(0);
-    m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
-#if 1
-    docErrorTabs->setHidden(!m_DocErrorTabsIsOpen);
-#else
-    QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
-    if(m_DocErrorTabsIsOpen)
-    {
-      int start = 0;
-      int end = 350;
-      docErrorTabs->setMaximumHeight(end);
-      animation1->setDuration(250);
-      animation1->setStartValue(start);
-      animation1->setEndValue(end);
-    }
-    else //open
-    {
-      int start = docErrorTabs->maximumHeight();
-      int end = 0;
-      animation1->setDuration(250);
-      animation1->setStartValue(start);
-      animation1->setEndValue(end);
-    }
-    animation1->start();
-#endif
-  }
-  else
-  {
-    docErrorTabs->setCurrentIndex(0);
-  }
+    m_HelpDialog->setContentFile(htmlHelpIndexFile());
 }
 
 // -----------------------------------------------------------------------------
@@ -734,42 +693,8 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_showErrors_clicked()
 {
-  if(docErrorTabs->currentIndex() == 1 || (m_DocErrorTabsIsOpen == false))
-  {
-    docErrorTabs->setCurrentIndex(1);
     m_DocErrorTabsIsOpen = !m_DocErrorTabsIsOpen;
-#if 1
-    docErrorTabs->setHidden(!m_DocErrorTabsIsOpen);
-#else
-    int deltaX;
-    QPropertyAnimation *animation1 = new QPropertyAnimation(docErrorTabs, "maximumHeight");
-
-    if(m_DocErrorTabsIsOpen)
-    {
-      int start = 0;
-      int end = 350;
-      docErrorTabs->setMaximumHeight(end);
-      deltaX = start;
-
-      animation1->setDuration(250);
-      animation1->setStartValue(start);
-      animation1->setEndValue(end);
-    }
-    else //open
-    {
-      int start = docErrorTabs->maximumHeight();
-      int end = 0;
-      animation1->setDuration(250);
-      animation1->setStartValue(start);
-      animation1->setEndValue(end);
-    }
-    animation1->start();
-#endif
-  }
-  else
-  {
-    docErrorTabs->setCurrentIndex(1);
-  }
+    docErrorTabs->setHidden(m_DocErrorTabsIsOpen);
 }
 
 // -----------------------------------------------------------------------------
