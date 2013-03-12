@@ -113,26 +113,17 @@ void FindSurfaceCells::execute()
     return;
   }
 
-  size_t udims[3] = {0,0,0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] = {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+  int xPoints = static_cast<int>(m->getXPoints());
+  int yPoints = static_cast<int>(m->getYPoints());
+  int zPoints = static_cast<int>(m->getZPoints());
 
-  DimType neighpoints[6];
-  neighpoints[0] = -dims[0]*dims[1];
-  neighpoints[1] = -dims[0];
+  int neighpoints[6];
+  neighpoints[0] = -xPoints*yPoints;
+  neighpoints[1] = -xPoints;
   neighpoints[2] = -1;
   neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = dims[0]*dims[1];
+  neighpoints[4] = xPoints;
+  neighpoints[5] = xPoints*yPoints;
 
   float column, row, plane;
   int grain;
@@ -140,32 +131,38 @@ void FindSurfaceCells::execute()
   int good = 0;
   int neighbor = 0;
 
-  for (int64_t j = 0; j < totalPoints; j++)
+  int zStride, yStride;
+  for(int i=0;i<zPoints;i++)
   {
-    onsurf = 0;
-    grain = m_GrainIds[j];
-    if(grain > 0)
-    {
-      column = static_cast<float>( j % dims[0] );
-      row = static_cast<float>( (j / dims[0]) % dims[1] );
-      plane = static_cast<float>( j / (dims[0] * dims[1]) );
-      for (int k = 0; k < 6; k++)
-      {
-        good = 1;
-        neighbor = static_cast<int>( j + neighpoints[k] );
-        if(k == 0 && plane == 0) good = 0;
-        if(k == 5 && plane == (dims[2] - 1)) good = 0;
-        if(k == 1 && row == 0) good = 0;
-        if(k == 4 && row == (dims[1] - 1)) good = 0;
-        if(k == 2 && column == 0) good = 0;
-        if(k == 3 && column == (dims[0] - 1)) good = 0;
-        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
-        {
-          onsurf++;
-        }
-      }
-    }
-    m_SurfaceVoxels[j] = onsurf;
+	zStride = i*xPoints*yPoints;
+	for (int j=0;j<yPoints;j++)
+	{
+		yStride = j*xPoints;
+		for(int k=0;k<xPoints;k++)
+		{
+			onsurf = 0;
+			grain = m_GrainIds[zStride+yStride+k];
+			if(grain > 0)
+			{
+			  for (int l = 0; l < 6; l++)
+			  {
+				good = 1;
+				neighbor = static_cast<int>( zStride+yStride+k + neighpoints[k] );
+				if(l == 0 && i == 0) good = 0;
+				if(l == 5 && i == (zPoints - 1)) good = 0;
+				if(l == 1 && j == 0) good = 0;
+				if(l == 4 && j == (yPoints - 1)) good = 0;
+				if(l == 2 && k == 0) good = 0;
+				if(l == 3 && k == (xPoints - 1)) good = 0;
+				if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+				{
+				  onsurf++;
+				}
+			  }
+			}
+			m_SurfaceVoxels[zStride+yStride+k] = onsurf;
+		}
+	}
   }
 
   notifyStatusMessage("Complete");

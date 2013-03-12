@@ -111,16 +111,9 @@ void FindSurfaceGrains::execute()
     return;
   }
 
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_surfacegrains();
+  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) find_surfacegrains2D();
 
-  if(m->getZPoints() > 1) find_surfacegrains();
-
-  if (getErrorCondition() < 0)
-  {return;}
-
-  if(m->getZPoints() == 1) find_surfacegrains2D();
-
-  if (getErrorCondition() < 0)
-  {return;}
 
  notifyStatusMessage("FindSurfaceGrains Completed");
 }
@@ -136,31 +129,37 @@ void FindSurfaceGrains::find_surfacegrains()
   size_t xPoints = m->getXPoints();
   size_t yPoints = m->getYPoints();
   size_t zPoints = m->getZPoints();
-  size_t col, row, plane;
-  for (int64_t j = 0; j < totalPoints; j++)
+
+  int zStride, yStride;
+  for(int i=0;i<zPoints;i++)
   {
-    int gnum = m_GrainIds[j];
-    if(m_SurfaceFields[gnum] == false)
-    {
-      col = j % xPoints;
-      row = (j / xPoints) % yPoints;
-      plane = j / (xPoints * yPoints);
-      if(col <= 0) m_SurfaceFields[gnum] = true;
-      if(col >= xPoints - 1) m_SurfaceFields[gnum] = true;
-      if(row <= 0) m_SurfaceFields[gnum] = true;
-      if(row >= yPoints - 1) m_SurfaceFields[gnum] = true;
-      if(plane <= 0) m_SurfaceFields[gnum] = true;
-      if(plane >= zPoints - 1) m_SurfaceFields[gnum] = true;
-      if(m_SurfaceFields[gnum] == false)
-      {
-        if(m_GrainIds[j - 1] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j + 1] == 0)m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j - xPoints] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j + xPoints] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j - (xPoints * yPoints)] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j + (xPoints * yPoints)] == 0) m_SurfaceFields[gnum] = true;
-      }
-    }
+	zStride = i*xPoints*yPoints;
+	for (int j=0;j<yPoints;j++)
+	{
+		yStride = j*xPoints;
+		for(int k=0;k<xPoints;k++)
+		{
+			int gnum = m_GrainIds[zStride+yStride+k];
+			if(m_SurfaceFields[gnum] == false)
+			{
+			  if(k <= 0) m_SurfaceFields[gnum] = true;
+			  if(k >= xPoints - 1) m_SurfaceFields[gnum] = true;
+			  if(j <= 0) m_SurfaceFields[gnum] = true;
+			  if(j >= yPoints - 1) m_SurfaceFields[gnum] = true;
+			  if(i <= 0) m_SurfaceFields[gnum] = true;
+			  if(i >= zPoints - 1) m_SurfaceFields[gnum] = true;
+			  if(m_SurfaceFields[gnum] == false)
+			  {
+				if(m_GrainIds[zStride+yStride+k - 1] == 0) m_SurfaceFields[gnum] = true;
+				if(m_GrainIds[zStride+yStride+k + 1] == 0) m_SurfaceFields[gnum] = true;
+				if(m_GrainIds[zStride+yStride+k - xPoints] == 0) m_SurfaceFields[gnum] = true;
+				if(m_GrainIds[zStride+yStride+k + xPoints] == 0) m_SurfaceFields[gnum] = true;
+				if(m_GrainIds[zStride+yStride+k - (xPoints * yPoints)] == 0) m_SurfaceFields[gnum] = true;
+				if(m_GrainIds[zStride+yStride+k + (xPoints * yPoints)] == 0) m_SurfaceFields[gnum] = true;
+			  }
+			}
+		}
+	}
   }
 }
 void FindSurfaceGrains::find_surfacegrains2D()
@@ -170,28 +169,52 @@ void FindSurfaceGrains::find_surfacegrains2D()
 
   size_t dims[3] = {0,0,0};
 
-  m->getDimensions(dims);
-  size_t planePoints = dims[0] * dims[1];
+  int xPoints, yPoints;
+  float xRes, yRes;
 
-  size_t col, row;
-  for (size_t j = 0; j < planePoints; j++)
+  if(m->getXPoints() == 1)
   {
-    int gnum = m_GrainIds[j];
-    if(m_SurfaceFields[gnum] == false)
-    {
-      col = j % m->getXPoints();
-      row = (j / m->getXPoints()) % m->getYPoints();
-      if(col <= 0) m_SurfaceFields[gnum] = true;
-      if(col >= m->getXPoints() - 1) m_SurfaceFields[gnum] = true;
-      if(row <= 0) m_SurfaceFields[gnum] = true;
-      if(row >= m->getYPoints() - 1) m_SurfaceFields[gnum] = true;
-      if(m_SurfaceFields[gnum] == false)
-      {
-        if(m_GrainIds[j - 1] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j + 1] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j - m->getXPoints()] == 0) m_SurfaceFields[gnum] = true;
-        if(m_GrainIds[j + m->getXPoints()] == 0) m_SurfaceFields[gnum] = true;
-      }
-    }
+	  xPoints = m->getYPoints();
+	  xRes = m->getYRes();
+	  yPoints = m->getZPoints();
+	  yRes = m->getZRes();
+  }
+  if(m->getYPoints() == 1)
+  {
+	  xPoints = m->getXPoints();
+	  xRes = m->getXRes();
+	  yPoints = m->getZPoints();
+	  yRes = m->getZRes();
+  }
+  if(m->getZPoints() == 1)
+  {
+	  xPoints = m->getXPoints();
+	  xRes = m->getXRes();
+	  yPoints = m->getYPoints();
+	  yRes = m->getYRes();
+  }
+
+  int yStride;
+  for (int j=0;j<yPoints;j++)
+  {
+	yStride = j*xPoints;
+	for(int k=0;k<xPoints;k++)
+	{
+		int gnum = m_GrainIds[yStride+k];
+		if(m_SurfaceFields[gnum] == false)
+		{
+		  if(k <= 0) m_SurfaceFields[gnum] = true;
+		  if(k >= xPoints - 1) m_SurfaceFields[gnum] = true;
+		  if(j <= 0) m_SurfaceFields[gnum] = true;
+		  if(j >= yPoints - 1) m_SurfaceFields[gnum] = true;
+		  if(m_SurfaceFields[gnum] == false)
+		  {
+			if(m_GrainIds[yStride+k - 1] == 0) m_SurfaceFields[gnum] = true;
+			if(m_GrainIds[yStride+k + 1] == 0) m_SurfaceFields[gnum] = true;
+			if(m_GrainIds[yStride+k - m->getXPoints()] == 0) m_SurfaceFields[gnum] = true;
+			if(m_GrainIds[yStride+k + m->getXPoints()] == 0) m_SurfaceFields[gnum] = true;
+		  }
+		}
+	}
   }
 }
