@@ -66,7 +66,6 @@ so it can be integrated with the other documentation pages.
 @li Add 3D linear intercept calculation filter (C. Hartley filter)
 @li Design protocol to learn user's 'ontology'
 @li Add filter to perform Tony's hot spot analysis
-@li Update file type stats generator can read (.dream3d)
 @li Check error causing crash in the find mdf filter
 @li Add ability to read list of ellipsoids into packing algorithms
 @li Look into bias near outside of box during synthetic building
@@ -86,6 +85,7 @@ so it can be integrated with the other documentation pages.
 @li Add mean filter in orientation space
 @li Add mean filter on scalar array
 @li Add median filter on scalar array
+@li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 
 
 
@@ -179,6 +179,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Add filter to segment features by scalar tolerance value
 @li Modify all stats filters to check for 2D in all directions
 @li Break out all stats filters to just calculate stats
+@li Update file type stats generator can read (.dream3d)
 
 
 @section NO_LONGER_WANTED No Longer Wanted
