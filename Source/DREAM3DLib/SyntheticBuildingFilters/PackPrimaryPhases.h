@@ -140,6 +140,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     float check_fillingerror(int gadd, int gremove);
     void assign_voxels_and_gaps();
+    void assign_gaps_only();
     void cleanup_grains();
 
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
@@ -149,6 +150,8 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     int writeVtkFile();
 
   private:
+    int32_t* m_Neighbors;
+
     // Cell Data - make sure these are all initialized to NULL in the constructor
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;

@@ -46,7 +46,7 @@ DistributionTypeWidget::DistributionTypeWidget(QString distributionName, QWidget
 {
   this->setupUi(this);
   setupGui();
-  distributionCheckBox->setText(distributionName);
+  distributionLabel->setText(distributionName);
 }
 
 // -----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ void DistributionTypeWidget::setupGui()
 // -----------------------------------------------------------------------------
 void DistributionTypeWidget::setDistributionName(QString name)
 {
-  distributionCheckBox->setText(name);
+  distributionLabel->setText(name);
 }
 
 // -----------------------------------------------------------------------------
