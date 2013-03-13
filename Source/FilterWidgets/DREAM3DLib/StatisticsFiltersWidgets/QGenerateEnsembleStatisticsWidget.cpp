@@ -39,30 +39,6 @@
 #include "QtSupport/DistributionTypeWidget.h"
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-
-class GenerateEnsembleStatisticsFilter : public AbstractFilter
-{
-  public:
-    DREAM3D_SHARED_POINTERS(GenerateEnsembleStatisticsFilter)
-    DREAM3D_STATIC_NEW_MACRO(GenerateEnsembleStatisticsFilter)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateEnsembleStatisticsFilter, AbstractFilter)
-    virtual ~GenerateEnsembleStatisticsFilter(){}
-
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
-    virtual const std::string getHumanLabel() { return "Generate Ensemble Statistics"; }
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer){}
-    virtual void execute() {}
-    virtual void preflight() {}
-  protected:
-    GenerateEnsembleStatisticsFilter() : AbstractFilter(){}
-
-  private:
-    GenerateEnsembleStatisticsFilter(const GenerateEnsembleStatisticsFilter&); // Copy Constructor Not Implemented
-    void operator=(const GenerateEnsembleStatisticsFilter&); // Operator '=' Not Implemented
-};
-
 
 // -----------------------------------------------------------------------------
 //
@@ -73,7 +49,7 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
   this->setupUi(this);
   setupGui();
 
-  GenerateEnsembleStatisticsFilter::Pointer filter = GenerateEnsembleStatisticsFilter::New();
+  GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
 
 
@@ -98,13 +74,11 @@ QGenerateEnsembleStatisticsWidget::~QGenerateEnsembleStatisticsWidget()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
 {
-  GenerateEnsembleStatisticsFilter::Pointer filter = GenerateEnsembleStatisticsFilter::New();
+  GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
 /* Copy all the settings from this instance into the new instance */
 
-  /* Mike,
-   *  work your way through all the instances of the DistributionTypeWidget getting the type of
-   * distribution and the checkbox value.
-   */
+  filter->setSizeDistribution(m_SizeDistributionWidget->isChecked());
+  filter->setSizeDistributionFitType(m_SizeDistributionWidget->getFitType());
 
   return filter;
 }

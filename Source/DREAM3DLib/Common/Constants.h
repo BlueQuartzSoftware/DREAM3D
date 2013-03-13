@@ -103,6 +103,7 @@ namespace DREAM3D
 
   namespace FilterSubGroups
   {
+    const std::string EnsembleStatsFilters("Ensemble");
     const std::string MemoryManagementFilters("Memory/Management");
     const std::string SpatialFilters("Spatial");
     const std::string OutputFilters("Output");
