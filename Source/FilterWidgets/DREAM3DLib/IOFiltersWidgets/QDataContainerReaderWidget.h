@@ -53,7 +53,9 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
   public:
     QDataContainerReaderWidget(QWidget* parent = NULL);
     virtual ~QDataContainerReaderWidget();
+
     virtual AbstractFilter::Pointer getFilter();
+
     void writeOptions(QSettings &prefs);
     void readOptions(QSettings &prefs);
 

@@ -128,6 +128,23 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      */
     virtual void writeOptions(QSettings &prefs, QString name);
 
+    /**
+     * @brief setVoxelDataEnabled Enable/Disable the Voxel Tab
+     * @param b
+     */
+    virtual void setVoxelDataEnabled(bool b);
+
+    /**
+     * @brief setSurfaceMeshEnabled Enable/Disable the Surface Mesh Tab
+     * @param b
+     */
+    virtual void setSurfaceMeshEnabled(bool b);
+
+    /**
+     * @brief setSolidMeshEnabled Enable/Disable the solid mesh tab
+     * @param b
+     */
+    virtual void setSolidMeshEnabled(bool b);
 
   signals:
     void arrayListsChanged();
