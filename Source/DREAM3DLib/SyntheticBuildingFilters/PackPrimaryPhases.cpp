@@ -411,7 +411,7 @@ void PackPrimaryPhases::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  if(totalFields == 0) totalFields = 1;  
+  if(totalFields == 0) totalFields = 1;
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -732,7 +732,7 @@ void PackPrimaryPhases::execute()
     m_Centroids[3 * i] = xc;
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
-	insert_grain(i);
+  insert_grain(i);
     fillingerror = check_fillingerror(i, -1000);
     for (int iter = 0; iter < 250; iter++)
     {
@@ -813,54 +813,54 @@ void PackPrimaryPhases::execute()
     if(option == 0)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-	  good = false;
-	  count = 0;
-	  while(good == false && count < (numgrains-firstPrimaryField))
-	  {
-		  xc = m_Centroids[3*randomgrain];
-		  yc = m_Centroids[3*randomgrain+1];
-		  zc = m_Centroids[3*randomgrain+2];
-		  column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-		  row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-		  plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
-		  if(grainowners[column][row][plane] > 1) good = true;
-		  else randomgrain++;
-		  if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-		  count++;
-	  }
+    good = false;
+    count = 0;
+    while(good == false && count < (numgrains-firstPrimaryField))
+    {
+      xc = m_Centroids[3*randomgrain];
+      yc = m_Centroids[3*randomgrain+1];
+      zc = m_Centroids[3*randomgrain+2];
+      column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
+      row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
+      plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
+      if(grainowners[column][row][plane] > 1) good = true;
+      else randomgrain++;
+      if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+      count++;
+    }
       Seed++;
 
-	  good = false;
-	  count = 0;
-	  xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
-	  yc = static_cast<float>(rg.genrand_res53() * (dims[1] * yRes));
-	  zc = static_cast<float>(rg.genrand_res53() * (dims[2] * zRes));
-	  column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-	  row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-	  plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
-	  while(good == false && count < packingtotalpoints)
-	  {
-		  if(grainowners[column][row][plane] > 1) good = true;
-		  else column++;
-		  if(column >= packingxpoints)
-		  {
-			column = 0;
-			row++;
-			if(row >= packingypoints)
-			{
-				row = 0;
-				plane++;
-				if(plane >= packingzpoints)
-				{
-					plane = 0;
-				}
-			}
-		  }
-		  count++;
-	  }
-	  xc = static_cast<float>((column*packingresx) + (packingresx/2.0));
-	  yc = static_cast<float>((row*packingresy) + (packingresy/2.0));
-	  zc = static_cast<float>((plane*packingresz) + (packingresz/2.0));
+    good = false;
+    count = 0;
+    xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
+    yc = static_cast<float>(rg.genrand_res53() * (dims[1] * yRes));
+    zc = static_cast<float>(rg.genrand_res53() * (dims[2] * zRes));
+    column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
+    row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
+    plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
+    while(good == false && count < packingtotalpoints)
+    {
+      if(grainowners[column][row][plane] > 1) good = true;
+      else column++;
+      if(column >= packingxpoints)
+      {
+      column = 0;
+      row++;
+      if(row >= packingypoints)
+      {
+        row = 0;
+        plane++;
+        if(plane >= packingzpoints)
+        {
+          plane = 0;
+        }
+      }
+      }
+      count++;
+    }
+    xc = static_cast<float>((column*packingresx) + (packingresx/2.0));
+    yc = static_cast<float>((row*packingresy) + (packingresy/2.0));
+    zc = static_cast<float>((plane*packingresz) + (packingresz/2.0));
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
@@ -885,21 +885,21 @@ void PackPrimaryPhases::execute()
     if(option == 1)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-	  good = false;
-	  count = 0;
-	  while(good == false && count < (numgrains-firstPrimaryField))
-	  {
-		  xc = m_Centroids[3*randomgrain];
-		  yc = m_Centroids[3*randomgrain+1];
-		  zc = m_Centroids[3*randomgrain+2];
-		  column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-		  row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-		  plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
-		  if(grainowners[column][row][plane] > 1) good = true;
-		  else randomgrain++;
-		  if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-		  count++;
-	  }
+    good = false;
+    count = 0;
+    while(good == false && count < (numgrains-firstPrimaryField))
+    {
+      xc = m_Centroids[3*randomgrain];
+      yc = m_Centroids[3*randomgrain+1];
+      zc = m_Centroids[3*randomgrain+2];
+      column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
+      row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
+      plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
+      if(grainowners[column][row][plane] > 1) good = true;
+      else randomgrain++;
+      if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+      count++;
+    }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
@@ -907,12 +907,12 @@ void PackPrimaryPhases::execute()
       xshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)) );
       yshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)) );
       zshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)) );
-	  if((oldxc+xshift) < sizex && (oldxc+xshift) > 0) xc = oldxc + xshift;
-	  else xc = oldxc;
-	  if((oldyc+yshift) < sizey && (oldyc+yshift) > 0) yc = oldyc + yshift;
-	  else yc = oldyc;
-	  if((oldzc+zshift) < sizez && (oldzc+zshift) > 0) zc = oldzc + zshift;
-	  else zc = oldzc;
+    if((oldxc+xshift) < sizex && (oldxc+xshift) > 0) xc = oldxc + xshift;
+    else xc = oldxc;
+    if((oldyc+yshift) < sizey && (oldyc+yshift) > 0) yc = oldyc + yshift;
+    else yc = oldyc;
+    if((oldzc+zshift) < sizez && (oldzc+zshift) > 0) zc = oldzc + zshift;
+    else zc = oldzc;
       oldfillingerror = fillingerror;
       fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
       move_grain(randomgrain, xc, yc, zc);
@@ -1828,9 +1828,9 @@ void PackPrimaryPhases::assign_gaps_only()
   int zPoints = static_cast<int>(m->getZPoints());
   int totalPoints = xPoints*yPoints*zPoints;
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
+//  float xRes = m->getXRes();
+//  float yRes = m->getYRes();
+//  float zRes = m->getZRes();
 
   int neighpoints[6];
   neighpoints[0] = -xPoints*yPoints;
@@ -1848,77 +1848,77 @@ void PackPrimaryPhases::assign_gaps_only()
   while (count != 0)
   {
     count = 0;
-	int zStride, yStride;
-	for(int i=0;i<zPoints;i++)
-	{
-		zStride = i*xPoints*yPoints;
-		for (int j=0;j<yPoints;j++)
-		{
-			yStride = j*xPoints;
-			for(int k=0;k<xPoints;k++)
-			{
-			  grainname = m_GrainIds[zStride+yStride+k];
-			  if (grainname < 0)
-			  {
-				count++;
-				current = 0;
-				most = 0;
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = zStride+yStride+k + neighpoints[l];
-				  if (l == 0 && i == 0) good = 0;
-				  if (l == 5 && i == (zPoints - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (yPoints - 1)) good = 0;
-				  if (l == 2 && k == 0) good = 0;
-				  if (l == 3 && k == (xPoints - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if (grain > 0)
-					{
-						n[grain]++;
-						current = n[grain];
-						if (current > most)
-						{
-							most = current;
-		//				    m_Neighbors[i] = grain;
-							m_Neighbors[zStride+yStride+k] = neighpoint;
-						}
-					}
-				  }
-				}
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = zStride+yStride+k + neighpoints[l];
-				  if (l == 0 && i == 0) good = 0;
-				  if (l == 5 && i == (zPoints - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (yPoints - 1)) good = 0;
-				  if (l == 2 && k == 0) good = 0;
-				  if (l == 3 && k == (xPoints - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if(grain > 0) n[grain] = 0;
-				  }
-				}
-			  }
-			}
-		}
-	}
-	for (int j = 0; j < totalPoints; j++)
-	{
-		grainname = m_GrainIds[j];
-		neighbor = m_Neighbors[j];
-		if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
-		{
-			m_GrainIds[j] = m_GrainIds[neighbor];
-			m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
-		}
-	}
+  int zStride, yStride;
+  for(int i=0;i<zPoints;i++)
+  {
+    zStride = i*xPoints*yPoints;
+    for (int j=0;j<yPoints;j++)
+    {
+      yStride = j*xPoints;
+      for(int k=0;k<xPoints;k++)
+      {
+        grainname = m_GrainIds[zStride+yStride+k];
+        if (grainname < 0)
+        {
+        count++;
+        current = 0;
+        most = 0;
+        for (int l = 0; l < 6; l++)
+        {
+          good = 1;
+          neighpoint = zStride+yStride+k + neighpoints[l];
+          if (l == 0 && i == 0) good = 0;
+          if (l == 5 && i == (zPoints - 1)) good = 0;
+          if (l == 1 && j == 0) good = 0;
+          if (l == 4 && j == (yPoints - 1)) good = 0;
+          if (l == 2 && k == 0) good = 0;
+          if (l == 3 && k == (xPoints - 1)) good = 0;
+          if (good == 1)
+          {
+          grain = m_GrainIds[neighpoint];
+          if (grain > 0)
+          {
+            n[grain]++;
+            current = n[grain];
+            if (current > most)
+            {
+              most = current;
+    //				    m_Neighbors[i] = grain;
+              m_Neighbors[zStride+yStride+k] = neighpoint;
+            }
+          }
+          }
+        }
+        for (int l = 0; l < 6; l++)
+        {
+          good = 1;
+          neighpoint = zStride+yStride+k + neighpoints[l];
+          if (l == 0 && i == 0) good = 0;
+          if (l == 5 && i == (zPoints - 1)) good = 0;
+          if (l == 1 && j == 0) good = 0;
+          if (l == 4 && j == (yPoints - 1)) good = 0;
+          if (l == 2 && k == 0) good = 0;
+          if (l == 3 && k == (xPoints - 1)) good = 0;
+          if (good == 1)
+          {
+          grain = m_GrainIds[neighpoint];
+          if(grain > 0) n[grain] = 0;
+          }
+        }
+        }
+      }
+    }
+  }
+  for (int j = 0; j < totalPoints; j++)
+  {
+    grainname = m_GrainIds[j];
+    neighbor = m_Neighbors[j];
+    if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
+    {
+      m_GrainIds[j] = m_GrainIds[neighbor];
+      m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
+    }
+  }
   }
 }
 // -----------------------------------------------------------------------------
