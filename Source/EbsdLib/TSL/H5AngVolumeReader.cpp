@@ -77,6 +77,15 @@ H5AngVolumeReader::~H5AngVolumeReader()
 }
 
 
+#define H5ANGREADER_ALLOCATE_ARRAY(name, type)\
+  if (readAllArrays == true || arrayNames.find(Ebsd::Ang::name) != arrayNames.end()) {\
+  type* _##name = allocateArray<type>(numElements);\
+  if (NULL != _##name) {\
+  ::memset(_##name, 0, numBytes);\
+  }\
+  set##name##Pointer(_##name);\
+ }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -84,28 +93,19 @@ void H5AngVolumeReader::initPointers(size_t numElements)
 {
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
-  m_Phi1 = allocateArray<float > (numElements);
-  m_Phi = allocateArray<float > (numElements);
-  m_Phi2 = allocateArray<float > (numElements);
-  m_Iq = allocateArray<float > (numElements);
-  m_Ci = allocateArray<float > (numElements);
-  m_PhaseData = allocateArray<int> (numElements);
-  m_X = allocateArray<float > (numElements);
-  m_Y = allocateArray<float > (numElements);
-  m_SEMSignal = allocateArray<float > (numElements);
-  m_Fit = allocateArray<float > (numElements);
+  bool readAllArrays = getReadAllArrays();
+  std::set<std::string> arrayNames = getArraysToRead();
 
-  ::memset(m_Phi1, 0, numBytes);
-  ::memset(m_Phi, 0, numBytes);
-  ::memset(m_Phi2, 0, numBytes);
-  ::memset(m_Iq, 0, numBytes);
-  ::memset(m_Ci, 0, numBytes);
-  ::memset(m_PhaseData, 0, numBytes);
-  ::memset(m_X, 0, numBytes);
-  ::memset(m_Y, 0, numBytes);
-  ::memset(m_SEMSignal, 0, numBytes);
-  ::memset(m_Fit, 0, numBytes);
-
+  H5ANGREADER_ALLOCATE_ARRAY(Phi1, float)
+  H5ANGREADER_ALLOCATE_ARRAY(Phi, float)
+  H5ANGREADER_ALLOCATE_ARRAY(Phi2, float)
+  H5ANGREADER_ALLOCATE_ARRAY(ImageQuality, float)
+  H5ANGREADER_ALLOCATE_ARRAY(ConfidenceIndex, float)
+  H5ANGREADER_ALLOCATE_ARRAY(PhaseData, int)
+  H5ANGREADER_ALLOCATE_ARRAY(XPosition, float)
+  H5ANGREADER_ALLOCATE_ARRAY(YPosition, float)
+  H5ANGREADER_ALLOCATE_ARRAY(SEMSignal, float)
+  H5ANGREADER_ALLOCATE_ARRAY(Fit, float)
 }
 
 // -----------------------------------------------------------------------------
@@ -198,6 +198,8 @@ std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   return m_Phases;
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -209,7 +211,8 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
   int index = 0;
   int err = -1;
   // Initialize all the pointers
-    initPointers(xpoints * ypoints * zpoints);
+  initPointers(xpoints * ypoints * zpoints);
+
 
   int readerIndex;
   int xpointsslice;
@@ -234,7 +237,8 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     reader->setSampleTransformationAxis(getSampleTransformationAxis());
     reader->setEulerTransformationAngle(getEulerTransformationAngle());
     reader->setEulerTransformationAxis(getEulerTransformationAxis());
-	
+    reader->readAllArrays(getReadAllArrays());
+    reader->setArraysToRead(getArraysToRead());
     err = reader->readFile();
     if(err < 0)
     {
@@ -247,11 +251,11 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     float* euler1Ptr = reader->getPhi1Pointer();
     float* euler2Ptr = reader->getPhiPointer();
     float* euler3Ptr = reader->getPhi2Pointer();
-    float* xPtr = reader->getXPosPointer();
-    float* yPtr = reader->getYPosPointer();
+    float* xPtr = reader->getXPositionPointer();
+    float* yPtr = reader->getYPositionPointer();
     float* iqPtr = reader->getImageQualityPointer();
     float* ciPtr = reader->getConfidenceIndexPointer();
-    int* phasePtr = reader->getPhasePointer();
+    int* phasePtr = reader->getPhaseDataPointer();
     float* sigPtr = reader->getSEMSignalPointer();
     float* fitPtr = reader->getFitPointer();
 
@@ -271,25 +275,22 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     if(ZDir == Ebsd::LowtoHigh) zval = slice;
     if(ZDir == Ebsd::HightoLow) zval = static_cast<int>( (zpoints - 1) - slice );
 
-    // Copy the data from the current storage into the ReconstructionFunc Storage Location
+    // Copy the data from the current storage into the new memory Location
     for (int j = 0; j < ystop; j++)
     {
       for (int i = 0; i < xstop; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-//        eulerangles[3 * index] = euler1Ptr[readerIndex]; // Phi1
-//        eulerangles[3 * index + 1] = euler2Ptr[readerIndex]; // Phi
-//        eulerangles[3 * index + 2] = euler3Ptr[readerIndex]; // Phi2
-        m_Phi1[index] = euler1Ptr[readerIndex];
-        m_Phi[index] = euler2Ptr[readerIndex];
-        m_Phi2[index] = euler3Ptr[readerIndex];
-        m_X[index] = xPtr[readerIndex];
-        m_Y[index] = yPtr[readerIndex];
-        m_Iq[index] = iqPtr[readerIndex];
-        m_Ci[index] = ciPtr[readerIndex];
-        m_PhaseData[index] = phasePtr[readerIndex]; // Phase
-        m_SEMSignal[index] = sigPtr[readerIndex];
-        m_Fit[index] = fitPtr[readerIndex];
+        if (NULL != euler1Ptr) {m_Phi1[index] = euler1Ptr[readerIndex];}
+        if (NULL != euler2Ptr) {m_Phi[index] = euler2Ptr[readerIndex];}
+        if (NULL != euler3Ptr) {m_Phi2[index] = euler3Ptr[readerIndex];}
+        if (NULL != xPtr) {m_X[index] = xPtr[readerIndex];}
+        if (NULL != yPtr) {m_Y[index] = yPtr[readerIndex];}
+        if (NULL != iqPtr) {m_Iq[index] = iqPtr[readerIndex];}
+        if (NULL != ciPtr) {m_Ci[index] = ciPtr[readerIndex];}
+        if (NULL != phasePtr) {m_PhaseData[index] = phasePtr[readerIndex];} // Phase
+        if (NULL != sigPtr) {m_SEMSignal[index] = sigPtr[readerIndex];}
+        if (NULL != fitPtr) {m_Fit[index] = fitPtr[readerIndex];}
 
         /* For TSL OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
@@ -298,7 +299,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if(m_PhaseData[index] < 1)
+        if (NULL != phasePtr && m_PhaseData[index] < 1)
         {
           m_PhaseData[index] = 1;
         }
@@ -309,4 +310,5 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
   }
   return err;
 }
+
 

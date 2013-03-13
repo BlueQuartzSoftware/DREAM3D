@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>598</width>
-    <height>212</height>
+    <width>668</width>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,12 @@
    <bool>false</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>5</number>
+   </property>
+   <property name="margin">
+    <number>2</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="topMargin">
@@ -39,7 +45,7 @@ font-size: 11px;
       </widget>
      </item>
      <item>
-      <widget class="QFSDropLineEdit" name="m_H5EbsdFile">
+      <widget class="QFSDropLineEdit" name="m_InputFile">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -49,7 +55,7 @@ font-size: 11px;
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="m_H5EbsdBtn">
+      <widget class="QPushButton" name="m_InputFileBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -65,6 +71,9 @@ font-size: 11px;
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout_2">
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
      <property name="spacing">
       <number>4</number>
      </property>
@@ -361,19 +370,6 @@ font-size: 10px;
        </item>
       </layout>
      </item>
-     <item row="1" column="4" rowspan="2">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item row="1" column="2">
       <layout class="QFormLayout" name="formLayout">
        <property name="fieldGrowthPolicy">
@@ -479,7 +475,7 @@ font-size: 10px;
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="m_StackingOrder">
+        <widget class="QLabel" name="m_RefFrameZDir">
          <property name="font">
           <font>
            <pointsize>-1</pointsize>
@@ -539,6 +535,54 @@ font-size: 10px;
        <property name="rightMargin">
         <number>5</number>
        </property>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_23">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel {
+font-weight: bold;
+font-size: 10px;
+}</string>
+         </property>
+         <property name="text">
+          <string>EBSD Manufacturer:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="m_EbsdManufacturer">
+         <property name="font">
+          <font>
+           <pointsize>-1</pointsize>
+           <italic>true</italic>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLabel {
+	font-size: 11px;
+	font-style: italic;
+}</string>
+         </property>
+         <property name="text">
+          <string>XXX</string>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_3">
          <property name="font">
@@ -635,55 +679,20 @@ font-size: 10px;
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="m_EbsdManufacturer">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
-         <property name="text">
-          <string>XXX</string>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_23">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-font-weight: bold;
-font-size: 10px;
-}</string>
-         </property>
-         <property name="text">
-          <string>EBSD Manufacturer:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-         </property>
-         <property name="wordWrap">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </item>
+     <item row="1" column="4">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -788,6 +797,9 @@ font-size: 11px;
      </item>
     </layout>
    </item>
+   <item>
+    <widget class="ArraySelectionWidget" name="arraySelectionWidget"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -800,6 +812,12 @@ font-size: 11px;
    <class>QFilterWidget</class>
    <extends>QGroupBox</extends>
    <header location="global">QFilterWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ArraySelectionWidget</class>
+   <extends>QTabWidget</extends>
+   <header location="global">ArraySelectionWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

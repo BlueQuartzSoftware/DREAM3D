@@ -46,7 +46,7 @@ class QualityMetricTableModel;
 
 class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     QReadH5EbsdWidget(QWidget* parent = NULL);
     virtual ~QReadH5EbsdWidget();
@@ -56,29 +56,52 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
-    QString getFilterGroup();
-
-  protected slots:
-    void m_SetSliceInfo();
-
-    // Auto Hookup Slots
-    void on_m_H5EbsdBtn_clicked();
-    void on_m_H5EbsdFile_textChanged(const QString &text);
-
     QFilterWidget* createDeepCopy();
 
-  private slots:
+    QString getFilterGroup();
+
+    void setupGui();
+    QString  getInputFile();
+
+    void resetGuiFileInfoWidgets();
+    void updateFileInfoWidgets();
+
+    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
+    void setZStartIndex(int value) { this->m_ZStartIndex->setValue(value); emit parametersChanged();}
+    int getZStartIndex() { return this->m_ZStartIndex->value(); }
+
+    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
+    void setZEndIndex(int value) { this->m_ZEndIndex->setValue(value); emit parametersChanged();}
+    int getZEndIndex() { return this->m_ZEndIndex->value(); }
+
+    Q_PROPERTY(QString RefFrameZDir READ getRefFrameZDir WRITE setRefFrameZDir)
+    void setRefFrameZDir(QString value) { this->m_RefFrameZDir->setText(value); emit parametersChanged();}
+    QString getRefFrameZDir() { return this->m_RefFrameZDir->text(); }
+
+
+    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+
+  public slots:
+    void setInputFile(const QString &v);
+    void arraySelectionWidgetChanged();
+
+  protected slots:
+    void on_m_InputFileBtn_clicked();
+    void on_m_InputFile_textChanged(const QString & text);
+
+  protected:
+    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
   private:
     float                        sampleTransAngle;
-	std::vector<float>           sampleTransAxis;
+    std::vector<float>           sampleTransAxis;
     float                        eulerTransAngle;
-	std::vector<float>           eulerTransAxis;
+    std::vector<float>           eulerTransAxis;
 
-    void setupGui();
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
+    QString m_FilterGroup;
 
-    void populateCreatedRequiredLists( QString filePath );
 
     QReadH5EbsdWidget(const QReadH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const QReadH5EbsdWidget&); // Operator '=' Not Implemented

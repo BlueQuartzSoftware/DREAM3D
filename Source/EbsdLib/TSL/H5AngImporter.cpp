@@ -289,11 +289,11 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi1, Ebsd::Ang::Phi1);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi, Ebsd::Ang::Phi);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi2, Ebsd::Ang::Phi2);
-  WRITE_ANG_DATA_ARRAY(reader, float, gid, XPos, Ebsd::Ang::XPosition);
-  WRITE_ANG_DATA_ARRAY(reader, float, gid, YPos, Ebsd::Ang::YPosition);
+  WRITE_ANG_DATA_ARRAY(reader, float, gid, XPosition, Ebsd::Ang::XPosition);
+  WRITE_ANG_DATA_ARRAY(reader, float, gid, YPosition, Ebsd::Ang::YPosition);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, ImageQuality, Ebsd::Ang::ImageQuality);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, ConfidenceIndex, Ebsd::Ang::ConfidenceIndex);
-  WRITE_ANG_DATA_ARRAY(reader, int, gid, Phase, Ebsd::Ang::PhaseData);
+  WRITE_ANG_DATA_ARRAY(reader, int, gid, PhaseData, Ebsd::Ang::PhaseData);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, SEMSignal, Ebsd::Ang::SEMSignal);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Fit, Ebsd::Ang::Fit);
   // Close the "Data" group
