@@ -25,7 +25,7 @@ endif(QT4_FOUND)
 #  Qwt Section
 # ------------------------------------------------------------------------------
 find_package(Qwt)
-if (QWT_FOUND)
+if(QWT_FOUND)
     include_directories(${QWT_INCLUDE_DIR})
     include_directories(${QWT_INCLUDE_DIR}/qwt)
     CMP_COPY_DEPENDENT_LIBRARIES("qwt")
@@ -227,7 +227,7 @@ IF(Q_WS_WIN)
 ENDIF(Q_WS_WIN)
 
 set(DEST_DIR ".")
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     set(DEST_DIR "bin")
 endif()
 

@@ -43,10 +43,10 @@ endif()
 
 
 
-if (NOT PROJECT_RESOURCES_DIR)
+if(NOT PROJECT_RESOURCES_DIR)
 set(PROJECT_RESOURCES_DIR ${EbsdLib_SOURCE_DIR}/Resources)
 endif()
-if (NOT DEFINED CMP_SOURCE_DIR)
+if(NOT DEFINED CMP_SOURCE_DIR)
 set(CMP_SOURCE_DIR ${EbsdLib_SOURCE_DIR}/Support/cmp)
 endif()
 
@@ -130,7 +130,7 @@ set(EbsdLib_PROJECT_SRCS
 if(DEFINED DREAM3DProj_BINARY_DIR)
 
     add_library(${PROJECT_NAME} ${LIB_TYPE} ${EbsdLib_PROJECT_SRCS})
-    if (EbsdLib_ENABLE_HDF5)
+    if(EbsdLib_ENABLE_HDF5)
         target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
     endif()
 
@@ -138,13 +138,13 @@ if(DEFINED DREAM3DProj_BINARY_DIR)
 
     set(install_dir "tools")
     set(lib_install_dir "lib")
-    if (WIN32)
+    if(WIN32)
         set(install_dir ".")
         set(lib_install_dir "")
     endif()
 
 
-    if (BUILD_SHARED_LIBS AND NOT APPLE)
+    if(BUILD_SHARED_LIBS AND NOT APPLE)
         INSTALL(TARGETS ${PROJECT_NAME}
             COMPONENT Applications
             RUNTIME DESTINATION ${install_dir}

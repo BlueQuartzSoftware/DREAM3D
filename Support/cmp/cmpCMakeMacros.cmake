@@ -265,7 +265,7 @@ function(BuildQtAppBundle)
                 COMPONENT ${QAB_COMPONENT})
         set(lib_suffix "")
         set(build_type "@CMAKE_BUILD_TYPE@")
-        if (${build_type} STREQUAL "Debug")
+        if(${build_type} STREQUAL "Debug")
             set(lib_suffix "_debug")
         endif()
 
@@ -517,9 +517,9 @@ endmacro()
 # something like "qgif;qjpeg;qtiff"
 #-------------------------------------------------------------------------------
 macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
-  set (qt_plugin_list ${pluginlist})
-  set (qt_plugin_types "Debug;Release")
-  if (WIN32)
+  set(qt_plugin_list ${pluginlist})
+  set(qt_plugin_types "Debug;Release")
+  if(WIN32)
     set(qt_plugin_prefix "")
     set(qt_plugin_DEBUG_suffix "d4")
     set(qt_plugin_RELEASE_suffix "4")
@@ -530,9 +530,9 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
   endif()
 
   #message(STATUS "qt_plugin_debug_suffix: ${qt_plugin_debug_suffix}")
-  set (QTPLUGINS_RELEASE "")
-  set (QTPLUGINS_DEBUG   "")
-  set (QTPLUGINS "")
+  set(QTPLUGINS_RELEASE "")
+  set(QTPLUGINS_DEBUG   "")
+  set(QTPLUGINS "")
 
   # Loop through all the Build Types and all the plugins to find each one.
   foreach(build_type ${qt_plugin_types})
@@ -546,15 +546,15 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                       DOC "Library Path for ${plugin}"
                       NO_DEFAULT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
 
-        if (MSVC)
+        if(MSVC)
             #  message(STATUS "QT_PLUGINS_DIR: ${QT_PLUGINS_DIR}")
             #  message(STATUS " QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}: ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}")
             get_filename_component(lib_path ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}} PATH)
             get_filename_component(lib_name ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}} NAME_WE)
             #  message(STATUS "lib_path: ${lib_path}")
             #  message(STATUS "lib_name: ${lib_name}")
-            set (QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE} ${lib_path}/${lib_name}.dll CACHE PATH "" FORCE)
-            if ( ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}} STREQUAL  "QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}-NOTFOUND")
+            set(QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE} ${lib_path}/${lib_name}.dll CACHE PATH "" FORCE)
+            if( ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}} STREQUAL  "QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}-NOTFOUND")
               message(STATUS "A Companion DLL for ${upperlib}_LIBRARY_${TYPE} was NOT found which usually means"
                                 " that the library was NOT built as a DLL. I looked in the "
                                 " following locations:  ${lib_path}\n  ${lib_path}/..\n  ${lib_path}/../bin")
@@ -567,7 +567,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                     CONFIGURATIONS ${BTYPE}
                     COMPONENT Applications)
             endif()
-        elseif (UNIX AND NOT APPLE)
+        elseif(UNIX AND NOT APPLE)
             INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
                 DESTINATION ./plugins/${plugintype}
                 CONFIGURATIONS ${BTYPE}
@@ -581,15 +581,15 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
     endforeach()
 
     # Assign either the debug or release plugin list to the QTPLUGINS variable on NON msvc platforms.
-    if (NOT MSVC)
-      if ( NOT DEFINED CMAKE_BUILD_TYPE )
-        if ( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-            set (QTPLUGINS ${QTPLUGINS_DEBUG})
+    if(NOT MSVC)
+      if( NOT DEFINED CMAKE_BUILD_TYPE )
+        if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+            set(QTPLUGINS ${QTPLUGINS_DEBUG})
         else()
-            set (QTPLUGINS ${QTPLUGINS_RELEASE})
+            set(QTPLUGINS ${QTPLUGINS_RELEASE})
         endif()
       else()
-        set (QTPLUGINS ${QTPLUGINS_RELEASE})
+        set(QTPLUGINS ${QTPLUGINS_RELEASE})
       endif()
     else()
         # Create the qt.conf file so that the image plugins will be loaded correctly

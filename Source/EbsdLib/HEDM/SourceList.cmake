@@ -26,7 +26,7 @@ set(HEDM_HDRS
     ${EbsdLib_SOURCE_DIR}/HEDM/MicFields.h
 )
 
-if (EbsdLib_ENABLE_HDF5)
+if(EbsdLib_ENABLE_HDF5)
     add_definitions(-DEbsdLib_HAVE_HDF5)
     set(HEDM_SRCS ${HEDM_SRCS}
         ${EbsdLib_SOURCE_DIR}/HEDM/H5MicImporter.cpp
@@ -42,7 +42,7 @@ if (EbsdLib_ENABLE_HDF5)
 endif()
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/HEDM" "${HEDM_HDRS}" "${HEDM_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
-if ( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
+if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )
     INSTALL (FILES ${HEDM_HDRS}
             DESTINATION include/EbsdLib/HEDM
             COMPONENT Headers   )
