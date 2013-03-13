@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindMDF.h"
+#include "FindMisorientations.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -45,22 +45,18 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMDF::FindMDF()  :
+FindMisorientations::FindMisorientations()  :
 AbstractFilter(),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_AvgQuats(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
-m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
-m_SharedSurfaceAreaList(NULL),
-m_CrystalStructures(NULL),
-m_PhaseTypes(NULL)
+m_MisorientationList(NULL),
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -75,17 +71,17 @@ m_PhaseTypes(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindMDF::~FindMDF()
+FindMisorientations::~FindMisorientations()
 {
 }
 // -----------------------------------------------------------------------------
-void FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -135,53 +131,41 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
       ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
-	}
+   }
   }
-  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-  if(m_SharedSurfaceAreaList == NULL)
+
+  m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                 (m->getFieldData(DREAM3D::FieldData::MisorientationList).get());
+  if(m_MisorientationList == NULL)
   {
-    setErrorCondition(0);
-    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) find_neighbors->execute();
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-    if(m_SharedSurfaceAreaList == NULL)
-	{
+    NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
+    misorientationListPtr->SetName(DREAM3D::FieldData::MisorientationList);
+    misorientationListPtr->Resize(fields);
+    m->addFieldData(DREAM3D::FieldData::MisorientationList, misorientationListPtr);
+    if (misorientationListPtr.get() == NULL)
+    {
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
-      setErrorCondition(-306);
-      addErrorMessage(getHumanLabel(), ss.str(), -306);
-	}
+      ss << "MisorientationLists Array Not Initialized correctly" << std::endl;
+      setErrorCondition(-308);
+      addErrorMessage(getHumanLabel(), ss.str(), -308);
+    }
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, -303,  float, FloatArrayType, ensembles, 1)
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  if(m_StatsDataArray == NULL)
-  {
-    StatsDataArray::Pointer p = StatsDataArray::New();
-    m_StatsDataArray = p.get();
-    m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
-  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMDF::preflight()
+void FindMisorientations::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMDF::execute()
+void FindMisorientations::execute()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -198,14 +182,12 @@ void FindMDF::execute()
     return;
   }
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
-  // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
+  // And we do the same for the Misorientation list
+  NeighborList<float>& neighbormisorientationlist = *m_MisorientationList;
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
   float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
@@ -215,32 +197,10 @@ void FindMDF::execute()
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  std::vector<FloatArrayType::Pointer> misobin;
-  int numbins = 0;
 
-  size_t numensembles = m->getNumEnsembleTuples();
-
-  misobin.resize(numensembles);
-  for(size_t i=1;i<numensembles;++i)
-  {
-    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
-    {
-      numbins = 36 * 36 * 12;
-	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
-    }
-    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
-    {
-      numbins = 18 * 18 * 18;
-	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
-    }
-    // Now initialize all bins to 0.0
-    for (int j = 0; j < numbins; j++)
-    {
-		misobin[i]->SetValue(j, 0.0);
-    }
-  }
   size_t nname;
   float nsa;
+  misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
 		q1[0] = m_AvgQuats[5*i];
@@ -249,6 +209,7 @@ void FindMDF::execute()
 		q1[3] = m_AvgQuats[5*i+3];
 		q1[4] = m_AvgQuats[5*i+4];
 		phase1 = m_CrystalStructures[m_FieldPhases[i]];
+		misorientationlists[i].resize(neighborlist[i].size(), -1.0);
 		for (size_t j = 0; j < neighborlist[i].size(); j++)
 		{
 		  w = 10000.0;
@@ -263,12 +224,11 @@ void FindMDF::execute()
 		  if (phase1 == phase2)
 		  {
 			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-		    if ((nname > i || m_SurfaceFields[nname] == true))
-		    {
-			  mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
-			  nsa = neighborsurfacearealist[i][j];
-			  misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + (nsa / m_TotalSurfaceAreas[m_FieldPhases[i]])));
-		    }
+			misorientationlists[i][j] = w;
+		  }
+		  if (phase1 != phase2)
+		  {
+			misorientationlists[i][j] = -100;
 		  }
 		}
   }
@@ -276,25 +236,13 @@ void FindMDF::execute()
   // We do this to create new set of MisorientationList objects
   dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
- // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
-  for (size_t i = 1; i < numensembles; i++)
+  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setMisorientationBins(misobin[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setMisorientationBins(misobin[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  tp->setMisorientationBins(misobin[i]);
-	  }
+    // Set the vector for each list into the NeighborList Object
+    NeighborList<float>::SharedVectorType misoL(new std::vector<float>);
+    misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
+    m_MisorientationList->setList(static_cast<int>(i), misoL);
   }
 
- notifyStatusMessage("FindMDF Completed");
+ notifyStatusMessage("FindMisorientations Completed");
 }
