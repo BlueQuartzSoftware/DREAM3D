@@ -39,6 +39,7 @@
 #include "QtSupport/DistributionTypeWidget.h"
 
 
+#include "DREAM3DLib/StatisticsFiltersWidgets/moc_QGenerateEnsembleStatisticsWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
@@ -47,7 +48,6 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
   QFilterWidget(parent)
 {
   this->setupUi(this);
-  setupGui();
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
@@ -57,8 +57,6 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
 
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +112,7 @@ QFilterWidget* QGenerateEnsembleStatisticsWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 QString QGenerateEnsembleStatisticsWidget::getFilterGroup()
 {
-return m_FilterGroup;
+  return m_FilterGroup;
 }
 
 // -----------------------------------------------------------------------------
@@ -143,7 +141,12 @@ void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VoxelDataContaine
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::setupGui()
 {
-  m_SizeDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Size Distribution"), distributionTypeGroupBox);
+  setCheckable(true);
+
+  setIsSelected(false);
+
+  m_SizeDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Size Distribution"), distributionTypeFrame);
+  m_SizeDistributionWidget->setStyleSheet("");
   distributionTypeLayout->addWidget(m_SizeDistributionWidget);
 }
 

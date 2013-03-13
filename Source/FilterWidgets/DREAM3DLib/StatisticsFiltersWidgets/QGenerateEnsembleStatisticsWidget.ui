@@ -12,35 +12,45 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="distributionTypeGroupBox">
-     <property name="title">
-      <string>Distribution Types</string>
+    <widget class="QLabel" name="label">
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+font-weight: bold;
+font-size: 12px;
+}</string>
      </property>
-     <layout class="QVBoxLayout" name="distributionTypeLayout">
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="text">
+      <string>Distribution Fitting</string>
+     </property>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="phaseTypeGroupBox">
-     <property name="title">
+    <widget class="QFrame" name="distributionTypeFrame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <layout class="QVBoxLayout" name="distributionTypeLayout"/>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+font-weight: bold;
+font-size: 12px;
+}</string>
+     </property>
+     <property name="text">
       <string>Phase Types</string>
      </property>
-     <layout class="QVBoxLayout" name="phaseTypeLayout">
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>TextLabel</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="phaseTypeFrame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <layout class="QVBoxLayout" name="phaseTypeLayout"/>
     </widget>
    </item>
   </layout>
