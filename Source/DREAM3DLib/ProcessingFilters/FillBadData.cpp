@@ -302,7 +302,7 @@ void FillBadData::execute()
 		}
 		for (int l = 0; l < 6; l++)
 		{
-//		  good = 1;
+		  good = 1;
           neighpoint = i + neighpoints[l];
 		  if (l == 0 && z == 0) good = 0;
 		  if (l == 5 && z == (dims[2] - 1)) good = 0;

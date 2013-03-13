@@ -64,7 +64,10 @@ so it can be integrated with the other documentation pages.
 @li Add mean filter in orientation space
 @li Add mean filter on scalar array
 @li Add median filter on scalar array
+@li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 @li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
+
+
 
 
 @section synthetic Synthetic Building Filters
@@ -176,9 +179,11 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Add filter to segment features by scalar tolerance value
 @li Modify all stats filters to check for 2D in all directions
 @li Break out all stats filters to just calculate stats
+@li Update file type stats generator can read (.dream3d)
 @li Users can not open .h5stats in StatsGenerator
 @li Add ability to open a previously saved stats file back into the stats generator
-@li Update file type stats generator can read (.dream3d)
+@li Add filter to calculate only misorientations
+@li Modify FindMDF filter to only calculate the MDF, not the actual misorientations
 
 
 @section NO_LONGER_WANTED No Longer Wanted

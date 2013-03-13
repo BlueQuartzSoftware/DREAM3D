@@ -8,7 +8,7 @@
  *
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- *
+ *Find
  * Redistributions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDMDF_H_
-#define FINDMDF_H_
+#ifndef GenerateEnsembleStatistics_H_
+#define GenerateEnsembleStatistics_H_
 
 #include <vector>
 #include <string>
@@ -53,37 +53,47 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 /**
- * @class FindMDF FindMDF.h DREAM3DLib/GenericFilters/FindMDF.h
+ * @class GenerateEnsembleStatistics GenerateEnsembleStatistics.h DREAM3DLib/GenericFilters/GenerateEnsembleStatistics.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindMDF)
-    DREAM3D_STATIC_NEW_MACRO(FindMDF)
-    DREAM3D_TYPE_MACRO_SUPER(FindMDF, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateEnsembleStatistics)
+    DREAM3D_STATIC_NEW_MACRO(GenerateEnsembleStatistics)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateEnsembleStatistics, AbstractFilter)
 
-    virtual ~FindMDF();
+    virtual ~GenerateEnsembleStatistics();
 
-    //------ Required Field Data
+    //------ (Possible) Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
-    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
+    //------ (Possible) Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find MDF"; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+    virtual const std::string getHumanLabel() { return "Generate Ensemble Statistics"; }
 
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
+	DREAM3D_INSTANCE_PROPERTY(int, SizeDistributionFitType)
+	
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 	/**
      * @brief Reimplemented from @see AbstractFilter class
@@ -92,7 +102,14 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     virtual void preflight();
 
   protected:
-    FindMDF();
+    GenerateEnsembleStatistics();
+
+	void gatherSizeStats();
+	void gatherAspectRatioStats();
+	void gatherOmegaStats();
+	void gatherNeighborhoodStats();
+	void gatherMDFStats();
+	void gatherODFStats();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
@@ -101,21 +118,25 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
+    bool* m_BiasedFields;
     bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
-    float* m_TotalSurfaceAreas;
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
-
+    float* m_AxisEulerAngles;
+    float* m_Omega3s;
+    float* m_AspectRatios;
+    float* m_EquivalentDiameters;
+    int32_t* m_Neighborhoods;
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
 
     StatsDataArray* m_StatsDataArray;
 
+    std::vector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindMDF(const FindMDF&); // Copy Constructor Not Implemented
-    void operator=(const FindMDF&); // Operator '=' Not Implemented
+    GenerateEnsembleStatistics(const GenerateEnsembleStatistics&); // Copy Constructor Not Implemented
+    void operator=(const GenerateEnsembleStatistics&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDMDF_H_ */
+#endif /* GenerateEnsembleStatistics_H_ */
