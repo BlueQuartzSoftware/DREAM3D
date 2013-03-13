@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDMDF_H_
-#define FINDMDF_H_
+#ifndef FindMisorientations_H_
+#define FindMisorientations_H_
 
 #include <vector>
 #include <string>
@@ -43,8 +43,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
@@ -55,20 +53,20 @@
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
- * @class FindMDF FindMDF.h DREAM3DLib/GenericFilters/FindMDF.h
+ * @class FindMisorientations FindMisorientations.h DREAM3DLib/GenericFilters/FindMisorientations.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
+class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindMDF)
-    DREAM3D_STATIC_NEW_MACRO(FindMDF)
-    DREAM3D_TYPE_MACRO_SUPER(FindMDF, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindMisorientations)
+    DREAM3D_STATIC_NEW_MACRO(FindMisorientations)
+    DREAM3D_TYPE_MACRO_SUPER(FindMisorientations, AbstractFilter)
 
-    virtual ~FindMDF();
+    virtual ~FindMisorientations();
 
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
@@ -76,12 +74,11 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find MDF"; }
+    virtual const std::string getHumanLabel() { return "Find Neighbor Misorientations"; }
 
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
@@ -92,7 +89,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     virtual void preflight();
 
   protected:
-    FindMDF();
+    FindMisorientations();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
@@ -103,19 +100,17 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     float* m_AvgQuats;
     bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
-    float* m_TotalSurfaceAreas;
     NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
+    NeighborList<float>* m_MisorientationList;
 
     unsigned int* m_CrystalStructures;
-    unsigned int* m_PhaseTypes;
 
-    StatsDataArray* m_StatsDataArray;
+    std::vector<std::vector<float> > misorientationlists;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindMDF(const FindMDF&); // Copy Constructor Not Implemented
-    void operator=(const FindMDF&); // Operator '=' Not Implemented
+    FindMisorientations(const FindMisorientations&); // Copy Constructor Not Implemented
+    void operator=(const FindMisorientations&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDMDF_H_ */
+#endif /* FindMisorientations_H_ */

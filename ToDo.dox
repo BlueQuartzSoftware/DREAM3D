@@ -70,6 +70,7 @@ so it can be integrated with the other documentation pages.
 
 
 
+
 @section synthetic Synthetic Building Filters
 @li Add ability to read list of ellipsoids into packing algorithms
 @li Look into bias near outside of box during synthetic building
@@ -181,6 +182,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Update file type stats generator can read (.dream3d)
 @li Users can not open .h5stats in StatsGenerator
 @li Add ability to open a previously saved stats file back into the stats generator
+@li Add filter to calculate only misorientations
+@li Modify FindMDF filter to only calculate the MDF, not the actual misorientations
 
 
 @section NO_LONGER_WANTED No Longer Wanted
