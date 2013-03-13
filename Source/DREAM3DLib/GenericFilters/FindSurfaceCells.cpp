@@ -125,7 +125,7 @@ void FindSurfaceCells::execute()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints*yPoints;
 
-  float column, row, plane;
+  //float column, row, plane;
   int grain;
   int onsurf = 0;
   int good = 0;
@@ -134,35 +134,35 @@ void FindSurfaceCells::execute()
   int zStride, yStride;
   for(int i=0;i<zPoints;i++)
   {
-	zStride = i*xPoints*yPoints;
-	for (int j=0;j<yPoints;j++)
-	{
-		yStride = j*xPoints;
-		for(int k=0;k<xPoints;k++)
-		{
-			onsurf = 0;
-			grain = m_GrainIds[zStride+yStride+k];
-			if(grain > 0)
-			{
-			  for (int l = 0; l < 6; l++)
-			  {
-				good = 1;
-				neighbor = static_cast<int>( zStride+yStride+k + neighpoints[k] );
-				if(l == 0 && i == 0) good = 0;
-				if(l == 5 && i == (zPoints - 1)) good = 0;
-				if(l == 1 && j == 0) good = 0;
-				if(l == 4 && j == (yPoints - 1)) good = 0;
-				if(l == 2 && k == 0) good = 0;
-				if(l == 3 && k == (xPoints - 1)) good = 0;
-				if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
-				{
-				  onsurf++;
-				}
-			  }
-			}
-			m_SurfaceVoxels[zStride+yStride+k] = onsurf;
-		}
-	}
+  zStride = i*xPoints*yPoints;
+  for (int j=0;j<yPoints;j++)
+  {
+    yStride = j*xPoints;
+    for(int k=0;k<xPoints;k++)
+    {
+      onsurf = 0;
+      grain = m_GrainIds[zStride+yStride+k];
+      if(grain > 0)
+      {
+        for (int l = 0; l < 6; l++)
+        {
+        good = 1;
+        neighbor = static_cast<int>( zStride+yStride+k + neighpoints[k] );
+        if(l == 0 && i == 0) good = 0;
+        if(l == 5 && i == (zPoints - 1)) good = 0;
+        if(l == 1 && j == 0) good = 0;
+        if(l == 4 && j == (yPoints - 1)) good = 0;
+        if(l == 2 && k == 0) good = 0;
+        if(l == 3 && k == (xPoints - 1)) good = 0;
+        if(good == 1 && m_GrainIds[neighbor] != grain && m_GrainIds[neighbor] > 0)
+        {
+          onsurf++;
+        }
+        }
+      }
+      m_SurfaceVoxels[zStride+yStride+k] = onsurf;
+    }
+  }
   }
 
   notifyStatusMessage("Complete");

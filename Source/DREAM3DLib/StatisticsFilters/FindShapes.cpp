@@ -170,7 +170,7 @@ void FindShapes::execute()
 void FindShapes::find_moments()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
 
   float u200 = 0;
   float u020 = 0;
@@ -207,71 +207,71 @@ void FindShapes::find_moments()
   int zStride, yStride;
   for(int i=0;i<zPoints;i++)
   {
-	zStride = i*xPoints*yPoints;
-	for (int j=0;j<yPoints;j++)
-	{
-		yStride = j*xPoints;
-		for(int k=0;k<xPoints;k++)
-		{
-			int gnum = m_GrainIds[zStride+yStride+k];
-			x = float(k) * xRes;
-			y = float(j) * yRes;
-			z = float(i) * zRes;
-			x1 = x + (xRes / 4);
-			x2 = x - (xRes / 4);
-			y1 = y + (yRes / 4);
-			y2 = y - (yRes / 4);
-			z1 = z + (zRes / 4);
-			z2 = z - (zRes / 4);
-			xdist1 = (x1 - m_Centroids[gnum*3 + 0]);
-			ydist1 = (y1 - m_Centroids[gnum*3 + 1]);
-			zdist1 = (z1 - m_Centroids[gnum*3 + 2]);
-			xdist2 = (x1 - m_Centroids[gnum*3 + 0]);
-			ydist2 = (y1 - m_Centroids[gnum*3 + 1]);
-			zdist2 = (z2 - m_Centroids[gnum*3 + 2]);
-			xdist3 = (x1 - m_Centroids[gnum*3 + 0]);
-			ydist3 = (y2 - m_Centroids[gnum*3 + 1]);
-			zdist3 = (z1 - m_Centroids[gnum*3 + 2]);
-			xdist4 = (x1 - m_Centroids[gnum*3 + 0]);
-			ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
-			zdist4 = (z2 - m_Centroids[gnum*3 + 2]);
-			xdist5 = (x2 - m_Centroids[gnum*3 + 0]);
-			ydist5 = (y1 - m_Centroids[gnum*3 + 1]);
-			zdist5 = (z1 - m_Centroids[gnum*3 + 2]);
-			xdist6 = (x2 - m_Centroids[gnum*3 + 0]);
-			ydist6 = (y1 - m_Centroids[gnum*3 + 1]);
-			zdist6 = (z2 - m_Centroids[gnum*3 + 2]);
-			xdist7 = (x2 - m_Centroids[gnum*3 + 0]);
-			ydist7 = (y2 - m_Centroids[gnum*3 + 1]);
-			zdist7 = (z1 - m_Centroids[gnum*3 + 2]);
-			xdist8 = (x2 - m_Centroids[gnum*3 + 0]);
-			ydist8 = (y2 - m_Centroids[gnum*3 + 1]);
-			zdist8 = (z2 - m_Centroids[gnum*3 + 2]);
+  zStride = i*xPoints*yPoints;
+  for (int j=0;j<yPoints;j++)
+  {
+    yStride = j*xPoints;
+    for(int k=0;k<xPoints;k++)
+    {
+      int gnum = m_GrainIds[zStride+yStride+k];
+      x = float(k) * xRes;
+      y = float(j) * yRes;
+      z = float(i) * zRes;
+      x1 = x + (xRes / 4);
+      x2 = x - (xRes / 4);
+      y1 = y + (yRes / 4);
+      y2 = y - (yRes / 4);
+      z1 = z + (zRes / 4);
+      z2 = z - (zRes / 4);
+      xdist1 = (x1 - m_Centroids[gnum*3 + 0]);
+      ydist1 = (y1 - m_Centroids[gnum*3 + 1]);
+      zdist1 = (z1 - m_Centroids[gnum*3 + 2]);
+      xdist2 = (x1 - m_Centroids[gnum*3 + 0]);
+      ydist2 = (y1 - m_Centroids[gnum*3 + 1]);
+      zdist2 = (z2 - m_Centroids[gnum*3 + 2]);
+      xdist3 = (x1 - m_Centroids[gnum*3 + 0]);
+      ydist3 = (y2 - m_Centroids[gnum*3 + 1]);
+      zdist3 = (z1 - m_Centroids[gnum*3 + 2]);
+      xdist4 = (x1 - m_Centroids[gnum*3 + 0]);
+      ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
+      zdist4 = (z2 - m_Centroids[gnum*3 + 2]);
+      xdist5 = (x2 - m_Centroids[gnum*3 + 0]);
+      ydist5 = (y1 - m_Centroids[gnum*3 + 1]);
+      zdist5 = (z1 - m_Centroids[gnum*3 + 2]);
+      xdist6 = (x2 - m_Centroids[gnum*3 + 0]);
+      ydist6 = (y1 - m_Centroids[gnum*3 + 1]);
+      zdist6 = (z2 - m_Centroids[gnum*3 + 2]);
+      xdist7 = (x2 - m_Centroids[gnum*3 + 0]);
+      ydist7 = (y2 - m_Centroids[gnum*3 + 1]);
+      zdist7 = (z1 - m_Centroids[gnum*3 + 2]);
+      xdist8 = (x2 - m_Centroids[gnum*3 + 0]);
+      ydist8 = (y2 - m_Centroids[gnum*3 + 1]);
+      zdist8 = (z2 - m_Centroids[gnum*3 + 2]);
 
-			xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
-				+ ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
-				+ ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
-			yy = ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3))
-				+ ((xdist4) * (xdist4)) + ((zdist4) * (zdist4)) + ((xdist5) * (xdist5)) + ((zdist5) * (zdist5)) + ((xdist6) * (xdist6)) + ((zdist6) * (zdist6))
-				+ ((xdist7) * (xdist7)) + ((zdist7) * (zdist7)) + ((xdist8) * (xdist8)) + ((zdist8) * (zdist8));
-			zz = ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3))
-				+ ((xdist4) * (xdist4)) + ((ydist4) * (ydist4)) + ((xdist5) * (xdist5)) + ((ydist5) * (ydist5)) + ((xdist6) * (xdist6)) + ((ydist6) * (ydist6))
-				+ ((xdist7) * (xdist7)) + ((ydist7) * (ydist7)) + ((xdist8) * (xdist8)) + ((ydist8) * (ydist8));
-			xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6))
-				+ ((xdist7) * (ydist7)) + ((xdist8) * (ydist8));
-			yz = ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6))
-				+ ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
-			xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
-				+ ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
-			grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + xx;
-			grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + yy;
-			grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + zz;
-			grainmoments[gnum*6 + 3] = grainmoments[gnum*6 + 3] + xy;
-			grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + yz;
-			grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + xz;
-		    m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
-		}
-	}
+      xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
+        + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
+        + ((ydist7) * (ydist7)) + ((zdist7) * (zdist7)) + ((ydist8) * (ydist8)) + ((zdist8) * (zdist8));
+      yy = ((xdist1) * (xdist1)) + ((zdist1) * (zdist1)) + ((xdist2) * (xdist2)) + ((zdist2) * (zdist2)) + ((xdist3) * (xdist3)) + ((zdist3) * (zdist3))
+        + ((xdist4) * (xdist4)) + ((zdist4) * (zdist4)) + ((xdist5) * (xdist5)) + ((zdist5) * (zdist5)) + ((xdist6) * (xdist6)) + ((zdist6) * (zdist6))
+        + ((xdist7) * (xdist7)) + ((zdist7) * (zdist7)) + ((xdist8) * (xdist8)) + ((zdist8) * (zdist8));
+      zz = ((xdist1) * (xdist1)) + ((ydist1) * (ydist1)) + ((xdist2) * (xdist2)) + ((ydist2) * (ydist2)) + ((xdist3) * (xdist3)) + ((ydist3) * (ydist3))
+        + ((xdist4) * (xdist4)) + ((ydist4) * (ydist4)) + ((xdist5) * (xdist5)) + ((ydist5) * (ydist5)) + ((xdist6) * (xdist6)) + ((ydist6) * (ydist6))
+        + ((xdist7) * (xdist7)) + ((ydist7) * (ydist7)) + ((xdist8) * (xdist8)) + ((ydist8) * (ydist8));
+      xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4)) + ((xdist5) * (ydist5)) + ((xdist6) * (ydist6))
+        + ((xdist7) * (ydist7)) + ((xdist8) * (ydist8));
+      yz = ((ydist1) * (zdist1)) + ((ydist2) * (zdist2)) + ((ydist3) * (zdist3)) + ((ydist4) * (zdist4)) + ((ydist5) * (zdist5)) + ((ydist6) * (zdist6))
+        + ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
+      xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
+        + ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
+      grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + xx;
+      grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + yy;
+      grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + zz;
+      grainmoments[gnum*6 + 3] = grainmoments[gnum*6 + 3] + xy;
+      grainmoments[gnum*6 + 4] = grainmoments[gnum*6 + 4] + yz;
+      grainmoments[gnum*6 + 5] = grainmoments[gnum*6 + 5] + xz;
+        m_Volumes[gnum] = m_Volumes[gnum] + 1.0;
+    }
+  }
   }
   float sphere = (2000.0f*m_pi*m_pi)/9.0f;
   //constant for moments because voxels are broken into smaller voxels
@@ -305,7 +305,7 @@ void FindShapes::find_moments()
 void FindShapes::find_moments2D()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
   float xx, yy, xy;
   size_t numgrains = m->getNumFieldTuples();
   grainmoments = m_GrainMoments->WritePointer(0, numgrains*6);
@@ -316,61 +316,61 @@ void FindShapes::find_moments2D()
 
   if(m->getXPoints() == 1)
   {
-	  xPoints = m->getYPoints();
-	  xRes = m->getYRes();
-	  yPoints = m->getZPoints();
-	  yRes = m->getZRes();
+    xPoints = m->getYPoints();
+    xRes = m->getYRes();
+    yPoints = m->getZPoints();
+    yRes = m->getZRes();
   }
   if(m->getYPoints() == 1)
   {
-	  xPoints = m->getXPoints();
-	  xRes = m->getXRes();
-	  yPoints = m->getZPoints();
-	  yRes = m->getZRes();
+    xPoints = m->getXPoints();
+    xRes = m->getXRes();
+    yPoints = m->getZPoints();
+    yRes = m->getZRes();
   }
   if(m->getZPoints() == 1)
   {
-	  xPoints = m->getXPoints();
-	  xRes = m->getXRes();
-	  yPoints = m->getYPoints();
-	  yRes = m->getYRes();
+    xPoints = m->getXPoints();
+    xRes = m->getXRes();
+    yPoints = m->getYPoints();
+    yRes = m->getYRes();
   }
 
   for (size_t i = 0; i < 6*numgrains; i++)
   {
       grainmoments[i] = 0.0;
   }
-  float x, y, z, x1, x2, y1, y2;
+  float x, y, x1, x2, y1, y2;
   float xdist1, xdist2, xdist3, xdist4;
   float ydist1, ydist2, ydist3, ydist4;
   int yStride;
   for (int j=0;j<yPoints;j++)
   {
-	yStride = j*xPoints;
-	for(int k=0;k<xPoints;k++)
-	{
-		int gnum = m_GrainIds[yStride+k];
-		x = float(k) * xRes;
-		y = float(j) * yRes;
-		x1 = x + (xRes / 2);
-		x2 = x - (xRes / 2);
-		y1 = y + (yRes / 2);
-		y2 = y - (yRes / 2);
-		xdist1 = (x1 - m_Centroids[gnum*3 + 0]);
-		ydist1 = (y1 - m_Centroids[gnum*3 + 1]);
-		xdist2 = (x1 - m_Centroids[gnum*3 + 0]);
-		ydist2 = (y2 - m_Centroids[gnum*3 + 1]);
-		xdist3 = (x2 - m_Centroids[gnum*3 + 0]);
-		ydist3 = (y1 - m_Centroids[gnum*3 + 1]);
-		xdist4 = (x2 - m_Centroids[gnum*3 + 0]);
-		ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
-		xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
-		yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
-		xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
-		grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + xx;
-		grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + yy;
-		grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + xy;
-	}
+  yStride = j*xPoints;
+  for(int k=0;k<xPoints;k++)
+  {
+    int gnum = m_GrainIds[yStride+k];
+    x = float(k) * xRes;
+    y = float(j) * yRes;
+    x1 = x + (xRes / 2);
+    x2 = x - (xRes / 2);
+    y1 = y + (yRes / 2);
+    y2 = y - (yRes / 2);
+    xdist1 = (x1 - m_Centroids[gnum*3 + 0]);
+    ydist1 = (y1 - m_Centroids[gnum*3 + 1]);
+    xdist2 = (x1 - m_Centroids[gnum*3 + 0]);
+    ydist2 = (y2 - m_Centroids[gnum*3 + 1]);
+    xdist3 = (x2 - m_Centroids[gnum*3 + 0]);
+    ydist3 = (y1 - m_Centroids[gnum*3 + 1]);
+    xdist4 = (x2 - m_Centroids[gnum*3 + 0]);
+    ydist4 = (y2 - m_Centroids[gnum*3 + 1]);
+    xx = ((ydist1) * (ydist1)) + ((ydist2) * (ydist2)) + ((ydist3) * (ydist3)) + ((ydist4) * (ydist4));
+    yy = ((xdist1) * (xdist1)) + ((xdist2) * (xdist2)) + ((xdist3) * (xdist3)) + ((xdist4) * (xdist4));
+    xy = ((xdist1) * (ydist1)) + ((xdist2) * (ydist2)) + ((xdist3) * (ydist3)) + ((xdist4) * (ydist4));
+    grainmoments[gnum*6 + 0] = grainmoments[gnum*6 + 0] + xx;
+    grainmoments[gnum*6 + 1] = grainmoments[gnum*6 + 1] + yy;
+    grainmoments[gnum*6 + 2] = grainmoments[gnum*6 + 2] + xy;
+  }
   }
   float konst1 = (xRes / 2.0f) * (yRes / 2.0f);
   for (size_t i = 1; i < numgrains; i++)

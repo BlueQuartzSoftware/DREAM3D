@@ -141,7 +141,7 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
+  //int err = 0;
 
   if(m_ScalarArrayName.empty() == true)
   {
@@ -205,7 +205,7 @@ void ScalarSegmentGrains::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFieldDataArrays(1);
-  // This runs a subfilter 
+  // This runs a subfilter
   dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -336,58 +336,58 @@ int ScalarSegmentGrains::getSeed(size_t gnum)
 bool ScalarSegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
 {
   bool group = false;
-  float w = 10000.0;
-  float q1[5];
-  float q2[5];
-  float n1, n2, n3;
-  unsigned int phase1, phase2;
+//  float w = 10000.0;
+//  float q1[5];
+//  float q2[5];
+//  float n1, n2, n3;
+//  unsigned int phase1, phase2;
 
   if(m_GrainIds[neighborpoint] == 0)
   {
-	  std::string dType = inputData->getTypeAsString();
-	  if (dType.compare("int8_t") == 0)
-	  {
-		group = compareData<int8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("uint8_t") == 0)
-	  {
-		group = compareData<uint8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("int16_t") == 0)
-	  {
-		group = compareData<int16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("uint16_t") == 0)
-	  {
-		group = compareData<uint16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("int32_t") == 0)
-	  {
-		group = compareData<int32_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("uint32_t") == 0)
-	  {
-		group = compareData<uint32_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("int64_t") == 0)
-	  {
-		group = compareData<int64_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("uint64_t") == 0)
-	  {
-		group = compareData<uint64_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("float") == 0)
-	  {
-		group = compareData<float>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
-	  else if (dType.compare("double") == 0)
-	  {
-		group = compareData<double>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-	  }
+    std::string dType = inputData->getTypeAsString();
+    if (dType.compare("int8_t") == 0)
+    {
+    group = compareData<int8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("uint8_t") == 0)
+    {
+    group = compareData<uint8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("int16_t") == 0)
+    {
+    group = compareData<int16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("uint16_t") == 0)
+    {
+    group = compareData<uint16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("int32_t") == 0)
+    {
+    group = compareData<int32_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("uint32_t") == 0)
+    {
+    group = compareData<uint32_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("int64_t") == 0)
+    {
+    group = compareData<int64_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("uint64_t") == 0)
+    {
+    group = compareData<uint64_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("float") == 0)
+    {
+    group = compareData<float>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
+    else if (dType.compare("double") == 0)
+    {
+    group = compareData<double>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
       if (group == true)
       {
-	    m_GrainIds[neighborpoint] = gnum;
+      m_GrainIds[neighborpoint] = gnum;
       }
   }
 
