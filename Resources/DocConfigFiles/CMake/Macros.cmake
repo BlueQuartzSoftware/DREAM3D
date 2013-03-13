@@ -51,7 +51,7 @@ function(ADD_DOXYGEN_TARGETS)
     					COMMAND ${DOXYGEN_EXECUTABLE} ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE}
     					SOURCES ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE} )
     											
-    if (DOX_GENERATE_LATEX STREQUAL "YES")
+    if(DOX_GENERATE_LATEX STREQUAL "YES")
         #-- Create the proper Directory Structure
         file(MAKE_DIRECTORY ${DOX_PROJECT_BINARY_DIR}/latex )
         
@@ -105,7 +105,7 @@ function(ADD_DOXYGEN_TARGETS)
 							${LATEX_MAIN_INPUT}.tex
 							WORKING_DIRECTORY ${DOX_PROJECT_BINARY_DIR}/latex/
 							COMMENT "======> ${DOX_PROJECT_NAME}  Generating PDF - Second Pass")
-    if (0)
+    if(0)
         add_custom_command(TARGET ${DOX_PROJECT_NAME}  POST_BUILD
 							COMMAND  ${PDFLATEX_COMPILER} 
 							 ${PDFLATEX_COMPILER_FLAGS} 
@@ -115,14 +115,14 @@ function(ADD_DOXYGEN_TARGETS)
 							COMMENT "======> ${DOX_PROJECT_NAME}  Generating PDF - Third Pass")
     endif()
         									
-        if (APPLE)
-          if (AUTO_OPEN_PDF)
+        if(APPLE)
+          if(AUTO_OPEN_PDF)
               add_custom_command(TARGET ${DOX_PROJECT_NAME}  POST_BUILD
 								COMMAND /usr/bin/open ${LATEX_OUTPUT_PATH}/${DOX_PDF_FILENAME}.pdf 
 								COMMENT "Opening PDF file with default Viewer")
           endif()
         endif()
     
-    endif() #-- Close the if (GENERATE_LATEX) conditional
+    endif() #-- Close the if(GENERATE_LATEX) conditional
 
 endfunction()

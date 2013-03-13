@@ -259,7 +259,7 @@ ENDIF("CMP_TYPE_CHAR_IS_SIGNED" MATCHES "^CMP_TYPE_CHAR_IS_SIGNED$")
 
 set(VERSION_COMPILE_FLAGS "")
 
-if (MSVC)
+if(MSVC)
  set(CMP_HAVE_TIME_GETTIMEOFDAY "TRUE")
  set(VERSION_COMPILE_FLAGS "/DCMP_HAVE_TIME_GETTIMEOFDAY")
 endif()
@@ -285,7 +285,7 @@ IF (NOT MSVC)
         set(VERSION_COMPILE_FLAGS "-DCMP_HAVE_SYS_TIME_GETTIMEOFDAY")
     ENDIF (CMP_HAVE_SYS_TIME_GETTIMEOFDAY STREQUAL "TRUE")
 
-    if (NOT CMP_HAVE_SYS_TIME_GETTIMEOFDAY AND NOT CMP_HAVE_TIME_GETTIMEOFDAY)
+    if(NOT CMP_HAVE_SYS_TIME_GETTIMEOFDAY AND NOT CMP_HAVE_TIME_GETTIMEOFDAY)
         message(STATUS "---------------------------------------------------------------")
         message(STATUS "Function 'gettimeofday()' was not found. CMPDataModel will use its")
         message(STATUS "  own implementation.. This can happen on older versions of")

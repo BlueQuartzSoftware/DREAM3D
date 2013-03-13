@@ -9,21 +9,21 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set (DREAM3D_FILTER_GROUP_NAME GenericFilters)
-set (${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+set(DREAM3D_FILTER_GROUP_NAME GenericFilters)
+set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
 
 START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}")
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindNeighbors FindNeighbors.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainPhases FindGrainPhases.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSurfaceCells FindSurfaceCells.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindCellQuats FindCellQuats.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainCentroids FindGrainCentroids.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSurfaceGrains FindSurfaceGrains.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains FindBoundingBoxGrains.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} CopyFieldArrayToCellArray CopyFieldArrayToCellArray.html "" TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateIPFColors GenerateIPFColors.html "IPFFilterLegend.jpg" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindNeighbors TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainPhases TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSurfaceCells TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindCellQuats TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainCentroids TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSurfaceGrains TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} CopyFieldArrayToCellArray TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateIPFColors TRUE)
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenumberGrains RenumberGrains.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenumberGrains TRUE)
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RemoveArrays RemoveArrays.html "" TRUE)
+ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RemoveArrays TRUE)

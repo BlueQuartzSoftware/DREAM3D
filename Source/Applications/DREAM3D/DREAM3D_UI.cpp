@@ -319,7 +319,7 @@ void DREAM3D_UI::setupGui()
   // Register all of the Filters we know about - the rest will be loaded through plugins
   //  which all should have been loaded by now.
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
-  Q_INIT_RESOURCE(Generated_FilterDocs);
+ // Q_INIT_RESOURCE(Generated_FilterDocs);
 
   // Now create our central widget
   m_PipelineBuilderWidget = new PipelineBuilderWidget(this);

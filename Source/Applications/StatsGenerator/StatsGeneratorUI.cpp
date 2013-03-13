@@ -714,8 +714,8 @@ void StatsGeneratorUI::on_actionNew_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionOpen_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
-  QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d)"));
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
+  QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d *.h5stats *.h5)"));
   if(true == h5file.isEmpty())
   {
     return;
@@ -793,6 +793,7 @@ void StatsGeneratorUI::openFile(QString h5file)
     reader->setReadCellData(false);
     reader->setReadFieldData(false);
     reader->setReadEnsembleData(true);
+    reader->setReadAllArrays(true);
     reader->execute();
     err = reader->getErrorCondition();
     if (err < 0)

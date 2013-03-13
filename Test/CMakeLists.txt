@@ -54,10 +54,10 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
 #
 # --------------------------------------------------------------------------
 macro(MXA_ADD_TEST testname Exename)
-    if (NOT APPLE)
+    if(NOT APPLE)
         ADD_TEST(${testname} ${Exename})
     else()
-        if (NOT ${CMAKE_OSX_ARCHITECTURES} STREQUAL "")
+        if(NOT ${CMAKE_OSX_ARCHITECTURES} STREQUAL "")
         foreach(arch ${CMAKE_OSX_ARCHITECTURES})
             ADD_TEST( ${arch}_${testname} ${CMP_OSX_TOOLS_SOURCE_DIR}/UBTest.sh ${arch} ${Exename} )
         endforeach()
@@ -164,7 +164,7 @@ add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 
 
 
-if (NOT ${DREAM3D_DATA_DIR} STREQUAL "")
+if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
     message(STATUS "  Please make sure the proper files are available in that directory")
 

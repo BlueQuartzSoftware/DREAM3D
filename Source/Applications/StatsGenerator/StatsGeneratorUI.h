@@ -66,7 +66,7 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
 {
   Q_OBJECT
 
-    public:
+  public:
     StatsGeneratorUI(QWidget *parent = 0);
     virtual ~StatsGeneratorUI();
 

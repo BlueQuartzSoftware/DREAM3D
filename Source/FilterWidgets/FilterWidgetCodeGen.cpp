@@ -193,29 +193,19 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options)
+void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options, const std::string &outSubPath)
 {
   std::stringstream ss;
-  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
-  std::string completePath = MXADir::toNativeSeparators(ss.str());
-  if (MXADir::exists(completePath) == true)
-  {
-    std::cout << filter << ": Header file already exists in source directory. NOT generating generic widget." << std::endl;
-    return;
-  }
+  std::string completePath;
+  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 
-  ss.str("");
+  completePath = MXADir::toNativeSeparators(ss.str());
   // Make sure the output path exists
-  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets";
-  if (MXADir::exists(ss.str()) == false)
+  std::string parentPath = MXADir::parentPath(completePath);
+  if (MXADir::exists(parentPath) == false)
   {
     MXADir::mkdir(ss.str(), true);
   }
-
-  ss.str("");
-  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
-
-  completePath = MXADir::toNativeSeparators(ss.str());
 
   ss.str("");
   ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.h";
@@ -431,30 +421,28 @@ void createHTMLFragment( const std::string &group, const std::string &filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createSourceFile( const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options)
+void createSourceFile( const std::string &group,
+                       const std::string &filter,
+                       std::vector<FilterParameter::Pointer> options,
+                       const std::string &outSubPath)
 {
   std::stringstream ss;
-  ss << FILTER_WIDGETS_SOURCE_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.h";
-  std::string completePath = MXADir::toNativeSeparators(ss.str());
-  if(MXADir::exists(completePath) == true)
-  {
-    std::cout << filter << ": Header file already exists in source directory. NOT generating generic widget." << std::endl;
-    return;
-  }
-  std::string origHeaderFile = completePath;
-  ss.str("");
-  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << group << "Widgets/Q" << filter << "Widget.cpp";
+  std::string completePath;
+  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 
   completePath = MXADir::toNativeSeparators(ss.str());
+  // Make sure the output path exists
+  std::string parentPath = MXADir::parentPath(completePath);
+  if (MXADir::exists(parentPath) == false)
+  {
+    MXADir::mkdir(ss.str(), true);
+  }
+
+  //std::string headerFile = parentPath + MXADir::Separator + MXAFileInfo::fileNameWithOutExtension(completePath) + ".h";
 
   ss.str("");
   ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.cpp";
   std::string tempPath = ss.str();
-
-  ss.str("");
-  ss << "Q" << filter << "Widget.h";
-
-  std::string headerFile = ss.str();
 
   FILE* f = fopen(tempPath.c_str(), "wb");
 
@@ -474,7 +462,7 @@ void createSourceFile( const std::string &group, const std::string &filter, std:
   {
     fprintf(f, "* %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
   }
-  fprintf(f, "#include \"%s\"\n", headerFile.c_str());
+  fprintf(f, "#include \"%s/%sWidgets/Q%sWidget.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
   fprintf(f, "#include <QtCore/QDir>\n");
   fprintf(f, "#include <QtGui/QLineEdit>\n");
   fprintf(f, "#include <QtGui/QCheckBox>\n");

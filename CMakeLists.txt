@@ -52,7 +52,7 @@ file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_MODULES_SOURCE_DIR ${CMP_SOURCE_DIR}/Modules CACHE INTERNAL "")
 
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
 
@@ -79,7 +79,7 @@ IF (BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
     set(LIB_TYPE SHARED)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
-    if (MSVC)
+    if(MSVC)
         list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
                                     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
     endif()
@@ -182,7 +182,7 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-if (MSVC)
+if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
@@ -217,7 +217,7 @@ file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
 #if we are going to build Qt based applications then we need to find Qt 4 first
-if (DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_QT_APPS)
    # ------------------------------------------------------------------------------
    #  Qt 4 Section
    # ------------------------------------------------------------------------------
@@ -255,14 +255,14 @@ if (DREAM3D_BUILD_QT_APPS)
 endif()
 
 # Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks
-if (NOT DREAM3D_BUILD_QT_APPS)
+if(NOT DREAM3D_BUILD_QT_APPS)
     set(DREAM3D_BUILD_DREAM3D "OFF" CACHE BOOL "" FORCE)
     set(DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
-if (DREAM3D_BUILD_TESTING)
+if(DREAM3D_BUILD_TESTING)
     ENABLE_TESTING()
 endif()
 
@@ -279,7 +279,7 @@ function(DREAM3D_COMPILE_PLUGIN)
     cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
-    if (DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
+    if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
         message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Adding Plugin")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
     else()
@@ -306,14 +306,14 @@ foreach(p ${DREAM3D_PLUGIN_LIST})
 endforeach()
 
 
-if (DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
     #- Add in the Main DREAM.3D Application
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
     #- Now set up the dependency between the main application and each of the plugins so that
     #- things like Visual Studio are forced to rebuild the plugins when launching
     #- the DREAM3D application
     foreach(p ${DREAM3D_PLUGIN_LIST})
-        if (DREAM3D_BUILD_PLUGIN_${p})
+        if(DREAM3D_BUILD_PLUGIN_${p})
             add_dependencies(${p} DREAM3D)
         endif()
     endforeach()
@@ -322,7 +322,7 @@ endif()
 
 #- Add in the Main DREAM.3D Application
 option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
-if (DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
 endif()
 
@@ -335,7 +335,7 @@ set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra Exter
 foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
   #message(STATUS "Looking for Plugin: ${userPlugin}...")
-  if (NOT DEFINED ${userPlugin}_SOURCE_DIR)
+  if(NOT DEFINED ${userPlugin}_SOURCE_DIR)
       set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
       if(EXISTS ${pluginSearchDir})
         set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
@@ -371,7 +371,7 @@ endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
 # Build the StatsGenerator Application
 OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-if (DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 endif()
 
@@ -384,7 +384,7 @@ IF ( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
-if (DREAM3D_BUILD_TESTING)
+if(DREAM3D_BUILD_TESTING)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 

@@ -139,39 +139,48 @@ font-size: 11px;
      <item row="1" column="4">
       <widget class="QDoubleSpinBox" name="m_XResolution">
        <property name="decimals">
-        <number>6</number>
+        <number>4</number>
+       </property>
+       <property name="maximum">
+        <double>999.990000000000009</double>
        </property>
        <property name="singleStep">
-        <double>0.250000000000000</double>
+        <double>0.050000000000000</double>
        </property>
        <property name="value">
-        <double>0.250000000000000</double>
+        <double>0.150000000000000</double>
        </property>
       </widget>
      </item>
      <item row="2" column="4">
       <widget class="QDoubleSpinBox" name="m_YResolution">
        <property name="decimals">
-        <number>6</number>
+        <number>4</number>
+       </property>
+       <property name="maximum">
+        <double>999.990000000000009</double>
        </property>
        <property name="singleStep">
-        <double>0.250000000000000</double>
+        <double>0.050000000000000</double>
        </property>
        <property name="value">
-        <double>0.250000000000000</double>
+        <double>0.150000000000000</double>
        </property>
       </widget>
      </item>
      <item row="3" column="4">
       <widget class="QDoubleSpinBox" name="m_ZResolution">
        <property name="decimals">
-        <number>6</number>
+        <number>4</number>
+       </property>
+       <property name="maximum">
+        <double>999.990000000000009</double>
        </property>
        <property name="singleStep">
-        <double>0.250000000000000</double>
+        <double>0.050000000000000</double>
        </property>
        <property name="value">
-        <double>0.250000000000000</double>
+        <double>0.150000000000000</double>
        </property>
       </widget>
      </item>
@@ -191,7 +200,7 @@ font-size: 11px;
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>302</width>
+          <width>310</width>
           <height>121</height>
          </rect>
         </property>
@@ -373,8 +382,6 @@ font-size: 11px;
   <tabstop>m_ShapeTypeScrollArea</tabstop>
   <tabstop>m_InputFileBtn</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

@@ -68,6 +68,7 @@ include_directories(${FilterWidgetsLib_BINARY_DIR})
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder)
 include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 # --------------------------------------------------------------------
 # Add in ONLY those headers and sources that need to have various Qt related
@@ -100,12 +101,20 @@ set(SAMPLING_WIDGET_SRCS
 )
 cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/SamplingFiltersWidgets" "${SAMPLING_WIDGET_HDRS}" "${SAMPLING_WIDGET_SRCS}" "0")
 
+set(STATISTICS_WIDGET_HDRS
+    ${FilterWidgetsLib_SOURCE_DIR}/DREAM3DLib/StatisticsFiltersWidgets/QGenerateEnsembleStatisticsWidget.h
+)
+set(STATISTICS_WIDGET_SRCS
+    ${FilterWidgetsLib_SOURCE_DIR}/DREAM3DLib/StatisticsFiltersWidgets/QGenerateEnsembleStatisticsWidget.cpp
+)
+cmp_IDE_SOURCE_PROPERTIES( "FilterWidgets/StatisticsFiltersWidgets" "${STATISTICS_WIDGET_HDRS}" "${STATISTICS_WIDGET_SRCS}" "0")
+
 set(QFilterWidget_HDRS
-    ${IOFILTER_WIDGET_HDRS} ${SYNTHETIC_WIDGET_HDRS} ${SAMPLING_WIDGET_HDRS}
+    ${IOFILTER_WIDGET_HDRS} ${SYNTHETIC_WIDGET_HDRS} ${SAMPLING_WIDGET_HDRS} ${STATISTICS_WIDGET_HDRS}
 )
 
 set(QFilterWidget_SRCS
-    ${IOFILTER_WIDGET_SRCS} ${SYNTHETIC_WIDGET_SRCS} ${SAMPLING_WIDGET_SRCS}
+    ${IOFILTER_WIDGET_SRCS} ${SYNTHETIC_WIDGET_SRCS} ${SAMPLING_WIDGET_SRCS} ${STATISTICS_WIDGET_SRCS}
 )
 
 
@@ -119,7 +128,7 @@ set_source_files_properties( ${FilterWidgetsLib_Generated_MOC_SRCS} PROPERTIES H
 set_source_files_properties( ${FilterWidgetsLib_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # -- Run MOC and UIC on the necessary files
-QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
+# QT4_ADD_RESOURCES( FilterWidgetsLib_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
@@ -130,6 +139,7 @@ QT4_WRAP_UI( FilterWidgetsLib_Generated_UI_HDRS
     ${FilterWidgetsLib_SOURCE_DIR}/DREAM3DLib/IOFiltersWidgets/QEbsdToH5EbsdWidget.ui
     ${FilterWidgetsLib_SOURCE_DIR}/DREAM3DLib/IOFiltersWidgets/QEbsdReferenceFrameDialog.ui
     ${FilterWidgetsLib_SOURCE_DIR}/DREAM3DLib/IOFiltersWidgets/QDataContainerReaderWidget.ui
+    ${FilterWidgetsLib_SOURCE_DIR}/DREAM3DLib/StatisticsFiltersWidgets/QGenerateEnsembleStatisticsWidget.ui
 )
 
 # --------------------------------------------------------------------
@@ -169,7 +179,7 @@ set(Project_SRCS
 
 
 
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
     set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 

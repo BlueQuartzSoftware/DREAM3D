@@ -1,6 +1,10 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
+  <file>nav_left_green.png</file>
+  <file>nav_right_green.png</file>
+  <file>nav_refresh_yellow.png</file>
+  <file>home.png</file>
   <file>add2.png</file>
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
