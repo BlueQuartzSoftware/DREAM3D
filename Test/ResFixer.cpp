@@ -189,11 +189,11 @@ int AngResFixer::fixFile()
   float* p1 = reader.getPhi1Pointer();
   float* p = reader.getPhiPointer();
   float* p2 = reader.getPhi2Pointer();
-  float* x = reader.getXPosPointer();
-  float* y = reader.getYPosPointer();
+  float* x = reader.getXPositionPointer();
+  float* y = reader.getYPositionPointer();
   float* iqual = reader.getImageQualityPointer();
   float* conf = reader.getConfidenceIndexPointer();
-  int* ph = reader.getPhasePointer();
+  int* ph = reader.getPhaseDataPointer();
   float* semSignal = reader.getSEMSignalPointer();
   float* fit = reader.getFitPointer();
 

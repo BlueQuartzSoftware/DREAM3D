@@ -17,10 +17,9 @@ so it can be integrated with the other documentation pages.
 @li Create filter to generate Abaqus input files, Albert Cerrone to help with this
 @li Write program to read in Pipeline Files on the command line
 @li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
-@li Update file type stats generator can read (.dream3d)
-
 
 @section STILL_TO_DO Still To Do
+@li Integrate Lisa Chan's Twin Insertion Code
 @li Change Field to Region in all codes
 @li Provide better feedback on 3D .ctf files
 @li Add/Modify filter to note if grain is a twin, parent or untwinned
@@ -81,6 +80,7 @@ so it can be integrated with the other documentation pages.
 @li Add filter to write out 2D slices as .ang, .ctf or .mic files
 @li Add filter to dump ensemble stats/info
 @li Add filter to read .edf data
+@li Add Filter to initialize the Field Map based on a user defined array such as Grain Ids.
 @li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
 @li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
 @li Reorganize the .h5ebsd file to include Images
@@ -178,6 +178,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Break out all stats filters to just calculate stats
 @li Users can not open .h5stats in StatsGenerator
 @li Add ability to open a previously saved stats file back into the stats generator
+@li Update file type stats generator can read (.dream3d)
 
 
 @section NO_LONGER_WANTED No Longer Wanted

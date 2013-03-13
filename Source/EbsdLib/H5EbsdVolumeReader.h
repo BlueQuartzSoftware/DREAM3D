@@ -39,7 +39,7 @@
 
 #include <string>
 #include <vector>
-
+#include <set>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -128,10 +128,29 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     */
     virtual void deletePointers();
 
+    /**
+     * @brief Sets the names of the arrays to read out of the file
+     * @param names
+     */
+    virtual void setArraysToRead(std::set<std::string> names);
+    virtual std::set<std::string> getArraysToRead();
+
+    /**
+     * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
+     * ArrayNames to read is empty and this is true then all arrays will be read.
+     * @param b
+     */
+    virtual void readAllArrays(bool b);
+    virtual bool getReadAllArrays();
+
   protected:
     H5EbsdVolumeReader();
 
   private:
+    std::set<std::string> m_ArrayNames;
+    bool                  m_ReadAllArrays;
+
+
     H5EbsdVolumeReader(const H5EbsdVolumeReader&); // Copy Constructor Not Implemented
     void operator=(const H5EbsdVolumeReader&); // Operator '=' Not Implemented
 
