@@ -7,36 +7,27 @@ so it can be integrated with the other documentation pages.
 
 
 @section blockers Show Stopping Bugs
-
-
-
-@section todo_high_priority High Priority
-@li Write documentation for filters
+@li Add filter to calculate ensemble stats (fit distributions to arrays)
+@li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
+@li How to incorporate documentation for plugins into the main help system
+@li Fix calculation+storage of real stats for reading into synthetic builder
 
 
 @section mike_jackson Mike Jackson ToDo List
 @li Create filter to generate Abaqus input files, Albert Cerrone to help with this
-@li Users can not open .h5stats in StatsGenerator
-
-
+@li Write program to read in Pipeline Files on the command line
+@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
+@li Update file type stats generator can read (.dream3d)
 
 
 @section STILL_TO_DO Still To Do
 @li Change Field to Region in all codes
 @li Provide better feedback on 3D .ctf files
-@li Add node type calculation during quick mesh
-@li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
-@li Fix calculation+storage of real stats for reading into synthetic builder
-@li Add advanced button on import filter to allow any recommended transformation
-@li Add filter to dump ensemble stats/info
-@li Add filter to read .edf data
 @li Add/Modify filter to note if grain is a twin, parent or untwinned
 @li Add ability to define twins of interest on merge twin filter
 @li Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
 @li Add ability to flag regions as 'defects' or a new phase in the fill bad data filter
-@li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
 @li Look into deleting field arrays after packing in synthetic structures
-@li Add filter to write out 2D slices as .ang, .ctf or .mic files
 @li Look into incorporating genetic algorithms in the packing algorithms of the synthetic builder
 @li Include a filter to calculate 2-pt statistics
 @li Look into using 2-pt statistics to advance the packing algorithms in the synthetic builder
@@ -51,59 +42,57 @@ so it can be integrated with the other documentation pages.
 @li Fix reference frame button on import filter to not reset to default
 @li Add filter to calculate microtexture function or equivalent
 @li Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
-@li Fix synthetic builder to note if volume is 2D and actually pack slices
-@li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
-@li Add filter to calculate ensemble stats (fit distributions to arrays)
 @li Add filter to merge twins using surface mesh (5 parameter)
 @li Add virtual sectioning filter
 @li Add/Finish filter to 'standardize' euler angles within a grain
-@li Add "help" button to each filter
 @li Look into creating a filter to color orientations using C. Shuh's color scale
-@li Update documentation file structure now that users can specify array names
 @li Add mesh quantification filter (code from Tony)
 @li Create filter to generate surface mesh from volume mesh
-@li Add mesh decimation filter (surface or volume)
 @li Add 3D linear intercept calculation filter (C. Hartley filter)
 @li Design protocol to learn user's 'ontology'
 @li Add filter to perform Tony's hot spot analysis
 @li Check error causing crash in the find mdf filter
-@li Add ability to read list of ellipsoids into packing algorithms
-@li Look into bias near outside of box during synthetic building
 @li Add filter to combine far field data with near field data from HEDM
 @li Remove all "under-the-hood" calls to other filters
 @li Allow the user to specify the phase for minimum neighbors filter
-@li Design batch processing capability through using pipeline files
 @li Create a filter to "link" field map to cell array
 @li Fix data check in find kernel average misorientation filter (crystal structures)
 @li Fix data check in deformation statistics filter (crystal structures)
 @li Fix data check in slip transmission metrics filter (crystal structures)
-@li Add filter to write out slices as images of any array
 @li Look at adding a mirror option to the rotate sample reference frame filter
 @li Add the option for the user to set the name of a copied array (from field to cell)
 @li Add filter to determine spherical correlation length from each grain centroid
-@li Add ability to open a previously saved stats file back into the stats generator
 @li Add mean filter in orientation space
 @li Add mean filter on scalar array
 @li Add median filter on scalar array
 @li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
+@li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 
+
+
+@section synthetic Synthetic Building Filters
+@li Add ability to read list of ellipsoids into packing algorithms
+@li Look into bias near outside of box during synthetic building
+@li Fix synthetic builder to note if volume is 2D and actually pack slices
+@li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
+
+
+@section io_filters
+@li Add filter to write out slices as images of any array
+@li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
+@li Add filter to write out 2D slices as .ang, .ctf or .mic files
+@li Add filter to dump ensemble stats/info
+@li Add filter to read .edf data
+@li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
+@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
+@li Reorganize the .h5ebsd file to include Images
 
 
 @section todo_GUI_Pipeline Add to the Pipeline Gui
 @li Add a 'Rename Favorite' menu
 @li allow user to right-click on a favorite and "delete, rename, ..." the favorite
 @li allow user to right-click on a filter and display help in a separate window
-@li Add in a "Search Box" to top of Filter list to filter out the list based on keywords
 
-@section todo_low_priority Low Priority
-@li Add splash Screen similar to ParaView where the various entities that have donated
-code or Funding are shown with their logos.
-@li Update/Create a user manual for the stats generator - last parts need pasting
-@li Add menu for displaying help
-@li Combine the threshold_points and DetermineGoodVoxels into a single filter
-@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
-@li Reorganize the .h5ebsd file to include Images
-@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
 
 @section todo_feature Feature Request
 @li A filter that finds all the twins in the microstructure and assigns them
@@ -114,10 +103,17 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @section todo_documentation Documentation Issues
 @li Add documentation on how to add new filter directly into DREAM3D
 @li Add documentation on how to add new filter group directly into DREAM3D
+@li Update/Create a user manual for the stats generator - last parts need pasting
+@li Update documentation file structure now that users can specify array names
+@li Add menu for displaying help
+@li Add "help" button to each filter
 
 
-@section cmu_meshing CMU Surface Meshing
+@section surface_meshing Surface Meshing
 @li bug in edges file is stopping the use in the smoothing filter
+@li Add mesh decimation filter (surface or volume)
+@li Add node type calculation during quick mesh
+
 
 @section mfe_smoothing MFE Smoothing
 @li add ability to stop the smoothing
@@ -127,10 +123,13 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li BASE64 decoder
 @li XML Parser for the SEM Image file
 @li Create XML Parsing code for each file from the Bruker File Archive
-@li Include Expat as part of the DREAM3D Compile
+@li Include Expat as part of the DREAM3D Compile?
 
 
 @section done Items Completed
+@li Add advanced button on import filter to allow any recommended transformation
+@li Add in a "Search Box" to top of Filter list to filter out the list based on keywords
+@li Combine the threshold_points and DetermineGoodVoxels into a single filter
 @li Add ability to "add filter" to plugin maker
 @li Work through all IO filters to have extensions in the save and open popup box
 @li Fix issue with writing euler angles to binary vtk file
@@ -180,6 +179,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Modify all stats filters to check for 2D in all directions
 @li Break out all stats filters to just calculate stats
 @li Update file type stats generator can read (.dream3d)
+@li Users can not open .h5stats in StatsGenerator
+@li Add ability to open a previously saved stats file back into the stats generator
 
 
 @section NO_LONGER_WANTED No Longer Wanted
