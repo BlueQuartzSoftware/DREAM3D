@@ -43,6 +43,7 @@
 #include <hdf5.h>
 
 #include <vector>
+#include <set>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -114,6 +115,19 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      */
     std::vector<CtfPhase::Pointer> getPhases() { return m_Phases; }
 
+    /**
+     * @brief Sets the names of the arrays to read out of the file
+     * @param names
+     */
+    virtual void setArraysToRead(std::set<std::string> names);
+
+    /**
+     * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
+     * ArrayNames to read is empty and this is true then all arrays will be read.
+     * @param b
+     */
+    virtual void readAllArrays(bool b);
+
   protected:
     H5CtfReader();
 
@@ -127,6 +141,8 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
 
   private:
     std::vector<CtfPhase::Pointer> m_Phases;
+    std::set<std::string> m_ArrayNames;
+    bool                  m_ReadAllArrays;
 
     H5CtfReader(const H5CtfReader&); // Copy Constructor Not Implemented
     void operator=(const H5CtfReader&); // Operator '=' Not Implemented

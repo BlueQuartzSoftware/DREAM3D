@@ -67,7 +67,7 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     T getFilterFields()
     {
       T fields;
-      fields.push_back(Ebsd::Ctf::Bands.c_str());
+      fields.push_back(Ebsd::Ctf::BandCount.c_str());
       fields.push_back(Ebsd::Ctf::Error.c_str());
 
       fields.push_back(Ebsd::Ctf::MAD.c_str());

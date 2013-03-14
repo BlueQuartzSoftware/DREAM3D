@@ -63,7 +63,7 @@ std::vector<std::string> CtfFields::getFieldNames()
   fields.push_back(Ebsd::Ctf::X);
   fields.push_back(Ebsd::Ctf::Y);
   fields.push_back(Ebsd::Ctf::Z);
-  fields.push_back(Ebsd::Ctf::Bands);
+  fields.push_back(Ebsd::Ctf::BandCount);
   fields.push_back(Ebsd::Ctf::Error);
   fields.push_back(Ebsd::Ctf::Euler1);
   fields.push_back(Ebsd::Ctf::Euler2);

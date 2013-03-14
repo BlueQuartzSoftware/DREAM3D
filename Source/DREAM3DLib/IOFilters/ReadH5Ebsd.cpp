@@ -42,14 +42,14 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-#include "EbsdLib/H5EbsdVolumeReader.h"
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngFields.h"
+#include "EbsdLib/HKL/CtfFields.h"
+#include "EbsdLib/HEDM/MicFields.h"
+
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 #include "EbsdLib/HKL/H5CtfVolumeReader.h"
-#include "EbsdLib/HKL/CtfFields.h"
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"
-#include "EbsdLib/HEDM/MicFields.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -94,7 +94,6 @@ ReadH5Ebsd::ReadH5Ebsd() :
   tempypoints(0),
   totaltemppoints(0)
 {
-  // Seed = MXA::getMilliSeconds();
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
   m_SampleTransformationAxis[1] = 0.0;
@@ -104,7 +103,6 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_EulerTransformationAxis[0] = 0.0;
   m_EulerTransformationAxis[1] = 0.0;
   m_EulerTransformationAxis[2] = 1.0;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -160,6 +158,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m)
   }
   return err;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -269,13 +268,13 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
 
-      addCreatedEnsembleData(m_MaterialNamesArrayName);
+  addCreatedEnsembleData(m_MaterialNamesArrayName);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
 
@@ -363,73 +362,15 @@ void ReadH5Ebsd::execute()
   H5EbsdVolumeReader::Pointer ebsdReader;
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
-    ebsdReader = H5AngVolumeReader::New();
-    if(NULL == ebsdReader)
-    {
-      setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
-      addErrorMessage(em);
-      return;
-    }
-    H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
-    err = loadInfo<H5AngVolumeReader, AngPhase>(angReader);
-    if(err < 0)
-    {
-      setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
-      addErrorMessage(em);
-      return;
-    }
-    if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end())
-    {
-      m_SelectedVoxelCellArrays.insert(Ebsd::Ang::Phi1);
-      m_SelectedVoxelCellArrays.insert(Ebsd::Ang::Phi);
-      m_SelectedVoxelCellArrays.insert(Ebsd::Ang::Phi2);
-    }
-    if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end())
-    {
-      m_SelectedVoxelCellArrays.insert(Ebsd::Ang::PhaseData);
-    }
+    ebsdReader = initTSLEbsdVolumeReader();
   }
   else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
-    ebsdReader = H5CtfVolumeReader::New();
-    if(NULL == ebsdReader)
-    {
-      setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
-      addErrorMessage(em);
-      return;
-    }
-    H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
-    err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader);
-    if(err < 0)
-    {
-      setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
-      addErrorMessage(em);
-      return;
-    }
+    ebsdReader = initHKLEbsdVolumeReader();
   }
   else if(manufacturer.compare(Ebsd::Mic::Manufacturer) == 0)
   {
-    ebsdReader = H5MicVolumeReader::New();
-    if(NULL == ebsdReader)
-    {
-      setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), "Could not Create H5MicVolumeReader object.", -1);
-      addErrorMessage(em);
-      return;
-    }
-    H5MicVolumeReader* micReader = dynamic_cast<H5MicVolumeReader*>(ebsdReader.get());
-    err = loadInfo<H5MicVolumeReader, MicPhase>(micReader);
-    if(err < 0)
-    {
-      setErrorCondition(-1);
-      PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
-      addErrorMessage(em);
-      return;
-    }
+    ebsdReader = initHEDMEbsdVolumeReader();
   }
   else
   {
@@ -441,9 +382,8 @@ void ReadH5Ebsd::execute()
     return;
   }
 
-  // This will create the arrays with the correct sizes
-  //  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  if(getErrorCondition() < 0)
+  // Sanity Check the Error Condition or the state of the EBSD Reader Object.
+  if(getErrorCondition() < 0 || NULL == ebsdReader.get())
   {
     return;
   }
@@ -474,8 +414,8 @@ void ReadH5Ebsd::execute()
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, m->getNumEnsembleTuples(), 1)
 
-      // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
-      if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
+  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     copyTSLArrays(ebsdReader.get());
   }
@@ -567,6 +507,114 @@ void ReadH5Ebsd::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVe
   // Empty because there is no Solid Mesh data in an H5Ebsd file
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
+{
+  int err = 0;
+  H5EbsdVolumeReader::Pointer ebsdReader = H5AngVolumeReader::New();
+  if(NULL == ebsdReader)
+  {
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
+    addErrorMessage(em);
+    return H5EbsdVolumeReader::NullPointer();
+  }
+  H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
+  err = loadInfo<H5AngVolumeReader, AngPhase>(angReader);
+  if(err < 0)
+  {
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
+    addErrorMessage(em);
+    return H5EbsdVolumeReader::NullPointer();
+  }
+  if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end())
+  {
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ang::Phi1);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ang::Phi);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ang::Phi2);
+  }
+  if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end())
+  {
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ang::PhaseData);
+  }
+  return ebsdReader;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
+{
+  int err = 0;
+  H5EbsdVolumeReader::Pointer ebsdReader = H5CtfVolumeReader::New();
+  if(NULL == ebsdReader)
+  {
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
+    addErrorMessage(em);
+    return H5EbsdVolumeReader::NullPointer();
+  }
+  H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
+  err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader);
+  if(err < 0)
+  {
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
+    addErrorMessage(em);
+    return H5EbsdVolumeReader::NullPointer();
+  }
+  if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end())
+  {
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler1);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler2);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler3);
+  }
+  if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end())
+  {
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Phase);
+  }
+  return ebsdReader;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHEDMEbsdVolumeReader()
+{
+  int err = 0;
+  H5EbsdVolumeReader::Pointer ebsdReader = H5MicVolumeReader::New();
+  if(NULL == ebsdReader)
+  {
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), "Could not Create H5MicVolumeReader object.", -1);
+    addErrorMessage(em);
+    return H5EbsdVolumeReader::NullPointer();
+  }
+  H5MicVolumeReader* micReader = dynamic_cast<H5MicVolumeReader*>(ebsdReader.get());
+  err = loadInfo<H5MicVolumeReader, MicPhase>(micReader);
+  if(err < 0)
+  {
+    setErrorCondition(-1);
+    PipelineMessage em (getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
+    addErrorMessage(em);
+    return H5EbsdVolumeReader::NullPointer();
+  }
+  if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end())
+  {
+    m_SelectedVoxelCellArrays.insert(Ebsd::Mic::Euler1);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler2);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler3);
+  }
+  if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end())
+  {
+    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Phase);
+  }
+  return ebsdReader;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -618,7 +666,6 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
   }
-
 
   if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end() )
   {
@@ -689,13 +736,14 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     }
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }
-  if (m_SelectedVoxelCellArrays.find(Ebsd::Ctf::Bands) != m_SelectedVoxelCellArrays.end() )
+
+  if (m_SelectedVoxelCellArrays.find(Ebsd::Ctf::BandCount) != m_SelectedVoxelCellArrays.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands);
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BandCount));
+    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BandCount);
     iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::Bands, iArray);
+    m->addCellData(Ebsd::Ctf::BandCount, iArray);
   }
 
   if (m_SelectedVoxelCellArrays.find(Ebsd::Ctf::Error) != m_SelectedVoxelCellArrays.end() )

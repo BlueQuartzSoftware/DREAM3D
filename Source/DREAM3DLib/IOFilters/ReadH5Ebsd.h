@@ -45,6 +45,8 @@
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/HEDM/MicConstants.h"
+#include "EbsdLib/H5EbsdVolumeReader.h"
+
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -117,6 +119,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m);
+
+    H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
+    H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
+    H5EbsdVolumeReader::Pointer initHEDMEbsdVolumeReader();
 
     void copyTSLArrays(H5EbsdVolumeReader* ebsdReader);
     void copyHKLArrays(H5EbsdVolumeReader* ebsdReader);

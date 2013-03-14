@@ -68,8 +68,8 @@ class EbsdLib_EXPORT H5MicVolumeReader : public H5EbsdVolumeReader
     EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
     EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
     EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
-    EBSD_POINTER_PROPERTY(XPos, X, float)
-    EBSD_POINTER_PROPERTY(YPos, Y, float)
+    EBSD_POINTER_PROPERTY(X, X, float)
+    EBSD_POINTER_PROPERTY(Y, Y, float)
     EBSD_POINTER_PROPERTY(Confidence, Conf, float)
     EBSD_POINTER_PROPERTY(Phase, Phase, int)
 

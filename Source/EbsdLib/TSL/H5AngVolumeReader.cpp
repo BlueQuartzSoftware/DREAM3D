@@ -259,7 +259,6 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     float* sigPtr = reader->getSEMSignalPointer();
     float* fitPtr = reader->getFitPointer();
 
-
     xpointstemp = static_cast<int>(xpoints);
     ypointstemp = static_cast<int>(ypoints);
     xstartspot = (xpointstemp - xpointsslice) / 2;
