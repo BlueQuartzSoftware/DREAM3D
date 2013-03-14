@@ -7,21 +7,26 @@ so it can be integrated with the other documentation pages.
 
 
 @section blockers Show Stopping Bugs
+These 2 items are together
 @li Add filter to calculate ensemble stats (fit distributions to arrays)
+@li Fix calculation+storage of real stats for reading into synthetic builder
+
 @li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 @li How to incorporate documentation for plugins into the main help system
-@li Fix calculation+storage of real stats for reading into synthetic builder
+@li Finish updating ReadH5Ebsd filter Gui for HKL and HEDM data sets
+@li Fix GUI for GenerateEnsembleStatistics Filter (waiting for Mike G to finish filter)
+@li Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 
 
 @section mike_jackson Mike Jackson ToDo List
 @li Create filter to generate Abaqus input files, Albert Cerrone to help with this
 @li Write program to read in Pipeline Files on the command line
 @li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
+@li Provide better feedback on 3D .ctf files
 
 @section STILL_TO_DO Still To Do
-@li Integrate Lisa Chan's Twin Insertion Code
+@li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
 @li Change Field to Region in all codes
-@li Provide better feedback on 3D .ctf files
 @li Add/Modify filter to note if grain is a twin, parent or untwinned
 @li Add ability to define twins of interest on merge twin filter
 @li Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
@@ -77,6 +82,7 @@ so it can be integrated with the other documentation pages.
 @li Look into bias near outside of box during synthetic building
 @li Fix synthetic builder to note if volume is 2D and actually pack slices
 @li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
+@li Add some optimizations into the PackPrimaryGrains by creating constants and removing triple nested vectors.
 
 
 @section io_filters

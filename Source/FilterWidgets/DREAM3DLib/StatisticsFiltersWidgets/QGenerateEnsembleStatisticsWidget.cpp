@@ -94,6 +94,8 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
 {
+  prefs.setValue("Filter_Name", "GenerateEnsembleStatistics" );
+  // Need to figure out how to write out the values for the DistributionTypeWidgets
 
 }
 
@@ -102,7 +104,7 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
 {
-
+  // Read the values back from the prefs and set them into the DistributionTypeWidgets
 }
 
 // -----------------------------------------------------------------------------
