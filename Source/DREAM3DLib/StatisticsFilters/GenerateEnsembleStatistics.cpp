@@ -54,7 +54,9 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
 AbstractFilter(),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+m_FieldEulerAnglesArrayName(DREAM3D::FieldData::FieldEulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
 m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
@@ -68,7 +70,8 @@ m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_SizeDistribution(false),
 m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
-m_AvgQuats(NULL),
+m_Volumes(NULL),
+m_FieldEulerAngles(NULL),
 m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
 m_EquivalentDiameters(NULL),
@@ -112,37 +115,25 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  //GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-  //TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
-  //if(err == -302)
-  //{
-  //  setErrorCondition(0);
-  //  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-  //  find_surfacefields->setObservers(this->getObservers());
-  //  find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-  //  if(preflight == true) find_surfacefields->preflight();
-  //  if(preflight == false) find_surfacefields->execute();
-  //}
-  //GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
-  //GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -305, float, FloatArrayType, fields, 3)
 
-  if(m_SizeDistribution == true || m_Omega3Distribution == true || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
+  if(err == -303)
   {
-    TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
-    if(err == -303)
-    {
       setErrorCondition(0);
       FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
       find_grainphases->setObservers(this->getObservers());
       find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
       if(preflight == true) find_grainphases->preflight();
       if(preflight == false) find_grainphases->execute();
-    }
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  }
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+
+
+  if(m_SizeDistribution == true || m_Omega3Distribution == true || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true ||m_AxisODF == true)
+  {
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
-
   if(m_NeighborhoodDistribution == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, -304, int32_t, Int32ArrayType, fields, 1)
@@ -155,11 +146,79 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
   }
+  if(m_AxisODF == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -305, float, FloatArrayType, fields, 3)
+  }
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+
+  if(m_ODF == true || m_MDF == true)
+  {
+    typedef DataArray<unsigned int> XTalStructArrayType;
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+	TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
+	if(err == -302)
+	{
+	  setErrorCondition(0);
+	  FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
+	  find_surfacefields->setObservers(this->getObservers());
+	  find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
+	  if(preflight == true) find_surfacefields->preflight();
+	  if(preflight == false) find_surfacefields->execute();
+	}
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+  }
+  if(m_ODF == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1)
+	GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)	  
+  }
+  if(m_MDF == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    if(m_SharedSurfaceAreaList == NULL)
+    {
+      setErrorCondition(0);
+      FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+      find_neighbors->setObservers(this->getObservers());
+      find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
+      if(preflight == true) find_neighbors->preflight();
+      if(preflight == false) find_neighbors->execute();
+      m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+      if(m_SharedSurfaceAreaList == NULL)
+	  {
+        ss.str("");
+        ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+        setErrorCondition(-306);
+        addErrorMessage(getHumanLabel(), ss.str(), -306);
+	  }
+    }
+    // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    if(m_NeighborList == NULL)
+    {
+      setErrorCondition(0);
+      FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+      find_neighbors->setObservers(this->getObservers());
+      find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
+      if(preflight == true) find_neighbors->preflight();
+      if(preflight == false) find_neighbors->execute();
+      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+      if(m_NeighborList == NULL)
+      {
+        ss.str("");
+        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+        setErrorCondition(-305);
+        addErrorMessage(getHumanLabel(), ss.str(), -305);
+	  }
+    }
+  }
+
+
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
+
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
@@ -212,6 +271,18 @@ void GenerateEnsembleStatistics::execute()
   if(m_NeighborhoodDistribution == true)
   {
 	  gatherNeighborhoodStats();
+  }
+  if(m_ODF == true)
+  {
+	  gatherODFStats();
+  }
+  if(m_MDF == true)
+  {
+	  gatherMDFStats();
+  }
+  if(m_AxisODF == true)
+  {
+	  gatherAxisODFStats();
   }
 
  notifyStatusMessage("GenerateEnsembleStatistics Completed");
@@ -544,4 +615,280 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 	  }
   }
 
+}
+void GenerateEnsembleStatistics::gatherODFStats()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+  setErrorCondition(0);
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  size_t bin;
+  size_t numgrains = m->getNumFieldTuples();
+  int phase;
+  std::vector<float> totalvol;
+  std::vector<FloatArrayType::Pointer> eulerodf;
+
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  totalvol.resize(numensembles);
+  eulerodf.resize(numensembles);
+  unsigned long long dims = 0;
+  for(unsigned long long i=1;i<numensembles;i++)
+  {
+	  totalvol[i] = 0;
+	  if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
+	  {
+	    dims = 36 * 36 * 12;
+		eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+	    for (unsigned long long j = 0; j < dims; j++)
+	    {
+			eulerodf[i]->SetValue(j, 0.0);
+	    }
+	  }
+	  else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
+	  {
+	    dims = 18 * 18 * 18;
+		eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+	    for (unsigned long long j = 0; j < dims; j++)
+	    {
+			eulerodf[i]->SetValue(j, 0.0);
+	    }
+	  }
+  }
+  float ea1, ea2, ea3;
+  float r1, r2, r3;
+  for (size_t i = 1; i < numgrains; i++)
+  {
+    if (m_SurfaceFields[i] == false)
+    {
+      totalvol[m_FieldPhases[i]] = totalvol[m_FieldPhases[i]] + m_Volumes[i];
+    }
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+    if (m_SurfaceFields[i] == false)
+    {
+      ea1 = m_FieldEulerAngles[3*i];
+      ea2 = m_FieldEulerAngles[3*i+1];
+      ea3 = m_FieldEulerAngles[3*i+2];
+      phase = m_CrystalStructures[m_FieldPhases[i]];
+      OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
+      eulerodf[m_FieldPhases[i]]->SetValue(bin, (eulerodf[m_FieldPhases[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_FieldPhases[i]])));
+    }
+  }
+
+  for(size_t i = 1;i < numensembles;i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setODF(eulerodf[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setODF(eulerodf[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  tp->setODF(eulerodf[i]);
+	  }
+  }
+
+}
+void GenerateEnsembleStatistics::gatherMDFStats()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+  setErrorCondition(0);
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  // But since a pointer is difficult to use operators with we will now create a
+  // reference variable to the pointer with the correct variable name that allows
+  // us to use the same syntax as the "vector of vectors"
+  NeighborList<int>& neighborlist = *m_NeighborList;
+  // And we do the same for the SharedSurfaceArea list
+  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
+
+  float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
+  float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
+  int mbin = 0;
+  float w;
+  float q1[5];
+  float q2[5];
+  size_t numgrains = m->getNumFieldTuples();
+  unsigned int phase1, phase2;
+  std::vector<float> totalSurfaceArea;
+  std::vector<FloatArrayType::Pointer> misobin;
+  int numbins = 0;
+
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  misobin.resize(numensembles);
+  totalSurfaceArea.resize(numensembles);
+  for(size_t i=1;i<numensembles;++i)
+  {
+	totalSurfaceArea[i] = 0;
+    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
+    {
+      numbins = 36 * 36 * 12;
+	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+    }
+    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
+    {
+      numbins = 18 * 18 * 18;
+	  misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+    }
+    // Now initialize all bins to 0.0
+    for (int j = 0; j < numbins; j++)
+    {
+		misobin[i]->SetValue(j, 0.0);
+    }
+  }
+  size_t nname;
+  float nsa;
+  for (size_t i = 1; i < numgrains; i++)
+  {
+		q1[0] = m_AvgQuats[5*i];
+		q1[1] = m_AvgQuats[5*i+1];
+		q1[2] = m_AvgQuats[5*i+2];
+		q1[3] = m_AvgQuats[5*i+3];
+		q1[4] = m_AvgQuats[5*i+4];
+		phase1 = m_CrystalStructures[m_FieldPhases[i]];
+		for (size_t j = 0; j < neighborlist[i].size(); j++)
+		{
+		  w = 10000.0;
+		  nname = neighborlist[i][j];
+		  q2[0] = m_AvgQuats[5*nname];
+		  q2[1] = m_AvgQuats[5*nname+1];
+		  q2[2] = m_AvgQuats[5*nname+2];
+		  q2[3] = m_AvgQuats[5*nname+3];
+		  q2[4] = m_AvgQuats[5*nname+4];
+		  phase2 = m_CrystalStructures[m_FieldPhases[nname]];
+		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+		  if (phase1 == phase2)
+		  {
+			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+		    if ((nname > i || m_SurfaceFields[nname] == true))
+		    {
+			  mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
+			  nsa = neighborsurfacearealist[i][j];
+			  misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + nsa));
+			  totalSurfaceArea[m_FieldPhases[i]] = totalSurfaceArea[m_FieldPhases[i]] + nsa;
+		    }
+		  }
+		}
+  }
+
+ // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  for(int j=0;j<misobin[i]->GetSize();j++)
+	  {
+		  misobin[i]->SetValue(j, (misobin[i]->GetValue(j)/totalSurfaceArea[i]));
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setMisorientationBins(misobin[i]);
+		  pp->setBoundaryArea(totalSurfaceArea[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  pp->setMisorientationBins(misobin[i]);
+		  pp->setBoundaryArea(totalSurfaceArea[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  tp->setMisorientationBins(misobin[i]);
+		  tp->setBoundaryArea(totalSurfaceArea[i]);
+	  }
+  }
+}
+void GenerateEnsembleStatistics::gatherAxisODFStats()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+  setErrorCondition(0);
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  float r1, r2, r3;
+  int bin;
+  std::vector<FloatArrayType::Pointer> axisodf;
+  std::vector<float> totalaxes;
+  size_t numXTals = m->getNumEnsembleTuples();
+  axisodf.resize(numXTals);
+  totalaxes.resize(numXTals);
+  for (size_t i = 1; i < numXTals; i++)
+  {
+    totalaxes[i] = 0.0;
+    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), DREAM3D::HDF5::AxisOrientation);
+    for (int j = 0; j < (36 * 36 * 36); j++)
+    {
+      axisodf[i]->SetValue(j, 0.0);
+    }
+  }
+  size_t numgrains = m->getNumFieldTuples();
+  for (size_t i = 0; i < numgrains; i++)
+  {
+    if(m_SurfaceFields[i] == false)
+    {
+      totalaxes[m_FieldPhases[i]]++;
+    }
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+    float ea1 = m_AxisEulerAngles[3 * i];
+    float ea2 = m_AxisEulerAngles[3 * i + 1];
+    float ea3 = m_AxisEulerAngles[3 * i + 2];
+    if(m_SurfaceFields[i] == 0)
+    {
+      OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
+      bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
+      axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
+    }
+  }
+  // int err;
+  for (size_t i = 1; i < numXTals; i++)
+  {
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setAxisOrientation(axisodf[i]);
+    }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setAxisOrientation(axisodf[i]);
+    }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      tp->setAxisOrientation(axisodf[i]);
+    }
+  }
 }

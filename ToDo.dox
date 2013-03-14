@@ -7,9 +7,8 @@ so it can be integrated with the other documentation pages.
 
 
 @section blockers Show Stopping Bugs
-These 2 items are together
-@li Add filter to calculate ensemble stats (fit distributions to arrays)
-@li Fix calculation+storage of real stats for reading into synthetic builder
+@li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
+
 
 @li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 @li How to incorporate documentation for plugins into the main help system
@@ -71,7 +70,7 @@ These 2 items are together
 @li Add median filter on scalar array
 @li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 @li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
-@li Fix GenerateEnsembleStatistics filter not reappearing when in the last pipeline
+@li Finish implementing writing of GenerateEnsembleStatistics filter'S GUI values to pref file
 @li Fix the mPrime, F1, F1spt, F7 functions in Hex- and Ortho- Ops
 
 
@@ -192,6 +191,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Add ability to open a previously saved stats file back into the stats generator
 @li Add filter to calculate only misorientations
 @li Modify FindMDF filter to only calculate the MDF, not the actual misorientations
+@li Add filter to calculate ensemble stats (fit distributions to arrays)
+@li Fix calculation+storage of real stats for reading into synthetic builder
 
 
 @section NO_LONGER_WANTED No Longer Wanted

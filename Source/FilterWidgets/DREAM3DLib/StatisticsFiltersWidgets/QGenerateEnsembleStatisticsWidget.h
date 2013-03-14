@@ -50,7 +50,6 @@
 
 class DistributionTypeWidget;
 
-
 /**
  * @brief The QGenerateEnsembleStatisticsWidget class
  */
