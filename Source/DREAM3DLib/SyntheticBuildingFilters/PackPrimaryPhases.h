@@ -148,6 +148,8 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
     int writeVtkFile(int32_t* grainOwners);
+    int estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
+
 
   private:
     int32_t* m_Neighbors;
