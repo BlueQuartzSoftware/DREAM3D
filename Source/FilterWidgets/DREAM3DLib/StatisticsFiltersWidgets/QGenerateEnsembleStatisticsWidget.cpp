@@ -38,16 +38,18 @@
 
 #include "QtSupport/DistributionTypeWidget.h"
 
+#include "DREAM3DLib/Common/PhaseType.h"
+
 #include "DREAM3DLib/StatisticsFiltersWidgets/moc_QGenerateEnsembleStatisticsWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* parent) :
-  QFilterWidget(parent)
+  QFilterWidget(parent),
+  m_PhaseTypeEdited(false)
 {
   this->setupUi(this);
-  setupGui();
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
@@ -57,8 +59,6 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
 
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ QFilterWidget* QGenerateEnsembleStatisticsWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 QString QGenerateEnsembleStatisticsWidget::getFilterGroup()
 {
-return m_FilterGroup;
+  return m_FilterGroup;
 }
 
 // -----------------------------------------------------------------------------
@@ -124,6 +124,36 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VoxelDataContain
                                                                 SurfaceMeshDataContainer::Pointer smdc,
                                                                 SolidMeshDataContainer::Pointer sdc)
 {
+
+
+  int numPhases = vdc->getNumEnsembleTuples();
+
+  std::vector<std::string> phaseTypeStrings;
+  PhaseType::getPhaseTypeStrings(phaseTypeStrings);
+  std::vector<unsigned int> phaseTypeEnums;
+  PhaseType::getPhaseTypeEnums(phaseTypeEnums);
+
+  // Remove all the items
+  phaseTypeList->clear();
+  // Now iterate over all the phases creating the proper UI elements
+  for (int i = 0; i < numPhases; i++)
+  {
+
+    phaseTypeList->addItem(PhaseType::PrimaryStr().c_str());
+    QListWidgetItem* item = phaseTypeList->item(i);
+    item->setSizeHint(QSize(50, 25));
+    QComboBox* cb = new QComboBox(phaseTypeList);
+    for (size_t i = 0; i < phaseTypeStrings.size(); ++i)
+    {
+      cb->addItem(QString::fromStdString(phaseTypeStrings[i]), phaseTypeEnums[i]);
+      cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
+    }
+    cb->setMinimumHeight(25);
+    phaseTypeList->setItemWidget(item, cb);
+    connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(phaseTypeEdited(int)));
+  }
+
+
 
 }
 
@@ -143,7 +173,24 @@ void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VoxelDataContaine
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::setupGui()
 {
-  m_SizeDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Size Distribution"), distributionTypeGroupBox);
+  setCheckable(true);
+  setIsSelected(false);
+
+
+
+  m_SizeDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Size Distribution"), distributionTypeFrame);
+  m_SizeDistributionWidget->setStyleSheet("");
   distributionTypeLayout->addWidget(m_SizeDistributionWidget);
+
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QGenerateEnsembleStatisticsWidget::phaseTypeEdited(int i)
+{
+  m_PhaseTypeEdited = true;
+  emit parametersChanged();
 }
 

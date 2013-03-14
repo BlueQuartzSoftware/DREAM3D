@@ -67,10 +67,10 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadSolidMeshData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    virtual void preflight();
+
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read DREAM3D Data File"; }
 
     virtual void setupFilterParameters();
@@ -80,6 +80,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
+    virtual void preflight();
 
     virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,   std::set<std::string> selectedFieldArrays, std::set<std::string> selectedEnsembleArrays);
     virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,   std::set<std::string> selectedFaceArrays, std::set<std::string> selectedEdgeArrays);

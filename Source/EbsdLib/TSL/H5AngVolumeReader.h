@@ -68,11 +68,11 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
     EBSD_POINTER_PROPERTY(Phi, Phi, float)
     EBSD_POINTER_PROPERTY(Phi2, Phi2, float)
-    EBSD_POINTER_PROPERTY(XPos, X, float)
-    EBSD_POINTER_PROPERTY(YPos, Y, float)
+    EBSD_POINTER_PROPERTY(XPosition, X, float)
+    EBSD_POINTER_PROPERTY(YPosition, Y, float)
     EBSD_POINTER_PROPERTY(ImageQuality, Iq, float)
     EBSD_POINTER_PROPERTY(ConfidenceIndex, Ci, float)
-    EBSD_POINTER_PROPERTY(Phase, PhaseData, int)
+    EBSD_POINTER_PROPERTY(PhaseData, PhaseData, int)
     EBSD_POINTER_PROPERTY(SEMSignal, SEMSignal, float)
     EBSD_POINTER_PROPERTY(Fit, Fit, float)
 
@@ -98,23 +98,23 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
       * @brief Returns the pointer to the data for a given field
       * @param fieldName The name of the field to return the pointer to.
       */
-     void* getPointerByName(const std::string &fieldName);
+    void* getPointerByName(const std::string &fieldName);
 
-     /**
+    /**
       * @brief Returns an enumeration value that depicts the numerical
       * primitive type that the data is stored as (Int, Float, etc).
       * @param fieldName The name of the field.
       */
-     Ebsd::NumType getPointerType(const std::string &fieldName);
+    Ebsd::NumType getPointerType(const std::string &fieldName);
 
-     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+    /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
      * and then splats '0' across all the bytes of the memory allocation
      */
-     void initPointers(size_t numElements);
+    void initPointers(size_t numElements);
 
-     /** @brief 'free's the allocated memory and sets the pointer to NULL
+    /** @brief 'free's the allocated memory and sets the pointer to NULL
      */
-     void deletePointers();
+    void deletePointers();
 
   protected:
     H5AngVolumeReader();
@@ -131,37 +131,37 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * also optionally produce SSE aligned memory for use with SSE intrinsics
      * @return Pointer to allocated memory
      */
-      template<typename T>
-      T* allocateArray(size_t numberOfElements)
-      {
-  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-        T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-  #else
-        T*  m_buffer = new T[numberOfElements];
-  #endif
-  //      m_NumberOfElements = numberOfElements;
-        return m_buffer;
-      }
+    template<typename T>
+    T* allocateArray(size_t numberOfElements)
+    {
+#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
+#else
+      T*  m_buffer = new T[numberOfElements];
+#endif
+      //      m_NumberOfElements = numberOfElements;
+      return m_buffer;
+    }
 
     /**
      * @brief Deallocates memory that has been previously allocated. This will set the
      * value of the pointer passed in as the argument to NULL.
      * @param ptr The pointer to be freed.
      */
-      template<typename T>
-      void deallocateArrayData(T* &ptr)
+    template<typename T>
+    void deallocateArrayData(T* &ptr)
+    {
+      if (ptr != NULL && getManageMemory() == true)
       {
-        if (ptr != NULL && getManageMemory() == true)
-        {
-  #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-          _mm_free(ptr );
-  #else
-          delete[] ptr;
-  #endif
-          ptr = NULL;
-   //       m_NumberOfElements = 0;
-        }
+#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
+        _mm_free(ptr );
+#else
+        delete[] ptr;
+#endif
+        ptr = NULL;
+        //       m_NumberOfElements = 0;
       }
+    }
 
 };
 

@@ -125,9 +125,9 @@ void FindGrainCentroids::execute()
 void FindGrainCentroids::find_centroids()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
+//  int64_t totalPoints = m->getTotalPoints();
   float x, y, z;
-  int col, row, plane;
+//  int col, row, plane;
 //  float allvol = 0.0;
   size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
@@ -148,40 +148,40 @@ void FindGrainCentroids::find_centroids()
   int zStride, yStride;
   for(int i=0;i<zPoints;i++)
   {
-	zStride = i*xPoints*yPoints;
-	for (int j=0;j<yPoints;j++)
-	{
-		yStride = j*xPoints;
-		for(int k=0;k<xPoints;k++)
-		{
-			int gnum = m_GrainIds[zStride+yStride+k];
-			graincenters[gnum * 5 + 0]++;
-			x = float(k) * xRes;
-			y = float(j) * yRes;
-			z = float(i) * zRes;
-			graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
-			graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
-			graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
-		}
-	}
+  zStride = i*xPoints*yPoints;
+  for (int j=0;j<yPoints;j++)
+  {
+    yStride = j*xPoints;
+    for(int k=0;k<xPoints;k++)
+    {
+      int gnum = m_GrainIds[zStride+yStride+k];
+      graincenters[gnum * 5 + 0]++;
+      x = float(k) * xRes;
+      y = float(j) * yRes;
+      z = float(i) * zRes;
+      graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
+      graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
+      graincenters[gnum * 5 + 3] = graincenters[gnum * 5 + 3] + z;
+    }
+  }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-	graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
-	graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
-	graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
-	m_Centroids[3 * i] = graincenters[i * 5 + 1];
-	m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
-	m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
+  graincenters[i * 5 + 1] = graincenters[i * 5 + 1] / graincenters[i * 5 + 0];
+  graincenters[i * 5 + 2] = graincenters[i * 5 + 2] / graincenters[i * 5 + 0];
+  graincenters[i * 5 + 3] = graincenters[i * 5 + 3] / graincenters[i * 5 + 0];
+  m_Centroids[3 * i] = graincenters[i * 5 + 1];
+  m_Centroids[3 * i + 1] = graincenters[i * 5 + 2];
+  m_Centroids[3 * i + 2] = graincenters[i * 5 + 3];
   }
 }
 void FindGrainCentroids::find_centroids2D()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
 
   float x, y;
-  int col, row;
+ // int col, row;
   size_t numgrains = m->getNumFieldTuples();
   graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
 
@@ -190,24 +190,24 @@ void FindGrainCentroids::find_centroids2D()
 
   if(m->getXPoints() == 1)
   {
-	  xPoints = m->getYPoints();
-	  xRes = m->getYRes();
-	  yPoints = m->getZPoints();
-	  yRes = m->getZRes();
+    xPoints = m->getYPoints();
+    xRes = m->getYRes();
+    yPoints = m->getZPoints();
+    yRes = m->getZRes();
   }
   if(m->getYPoints() == 1)
   {
-	  xPoints = m->getXPoints();
-	  xRes = m->getXRes();
-	  yPoints = m->getZPoints();
-	  yRes = m->getZRes();
+    xPoints = m->getXPoints();
+    xRes = m->getXRes();
+    yPoints = m->getZPoints();
+    yRes = m->getZRes();
   }
   if(m->getZPoints() == 1)
   {
-	  xPoints = m->getXPoints();
-	  xRes = m->getXRes();
-	  yPoints = m->getYPoints();
-	  yRes = m->getYRes();
+    xPoints = m->getXPoints();
+    xRes = m->getXRes();
+    yPoints = m->getYPoints();
+    yRes = m->getYRes();
   }
 
   for (size_t i = 0; i < numgrains*5; i++)
@@ -217,16 +217,16 @@ void FindGrainCentroids::find_centroids2D()
   int yStride;
   for (int j=0;j<yPoints;j++)
   {
-	yStride = j*xPoints;
-	for(int k=0;k<xPoints;k++)
-	{
-		int gnum = m_GrainIds[yStride+k];
-		graincenters[gnum * 5 + 0]++;
-		x = float(k) * xRes;
-		y = float(j) * yRes;
-		graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
-		graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
-	}
+  yStride = j*xPoints;
+  for(int k=0;k<xPoints;k++)
+  {
+    int gnum = m_GrainIds[yStride+k];
+    graincenters[gnum * 5 + 0]++;
+    x = float(k) * xRes;
+    y = float(j) * yRes;
+    graincenters[gnum * 5 + 1] = graincenters[gnum * 5 + 1] + x;
+    graincenters[gnum * 5 + 2] = graincenters[gnum * 5 + 2] + y;
+  }
   }
   for (size_t i = 1; i < numgrains; i++)
   {

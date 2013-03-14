@@ -163,17 +163,25 @@ void QDataContainerReaderWidget::on_m_ReadSolidMeshData_stateChanged(int state)
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QDataContainerReaderWidget::setInputFile(const QString &v)
 {
   QString natPath = QDir::toNativeSeparators(v);
   m_InputFile->setText(natPath);
   emit parametersChanged();
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 QString  QDataContainerReaderWidget::getInputFile()
 {
   return m_InputFile->text();
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void QDataContainerReaderWidget::writeOptions(QSettings &prefs)
 {
@@ -185,6 +193,8 @@ void QDataContainerReaderWidget::writeOptions(QSettings &prefs)
   arraySelectionWidget->writeOptions(prefs, "ArraySelections");
 }
 
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void QDataContainerReaderWidget::readOptions(QSettings &prefs)
 {

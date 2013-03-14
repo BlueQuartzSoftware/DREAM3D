@@ -91,11 +91,11 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
     EBSD_POINTER_PROPERTY(Phi, Phi, float)
     EBSD_POINTER_PROPERTY(Phi2, Phi2, float)
-    EBSD_POINTER_PROPERTY(XPos, X, float)
-    EBSD_POINTER_PROPERTY(YPos, Y, float)
+    EBSD_POINTER_PROPERTY(XPosition, X, float)
+    EBSD_POINTER_PROPERTY(YPosition, Y, float)
     EBSD_POINTER_PROPERTY(ImageQuality, Iq, float)
     EBSD_POINTER_PROPERTY(ConfidenceIndex, Ci, float)
-    EBSD_POINTER_PROPERTY(Phase, PhaseData, int)
+    EBSD_POINTER_PROPERTY(PhaseData, PhaseData, int)
     EBSD_POINTER_PROPERTY(SEMSignal, SEMSignal, float)
     EBSD_POINTER_PROPERTY(Fit, Fit, float)
 
@@ -124,7 +124,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     */
     virtual int readHeaderOnly();
 
-	/** @brief Allocates the proper amount of memory (after reading the header portion of the file)
+  /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
     */
     virtual void initPointers(size_t numElements);
@@ -151,8 +151,8 @@ private:
     * @param line The line to parse
     */
     void parseHeaderLine(char* buf, size_t length);
-	
-	/** @brief Parses the data from a line of data from the TSL .ang file
+
+  /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
     void parseDataLine(const std::string &line, size_t i);

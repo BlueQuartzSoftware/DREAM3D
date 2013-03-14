@@ -56,7 +56,7 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
   sampleTransAngle(0.0),
   eulerTransAngle(0.0)
 {
-	sampleTransAxis.resize(3);
+  sampleTransAxis.resize(3);
   sampleTransAxis[0] = 0.0;
   sampleTransAxis[1] = 0.0;
   sampleTransAxis[2] = 1.0;
@@ -71,6 +71,8 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
   }
   setupUi(this);
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
+  setInputFile( QString::fromStdString(filter->getInputFile() ) );
+  m_FilterGroup = QString::fromStdString(filter->getGroupName());
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
@@ -88,7 +90,7 @@ QReadH5EbsdWidget::~QReadH5EbsdWidget()
 // -----------------------------------------------------------------------------
 QString QReadH5EbsdWidget::getFilterGroup()
 {
-  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+  return m_FilterGroup;
 }
 
 
@@ -97,16 +99,16 @@ QString QReadH5EbsdWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 {
-
   ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
-
-  // Update the Filter with all of these values;
-  filter->setH5EbsdFile(m_H5EbsdFile->text().toStdString());
+  filter->setInputFile(m_InputFile->text().toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setUseTransformations(m_UseTransformations->isChecked());
 
-  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_RefFrameZDir->text().toStdString()));
+
+  arraySelectionWidget->getArraySelections(filter.get());
+
   return filter;
 }
 
@@ -115,37 +117,13 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter()
 // -----------------------------------------------------------------------------
 QFilterWidget* QReadH5EbsdWidget::createDeepCopy()
 {
-#if 0
   QReadH5EbsdWidget* w = new QReadH5EbsdWidget();
-  ReadH5Ebsd::Pointer f = ReadH5Ebsd::New();
-
   // Update the Filter with all of these values;
-  f->setH5EbsdFile(m_H5EbsdFile->text().toStdString());
-  f->setZStartIndex(m_ZStartIndex->value());
-  f->setZEndIndex(m_ZEndIndex->value());
-
-  f->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_StackingOrder->text().toStdString()));
+  w->setInputFile(m_InputFile->text());
+  w->setZStartIndex(m_ZStartIndex->value());
+  w->setZEndIndex(m_ZEndIndex->value());
+  w->setRefFrameZDir(m_RefFrameZDir->text());
   return w;
-#endif
-  return NULL;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
-{
-  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
-  QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
 }
 
 // -----------------------------------------------------------------------------
@@ -156,48 +134,139 @@ void QReadH5EbsdWidget::setupGui()
   setCheckable(true);
   setIsSelected(false);
 
+
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-  m_H5EbsdFile->setCompleter(com);
+  m_InputFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_H5EbsdFile_textChanged(const QString &)));
+                    this, SLOT(on_m_InputFile_textChanged(const QString &)));
 
+  connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
+          this, SLOT(arraySelectionWidgetChanged()));
+
+  arraySelectionWidget->setSurfaceMeshEnabled(false);
+  arraySelectionWidget->setSolidMeshEnabled(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::on_m_H5EbsdBtn_clicked()
+void QReadH5EbsdWidget::arraySelectionWidgetChanged()
 {
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"),
-                                              getOpenDialogLastDirectory(),
-                                              tr("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)") );
-  if ( true == file.isEmpty() ){ return; }
-  QFileInfo fi (file);
-  m_H5EbsdFile->blockSignals(true);
-  QString p = QDir::toNativeSeparators(fi.absoluteFilePath());
-  m_H5EbsdFile->setText(p);
-  on_m_H5EbsdFile_textChanged(m_H5EbsdFile->text() );
-  m_H5EbsdFile->blockSignals(false);
-  setOpenDialogLastDirectory( fi.path() );
+  emit parametersChanged();
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
+void QReadH5EbsdWidget::setInputFile(const QString &v)
 {
+  QString natPath = QDir::toNativeSeparators(v);
+  m_InputFile->setText(natPath);
+  emit parametersChanged();
+}
 
-  if(verifyPathExists(m_H5EbsdFile->text(), m_H5EbsdFile))
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString  QReadH5EbsdWidget::getInputFile()
+{
+  return m_InputFile->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::writeOptions(QSettings &prefs)
+{
+  prefs.setValue("Filter_Name", "ReadH5Ebsd" );
+  prefs.setValue("InputFile", QDir::toNativeSeparators(getInputFile()) );
+  prefs.setValue("ZStartIndex", m_ZStartIndex->value());
+  prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
+  prefs.setValue("UseTransformations",m_UseTransformations->isChecked());
+  arraySelectionWidget->writeOptions(prefs, "ArraySelections");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::readOptions(QSettings &prefs)
+{
+  QString val;
+  bool ok;
+  qint32 i;
+
   {
-    QFileInfo fi(m_H5EbsdFile->text());
+    QVariant p_InputFile = prefs.value("InputFile");
+    QString path = QDir::toNativeSeparators(p_InputFile.toString());
+    QLineEdit* lb = qFindChild<QLineEdit*>(this, "InputFile");
+    if (lb) { lb->setText(path); }
+    setInputFile(path);
+  }
+
+  READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
+      READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
+
+      QVariant UseTrans = prefs.value("UseTransformations");
+  m_UseTransformations->setChecked(UseTrans.toBool());
+
+  arraySelectionWidget->readOptions(prefs, "ArraySelections");
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::on_m_InputFileBtn_clicked()
+{
+  QObject* whoSent = sender();
+  // for QButtons we prepended "btn_" to the end of the property name so strip that off
+  QString propName = whoSent->objectName();
+  propName = propName.remove(0, 4);
+
+  QString Ftype = getFileType(propName.toStdString());
+  QString ext = getFileExtension(propName.toStdString());
+  QString s = Ftype + QString("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)");
+  QString defaultName = getOpenDialogLastDirectory();
+  QString inputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
+  if(true == inputFile.isEmpty())
+  {
+    return;
+  }
+  // Store the last used directory into the private instance variable
+  inputFile = QDir::toNativeSeparators(inputFile);
+  if (!inputFile.isNull())
+  {
+    setInputFile(inputFile);
+    setOpenDialogLastDirectory(inputFile);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
+{
+
+  if (verifyPathExists(m_InputFile->text(), m_InputFile) )
+  {
+    setInputFile(m_InputFile->text());
+    setOpenDialogLastDirectory(m_InputFile->text());
+  }
+
+#if 0
+  if(verifyPathExists(m_InputFile->text(), m_InputFile))
+  {
+    QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
       m_SetSliceInfo();
 
       // Read the Phase information from the .h5ang file
       H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-      h5Reader->setFileName(m_H5EbsdFile->text().toStdString());
+      h5Reader->setFileName(m_InputFile->text().toStdString());
       h5Reader->setSliceStart(m_ZStartIndex->value());
 
       int err = 0;
@@ -249,7 +318,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
         int ret = msgBox.exec();
         if (QMessageBox::Ok == ret)
         {
-         h5Reader->updateToLatestVersion();
+          h5Reader->updateToLatestVersion();
         }
       }
 
@@ -272,7 +341,7 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
 
       setOpenDialogLastDirectory( fi.path() );
 
-      populateCreatedRequiredLists( m_H5EbsdFile->text() );
+      populateCreatedRequiredLists( m_InputFile->text() );
     }
   }
   else
@@ -291,97 +360,167 @@ void QReadH5EbsdWidget::on_m_H5EbsdFile_textChanged(const QString &text)
     m_StackingOrder->setText("xxx");
   }
   emit parametersChanged();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::populateCreatedRequiredLists(QString filePath)
-{
-#if 0
-  ReadH5Ebsd::Pointer readH5Ebsd = ReadH5Ebsd::New();
-  readH5Ebsd->setH5EbsdFile(filePath.toStdString());
-  VoxelDataContainer::Pointer voxelDataContainer = VoxelDataContainer::New();
-  readH5Ebsd->setVoxelDataContainer(voxelDataContainer.get());
-  readH5Ebsd->preflight(); // This gets all the create/required array names
-  m_CreatedArrays->clear();
-  std::set<std::string> createdCellData = readH5Ebsd->getCreatedCellData();
-  for(std::set<std::string>::iterator i = createdCellData.begin(); i != createdCellData.end(); ++i)
-  {
-    m_CreatedArrays->addItem(QString::fromStdString(*i));
-  }
 #endif
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::m_SetSliceInfo()
+bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
-
-  QFileInfo fi(m_H5EbsdFile->text());
-  if (fi.isFile() == false)
+  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+  QFileInfo fileinfo(outFilePath);
+  if (false == fileinfo.exists() )
   {
-    return;
+    lineEdit->setStyleSheet("border: 1px solid red;");
   }
-
-  reader->setFileName(m_H5EbsdFile->text().toStdString());
-  if (reader->readVolumeInfo() >= 0)
+  else
   {
-    float x, y, z;
-    reader->getResolution(x, y, z);
-    m_ZStartIndex->setRange(reader->getZStart(), reader->getZEnd());
-    m_ZStartIndex->setValue(reader->getZStart());
-    m_ZEndIndex->setRange(reader->getZStart(), reader->getZEnd());
-    m_ZEndIndex->setValue(reader->getZEnd());
-    m_ZRes->setText(QString::number(z));
-    m_ZMin->setText(QString::number(reader->getZStart()));
-    m_ZMax->setText(QString::number(reader->getZEnd()));
+    lineEdit->setStyleSheet("");
+  }
+  return fileinfo.exists();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+{
+  // This would only really make sense if the Reader were in the middle of a pipeline then the list
+  // would show what is currently in the pipeline
+  //  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+{
+  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
+  arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
+
+  updateFileInfoWidgets();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::updateFileInfoWidgets()
+{
+  if(verifyPathExists(m_InputFile->text(), m_InputFile))
+  {
+    QFileInfo fi(m_InputFile->text());
+    if(fi.exists() && fi.isFile())
+    {
+      // Read the Phase information from the .h5ang file
+      H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
+      h5Reader->setFileName(m_InputFile->text().toStdString());
+
+      float xres = 0.0f;
+      float yres = 0.0f;
+      float zres = 0.0f;
+
+      int64_t xpoints = 0;
+      int64_t ypoints = 0;
+      int64_t zpoints = 1;
+
+      int zStart = 0;
+      int zEnd = 0;
+
+      if (h5Reader->readVolumeInfo() >= 0)
+      {
+
+        h5Reader->getResolution(xres, yres, zres);
+        m_XRes->setText(QString::number(xres));
+        m_YRes->setText(QString::number(yres));
+        m_ZRes->setText(QString::number(zres));
+
+        h5Reader->getDims(xpoints, ypoints, zpoints);
+        m_XDim->setText(QString::number(xpoints));
+        m_YDim->setText(QString::number(ypoints));
+        m_ZDim->setText(QString::number(zpoints));
+
+        zStart = h5Reader->getZStart();
+        zEnd = h5Reader->getZEnd();
+        m_ZMin->setText(QString::number(zStart));
+        m_ZMax->setText(QString::number(zEnd));
+        m_ZStartIndex->setRange(zStart, zEnd);
+        m_ZStartIndex->setValue(zStart);
+        m_ZEndIndex->setRange(zStart, zEnd);
+        m_ZEndIndex->setValue(zEnd);
+
+      }
+      else
+      {
+        resetGuiFileInfoWidgets();
+      }
+
+      // Compare the Manufactureres of the current file versus the one we have cached
+      // If they are different then we need to remove all the quality filters
+      QString fileManufact = QString::fromStdString(h5Reader->getManufacturer());
+
+      // Cache the Manufacturer from the File
+      m_EbsdManufacturer->setText(fileManufact);
+
+      m_RefFrameZDir->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
+
+
+      if (h5Reader->getFileVersion() < 4)
+      {
+        QMessageBox msgBox;
+        msgBox.setText("H5Ebsd File Needs Updating");
+        msgBox.setInformativeText("The transformation information stored in the file does not meet the latest specification.\nShould DREAM3D update the file for you?\n  If you select NOT to do this operation DREAM3D can not use this file.");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        int ret = msgBox.exec();
+        if (QMessageBox::Ok == ret)
+        {
+          h5Reader->updateToLatestVersion();
+        }
+      }
+
+      // Now test again to see if we are at the correct file version
+      if (h5Reader->getFileVersion() >= 4)
+      {
+        sampleTransAngle = h5Reader->getSampleTransformationAngle();
+        sampleTransAxis = h5Reader->getSampleTransformationAxis();
+        eulerTransAngle = h5Reader->getEulerTransformationAngle();
+        eulerTransAxis = h5Reader->getEulerTransformationAxis();
+        QString sampleTrans;
+        QString eulerTrans;
+        sampleTransAxis = h5Reader->getSampleTransformationAxis();
+        eulerTransAxis = h5Reader->getEulerTransformationAxis();
+        sampleTrans = QString::number(h5Reader->getSampleTransformationAngle()) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
+        eulerTrans = QString::number(h5Reader->getEulerTransformationAngle()) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
+        m_SampleTransformationLabel->setText(sampleTrans);
+        m_EulerTransformationLabel->setText(eulerTrans);
+      }
+    }
+  }
+  else
+  {
+    resetGuiFileInfoWidgets();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::readOptions(QSettings &prefs)
+void QReadH5EbsdWidget::resetGuiFileInfoWidgets()
 {
-  QString val;
-  bool ok;
-  qint32 i;
-  //bool b;
-
-  READ_FILEPATH_SETTING(prefs, m_, H5EbsdFile, "");
-  on_m_H5EbsdFile_textChanged(QString(""));
-  READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
-      READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
-
-
-      QVariant UseTrans = prefs.value("UseTransformations");
-  m_UseTransformations->setChecked(UseTrans.toBool());
-
-
+  m_XDim->setText("xxx");
+  m_YDim->setText("xxx");
+  m_ZDim->setText("xxx");
+  m_XRes->setText("xxx");
+  m_YRes->setText("xxx");
+  m_ZRes->setText("xxx");
+  m_EbsdManufacturer->setText("xxx");
+  m_SampleTransformationLabel->setText("xxx");
+  m_EulerTransformationLabel->setText("xxx");
+  m_ZMin->setText("xxx");
+  m_ZMax->setText("xxx");
+  m_RefFrameZDir->setText("xxx");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::writeOptions(QSettings &prefs)
-{
-  prefs.setValue("Filter_Name", "ReadH5Ebsd" );
-  prefs.setValue("H5EbsdFile", m_H5EbsdFile->text());
-  prefs.setValue("ZStartIndex", m_ZStartIndex->value());
-  prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
-  prefs.setValue("UseTransformations",m_UseTransformations->isChecked());
-  //  prefs.setValue("MisorientationTolerance", m_MisorientationTolerance->value() );
-
-
-}
-
-

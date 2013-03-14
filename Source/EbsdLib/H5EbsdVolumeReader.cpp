@@ -50,7 +50,8 @@ H5EbsdVolumeReader::H5EbsdVolumeReader() :
     m_SliceStart(0),
     m_SliceEnd(0),
     m_ManageMemory(true),
-    m_NumberOfElements(0)
+    m_NumberOfElements(0),
+    m_ReadAllArrays(true)
 {
 
 }
@@ -102,3 +103,34 @@ int H5EbsdVolumeReader::loadData(int64_t xpoints, int64_t ypoints, int64_t zpoin
   return -1;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5EbsdVolumeReader::setArraysToRead(std::set<std::string> names)
+{
+  m_ArrayNames = names;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::set<std::string> H5EbsdVolumeReader::getArraysToRead()
+{
+  return m_ArrayNames;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool H5EbsdVolumeReader::getReadAllArrays()
+{
+  return m_ReadAllArrays;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5EbsdVolumeReader::readAllArrays(bool b)
+{
+  m_ReadAllArrays = b;
+}
