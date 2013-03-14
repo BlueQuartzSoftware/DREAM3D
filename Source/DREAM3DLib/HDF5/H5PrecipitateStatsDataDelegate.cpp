@@ -136,8 +136,8 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
   data->setGrainSize_DistType(dType);
   data->setGrainSizeDistribution(createDistributionVector(data->getGrainSize_DistType()));
   err = readDistributionData(groupId,
-								DREAM3D::HDF5::Grain_Size_Distribution,
-								data->getGrainSizeDistribution());
+                DREAM3D::HDF5::Grain_Size_Distribution,
+                data->getGrainSizeDistribution());
 
    // Read the Bin Numbers
    err = readBinNumbers(data, groupId);
@@ -241,9 +241,9 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
 
   // Write the Grain Size Distribution
   err = writeDistributionData(groupId,
-							   data->getGrainSize_DistType(),
-							   DREAM3D::HDF5::Grain_Size_Distribution,
-							   data->getGrainSizeDistribution());
+                 data->getGrainSize_DistType(),
+                 DREAM3D::HDF5::Grain_Size_Distribution,
+                 data->getGrainSizeDistribution());
 
   // Write the Bin Numbers
   err = writeBinNumbers(data, groupId);
@@ -392,15 +392,15 @@ int H5PrecipitateStatsDataDelegate::readODFWeights(hid_t pid, PrecipitateStatsDa
   FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler1);
   FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler2);
   FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler3);
-  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
   FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
 
   VectorOfFloatArray odfWeights;
   odfWeights.push_back(euler1);
   odfWeights.push_back(euler2);
   odfWeights.push_back(euler3);
-  odfWeights.push_back(sigma);
   odfWeights.push_back(weight);
+  odfWeights.push_back(sigma);
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
 

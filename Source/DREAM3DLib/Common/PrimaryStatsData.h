@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT PrimaryStatsData : public StatsData
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 
-  size_t getNumberOfBins()
+    size_t getNumberOfBins()
     {
       return (m_BinNumbers.get() == NULL) ? 0 : m_BinNumbers->GetSize();
     }

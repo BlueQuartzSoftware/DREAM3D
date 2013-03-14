@@ -133,8 +133,8 @@ int H5PrimaryStatsDataDelegate::readPrimaryStatsData(PrimaryStatsData* data, hid
   data->setGrainSize_DistType(dType);
   data->setGrainSizeDistribution(createDistributionVector(data->getGrainSize_DistType()));
   err = readDistributionData(groupId,
-								DREAM3D::HDF5::Grain_Size_Distribution,
-								data->getGrainSizeDistribution());
+                DREAM3D::HDF5::Grain_Size_Distribution,
+                data->getGrainSizeDistribution());
 
    // Read the Bin Numbers
    err = readBinNumbers(data, groupId);
@@ -235,9 +235,9 @@ int H5PrimaryStatsDataDelegate::writePrimaryStatsData(PrimaryStatsData* data, hi
 
   // Write the Grain Size Distribution
   err = writeDistributionData(groupId,
-							   data->getGrainSize_DistType(),
-							   DREAM3D::HDF5::Grain_Size_Distribution,
-							   data->getGrainSizeDistribution());
+                 data->getGrainSize_DistType(),
+                 DREAM3D::HDF5::Grain_Size_Distribution,
+                 data->getGrainSizeDistribution());
 
   // Write the Bin Numbers
   err = writeBinNumbers(data, groupId);
@@ -388,15 +388,15 @@ int H5PrimaryStatsDataDelegate::readODFWeights(hid_t pid, PrimaryStatsData* data
   FloatArrayType::Pointer euler1 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler1);
   FloatArrayType::Pointer euler2 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler2);
   FloatArrayType::Pointer euler3 = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Euler3);
-  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
   FloatArrayType::Pointer weight = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Weight);
+  FloatArrayType::Pointer sigma = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Sigma);
 
   VectorOfFloatArray odfWeights;
   odfWeights.push_back(euler1);
   odfWeights.push_back(euler2);
   odfWeights.push_back(euler3);
-  odfWeights.push_back(sigma);
   odfWeights.push_back(weight);
+  odfWeights.push_back(sigma);
 
   hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
   if(groupId > 0)
