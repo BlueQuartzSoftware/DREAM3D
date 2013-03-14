@@ -38,7 +38,7 @@
 
 #include "QtSupport/DistributionTypeWidget.h"
 
-
+#include "DREAM3DLib/StatisticsFiltersWidgets/moc_QGenerateEnsembleStatisticsWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
