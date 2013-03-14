@@ -66,6 +66,7 @@ so it can be integrated with the other documentation pages.
 @li Add median filter on scalar array
 @li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 @li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
+@li Fix GenerateEnsembleStatistics filter not reappearing when in the last pipeline
 
 
 
