@@ -1029,9 +1029,9 @@ void PackPrimaryPhases::initialize_packinggrid()
   packingresx = m->getXRes() * 2.0f;
   packingresy = m->getYRes() * 2.0f;
   packingresz = m->getZRes() * 2.0f;
-  packingxpoints = int(sizex / packingresx);
-  packingypoints = int(sizey / packingresy);
-  packingzpoints = int(sizez / packingresz);
+  packingxpoints = m->getXPoints()/2;
+  packingypoints = m->getYPoints()/2;
+  packingzpoints = m->getZPoints()/2;
   packingtotalpoints = packingxpoints * packingypoints * packingzpoints;
   grainowners.resize(packingxpoints);
   for (int i = 0; i < packingxpoints; i++)

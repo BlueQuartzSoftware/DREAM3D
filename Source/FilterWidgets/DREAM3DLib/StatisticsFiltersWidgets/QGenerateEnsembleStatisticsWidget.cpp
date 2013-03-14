@@ -40,8 +40,6 @@
 
 #include "DREAM3DLib/Common/PhaseType.h"
 
-
-
 #include "DREAM3DLib/StatisticsFiltersWidgets/moc_QGenerateEnsembleStatisticsWidget.cxx"
 
 // -----------------------------------------------------------------------------
