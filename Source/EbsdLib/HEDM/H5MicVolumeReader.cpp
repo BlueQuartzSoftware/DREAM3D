@@ -74,6 +74,16 @@ H5MicVolumeReader::~H5MicVolumeReader()
 }
 
 
+#define H5MICREADER_ALLOCATE_ARRAY(name, type)\
+  if (readAllArrays == true || arrayNames.find(Ebsd::Mic::name) != arrayNames.end()) {\
+  type* _##name = allocateArray<type>(numElements);\
+  if (NULL != _##name) {\
+  ::memset(_##name, 0, numBytes);\
+  }\
+  set##name##Pointer(_##name);\
+ }
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -81,22 +91,17 @@ void H5MicVolumeReader::initPointers(size_t numElements)
 {
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
-  m_Euler1 = allocateArray<float > (numElements);
-  m_Euler2 = allocateArray<float > (numElements);
-  m_Euler3 = allocateArray<float > (numElements);
-  m_Conf = allocateArray<float > (numElements);
-  m_Phase = allocateArray<int> (numElements);
-  m_X = allocateArray<float > (numElements);
-  m_Y = allocateArray<float > (numElements);
+  bool readAllArrays = getReadAllArrays();
+  std::set<std::string> arrayNames = getArraysToRead();
 
-  ::memset(m_Euler1, 0, numBytes);
-  ::memset(m_Euler2, 0, numBytes);
-  ::memset(m_Euler3, 0, numBytes);
-  ::memset(m_Conf, 0, numBytes);
-  ::memset(m_Phase, 0, numBytes);
-  ::memset(m_X, 0, numBytes);
-  ::memset(m_Y, 0, numBytes);
 
+  H5MICREADER_ALLOCATE_ARRAY(Euler1, float)
+  H5MICREADER_ALLOCATE_ARRAY(Euler2, float)
+  H5MICREADER_ALLOCATE_ARRAY(Euler3, float)
+  H5MICREADER_ALLOCATE_ARRAY(Confidence, float)
+  H5MICREADER_ALLOCATE_ARRAY(Phase, int)
+  H5MICREADER_ALLOCATE_ARRAY(X, float)
+  H5MICREADER_ALLOCATE_ARRAY(Y, float)
 }
 
 // -----------------------------------------------------------------------------
@@ -191,7 +196,7 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
   int index = 0;
   int err = -1;
   // Initialize all the pointers
-    initPointers(xpoints * ypoints * zpoints);
+  initPointers(xpoints * ypoints * zpoints);
 
   int readerIndex;
   int xpointsslice;
@@ -216,7 +221,8 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
     reader->setSampleTransformationAxis(getSampleTransformationAxis());
     reader->setEulerTransformationAngle(getEulerTransformationAngle());
     reader->setEulerTransformationAxis(getEulerTransformationAxis());
-
+    reader->readAllArrays(getReadAllArrays());
+    reader->setArraysToRead(getArraysToRead());
     err = reader->readFile();
     if(err < 0)
     {
@@ -229,8 +235,8 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
     float* euler1Ptr = reader->getEuler1Pointer();
     float* euler2Ptr = reader->getEuler2Pointer();
     float* euler3Ptr = reader->getEuler3Pointer();
-    float* xPtr = reader->getXPosPointer();
-    float* yPtr = reader->getYPosPointer();
+    float* xPtr = reader->getXPointer();
+    float* yPtr = reader->getYPointer();
     float* confPtr = reader->getConfidencePointer();
     int* phasePtr = reader->getPhasePointer();
 
@@ -256,13 +262,13 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
       for (int i = 0; i < xstop; i++)
       {
         index = (zval * xpointstemp * ypointstemp) + ((j + ystartspot) * xpointstemp) + (i + xstartspot);
-        m_Euler1[index] = euler1Ptr[readerIndex];
-        m_Euler2[index] = euler2Ptr[readerIndex];
-        m_Euler3[index] = euler3Ptr[readerIndex];
-        m_X[index] = xPtr[readerIndex];
-        m_Y[index] = yPtr[readerIndex];
-        m_Conf[index] = confPtr[readerIndex];
-        m_Phase[index] = phasePtr[readerIndex]; // Phase
+        if (NULL != euler1Ptr) {m_Euler1[index] = euler1Ptr[readerIndex];}
+        if (NULL != euler2Ptr) {m_Euler2[index] = euler2Ptr[readerIndex];}
+        if (NULL != euler3Ptr) {m_Euler3[index] = euler3Ptr[readerIndex];}
+        if (NULL != xPtr) {m_X[index] = xPtr[readerIndex];}
+        if (NULL != yPtr) {m_Y[index] = yPtr[readerIndex];}
+        if (NULL != confPtr) {m_Conf[index] = confPtr[readerIndex];}
+        if (NULL != phasePtr) {m_Phase[index] = phasePtr[readerIndex];} // Phase
 
         /* For HEDM OIM Files if there is a single phase then the value of the phase
          * data is zero (0). If there are 2 or more phases then the lowest value
@@ -271,7 +277,7 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
          * phase. The next if statement converts all zeros to ones if there is a single
          * phase in the OIM data.
          */
-        if(m_Phase[index] < 1)
+        if(NULL != phasePtr && m_Phase[index] < 1)
         {
           m_Phase[index] = 1;
         }

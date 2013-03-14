@@ -73,9 +73,9 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
     EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
     EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
-    EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
-    EBSD_POINTER_PROPERTY(BandContrast, BC, int)
-    EBSD_POINTER_PROPERTY(BandSlope, BS, int)
+    EBSD_POINTER_PROPERTY(MAD, MAD, float)
+    EBSD_POINTER_PROPERTY(BC, BC, int)
+    EBSD_POINTER_PROPERTY(BS, BS, int)
 
     /**
      * @brief This method does the actual loading of the OIM data from the data

@@ -345,8 +345,8 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   WRITE_Mic_DATA_ARRAY(reader, float, gid, Euler1, Ebsd::Mic::Euler1);
   WRITE_Mic_DATA_ARRAY(reader, float, gid, Euler2, Ebsd::Mic::Euler2);
   WRITE_Mic_DATA_ARRAY(reader, float, gid, Euler3, Ebsd::Mic::Euler3);
-  WRITE_Mic_DATA_ARRAY(reader, float, gid, XPos, Ebsd::Mic::X);
-  WRITE_Mic_DATA_ARRAY(reader, float, gid, YPos, Ebsd::Mic::Y);
+  WRITE_Mic_DATA_ARRAY(reader, float, gid, X, Ebsd::Mic::X);
+  WRITE_Mic_DATA_ARRAY(reader, float, gid, Y, Ebsd::Mic::Y);
   WRITE_Mic_DATA_ARRAY(reader, float, gid, Confidence, Ebsd::Mic::Confidence);
   WRITE_Mic_DATA_ARRAY(reader, int, gid, Phase, Ebsd::Mic::Phase);
   // Close the "Data" group

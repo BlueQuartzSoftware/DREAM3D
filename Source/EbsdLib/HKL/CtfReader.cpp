@@ -196,7 +196,7 @@ Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
@@ -221,7 +221,7 @@ int CtfReader::getTypeSize(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
@@ -245,7 +245,7 @@ DataParser::Pointer CtfReader::getParser(const std::string &fieldName, void* ptr
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}

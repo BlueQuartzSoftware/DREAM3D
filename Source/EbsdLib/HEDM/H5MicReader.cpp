@@ -51,7 +51,8 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5MicReader::H5MicReader() :
-MicReader()
+MicReader(),
+  m_ReadAllArrays(true)
 {
 
 }
@@ -184,9 +185,9 @@ int H5MicReader::readHeader(hid_t parId)
     MicPhase::Pointer m_CurrentPhase = MicPhase::New();
 
     READ_PHASE_HEADER_DATA("H5MicReader", pid, int, Ebsd::Mic::Phase, PhaseIndex, m_CurrentPhase)
-	READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
-	READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::LatticeAngles, LatticeAngles, m_CurrentPhase)
-	READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::BasisAtoms, BasisAtoms, m_CurrentPhase)
+  READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
+  READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::LatticeAngles, LatticeAngles, m_CurrentPhase)
+  READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::BasisAtoms, BasisAtoms, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::Symmetry, Symmetry, m_CurrentPhase)
 
     m_Phases.push_back(m_CurrentPhase);
@@ -200,6 +201,19 @@ int H5MicReader::readHeader(hid_t parId)
   err = H5Gclose(gid);
   return err;
 }
+
+
+#define MIC_READER_ALLOCATE_AND_READ(name, type)\
+  if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Mic::name) != m_ArrayNames.end()) {\
+  type* _##name = allocateArray<type>(totalDataRows);\
+  if (NULL != _##name) {\
+  ::memset(_##name, 0, numBytes);\
+  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::name, _##name);\
+  }\
+  set##name##Pointer(_##name);\
+  }
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -222,14 +236,6 @@ int H5MicReader::readData(hid_t parId)
 
   totalDataRows = xDim*yDim;
 
-  initPointers(totalDataRows);
-  if (NULL == getEuler1Pointer() || NULL == getEuler2Pointer() || NULL == getEuler3Pointer()
-      || NULL == getConfidencePointer() || NULL == getPhasePointer() || getXPosPointer() == NULL || getYPosPointer() == NULL)
-  {
-    return -1;
-  }
-
-
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
@@ -237,16 +243,35 @@ int H5MicReader::readData(hid_t parId)
     return -1;
   }
 
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::Euler1, getEuler1Pointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::Euler2, getEuler2Pointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::Euler3, getEuler3Pointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::Confidence, getConfidencePointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::Phase, getPhasePointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::X, getXPosPointer());
-  err = H5Lite::readPointerDataset(gid, Ebsd::Mic::Y, getYPosPointer());
+  setNumberOfElements(totalDataRows);
+  size_t numBytes = totalDataRows * sizeof(float);
+
+  MIC_READER_ALLOCATE_AND_READ(Euler1, float);
+  MIC_READER_ALLOCATE_AND_READ(Euler2, float);
+  MIC_READER_ALLOCATE_AND_READ(Euler3, float);
+  MIC_READER_ALLOCATE_AND_READ(Confidence, float);
+  MIC_READER_ALLOCATE_AND_READ(Phase, int);
+  MIC_READER_ALLOCATE_AND_READ(X, float);
+  MIC_READER_ALLOCATE_AND_READ(Y, float);
 
   err = H5Gclose(gid);
 
   return err;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5MicReader::setArraysToRead(std::set<std::string> names)
+{
+  m_ArrayNames = names;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5MicReader::readAllArrays(bool b)
+{
+  m_ReadAllArrays = b;
+}

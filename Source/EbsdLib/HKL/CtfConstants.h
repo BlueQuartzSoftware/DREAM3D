@@ -152,15 +152,15 @@ namespace Ctf
   DECLARE_STRING_CONST(Comment)
 
   // These are the names of the Data Columns
-  const std::string Phase("Phase");
-  const std::string X("X");
-  const std::string Y("Y");
-  const std::string Z("Z");
-  DECLARE_STRING_CONST(Bands)
+  DECLARE_STRING_CONST(Phase)
+  DECLARE_STRING_CONST(X)
+  DECLARE_STRING_CONST(Y)
+  DECLARE_STRING_CONST(Z)
+  DECLARE_STRING_CONST(BandCount)
   DECLARE_STRING_CONST(Error)
-  const std::string Euler1("Euler1");
-  const std::string Euler2("Euler2");
-  const std::string Euler3("Euler3");
+  DECLARE_STRING_CONST(Euler1)
+  DECLARE_STRING_CONST(Euler2)
+  DECLARE_STRING_CONST(Euler3)
   DECLARE_STRING_CONST(MAD)
   DECLARE_STRING_CONST(BC) // BC
   DECLARE_STRING_CONST(BS) // BS

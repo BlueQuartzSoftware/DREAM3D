@@ -54,7 +54,8 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5CtfReader::H5CtfReader() :
-CtfReader()
+CtfReader(),
+  m_ReadAllArrays(true)
 {
 }
 
@@ -222,7 +223,6 @@ int H5CtfReader::readHeader(hid_t parId)
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -251,48 +251,54 @@ int H5CtfReader::readData(hid_t parId)
   err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
   for (std::list<std::string>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
   {
-    numType = getPointerType(*iter);
-    if(numType == Ebsd::Int32)
+    if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) == m_ArrayNames.end())
     {
-      int32_t* dataPtr = allocateArray<int32_t>(totalDataRows);
-      if(NULL == dataPtr)
+      numType = getPointerType(*iter);
+      if(numType == Ebsd::Int32)
+      {
+        int32_t* dataPtr = allocateArray<int32_t>(totalDataRows);
+        if(NULL == dataPtr)
+        {
+          BOOST_ASSERT(false);
+        } // We are going to crash here. I would rather crash than have bad data
+        err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
+        setPointerByName(*iter, dataPtr);
+      }
+      else if(numType == Ebsd::Float)
+      {
+        float* dataPtr = allocateArray<float>(totalDataRows);
+        if(NULL == dataPtr)
+        {
+          BOOST_ASSERT(false);
+        } // We are going to crash here. I would rather crash than have bad data
+        err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
+        setPointerByName(*iter, dataPtr);
+      }
+      else
       {
         BOOST_ASSERT(false);
-      } // We are going to crash here. I would rather crash than have bad data
-      err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
-      setPointerByName(*iter, dataPtr);
-    }
-    else if(numType == Ebsd::Float)
-    {
-      float* dataPtr = allocateArray<float>(totalDataRows);
-      if(NULL == dataPtr)
-      {
-        BOOST_ASSERT(false);
-      } // We are going to crash here. I would rather crash than have bad data
-      err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
-      setPointerByName(*iter, dataPtr);
-    }
-    else
-    {
-      BOOST_ASSERT(false);
-      // We are going to crash here because I would rather crash than have bad data
+        // We are going to crash here because I would rather crash than have bad data
+      }
     }
   }
-
-
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Phase, static_cast<int32_t*>(getPointerByName("Phase")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::X, static_cast<float*>(getPointerByName("X")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Y, static_cast<float*>(getPointerByName("Y")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Bands, static_cast<int32_t*>(getPointerByName("Bands")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Error, static_cast<int32_t*>(getPointerByName("Error")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler1, static_cast<float*>(getPointerByName("Euler1")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler2, static_cast<float*>(getPointerByName("Euler2")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::Euler3, static_cast<float*>(getPointerByName("Euler3")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::MAD, static_cast<float*>(getPointerByName("MAD")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BC, static_cast<int32_t*>(getPointerByName("BC")));
-//  err = H5Lite::readPointerDataset(gid, Ebsd::Ctf::BS, static_cast<int32_t*>(getPointerByName("BS")));
 
   err = H5Gclose(gid);
 
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfReader::setArraysToRead(std::set<std::string> names)
+{
+  m_ArrayNames = names;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void H5CtfReader::readAllArrays(bool b)
+{
+  m_ReadAllArrays = b;
 }
