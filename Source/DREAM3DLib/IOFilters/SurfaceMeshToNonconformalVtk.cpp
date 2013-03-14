@@ -125,11 +125,6 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
     }
-    if (sm->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels).get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangle Label array", getErrorCondition());
-    }
   }
 }
 
@@ -786,63 +781,65 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
   // Write the triangle region ids
   StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
-  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
-
-  int triangleCount = triangles.GetNumberOfTuples();
-  int swapped;
-
-  // This is like a "section header"
-  fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %d\n", triangleCount * 2);
-
-  int32_t totalCellsWritten = 0;
-
-  // Write the GrainId Data to the file
-  fprintf(vtkFile, "SCALARS GrainID int 1\n");
-  fprintf(vtkFile, "LOOKUP_TABLE default\n");
-
-  // Loop over all the grains
-  for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+  if (NULL != flPtr.get())
   {
-    int32_t gid = (*grainIter).first; // The current Grain Id
-    size_t size = (*grainIter).second; // The number of triangles for this grain id
-    std::vector<int32_t> buffer(size, 0);
-    totalCellsWritten += size;
+    DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+    int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-    // Endian Swap our current grain Id since we are going to write it a bunch of times.
-    swapped = gid;
-    MXA::Endian::FromSystemToBig::convert<int>(swapped);
-    size_t index = 0;
+    int triangleCount = triangles.GetNumberOfTuples();
+    int swapped;
 
-    // Loop over all the triangles looking for the current grain id
-    // this is probably sub-optimal as if we have 1000 grains we are going to loop 1000 times but this will use the
-    // least amount of memory. We could run a filter to group the triangles by grain but then we would need an
-    // additional amount of memory equal to 3X the memory used for the triangle list because every triangle will be listed
-    // twice. We could get some slightly better performance if we buffered 4K worth of data then wrote out that data
-    // in one chunk versus what we are doing here.
-    for (int j = 0; j < triangleCount; j++)
+    // This is like a "section header"
+    fprintf(vtkFile, "\n");
+    fprintf(vtkFile, "CELL_DATA %d\n", triangleCount * 2);
+
+    int32_t totalCellsWritten = 0;
+
+    // Write the GrainId Data to the file
+    fprintf(vtkFile, "SCALARS GrainID int 1\n");
+    fprintf(vtkFile, "LOOKUP_TABLE default\n");
+
+    // Loop over all the grains
+    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
-      if (faceLabels[j*2] == gid || faceLabels[j*2+1] == gid)
+      int32_t gid = (*grainIter).first; // The current Grain Id
+      size_t size = (*grainIter).second; // The number of triangles for this grain id
+      std::vector<int32_t> buffer(size, 0);
+      totalCellsWritten += size;
+
+      // Endian Swap our current grain Id since we are going to write it a bunch of times.
+      swapped = gid;
+      MXA::Endian::FromSystemToBig::convert<int>(swapped);
+      size_t index = 0;
+
+      // Loop over all the triangles looking for the current grain id
+      // this is probably sub-optimal as if we have 1000 grains we are going to loop 1000 times but this will use the
+      // least amount of memory. We could run a filter to group the triangles by grain but then we would need an
+      // additional amount of memory equal to 3X the memory used for the triangle list because every triangle will be listed
+      // twice. We could get some slightly better performance if we buffered 4K worth of data then wrote out that data
+      // in one chunk versus what we are doing here.
+      for (int j = 0; j < triangleCount; j++)
       {
-        if(m_WriteBinaryFile == true)
+        if (faceLabels[j*2] == gid || faceLabels[j*2+1] == gid)
         {
-          buffer[index]=swapped;
-          ++index;
-        }
-        else
-        {
-          fprintf(vtkFile, "%d\n", gid);
+          if(m_WriteBinaryFile == true)
+          {
+            buffer[index]=swapped;
+            ++index;
+          }
+          else
+          {
+            fprintf(vtkFile, "%d\n", gid);
+          }
         }
       }
-    }
-    // Write the Buffer
-    if(m_WriteBinaryFile == true)
-    {
-      fwrite(&(buffer.front()), sizeof(int32_t), size, vtkFile);
+      // Write the Buffer
+      if(m_WriteBinaryFile == true)
+      {
+        fwrite(&(buffer.front()), sizeof(int32_t), size, vtkFile);
+      }
     }
   }
-
 #if 0
   // Write the Original Triangle ID Data to the file
   fprintf(vtkFile, "\n");
