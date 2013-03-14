@@ -92,6 +92,12 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
 	DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
 	DREAM3D_INSTANCE_PROPERTY(int, SizeDistributionFitType)
+	DREAM3D_INSTANCE_PROPERTY(bool, AspectRatioDistribution)
+	DREAM3D_INSTANCE_PROPERTY(int, AspectRatioDistributionFitType)
+	DREAM3D_INSTANCE_PROPERTY(bool, Omega3Distribution)
+	DREAM3D_INSTANCE_PROPERTY(int, Omega3DistributionFitType)
+	DREAM3D_INSTANCE_PROPERTY(bool, NeighborhoodDistribution)
+	DREAM3D_INSTANCE_PROPERTY(int, NeighborhoodDistributionFitType)
 	
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
@@ -106,7 +112,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
 	void gatherSizeStats();
 	void gatherAspectRatioStats();
-	void gatherOmegaStats();
+	void gatherOmega3Stats();
 	void gatherNeighborhoodStats();
 	void gatherMDFStats();
 	void gatherODFStats();

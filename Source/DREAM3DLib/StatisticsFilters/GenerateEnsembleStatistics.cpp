@@ -124,29 +124,36 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   //  if(preflight == false) find_surfacefields->execute();
   //}
   //GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
-
-
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
-  if(err == -303)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
-  
-  //GET_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, -304, int32_t, Int32ArrayType, fields, 1)
   //GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -305, float, FloatArrayType, fields, 3)
-  //GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
-  //GET_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, -307, float, FloatArrayType, fields, 2)
 
-  if(m_SizeDistribution == true)
+  if(m_SizeDistribution == true || m_Omega3Distribution == true || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true)
   {
+    TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
+    if(err == -303)
+    {
+      setErrorCondition(0);
+      FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
+      find_grainphases->setObservers(this->getObservers());
+      find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
+      if(preflight == true) find_grainphases->preflight();
+      if(preflight == false) find_grainphases->execute();
+    }
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
 	GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  }
+
+  if(m_NeighborhoodDistribution == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  }
+  if(m_AspectRatioDistribution == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, -307, float, FloatArrayType, fields, 2)
+  }
+  if(m_Omega3Distribution == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -194,6 +201,18 @@ void GenerateEnsembleStatistics::execute()
   {
 	  gatherSizeStats();
   }
+  if(m_AspectRatioDistribution == true)
+  {
+	  gatherAspectRatioStats();
+  }
+  if(m_Omega3Distribution == true)
+  {
+	  gatherOmega3Stats();
+  }
+  if(m_NeighborhoodDistribution == true)
+  {
+	  gatherNeighborhoodStats();
+  }
 
  notifyStatusMessage("GenerateEnsembleStatistics Completed");
 }
@@ -205,8 +224,6 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
-  float radcubed;
-  float diameter;
   float maxdiam;
   float mindiam;
   float totalUnbiasedVolume = 0.0;
@@ -279,4 +296,252 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 		  tp->setBinNumbers(binnumbers);
 	  }
   }
+}
+void GenerateEnsembleStatistics::gatherAspectRatioStats()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  StatsData::Pointer stats_data = StatsData::New();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  size_t bin;
+
+  std::vector<VectorOfFloatArray> boveras;
+  std::vector<VectorOfFloatArray> coveras;
+  std::vector<std::vector<std::vector<float> > > bvalues;
+  std::vector<std::vector<std::vector<float> > > cvalues;
+  std::vector<float> mindiams;
+  std::vector<float> binsteps;
+  size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  boveras.resize(numensembles);
+  coveras.resize(numensembles);
+  bvalues.resize(numensembles);
+  cvalues.resize(numensembles);
+  mindiams.resize(numensembles);
+  binsteps.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  boveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->GetSize());
+		  coveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->GetSize());
+		  bvalues[i].resize(pp->getBinNumbers()->GetSize());
+		  cvalues[i].resize(pp->getBinNumbers()->GetSize());
+		  mindiams[i] = pp->getMinGrainDiameter();
+		  binsteps[i] = pp->getBinStepSize();
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  boveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->GetSize());
+		  coveras[i] = pp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, pp->getBinNumbers()->GetSize());
+		  bvalues[i].resize(pp->getBinNumbers()->GetSize());
+		  cvalues[i].resize(pp->getBinNumbers()->GetSize());
+		  mindiams[i] = pp->getMinGrainDiameter();
+		  binsteps[i] = pp->getBinStepSize();
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  boveras[i] = tp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, tp->getBinNumbers()->GetSize());
+		  coveras[i] = tp->CreateCorrelatedDistributionArrays(m_AspectRatioDistributionFitType, tp->getBinNumbers()->GetSize());
+		  bvalues[i].resize(tp->getBinNumbers()->GetSize());
+		  cvalues[i].resize(tp->getBinNumbers()->GetSize());
+		  mindiams[i] = tp->getMinGrainDiameter();
+		  binsteps[i] = tp->getBinStepSize();
+	  }
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+		bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
+		cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+		  m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+		  pp->setGrainSize_BOverA(boveras[i]);
+		  pp->setGrainSize_COverA(coveras[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+		  m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+		  pp->setGrainSize_BOverA(boveras[i]);
+		  pp->setGrainSize_COverA(coveras[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(bvalues[i], boveras[i]);
+		  m_DistributionAnalysis[m_AspectRatioDistributionFitType]->calculateCorrelatedParameters(cvalues[i], coveras[i]);
+		  tp->setGrainSize_BOverA(boveras[i]);
+		  tp->setGrainSize_COverA(coveras[i]);
+	  }
+  }
+}
+void GenerateEnsembleStatistics::gatherOmega3Stats()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  int64_t totalPoints = m->getTotalPoints();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  size_t bin;
+
+  std::vector<VectorOfFloatArray> omega3s;
+  std::vector<std::vector<std::vector<float> > > values;
+  std::vector<float> mindiams;
+  std::vector<float> binsteps;
+  size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  omega3s.resize(numensembles);
+  values.resize(numensembles);
+  mindiams.resize(numensembles);
+  binsteps.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->GetSize());
+		  values[i].resize(pp->getBinNumbers()->GetSize());
+		  mindiams[i] = pp->getMinGrainDiameter();
+		  binsteps[i] = pp->getBinStepSize();
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  omega3s[i] = pp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, pp->getBinNumbers()->GetSize());
+		  values[i].resize(pp->getBinNumbers()->GetSize());
+		  mindiams[i] = pp->getMinGrainDiameter();
+		  binsteps[i] = pp->getBinStepSize();
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  omega3s[i] = tp->CreateCorrelatedDistributionArrays(m_Omega3DistributionFitType, tp->getBinNumbers()->GetSize());
+		  values[i].resize(tp->getBinNumbers()->GetSize());
+		  mindiams[i] = tp->getMinGrainDiameter();
+		  binsteps[i] = tp->getBinStepSize();
+	  }
+  }
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	if(m_BiasedFields[i] == false)
+	{
+		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+		values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
+	}
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
+		  pp->setGrainSize_Omegas(omega3s[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
+		  pp->setGrainSize_Omegas(omega3s[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_Omega3DistributionFitType]->calculateCorrelatedParameters(values[i], omega3s[i]);
+		  tp->setGrainSize_Omegas(omega3s[i]);
+	  }
+  }
+}
+void GenerateEnsembleStatistics::gatherNeighborhoodStats()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  size_t bin;
+  std::vector<VectorOfFloatArray> neighborhoods;
+  std::vector<std::vector<std::vector<float > > > values;
+  std::vector<float> mindiams;
+  std::vector<float> binsteps;
+  size_t numgrains = m->getNumFieldTuples();
+  size_t numensembles = m->getNumEnsembleTuples();
+
+  neighborhoods.resize(numensembles);
+  values.resize(numensembles);
+  mindiams.resize(numensembles);
+  binsteps.resize(numensembles);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->GetSize());
+		  values[i].resize(pp->getBinNumbers()->GetSize());
+		  mindiams[i] = pp->getMinGrainDiameter();
+		  binsteps[i] = pp->getBinStepSize();
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  neighborhoods[i] = pp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, pp->getBinNumbers()->GetSize());
+		  values[i].resize(pp->getBinNumbers()->GetSize());
+		  mindiams[i] = pp->getMinGrainDiameter();
+		  binsteps[i] = pp->getBinStepSize();
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  neighborhoods[i] = tp->CreateCorrelatedDistributionArrays(m_NeighborhoodDistributionFitType, tp->getBinNumbers()->GetSize());
+		  values[i].resize(tp->getBinNumbers()->GetSize());
+		  mindiams[i] = tp->getMinGrainDiameter();
+		  binsteps[i] = tp->getBinStepSize();
+	  }
+  }
+
+  for (size_t i = 1; i < numgrains; i++)
+  {
+	  if(m_BiasedFields[i] == false)
+	  {
+		bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+		values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
+	  }
+  }
+  for (size_t i = 1; i < numensembles; i++)
+  {
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+	  {
+		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
+		  pp->setGrainSize_Neighbors(neighborhoods[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+	  {
+		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
+		  pp->setGrainSize_Neighbors(neighborhoods[i]);
+	  }
+	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+	  {
+		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+		  m_DistributionAnalysis[m_NeighborhoodDistributionFitType]->calculateCorrelatedParameters(values[i], neighborhoods[i]);
+		  tp->setGrainSize_Neighbors(neighborhoods[i]);
+	  }
+  }
+
 }

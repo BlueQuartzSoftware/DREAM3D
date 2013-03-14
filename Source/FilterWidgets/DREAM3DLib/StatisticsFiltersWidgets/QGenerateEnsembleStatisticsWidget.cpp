@@ -79,6 +79,12 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
 
   filter->setSizeDistribution(m_SizeDistributionWidget->isChecked());
   filter->setSizeDistributionFitType(m_SizeDistributionWidget->getFitType());
+  filter->setAspectRatioDistribution(m_AspectRatioDistributionWidget->isChecked());
+  filter->setAspectRatioDistributionFitType(m_AspectRatioDistributionWidget->getFitType());
+  filter->setOmega3Distribution(m_Omega3DistributionWidget->isChecked());
+  filter->setOmega3DistributionFitType(m_Omega3DistributionWidget->getFitType());
+  filter->setNeighborhoodDistribution(m_NeighborhoodDistributionWidget->isChecked());
+  filter->setNeighborhoodDistributionFitType(m_NeighborhoodDistributionWidget->getFitType());
 
   return filter;
 }
@@ -181,6 +187,15 @@ void QGenerateEnsembleStatisticsWidget::setupGui()
   m_SizeDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Size Distribution"), distributionTypeFrame);
   m_SizeDistributionWidget->setStyleSheet("");
   distributionTypeLayout->addWidget(m_SizeDistributionWidget);
+  m_AspectRatioDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Aspect Ratio Distribution"), distributionTypeFrame);
+  m_AspectRatioDistributionWidget->setStyleSheet("");
+  distributionTypeLayout->addWidget(m_AspectRatioDistributionWidget);
+  m_Omega3DistributionWidget = new DistributionTypeWidget( QString::fromAscii("Omega3 Distribution"), distributionTypeFrame);
+  m_Omega3DistributionWidget->setStyleSheet("");
+  distributionTypeLayout->addWidget(m_Omega3DistributionWidget);
+  m_NeighborhoodDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Neighborhood Distribution"), distributionTypeFrame);
+  m_NeighborhoodDistributionWidget->setStyleSheet("");
+  distributionTypeLayout->addWidget(m_NeighborhoodDistributionWidget);
 
 
 }
