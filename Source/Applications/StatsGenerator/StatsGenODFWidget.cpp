@@ -123,17 +123,25 @@ void StatsGenODFWidget::extractStatsData(VoxelDataContainer::Pointer m, int inde
     QVector<float> e1(static_cast<int>(arrays[0]->GetNumberOfTuples()));
     ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
-    QVector<float> e2(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-    ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
+    QVector<float> e2(static_cast<int>(arrays[1]->GetNumberOfTuples()));
+    ::memcpy( &(e2.front()), arrays[1]->GetVoidPointer(0), sizeof(float)*e2.size() );
 
-    QVector<float> e3(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-    ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
+    QVector<float> e3(static_cast<int>(arrays[2]->GetNumberOfTuples()));
+    ::memcpy( &(e3.front()), arrays[2]->GetVoidPointer(0), sizeof(float)*e3.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> weights(static_cast<int>(arrays[3]->GetNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[3]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
-    QVector<float> sigmas(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-    ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+    QVector<float> sigmas(static_cast<int>(arrays[4]->GetNumberOfTuples()));
+    ::memcpy( &(sigmas.front()), arrays[4]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+
+    // Convert from Radians to Degrees for the Euler Angles
+    for(int i = 0; i < e1.size(); ++i)
+    {
+      e1[i] = e1[i] * 180.0f/M_PI;
+      e2[i] = e2[i] * 180.0f/M_PI;
+      e3[i] = e3[i] * 180.0f/M_PI;
+    }
 
     if(e1.size() > 0)
     {

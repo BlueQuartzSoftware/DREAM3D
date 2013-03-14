@@ -578,9 +578,9 @@ void StatsGeneratorUI::openRecentFile()
 void StatsGeneratorUI::on_actionSaveAs_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save HDF5 Statistics File"),
+  QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
     proposedFile,
-    tr("HDF5 Files (*.h5)") );
+    tr("DREAM3D Files (*.dream3d)") );
   if ( true == h5file.isEmpty() ){ return;  }
   m_FilePath = h5file;
   QFileInfo fi (m_FilePath);
@@ -600,7 +600,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   if (m_FileSelected == false)
   {
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
-    QString h5file = QFileDialog::getSaveFileName(this, tr("Save Statistics File"),
+    QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
                                                   m_FilePath,
                                                    tr("DREAM3D Files (*.dream3d)") );
     if ( true == h5file.isEmpty() ){ return;  }
@@ -714,8 +714,11 @@ void StatsGeneratorUI::on_actionNew_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionOpen_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5stats";
-  QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d *.h5stats *.h5)"));
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
+  QString h5file = QFileDialog::getOpenFileName(this,
+                  tr("Open Statistics File"),
+                  proposedFile,
+                  tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == h5file.isEmpty())
   {
     return;
