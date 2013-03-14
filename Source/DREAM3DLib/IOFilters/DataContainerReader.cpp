@@ -178,7 +178,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       voxelReader->preflight();
       if (voxelReader->getErrorCondition() < 0)
       {
-        setReadSurfaceMeshData(false);
+        setReadVoxelData(false);
         setErrorCondition(voxelReader->getErrorCondition());
         addErrorMessage(getHumanLabel(), "The voxel data was not available in the data file.", getErrorCondition());
       }
@@ -216,7 +216,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
-        setReadSurfaceMeshData(false);
+        setReadSolidMeshData(false);
         setErrorCondition(smReader->getErrorCondition());
         addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
       }
@@ -354,6 +354,7 @@ void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string>
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
   m_ReadAllArrays = false;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

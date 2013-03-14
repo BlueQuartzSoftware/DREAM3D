@@ -228,7 +228,7 @@ void Hex2SqrConverter::execute()
             float* iq = reader.getImageQualityPointer();
             float* semsig = reader.getSEMSignalPointer();
             float* fit = reader.getFitPointer();
-            int* phase = reader.getPhasePointer();
+            int* phase = reader.getPhaseDataPointer();
             while (!in.eof())
             {
                 std::string line;

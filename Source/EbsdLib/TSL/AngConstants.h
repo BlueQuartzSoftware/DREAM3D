@@ -77,12 +77,14 @@
 #define ANG_SQUARE_GRID       "SqrGrid"
 #define ANG_HEX_GRID          "HexGrid"
 
+
 #define ANG_PHI1 "Phi1"
 #define ANG_PHI "Phi"
 #define ANG_PHI2 "Phi2"
 #define ANG_IMAGE_QUALITY "Image Quality"
 #define ANG_CONFIDENCE_INDEX "Confidence Index"
 #define ANG_PHASE_DATA "PhaseData"
+#define ANG_PHASES "Phases"
 #define ANG_X_POSITION "X Position"
 #define ANG_Y_POSITION "Y Position"
 #define ANG_SEM_SIGNAL "SEM Signal"
@@ -90,6 +92,7 @@
 #define ANG_Z_STEP "ZStep"
 #define ANG_Z_POS "ZPos"
 #define ANG_Z_MAX "ZMax"
+
 
 
 namespace Ebsd {
@@ -131,7 +134,6 @@ namespace Ebsd {
    const std::string Operator(ANG_OPERATOR);
    const std::string SampleId(ANG_SAMPLE_ID);
    const std::string ScanId(ANG_SCAN_ID);
-
    const std::string Phi1(ANG_PHI1);
    const std::string Phi(ANG_PHI);
    const std::string Phi2(ANG_PHI2);

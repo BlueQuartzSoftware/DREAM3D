@@ -381,3 +381,27 @@ void ArraySelectionWidget::readSelections(QSettings &prefs, QString name, QStrin
   setSelections(widget, selections);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::setVoxelDataEnabled(bool b)
+{
+  voxel_data->setEnabled(b);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::setSurfaceMeshEnabled(bool b)
+{
+  surfacemesh_data->setEnabled(b);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::setSolidMeshEnabled(bool b)
+{
+  solidmesh_data->setEnabled(b);
+}

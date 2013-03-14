@@ -187,11 +187,11 @@ void FindMisorientations::execute()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
   // And we do the same for the Misorientation list
-  NeighborList<float>& neighbormisorientationlist = *m_MisorientationList;
+  //NeighborList<float>& neighbormisorientationlist = *m_MisorientationList;
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
   float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
-  int mbin = 0;
+ // int mbin = 0;
   float w;
   float q1[5];
   float q2[5];
@@ -199,38 +199,38 @@ void FindMisorientations::execute()
   unsigned int phase1, phase2;
 
   size_t nname;
-  float nsa;
+ // float nsa;
   misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-		q1[0] = m_AvgQuats[5*i];
-		q1[1] = m_AvgQuats[5*i+1];
-		q1[2] = m_AvgQuats[5*i+2];
-		q1[3] = m_AvgQuats[5*i+3];
-		q1[4] = m_AvgQuats[5*i+4];
-		phase1 = m_CrystalStructures[m_FieldPhases[i]];
-		misorientationlists[i].resize(neighborlist[i].size(), -1.0);
-		for (size_t j = 0; j < neighborlist[i].size(); j++)
-		{
-		  w = 10000.0;
-		  nname = neighborlist[i][j];
-		  q2[0] = m_AvgQuats[5*nname];
-		  q2[1] = m_AvgQuats[5*nname+1];
-		  q2[2] = m_AvgQuats[5*nname+2];
-		  q2[3] = m_AvgQuats[5*nname+3];
-		  q2[4] = m_AvgQuats[5*nname+4];
-		  phase2 = m_CrystalStructures[m_FieldPhases[nname]];
-		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-		  if (phase1 == phase2)
-		  {
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-			misorientationlists[i][j] = w;
-		  }
-		  if (phase1 != phase2)
-		  {
-			misorientationlists[i][j] = -100;
-		  }
-		}
+    q1[0] = m_AvgQuats[5*i];
+    q1[1] = m_AvgQuats[5*i+1];
+    q1[2] = m_AvgQuats[5*i+2];
+    q1[3] = m_AvgQuats[5*i+3];
+    q1[4] = m_AvgQuats[5*i+4];
+    phase1 = m_CrystalStructures[m_FieldPhases[i]];
+    misorientationlists[i].resize(neighborlist[i].size(), -1.0);
+    for (size_t j = 0; j < neighborlist[i].size(); j++)
+    {
+      w = 10000.0;
+      nname = neighborlist[i][j];
+      q2[0] = m_AvgQuats[5*nname];
+      q2[1] = m_AvgQuats[5*nname+1];
+      q2[2] = m_AvgQuats[5*nname+2];
+      q2[3] = m_AvgQuats[5*nname+3];
+      q2[4] = m_AvgQuats[5*nname+4];
+      phase2 = m_CrystalStructures[m_FieldPhases[nname]];
+      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+      if (phase1 == phase2)
+      {
+      OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+      misorientationlists[i][j] = w;
+      }
+      if (phase1 != phase2)
+      {
+      misorientationlists[i][j] = -100;
+      }
+    }
   }
 
   // We do this to create new set of MisorientationList objects
