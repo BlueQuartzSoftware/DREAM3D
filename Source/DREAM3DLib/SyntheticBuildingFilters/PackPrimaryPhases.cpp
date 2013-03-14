@@ -298,6 +298,10 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(m_OrthoOps.get());
 
+
+  m_HalfPackingRes[0] = m_HalfPackingRes[1] = m_HalfPackingRes[2] = 1.0f;
+  m_OneOverHalfPackingRes[0] = m_OneOverHalfPackingRes[1] = m_OneOverHalfPackingRes[2] = 1.0f;
+
   Seed = MXA::getMilliSeconds();
   setupFilterParameters();
 }
@@ -352,25 +356,25 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
-      //Field Data
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  //Field Data
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
-      //Ensemble Data
-      typedef DataArray<unsigned int> PhaseTypeArrayType;
+  //Ensemble Data
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
-      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss.str("");
@@ -500,7 +504,10 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessage("Packing Grains - Initializing Volume");
   // this initializes the arrays to hold the details of the locations of all of the grains during packing
-  initialize_packinggrid();
+  Int32ArrayType::Pointer grainOwnersPtr = initialize_packinggrid();
+  // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method
+  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+  size_t grainOwnersIdx = 0;
 
   // initialize the sim and goal size distributions for the primary phases
   grainsizedist.resize(primaryphases.size());
@@ -575,7 +582,10 @@ void PackPrimaryPhases::execute()
         std::stringstream ss;
         ss << "Packing Grains - Generating Grain #" << gid;
         notifyStatusMessage(ss.str());
-
+//FIXME: Optimize this section
+/* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
+/* We should estimate the number of grains first, allocate that many, then check to see
+ * if we need to reallocate for each added grain */
         m->resizeFieldDataArrays(gid + 1);
         dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
         m_Active[gid] = true;
@@ -622,7 +632,10 @@ void PackPrimaryPhases::execute()
           std::stringstream ss;
           ss << "Packing Grains - Generating Grain #" << gid;
           notifyStatusMessage(ss.str());
-
+//FIXME: Optimize this section
+/* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
+/* We should estimate the number of grains first, allocate that many, then check to see
+ * if we need to reallocate for each added grain */
           m->resizeFieldDataArrays(gid + 1);
           dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
           m_Active[gid] = true;
@@ -645,7 +658,7 @@ void PackPrimaryPhases::execute()
     setErrorCondition(-1);
     return;
   }
-  notifyStatusMessage("Packing Grains - Grain Generation Complete");
+  notifyStatusMessage("Packing Grains - Initializing Neighbor Distributions");
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -732,8 +745,8 @@ void PackPrimaryPhases::execute()
     m_Centroids[3 * i] = xc;
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
-  insert_grain(i);
-    fillingerror = check_fillingerror(i, -1000);
+    insert_grain(i);
+    fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
     for (int iter = 0; iter < 250; iter++)
     {
       xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
@@ -743,36 +756,49 @@ void PackPrimaryPhases::execute()
       oldyc = m_Centroids[3 * i + 1];
       oldzc = m_Centroids[3 * i + 2];
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, i);
+      fillingerror = check_fillingerror(-1000, i, grainOwnersPtr);
       move_grain(i, xc, yc, zc);
-      fillingerror = check_fillingerror(i, -1000);
+      fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
       if(fillingerror > oldfillingerror)
       {
-        fillingerror = check_fillingerror(-1000, i);
+        fillingerror = check_fillingerror(-1000, i, grainOwnersPtr);
         move_grain(i, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(i, -1000);
+        fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
       }
     }
   }
 
-  notifyStatusMessage("Packing Grains - Initial Grain Placement Complete");
-
-  // determine neighborhoods and initial neighbor distribution errors
-  for (size_t i = firstPrimaryField; i < numgrains; i++)
-  {
-    determine_neighbors(i, 1);
-  }
-  oldneighborhooderror = check_neighborhooderror(-1000, -1000);
-  // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+  notifyStatusMessage("Packing Grains - Determining Neighbors");
   progGrain = 0;
-  progGrainInc = totalAdjustments * .01;
+  progGrainInc = numgrains * .01;
   uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
 
+  // determine neighborhoods and initial neighbor distribution errors
+  for (size_t i = firstPrimaryField; i < numgrains; i++)
+  {
+    currentMillis = MXA::getMilliSeconds();
+    if (currentMillis - millis > 1000)
+    {
+      ss.str("");
+      ss << "Packing Grains - Determining Neighbors " << i << "/" << numgrains;
+      timeDiff = ((float)i / (float)(currentMillis - startMillis));
+      estimatedTime = (float)(numgrains - i) / timeDiff;
+      ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      notifyStatusMessage(ss.str());
+      millis = MXA::getMilliSeconds();
+    }
+    determine_neighbors(i, 1);
+  }
+  oldneighborhooderror = check_neighborhooderror(-1000, -1000);
+  // begin swaping/moving/adding/removing grains to try to improve packing
+  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+
+  millis = MXA::getMilliSeconds();
+  startMillis = millis;
   bool good;
   int count, column, row, plane;
   float xshift, yshift, zshift;
@@ -813,61 +839,64 @@ void PackPrimaryPhases::execute()
     if(option == 0)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-    good = false;
-    count = 0;
-    while(good == false && count < (numgrains-firstPrimaryField))
-    {
-      xc = m_Centroids[3*randomgrain];
-      yc = m_Centroids[3*randomgrain+1];
-      zc = m_Centroids[3*randomgrain+2];
-      column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-      row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-      plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
-      if(grainowners[column][row][plane] > 1) good = true;
-      else randomgrain++;
-      if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-      count++;
-    }
+      good = false;
+      count = 0;
+      while(good == false && count < (numgrains-firstPrimaryField))
+      {
+        xc = m_Centroids[3*randomgrain];
+        yc = m_Centroids[3*randomgrain+1];
+        zc = m_Centroids[3*randomgrain+2];
+        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
+        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
+        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) good = true;
+        else randomgrain++;
+        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+        count++;
+      }
       Seed++;
 
-    good = false;
-    count = 0;
-    xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
-    yc = static_cast<float>(rg.genrand_res53() * (dims[1] * yRes));
-    zc = static_cast<float>(rg.genrand_res53() * (dims[2] * zRes));
-    column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-    row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-    plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
-    while(good == false && count < packingtotalpoints)
-    {
-      if(grainowners[column][row][plane] > 1) good = true;
-      else column++;
-      if(column >= packingxpoints)
+      good = false;
+      count = 0;
+      xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
+      yc = static_cast<float>(rg.genrand_res53() * (dims[1] * yRes));
+      zc = static_cast<float>(rg.genrand_res53() * (dims[2] * zRes));
+      column = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
+      row = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
+      plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+
+      while(good == false && count < m_TotalPackingPoints)
       {
-      column = 0;
-      row++;
-      if(row >= packingypoints)
-      {
-        row = 0;
-        plane++;
-        if(plane >= packingzpoints)
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) good = true;
+        else column++;
+        if(column >= m_PackingPoints[0])
         {
-          plane = 0;
+          column = 0;
+          row++;
+          if(row >= m_PackingPoints[1])
+          {
+            row = 0;
+            plane++;
+            if(plane >= m_PackingPoints[2])
+            {
+              plane = 0;
+            }
+          }
         }
+        count++;
       }
-      }
-      count++;
-    }
-    xc = static_cast<float>((column*packingresx) + (packingresx/2.0));
-    yc = static_cast<float>((row*packingresy) + (packingresy/2.0));
-    zc = static_cast<float>((plane*packingresz) + (packingresz/2.0));
+      xc = static_cast<float>((column*m_PackingRes[0]) + (m_PackingRes[0]/2.0));
+      yc = static_cast<float>((row*m_PackingRes[1]) + (m_PackingRes[1]/2.0));
+      zc = static_cast<float>((plane*m_PackingRes[2]) + (m_PackingRes[2]/2.0));
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain)  );
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
       move_grain(randomgrain, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
+      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
       if(fillingerror <= oldfillingerror)
       {
@@ -876,47 +905,48 @@ void PackPrimaryPhases::execute()
       }
       else if(fillingerror > oldfillingerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
+        fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
         move_grain(randomgrain, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
+        fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
       }
     }
     // NUDGE - this option moves one grain to a spot close to its current centroid
     if(option == 1)
     {
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
-    good = false;
-    count = 0;
-    while(good == false && count < (numgrains-firstPrimaryField))
-    {
-      xc = m_Centroids[3*randomgrain];
-      yc = m_Centroids[3*randomgrain+1];
-      zc = m_Centroids[3*randomgrain+2];
-      column = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-      row = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-      plane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
-      if(grainowners[column][row][plane] > 1) good = true;
-      else randomgrain++;
-      if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-      count++;
-    }
+      good = false;
+      count = 0;
+      while(good == false && count < (numgrains-firstPrimaryField))
+      {
+        xc = m_Centroids[3*randomgrain];
+        yc = m_Centroids[3*randomgrain+1];
+        zc = m_Centroids[3*randomgrain+2];
+        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
+        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
+        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) good = true;
+        else randomgrain++;
+        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+        count++;
+      }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
-      xshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresx)) );
-      yshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresy)) );
-      zshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * packingresz)) );
-    if((oldxc+xshift) < sizex && (oldxc+xshift) > 0) xc = oldxc + xshift;
-    else xc = oldxc;
-    if((oldyc+yshift) < sizey && (oldyc+yshift) > 0) yc = oldyc + yshift;
-    else yc = oldyc;
-    if((oldzc+zshift) < sizez && (oldzc+zshift) > 0) zc = oldzc + zshift;
-    else zc = oldzc;
+      xshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])) );
+      yshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])) );
+      zshift = static_cast<float>(((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])) );
+      if((oldxc+xshift) < sizex && (oldxc+xshift) > 0) xc = oldxc + xshift;
+      else xc = oldxc;
+      if((oldyc+yshift) < sizey && (oldyc+yshift) > 0) yc = oldyc + yshift;
+      else yc = oldyc;
+      if((oldzc+zshift) < sizez && (oldzc+zshift) > 0) zc = oldzc + zshift;
+      else zc = oldzc;
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
       move_grain(randomgrain, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
+      fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
       currentneighborhooderror = check_neighborhooderror(-1000, randomgrain);
       //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       //      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
@@ -928,9 +958,9 @@ void PackPrimaryPhases::execute()
       //      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
       else if(fillingerror > oldfillingerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain));
+        fillingerror = check_fillingerror(-1000, static_cast<int>(randomgrain), grainOwnersPtr);
         move_grain(randomgrain, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000);
+        fillingerror = check_fillingerror(static_cast<int>(randomgrain), -1000, grainOwnersPtr);
       }
     }
   }
@@ -939,7 +969,7 @@ void PackPrimaryPhases::execute()
 
   if(m_VtkOutputFile.empty() == false)
   {
-    err = writeVtkFile();
+    err = writeVtkFile(grainOwnersPtr->GetPointer(0));
     if(err < 0)
     {
       return;
@@ -955,7 +985,7 @@ void PackPrimaryPhases::execute()
   if (getCancel() == true) { return; }
 
   notifyStatusMessage("Packing Grains - Cleaning Up Volume");
-//  cleanup_grains();
+  //  cleanup_grains();
   if (getCancel() == true) { return; }
 
   notifyStatusMessage("Packing Grains - Renumbering Grains");
@@ -978,9 +1008,9 @@ void PackPrimaryPhases::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PackPrimaryPhases::writeVtkFile()
+int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners)
 {
-  //  ofstream outFile;
+  size_t grainOwnersIdx = 0;
   std::ofstream outFile;
   outFile.open(m_VtkOutputFile.c_str(), std::ios_base::binary);
   if(outFile.is_open() == false)
@@ -995,21 +1025,22 @@ int PackPrimaryPhases::writeVtkFile()
   outFile << "DREAM.3D Generated from PackPrimaryPhases Filter" << std::endl;
   outFile << "ASCII" << std::endl;
   outFile << "DATASET STRUCTURED_POINTS" << std::endl;
-  outFile << "DIMENSIONS " << packingxpoints << " " << packingypoints << " " << packingzpoints << std::endl;
+  outFile << "DIMENSIONS " << m_PackingPoints[0] << " " << m_PackingPoints[1] << " " << m_PackingPoints[2] << std::endl;
   outFile << "ORIGIN 0.0 0.0 0.0" << std::endl;
-  outFile << "SPACING " << packingresx << " " << packingresy << " " << packingresz << std::endl;
-  outFile << "POINT_DATA " << packingxpoints * packingypoints * packingzpoints << std::endl;
-  outFile << std::endl;
-  outFile << std::endl;
+  outFile << "SPACING " << m_PackingRes[0] << " " << m_PackingRes[1] << " " << m_PackingRes[2] << std::endl;
+  outFile << "POINT_DATA " << m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2] << std::endl;
+  outFile << "\n";
+  outFile << "\n";
   outFile << "SCALARS GrainID int  1" << std::endl;
   outFile << "LOOKUP_TABLE default" << std::endl;
-  for (int i = 0; i < (packingzpoints); i++)
+  for (int i = 0; i < (m_PackingPoints[2]); i++)
   {
-    for (int j = 0; j < (packingypoints); j++)
+    for (int j = 0; j < (m_PackingPoints[1]); j++)
     {
-      for (int k = 0; k < (packingxpoints); k++)
+      for (int k = 0; k < (m_PackingPoints[0]); k++)
       {
-        int name = grainowners[k][j][i];
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*i) + (m_PackingPoints[0]*j) + k;
+        int name = grainOwners[grainOwnersIdx];
         if(i % 20 == 0 && i > 0) outFile << std::endl;
         outFile << "     ";
         if(name < 100) outFile << " ";
@@ -1022,36 +1053,53 @@ int PackPrimaryPhases::writeVtkFile()
   return 0;
 }
 
-void PackPrimaryPhases::initialize_packinggrid()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  packingresx = m->getXRes() * 2.0f;
-  packingresy = m->getYRes() * 2.0f;
-  packingresz = m->getZRes() * 2.0f;
-  packingxpoints = m->getXPoints()/2;
-  packingypoints = m->getYPoints()/2;
-  packingzpoints = m->getZPoints()/2;
-  packingtotalpoints = packingxpoints * packingypoints * packingzpoints;
-  grainowners.resize(packingxpoints);
-  for (int i = 0; i < packingxpoints; i++)
-  {
-    grainowners[i].resize(packingypoints);
-    for (int j = 0; j < packingypoints; j++)
-    {
-      grainowners[i][j].resize(packingzpoints, 0);
-    }
-  }
+  m_PackingRes[0] = m->getXRes() * 2.0f;
+  m_PackingRes[1] = m->getYRes() * 2.0f;
+  m_PackingRes[2] = m->getZRes() * 2.0f;
+
+  m_HalfPackingRes[0] = m_HalfPackingRes[0];
+  m_HalfPackingRes[1] = m_HalfPackingRes[1];
+  m_HalfPackingRes[2] = m_HalfPackingRes[2];
+
+  m_OneOverHalfPackingRes[0] = 1.0f/m_HalfPackingRes[0];
+  m_OneOverHalfPackingRes[1] = 1.0f/m_HalfPackingRes[1];
+  m_OneOverHalfPackingRes[2] = 1.0f/m_HalfPackingRes[2];
+
+
+  m_PackingPoints[0] = m->getXPoints()/2;
+  m_PackingPoints[1] = m->getYPoints()/2;
+  m_PackingPoints[2] = m->getZPoints()/2;
+  m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
+  Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::grain_owners");
+  grainOwnersPtr->initializeWithZeros();
+
+//  grain_owners.resize(m_PackingPoints[0]);
+//  for (int i = 0; i < m_PackingPoints[0]; i++)
+//  {
+//    grain_owners[i].resize(m_PackingPoints[1]);
+//    for (int j = 0; j < m_PackingPoints[1]; j++)
+//    {
+//      grain_owners[i][j].resize(m_PackingPoints[2], 0);
+//    }
+//  }
+  return grainOwnersPtr;
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-      //DataContainer* m = getVoxelDataContainer();
-
-      StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -1127,6 +1175,9 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   field->m_Neighborhoods = 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::transfer_attributes(int gnum, Field* field)
 {
   m_Volumes[gnum] = field->m_Volumes;
@@ -1142,6 +1193,9 @@ void PackPrimaryPhases::transfer_attributes(int gnum, Field* field)
   m_Neighborhoods[gnum] = field->m_Neighborhoods;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
 {
   int occolumn, ocrow, ocplane;
@@ -1150,12 +1204,12 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
   float oxc = m_Centroids[3*gnum];
   float oyc = m_Centroids[3*gnum+1];
   float ozc = m_Centroids[3*gnum+2];
-  occolumn = static_cast<int>( (oxc - (packingresx / 2.0f)) / packingresx );
-  ocrow = static_cast<int>( (oyc - (packingresy / 2.0f)) / packingresy );
-  ocplane = static_cast<int>( (ozc - (packingresz / 2.0f)) / packingresz );
-  nccolumn = static_cast<int>( (xc - (packingresx / 2.0f)) / packingresx );
-  ncrow = static_cast<int>( (yc - (packingresy / 2.0f)) / packingresy );
-  ncplane = static_cast<int>( (zc - (packingresz / 2.0f)) / packingresz );
+  occolumn = static_cast<int>( (oxc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
+  ocrow = static_cast<int>( (oyc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
+  ocplane = static_cast<int>( (ozc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+  nccolumn = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
+  ncrow = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
+  ncplane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
   shiftcolumn = nccolumn - occolumn;
   shiftrow = ncrow - ocrow;
   shiftplane = ncplane - ocplane;
@@ -1175,7 +1229,9 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
   }
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 {
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -1211,6 +1267,9 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -1310,6 +1369,9 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   return neighborerror;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float &bhattdist)
 {
   bhattdist = 0;
@@ -1318,6 +1380,10 @@ void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::
     bhattdist = bhattdist + sqrt((array1[i]*array2[i]));
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float &bhattdist)
 {
   bhattdist = 0;
@@ -1330,6 +1396,9 @@ void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> >
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float &bhattdist)
 {
   bhattdist = 0;
@@ -1345,6 +1414,9 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_sizedisterror(Field* field)
 {
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -1399,9 +1471,15 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
   return sizedisterror;
 }
 
-float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr)
 {
-  fillingerror = fillingerror * float(packingtotalpoints);
+  size_t grainOwnersIdx = 0;
+  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+
+  fillingerror = fillingerror * float(m_TotalPackingPoints);
   int col, row, plane;
   if(gadd > 0)
   {
@@ -1418,25 +1496,28 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
 
       if(m_PeriodicBoundaries == true)
       {
-        if(col < 0) col = col + packingxpoints;
-        if(col > packingxpoints - 1) col = col - packingxpoints;
-        if(row < 0) row = row + packingypoints;
-        if(row > packingypoints - 1) row = row - packingypoints;
-        if(plane < 0) plane = plane + packingzpoints;
-        if(plane > packingzpoints - 1) plane = plane - packingzpoints;
-        int& currentGrainOwner = grainowners[col][row][plane];
+        if(col < 0) col = col + m_PackingPoints[0];
+        if(col > m_PackingPoints[0] - 1) col = col - m_PackingPoints[0];
+        if(row < 0) row = row + m_PackingPoints[1];
+        if(row > m_PackingPoints[1] - 1) row = row - m_PackingPoints[1];
+        if(plane < 0) plane = plane + m_PackingPoints[2];
+        if(plane > m_PackingPoints[2] - 1) plane = plane - m_PackingPoints[2];
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+
+        int currentGrainOwner = grainOwners[grainOwnersIdx];
         fillingerror = fillingerror + (2 * currentGrainOwner - 1);
         packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
-        ++currentGrainOwner;
+        grainOwners[grainOwnersIdx] = currentGrainOwner + 1;
       }
       else
       {
-        if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
+        if(col >= 0 && col <= m_PackingPoints[0] - 1 && row >= 0 && row <= m_PackingPoints[1] - 1 && plane >= 0 && plane <= m_PackingPoints[2] - 1)
         {
-          int& currentGrainOwner = grainowners[col][row][plane];
+          grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+          int currentGrainOwner = grainOwners[grainOwnersIdx];
           fillingerror = fillingerror + (2 * currentGrainOwner - 1);
           packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
-          ++currentGrainOwner;
+          grainOwners[grainOwnersIdx] = currentGrainOwner + 1;
         }
       }
     }
@@ -1455,37 +1536,41 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove)
       plane = pl_gremove[i];
       if(m_PeriodicBoundaries == true)
       {
-        if(col < 0) col = col + packingxpoints;
-        if(col > packingxpoints - 1) col = col - packingxpoints;
-        if(row < 0) row = row + packingypoints;
-        if(row > packingypoints - 1) row = row - packingypoints;
-        if(plane < 0) plane = plane + packingzpoints;
-        if(plane > packingzpoints - 1) plane = plane - packingzpoints;
-        int& currentGrainOwner = grainowners[col][row][plane];
+        if(col < 0) col = col + m_PackingPoints[0];
+        if(col > m_PackingPoints[0] - 1) col = col - m_PackingPoints[0];
+        if(row < 0) row = row + m_PackingPoints[1];
+        if(row > m_PackingPoints[1] - 1) row = row - m_PackingPoints[1];
+        if(plane < 0) plane = plane + m_PackingPoints[2];
+        if(plane > m_PackingPoints[2] - 1) plane = plane - m_PackingPoints[2];
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+        int currentGrainOwner = grainOwners[grainOwnersIdx];
         fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
-        currentGrainOwner = currentGrainOwner - 1;
+        grainOwners[grainOwnersIdx] = currentGrainOwner - 1;
       }
       else
       {
-        if(col >= 0 && col <= packingxpoints - 1 && row >= 0 && row <= packingypoints - 1 && plane >= 0 && plane <= packingzpoints - 1)
+        if(col >= 0 && col <= m_PackingPoints[0] - 1 && row >= 0 && row <= m_PackingPoints[1] - 1 && plane >= 0 && plane <= m_PackingPoints[2] - 1)
         {
-          int& currentGrainOwner = grainowners[col][row][plane];
+          grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
+          int currentGrainOwner = grainOwners[grainOwnersIdx];
           fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
-          currentGrainOwner = currentGrainOwner - 1;
+          grainOwners[grainOwnersIdx] = currentGrainOwner - 1;
         }
       }
     }
   }
-  fillingerror = fillingerror / float(packingtotalpoints);
+  fillingerror = fillingerror / float(m_TotalPackingPoints);
   return fillingerror;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::insert_grain(size_t gnum)
 {
-  DREAM3D_RANDOMNG_NEW()
-      //   DataContainer* m = getVoxelDataContainer();
-      //  float dist;
-      float inside = -1;
+  DREAM3D_RANDOMNG_NEW();
+
+  float inside = -1;
   int column, row, plane;
   int centercolumn, centerrow, centerplane;
   int xmin, xmax, ymin, ymax, zmin, zmax;
@@ -1523,21 +1608,21 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
-  centercolumn = static_cast<int>( (xc - (packingresx / 2)) / packingresx );
-  centerrow = static_cast<int>( (yc - (packingresy / 2)) / packingresy );
-  centerplane = static_cast<int>( (zc - (packingresz / 2)) / packingresz );
-  xmin = int(centercolumn - ((radcur1 / packingresx) + 1));
-  xmax = int(centercolumn + ((radcur1 / packingresx) + 1));
-  ymin = int(centerrow - ((radcur1 / packingresy) + 1));
-  ymax = int(centerrow + ((radcur1 / packingresy) + 1));
-  zmin = int(centerplane - ((radcur1 / packingresz) + 1));
-  zmax = int(centerplane + ((radcur1 / packingresz) + 1));
-  if(xmin < -packingxpoints) xmin = -packingxpoints;
-  if(xmax > 2 * packingxpoints - 1) xmax = (2 * packingxpoints - 1);
-  if(ymin < -packingypoints) ymin = -packingypoints;
-  if(ymax > 2 * packingypoints - 1) ymax = (2 * packingypoints - 1);
-  if(zmin < -packingzpoints) zmin = -packingzpoints;
-  if(zmax > 2 * packingzpoints - 1) zmax = (2 * packingzpoints - 1);
+  centercolumn = static_cast<int>( (xc - (m_PackingRes[0] / 2)) / m_PackingRes[0] );
+  centerrow = static_cast<int>( (yc - (m_PackingRes[1] / 2)) / m_PackingRes[1] );
+  centerplane = static_cast<int>( (zc - (m_PackingRes[2] / 2)) / m_PackingRes[2] );
+  xmin = int(centercolumn - ((radcur1 / m_PackingRes[0]) + 1));
+  xmax = int(centercolumn + ((radcur1 / m_PackingRes[0]) + 1));
+  ymin = int(centerrow - ((radcur1 / m_PackingRes[1]) + 1));
+  ymax = int(centerrow + ((radcur1 / m_PackingRes[1]) + 1));
+  zmin = int(centerplane - ((radcur1 / m_PackingRes[2]) + 1));
+  zmax = int(centerplane + ((radcur1 / m_PackingRes[2]) + 1));
+  if(xmin < -m_PackingPoints[0]) xmin = -m_PackingPoints[0];
+  if(xmax > 2 * m_PackingPoints[0] - 1) xmax = (2 * m_PackingPoints[0] - 1);
+  if(ymin < -m_PackingPoints[1]) ymin = -m_PackingPoints[1];
+  if(ymax > 2 * m_PackingPoints[1] - 1) ymax = (2 * m_PackingPoints[1] - 1);
+  if(zmin < -m_PackingPoints[2]) zmin = -m_PackingPoints[2];
+  if(zmax > 2 * m_PackingPoints[2] - 1) zmax = (2 * m_PackingPoints[2] - 1);
   for (int iter1 = xmin; iter1 < xmax + 1; iter1++)
   {
     for (int iter2 = ymin; iter2 < ymax + 1; iter2++)
@@ -1547,9 +1632,9 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
         column = iter1;
         row = iter2;
         plane = iter3;
-        coords[0] = float(column) * packingresx;
-        coords[1] = float(row) * packingresy;
-        coords[2] = float(plane) * packingresz;
+        coords[0] = float(column) * m_PackingRes[0];
+        coords[1] = float(row) * m_PackingRes[1];
+        coords[2] = float(plane) * m_PackingRes[2];
         inside = -1;
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
@@ -1828,9 +1913,9 @@ void PackPrimaryPhases::assign_gaps_only()
   int zPoints = static_cast<int>(m->getZPoints());
   int totalPoints = xPoints*yPoints*zPoints;
 
-//  float xRes = m->getXRes();
-//  float yRes = m->getYRes();
-//  float zRes = m->getZRes();
+  //  float xRes = m->getXRes();
+  //  float yRes = m->getYRes();
+  //  float zRes = m->getZRes();
 
   int neighpoints[6];
   neighpoints[0] = -xPoints*yPoints;
@@ -1848,77 +1933,77 @@ void PackPrimaryPhases::assign_gaps_only()
   while (count != 0)
   {
     count = 0;
-  int zStride, yStride;
-  for(int i=0;i<zPoints;i++)
-  {
-    zStride = i*xPoints*yPoints;
-    for (int j=0;j<yPoints;j++)
+    int zStride, yStride;
+    for(int i=0;i<zPoints;i++)
     {
-      yStride = j*xPoints;
-      for(int k=0;k<xPoints;k++)
+      zStride = i*xPoints*yPoints;
+      for (int j=0;j<yPoints;j++)
       {
-        grainname = m_GrainIds[zStride+yStride+k];
-        if (grainname < 0)
+        yStride = j*xPoints;
+        for(int k=0;k<xPoints;k++)
         {
-        count++;
-        current = 0;
-        most = 0;
-        for (int l = 0; l < 6; l++)
-        {
-          good = 1;
-          neighpoint = zStride+yStride+k + neighpoints[l];
-          if (l == 0 && i == 0) good = 0;
-          if (l == 5 && i == (zPoints - 1)) good = 0;
-          if (l == 1 && j == 0) good = 0;
-          if (l == 4 && j == (yPoints - 1)) good = 0;
-          if (l == 2 && k == 0) good = 0;
-          if (l == 3 && k == (xPoints - 1)) good = 0;
-          if (good == 1)
+          grainname = m_GrainIds[zStride+yStride+k];
+          if (grainname < 0)
           {
-          grain = m_GrainIds[neighpoint];
-          if (grain > 0)
-          {
-            n[grain]++;
-            current = n[grain];
-            if (current > most)
+            count++;
+            current = 0;
+            most = 0;
+            for (int l = 0; l < 6; l++)
             {
-              most = current;
-    //				    m_Neighbors[i] = grain;
-              m_Neighbors[zStride+yStride+k] = neighpoint;
+              good = 1;
+              neighpoint = zStride+yStride+k + neighpoints[l];
+              if (l == 0 && i == 0) good = 0;
+              if (l == 5 && i == (zPoints - 1)) good = 0;
+              if (l == 1 && j == 0) good = 0;
+              if (l == 4 && j == (yPoints - 1)) good = 0;
+              if (l == 2 && k == 0) good = 0;
+              if (l == 3 && k == (xPoints - 1)) good = 0;
+              if (good == 1)
+              {
+                grain = m_GrainIds[neighpoint];
+                if (grain > 0)
+                {
+                  n[grain]++;
+                  current = n[grain];
+                  if (current > most)
+                  {
+                    most = current;
+                    //				    m_Neighbors[i] = grain;
+                    m_Neighbors[zStride+yStride+k] = neighpoint;
+                  }
+                }
+              }
+            }
+            for (int l = 0; l < 6; l++)
+            {
+              good = 1;
+              neighpoint = zStride+yStride+k + neighpoints[l];
+              if (l == 0 && i == 0) good = 0;
+              if (l == 5 && i == (zPoints - 1)) good = 0;
+              if (l == 1 && j == 0) good = 0;
+              if (l == 4 && j == (yPoints - 1)) good = 0;
+              if (l == 2 && k == 0) good = 0;
+              if (l == 3 && k == (xPoints - 1)) good = 0;
+              if (good == 1)
+              {
+                grain = m_GrainIds[neighpoint];
+                if(grain > 0) n[grain] = 0;
+              }
             }
           }
-          }
-        }
-        for (int l = 0; l < 6; l++)
-        {
-          good = 1;
-          neighpoint = zStride+yStride+k + neighpoints[l];
-          if (l == 0 && i == 0) good = 0;
-          if (l == 5 && i == (zPoints - 1)) good = 0;
-          if (l == 1 && j == 0) good = 0;
-          if (l == 4 && j == (yPoints - 1)) good = 0;
-          if (l == 2 && k == 0) good = 0;
-          if (l == 3 && k == (xPoints - 1)) good = 0;
-          if (good == 1)
-          {
-          grain = m_GrainIds[neighpoint];
-          if(grain > 0) n[grain] = 0;
-          }
-        }
         }
       }
     }
-  }
-  for (int j = 0; j < totalPoints; j++)
-  {
-    grainname = m_GrainIds[j];
-    neighbor = m_Neighbors[j];
-    if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
+    for (int j = 0; j < totalPoints; j++)
     {
-      m_GrainIds[j] = m_GrainIds[neighbor];
-      m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
+      grainname = m_GrainIds[j];
+      neighbor = m_Neighbors[j];
+      if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
+      {
+        m_GrainIds[j] = m_GrainIds[neighbor];
+        m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
+      }
     }
-  }
   }
 }
 // -----------------------------------------------------------------------------
