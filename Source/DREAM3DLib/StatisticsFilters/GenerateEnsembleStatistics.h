@@ -72,8 +72,10 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     virtual ~GenerateEnsembleStatistics();
 
     //------ (Possible) Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(BiasedFieldsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
@@ -98,6 +100,9 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 	DREAM3D_INSTANCE_PROPERTY(int, Omega3DistributionFitType)
 	DREAM3D_INSTANCE_PROPERTY(bool, NeighborhoodDistribution)
 	DREAM3D_INSTANCE_PROPERTY(int, NeighborhoodDistributionFitType)
+	DREAM3D_INSTANCE_PROPERTY(bool, ODF)
+	DREAM3D_INSTANCE_PROPERTY(bool, MDF)
+	DREAM3D_INSTANCE_PROPERTY(bool, AxisODF)
 	
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
@@ -116,6 +121,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 	void gatherNeighborhoodStats();
 	void gatherMDFStats();
 	void gatherODFStats();
+	void gatherAxisODFStats();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;
@@ -124,6 +130,8 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
+    float* m_FieldEulerAngles;
+    float* m_Volumes;
     bool* m_BiasedFields;
     bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
@@ -134,6 +142,9 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     int32_t* m_Neighborhoods;
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
+
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_SharedSurfaceAreaList;
 
     StatsDataArray* m_StatsDataArray;
 

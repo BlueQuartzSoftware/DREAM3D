@@ -52,12 +52,10 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
 m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_GrainIds(NULL),
 m_SurfaceVoxels(NULL),
 m_SurfaceFields(NULL),
 m_NumNeighbors(NULL),
-m_TotalSurfaceAreas(NULL),
 m_NeighborList(NULL),
 m_SharedSurfaceAreaList(NULL)
 {
@@ -124,10 +122,6 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, 0, fields, 1)
-
-
-  //Ensemble Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceAreas, ss, float, FloatArrayType, 0, ensembles, 1)
 }
 
 
@@ -192,11 +186,6 @@ void FindNeighbors::execute()
   int neighbor = 0;
 
   size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
-
-  for (size_t i = 1; i < xtalCount; ++i)
-  {
-    m_TotalSurfaceAreas[i] = 0.0f;
-  }
 
     std::vector<std::vector<int> > neighborlist;
     std::vector<std::vector<float> > neighborsurfacearealist;
