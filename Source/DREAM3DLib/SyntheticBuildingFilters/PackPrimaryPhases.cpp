@@ -553,6 +553,14 @@ void PackPrimaryPhases::execute()
 
   // generate the grains and monitor the size distribution error while doing so. After grains are generated, no new grains can enter or leave the structure.
   Field field;
+
+  // Estimate the total Number of grains here
+  int estNumGrains = estimate_numgrains((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
+  std::cout << "estNumGrains: " << estNumGrains << std::endl;
+  m->resizeFieldDataArrays(estNumGrains);
+  dataCheck(false, totalPoints, estNumGrains, m->getNumEnsembleTuples());
+  int gid = 1;
+  #if 0
   int gid = static_cast<int>(m->getNumFieldTuples());
   if(gid == 0)
   {
@@ -560,6 +568,8 @@ void PackPrimaryPhases::execute()
     dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
     gid = 1;
   }
+  #endif
+
   firstPrimaryField = gid;
   std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
@@ -580,14 +590,18 @@ void PackPrimaryPhases::execute()
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
       {
         std::stringstream ss;
-        ss << "Packing Grains - Generating Grain #" << gid;
+        ss << "Packing Grains (1/2) - Generating Grain #" << gid;
         notifyStatusMessage(ss.str());
 //FIXME: Optimize this section
 /* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
 /* We should estimate the number of grains first, allocate that many, then check to see
  * if we need to reallocate for each added grain */
-        m->resizeFieldDataArrays(gid + 1);
-        dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+        if (gid + 1 >= m->getNumFieldTuples())
+        {
+          m->resizeFieldDataArrays(gid + 1);
+          dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+        }
+
         m_Active[gid] = true;
         transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
@@ -630,14 +644,18 @@ void PackPrimaryPhases::execute()
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
         {
           std::stringstream ss;
-          ss << "Packing Grains - Generating Grain #" << gid;
+          ss << "Packing Grains (2/2) - Generating Grain #" << gid;
           notifyStatusMessage(ss.str());
 //FIXME: Optimize this section
 /* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
 /* We should estimate the number of grains first, allocate that many, then check to see
  * if we need to reallocate for each added grain */
-          m->resizeFieldDataArrays(gid + 1);
-          dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+          if (gid + 1 >= m->getNumFieldTuples())
+          {
+            m->resizeFieldDataArrays(gid + 1);
+            dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
+          }
+
           m_Active[gid] = true;
           transfer_attributes(gid, &field);
           oldsizedisterror = currentsizedisterror;
@@ -658,7 +676,7 @@ void PackPrimaryPhases::execute()
     setErrorCondition(-1);
     return;
   }
-  notifyStatusMessage("Packing Grains - Initializing Neighbor Distributions");
+  notifyStatusMessage("Initializing Neighbor Distributions");
 
   // initialize the sim and goal neighbor distribution for the primary phases
   neighbordist.resize(primaryphases.size());
@@ -734,7 +752,7 @@ void PackPrimaryPhases::execute()
     if ((int)i > progGrain + progGrainInc)
     {
       ss.str("");
-      ss << "Packing Grains - Placing Grain #" << i << "/" << numgrains;
+      ss << "Placing Grain #" << i << "/" << numgrains;
       notifyStatusMessage(ss.str());
       progGrain = i;
     }
@@ -768,7 +786,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyStatusMessage("Packing Grains - Determining Neighbors");
+  notifyStatusMessage("Determining Neighbors");
   progGrain = 0;
   progGrainInc = numgrains * .01;
   uint64_t millis = MXA::getMilliSeconds();
@@ -784,7 +802,7 @@ void PackPrimaryPhases::execute()
     if (currentMillis - millis > 1000)
     {
       ss.str("");
-      ss << "Packing Grains - Determining Neighbors " << i << "/" << numgrains;
+      ss << "Determining Neighbors " << i << "/" << numgrains;
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(numgrains - i) / timeDiff;
       ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
@@ -808,7 +826,7 @@ void PackPrimaryPhases::execute()
     if (currentMillis - millis > 1000)
     {
       ss.str("");
-      ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
+      ss << "Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
@@ -1272,7 +1290,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+ VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1419,6 +1437,79 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_sizedisterror(Field* field)
 {
+
+
+#if 1
+  // This is the optimized code
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  float dia;
+  float sizedisterror = 0;
+  float bhattdist;
+  int index;
+  int count = 0;
+  int phase;
+  for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
+  {
+    phase = primaryphases[iter];
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    count = 0;
+    std::vector<float>& curGrainSizeDist = grainsizedist[iter];
+    std::vector<float>::size_type curGrainSizeDistSize = curGrainSizeDist.size();
+    std::vector<float>& curSimGrainSizeDist = simgrainsizedist[iter];
+    // Initialize all Values to Zero
+    for (size_t i = 0; i < curGrainSizeDistSize; i++)
+    {
+      curSimGrainSizeDist[i] = 0.0f;
+    }
+
+    size_t nFieldTuples = m->getNumFieldTuples();
+    float oneOverCurGrainSizeDistStep = 1.0f/grainsizediststep[iter];
+    float halfMinGrainDiameter = pp->getMinGrainDiameter() * 0.5f;
+    for (size_t b = firstPrimaryField; b < nFieldTuples; b++)
+    {
+      index = b;
+      if(m_FieldPhases[index] == phase)
+      {
+        dia = m_EquivalentDiameters[index];
+        dia = (dia - halfMinGrainDiameter) * oneOverCurGrainSizeDistStep;
+        if(dia < 0) { dia = 0; }
+        if(dia > curGrainSizeDistSize - 1.0f) { dia = curGrainSizeDistSize - 1.0f; }
+        curSimGrainSizeDist[int(dia)]++;
+        count++;
+      }
+    }
+
+    if(field->m_FieldPhases == phase)
+    {
+      dia = field->m_EquivalentDiameters;
+      dia = (dia - halfMinGrainDiameter) * oneOverCurGrainSizeDistStep;
+      if(dia < 0) { dia = 0; }
+      if(dia > curGrainSizeDistSize - 1.0f) dia = curGrainSizeDistSize - 1.0f;
+      curSimGrainSizeDist[int(dia)]++;
+      count++;
+    }
+    float oneOverCount = 1.0f/count;
+
+    if (count == 0)
+    {
+      for (size_t i = 0; i < curGrainSizeDistSize; i++) { curSimGrainSizeDist[i] = 0.0; }
+    }
+    else
+    {
+      for (size_t i = 0; i < curGrainSizeDistSize; i++)
+      {
+        curSimGrainSizeDist[i] = curSimGrainSizeDist[i] * oneOverCount;
+      }
+    }
+  }
+  compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
+  sizedisterror = bhattdist;
+  return sizedisterror;
+  #else
+  // This is the original Code
   VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -1469,6 +1560,7 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
   compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
   sizedisterror = bhattdist;
   return sizedisterror;
+  #endif
 }
 
 // -----------------------------------------------------------------------------
@@ -2165,5 +2257,99 @@ void PackPrimaryPhases::cleanup_grains()
   {
     if(m_GrainIds[i] > 0) { m_CellPhases[i] = m_FieldPhases[m_GrainIds[i]]; }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
+{
+//  int err = -1;
+
+  float totalvol;
+  int phase;
+
+  totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
+  if (totalvol == 0.0)
+  {
+    return 1;
+  }
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  IDataArray::Pointer iPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
+  DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
+
+  iPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics);
+  StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
+  if(NULL == statsDataArrayPtr)
+  {
+    return 1;
+  }
+
+  // Create a Reference Variable so we can use the [] syntax
+  StatsDataArray& statsDataArray = *statsDataArrayPtr;
+
+  DREAM3D_RANDOMNG_NEW()
+
+  std::vector<int> primaryphases;
+  std::vector<double> primaryphasefractions;
+  double totalprimaryfractions = 0.0;
+  StatsData::Pointer statsData = StatsData::NullPointer();
+  // find which phases are primary phases
+  for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
+  {
+    if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      primaryphases.push_back(i);
+      primaryphasefractions.push_back(pp->getPhaseFraction());
+      totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
+    }
+  }
+  // scale the primary phase fractions to total to 1
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  {
+    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
+    if(i > 0)
+    {
+      primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
+    }
+  }
+  // generate the grains
+  int gid = 1;
+
+  float currentvol = 0.0;
+  float vol;
+  float diam;
+  int volgood = 0;
+  for (size_t j = 0; j < primaryphases.size(); ++j)
+  {
+    float curphasetotalvol = totalvol * primaryphasefractions[j];
+    while (currentvol < (curphasetotalvol))
+    {
+      volgood = 0;
+      phase = primaryphases[j];
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      while (volgood == 0)
+      {
+        volgood = 1;
+        // u = rg.genrand_res53();
+        if(pp->getGrainSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        {
+          float avgdiam = pp->getGrainSizeDistribution().at(0)->GetValue(0);
+          float sddiam = pp->getGrainSizeDistribution().at(1)->GetValue(0);
+          diam = rg.genrand_norm(avgdiam, sddiam);
+          diam = exp(diam);
+          if(diam >= pp->getMaxGrainDiameter()) volgood = 0;
+          if(diam < pp->getMinGrainDiameter()) volgood = 0;
+          vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+        }
+      }
+      currentvol = currentvol + vol;
+      gid++;
+    }
+  }
+  return gid;
 }
 
