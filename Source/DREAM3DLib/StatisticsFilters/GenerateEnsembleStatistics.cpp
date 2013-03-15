@@ -285,6 +285,14 @@ void GenerateEnsembleStatistics::execute()
     m_PhaseTypes = phaseTypes->GetPointer(0);
   }
 
+  m->removeEnsembleData(DREAM3D::EnsembleData::Statistics);
+  StatsDataArray::Pointer p = StatsDataArray::New();
+  m_StatsDataArray = p.get();
+  m_StatsDataArray->fillArrayWithNewStatsData(m->getNumEnsembleTuples(), m_PhaseTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
   if(m_SizeDistribution == true)
   {
     gatherSizeStats();

@@ -105,7 +105,8 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
   {
 
     int count = phaseTypeTableWidget->rowCount();
-    std::vector<unsigned int> phaseTypes(count);
+    std::vector<unsigned int> phaseTypes;
+	phaseTypes.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     for(int r = 0; r < count; ++r)
     {
       QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
