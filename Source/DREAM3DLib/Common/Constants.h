@@ -355,6 +355,12 @@ namespace DREAM3D
     const unsigned int MatrixPhase = 3;              //!<
     const unsigned int BoundaryPhase = 4;              //!<
     const unsigned int UnknownPhaseType = 999;    //!<
+
+    const std::string Primary("Primary");
+    const std::string Precipitate("Precipitate");
+    const std::string Transformation("Transformation");
+    const std::string Matrix("Matrix");
+    const std::string Boundary("Boundary");
   }
 
   namespace AlignmentMethod
