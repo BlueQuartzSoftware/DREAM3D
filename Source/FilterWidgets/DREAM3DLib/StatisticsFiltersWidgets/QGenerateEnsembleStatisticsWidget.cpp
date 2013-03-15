@@ -144,6 +144,23 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, calc, AODF)
 
   WRITE_CHECKBOX_SETTING(prefs, m_, DefinePhaseTypes)
+
+  if (m_DefinePhaseTypes->isChecked() == true)
+  {
+    prefs.beginWriteArray("PhaseTypes");
+    int count = phaseTypeTableWidget->rowCount();
+    for(int r = 0; r < count; ++r)
+    {
+      QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
+      QComboBox* cb = qobject_cast<QComboBox*>(w);
+      if(NULL != cb)
+      {
+        prefs.setArrayIndex(r);
+        prefs.setValue("PhastType", cb->currentIndex());
+      }
+    }
+    prefs.endArray();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -169,6 +186,23 @@ void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, calc, AODF, false)
 
   READ_CHECKBOX_SETTING(prefs, m_, DefinePhaseTypes, false)
+
+  bool ok = false;
+  int size = prefs.beginReadArray("PhaseTypes");
+  for (int r = 0; r < size; ++r) {
+    prefs.setArrayIndex(r);
+    on_addPhaseType_clicked();
+    unsigned int value = prefs.value("PhaseType").toUInt(&ok);
+    QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
+    QComboBox* cb = qobject_cast<QComboBox*>(w);
+    if(NULL != cb)
+    {
+      cb->setCurrentIndex(value);
+    }
+  }
+  prefs.endArray();
+
+
 }
 
 // -----------------------------------------------------------------------------
