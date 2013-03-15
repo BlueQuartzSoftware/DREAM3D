@@ -62,16 +62,24 @@ int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::P
   int err = 0;
   float alpha = 0;
   float min = std::numeric_limits<float>::max();
-  for(size_t i = 0; i < data.size(); i++)
+  if(data.size() > 1)
   {
-	if (data[i] < min) min = data[i];		
+	  for(size_t i = 0; i < data.size(); i++)
+	  {
+		if (data[i] < min) min = data[i];		
+	  }
+	  for(size_t i = 0; i < data.size(); i++)
+	  {
+		alpha = alpha + log(data[i]/min);		
+	  }
+	  alpha = 1.0f/alpha;
+	  alpha = 1 + (alpha*data.size());
   }
-  for(size_t i = 0; i < data.size(); i++)
+  else
   {
-	alpha = alpha + log(data[i]/min);		
+	  min = 0;
+	  alpha = 0;
   }
-  alpha = 1.0f/alpha;
-  alpha = 1 + (alpha*data.size());
   outputs->SetValue(0, alpha);
   outputs->SetValue(1, min);
   return err;
@@ -86,17 +94,25 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > 
   float min;
   for(size_t i = 0; i < data.size(); i++)
   {
-	  min = std::numeric_limits<float>::max();
-	  for(size_t j = 0; j < data[i].size(); j++)
+	  if(data[i].size() > 1)
 	  {
-		if (data[i][j] < min) min = data[i][j];		
+		  min = std::numeric_limits<float>::max();
+		  for(size_t j = 0; j < data[i].size(); j++)
+		  {
+			if (data[i][j] < min) min = data[i][j];		
+		  }
+		  for(size_t j = 0; j < data[i].size(); j++)
+		  {
+			alpha = alpha + log(data[i][j]/min);		
+		  }
+		  if(alpha != 0.0f) alpha = 1.0f/alpha;
+		  alpha = 1.0f + (alpha*data[i].size());
 	  }
-	  for(size_t j = 0; j < data[i].size(); j++)
+	  else
 	  {
-		alpha = alpha + log(data[i][j]/min);		
-	  }
-	  if(alpha != 0.0f) alpha = 1.0f/alpha;
-	  alpha = 1.0f + (alpha*data[i].size());
+		  min = 0;
+		  alpha = 0;
+	  }	
 	  outputs[0]->SetValue(i, alpha);
 	  outputs[1]->SetValue(i, min);
   }

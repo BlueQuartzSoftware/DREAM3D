@@ -60,18 +60,31 @@ int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::
   int err = 0;
   float avg = 0;
   float stddev = 0;
-  for(size_t i = 0; i < data.size(); i++)
+  if(data.size() > 1)
   {
-	avg = avg + log(data[i]);
+	  for(size_t i = 0; i < data.size(); i++)
+	  {
+		avg = avg + log(data[i]);
+	  }
+	  avg = avg/float(data.size());
+	  for(size_t i = 0; i < data.size(); i++)
+	  {
+		stddev = stddev + ((avg - log(data[i]))*(avg - log(data[i])));
+	  }
+	  stddev = stddev/float(data.size());
+	  stddev = sqrt(stddev);
   }
-  avg = avg/float(data.size());
+  else if (data.size() == 1)
+  {
+	  avg = data[0];
+	  stddev = 0;
+  }
+  else
+  {
+	  avg = 0;
+	  stddev = 0;
+  }
   outputs->SetValue(0, avg);
-  for(size_t i = 0; i < data.size(); i++)
-  {
-	stddev = stddev + ((avg - log(data[i]))*(avg - log(data[i])));
-  }
-  stddev = stddev/float(data.size());
-  stddev = sqrt(stddev);
   outputs->SetValue(1, stddev);
   return err;
 }
@@ -87,18 +100,31 @@ int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >
   {
 	  avg = 0;
 	  stddev = 0;
-	  for(size_t j = 0; j < data[i].size(); j++)
-	  {
-		avg = avg + log(data[i][j]);
+	  if(data[i].size() > 1)
+	  {	  
+		  for(size_t j = 0; j < data[i].size(); j++)
+		  {
+			avg = avg + log(data[i][j]);
+		  }
+		  avg = avg/float(data[i].size());
+		  for(size_t j = 0; j < data[i].size(); j++)
+		  {
+			stddev = stddev + ((avg - log(data[i][j]))*(avg - log(data[i][j])));
+		  }
+		  stddev = stddev/float(data[i].size());
+		  stddev = sqrt(stddev);
 	  }
-	  avg = avg/float(data[i].size());
+	  else if (data[i].size() == 1)
+	  {
+		  avg = data[i][0];
+		  stddev = 0;
+	  }
+	  else
+	  {
+		  avg = 0;
+		  stddev = 0;
+	  }
 	  outputs[0]->SetValue(i, avg);
-	  for(size_t j = 0; j < data[i].size(); j++)
-	  {
-		stddev = stddev + ((avg - log(data[i][j]))*(avg - log(data[i][j])));
-	  }
-	  stddev = stddev/float(data[i].size());
-	  stddev = sqrt(stddev);
 	  outputs[1]->SetValue(i, stddev);
   }
   return err;

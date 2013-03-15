@@ -62,18 +62,26 @@ int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Point
   float stddev = 0;
   float alpha = 0;
   float beta = 0;
-  for(size_t i = 0; i < data.size(); i++)
+  if(data.size() > 1)
   {
-	avg = avg + data[i];
+	  for(size_t i = 0; i < data.size(); i++)
+	  {
+		avg = avg + data[i];
+	  }
+	  avg = avg/float(data.size());
+	  for(size_t i = 0; i < data.size(); i++)
+	  {
+		stddev = stddev + ((avg - data[i])*(avg - data[i]));
+	  }
+	  stddev = stddev/float(data.size());
+	  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+	  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
   }
-  avg = avg/float(data.size());
-  for(size_t i = 0; i < data.size(); i++)
+  else
   {
-	stddev = stddev + ((avg - data[i])*(avg - data[i]));
+	  alpha = 0;
+	  beta = 0;
   }
-  stddev = stddev/float(data.size());
-  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
   outputs->SetValue(0, alpha);
   outputs->SetValue(1, beta);
   return err;
@@ -92,20 +100,26 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &dat
   {
 	  avg = 0;
 	  stddev = 0;
-	//  alpha = 0;
-	//  beta = 0;
-	  for(size_t j = 0; j < data[i].size(); j++)
+	  if(data[i].size() > 1)
 	  {
-		avg = avg + data[i][j];
+		  for(size_t j = 0; j < data[i].size(); j++)
+		  {
+			avg = avg + data[i][j];
+		  }
+		  avg = avg/float(data[i].size());
+		  for(size_t j = 0; j < data[i].size(); j++)
+		  {
+			stddev = stddev + ((avg - data[i][j])*(avg - data[i][j]));
+		  }
+		  stddev = stddev/float(data[i].size());
+		  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+		  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
 	  }
-	  avg = avg/float(data[i].size());
-	  for(size_t j = 0; j < data[i].size(); j++)
+	  else
 	  {
-		stddev = stddev + ((avg - data[i][j])*(avg - data[i][j]));
+		  alpha = 0;
+		  beta = 0;
 	  }
-	  stddev = stddev/float(data[i].size());
-	  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-	  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
 	  outputs[0]->SetValue(i, alpha);
 	  outputs[1]->SetValue(i, beta);
   }
