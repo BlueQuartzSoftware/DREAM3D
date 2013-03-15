@@ -88,7 +88,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
@@ -115,6 +114,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void initializeArrays();
 
     void determine_volumes();
+    void determine_boundary_areas();
     void assign_eulers();
     void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
     void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
@@ -137,7 +137,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     NeighborList<float>* m_SharedSurfaceAreaList;
 
     //Ensemble Data
-    float* m_TotalSurfaceAreas;
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
 	int32_t* m_NumFields;
@@ -148,6 +147,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 	  float odfchange;
 
     std::vector<float> unbiasedvol;
+	std::vector<float> totalSurfaceArea;
 
 
     std::vector<FloatArrayType::Pointer> actualodf;
