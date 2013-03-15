@@ -264,7 +264,11 @@ void GenerateEnsembleStatistics::execute()
     return;
   }
   setErrorCondition(0);
+  std::stringstream ss;
 
+  int totalPoints = m->getTotalPoints();
+  int totalFields = m->getNumFieldTuples();
+  int totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -276,14 +280,34 @@ void GenerateEnsembleStatistics::execute()
   {
     typedef DataArray<unsigned int> PhaseTypeArrayType;
 
-    PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(m_PhaseTypeArray.size(), m_PhaseTypesArrayName);
-    for(size_t r = 0; r < m_PhaseTypeArray.size(); ++r)
+	if(m_PhaseTypeArray.size() < totalEnsembles)
+	{
+	    setErrorCondition(-999);
+	    notifyErrorMessage("The number of PhaseTypes entered is less than the number of Ensembles", -999);
+	    return;
+	}
+	if(m_PhaseTypeArray.size() > totalEnsembles)
+	{
+		ss.str("");
+		ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
+	    notifyWarningMessage(ss.str(), -999);
+	    return;
+	}
+    PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
+    for(size_t r = 0; r < totalEnsembles; ++r)
     {
       phaseTypes->SetValue(r, m_PhaseTypeArray[r]);
     }
     m->addEnsembleData(phaseTypes->GetName(), phaseTypes);
     m_PhaseTypes = phaseTypes->GetPointer(0);
   }
+
+  StatsDataArray::Pointer p = StatsDataArray::New();
+  m_StatsDataArray = p.get();
+  m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
   if(m_SizeDistribution == true)
   {

@@ -1101,9 +1101,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_PackingRes[1] = m->getYRes() * 2.0f;
   m_PackingRes[2] = m->getZRes() * 2.0f;
 
-  m_HalfPackingRes[0] = m_PackingRes[0] / 2.0f;
-  m_HalfPackingRes[1] = m_PackingRes[1] / 2.0f;
-  m_HalfPackingRes[2] = m_PackingRes[2] / 2.0f;
+  m_HalfPackingRes[0] = m_PackingRes[0]*0.5;
+  m_HalfPackingRes[1] = m_PackingRes[1]*0.5;
+  m_HalfPackingRes[2] = m_PackingRes[2]*0.5;
 
   m_OneOverHalfPackingRes[0] = 1.0f/m_HalfPackingRes[0];
   m_OneOverHalfPackingRes[1] = 1.0f/m_HalfPackingRes[1];
