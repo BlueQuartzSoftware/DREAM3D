@@ -8,7 +8,6 @@ so it can be integrated with the other documentation pages.
 
 @section blockers Show Stopping Bugs
 @li Fix distributionOps functions to not fart when there is only 1 grain in a bin.
-@li Fix TotalSurfaceAreas in MatchCrystallography
 
 
 @section mike_jackson Mike Jackson ToDo List
@@ -131,6 +130,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Fix TotalSurfaceAreas in MatchCrystallography
 @li Fix phasetype sizecheck in GenerateEnsembleStatistics.
 @li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
 @li Finish implementing writing of GenerateEnsembleStatistics filter'S GUI values to pref file
