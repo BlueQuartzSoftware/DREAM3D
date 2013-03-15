@@ -556,7 +556,7 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of grains here
   int estNumGrains = estimate_numgrains((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
-  std::cout << "estNumGrains: " << estNumGrains << std::endl;
+ // std::cout << "estNumGrains: " << estNumGrains << std::endl;
   m->resizeFieldDataArrays(estNumGrains);
   dataCheck(false, totalPoints, estNumGrains, m->getNumEnsembleTuples());
   int gid = 1;
@@ -592,10 +592,6 @@ void PackPrimaryPhases::execute()
         std::stringstream ss;
         ss << "Packing Grains (1/2) - Generating Grain #" << gid;
         notifyStatusMessage(ss.str());
-//FIXME: Optimize this section
-/* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
-/* We should estimate the number of grains first, allocate that many, then check to see
- * if we need to reallocate for each added grain */
         if (gid + 1 >= m->getNumFieldTuples())
         {
           m->resizeFieldDataArrays(gid + 1);
@@ -646,10 +642,6 @@ void PackPrimaryPhases::execute()
           std::stringstream ss;
           ss << "Packing Grains (2/2) - Generating Grain #" << gid;
           notifyStatusMessage(ss.str());
-//FIXME: Optimize this section
-/* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
-/* We should estimate the number of grains first, allocate that many, then check to see
- * if we need to reallocate for each added grain */
           if (gid + 1 >= m->getNumFieldTuples())
           {
             m->resizeFieldDataArrays(gid + 1);
@@ -757,9 +749,9 @@ void PackPrimaryPhases::execute()
       progGrain = i;
     }
 
-    xc = sizex / 2.0f;
-    yc = sizey / 2.0f;
-    zc = sizez / 2.0f;
+    xc = sizex * 0.5f;
+    yc = sizey * 0.5f;
+    zc = sizez * 0.5f;
     m_Centroids[3 * i] = xc;
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
@@ -784,6 +776,18 @@ void PackPrimaryPhases::execute()
         fillingerror = check_fillingerror(i, -1000, grainOwnersPtr);
       }
     }
+
+
+    if (getCancel() == true)
+    {
+      ss.str("");
+      ss << "Filter Cancelled.";
+      notifyWarningMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return;
+    }
+
+
   }
 
   notifyStatusMessage("Determining Neighbors");
@@ -820,6 +824,8 @@ void PackPrimaryPhases::execute()
   bool good;
   int count, column, row, plane;
   float xshift, yshift, zshift;
+  int lastIteration = 0;
+  int numIterationsPerTime = 0;
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     currentMillis = MXA::getMilliSeconds();
@@ -830,9 +836,14 @@ void PackPrimaryPhases::execute()
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
-      ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      ss << " || Iterations/Sec: " << timeDiff * 1000;
       notifyStatusMessage(ss.str());
+
       millis = MXA::getMilliSeconds();
+
+      numIterationsPerTime = iteration - lastIteration;
+      lastIteration = iteration;
     }
 
 
@@ -1257,13 +1268,15 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   float xn, yn, zn;
   float dia, dia2;
   float dx, dy, dz;
-  //  int nnum = 0;
-  //  nnum = 0;
   x = m_Centroids[3*gnum];
   y = m_Centroids[3*gnum+1];
   z = m_Centroids[3*gnum+2];
   dia = m_EquivalentDiameters[gnum];
-  for (size_t n = firstPrimaryField; n < m->getNumFieldTuples(); n++)
+  size_t numFieldTuples = m->getNumFieldTuples();
+  int32_t increment = 0;
+  if(add > 0) { increment = 1; }
+  if(add < 0) { increment = -1; }
+  for (size_t n = firstPrimaryField; n < numFieldTuples; n++)
   {
     xn = m_Centroids[3*n];
     yn = m_Centroids[3*n+1];
@@ -1274,13 +1287,11 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
     dz = fabs(z - zn);
     if(dx < dia && dy < dia && dz < dia)
     {
-      if(add > 0) m_Neighborhoods[gnum]++;
-      if(add < 0) m_Neighborhoods[gnum] = m_Neighborhoods[gnum] - 1;
+      m_Neighborhoods[gnum] = m_Neighborhoods[gnum] + increment;
     }
     if(dx < dia2 && dy < dia2 && dz < dia2)
     {
-      if(add > 0) m_Neighborhoods[n]++;
-      if(add < 0) m_Neighborhoods[n] = m_Neighborhoods[n] - 1;
+      m_Neighborhoods[n] = m_Neighborhoods[n] + increment;
     }
   }
 }
@@ -1290,6 +1301,133 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
+
+#if 1
+// Optimized Code
+VoxelDataContainer* m = getVoxelDataContainer();
+
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
+
+  float neighborerror;
+  float bhattdist;
+  float dia;
+  int nnum;
+  size_t diabin = 0;
+  size_t nnumbin = 0;
+  int index = 0;
+  std::vector<int> count;
+  int counter = 0;
+  int phase;
+  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+  for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
+  {
+    phase = primaryphases[iter];
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    VectOfVectFloat_t& curSimNeighborDist = simneighbordist[iter];
+    size_t curSImNeighborDist_Size = curSimNeighborDist.size();
+    float oneOverNeighborDistStep = 1.0f/neighbordiststep[iter];
+
+    count.resize(curSImNeighborDist_Size, 0);
+    for (size_t i = 0; i < curSImNeighborDist_Size; i++)
+    {
+      curSimNeighborDist[i].resize(40);
+      for (size_t j = 0; j < 40; j++)
+      {
+        curSimNeighborDist[i][j] = 0;
+      }
+    }
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    {
+      determine_neighbors(gadd, 1);
+    }
+    if(gremove > 0 && m_FieldPhases[gremove] == phase)
+    {
+      determine_neighbors(gremove, -1);
+    }
+
+    float maxGrainDia = pp->getMaxGrainDiameter();
+    float minGrainDia = pp->getMinGrainDiameter();
+    float oneOverBinStepSize = 1.0f/pp->getBinStepSize();
+
+
+    for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
+    {
+      nnum = 0;
+      index = i;
+      if(index != gremove && m_FieldPhases[index] == phase)
+      {
+        dia = m_EquivalentDiameters[index];
+        if(dia > maxGrainDia) { dia = maxGrainDia; }
+        if(dia < minGrainDia) { dia = minGrainDia; }
+        diabin = static_cast<size_t>(((dia - minGrainDia) * oneOverBinStepSize) );
+        nnum = m_Neighborhoods[index];
+        nnumbin = static_cast<size_t>( nnum * oneOverNeighborDistStep );
+        if(nnumbin >= 40) { nnumbin = 39; }
+        curSimNeighborDist[diabin][nnumbin]++;
+        count[diabin]++;
+        counter++;
+      }
+    }
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    {
+      dia = m_EquivalentDiameters[gadd];
+        if(dia > maxGrainDia) { dia = maxGrainDia; }
+        if(dia < minGrainDia) { dia = minGrainDia; }
+      diabin = static_cast<size_t>(((dia - minGrainDia) * oneOverBinStepSize) );
+      nnum = m_Neighborhoods[gadd];
+      nnumbin = static_cast<size_t>( nnum * oneOverNeighborDistStep );
+      if(nnumbin >= 40) { nnumbin = 39; }
+      curSimNeighborDist[diabin][nnumbin]++;
+      count[diabin]++;
+      counter++;
+    }
+    float runningtotal = 0.0f;
+
+    for (size_t i = 0; i < curSImNeighborDist_Size; i++)
+    {
+      if (count[i] == 0)
+      {
+        for (size_t j = 0; j < 40; j++)
+        {
+          curSimNeighborDist[i][j] = 0.0f;
+          runningtotal = runningtotal + 0.0f;
+        }
+      }
+      else
+      {
+        float oneOverCount = 1.0f / (float)(count[i]);
+        for (size_t j = 0; j < 40; j++)
+        {
+          curSimNeighborDist[i][j] = curSimNeighborDist[i][j] * oneOverCount;
+          runningtotal = runningtotal + curSimNeighborDist[i][j];
+        }
+      }
+    }
+
+    runningtotal = 1.0f / runningtotal; // Flip this so that we have a multiply instead of a divide.
+    for (size_t i = 0; i < curSImNeighborDist_Size; i++)
+    {
+      for (size_t j = 0; j < 40; j++)
+      {
+        curSimNeighborDist[i][j] = curSimNeighborDist[i][j] * runningtotal;
+      }
+    }
+
+    if(gadd > 0 && m_FieldPhases[gadd] == phase)
+    {
+      determine_neighbors(gadd, -1);
+    }
+
+    if(gremove > 0 && m_FieldPhases[gremove] == phase)
+    {
+      determine_neighbors(gremove, 1);
+    }
+  }
+  compare_3Ddistributions(simneighbordist, neighbordist, bhattdist);
+  neighborerror = bhattdist;
+  return neighborerror;
+  #else
+
  VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -1385,6 +1523,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   compare_3Ddistributions(simneighbordist, neighbordist, bhattdist);
   neighborerror = bhattdist;
   return neighborerror;
+  #endif
 }
 
 // -----------------------------------------------------------------------------
@@ -1437,10 +1576,6 @@ void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vec
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_sizedisterror(Field* field)
 {
-
-
-#if 1
-  // This is the optimized code
   VoxelDataContainer* m = getVoxelDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -1451,7 +1586,8 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
   int index;
   int count = 0;
   int phase;
-  for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
+  size_t grainSizeDist_Size = grainsizedist.size();
+  for (size_t iter = 0; iter < grainSizeDist_Size; ++iter)
   {
     phase = primaryphases[iter];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
@@ -1508,59 +1644,6 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
   compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
   sizedisterror = bhattdist;
   return sizedisterror;
-  #else
-  // This is the original Code
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
-  float dia;
-  float sizedisterror = 0;
-  float bhattdist;
-  int index;
-  int count = 0;
-  int phase;
-  for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
-  {
-    phase = primaryphases[iter];
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    count = 0;
-    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
-    {
-      simgrainsizedist[iter][i] = 0.0f;
-    }
-    for (size_t b = firstPrimaryField; b < m->getNumFieldTuples(); b++)
-    {
-      index = b;
-      if(m_FieldPhases[index] == phase)
-      {
-        dia = m_EquivalentDiameters[index];
-        dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
-        if(dia < 0) dia = 0;
-        if(dia > grainsizedist[iter].size() - 1.0f) dia = grainsizedist[iter].size() - 1.0f;
-        simgrainsizedist[iter][int(dia)]++;
-        count++;
-      }
-    }
-    if(field->m_FieldPhases == phase)
-    {
-      dia = field->m_EquivalentDiameters;
-      dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
-      if(dia < 0) dia = 0;
-      if(dia > grainsizedist[iter].size() - 1.0f) dia = grainsizedist[iter].size() - 1.0f;
-      simgrainsizedist[iter][int(dia)]++;
-      count++;
-    }
-    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
-    {
-      simgrainsizedist[iter][i] = simgrainsizedist[iter][i] / float(count);
-      if(count == 0) simgrainsizedist[iter][i] = 0.0;
-    }
-  }
-  compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
-  sizedisterror = bhattdist;
-  return sizedisterror;
-  #endif
 }
 
 // -----------------------------------------------------------------------------
