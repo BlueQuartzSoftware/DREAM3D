@@ -556,7 +556,7 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of grains here
   int estNumGrains = estimate_numgrains((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
-  std::cout << "estNumGrains: " << estNumGrains << std::endl;
+ // std::cout << "estNumGrains: " << estNumGrains << std::endl;
   m->resizeFieldDataArrays(estNumGrains);
   dataCheck(false, totalPoints, estNumGrains, m->getNumEnsembleTuples());
   int gid = 1;
@@ -592,10 +592,6 @@ void PackPrimaryPhases::execute()
         std::stringstream ss;
         ss << "Packing Grains (1/2) - Generating Grain #" << gid;
         notifyStatusMessage(ss.str());
-//FIXME: Optimize this section
-/* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
-/* We should estimate the number of grains first, allocate that many, then check to see
- * if we need to reallocate for each added grain */
         if (gid + 1 >= m->getNumFieldTuples())
         {
           m->resizeFieldDataArrays(gid + 1);
@@ -646,10 +642,6 @@ void PackPrimaryPhases::execute()
           std::stringstream ss;
           ss << "Packing Grains (2/2) - Generating Grain #" << gid;
           notifyStatusMessage(ss.str());
-//FIXME: Optimize this section
-/* +++++++++++++++ THIS IS KILLING THE TIME FOR THIS SECTION ++++++++++++++++++++++++ */
-/* We should estimate the number of grains first, allocate that many, then check to see
- * if we need to reallocate for each added grain */
           if (gid + 1 >= m->getNumFieldTuples())
           {
             m->resizeFieldDataArrays(gid + 1);
@@ -844,8 +836,8 @@ void PackPrimaryPhases::execute()
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
-      ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
-      ss << " Iterations/Sec: " << timeDiff * 1000;
+      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      ss << " || Iterations/Sec: " << timeDiff * 1000;
       notifyStatusMessage(ss.str());
 
       millis = MXA::getMilliSeconds();
@@ -1295,11 +1287,11 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
     dz = fabs(z - zn);
     if(dx < dia && dy < dia && dz < dia)
     {
-      m_Neighborhoods[gnum] + increment;
+      m_Neighborhoods[gnum] = m_Neighborhoods[gnum] + increment;
     }
     if(dx < dia2 && dy < dia2 && dz < dia2)
     {
-      m_Neighborhoods[n] + increment;
+      m_Neighborhoods[n] = m_Neighborhoods[n] + increment;
     }
   }
 }
