@@ -230,7 +230,7 @@ void InsertPrecipitatePhases::execute()
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
 
-  if(totalFields == 0) totalFields = 1;  
+  if(totalFields == 0) totalFields = 1;
   dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -962,6 +962,9 @@ void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<st
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 {
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -977,38 +980,54 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
   for (size_t iter = 0; iter < grainsizedist.size(); ++iter)
   {
     phase = precipitatephases[iter];
-  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count = 0;
-    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
+    std::vector<float>& curGrainSizeDist = grainsizedist[iter];
+    std::vector<float>::size_type curGrainSizeDistSize = curGrainSizeDist.size();
+    std::vector<float>& curSimGrainSizeDist = simgrainsizedist[iter];
+    for (size_t i = 0; i < curGrainSizeDistSize; i++)
     {
-      simgrainsizedist[iter][i] = 0.0f;
+      curSimGrainSizeDist[i] = 0.0f;
     }
-    for (size_t b = firstPrecipitateField; b < m->getNumFieldTuples(); b++)
+
+    size_t nFieldTuples = m->getNumFieldTuples();
+    float oneOverCurGrainSizeDistStep = 1.0f/grainsizediststep[iter];
+    float halfMinGrainDiameter = pp->getMinGrainDiameter() * 0.5f;
+    for (size_t b = firstPrecipitateField; b < nFieldTuples; b++)
     {
       index = b;
       if(m_FieldPhases[index] == phase)
       {
         dia = m_EquivalentDiameters[index];
-        dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
+        dia = (dia - halfMinGrainDiameter) * oneOverCurGrainSizeDistStep;
         if(dia < 0) dia = 0;
-        if(dia > grainsizedist[iter].size() - 1) dia = static_cast<float>( grainsizedist[iter].size() - 1 );
-        simgrainsizedist[iter][int(dia)]++;
+        if(dia > curGrainSizeDistSize - 1.0f) { dia = curGrainSizeDistSize - 1.0f; }
+        curSimGrainSizeDist[int(dia)]++;
         count++;
       }
     }
+
     if(precip->m_FieldPhases == phase)
     {
       dia = precip->m_EquivalentDiameters;
-      dia = (dia - (pp->getMinGrainDiameter() / 2.0f)) / grainsizediststep[iter];
-      if(dia < 0) dia = 0;
-      if(dia > grainsizedist[iter].size() - 1) dia = static_cast<float>( grainsizedist[iter].size() - 1 );
-      simgrainsizedist[iter][int(dia)]++;
+      dia = (dia - halfMinGrainDiameter) * oneOverCurGrainSizeDistStep;
+      if(dia < 0) { dia = 0; }
+      if(dia > curGrainSizeDistSize - 1.0f) dia = curGrainSizeDistSize - 1.0f;
+      curSimGrainSizeDist[int(dia)]++;
       count++;
     }
-    for (size_t i = 0; i < grainsizedist[iter].size(); i++)
+    float oneOverCount = 1.0f/count;
+
+    if (count == 0)
     {
-      simgrainsizedist[iter][i] = simgrainsizedist[iter][i] / float(count);
-      if(count == 0) simgrainsizedist[iter][i] = 0.0;
+      for (size_t i = 0; i < curGrainSizeDistSize; i++) { curSimGrainSizeDist[i] = 0.0; }
+    }
+    else
+    {
+      for (size_t i = 0; i < curGrainSizeDistSize; i++)
+      {
+        curSimGrainSizeDist[i] = curSimGrainSizeDist[i] * oneOverCount;
+      }
     }
   }
   compare_2Ddistributions(simgrainsizedist, grainsizedist, bhattdist);
