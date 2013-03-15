@@ -660,6 +660,9 @@ void PackPrimaryPhases::execute()
     }
   }
 
+  m->resizeFieldDataArrays(gid);
+  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
   if (getCancel() == true)
   {
     ss.str("");

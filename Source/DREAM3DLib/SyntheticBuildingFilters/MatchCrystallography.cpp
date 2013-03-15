@@ -260,6 +260,7 @@ void MatchCrystallography::execute()
 
   initializeArrays();
   determine_volumes();
+  determine_boundary_areas();
   assign_eulers();
   measure_misorientations();
   matchCrystallography();
@@ -320,8 +321,10 @@ void MatchCrystallography::determine_volumes()
 
   size_t totalPoints = m->getNumCellTuples();
   size_t totalFields = m->getNumFieldTuples();
+  size_t totalEnsembles = m->getNumEnsembleTuples();
 
-  for (size_t i = 0; i < totalFields; i++)
+  unbiasedvol.resize(totalEnsembles);
+  for (size_t i = 1; i < totalFields; i++)
   {
     m_Volumes[i] = 0.0;
   }
@@ -330,7 +333,7 @@ void MatchCrystallography::determine_volumes()
     m_Volumes[m_GrainIds[i]]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  for (size_t i = 0; i < totalFields; i++)
+  for (size_t i = 1; i < totalFields; i++)
   {
     m_Volumes[i] = m_Volumes[i] * res_scalar;
     unbiasedvol[m_FieldPhases[i]] = unbiasedvol[m_FieldPhases[i]] + m_Volumes[i];
@@ -353,7 +356,7 @@ void MatchCrystallography::determine_boundary_areas()
   totalSurfaceArea.resize(totalEnsembles,0.0);
   
   int phase1, phase2;
-  for (size_t i = 0; i < totalFields; i++)
+  for (size_t i = 1; i < totalFields; i++)
   {
     phase1 = m_CrystalStructures[m_FieldPhases[i]];
     size_t size = 0;
@@ -391,7 +394,6 @@ void MatchCrystallography::assign_eulers()
 
   int totalFields = m->getNumFieldTuples();
   size_t xtalCount = m->getNumEnsembleTuples();
-  unbiasedvol.resize(xtalCount);
   for (size_t i = 1; i < xtalCount; ++i)
   {
     unbiasedvol[i] = 0;
