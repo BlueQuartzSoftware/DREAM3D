@@ -328,12 +328,12 @@ void MatchCrystallography::determine_volumes()
   for (size_t i = 0; i < totalPoints; i++)
   {
     m_Volumes[m_GrainIds[i]]++;
-    unbiasedvol[m_FieldPhases[i]] = unbiasedvol[m_FieldPhases[i]] + m_Volumes[i];
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
   for (size_t i = 0; i < totalFields; i++)
   {
     m_Volumes[i] = m_Volumes[i] * res_scalar;
+    unbiasedvol[m_FieldPhases[i]] = unbiasedvol[m_FieldPhases[i]] + m_Volumes[i];
   }
 }
 
