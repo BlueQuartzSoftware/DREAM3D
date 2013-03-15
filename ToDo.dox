@@ -7,21 +7,17 @@ so it can be integrated with the other documentation pages.
 
 
 @section blockers Show Stopping Bugs
-@li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
 
-
-@li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
-@li How to incorporate documentation for plugins into the main help system
-@li Finish updating ReadH5Ebsd filter Gui for HKL and HEDM data sets
-@li Fix GUI for GenerateEnsembleStatistics Filter (waiting for Mike G to finish filter)
-@li Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 
 
 @section mike_jackson Mike Jackson ToDo List
 @li Create filter to generate Abaqus input files, Albert Cerrone to help with this
 @li Write program to read in Pipeline Files on the command line
-@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
 @li Provide better feedback on 3D .ctf files
+@li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
+@li How to incorporate documentation for plugins into the main help system
+@li Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
+
 
 @section STILL_TO_DO Still To Do
 @li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
@@ -70,7 +66,6 @@ so it can be integrated with the other documentation pages.
 @li Add median filter on scalar array
 @li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 @li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
-@li Finish implementing writing of GenerateEnsembleStatistics filter'S GUI values to pref file
 @li Fix the mPrime, F1, F1spt, F7 functions in Hex- and Ortho- Ops
 
 
@@ -135,6 +130,10 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
+@li Finish implementing writing of GenerateEnsembleStatistics filter'S GUI values to pref file
+@li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
+@li Finish updating ReadH5Ebsd filter Gui for HKL and HEDM data sets
 @li Add advanced button on import filter to allow any recommended transformation
 @li Add in a "Search Box" to top of Filter list to filter out the list based on keywords
 @li Combine the threshold_points and DetermineGoodVoxels into a single filter
