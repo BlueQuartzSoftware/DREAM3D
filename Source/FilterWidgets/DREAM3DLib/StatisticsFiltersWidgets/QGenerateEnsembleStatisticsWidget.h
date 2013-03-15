@@ -78,15 +78,14 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
 
 
   private slots:
-    void phaseTypeEdited(int i);
+    void on_addPhaseType_clicked();
+    void on_removePhaseType_clicked();
+    void inputChanged();
+
 
   private:
     QString m_FilterGroup;
-    DistributionTypeWidget* m_SizeDistributionWidget;
-    DistributionTypeWidget* m_AspectRatioDistributionWidget;
-    DistributionTypeWidget* m_Omega3DistributionWidget;
-    DistributionTypeWidget* m_NeighborhoodDistributionWidget;
-    bool                        m_PhaseTypeEdited;
+
 
     QGenerateEnsembleStatisticsWidget(const QGenerateEnsembleStatisticsWidget&); // Copy Constructor Not Implemented
     void operator=(const QGenerateEnsembleStatisticsWidget&); // Operator '=' Not Implemented

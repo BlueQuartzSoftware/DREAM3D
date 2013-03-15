@@ -89,24 +89,25 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
     virtual const std::string getHumanLabel() { return "Generate Ensemble Statistics"; }
 
-	DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
-	DREAM3D_INSTANCE_PROPERTY(int, SizeDistributionFitType)
-	DREAM3D_INSTANCE_PROPERTY(bool, AspectRatioDistribution)
-	DREAM3D_INSTANCE_PROPERTY(int, AspectRatioDistributionFitType)
-	DREAM3D_INSTANCE_PROPERTY(bool, Omega3Distribution)
-	DREAM3D_INSTANCE_PROPERTY(int, Omega3DistributionFitType)
-	DREAM3D_INSTANCE_PROPERTY(bool, NeighborhoodDistribution)
-	DREAM3D_INSTANCE_PROPERTY(int, NeighborhoodDistributionFitType)
-	DREAM3D_INSTANCE_PROPERTY(bool, ODF)
-	DREAM3D_INSTANCE_PROPERTY(bool, MDF)
-	DREAM3D_INSTANCE_PROPERTY(bool, AxisODF)
-	
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
+    DREAM3D_INSTANCE_PROPERTY(int, SizeDistributionFitType)
+    DREAM3D_INSTANCE_PROPERTY(bool, AspectRatioDistribution)
+    DREAM3D_INSTANCE_PROPERTY(int, AspectRatioDistributionFitType)
+    DREAM3D_INSTANCE_PROPERTY(bool, Omega3Distribution)
+    DREAM3D_INSTANCE_PROPERTY(int, Omega3DistributionFitType)
+    DREAM3D_INSTANCE_PROPERTY(bool, NeighborhoodDistribution)
+    DREAM3D_INSTANCE_PROPERTY(int, NeighborhoodDistributionFitType)
+    DREAM3D_INSTANCE_PROPERTY(bool, CalculateODF)
+    DREAM3D_INSTANCE_PROPERTY(bool, CalculateMDF)
+    DREAM3D_INSTANCE_PROPERTY(bool, CalculateAxisODF)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<unsigned int>, PhaseTypeArray)
 
-	/**
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+
+  /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -115,13 +116,13 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
   protected:
     GenerateEnsembleStatistics();
 
-	void gatherSizeStats();
-	void gatherAspectRatioStats();
-	void gatherOmega3Stats();
-	void gatherNeighborhoodStats();
-	void gatherMDFStats();
-	void gatherODFStats();
-	void gatherAxisODFStats();
+    void gatherSizeStats();
+    void gatherAspectRatioStats();
+    void gatherOmega3Stats();
+    void gatherNeighborhoodStats();
+    void gatherMDFStats();
+    void gatherODFStats();
+    void gatherAxisODFStats();
 
   private:
     std::vector<OrientationMath*> m_OrientationOps;

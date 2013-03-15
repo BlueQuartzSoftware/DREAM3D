@@ -185,7 +185,7 @@ void FindNeighbors::execute()
   int good = 0;
   int neighbor = 0;
 
-  size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
+  //size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
 
     std::vector<std::vector<int> > neighborlist;
     std::vector<std::vector<float> > neighborsurfacearealist;
@@ -201,7 +201,7 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
-	m_SurfaceFields[i] = false;
+  m_SurfaceFields[i] = false;
   }
 
   totalPoints = m->getTotalPoints();

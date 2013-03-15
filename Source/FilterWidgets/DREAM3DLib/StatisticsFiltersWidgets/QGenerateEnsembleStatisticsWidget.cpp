@@ -36,6 +36,7 @@
 
 #include "QGenerateEnsembleStatisticsWidget.h"
 
+#include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DistributionTypeWidget.h"
 
 #include "DREAM3DLib/Common/PhaseType.h"
@@ -46,16 +47,25 @@
 //
 // -----------------------------------------------------------------------------
 QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* parent) :
-  QFilterWidget(parent),
-  m_PhaseTypeEdited(false)
+  QFilterWidget(parent)
 {
   this->setupUi(this);
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
-
-
   //Get the defaults from the filter and assign to the internal variables
+  /* Copy all the settings from this instance into the new instance */
+  calcSizeDistribution->setChecked(filter->getSizeDistribution());
+  m_SizeDistributionFitType->setCurrentIndex(filter->getSizeDistributionFitType());
+  calcAspectRatioDistribution->setChecked(filter->getAspectRatioDistribution());
+  m_AspectRatioDistributionFitType->setCurrentIndex(filter->getAspectRatioDistributionFitType());
+  calcOmega3Distribution->setChecked(filter->getOmega3Distribution());
+  m_Omega3DistributionFitType->setCurrentIndex(filter->getOmega3DistributionFitType());
+  calcNeighborhoodDistribution->setChecked(filter->getNeighborhoodDistribution());
+  m_NeighborhoodDistributionFitType->setCurrentIndex(filter->getNeighborhoodDistributionFitType());
+  calcODF->setChecked(filter->getCalculateODF());
+  calcMDF->setChecked(filter->getCalculateMDF());
+  calcAODF->setChecked(filter->getCalculateAxisODF());
 
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
@@ -77,18 +87,36 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
 /* Copy all the settings from this instance into the new instance */
 
-  filter->setSizeDistribution(m_SizeDistributionWidget->isChecked());
-  filter->setSizeDistributionFitType(m_SizeDistributionWidget->getFitType());
-  filter->setAspectRatioDistribution(m_AspectRatioDistributionWidget->isChecked());
-  filter->setAspectRatioDistributionFitType(m_AspectRatioDistributionWidget->getFitType());
-  filter->setOmega3Distribution(m_Omega3DistributionWidget->isChecked());
-  filter->setOmega3DistributionFitType(m_Omega3DistributionWidget->getFitType());
-  filter->setNeighborhoodDistribution(m_NeighborhoodDistributionWidget->isChecked());
-  filter->setNeighborhoodDistributionFitType(m_NeighborhoodDistributionWidget->getFitType());
-  filter->setODF(m_ODFWidget->isChecked());
-  filter->setMDF(m_MDFWidget->isChecked());
-  filter->setAxisODF(m_AxisODFWidget->isChecked());
+  filter->setSizeDistribution(calcSizeDistribution->isChecked());
+  filter->setSizeDistributionFitType(m_SizeDistributionFitType->currentIndex());
+  filter->setAspectRatioDistribution(calcAspectRatioDistribution->isChecked());
+  filter->setAspectRatioDistributionFitType(m_AspectRatioDistributionFitType->currentIndex());
+  filter->setOmega3Distribution(calcOmega3Distribution->isChecked());
+  filter->setOmega3DistributionFitType(m_Omega3DistributionFitType->currentIndex());
+  filter->setNeighborhoodDistribution(calcNeighborhoodDistribution->isChecked());
+  filter->setNeighborhoodDistributionFitType(m_NeighborhoodDistributionFitType->currentIndex());
+  filter->setCalculateODF(calcODF->isChecked());
+  filter->setCalculateMDF(calcMDF->isChecked());
+  filter->setCalculateAxisODF(calcAODF->isChecked());
 
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
+  if (m_DefinePhaseTypes->isChecked() == true)
+  {
+
+    int count = phaseTypeTableWidget->rowCount();
+    std::vector<unsigned int> phaseTypes(count);
+    for(int r = 0; r < count; ++r)
+    {
+      QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
+      QComboBox* cb = qobject_cast<QComboBox*>(w);
+      if(NULL != cb)
+      {
+        phaseTypes.push_back(cb->currentIndex());
+      }
+    }
+    filter->setPhaseTypeArray(phaseTypes);
+  }
   return filter;
 }
 
@@ -99,7 +127,23 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
 {
   prefs.setValue("Filter_Name", "GenerateEnsembleStatistics" );
   // Need to figure out how to write out the values for the DistributionTypeWidgets
+  WRITE_CHECKBOX_SETTING(prefs, calc, SizeDistribution)
+  WRITE_COMBO_BOX(prefs, m_, SizeDistributionFitType)
 
+  WRITE_CHECKBOX_SETTING(prefs, calc, AspectRatioDistribution)
+  WRITE_COMBO_BOX(prefs, m_, AspectRatioDistributionFitType)
+
+  WRITE_CHECKBOX_SETTING(prefs, calc, Omega3Distribution)
+  WRITE_COMBO_BOX(prefs, m_, Omega3DistributionFitType)
+
+  WRITE_CHECKBOX_SETTING(prefs, calc, NeighborhoodDistribution)
+  WRITE_COMBO_BOX(prefs, m_, NeighborhoodDistributionFitType)
+
+  WRITE_CHECKBOX_SETTING(prefs, calc, ODF)
+  WRITE_CHECKBOX_SETTING(prefs, calc, MDF)
+  WRITE_CHECKBOX_SETTING(prefs, calc, AODF)
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, DefinePhaseTypes)
 }
 
 // -----------------------------------------------------------------------------
@@ -108,6 +152,23 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
 void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
 {
   // Read the values back from the prefs and set them into the DistributionTypeWidgets
+  READ_CHECKBOX_SETTING(prefs, calc, SizeDistribution, false)
+  READ_COMBO_BOX(prefs, m_, SizeDistributionFitType)
+
+  READ_CHECKBOX_SETTING(prefs, calc, AspectRatioDistribution, false)
+  READ_COMBO_BOX(prefs, m_, AspectRatioDistributionFitType)
+
+  READ_CHECKBOX_SETTING(prefs, calc, Omega3Distribution, false)
+  READ_COMBO_BOX(prefs, m_, Omega3DistributionFitType)
+
+  READ_CHECKBOX_SETTING(prefs, calc, NeighborhoodDistribution, false)
+  READ_COMBO_BOX(prefs, m_, NeighborhoodDistributionFitType)
+
+  READ_CHECKBOX_SETTING(prefs, calc, ODF, false)
+  READ_CHECKBOX_SETTING(prefs, calc, MDF, false)
+  READ_CHECKBOX_SETTING(prefs, calc, AODF, false)
+
+  READ_CHECKBOX_SETTING(prefs, m_, DefinePhaseTypes, false)
 }
 
 // -----------------------------------------------------------------------------
@@ -117,6 +178,20 @@ QFilterWidget* QGenerateEnsembleStatisticsWidget::createDeepCopy()
 {
   QGenerateEnsembleStatisticsWidget* w = new QGenerateEnsembleStatisticsWidget(NULL);
   /* Copy all the settings from this instance into the new instance */
+  w->calcSizeDistribution->setChecked(calcSizeDistribution->isChecked());
+  w->m_SizeDistributionFitType->setCurrentIndex(m_SizeDistributionFitType->currentIndex());
+  w->calcAspectRatioDistribution->setChecked(calcAspectRatioDistribution->isChecked());
+  w->m_AspectRatioDistributionFitType->setCurrentIndex(m_AspectRatioDistributionFitType->currentIndex());
+  w->calcOmega3Distribution->setChecked(calcOmega3Distribution->isChecked());
+  w->m_Omega3DistributionFitType->setCurrentIndex(m_Omega3DistributionFitType->currentIndex());
+  w->calcNeighborhoodDistribution->setChecked(calcNeighborhoodDistribution->isChecked());
+  w->m_NeighborhoodDistributionFitType->setCurrentIndex(m_NeighborhoodDistributionFitType->currentIndex());
+  w->calcODF->setChecked(calcODF->isChecked());
+  w->calcMDF->setChecked(calcMDF->isChecked());
+  w->calcAODF->setChecked(calcAODF->isChecked());
+  w->m_DefinePhaseTypes->setChecked(m_DefinePhaseTypes->isChecked());
+
+
   return w;
 }
 
@@ -135,37 +210,25 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VoxelDataContain
                                                                 SurfaceMeshDataContainer::Pointer smdc,
                                                                 SolidMeshDataContainer::Pointer sdc)
 {
-
-
-  int numPhases = vdc->getNumEnsembleTuples();
-
-  std::vector<std::string> phaseTypeStrings;
-  PhaseType::getPhaseTypeStrings(phaseTypeStrings);
-  std::vector<unsigned int> phaseTypeEnums;
-  PhaseType::getPhaseTypeEnums(phaseTypeEnums);
-
-  // Remove all the items
-  phaseTypeList->clear();
-  // Now iterate over all the phases creating the proper UI elements
-  for (int i = 0; i < numPhases; i++)
+  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
+  if (m_DefinePhaseTypes->isChecked() == true)
   {
-
-    phaseTypeList->addItem(PhaseType::PrimaryStr().c_str());
-    QListWidgetItem* item = phaseTypeList->item(i);
-    item->setSizeHint(QSize(50, 25));
-    QComboBox* cb = new QComboBox(phaseTypeList);
-    for (size_t i = 0; i < phaseTypeStrings.size(); ++i)
+    int count = phaseTypeTableWidget->rowCount();
+    if (count > 1) { count = 1; } // Since this is preflight we only need to size the array to 1 otherwise errors from the preflight engine
+    PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(count, DREAM3D::EnsembleData::PhaseTypes);
+    for(int r = 0; r < count; ++r)
     {
-      cb->addItem(QString::fromStdString(phaseTypeStrings[i]), phaseTypeEnums[i]);
-      cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
+      QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
+      QComboBox* cb = qobject_cast<QComboBox*>(w);
+      if(NULL != cb)
+      {
+        phaseTypes->SetValue(r, cb->currentIndex());
+      }
     }
-    cb->setMinimumHeight(25);
-    phaseTypeList->setItemWidget(item, cb);
-    connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(phaseTypeEdited(int)));
+
+    vdc->addEnsembleData(phaseTypes->GetName(), phaseTypes);
   }
-
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -178,7 +241,6 @@ void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VoxelDataContaine
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -186,30 +248,50 @@ void QGenerateEnsembleStatisticsWidget::setupGui()
 {
   setCheckable(true);
   setIsSelected(false);
-
-
-
-  m_NeighborhoodDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Neighborhood Distribution"), distributionTypeFrame);
-  m_NeighborhoodDistributionWidget->setStyleSheet("");
-  distributionTypeLayout->insertWidget(0, m_NeighborhoodDistributionWidget);
-  m_Omega3DistributionWidget = new DistributionTypeWidget( QString::fromAscii("Omega3 Distribution"), distributionTypeFrame);
-  m_Omega3DistributionWidget->setStyleSheet("");
-  distributionTypeLayout->insertWidget(0, m_Omega3DistributionWidget);
-  m_AspectRatioDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Aspect Ratio Distribution"), distributionTypeFrame);
-  m_AspectRatioDistributionWidget->setStyleSheet("");
-  distributionTypeLayout->insertWidget(0, m_AspectRatioDistributionWidget);
-  m_SizeDistributionWidget = new DistributionTypeWidget( QString::fromAscii("Size Distribution"), distributionTypeFrame);
-  m_SizeDistributionWidget->setStyleSheet("");
-  distributionTypeLayout->insertWidget(0, m_SizeDistributionWidget);
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::phaseTypeEdited(int i)
+void QGenerateEnsembleStatisticsWidget::inputChanged()
 {
-  m_PhaseTypeEdited = true;
   emit parametersChanged();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QGenerateEnsembleStatisticsWidget::on_addPhaseType_clicked()
+{
+  std::vector<std::string> phaseTypeStrings;
+  PhaseType::getPhaseTypeStrings(phaseTypeStrings);
+  std::vector<unsigned int> phaseTypeEnums;
+  PhaseType::getPhaseTypeEnums(phaseTypeEnums);
+
+  phaseTypeTableWidget->insertRow(phaseTypeTableWidget->rowCount());
+
+  QComboBox* cb = new QComboBox(phaseTypeTableWidget);
+  for (size_t i = 0; i < phaseTypeStrings.size() - 1; ++i)
+  {
+    cb->addItem(QString::fromStdString(phaseTypeStrings[i]), phaseTypeEnums[i]);
+    cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
+  }
+  cb->setMinimumHeight(25);
+  phaseTypeTableWidget->setCellWidget(phaseTypeTableWidget->rowCount()-1, 0, cb);
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QGenerateEnsembleStatisticsWidget::on_removePhaseType_clicked()
+{
+  QItemSelectionModel *selectionModel = phaseTypeTableWidget->selectionModel();
+  if (!selectionModel->hasSelection()) return;
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) return;
+  phaseTypeTableWidget->model()->removeRow(index.row(), index.parent());
+  emit parametersChanged();
+}
+
 
