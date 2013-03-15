@@ -606,17 +606,18 @@ void PackPrimaryPhases::execute()
         iter = 0;
         gid++;
       }
+      if (getCancel() == true)
+      {
+        ss.str("");
+        ss << "Filter Cancelled.";
+        notifyWarningMessage(ss.str(), -1);
+        setErrorCondition(-1);
+        return;
+      }
+
     }
   }
 
-  if (getCancel() == true)
-  {
-    ss.str("");
-    ss << "Filter Cancelled.";
-    notifyWarningMessage(ss.str(), -1);
-    setErrorCondition(-1);
-    return;
-  }
 
   if(m_PeriodicBoundaries == false)
   {
@@ -656,18 +657,19 @@ void PackPrimaryPhases::execute()
           iter = 0;
           gid++;
         }
+        if (getCancel() == true)
+        {
+          ss.str("");
+          ss << "Filter Cancelled.";
+          notifyWarningMessage(ss.str(), -1);
+          setErrorCondition(-1);
+          return;
+        }
       }
     }
   }
 
-  if (getCancel() == true)
-  {
-    ss.str("");
-    ss << "Filter Cancelled.";
-    notifyWarningMessage(ss.str(), -1);
-    setErrorCondition(-1);
-    return;
-  }
+
   notifyStatusMessage("Initializing Neighbor Distributions");
 
   // initialize the sim and goal neighbor distribution for the primary phases
@@ -1656,19 +1658,22 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
 
   fillingerror = fillingerror * float(m_TotalPackingPoints);
   int col, row, plane;
+  int k1 = 0, k2 = 0, k3 = 0;
   if(gadd > 0)
   {
+    k1 = 2;
+    k2 = -1;
+    k3 = 1;
     size_t size = columnlist[gadd].size();
-    std::vector<int>& cl_gadd = columnlist[gadd];
-    std::vector<int>& rl_gadd = rowlist[gadd];
-    std::vector<int>& pl_gadd = planelist[gadd];
+    std::vector<int>& cl = columnlist[gadd];
+    std::vector<int>& rl = rowlist[gadd];
+    std::vector<int>& pl = planelist[gadd];
     float packquality = 0;
     for (size_t i = 0; i < size; i++)
     {
-      col = cl_gadd[i];
-      row = rl_gadd[i];
-      plane = pl_gadd[i];
-
+      col = cl[i];
+      row = rl[i];
+      plane = pl[i];
       if(m_PeriodicBoundaries == true)
       {
         if(col < 0) col = col + m_PackingPoints[0];
@@ -1678,21 +1683,20 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane < 0) plane = plane + m_PackingPoints[2];
         if(plane > m_PackingPoints[2] - 1) plane = plane - m_PackingPoints[2];
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
-
         int currentGrainOwner = grainOwners[grainOwnersIdx];
-        fillingerror = fillingerror + (2 * currentGrainOwner - 1);
+        fillingerror = fillingerror + (k1 * currentGrainOwner  + k2);
+        grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
         packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
-        grainOwners[grainOwnersIdx] = currentGrainOwner + 1;
       }
       else
       {
-        if(col >= 0 && col <= m_PackingPoints[0] - 1 && row >= 0 && row <= m_PackingPoints[1] - 1 && plane >= 0 && plane <= m_PackingPoints[2] - 1)
+        if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
         {
           grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
           int currentGrainOwner = grainOwners[grainOwnersIdx];
-          fillingerror = fillingerror + (2 * currentGrainOwner - 1);
+          fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
+          grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
           packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
-          grainOwners[grainOwnersIdx] = currentGrainOwner + 1;
         }
       }
     }
@@ -1700,15 +1704,18 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   }
   if(gremove > 0)
   {
+    k1 = -2;
+    k2 = 3;
+    k3 = -1;
     size_t size = columnlist[gremove].size();
-    std::vector<int>& cl_gremove = columnlist[gremove];
-    std::vector<int>& rl_gremove = rowlist[gremove];
-    std::vector<int>& pl_gremove = planelist[gremove];
+    std::vector<int>& cl = columnlist[gremove];
+    std::vector<int>& rl = rowlist[gremove];
+    std::vector<int>& pl = planelist[gremove];
     for (size_t i = 0; i < size; i++)
     {
-      col = cl_gremove[i];
-      row = rl_gremove[i];
-      plane = pl_gremove[i];
+      col = cl[i];
+      row = rl[i];
+      plane = pl[i];
       if(m_PeriodicBoundaries == true)
       {
         if(col < 0) col = col + m_PackingPoints[0];
@@ -1719,17 +1726,17 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) plane = plane - m_PackingPoints[2];
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
         int currentGrainOwner = grainOwners[grainOwnersIdx];
-        fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
-        grainOwners[grainOwnersIdx] = currentGrainOwner - 1;
+        fillingerror = fillingerror + ( k1 * currentGrainOwner + k2);
+        grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
       }
       else
       {
-        if(col >= 0 && col <= m_PackingPoints[0] - 1 && row >= 0 && row <= m_PackingPoints[1] - 1 && plane >= 0 && plane <= m_PackingPoints[2] - 1)
+        if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
         {
           grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + col;
           int currentGrainOwner = grainOwners[grainOwnersIdx];
-          fillingerror = fillingerror + (-2 * currentGrainOwner + 3);
-          grainOwners[grainOwnersIdx] = currentGrainOwner - 1;
+          fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
+          grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
         }
       }
     }
