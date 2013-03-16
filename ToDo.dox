@@ -13,7 +13,7 @@ so it can be integrated with the other documentation pages.
 @section mike_jackson Mike Jackson ToDo List
 @li Create filter to generate Abaqus input files, Albert Cerrone to help with this
 @li Write program to read in Pipeline Files on the command line
-@li Provide better feedback on 3D .ctf files
+
 @li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 @li How to incorporate documentation for plugins into the main help system
 @li Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
@@ -80,6 +80,7 @@ so it can be integrated with the other documentation pages.
 
 
 @section io_filters
+@li Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 @li Add filter to write out slices as images of any array
 @li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
 @li Add filter to write out 2D slices as .ang, .ctf or .mic files
@@ -87,8 +88,6 @@ so it can be integrated with the other documentation pages.
 @li Add filter to read .edf data
 @li Add Filter to initialize the Field Map based on a user defined array such as Grain Ids.
 @li Read in more meta-data about each phase: Space Group, Phase Name, Material Name
-@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm
-@li Reorganize the .h5ebsd file to include Images
 
 
 @section todo_GUI_Pipeline Add to the Pipeline Gui
@@ -130,6 +129,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Output file similar to TSL OIM Analysis software. See example from Brad Fromm (INLFileWriter filter)
 @li Fix TotalSurfaceAreas in MatchCrystallography
 @li Fix phasetype sizecheck in GenerateEnsembleStatistics.
 @li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
