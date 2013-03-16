@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/FileWriter.h"
 
 /**
- * @class PhWriter PhWriter.h DREAM3D/IO/PhWriter.h
+ * @class PhWriter PhWriter.h DREAM3DLib/IOFilters/PhWriter.h
  * @brief This class writes a "Ph" file from the Grain Generator Data but is templated
  * so that possibly other classes can use this writing method. This code was adapted
  * from code supplied by S. Sintay and J. Tucker.
@@ -63,14 +63,43 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
+    /**
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+
+     /**
+     * @brief getSubGroupName Returns the Subgroup Name for this filter
+     * @return
+     */
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
     virtual const std::string getHumanLabel() { return "Write Ph File (Grain Ids)"; }
 
+   /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
+
 
   protected:
     PhWriter();
@@ -79,11 +108,18 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
 
     virtual int writeFile();
 
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
     int32_t* m_GrainIds;
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     PhWriter(const PhWriter&); // Copy Constructor Not Implemented
     void operator=(const PhWriter&); // Operator '=' Not Implemented
