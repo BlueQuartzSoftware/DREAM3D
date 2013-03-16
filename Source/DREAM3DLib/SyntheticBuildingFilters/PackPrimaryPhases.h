@@ -208,9 +208,6 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    //std::vector<std::vector<std::vector<int> > > grainowners;
-
-
     std::vector<std::vector<float> > grainsizedist;
     std::vector<std::vector<float> > simgrainsizedist;
     std::vector<std::vector<std::vector<float> > > neighbordist;

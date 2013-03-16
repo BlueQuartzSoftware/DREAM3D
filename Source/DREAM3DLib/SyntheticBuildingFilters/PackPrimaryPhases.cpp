@@ -1118,19 +1118,12 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_PackingPoints[0] = m->getXPoints()/2;
   m_PackingPoints[1] = m->getYPoints()/2;
   m_PackingPoints[2] = m->getZPoints()/2;
+
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
+
   Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::grain_owners");
   grainOwnersPtr->initializeWithZeros();
 
-//  grain_owners.resize(m_PackingPoints[0]);
-//  for (int i = 0; i < m_PackingPoints[0]; i++)
-//  {
-//    grain_owners[i].resize(m_PackingPoints[1]);
-//    for (int j = 0; j < m_PackingPoints[1]; j++)
-//    {
-//      grain_owners[i][j].resize(m_PackingPoints[2], 0);
-//    }
-//  }
   return grainOwnersPtr;
 }
 
@@ -1329,7 +1322,6 @@ VoxelDataContainer* m = getVoxelDataContainer();
   size_t nnumbin = 0;
   int index = 0;
   std::vector<int> count;
-  int counter = 0;
   int phase;
   typedef std::vector<std::vector<float> > VectOfVectFloat_t;
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
@@ -1378,7 +1370,6 @@ VoxelDataContainer* m = getVoxelDataContainer();
         if(nnumbin >= 40) { nnumbin = 39; }
         curSimNeighborDist[diabin][nnumbin]++;
         count[diabin]++;
-        counter++;
       }
     }
     if(gadd > 0 && m_FieldPhases[gadd] == phase)
@@ -1392,7 +1383,6 @@ VoxelDataContainer* m = getVoxelDataContainer();
       if(nnumbin >= 40) { nnumbin = 39; }
       curSimNeighborDist[diabin][nnumbin]++;
       count[diabin]++;
-      counter++;
     }
     float runningtotal = 0.0f;
 
