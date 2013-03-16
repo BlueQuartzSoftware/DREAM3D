@@ -146,7 +146,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
     find_surfacefields->setMessagePrefix(this->getMessagePrefix());
     if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) find_surfacefields->execute();
+    if(preflight == false) {
+      notifyStatusMessage("Finding Surface Fields");
+      find_surfacefields->execute();
+    }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
@@ -159,7 +162,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     find_grainphases->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
+    if(preflight == false) {
+      notifyStatusMessage("Finding Grain Phases");
+      find_grainphases->execute();
+     }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -178,7 +184,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     find_neighbors->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) find_neighbors->execute();
+    if(preflight == false) {
+      notifyStatusMessage("Finding Neighbors");
+      find_neighbors->execute();
+    }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
@@ -212,7 +221,11 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_numfields->setVoxelDataContainer(getVoxelDataContainer());
     find_numfields->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_numfields->preflight();
-    if(preflight == false) find_numfields->execute();
+    if(preflight == false)
+    {
+      notifyStatusMessage("Finding Number of Fields");
+      find_numfields->execute();
+    }
   }
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
 
@@ -223,6 +236,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     ss << "Stats Array Not Initialized correctly" << std::endl;
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss.str(), -310);
+  }
+  if (preflight == true)
+  {
+    notifyStatusMessage("Finished running required filters");
   }
 }
 
