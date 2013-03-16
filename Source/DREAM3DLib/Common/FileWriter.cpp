@@ -123,7 +123,7 @@ void FileWriter::execute()
   if (err < 0)
   {
     PipelineMessage em (getHumanLabel(), "Error Writing the file", err);
-  addErrorMessage(em);
+    addErrorMessage(em);
     setErrorCondition(err);
     notifyMessage(em);
     return;
