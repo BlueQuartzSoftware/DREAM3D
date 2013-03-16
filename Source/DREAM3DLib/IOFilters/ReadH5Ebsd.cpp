@@ -737,13 +737,13 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }
 
-  if (m_SelectedVoxelCellArrays.find(Ebsd::Ctf::BandCount) != m_SelectedVoxelCellArrays.end() )
+  if (m_SelectedVoxelCellArrays.find(Ebsd::Ctf::Bands) != m_SelectedVoxelCellArrays.end() )
   {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::BandCount));
-    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BandCount);
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
+    iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands);
     iArray->SetNumberOfComponents(1);
     ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(Ebsd::Ctf::BandCount, iArray);
+    m->addCellData(Ebsd::Ctf::Bands, iArray);
   }
 
   if (m_SelectedVoxelCellArrays.find(Ebsd::Ctf::Error) != m_SelectedVoxelCellArrays.end() )

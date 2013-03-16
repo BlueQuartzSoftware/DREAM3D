@@ -186,9 +186,9 @@ endif()
 # --------------------------------------------------------------------------
 # Preflight Test
 # --------------------------------------------------------------------------
-add_executable(PreFlightTest ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp)
-target_link_libraries(PreFlightTest DREAM3DLib)
-add_test(PreFlightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightTest)
+#add_executable(PreFlightTest ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp)
+#target_link_libraries(PreFlightTest DREAM3DLib)
+#add_test(PreFlightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightTest)
 
 
 # --------
