@@ -1907,7 +1907,7 @@ void PackPrimaryPhases::assign_voxels_and_gaps()
       {
         float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
         ss.str("");
-        ss << "Cycle: " << cycle << "  Grains Checked: " << i << "  Grains/Second: " << (int)rate << "  Unassigned Count: " << lastUnassignedCount;
+        ss << "Assign Voxels & Gaps || Cycle: " << cycle << " || Grains Checked: " << i << " || Grains/Second: ";// << (int)rate << "  Unassigned Count: " << lastUnassignedCount;
         notifyStatusMessage(ss.str());
         grainsPerTime = 0;
         millis = MXA::getMilliSeconds();
