@@ -38,10 +38,12 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <iomanip>
-#include <map>
+//#include <string>
+#include <sstream>
+//#include <iomanip>
+//#include <map>
 
+#include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
@@ -211,12 +213,36 @@ int SpinsWriter::writeFile()
     return -1;
   }
 
+
+  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t currentMillis = millis;
+  uint64_t startMillis = millis;
+  uint64_t estimatedTime = 0;
+  float timeDiff = 0.0f;
+  std::stringstream ss;
+
+  int increment = totalpoints * .01;
+
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
   outfile.rdbuf()->pubsetbuf(buffer, 4096);
   for (int k = 0; k < totalpoints; k++)
   {
+    if (totalpoints % increment == 0)
+    {
+      currentMillis = MXA::getMilliSeconds();
+      if (currentMillis - millis > 1000)
+      {
+        ss.str("");
+        ss << static_cast<int>((float)(k)/(float)(totalpoints) * 100)<< " % Completed ";
+        timeDiff = ((float)k / (float)(currentMillis - startMillis));
+        estimatedTime = (float)(totalpoints - k) / timeDiff;
+        ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+        notifyStatusMessage(ss.str());
+        millis = MXA::getMilliSeconds();
+      }
+    }
     outfile << k << " " << m_GrainIds[k] << "\n";
   }
   outfile.close();
