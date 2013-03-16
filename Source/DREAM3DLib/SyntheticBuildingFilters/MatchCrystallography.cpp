@@ -121,7 +121,7 @@ void MatchCrystallography::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-	writer->writeValue("MaxIterations", getMaxIterations() );
+  writer->writeValue("MaxIterations", getMaxIterations() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -258,15 +258,21 @@ void MatchCrystallography::execute()
     return;
   }
 
+  notifyStatusMessage("Initializing Arrays");
   initializeArrays();
+  notifyStatusMessage("Determining Volumes");
   determine_volumes();
+  notifyStatusMessage("Determining Boundary Areas");
   determine_boundary_areas();
+  notifyStatusMessage("Assigning Eulers");
   assign_eulers();
+  notifyStatusMessage("Measuring Misorientation");
   measure_misorientations();
+  notifyStatusMessage("Matching Crystallography");
   matchCrystallography();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Matching Crystallography Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -354,7 +360,7 @@ void MatchCrystallography::determine_boundary_areas()
   size_t totalEnsembles = m->getNumEnsembleTuples();
 
   totalSurfaceArea.resize(totalEnsembles,0.0);
-  
+
   int phase1, phase2;
   for (size_t i = 1; i < totalFields; i++)
   {
@@ -372,9 +378,9 @@ void MatchCrystallography::determine_boundary_areas()
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if(phase1 == phase2)
       {
-		  totalSurfaceArea[phase1] = totalSurfaceArea[phase1] + neighsurfarea;
-	  }
-	}
+      totalSurfaceArea[phase1] = totalSurfaceArea[phase1] + neighsurfarea;
+    }
+  }
   }
 }
 
