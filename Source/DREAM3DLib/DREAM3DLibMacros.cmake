@@ -39,7 +39,6 @@ endmacro()
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_FILTER
 macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter)
-
     set(Project_SRCS ${Project_SRCS}
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp)
@@ -81,8 +80,8 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter
      #   file(APPEND ${HtmlDocQrcFile} "${filterGroup}/${filterName}.html\n")
         file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
 
-        file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${filterName}Widget>::Pointer q${filterName}WidgetFactory = QFilterWidgetFactory<Q${filterName}Widget>::New(); \n")
-        file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory); \n\n")
+        file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${filterName}Widget>::Pointer q${filterName}WidgetFactory = QFilterWidgetFactory<Q${filterName}Widget>::New();\n")
+        file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory);\n\n")
 
     endif()
 endmacro()
