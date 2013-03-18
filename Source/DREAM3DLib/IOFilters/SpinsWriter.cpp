@@ -243,7 +243,7 @@ int SpinsWriter::writeFile()
         millis = MXA::getMilliSeconds();
       }
     }
-    outfile << k << " " << m_GrainIds[k] << "\n";
+    outfile << k + 1 << " " << m_GrainIds[k] << "\n";
   }
   outfile.close();
 
