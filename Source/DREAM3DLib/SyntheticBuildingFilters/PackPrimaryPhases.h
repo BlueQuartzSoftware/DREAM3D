@@ -202,6 +202,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     float totalvol;
 
     float m_HalfPackingRes[3];
+    float m_OneOverPackingRes[3];
     float m_OneOverHalfPackingRes[3];
 
     float m_PackingRes[3];

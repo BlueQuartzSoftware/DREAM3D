@@ -84,7 +84,7 @@ typedef int64_t DimType;
 class AssignVoxelsGapsImpl
 {
     DimType dims[3];
-    float radcur[3];
+    float Invradcur[3];
     float res[3];
     float size[3];
     int32_t* m_GrainIds;
@@ -109,9 +109,9 @@ class AssignVoxelsGapsImpl
       dims[0] = dimensions[0];
       dims[1] = dimensions[1];
       dims[2] = dimensions[2];
-      radcur[0] = radCur[0];
-      radcur[1] = radCur[1];
-      radcur[2] = radCur[2];
+      Invradcur[0] = 1.0/radCur[0];
+      Invradcur[1] = 1.0/radCur[1];
+      Invradcur[2] = 1.0/radCur[2];
 
       res[0] = resolution[0];
       res[1] = resolution[1];
@@ -152,7 +152,7 @@ class AssignVoxelsGapsImpl
       float coords[3] = {0.0f, 0.0f, 0.0f};
       float inside = 0.0f;
       float dist = 0.0f;
-      float radcur1squared = radcur[0]*radcur[0];
+      float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
       float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
       int32_t* newowners = newownersPtr->GetPointer(0);
       float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
@@ -198,9 +198,9 @@ class AssignVoxelsGapsImpl
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
                 MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
-                float axis1comp = coordsRotated[0] / radcur[0];
-                float axis2comp = coordsRotated[1] / radcur[1];
-                float axis3comp = coordsRotated[2] / radcur[2];
+                float axis1comp = coordsRotated[0] * Invradcur[0];
+                float axis2comp = coordsRotated[1] * Invradcur[1];
+                float axis3comp = coordsRotated[2] * Invradcur[2];
                 inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
                 if(iteration == 1)
                 {
@@ -556,20 +556,10 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of grains here
   int estNumGrains = estimate_numgrains((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
- // std::cout << "estNumGrains: " << estNumGrains << std::endl;
   m->resizeFieldDataArrays(estNumGrains);
   dataCheck(false, totalPoints, estNumGrains, m->getNumEnsembleTuples());
-  int gid = 1;
-  #if 0
-  int gid = static_cast<int>(m->getNumFieldTuples());
-  if(gid == 0)
-  {
-    m->resizeFieldDataArrays(1);
-    dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
-    gid = 1;
-  }
-  #endif
 
+  int gid = 1;
   firstPrimaryField = gid;
   std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
@@ -602,7 +592,6 @@ void PackPrimaryPhases::execute()
         transfer_attributes(gid, &field);
         oldsizedisterror = currentsizedisterror;
         curphasevol[j] = curphasevol[j] + m_Volumes[gid];
-        //FIXME: Initialize the Grain with some sort of default data
         iter = 0;
         gid++;
       }
@@ -653,7 +642,6 @@ void PackPrimaryPhases::execute()
           transfer_attributes(gid, &field);
           oldsizedisterror = currentsizedisterror;
           curphasevol[j] = curphasevol[j] + m_Volumes[gid];
-          //FIXME: Initialize the Grain with some sort of default data
           iter = 0;
           gid++;
         }
@@ -888,9 +876,9 @@ void PackPrimaryPhases::execute()
         xc = m_Centroids[3*randomgrain];
         yc = m_Centroids[3*randomgrain+1];
         zc = m_Centroids[3*randomgrain+2];
-        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
-        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
-        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
         if(grainOwners[grainOwnersIdx] > 1) good = true;
         else randomgrain++;
@@ -904,9 +892,9 @@ void PackPrimaryPhases::execute()
       xc = static_cast<float>(rg.genrand_res53() * (dims[0] * xRes));
       yc = static_cast<float>(rg.genrand_res53() * (dims[1] * yRes));
       zc = static_cast<float>(rg.genrand_res53() * (dims[2] * zRes));
-      column = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
-      row = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
-      plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+      column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+      row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+      plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
 
       while(good == false && count < m_TotalPackingPoints)
       {
@@ -929,9 +917,9 @@ void PackPrimaryPhases::execute()
         }
         count++;
       }
-      xc = static_cast<float>((column*m_PackingRes[0]) + (m_PackingRes[0]/2.0));
-      yc = static_cast<float>((row*m_PackingRes[1]) + (m_PackingRes[1]/2.0));
-      zc = static_cast<float>((plane*m_PackingRes[2]) + (m_PackingRes[2]/2.0));
+      xc = static_cast<float>((column*m_PackingRes[0]) + (m_PackingRes[0]*0.5));
+      yc = static_cast<float>((row*m_PackingRes[1]) + (m_PackingRes[1]*0.5));
+      zc = static_cast<float>((plane*m_PackingRes[2]) + (m_PackingRes[2]*0.5));
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
       oldzc = m_Centroids[3 * randomgrain + 2];
@@ -963,9 +951,9 @@ void PackPrimaryPhases::execute()
         xc = m_Centroids[3*randomgrain];
         yc = m_Centroids[3*randomgrain+1];
         zc = m_Centroids[3*randomgrain+2];
-        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) / m_PackingRes[0] );
-        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) / m_PackingRes[1] );
-        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) / m_PackingRes[2] );
+        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
         if(grainOwners[grainOwnersIdx] > 1) good = true;
         else randomgrain++;
@@ -1114,6 +1102,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initialize_packinggrid()
   m_OneOverHalfPackingRes[1] = 1.0f/m_HalfPackingRes[1];
   m_OneOverHalfPackingRes[2] = 1.0f/m_HalfPackingRes[2];
 
+  m_OneOverPackingRes[0] = 1.0f/m_PackingRes[0];
+  m_OneOverPackingRes[1] = 1.0f/m_PackingRes[1];
+  m_OneOverPackingRes[2] = 1.0f/m_PackingRes[2];
 
   m_PackingPoints[0] = m->getXPoints()/2;
   m_PackingPoints[1] = m->getYPoints()/2;
