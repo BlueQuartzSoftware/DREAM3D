@@ -75,6 +75,7 @@ class ImportImageStack : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return "ImageImport"; }
+    virtual const std::string getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
