@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterParameters();
@@ -120,9 +120,9 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
   protected:
     InsertPrecipitatePhases();
 
-    void place_precipitates();
-    void initialize_packinggrid();
+    Int32ArrayType::Pointer initialize_packinggrid();
 
+    void place_precipitates(Int32ArrayType::Pointer grainOwnersPtr);
     void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Precip* precip);
@@ -134,7 +134,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr);
     void assign_voxels();
     void assign_gaps();
     void cleanup_grains();
@@ -196,15 +196,12 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     std::vector<std::vector<int> > rowlist;
     std::vector<std::vector<int> > planelist;
 
-    float packingresx;
-    float packingresy;
-    float packingresz;
-    int packingxpoints;
-    int packingypoints;
-    int packingzpoints;
-    int packingtotalpoints;
+    float m_HalfPackingRes[3];
+    float m_OneOverHalfPackingRes[3];
 
-    std::vector<std::vector<std::vector<int> > > grainowners;
+    float m_PackingRes[3];
+    int m_PackingPoints[3];
+    int m_TotalPackingPoints;
 
     std::vector<std::vector<float> > grainsizedist;
     std::vector<std::vector<float> > simgrainsizedist;

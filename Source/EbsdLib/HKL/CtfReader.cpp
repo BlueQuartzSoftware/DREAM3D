@@ -196,7 +196,7 @@ Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
@@ -208,7 +208,7 @@ Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::GrainRandomColourR) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::GrainRandomColourG) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::GrainRandomColourB) == 0) { return Ebsd::Int32;}
-  std::cout << "THIS IS NOT GOOD. Fieldname: " << fieldName << " was not found in the list" << std::endl;
+ // std::cout << "THIS IS NOT GOOD. Fieldname: " << fieldName << " was not found in the list" << std::endl;
   return Ebsd::UnknownNumType;
 }
 
@@ -221,7 +221,7 @@ int CtfReader::getTypeSize(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return 4;}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return 4;}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return 4;}
@@ -245,7 +245,7 @@ DataParser::Pointer CtfReader::getParser(const std::string &fieldName, void* ptr
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Z) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
@@ -335,7 +335,7 @@ int CtfReader::readData(std::ifstream &in)
 {
   // Delete any currently existing pointers
   deletePointers();
-
+  std::stringstream ss;
   // Initialize new pointers
   size_t yCells = getYCells();
   size_t xCells = getXCells();
@@ -354,9 +354,9 @@ int CtfReader::readData(std::ifstream &in)
   ::memset(buf, 0, kBufferSize);
   in.getline(buf, kBufferSize);
   // over write the newline at the end of the line with a NULL character
-  int i = 0;
-  while (buf[i] != 0 && i < kBufferSize) { ++i; }
-  if(buf[i - 1] < 32) { buf[i - 1] = 0; }
+  int idx = 0;
+  while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
+  if(buf[idx - 1] < 32) { buf[idx - 1] = 0; }
 
   std::vector<std::string> tokens = tokenize(buf, '\t');
 
@@ -380,7 +380,11 @@ int CtfReader::readData(std::ifstream &in)
     }
     else
     {
-      assert(0);
+      ss.str("");
+      ss << "Column Header '" << tokens[i] << "' is not a recognized column for CTF Files. Please recheck your .ctf file and report this error to the DREAM3D developers.";
+      setErrorMessage(ss.str());
+      deletePointers();
+      return -1;
     }
 
     if(m_ColumnData[i] == NULL)
@@ -404,9 +408,9 @@ int CtfReader::readData(std::ifstream &in)
 
         if ( (m_SingleSliceRead < 0) || (m_SingleSliceRead >= 0 && slice == m_SingleSliceRead) )
         {
-          i = 0;
-          while (buf[i] != 0 && i < kBufferSize) { ++i; }
-          if(buf[i - 1] < 32) { buf[i - 1] = 0; }
+          idx = 0;
+          while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
+          if(buf[idx - 1] < 32) { buf[idx - 1] = 0; }
           if(in.eof() == true) {
             break;
           }

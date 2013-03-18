@@ -121,7 +121,7 @@ void MatchCrystallography::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-	writer->writeValue("MaxIterations", getMaxIterations() );
+  writer->writeValue("MaxIterations", getMaxIterations() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -146,7 +146,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
     find_surfacefields->setMessagePrefix(this->getMessagePrefix());
     if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) find_surfacefields->execute();
+    if(preflight == false) {
+      notifyStatusMessage("Finding Surface Fields");
+      find_surfacefields->execute();
+    }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
@@ -159,7 +162,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
     find_grainphases->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
+    if(preflight == false) {
+      notifyStatusMessage("Finding Grain Phases");
+      find_grainphases->execute();
+     }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -178,7 +184,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
     find_neighbors->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) find_neighbors->execute();
+    if(preflight == false) {
+      notifyStatusMessage("Finding Neighbors");
+      find_neighbors->execute();
+    }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
@@ -212,7 +221,11 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     find_numfields->setVoxelDataContainer(getVoxelDataContainer());
     find_numfields->setMessagePrefix(getMessagePrefix());
     if(preflight == true) find_numfields->preflight();
-    if(preflight == false) find_numfields->execute();
+    if(preflight == false)
+    {
+      notifyStatusMessage("Finding Number of Fields");
+      find_numfields->execute();
+    }
   }
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
 
@@ -223,6 +236,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
     ss << "Stats Array Not Initialized correctly" << std::endl;
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss.str(), -310);
+  }
+  if (preflight == true)
+  {
+    notifyStatusMessage("Finished running required filters");
   }
 }
 
@@ -258,15 +275,21 @@ void MatchCrystallography::execute()
     return;
   }
 
+  notifyStatusMessage("Initializing Arrays");
   initializeArrays();
+  notifyStatusMessage("Determining Volumes");
   determine_volumes();
+  notifyStatusMessage("Determining Boundary Areas");
   determine_boundary_areas();
+  notifyStatusMessage("Assigning Eulers");
   assign_eulers();
+  notifyStatusMessage("Measuring Misorientation");
   measure_misorientations();
+  notifyStatusMessage("Matching Crystallography");
   matchCrystallography();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Matching Crystallography Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -354,7 +377,7 @@ void MatchCrystallography::determine_boundary_areas()
   size_t totalEnsembles = m->getNumEnsembleTuples();
 
   totalSurfaceArea.resize(totalEnsembles,0.0);
-  
+
   int phase1, phase2;
   for (size_t i = 1; i < totalFields; i++)
   {
@@ -372,9 +395,9 @@ void MatchCrystallography::determine_boundary_areas()
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if(phase1 == phase2)
       {
-		  totalSurfaceArea[phase1] = totalSurfaceArea[phase1] + neighsurfarea;
-	  }
-	}
+      totalSurfaceArea[phase1] = totalSurfaceArea[phase1] + neighsurfarea;
+    }
+  }
   }
 }
 

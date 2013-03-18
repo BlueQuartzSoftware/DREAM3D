@@ -59,7 +59,7 @@ H5EbsdVolumeReader()
   m_Phase = NULL;
   m_X = NULL;
   m_Y = NULL;
-  m_BandCount = NULL;
+  m_Bands = NULL;
   m_Error = NULL;
   m_Euler1 = NULL;
   m_Euler2 = NULL;
@@ -102,7 +102,8 @@ void H5CtfVolumeReader::initPointers(size_t numElements)
   H5CTFREADER_ALLOCATE_ARRAY(Phase, int)
   H5CTFREADER_ALLOCATE_ARRAY(X, float)
   H5CTFREADER_ALLOCATE_ARRAY(Y, float)
-  H5CTFREADER_ALLOCATE_ARRAY(BandCount, int)
+  H5CTFREADER_ALLOCATE_ARRAY(Z, float)
+  H5CTFREADER_ALLOCATE_ARRAY(Bands, int)
   H5CTFREADER_ALLOCATE_ARRAY(Error, int)
   H5CTFREADER_ALLOCATE_ARRAY(Euler1, float)
   H5CTFREADER_ALLOCATE_ARRAY(Euler2, float)
@@ -120,7 +121,7 @@ void H5CtfVolumeReader::deletePointers()
   this->deallocateArrayData<int > (m_Phase);
   this->deallocateArrayData<float > (m_X);
   this->deallocateArrayData<float > (m_Y);
-  this->deallocateArrayData<int > (m_BandCount);
+  this->deallocateArrayData<int > (m_Bands);
   this->deallocateArrayData<int > (m_Error);
   this->deallocateArrayData<float > (m_Euler1);
   this->deallocateArrayData<float > (m_Euler2);
@@ -138,7 +139,7 @@ void* H5CtfVolumeReader::getPointerByName(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return static_cast<void*>(m_Y);}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return static_cast<void*>(m_BandCount);}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return static_cast<void*>(m_Bands);}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return static_cast<void*>(m_Error);}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
@@ -157,7 +158,7 @@ Ebsd::NumType H5CtfVolumeReader::getPointerType(const std::string &fieldName)
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Y) == 0) { return Ebsd::Float;}
-  if (fieldName.compare(Ebsd::Ctf::BandCount) == 0) { return Ebsd::Int32;}
+  if (fieldName.compare(Ebsd::Ctf::Bands) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Error) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ctf::Euler2) == 0) { return Ebsd::Float;}
@@ -289,7 +290,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
         if (NULL != phasePtr) {m_Phase[index] = phasePtr[readerIndex];} // Phase Add 1 to the phase number because .ctf files are zero based for phases
         if (NULL != xPtr) {m_X[index] = xPtr[readerIndex];}
         if (NULL != yPtr) {m_Y[index] = yPtr[readerIndex];}
-        if (NULL != bandPtr) {m_BandCount[index] = bandPtr[readerIndex];}
+        if (NULL != bandPtr) {m_Bands[index] = bandPtr[readerIndex];}
         if (NULL != errorPtr) {m_Error[index] = errorPtr[readerIndex];}
         if (NULL != euler1Ptr) {m_Euler1[index] = euler1Ptr[readerIndex];}
         if (NULL != euler2Ptr) {m_Euler2[index] = euler2Ptr[readerIndex];}

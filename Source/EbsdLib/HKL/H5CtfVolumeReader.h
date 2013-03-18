@@ -68,7 +68,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     EBSD_POINTER_PROPERTY(X, X, float)
     EBSD_POINTER_PROPERTY(Y, Y, float)
     EBSD_POINTER_PROPERTY(Z, Z, float)
-    EBSD_POINTER_PROPERTY(BandCount, BandCount, int)
+    EBSD_POINTER_PROPERTY(Bands, Bands, int)
     EBSD_POINTER_PROPERTY(Error, Error, int)
     EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
     EBSD_POINTER_PROPERTY(Euler2, Euler2, float)

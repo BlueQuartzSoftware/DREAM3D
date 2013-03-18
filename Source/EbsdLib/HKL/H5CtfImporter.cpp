@@ -180,7 +180,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     }
     else
     {
-      ss << "H5CtfImporter Error: Unknown error.";
+      ss << reader.getErrorMessage();
     }
     setPipelineMessage(ss.str());
     setErrorCondition(err);
