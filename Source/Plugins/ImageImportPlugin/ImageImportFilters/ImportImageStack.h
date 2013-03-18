@@ -84,6 +84,12 @@ class ImportImageStack : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Import Images (3D Stack)"; }
 
     /**
+     * @brief getSubGroupName This returns the subgroup within the main group for this filter.
+     * @return
+     */
+    virtual const std::string getSubGroupName() { return "IO"; }
+
+    /**
     * @brief This method will instantiate all the end user settable options/parameters
     * for this filter
     */

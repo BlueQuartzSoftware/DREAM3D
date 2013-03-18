@@ -19,10 +19,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
    width:98%;
 }
 </style>
-<title>Write Spins File (Grain Ids)</title>
+<title>Write SPParks File (Grain Ids)</title>
 </head>
 <body>
-<h1 class="pHeading1">Write Spins File (Grain Ids)</h1>
+<h1 class="pHeading1">Write SPParks File (Grain Ids)</h1>
 <p class="pCellBody">
 <a href="../IOFilters/PhWriter.html#wp2">Description</a> | <a href="../IOFilters/SpinsWriter.html#wp3">Options</a> | <a href="../IOFilters/PhWriter.html#wp4">Required Arrays</a> | <a href="../IOFilters/PhWriter.html#wp5">Created Arrays</a> | <a href="../IOFilters/PhWriter.html#wp1">Authors</a> </p>
 
@@ -35,10 +35,11 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p class="pBody">
-This Filter writes to a data file in a format used by University of Florida for the Sparks FEM Simulations. The
- "Values" section is a pair of numbers where the first number is the index into the GrainIds Array and the second
- number is the actual value of the Grain Id at that index. LINE 4 evidently must be what is shown in the example file.
+This Filter writes to a data file in a format used by <a href="http://spparks.sandia.gov/">SPPARKS Kinetic Monte Carlo Simulator.</a> The
+ "Values" section is a pair of numbers where the first number is the site ID and the second
+ number is the actual value of the Grain Id at that site. LINE 4 evidently must be what is shown in the example file.
  LINES 5,6 and 7 are the Dimensions of the volume. LINE 3 is the total number of voxels. <br />
+ More information can be found at the <a href="http://spparks.sandia.gov/doc/read_sites.html">SPParks web site</a>
 </p>
 
 <p class="pBody">
