@@ -1,4 +1,4 @@
-/* ============================================================================
+ /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
@@ -149,7 +149,7 @@ void RenumberGrains::execute()
       RemoveList.push_back(i);
       NewNames[i] = 0;
     }
-    if(m_Active[i] == true)
+    else
     {
       NewNames[i] = goodcount;
       goodcount++;

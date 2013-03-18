@@ -19,10 +19,10 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
    width:98%;
 }
 </style>
-<title>Open/Close Bad Data</title>
+<title>Erode/Dilate Bad Data</title>
 </head>
 <body>
-<h1 class="pHeading1">Open/Close Bad Data Filter</h1>
+<h1 class="pHeading1">Erode/Dilate Bad Data Filter</h1>
 <p class="pCellBody">
 <a href="../ProcessingFilters/OpenCloseBadData.html#wp2">Description</a>
 | <a href="../ProcessingFilters/OpenCloseBadData.html#wp3">Options</a>
@@ -40,25 +40,26 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a><h2 class="pHeading2">Description</h2>
 <p>
 <!-- Write all your documentation here -->
-Bad data means a <i>voxel</i> has a <b>GrainID</b> of 0, which means the <i>voxel</i> failed one of the quality metrics
- in the <i>ReadH5Ebsd Filter</i>. To remedy this situation, this Filter <i>opens</i> or <i>closes</i> the bad data. </p>
+Bad data means a <i>voxel</i> has a <b>GrainID</b> of 0, which means the <i>voxel</i> has failed some sort of test and been marked 
+as a <i>Bad Voxel</i>. To remedy this situation, this Filter <i>Dilates</i> or <i>Erodes</i> the bad data. </p>
 
 <p>
-If the bad data is <i>opened</i>, the Filter grows the bad data by one <i>voxel</i> in an iteration sequence. The number of
+If the bad data is <i>dilated</i>, the Filter grows the bad data by one <i>voxel</i> in an iteration sequence. The number of
  iterations to grow the <i>voxel</i> is limited to the situation in which only one grain remains or there is no place to grow.</p>
 
 <p>The <b>GrainID</b> of any neighboring <i>voxel</i> will be changed to 0. </p>
 
 <p>
-For the <i>close</i> option, the <b>GrainID</b> of the bad data <i>voxel</i> is changed to the <b>GrainID</b> of the majority
+For the <i>erode</i> option, the <b>GrainID</b> of the bad data <i>voxel</i> is changed to the <b>GrainID</b> of the majority
  of its neighbors, with the requirement that at least one of the neighbors have a non-zero <b>GrainID</b>.<br />
  If there is a tie between two <b>GrainID</b>s, then one of the <b>GrainID</b>s, chosen randomly, will be assigned to the bad <i>voxel</i>.
 </p>
 Goals a user might be trying to accomplish with this Filter are<br />
 <ol>
 <li>to remove small or thin regions of bad data by running a single
- (or two) iteration <i>close</i> operation. </li>
-<li>to increase the size of a "bad" data region by running an <i>open operation</i>. This might be useful if the experimental technique always underestimates the size of certain objects. </li>
+ (or two) iteration <i>erode</i> operation. </li>
+<li>to increase the size of a "bad" data region by running an <i>open operation</i>. This might be useful if the experimental technique 
+ always underestimates the size of certain objects. </li>
 </ol>
 <p>
 For example, when running EBSD, the pores (which show up as
@@ -81,9 +82,9 @@ Running the <i>open-close</i> operations in pairs can
 <table border="0" cellpadding="4" cellspacing="1">
 <tr bgcolor="#A2A2A2"><th>Name</th><th>Type</th></tr>
 <tr bgcolor="#E2E2E2">
-<td>Direction of Operation</td><td>Choices</td></tr>
+<td>Direction of Operation</td><td>Dilate or Erode</td></tr>
 <tr bgcolor="#E2E2E2">
-<td>Number of Iterations</td><td>Integer</td></tr>
+<td>Number of Iterations</td><td>The number of iterations to use for the filter</td></tr>
 </table>
 <!-- A table of Required Data for your filter -->
 <a name="wp4"> </a><h2 class="pHeading2">Required Arrays</h2>
