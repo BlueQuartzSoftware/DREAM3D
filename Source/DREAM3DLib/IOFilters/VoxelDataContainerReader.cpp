@@ -174,6 +174,10 @@ int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volD
   std::stringstream ss;
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
+  if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
+  {
+    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+  }
   if(dcGid < 0)
   {
     err = H5Utilities::closeFile(fileId);

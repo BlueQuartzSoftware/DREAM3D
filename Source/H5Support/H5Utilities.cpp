@@ -123,7 +123,7 @@ herr_t H5Utilities::closeFile(hid_t &fileId)
 
   err = H5Fclose(fileId);
   if (err < 0) {
-    std::cout << "Error Closing HDF5 File." << err << std::endl;
+    std::cout << "Error Closing HDF5 File. " << err << std::endl;
   }
   fileId= -1;
   return err;

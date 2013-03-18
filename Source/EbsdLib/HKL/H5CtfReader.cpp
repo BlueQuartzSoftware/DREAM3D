@@ -251,7 +251,7 @@ int H5CtfReader::readData(hid_t parId)
   err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
   for (std::list<std::string>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
   {
-    if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) == m_ArrayNames.end())
+    if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) != m_ArrayNames.end())
     {
       numType = getPointerType(*iter);
       if(numType == Ebsd::Int32)

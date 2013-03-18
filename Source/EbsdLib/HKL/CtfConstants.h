@@ -151,12 +151,15 @@ namespace Ctf
   DECLARE_STRING_CONST(Internal2)
   DECLARE_STRING_CONST(Comment)
 
+  /* ******************************************************************************************************** */
+  /* ******************************************************************************************************** */
   // These are the names of the Data Columns
+  // DO NOT CHANGE ANY OF THESE CONSTANTS, IT WILL MESS UP THE CTF Parser
   DECLARE_STRING_CONST(Phase)
   DECLARE_STRING_CONST(X)
   DECLARE_STRING_CONST(Y)
   DECLARE_STRING_CONST(Z)
-  DECLARE_STRING_CONST(BandCount)
+  DECLARE_STRING_CONST(Bands)
   DECLARE_STRING_CONST(Error)
   DECLARE_STRING_CONST(Euler1)
   DECLARE_STRING_CONST(Euler2)
@@ -168,6 +171,9 @@ namespace Ctf
   DECLARE_STRING_CONST(GrainRandomColourR)
   DECLARE_STRING_CONST(GrainRandomColourG)
   DECLARE_STRING_CONST(GrainRandomColourB)
+  /* ******************************************************************************************************** */
+  /* ******************************************************************************************************** */
+  /* ******************************************************************************************************** */
 
 } // End namespace Ctf
 

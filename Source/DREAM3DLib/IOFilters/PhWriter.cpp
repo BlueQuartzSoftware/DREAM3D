@@ -206,6 +206,10 @@ int PhWriter::writeFile()
     }
   }
   //std::cout<<grains<< " " << used.size() << std::endl;
+  // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
+  // modern Hard Drive. This should speed up the writes considerably
+  char buffer[4096];
+  outfile.rdbuf()->pubsetbuf(buffer, 4096);
 
   outfile << "     " << dims[0] << "     " << dims[1] << "     " << dims[2] << "\n";
   outfile << "\'DREAM3\'              52.00  1.000  1.0       " << grains << "\n";

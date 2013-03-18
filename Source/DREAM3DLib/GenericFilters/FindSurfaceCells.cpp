@@ -147,7 +147,7 @@ void FindSurfaceCells::execute()
         for (int l = 0; l < 6; l++)
         {
         good = 1;
-        neighbor = static_cast<int>( zStride+yStride+k + neighpoints[k] );
+        neighbor = static_cast<int>( zStride+yStride+k + neighpoints[l] );
         if(l == 0 && i == 0) good = 0;
         if(l == 5 && i == (zPoints - 1)) good = 0;
         if(l == 1 && j == 0) good = 0;

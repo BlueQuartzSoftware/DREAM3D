@@ -328,13 +328,18 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
     }
 
     // This should automatically close the file when we leave this function
-    HDF5ScopedFileSentinel sentinel(&fileId, true);
+    //HDF5ScopedFileSentinel sentinel(&fileId, true);
 
     VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+    reader->setHdfFileId(fileId);
     int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
+
     if (err < 0) {
+      err = H5Utilities::closeFile(fileId);
       return;
     }
+    err = H5Utilities::closeFile(fileId);
+
     m_XDim->setText(QString::number(dims[0]));
     m_YDim->setText(QString::number(dims[1]));
     m_ZDim->setText(QString::number(dims[2]));
