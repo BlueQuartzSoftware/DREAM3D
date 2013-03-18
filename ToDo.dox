@@ -9,6 +9,11 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Fix distributionOps functions to not fart when there is only 1 grain in a bin.
 @li Fix html Help for "Standardize Euler Angles"
 @li Fix html Help for "Erode Dilate Coordination Number"
+@li Fix html for FindSlicetoSliceRotations.html
+@li Fix html for FindSlipTransmissionMetrics.html
+@li Fix html for AddBadData.html
+@li Fix html for AddNoise.html
+@li fix HTML for JumbleOrientations.html
 
 
 @section mike_jackson Mike Jackson ToDo List
