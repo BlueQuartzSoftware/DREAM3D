@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SpinsWriter.h"
+#include "SPParksWriter.h"
 
 #include <iostream>
 #include <fstream>
@@ -50,7 +50,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SpinsWriter::SpinsWriter() :
+SPParksWriter::SPParksWriter() :
 FileWriter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
@@ -61,7 +61,7 @@ m_GrainIds(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SpinsWriter::~SpinsWriter()
+SPParksWriter::~SPParksWriter()
 {
 
 }
@@ -69,7 +69,7 @@ SpinsWriter::~SpinsWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SpinsWriter::setupFilterParameters()
+void SPParksWriter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
@@ -77,22 +77,22 @@ void SpinsWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.spin");
-    option->setFileType("Sparks Spin File");
+    option->setFileExtension("*.spparks");
+    option->setFileType("SPParks Sites File");
     option->setValueType("string");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void SpinsWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SpinsWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -104,7 +104,7 @@ void SpinsWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SpinsWriter::preflight()
+void SPParksWriter::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -112,7 +112,7 @@ void SpinsWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SpinsWriter::writeHeader()
+int SPParksWriter::writeHeader()
 {
     VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
@@ -171,7 +171,7 @@ int SpinsWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SpinsWriter::writeFile()
+int SPParksWriter::writeFile()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
