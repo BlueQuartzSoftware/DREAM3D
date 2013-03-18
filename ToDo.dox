@@ -1,18 +1,24 @@
 /**
 @page todo DREAM3D ToDo List and RoadMap
 
-This is the list of things to do. It is written with the DOxygen style
-so it can be integrated with the other documentation pages.
+This is the list of things to do. It is written with the DOxygen style so it can be integrated with the other documentation pages.
 
 
 
 @section blockers Show Stopping Bugs
+@li Fix html Help for "Standardize Euler Angles"
+@li Fix html Help for "Erode Dilate Coordination Number"
+@li Fix html for FindSlicetoSliceRotations.html
+@li Fix html for FindSlipTransmissionMetrics.html
+@li Fix html for AddBadData.html
+@li Fix html for AddNoise.html
+@li fix HTML for JumbleOrientations.html
 
 
 @section mike_jackson Mike Jackson ToDo List
+@li Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 @li Create filter to generate Abaqus input files, Albert Cerrone to help with this
 @li Write program to read in Pipeline Files on the command line
-
 @li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 @li How to incorporate documentation for plugins into the main help system
 @li Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.

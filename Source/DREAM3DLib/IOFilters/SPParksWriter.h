@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SpinsWriter_H_
-#define _SpinsWriter_H_
+#ifndef _SPParksWriter_H_
+#define _SPParksWriter_H_
 
 #include <string>
 
@@ -45,21 +45,20 @@
 
 
 /**
- * @class SpinsWriter SpinsWriter.h DREAM3DLib/IOFilters/SpinsWriter.h
- * @brief This filter writes a .spins file which the University of Florida uses for their
- * sparks FEM simulations.
+ * @class SPParksWriter SPParksWriter.h DREAM3DLib/IOFilters/SPParksWriter.h
+ * @brief This filter writes a .spparks file for input into http://spparks.sandia.gov/ SPParks Simulator
  * @author Michael A. Jackson (BlueQuartz Software)
  * @date March 16, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SpinsWriter : public FileWriter
+class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SpinsWriter)
-    DREAM3D_STATIC_NEW_MACRO(SpinsWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SpinsWriter, FileWriter)
+    DREAM3D_SHARED_POINTERS(SPParksWriter)
+    DREAM3D_STATIC_NEW_MACRO(SPParksWriter)
+    DREAM3D_TYPE_MACRO_SUPER(SPParksWriter, FileWriter)
 
-    virtual ~SpinsWriter();
+    virtual ~SPParksWriter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
@@ -82,7 +81,7 @@ class DREAM3DLib_EXPORT SpinsWriter : public FileWriter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write Spins File"; }
+    virtual const std::string getHumanLabel() { return "Write SPParks Sites (GrainIds)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -103,7 +102,7 @@ class DREAM3DLib_EXPORT SpinsWriter : public FileWriter
     virtual void preflight();
 
   protected:
-    SpinsWriter();
+    SPParksWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -130,8 +129,8 @@ class DREAM3DLib_EXPORT SpinsWriter : public FileWriter
   private:
     int32_t* m_GrainIds;
 
-    SpinsWriter(const SpinsWriter&); // Copy Constructor Not Implemented
-    void operator=(const SpinsWriter&); // Operator '=' Not Implemented
+    SPParksWriter(const SPParksWriter&); // Copy Constructor Not Implemented
+    void operator=(const SPParksWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _SpinsWriter_H_ */
+#endif /* _SPParksWriter_H_ */
