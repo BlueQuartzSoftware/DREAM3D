@@ -81,8 +81,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Add ability to read list of ellipsoids into packing algorithms
 @li Look into bias near outside of box during synthetic building
 @li Fix synthetic builder to note if volume is 2D and actually pack slices
-@li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
-@li Look into deleting field arrays after packing in synthetic structures
 @li Add some optimizations into the PackPrimaryGrains by creating constants and removing triple nested vectors.
 
 
@@ -135,6 +133,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
+@li Look into deleting field arrays after packing in synthetic structures
 @li Fix distributionOps functions to not fart when there is only 1 grain in a bin.
 @li Output file similar to TSL OIM Analysis software. See example from Brad Fromm (INLFileWriter filter)
 @li Fix TotalSurfaceAreas in MatchCrystallography
