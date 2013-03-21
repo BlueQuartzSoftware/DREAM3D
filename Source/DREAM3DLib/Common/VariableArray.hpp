@@ -420,7 +420,7 @@ class VariableArray : public IDataArray
     virtual T* GetPointer(size_t i)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       return (T*)(&(Array[i]));
     }
@@ -433,7 +433,7 @@ class VariableArray : public IDataArray
     void InitializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       BOOST_ASSERT(false);
       //T c = static_cast<T>(p);
@@ -526,7 +526,7 @@ class VariableArray : public IDataArray
      */
     inline T& operator[](size_t i)
     {
-      assert(i < Size);
+      BOOST_ASSERT(i < Size);
       return Array[i];
     }
 

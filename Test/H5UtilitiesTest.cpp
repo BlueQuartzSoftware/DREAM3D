@@ -481,7 +481,7 @@ void HDF5Darwin2GBWriteTest()
   hsize_t dims[2] = {dim0, dim1};
 
   herr_t err = H5Lite::writePointerDataset(file_id, "data", rank, dims, data);
-  assert(err > -1);
+  BOOST_ASSERT(err > -1);
 }
 #endif
 

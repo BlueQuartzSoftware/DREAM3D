@@ -370,7 +370,7 @@ void VerifyTriangleWinding::execute()
   if (m_DoUniqueEdgesFilter == true)
   {
     IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
-    assert(removedConnectviity.get() != NULL);
+    BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
   if (clearMeshVertLinks == true)
   {

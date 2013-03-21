@@ -95,7 +95,7 @@ void* StatsDataArray::GetVoidPointer(size_t i)
 #ifndef NDEBUG
   if(m_StatsDataArray.size() > 0)
   {
-    assert(i < m_StatsDataArray.size());
+    BOOST_ASSERT(i < m_StatsDataArray.size());
   }
 #endif
   if(i >= this->GetNumberOfTuples())
