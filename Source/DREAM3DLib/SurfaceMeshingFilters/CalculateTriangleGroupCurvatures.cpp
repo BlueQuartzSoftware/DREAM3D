@@ -173,7 +173,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->generate();
 
     SurfaceMesh::DataStructures::UniqueTriangleIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
-    assert(triPatch.size() > 1);
+    BOOST_ASSERT(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
     DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
@@ -275,7 +275,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
       // Kappa1 >= Kappa2
       double kappa1 = eValues(0) * -1;// Kappa 1
       double kappa2 = eValues(1) * -1; //kappa 2
-      assert(kappa1 >= kappa2);
+      BOOST_ASSERT(kappa1 >= kappa2);
       m_PrincipleCurvature1->SetValue(triId, kappa1);
       m_PrincipleCurvature2->SetValue(triId, kappa2);
 
