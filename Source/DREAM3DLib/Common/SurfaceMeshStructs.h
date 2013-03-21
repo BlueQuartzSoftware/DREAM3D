@@ -50,11 +50,18 @@ namespace SurfaceMesh
   namespace DataStructures
   {
     typedef float Float_t;
+    typedef double Double_t;
 
     typedef struct
     {
         Float_t pos[3];
     } Vert_t;
+    typedef struct
+    {
+      Double_t pos[3];
+    } VertD_t;
+
+
     const int32_t k_VertexNumElements = 3;
 
     typedef struct
