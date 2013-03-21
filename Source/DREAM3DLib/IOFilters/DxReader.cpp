@@ -73,6 +73,7 @@ void DxReader::setupFilterParameters()
     option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setFileExtension("*.dx");
     option->setValueType("string");
     parameters.push_back(option);
   }
