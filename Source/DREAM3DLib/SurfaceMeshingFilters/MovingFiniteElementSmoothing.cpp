@@ -338,9 +338,9 @@ void MovingFiniteElementSmoothing::execute()
   int ntri = trianglesPtr->GetNumberOfTuples();
 
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesDPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<SurfaceMesh::DataStructures::VertD_t>::Pointer nodesDPtr = StructArray<SurfaceMesh::DataStructures::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  SurfaceMesh::DataStructures::Vert_t* nodes = nodesDPtr->GetPointer(0);
+  SurfaceMesh::DataStructures::VertD_t* nodes = nodesDPtr->GetPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
@@ -755,14 +755,17 @@ void MovingFiniteElementSmoothing::execute()
     Dihedral_min = 180.;
     Dihedral_max = -1.; //  added may 10, ADR
     double LDistance, deltaLDistance;
+
+    typedef NodeFunctions<SurfaceMesh::DataStructures::VertD_t, double> NodeFunctionsType;
+    typedef TriangleFunctions<SurfaceMesh::DataStructures::VertD_t, double> TriangleFunctionsType;
     // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
     {
       SurfaceMesh::DataStructures::Face_t& rtri = triangles[t];
       MFE::Vector<double> n(3);
-      n = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
-      A = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
-      Q = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], A); //  current quality
+      n = TriangleFunctionsType::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
+      A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
+      Q = TriangleFunctionsType::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], A); //  current quality
       if(Q > 100.) {
         if(isVerbose)
         {
@@ -772,7 +775,7 @@ void MovingFiniteElementSmoothing::execute()
       Q_sum += Q;
       if(Q > Q_max) { Q_max = Q; }
 
-      Dihedral = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::MinDihedral(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
+      Dihedral = TriangleFunctionsType::MinDihedral(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       // debug
       //      std::cout << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI << std::endl;
       Dihedral_sum += Dihedral;
@@ -782,21 +785,21 @@ void MovingFiniteElementSmoothing::execute()
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
         int i = rtri.verts[n0];
-        SurfaceMesh::DataStructures::Vert_t& node_i = nodes[i];
+        SurfaceMesh::DataStructures::VertD_t& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            LDistance = NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
+            LDistance = NodeFunctionsType::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctionsType::Distance(nodes[triplenn[i].triplenn2], nodes[i]);
           }
           node_i.pos[j] += small;
-          double Anew = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
-          double Qnew = TriangleFunctions<SurfaceMesh::DataStructures::Vert_t, double>::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], Anew);
+          double Anew = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
+          double Qnew = TriangleFunctionsType::circularity(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]], Anew);
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
           {
             //  if we are smoothing triple lines, and we have a TJ node
-            deltaLDistance = NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctions<SurfaceMesh::DataStructures::Vert_t, double>::Distance(nodes[triplenn[i].triplenn2], nodes[i])
+            deltaLDistance = NodeFunctionsType::Distance(node_i, nodes[triplenn[i].triplenn1]) + NodeFunctionsType::Distance(nodes[triplenn[i].triplenn2], nodes[i])
                 - LDistance; // change in line length
             F[3 * i + j] -= TJ_scale * deltaLDistance;
           }
@@ -817,6 +820,7 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
     }
+
 
     // add epsilon to the diagonal
     for (int r = 0; r < numberNodes; r++)

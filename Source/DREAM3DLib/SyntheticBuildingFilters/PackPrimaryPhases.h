@@ -107,8 +107,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
-    DREAM3D_INSTANCE_PROPERTY(float, NeighborhoodErrorWeight)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
 
 
     virtual void setupFilterParameters();
@@ -125,7 +126,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
   protected:
     PackPrimaryPhases();
 
-    Int32ArrayType::Pointer initialize_packinggrid();
+    void initialize_packinggrid();
 
     void generate_grain(int phase, int Seed, Field* grain, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
 
@@ -138,16 +139,17 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr);
-    void assign_voxels_and_gaps();
+	float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
+    void assign_voxels();
     void assign_gaps_only();
     void cleanup_grains();
+	void write_goal_attributes();
 
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
 
-    int writeVtkFile(int32_t* grainOwners);
+    int writeVtkFile(int32_t* grainOwners, bool* exclusionZonesPtr);
     int estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
 
 
@@ -191,6 +193,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     std::vector<std::vector<int> > columnlist;
     std::vector<std::vector<int> > rowlist;
     std::vector<std::vector<int> > planelist;
+    std::vector<std::vector<float> > ellipfunclist;
 
     unsigned long long int Seed;
 

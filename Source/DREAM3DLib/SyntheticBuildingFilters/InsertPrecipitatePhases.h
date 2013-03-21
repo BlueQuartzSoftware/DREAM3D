@@ -101,7 +101,9 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
@@ -138,6 +140,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void assign_voxels();
     void assign_gaps();
     void cleanup_grains();
+	void write_goal_attributes();
 
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
