@@ -38,6 +38,8 @@
 
 #include <map>
 
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/MatrixMath.h"
@@ -79,7 +81,9 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
   m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+  m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
+  m_WriteGoalAttributes(false),
   m_GrainIds(NULL),
   m_CellPhases(NULL),
   m_SurfaceVoxels(NULL),
@@ -139,7 +143,24 @@ void InsertPrecipitatePhases::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Goal Attributes");
+    option->setPropertyName("WriteGoalAttributes");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Goal Attribute CSV File");
+    option->setPropertyName("CsvOutputFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+	option->setFileExtension("*.csv");
+	option->setFileType("Comma Separated Data");
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -208,6 +229,14 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 void InsertPrecipitatePhases::preflight()
 {
   dataCheck(true, 1, 1, 1);
+
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
+  {
+    std::stringstream ss;
+    ss << ClassName() << " needs the Csv Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-387);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -289,6 +318,15 @@ void InsertPrecipitatePhases::execute()
     addErrorMessages(renumber_grains2->getPipelineMessages());
     return;
   }
+
+  m->removeFieldData(m_EquivalentDiametersArrayName);
+  m->removeFieldData(m_Omega3sArrayName);
+  m->removeFieldData(m_AxisEulerAnglesArrayName);
+  m->removeFieldData(m_AxisLengthsArrayName);
+  m->removeFieldData(m_VolumesArrayName);
+  m->removeFieldData(m_CentroidsArrayName);
+  m->removeFieldData(m_NumCellsArrayName);
+  m->removeFieldData(m_NeighborhoodsArrayName);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("InsertPrecipitatePhases Completed");
@@ -1813,4 +1851,97 @@ float InsertPrecipitatePhases::find_zcoord(long long int index)
   VoxelDataContainer* m = getVoxelDataContainer();
   float z = m->getZRes()*float(index/(m->getXPoints()*m->getYPoints()));
   return z;
+}
+void InsertPrecipitatePhases::write_goal_attributes()
+{
+  int err = 0;
+  setErrorCondition(err);
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
+  if(!MXADir::mkdir(parentPath, true))
+  {
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return;
+  }
+
+  std::string filename = getCsvOutputFile();
+
+  std::ofstream outFile;
+  outFile.open(filename.c_str(), std::ios_base::binary);
+  char space = DREAM3D::GrainData::Delimiter;
+  // Write the total number of grains
+  outFile << m->getNumFieldTuples()-firstPrecipitateField << std::endl;
+  // Get all the names of the arrays from the Data Container
+  std::list<std::string> headers = m->getFieldArrayNameList();
+
+  std::vector<IDataArray::Pointer> data;
+
+  //For checking if an array is a neighborlist
+  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+
+  // Print the GrainIds Header before the rest of the headers
+  outFile << DREAM3D::GrainData::GrainID;
+  // Loop throught the list and print the rest of the headers, ignoring those we don't want
+  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  {
+    // Only get the array if the name does NOT match those listed
+    IDataArray::Pointer p = m->getFieldData(*iter);
+  if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+  {
+      if (p->GetNumberOfComponents() == 1) {
+        outFile << space << (*iter);
+      }
+      else // There are more than a single component so we need to add multiple header values
+      {
+        for(int k = 0; k < p->GetNumberOfComponents(); ++k)
+        {
+          outFile << space << (*iter) << "_" << k;
+        }
+      }
+      // Get the IDataArray from the DataContainer
+      data.push_back(p);
+    }
+  }
+  outFile << std::endl;
+
+  // Get the number of tuples in the arrays
+  size_t numTuples = data[0]->GetNumberOfTuples();
+  std::stringstream ss;
+  float threshold = 0.0f;
+
+  // Skip the first grain
+  for(size_t i = firstPrecipitateField; i < numTuples; ++i)
+  {
+    if (((float)i / numTuples) * 100.0f > threshold) {
+      ss.str("");
+      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
+      notifyStatusMessage(ss.str());
+      threshold = threshold + 5.0f;
+      if (threshold < ((float)i / numTuples) * 100.0f) {
+        threshold = ((float)i / numTuples) * 100.0f;
+      }
+    }
+
+    // Print the grain id
+    outFile << i;
+    // Print a row of data
+    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    {
+      outFile << space;
+      (*p)->printTuple(outFile, i, space);
+    }
+    outFile << std::endl;
+  }
 }
