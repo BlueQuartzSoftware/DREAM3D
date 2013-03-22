@@ -89,7 +89,7 @@ SurfaceMesh::DataStructures::UniqueTriangleIds_t& FindNRingNeighbors::getNRingTr
 // -----------------------------------------------------------------------------
 void FindNRingNeighbors::generate()
 {
-  assert(m_SurfaceMeshDataContainer != NULL);
+  BOOST_ASSERT(m_SurfaceMeshDataContainer != NULL);
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
   // Clear out any previous triangles

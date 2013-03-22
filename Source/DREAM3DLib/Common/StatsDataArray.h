@@ -142,7 +142,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 #ifndef NDEBUG
       if(m_StatsDataArray.size() > 0u)
       {
-        assert(idx < static_cast<int>(m_StatsDataArray.size()));
+        BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
       }
 #endif
       return m_StatsDataArray[idx];
@@ -153,7 +153,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 #ifndef NDEBUG
       if(m_StatsDataArray.size() > 0u)
       {
-        assert(idx < static_cast<int>(m_StatsDataArray.size()));
+        BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
       }
 #endif
       return m_StatsDataArray[idx];

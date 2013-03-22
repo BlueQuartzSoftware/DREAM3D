@@ -318,7 +318,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     totalCells += (*grainIter).second;
   }
-  assert(totalCells == (size_t)(triangleCount * 2) );
+  BOOST_ASSERT(totalCells == (size_t)(triangleCount * 2) );
 
 
   // Loop over all the grains

@@ -168,7 +168,7 @@ void AbstractFilter::addCreatedEnsembleData(const std::string &name)
 // -----------------------------------------------------------------------------
 void AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  assert(writer != NULL);
+  BOOST_ASSERT(writer != NULL);
   std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;
 }
 
