@@ -72,8 +72,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 @li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 @li Fix the mPrime, F1, F1spt, F7 functions in Hex- and Ortho- Ops
-@li Add filter to rename array from cell map
-@li Add filter to rename array from field map
 
 
 @section synthetic Synthetic Building Filters
@@ -131,6 +129,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Add filter to rename array from cell map
+@li Add filter to rename array from field map
 @li Add Filter to initialize the Field Map based on a user defined array such as Grain Ids.
 @li Move FindNeighbors filter to the statistics group
 @li Add some optimizations into the PackPrimaryGrains by creating constants and removing triple nested vectors.
