@@ -47,7 +47,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @code
      *    typedef DataArray<int32_t>  Int32ArrayType;
      *    int32_t* iPtr = IDataArray::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(ptr.get());
-    *     assert(NULL != iPtr);
+    *     BOOST_ASSERT(NULL != iPtr);
      * @endcode
      * @param x The Pointer to IDataArray
      * @return

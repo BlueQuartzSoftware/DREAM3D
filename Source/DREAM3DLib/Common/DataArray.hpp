@@ -565,7 +565,7 @@ class DataArray : public IDataArray
     virtual T* GetPointer(size_t i)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       return (T*)(&(Array[i]));
     }
@@ -578,7 +578,7 @@ class DataArray : public IDataArray
     virtual T GetValue(size_t i)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       return this->Array[i];
     }
@@ -591,7 +591,7 @@ class DataArray : public IDataArray
     void SetValue(size_t i, T value)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       this->Array[i] = value;
     }
@@ -601,7 +601,7 @@ class DataArray : public IDataArray
     T GetComponent(size_t i, int j)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
+      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents+j < Size);}
 #endif
       return Array[i*this->NumberOfComponents + j];
     }
@@ -615,7 +615,7 @@ class DataArray : public IDataArray
     void SetComponent(size_t i, int j, T c)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i*NumberOfComponents+j < Size);}
+      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents+j < Size);}
 #endif
       Array[i*this->NumberOfComponents + j] = c;
     }
@@ -628,7 +628,7 @@ class DataArray : public IDataArray
     void InitializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i*NumberOfComponents < Size);}
+      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents < Size);}
 #endif
       T c = static_cast<T>(p);
       for (int j = 0; j < this->NumberOfComponents; ++j) {

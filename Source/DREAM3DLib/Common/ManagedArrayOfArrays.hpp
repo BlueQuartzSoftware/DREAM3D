@@ -445,7 +445,7 @@ class ManagedArrayOfArrays : public IDataArray
     virtual Data_t* GetPointer(size_t i)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       return (Data_t*)(&(Array[i]));
     }
@@ -458,7 +458,7 @@ class ManagedArrayOfArrays : public IDataArray
     void InitializeTuple(size_t i, double p)
     {
 #ifndef NDEBUG
-      if (Size > 0) { assert(i < Size);}
+      if (Size > 0) { BOOST_ASSERT(i < Size);}
 #endif
       BOOST_ASSERT(false);
       //T c = static_cast<T>(p);
@@ -551,7 +551,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     inline T& operator[](size_t i)
     {
-      assert(i < Size);
+      BOOST_ASSERT(i < Size);
       return Array[i];
     }
 

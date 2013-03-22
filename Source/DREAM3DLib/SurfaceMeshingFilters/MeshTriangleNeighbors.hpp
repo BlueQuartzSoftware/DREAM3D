@@ -176,7 +176,7 @@ class MeshTriangleNeighbors
               vCount++;
             }
 
-            assert(vCount < 3); // No way 2 triangles can share all 3 vertices. Something is VERY wrong at this point
+            BOOST_ASSERT(vCount < 3); // No way 2 triangles can share all 3 vertices. Something is VERY wrong at this point
 
             // So if our vertex match count is 2 and we have not visited the triangle in question then add this triangle index
             // into the list of Triangle Indices as neighbors for the source triangle.
@@ -195,7 +195,7 @@ class MeshTriangleNeighbors
             }
           }
         }
-        assert(this->Array[t].ncells > 2);
+        BOOST_ASSERT(this->Array[t].ncells > 2);
         // Reset all the visited triangle indexs back to false (zero)
         for(size_t k = 0;k < this->Array[t].ncells; ++k)
         {
