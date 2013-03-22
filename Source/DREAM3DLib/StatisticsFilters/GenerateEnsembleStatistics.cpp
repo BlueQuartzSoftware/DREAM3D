@@ -43,7 +43,7 @@
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
