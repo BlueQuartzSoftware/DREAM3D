@@ -58,7 +58,7 @@
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
@@ -194,10 +194,13 @@ class AssignVoxelsGapsImpl
                 float axis2comp = coordsRotated[1] * Invradcur[1];
                 float axis3comp = coordsRotated[2] * Invradcur[2];
                 inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
-                if (inside >= 0 && newowners[index] > 0)
+//                if (inside >= 0 && newowners[index] > 0)
+                if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
                 {
-                    newowners[index] = -2;
+                    newowners[index] = curGrain;
                     ellipfuncs[index] = inside;
+//                    newowners[index] = -2;
+//                    ellipfuncs[index] = inside;
                 }
                 else if (inside >= 0 && newowners[index] == -1)
                 {
@@ -889,20 +892,20 @@ void PackPrimaryPhases::execute()
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
       good = false;
       count = 0;
-      while(good == false && count < (numgrains-firstPrimaryField))
-      {
-        xc = m_Centroids[3*randomgrain];
-        yc = m_Centroids[3*randomgrain+1];
-        zc = m_Centroids[3*randomgrain+2];
-        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-        if(grainOwners[grainOwnersIdx] > 1) good = true;
-        else randomgrain++;
-        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-        count++;
-      }
+      //while(good == false && count < (numgrains-firstPrimaryField))
+      //{
+      //  xc = m_Centroids[3*randomgrain];
+      //  yc = m_Centroids[3*randomgrain+1];
+      //  zc = m_Centroids[3*randomgrain+2];
+      //  column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+      //  row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+      //  plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+      //  grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+      //  if(grainOwners[grainOwnersIdx] > 1) good = true;
+      //  else randomgrain++;
+      //  if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+      //  count++;
+      //}
       Seed++;
 
       count = 0;
@@ -961,20 +964,20 @@ void PackPrimaryPhases::execute()
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
       good = false;
       count = 0;
-      while(good == false && count < (numgrains-firstPrimaryField))
-      {
-        xc = m_Centroids[3*randomgrain];
-        yc = m_Centroids[3*randomgrain+1];
-        zc = m_Centroids[3*randomgrain+2];
-        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-        if(grainOwners[grainOwnersIdx] > 1) good = true;
-        else randomgrain++;
-        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-        count++;
-      }
+      //while(good == false && count < (numgrains-firstPrimaryField))
+      //{
+      //  xc = m_Centroids[3*randomgrain];
+      //  yc = m_Centroids[3*randomgrain+1];
+      //  zc = m_Centroids[3*randomgrain+2];
+      //  column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+      //  row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+      //  plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+      //  grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+      //  if(grainOwners[grainOwnersIdx] > 1) good = true;
+      //  else randomgrain++;
+      //  if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+      //  count++;
+      //}
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
@@ -2088,6 +2091,14 @@ void PackPrimaryPhases::assign_gaps_only()
         m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
       }
     }
+	if(counter == 1)
+	{
+		for(int i = 0; i < 1000; i++)
+		{
+				ss.str("");
+				ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
+		}
+	}
   }
 }
 // -----------------------------------------------------------------------------
