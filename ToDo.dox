@@ -26,7 +26,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 
 
 @section STILL_TO_DO Still To Do
-@li Fix rename cell and field array filters to update the data container during the preflight
 @li Add Filter to initialize the Ensemble Map based on a user defined array such as Phase Ids.
 @li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
 @li Change Field to Region in all codes
@@ -131,6 +130,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Fix rename cell and field array filters to update the data container during the preflight
 @li Fix the link field map filter to return an error during preflight if array is not correct type
 @li Add filter to rename array from cell map
 @li Add filter to rename array from field map
