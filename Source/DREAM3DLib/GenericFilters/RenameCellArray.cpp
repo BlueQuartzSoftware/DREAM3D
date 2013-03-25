@@ -96,13 +96,29 @@ void RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   setErrorCondition(0);
   std::stringstream ss;
 
   if(m_SelectedCellArrayName.empty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
+	ss << "An array from the Voxel Data Container must be selected.";
+	addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+	notifyErrorMessage(ss.str(), getErrorCondition());
+  }
+  else
+  {
+	bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
+	if(check == false) ss << "Array to be renamed could not be found in DataContainer";
+	addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+	notifyErrorMessage(ss.str(), getErrorCondition());
   }
 }
 
@@ -135,7 +151,12 @@ void RenameCellArray::execute()
 
   bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
 
-  if(check == false) ss << "Array to be renamed could not be found in DataContainer";
+  if(check == false)
+  {
+	ss << "Array to be renamed could not be found in DataContainer";
+	setErrorCondition(-11000);
+	notifyErrorMessage(ss.str(), getErrorCondition());
+  }
 
   notifyStatusMessage("Complete");
 }
