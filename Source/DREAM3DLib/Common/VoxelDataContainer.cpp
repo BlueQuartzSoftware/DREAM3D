@@ -139,6 +139,8 @@ bool VoxelDataContainer::renameCellData(const std::string &oldname, const std::s
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
+  removeCellData(oldname);
+  addCellData(newname, p);
   return true;
 }
 
@@ -232,6 +234,8 @@ bool VoxelDataContainer::renameFieldData(const std::string &oldname, const std::
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
+  removeFieldData(oldname);
+  addFieldData(newname, p);
   return true;
 }
 
