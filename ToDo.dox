@@ -57,7 +57,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Add 3D linear intercept calculation filter (C. Hartley filter)
 @li Design protocol to learn user's 'ontology'
 @li Add filter to perform Tony's hot spot analysis
-@li Check error causing crash in the find mdf filter
 @li Add filter to combine far field data with near field data from HEDM
 @li Remove all "under-the-hood" calls to other filters
 @li Allow the user to specify the phase for minimum neighbors filter
@@ -142,6 +141,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Output file similar to TSL OIM Analysis software. See example from Brad Fromm (INLFileWriter filter)
 @li Fix TotalSurfaceAreas in MatchCrystallography
 @li Fix phasetype sizecheck in GenerateEnsembleStatistics.
+@li Check error causing crash in the find mdf filter
 @li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
 @li Finish implementing writing of GenerateEnsembleStatistics filter'S GUI values to pref file
 @li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters

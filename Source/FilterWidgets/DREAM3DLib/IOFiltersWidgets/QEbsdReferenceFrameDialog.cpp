@@ -110,7 +110,6 @@ QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog()
 {
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -122,7 +121,38 @@ void QEbsdReferenceFrameDialog::setEbsdFileName(QString filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::setTSLDefault(bool checked)
+{
+  m_TSLdefaultBtn->setChecked(checked);
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::setHKLDefault(bool checked)
+{
+  m_HKLdefaultBtn->setChecked(checked);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::setHEDMDefault(bool checked)
+{
+  m_HEDMdefaultBtn->setChecked(checked);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::setNoTrans(bool checked)
+{
+  m_NoTransBtn->setChecked(checked);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 Ebsd::EbsdToSampleCoordinateMapping QEbsdReferenceFrameDialog::getSelectedOrigin()
 {
   if (m_TSLdefaultBtn->isChecked()) { return Ebsd::TSLdefault; }
@@ -130,6 +160,38 @@ Ebsd::EbsdToSampleCoordinateMapping QEbsdReferenceFrameDialog::getSelectedOrigin
   if (m_HEDMdefaultBtn->isChecked()) { return Ebsd::HEDMdefault; }
   if (m_NoTransBtn->isChecked()) { return Ebsd::UnknownCoordinateMapping; }
   return Ebsd::UnknownCoordinateMapping;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool QEbsdReferenceFrameDialog::getTSLchecked()
+{
+  return m_TSLdefaultBtn->isChecked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool QEbsdReferenceFrameDialog::getHKLchecked()
+{
+  return m_HKLdefaultBtn->isChecked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool QEbsdReferenceFrameDialog::getHEDMchecked()
+{
+  return m_HEDMdefaultBtn->isChecked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool QEbsdReferenceFrameDialog::getNoTranschecked()
+{
+  return m_NoTransBtn->isChecked();
 }
 
 // -----------------------------------------------------------------------------
