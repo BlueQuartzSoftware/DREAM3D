@@ -45,7 +45,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Look into creating multiple maps at each level (i.e. parent and grain filed maps)
 @li Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 @li Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
-@li Fix reference frame button on import filter to not reset to default
 @li Add filter to calculate microtexture function or equivalent
 @li Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
 @li Add filter to merge twins using surface mesh (5 parameter)
@@ -125,6 +124,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Fix reference frame button on import filter to not reset to default
 @li Add node type calculation during quick mesh
 @li Change the Slip Transmission Metrics filter to store the metrics as Neighborlist values to save space and time for calculation.
 @li Fix data check in numerous filters that are omitting the crystal structures check and performing it in the execute
