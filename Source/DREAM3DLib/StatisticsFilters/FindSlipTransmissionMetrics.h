@@ -62,6 +62,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class FindSlipTransmissionMetrics FindSlipTransmissionMetrics.h DREAM3DLib/GenericFilters/FindSlipTransmissionMetrics.h
@@ -86,10 +87,6 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(TJEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
@@ -121,16 +118,12 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 
     int32_t* m_GrainIds;
     int32_t* m_FieldPhases;
-    int32_t* m_NearestNeighbors;
     float* m_AvgQuats;
-    float* m_F1;
-    float* m_F1spt;
-    float* m_F7;
-    float* m_mPrime;
-    float* m_GBEuclideanDistances;
-    float* m_TJEuclideanDistances;
-    float* m_QPEuclideanDistances;
-
+    NeighborList<float>* m_F1;
+    NeighborList<float>* m_F1spt;
+    NeighborList<float>* m_F7;
+    NeighborList<float>* m_mPrime;
+    NeighborList<int>* m_NeighborList;
     unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

@@ -146,6 +146,7 @@ void QuickSurfaceMesh::execute()
   float zRes = m->getZRes();
 
   std::vector<int> m_NodeIds;
+  std::vector<std::set<int> > ownerLists;
 
   size_t possibleNumNodes = (xP+1)*(yP+1)*(zP+1);
   m_NodeIds.resize(possibleNumNodes, -1);
@@ -442,9 +443,13 @@ void QuickSurfaceMesh::execute()
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nodeCount, DREAM3D::PointData::SurfaceMeshNodes);
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshTriangles);
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(triangleCount, 2, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(nodeCount, 1, DREAM3D::PointData::SurfaceMeshNodeType);
   SurfaceMesh::DataStructures::Vert_t* vertex = vertices.get()->GetPointer(0);
   SurfaceMesh::DataStructures::Face_t* triangle = triangles.get()->GetPointer(0);
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
+  int8_t* nodeTypes = nodeTypePtr->GetPointer(0);
+
+  ownerLists.resize(nodeCount);
 
   triangleCount = 0;
   const SurfaceMesh::DataStructures::Float_t k_Two = static_cast<SurfaceMesh::DataStructures::Float_t>(2.0);
@@ -454,366 +459,439 @@ void QuickSurfaceMesh::execute()
     {
       for(size_t i = 0; i < xP; i++)
       {
-      point = (k*xP*yP)+(j*xP)+i;
-      neigh1 = point + 1;
-      neigh2 = point + xP;
-      neigh3 = point + (xP*yP);
-
-      if(i == 0)
-      {
-        nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-        nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-        triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-        triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        faceLabels[triangleCount*2] = m_GrainIds[point];
-        faceLabels[triangleCount*2+1] = -1;
-
-        triangleCount++;
-
-        triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-        triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        faceLabels[triangleCount*2] = m_GrainIds[point];
-        faceLabels[triangleCount*2+1] = -1;
-
-        triangleCount++;
-      }
-      if(j == 0)
-      {
-        nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-        nodeId4 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId4]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-        triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-        triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-        triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-        faceLabels[triangleCount*2] = m_GrainIds[point];
-        faceLabels[triangleCount*2+1] = -1;
-
-        triangleCount++;
-
-        triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-        triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-        triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-        faceLabels[triangleCount*2] = m_GrainIds[neigh1];
-        faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-        triangleCount++;
-      }
-      if(k == 0)
-      {
-        nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId3 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-        vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId3]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        nodeId4 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-        vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-        vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-        vertex[m_NodeIds[nodeId4]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-        triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-        triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        faceLabels[triangleCount*2] = m_GrainIds[neigh1];
-        faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-        triangleCount++;
-
-        triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-        triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-        triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-        faceLabels[triangleCount*2] = m_GrainIds[neigh1];
-        faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-        triangleCount++;
-      }
-      if(i == (xP-1) || j == (yP-1) || k == (zP-1))
-      {
-        if(i == (xP-1))
-        {
-          nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          faceLabels[triangleCount*2] = m_GrainIds[point];
-          faceLabels[triangleCount*2+1] = -1;
-
-          triangleCount++;
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount*2] = m_GrainIds[point];
-          faceLabels[triangleCount*2+1] = -1;
-
-          triangleCount++;
-        }
-        if(j == (yP-1))
-        {
-          nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          faceLabels[triangleCount*2] = m_GrainIds[point];
-          faceLabels[triangleCount*2+1] = -1;
-
-          triangleCount++;
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount*2] = m_GrainIds[point];
-          faceLabels[triangleCount*2+1] = -1;
-
-          triangleCount++;
-        }
-        if(k == (zP-1))
-        {
-          nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
-          faceLabels[triangleCount*2] = m_GrainIds[point];
-          faceLabels[triangleCount*2+1] = -1;
-
-          triangleCount++;
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount*2] = m_GrainIds[point];
-          faceLabels[triangleCount*2+1] = -1;
-
-          triangleCount++;
-        }
-      }
-      else
-      {
-        if(m_GrainIds[point] != m_GrainIds[neigh1])
-        {
-          nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount*2] = m_GrainIds[neigh1];
-          faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-          triangleCount++;
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount*2] = m_GrainIds[neigh1];
-          faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-          triangleCount++;
-        }
-        if(m_GrainIds[point] != m_GrainIds[neigh2])
-        {
-          nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
-
-          nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount*2] = m_GrainIds[neigh2];
-          faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-          triangleCount++;
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
-          faceLabels[triangleCount*2] = m_GrainIds[neigh2];
-          faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-          triangleCount++;
-        }
-        if(m_GrainIds[point] != m_GrainIds[neigh3])
-        {
-          nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-          vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-          vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
-          vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
-          faceLabels[triangleCount*2] = m_GrainIds[neigh3];
-          faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-          triangleCount++;
-
-          triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
-          triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
-          triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
-          faceLabels[triangleCount*2] = m_GrainIds[neigh3];
-          faceLabels[triangleCount*2+1] = m_GrainIds[point];
-
-          triangleCount++;
-        }
-      }
+		  point = (k*xP*yP)+(j*xP)+i;
+		  neigh1 = point + 1;
+		  neigh2 = point + xP;
+		  neigh3 = point + (xP*yP);
+
+		  if(i == 0)
+		  {
+			nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+			triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+			triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			faceLabels[triangleCount*2] = m_GrainIds[point];
+			faceLabels[triangleCount*2+1] = -1;
+			triangleCount++;
+
+			triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+			triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			faceLabels[triangleCount*2] = m_GrainIds[point];
+			faceLabels[triangleCount*2+1] = -1;
+			triangleCount++;
+
+			ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId1]].insert(-1);
+			ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId2]].insert(-1);
+			ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId3]].insert(-1);
+			ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId4]].insert(-1);
+		  }
+		  if(j == 0)
+		  {
+			nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId4]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+			triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+			triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+			faceLabels[triangleCount*2] = m_GrainIds[point];
+			faceLabels[triangleCount*2+1] = -1;
+			triangleCount++;
+
+			triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+			triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
+			faceLabels[triangleCount*2] = m_GrainIds[point];
+			faceLabels[triangleCount*2+1] = -1;
+			triangleCount++;
+
+			ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId1]].insert(-1);
+			ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId2]].insert(-1);
+			ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId3]].insert(-1);
+			ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId4]].insert(-1);
+		  }
+		  if(k == 0)
+		  {
+			nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId3 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId3]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			nodeId4 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			vertex[m_NodeIds[nodeId4]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+			triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+			triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			faceLabels[triangleCount*2] = m_GrainIds[point];
+			faceLabels[triangleCount*2+1] = -1;
+			triangleCount++;
+
+			triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+			triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			faceLabels[triangleCount*2] = m_GrainIds[point];
+			faceLabels[triangleCount*2+1] = -1;
+			triangleCount++;
+
+			ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId1]].insert(-1);
+			ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId2]].insert(-1);
+			ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId3]].insert(-1);
+			ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			ownerLists[m_NodeIds[nodeId4]].insert(-1);
+		  }
+		  if(i == (xP-1) || j == (yP-1) || k == (zP-1))
+		  {
+			if(i == (xP-1))
+			{
+			  nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
+			  faceLabels[triangleCount*2] = m_GrainIds[point];
+			  faceLabels[triangleCount*2+1] = -1;
+			  triangleCount++;
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+			  faceLabels[triangleCount*2] = m_GrainIds[point];
+			  faceLabels[triangleCount*2+1] = -1;
+			  triangleCount++;
+
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId1]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(-1);
+			}
+			if(j == (yP-1))
+			{
+			  nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
+			  faceLabels[triangleCount*2] = m_GrainIds[point];
+			  faceLabels[triangleCount*2+1] = -1;
+			  triangleCount++;
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+			  faceLabels[triangleCount*2] = m_GrainIds[point];
+			  faceLabels[triangleCount*2+1] = -1;
+			  triangleCount++;
+
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId1]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(-1);
+			}
+			if(k == (zP-1))
+			{
+			  nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId1];
+			  faceLabels[triangleCount*2] = m_GrainIds[point];
+			  faceLabels[triangleCount*2+1] = -1;
+			  triangleCount++;
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId4];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+			  faceLabels[triangleCount*2] = m_GrainIds[point];
+			  faceLabels[triangleCount*2+1] = -1;
+			  triangleCount++;
+
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId1]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(-1);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(-1);
+			}
+		  }
+		  else
+		  {
+			if(m_GrainIds[point] != m_GrainIds[neigh1])
+			{
+			  nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			  faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+			  faceLabels[triangleCount*2+1] = m_GrainIds[point];
+			  triangleCount++;
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			  faceLabels[triangleCount*2] = m_GrainIds[neigh1];
+			  faceLabels[triangleCount*2+1] = m_GrainIds[point];
+			  triangleCount++;
+
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[neigh1]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[neigh1]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[neigh1]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[neigh1]);
+			}
+			if(m_GrainIds[point] != m_GrainIds[neigh2])
+			{
+			  nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two);
+
+			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			  faceLabels[triangleCount*2] = m_GrainIds[neigh2];
+			  faceLabels[triangleCount*2+1] = m_GrainIds[point];
+			  triangleCount++;
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId4];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId3];
+			  faceLabels[triangleCount*2] = m_GrainIds[neigh2];
+			  faceLabels[triangleCount*2+1] = m_GrainIds[point];
+			  triangleCount++;
+
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[neigh2]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[neigh2]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[neigh2]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[neigh2]);
+			}
+			if(m_GrainIds[point] != m_GrainIds[neigh3])
+			{
+			  nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
+			  vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
+			  vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two);
+			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two);
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId2];
+			  faceLabels[triangleCount*2] = m_GrainIds[neigh3];
+			  faceLabels[triangleCount*2+1] = m_GrainIds[point];
+			  triangleCount++;
+
+			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
+			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
+			  triangle[triangleCount].verts[2] = m_NodeIds[nodeId4];
+			  faceLabels[triangleCount*2] = m_GrainIds[neigh3];
+			  faceLabels[triangleCount*2+1] = m_GrainIds[point];
+			  triangleCount++;
+
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId1]].insert(m_GrainIds[neigh3]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId2]].insert(m_GrainIds[neigh3]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId3]].insert(m_GrainIds[neigh3]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[point]);
+			  ownerLists[m_NodeIds[nodeId4]].insert(m_GrainIds[neigh3]);
+			}
+		  }
       }
     }
   }
 
+  for (size_t i = 0; i < nodeCount; i++)
+  {
+	  nodeTypes[i] = ownerLists[i].size();
+	  if(nodeTypes[i] > 4) nodeTypes[i] = 4;
+	  if(ownerLists[i].find(-1) != ownerLists[i].end()) nodeTypes[i] = nodeTypes[i]+10;
+  }
+
+
+
   sm->setFaces(triangles);
   sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
   sm->setVertices(vertices);
+  sm->addPointData(nodeTypePtr->GetName(), nodeTypePtr);
 
   notifyStatusMessage("Complete");
 }

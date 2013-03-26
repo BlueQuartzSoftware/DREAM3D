@@ -26,6 +26,7 @@ This is the list of things to do. It is written with the DOxygen style so it can
 
 
 @section STILL_TO_DO Still To Do
+@li Fix the deformation statistics filter to adapt to new structure of transmission metrics
 @li Add Filter to initialize the Ensemble Map based on a user defined array such as Phase Ids.
 @li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
 @li Change Field to Region in all codes
@@ -127,6 +128,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Change the Slip Transmission Metrics filter to store the metrics as Neighborlist values to save space and time for calculation.
 @li Fix data check in numerous filters that are omitting the crystal structures check and performing it in the execute
 @li Fix rename cell and field array filters to update the data container during the preflight
 @li Fix the link field map filter to return an error during preflight if array is not correct type

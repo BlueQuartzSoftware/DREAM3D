@@ -48,10 +48,10 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
 AbstractFilter(),
-m_F1ArrayName(DREAM3D::CellData::F1),
-m_F1sptArrayName(DREAM3D::CellData::F1spt),
-m_F7ArrayName(DREAM3D::CellData::F7),
-m_mPrimeArrayName(DREAM3D::CellData::mPrime),
+m_F1ArrayName(DREAM3D::FieldData::F1),
+m_F1sptArrayName(DREAM3D::FieldData::F1spt),
+m_F7ArrayName(DREAM3D::FieldData::F7),
+m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
@@ -167,10 +167,10 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
   GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, F1, ss, -307, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, -309, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
