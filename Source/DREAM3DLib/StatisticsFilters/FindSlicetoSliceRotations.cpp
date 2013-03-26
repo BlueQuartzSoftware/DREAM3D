@@ -53,7 +53,8 @@ m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_CellPhases(NULL),
 m_GoodVoxels(NULL),
-m_Quats(NULL)
+m_Quats(NULL),
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
@@ -120,6 +121,9 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
     if(preflight == false) find_cellquats->execute();
   }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -159,13 +163,6 @@ void FindSlicetoSliceRotations::execute()
 //  int numVoxel; // number of voxels in the grain...
 //  int numchecks; // number of voxels in the grain...
   bool good = false;
-
-
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  unsigned int* crystruct = crystructPtr->GetPointer(0);
- // size_t numXTals = crystructPtr->GetNumberOfTuples();
 
   float w, n1, n2, n3;
 //  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
@@ -231,7 +228,7 @@ void FindSlicetoSliceRotations::execute()
                 q2[2] = m_Quats[outNeighbor*5 + 2];
                 q2[3] = m_Quats[outNeighbor*5 + 3];
                 q2[4] = m_Quats[outNeighbor*5 + 4];
-                w = m_OrientationOps[crystruct[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
+                w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
                 if(w < 5.0f*m_pi/180.0f)
                 {
                     OrientationMath::changeAxisReferenceFrame(q1, n1, n2, n3);
@@ -257,7 +254,7 @@ void FindSlicetoSliceRotations::execute()
              q2[2] = m_Quats[inNeighbor*5 + 2];
              q2[3] = m_Quats[inNeighbor*5 + 3];
              q2[4] = m_Quats[inNeighbor*5 + 4];
-             w = m_OrientationOps[crystruct[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
+             w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
              if(w < 5.0f*m_pi/180.0f)
              {
                 OrientationMath::changeAxisReferenceFrame(q1, n1, n2, n3);

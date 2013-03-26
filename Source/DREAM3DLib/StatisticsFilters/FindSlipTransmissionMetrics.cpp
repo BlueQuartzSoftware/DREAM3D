@@ -69,7 +69,8 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   m_mPrime(NULL),
   m_GBEuclideanDistances(NULL),
   m_TJEuclideanDistances(NULL),
-  m_QPEuclideanDistances(NULL)
+  m_QPEuclideanDistances(NULL),
+  m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -136,6 +137,8 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, float, FloatArrayType, 0, voxels, 1)
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, float, FloatArrayType, 0, voxels, 1)
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -167,10 +170,6 @@ void FindSlipTransmissionMetrics::execute()
     return;
   }
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-
   //  size_t numXTals = crystruct->GetNumberOfTuples();
 
 
@@ -196,12 +195,12 @@ void FindSlipTransmissionMetrics::execute()
         q1[j] = m_AvgQuats[5 * gname + j];
         q2[j] = m_AvgQuats[5 * gname2 + j];
       }
-      if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2]) && m_FieldPhases[gname] > 0)
+      if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1(q1, q2, LD, true, F1);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1spt(q1, q2, LD, true, F1spt);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF7(q1, q2, LD, true, F7);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getmPrime(q1, q2, LD, mprime);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getF1(q1, q2, LD, true, F1);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getF1spt(q1, q2, LD, true, F1spt);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getF7(q1, q2, LD, true, F7);
       }
       else
       {
