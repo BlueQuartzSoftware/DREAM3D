@@ -84,9 +84,13 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodes);
     StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangles);
+	DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+	DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodeType);
 
     sm->setVertices(vertices);
     sm->setFaces(triangles);
+	sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
+	sm->addPointData(nodeTypePtr->GetName(), nodeTypePtr);
   }
 }
 
@@ -885,8 +889,6 @@ void QuickSurfaceMesh::execute()
 	  if(nodeTypes[i] > 4) nodeTypes[i] = 4;
 	  if(ownerLists[i].find(-1) != ownerLists[i].end()) nodeTypes[i] = nodeTypes[i]+10;
   }
-
-
 
   sm->setFaces(triangles);
   sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
