@@ -2957,7 +2957,7 @@ void M3CSliceBySlice::analyzeWinding()
     if (NULL == t.get() )
     {
       std::cout << "Could not find a triangle with the winding set. This should NOT happen" << std::endl;
-      assert(1 == 0);
+      BOOST_ASSERT(1 == 0);
     }
 
     std::set<int> localVisited; // Keep track of which triangles have been visited

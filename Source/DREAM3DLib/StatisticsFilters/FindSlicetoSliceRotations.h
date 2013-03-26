@@ -74,6 +74,8 @@ class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SlicetoSliceRotationsFile)
 
@@ -103,6 +105,8 @@ class DREAM3DLib_EXPORT FindSlicetoSliceRotations : public AbstractFilter
     int32_t* m_CellPhases;
     bool* m_GoodVoxels;
     float* m_Quats;
+
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

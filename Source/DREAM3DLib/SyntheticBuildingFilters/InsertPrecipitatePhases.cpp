@@ -53,7 +53,7 @@
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 
 #include "DREAM3DLib/GenericFilters/FindSurfaceCells.h"
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 #include "DREAM3DLib/Common/PrecipitateStatsData.h"

@@ -560,7 +560,7 @@ void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, s
   }
 
   std::vector<std::string> tokens = tokenize( &(cLine.front()), '\t');
-  assert(tokens.size() == m_DataParsers.size());
+  BOOST_ASSERT(tokens.size() == m_DataParsers.size());
 
   for (unsigned int i = 0; i < m_DataParsers.size(); ++i)
   {

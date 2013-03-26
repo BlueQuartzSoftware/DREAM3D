@@ -58,7 +58,8 @@ m_KernelZSize(1),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_KernelAverageMisorientations(NULL),
-m_Quats(NULL)
+m_Quats(NULL),
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
@@ -147,6 +148,9 @@ void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -187,11 +191,6 @@ void FindKernelAvgMisorientations::execute()
  // int numchecks; // number of voxels in the grain...
   int good = 0;
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  unsigned int* crystruct = crystructPtr->GetPointer(0);
-
   float w, totalmisorientation;
   float n1, n2, n3;
   unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
@@ -226,7 +225,7 @@ void FindKernelAvgMisorientations::execute()
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-          phase1 = crystruct[m_CellPhases[point]];
+          phase1 = m_CrystalStructures[m_CellPhases[point]];
           for (int j = -m_KernelZSize; j < m_KernelZSize + 1; j++)
           {
             jStride = j * xPoints * yPoints;
@@ -250,7 +249,7 @@ void FindKernelAvgMisorientations::execute()
                   q2[2] = m_Quats[neighbor*5 + 2];
                   q2[3] = m_Quats[neighbor*5 + 3];
                   q2[4] = m_Quats[neighbor*5 + 4];
-                  phase2 = crystruct[m_CellPhases[neighbor]];
+                  phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   w = w *(180.0f/m_pi);
                   totalmisorientation = totalmisorientation + w;

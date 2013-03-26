@@ -461,6 +461,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     conn->setVoxelDataContainer(getVoxelDataContainer());
     conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
     conn->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {
@@ -509,8 +510,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
       for (int j = 0; j < 3; j++)
       {
-        assert( 3*in1+j < nvert*3);
-        assert( 3*in2+j < nvert*3);
+        BOOST_ASSERT( 3*in1+j < nvert*3);
+        BOOST_ASSERT( 3*in2+j < nvert*3);
         dlta = vsm[in2].pos[j] - vsm[in1].pos[j];
         delta[3*in1+j] += dlta;
         delta[3*in2+j] += -1.0*dlta;
@@ -547,8 +548,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   // This filter had to generate the edge connectivity data so delete it when we are done with it.
   if (m_DoConnectivityFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removePointData(m_SurfaceMeshUniqueEdgesArrayName);
-    assert(removedConnectviity.get() != NULL);
+    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
+    BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
 
   return err;

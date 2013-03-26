@@ -26,6 +26,8 @@ This is the list of things to do. It is written with the DOxygen style so it can
 
 
 @section STILL_TO_DO Still To Do
+@li Fix the deformation statistics filter to adapt to new structure of transmission metrics
+@li Add Filter to initialize the Ensemble Map based on a user defined array such as Phase Ids.
 @li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
 @li Change Field to Region in all codes
 @li Add/Modify filter to note if grain is a twin, parent or untwinned
@@ -59,10 +61,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Add filter to combine far field data with near field data from HEDM
 @li Remove all "under-the-hood" calls to other filters
 @li Allow the user to specify the phase for minimum neighbors filter
-@li Create a filter to "link" field map to cell array
-@li Fix data check in find kernel average misorientation filter (crystal structures)
-@li Fix data check in deformation statistics filter (crystal structures)
-@li Fix data check in slip transmission metrics filter (crystal structures)
 @li Look at adding a mirror option to the rotate sample reference frame filter
 @li Add the option for the user to set the name of a copied array (from field to cell)
 @li Add filter to determine spherical correlation length from each grain centroid
@@ -72,16 +70,12 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 @li Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 @li Fix the mPrime, F1, F1spt, F7 functions in Hex- and Ortho- Ops
-@li Add Filter to initialize the Field Map based on a user defined array such as Grain Ids.
-
-
 
 
 @section synthetic Synthetic Building Filters
 @li Add ability to read list of ellipsoids into packing algorithms
 @li Look into bias near outside of box during synthetic building
 @li Fix synthetic builder to note if volume is 2D and actually pack slices
-@li Add some optimizations into the PackPrimaryGrains by creating constants and removing triple nested vectors.
 
 
 @section io_filters
@@ -118,7 +112,6 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @section surface_meshing Surface Meshing
 @li bug in edges file is stopping the use in the smoothing filter
 @li Add mesh decimation filter (surface or volume)
-@li Add node type calculation during quick mesh
 
 
 @section mfe_smoothing MFE Smoothing
@@ -133,6 +126,16 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Add node type calculation during quick mesh
+@li Change the Slip Transmission Metrics filter to store the metrics as Neighborlist values to save space and time for calculation.
+@li Fix data check in numerous filters that are omitting the crystal structures check and performing it in the execute
+@li Fix rename cell and field array filters to update the data container during the preflight
+@li Fix the link field map filter to return an error during preflight if array is not correct type
+@li Add filter to rename array from cell map
+@li Add filter to rename array from field map
+@li Add Filter to initialize the Field Map based on a user defined cell array such as Grain Ids.
+@li Move FindNeighbors filter to the statistics group
+@li Add some optimizations into the PackPrimaryGrains by creating constants and removing triple nested vectors.
 @li Add ability to write out goal statistics/attributes for grains during packing synthetic volumes
 @li Look into deleting field arrays after packing in synthetic structures
 @li Fix distributionOps functions to not fart when there is only 1 grain in a bin.

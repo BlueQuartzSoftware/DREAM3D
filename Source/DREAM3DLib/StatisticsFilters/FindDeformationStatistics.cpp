@@ -48,10 +48,10 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
 AbstractFilter(),
-m_F1ArrayName(DREAM3D::CellData::F1),
-m_F1sptArrayName(DREAM3D::CellData::F1spt),
-m_F7ArrayName(DREAM3D::CellData::F7),
-m_mPrimeArrayName(DREAM3D::CellData::mPrime),
+m_F1ArrayName(DREAM3D::FieldData::F1),
+m_F1sptArrayName(DREAM3D::FieldData::F1spt),
+m_F7ArrayName(DREAM3D::FieldData::F7),
+m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
@@ -79,7 +79,8 @@ m_Poles(NULL),
 m_Schmids(NULL),
 m_GBEuclideanDistances(NULL),
 m_TJEuclideanDistances(NULL),
-m_QPEuclideanDistances(NULL)
+m_QPEuclideanDistances(NULL),
+m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -166,11 +167,13 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
   GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, F1, ss, -307, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, -309, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
 
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -201,13 +204,6 @@ void FindDeformationStatistics::execute()
   {
     return;
   }
-
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-
-//  size_t numXTals = crystruct->GetNumberOfTuples();
-
 
 //  std::string filename = m_OutputFile1;
   std::ofstream outFile;
@@ -322,9 +318,9 @@ void FindDeformationStatistics::execute()
         q1[j] = m_AvgQuats[5 * gname + j];
         q2[j] = m_AvgQuats[5 * gname2 + j];
       }
-      if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2]) && m_FieldPhases[gname] > 0)
+      if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
-        w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
       }
       else
@@ -367,9 +363,9 @@ void FindDeformationStatistics::execute()
         q1[j] = m_AvgQuats[5 * gname + j];
         q2[j] = m_AvgQuats[5 * gname2 + j];
       }
-      if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2]) && m_FieldPhases[gname] > 0)
+      if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
-        w = m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getMisoQuat(q1, q2, n1, n2, n3);
+        w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
         w = w *(180.0f/m_pi);
       }
       else
