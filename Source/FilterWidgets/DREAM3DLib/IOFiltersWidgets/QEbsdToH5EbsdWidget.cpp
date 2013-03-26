@@ -556,11 +556,19 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 
   QEbsdReferenceFrameDialog d(ebsdFileName, this);
   d.setEbsdFileName(ebsdFileName);
+  d.setTSLDefault(m_TSLchecked);
+  d.setHKLDefault(m_HKLchecked);
+  d.setHEDMDefault(m_HEDMchecked);
+  d.setNoTrans(m_NoTranschecked);
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
 
     Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
+	m_TSLchecked = d.getTSLchecked();
+	m_HKLchecked = d.getHKLchecked();
+	m_HEDMchecked = d.getHEDMchecked();
+	m_NoTranschecked = d.getNoTranschecked();
     m_SampleTransformationAxis.resize(3);
     m_EulerTransformationAxis.resize(3);
     if (mapping == Ebsd::TSLdefault)
