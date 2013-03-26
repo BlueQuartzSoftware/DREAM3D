@@ -61,9 +61,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Remove all "under-the-hood" calls to other filters
 @li Allow the user to specify the phase for minimum neighbors filter
 @li Create a filter to "link" field map to cell array
-@li Fix data check in find kernel average misorientation filter (crystal structures)
-@li Fix data check in deformation statistics filter (crystal structures)
-@li Fix data check in slip transmission metrics filter (crystal structures)
 @li Look at adding a mirror option to the rotate sample reference frame filter
 @li Add the option for the user to set the name of a copied array (from field to cell)
 @li Add filter to determine spherical correlation length from each grain centroid
@@ -130,6 +127,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Fix data check in numerous filters that are omitting the crystal structures check and performing it in the execute
 @li Fix rename cell and field array filters to update the data container during the preflight
 @li Fix the link field map filter to return an error during preflight if array is not correct type
 @li Add filter to rename array from cell map

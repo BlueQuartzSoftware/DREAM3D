@@ -98,6 +98,8 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(PolesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(SchmidsArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
@@ -141,6 +143,8 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     float* m_GBEuclideanDistances;
     float* m_TJEuclideanDistances;
     float* m_QPEuclideanDistances;
+
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

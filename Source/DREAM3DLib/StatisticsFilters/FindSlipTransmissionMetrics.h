@@ -93,7 +93,8 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -129,6 +130,8 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     float* m_GBEuclideanDistances;
     float* m_TJEuclideanDistances;
     float* m_QPEuclideanDistances;
+
+    unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
