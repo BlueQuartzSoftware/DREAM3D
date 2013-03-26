@@ -238,21 +238,15 @@ void FindBoundaryStrengths::execute()
 
   for (int i = 0; i < nTriangles; i++)
   {
-   // SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
     gname1 = faceLabels[i*2];
     gname2 = faceLabels[i*2 + 1];
     if(gname1 > 0 && gname2 > 0)
     {
-//      if((gname1 == 166 && gname2 == 53) || (gname2 == 166 && gname1 == 53))
-//      {
-//        int stop = 0;
-//      }
       for (int j = 0; j < 5; j++)
       {
         q1[j] = m_AvgQuats[5 * gname1 + j];
         q2[j] = m_AvgQuats[5 * gname2 + j];
       }
-      //      OrientationMath::getSlipMisalignment(ss1, q1, q2, ssap);
       if(m_CrystalStructures[m_FieldPhases[gname1]] == m_CrystalStructures[m_FieldPhases[gname2]]
          && m_FieldPhases[gname1] > 0)
       {
