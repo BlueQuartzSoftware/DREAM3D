@@ -129,6 +129,24 @@ IDataArray::Pointer VoxelDataContainer::removeCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool VoxelDataContainer::renameCellData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_CellData.find(oldname);
+  if ( it == m_CellData.end() )
+  {
+	  return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeCellData(oldname);
+  addCellData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VoxelDataContainer::clearCellData()
 {
   m_CellData.clear();
@@ -201,6 +219,24 @@ IDataArray::Pointer VoxelDataContainer::removeFieldData(const std::string &name)
   IDataArray::Pointer p = (*it).second;
   m_FieldData.erase(it);
   return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool VoxelDataContainer::renameFieldData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(oldname);
+  if ( it == m_FieldData.end() )
+  {
+	  return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeFieldData(oldname);
+  addFieldData(newname, p);
+  return true;
 }
 
 // -----------------------------------------------------------------------------

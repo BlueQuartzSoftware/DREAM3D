@@ -105,8 +105,6 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<std::vector<float> > misorientationlists;
-
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindMisorientations(const FindMisorientations&); // Copy Constructor Not Implemented

@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -48,28 +48,22 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   AbstractFilter(),
-  m_F1ArrayName(DREAM3D::CellData::F1),
-  m_F1sptArrayName(DREAM3D::CellData::F1spt),
-  m_F7ArrayName(DREAM3D::CellData::F7),
-  m_mPrimeArrayName(DREAM3D::CellData::mPrime),
+  m_F1ArrayName(DREAM3D::FieldData::F1),
+  m_F1sptArrayName(DREAM3D::FieldData::F1spt),
+  m_F7ArrayName(DREAM3D::FieldData::F7),
+  m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
-  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_GrainIds(NULL),
   m_FieldPhases(NULL),
-  m_NearestNeighbors(NULL),
   m_AvgQuats(NULL),
   m_F1(NULL),
   m_F1spt(NULL),
   m_F7(NULL),
   m_mPrime(NULL),
-  m_GBEuclideanDistances(NULL),
-  m_TJEuclideanDistances(NULL),
-  m_QPEuclideanDistances(NULL)
+  m_NeighborList(NULL),
+  m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -113,14 +107,11 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-      TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-      if(err == -302)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
+  if(err == -302)
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
@@ -131,11 +122,68 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F1, ss, float, FloatArrayType, 0, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F1spt, ss, float, FloatArrayType, 0, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, F7, ss, float, FloatArrayType, 0, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, mPrime, ss, float, FloatArrayType, 0, voxels, 1)
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  if(m_NeighborList == NULL)
+  {
+    setErrorCondition(0);
+    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
+    find_neighbors->setObservers(this->getObservers());
+    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
+    if(preflight == true) find_neighbors->preflight();
+    if(preflight == false) find_neighbors->execute();
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    if(m_NeighborList == NULL)
+    {
+      ss.str("");
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      setErrorCondition(-305);
+      addErrorMessage(getHumanLabel(), ss.str(), -305);
+   }
+  }
 
+  NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
+  f1Ptr->SetName(DREAM3D::FieldData::F1);
+  f1Ptr->Resize(fields);
+  m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
+  if (f1Ptr.get() == NULL) 
+  {
+      ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+      setErrorCondition(-308);
+  }
+
+  NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
+  f1sptPtr->SetName(DREAM3D::FieldData::F1spt);
+  f1sptPtr->Resize(fields);
+  m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
+  if (f1sptPtr.get() == NULL) 
+  {
+      ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+      setErrorCondition(-308);
+  }
+
+  NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
+  f7Ptr->SetName(DREAM3D::FieldData::F7);
+  f7Ptr->Resize(fields);
+  m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
+  if (f7Ptr.get() == NULL) 
+  {
+      ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+      setErrorCondition(-308);
+  }
+
+  NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
+  mPrimePtr->SetName(DREAM3D::FieldData::mPrime);
+  mPrimePtr->Resize(fields);
+  m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
+  if (mPrimePtr.get() == NULL) 
+  {
+      ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+      setErrorCondition(-308);
+  }
+	
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -161,21 +209,25 @@ void FindSlipTransmissionMetrics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  int64_t totalFields = m->getNumFieldTuples();
+  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystruct
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
+  // But since a pointer is difficult to use operators with we will now create a
+  // reference variable to the pointer with the correct variable name that allows
+  // us to use the same syntax as the "vector of vectors"
+  NeighborList<int>& neighborlist = *m_NeighborList;
 
-  //  size_t numXTals = crystruct->GetNumberOfTuples();
-
+  std::vector<std::vector<float> > F1lists;
+  std::vector<std::vector<float> > F1sptlists;
+  std::vector<std::vector<float> > F7lists;
+  std::vector<std::vector<float> > mPrimelists;
 
   float mprime, F1, F1spt, F7;
-  int gname, gname2;
+  int nname;
   float q1[5], q2[5];
 
   //  int mprimebin, F1bin, F1sptbin, F7bin, disbin;
@@ -185,23 +237,31 @@ void FindSlipTransmissionMetrics::execute()
   LD[0] = 0;
   LD[1] = 0;
   LD[2] = 1;
-  for (int i = 0; i < totalPoints; i++)
+
+  F1lists.resize(totalFields);
+  F1sptlists.resize(totalFields);
+  F7lists.resize(totalFields);
+  mPrimelists.resize(totalFields);
+  for (int i = 1; i < totalFields; i++)
   {
-    gname = m_GrainIds[i];
-    if(gname > 0)
+	F1lists[i].resize(neighborlist[i].size(),0);
+	F1sptlists[i].resize(neighborlist[i].size(),0);
+	F7lists[i].resize(neighborlist[i].size(),0);
+	mPrimelists[i].resize(neighborlist[i].size(),0);
+    for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
-      gname2 = m_NearestNeighbors[i * 3 + 0];
-      for (int j = 0; j < 5; j++)
+      nname = neighborlist[i][j];
+      for (int k = 0; k < 5; k++)
       {
-        q1[j] = m_AvgQuats[5 * gname + j];
-        q2[j] = m_AvgQuats[5 * gname2 + j];
+        q1[k] = m_AvgQuats[5 * i + k];
+        q2[k] = m_AvgQuats[5 * nname + k];
       }
-      if(crystruct->GetValue(m_FieldPhases[gname]) == crystruct->GetValue(m_FieldPhases[gname2]) && m_FieldPhases[gname] > 0)
+      if(m_CrystalStructures[m_FieldPhases[i]] == m_CrystalStructures[m_FieldPhases[nname]] && m_FieldPhases[i] > 0)
       {
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getmPrime(q1, q2, LD, mprime);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1(q1, q2, LD, true, F1);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF1spt(q1, q2, LD, true, F1spt);
-        m_OrientationOps[crystruct->GetValue(m_FieldPhases[gname])]->getF7(q1, q2, LD, true, F7);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getmPrime(q1, q2, LD, mprime);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getF1(q1, q2, LD, true, F1);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getF1spt(q1, q2, LD, true, F1spt);
+        m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getF7(q1, q2, LD, true, F7);
       }
       else
       {
@@ -210,11 +270,37 @@ void FindSlipTransmissionMetrics::execute()
         F1spt = 0;
         F7 = 0;
       }
-      m_mPrime[i] = mprime;
-      m_F1[i] = F1;
-      m_F1spt[i] = F1spt;
-      m_F7[i] = F7;
-    }
+      mPrimelists[i][j] = mprime;
+      F1lists[i][j] = F1;
+      F1sptlists[i][j] = F1spt;
+      F7lists[i][j] = F7;
+	}
+  }
+
+  // We do this to create new set of List objects
+  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+
+  for (size_t i = 1; i < totalFields; i++)
+  {
+    // Set the vector for each list into the NeighborList Object
+    NeighborList<float>::SharedVectorType f1L(new std::vector<float>);
+    f1L->assign(F1lists[i].begin(), F1lists[i].end());
+    m_F1->setList(static_cast<int>(i), f1L);
+
+    // Set the vector for each list into the NeighborList Object
+    NeighborList<float>::SharedVectorType f1sptL(new std::vector<float>);
+    f1sptL->assign(F1sptlists[i].begin(), F1sptlists[i].end());
+    m_F1spt->setList(static_cast<int>(i), f1sptL);
+
+    // Set the vector for each list into the NeighborList Object
+    NeighborList<float>::SharedVectorType f7L(new std::vector<float>);
+    f7L->assign(F7lists[i].begin(), F7lists[i].end());
+    m_F7->setList(static_cast<int>(i), f7L);
+
+    // Set the vector for each list into the NeighborList Object
+    NeighborList<float>::SharedVectorType mPrimeL(new std::vector<float>);
+    mPrimeL->assign(mPrimelists[i].begin(), mPrimelists[i].end());
+    m_mPrime->setList(static_cast<int>(i), mPrimeL);
   }
 
   notifyStatusMessage("Completed");

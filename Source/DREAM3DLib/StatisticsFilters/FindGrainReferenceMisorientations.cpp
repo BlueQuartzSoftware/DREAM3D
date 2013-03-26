@@ -69,7 +69,8 @@ FindGrainReferenceMisorientations::FindGrainReferenceMisorientations() :
   m_GrainReferenceRotations(NULL),
   m_AvgQuats(NULL),
   m_GrainAvgMisorientations(NULL),
-  m_Quats(NULL)
+  m_Quats(NULL),
+  m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
@@ -174,6 +175,9 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
+
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -221,11 +225,6 @@ void FindGrainReferenceMisorientations::execute()
 
   float q1[5];
   float q2[5];
-
-  typedef DataArray<unsigned int> XTalType;
-  XTalType* crystructPtr
-      = XTalType::SafeObjectDownCast<IDataArray*, XTalType*>(m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get());
-  unsigned int* crystruct = crystructPtr->GetPointer(0);
 
   float w;
   float n1, n2, n3;
@@ -285,7 +284,7 @@ void FindGrainReferenceMisorientations::execute()
           q1[2] = m_Quats[point*5 + 2];
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
-          phase1 = crystruct[m_CellPhases[point]];
+          phase1 = m_CrystalStructures[m_CellPhases[point]];
           if(m_ReferenceOrientation == 0)
           {
             q2[0] = m_AvgQuats[5*m_GrainIds[point]];
@@ -301,7 +300,7 @@ void FindGrainReferenceMisorientations::execute()
             q2[2] = m_Quats[m_Centers[gnum]*5 + 2];
             q2[3] = m_Quats[m_Centers[gnum]*5 + 3];
             q2[4] = m_Quats[m_Centers[gnum]*5 + 4];
-            phase2 = crystruct[m_CellPhases[m_Centers[gnum]]];
+            phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
           OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);

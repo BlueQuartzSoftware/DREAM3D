@@ -15,8 +15,8 @@ int main(int argc, char** argv)
 
   {
     ManagedArrayOfArrays<int>::Data_t& ptr = *(array->GetPointer(0));
-    assert(ptr.count == 0);
-    assert(ptr.data == NULL);
+    BOOST_ASSERT(ptr.count == 0);
+    BOOST_ASSERT(ptr.data == NULL);
 
     ptr.count = 10;
     ptr.data = (int*)(malloc(sizeof(int) * ptr.count));
@@ -25,8 +25,8 @@ int main(int argc, char** argv)
 
   {
     ManagedArrayOfArrays<int>::Data_t& ptr = *(array->GetPointer(0));
-    assert(ptr.count == 10);
-    assert(ptr.data != NULL);
+    BOOST_ASSERT(ptr.count == 10);
+    BOOST_ASSERT(ptr.data != NULL);
 
 
   }

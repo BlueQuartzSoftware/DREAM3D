@@ -39,7 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/GenericFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 // -----------------------------------------------------------------------------
@@ -186,8 +186,8 @@ void FindMisorientations::execute()
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
-  // And we do the same for the Misorientation list
-  //NeighborList<float>& neighbormisorientationlist = *m_MisorientationList;
+
+  std::vector<std::vector<float> > misorientationlists;
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
   float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;

@@ -168,7 +168,7 @@ void CopyFieldArrayToCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t fields = m->getTotalPoints();
+  int64_t fields = m->getNumFieldTuples();
   dataCheck(false, voxels, fields, m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
