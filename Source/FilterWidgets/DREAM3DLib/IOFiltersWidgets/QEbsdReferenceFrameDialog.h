@@ -67,6 +67,10 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     virtual ~QEbsdReferenceFrameDialog();
 
     void setEbsdFileName(QString filename);
+    void setTSLDefault(bool checked);
+    void setHKLDefault(bool checked);
+    void setHEDMDefault(bool checked);
+    void setNoTrans(bool checked);
 
     void loadEbsdData();
     void updateGraphicsView();
@@ -74,7 +78,10 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
 
 
     Ebsd::EbsdToSampleCoordinateMapping getSelectedOrigin();
-
+    bool getTSLchecked();
+    bool getHKLchecked();
+    bool getHEDMchecked();
+    bool getNoTranschecked();
 
   protected slots:
     void originChanged(bool checked);
