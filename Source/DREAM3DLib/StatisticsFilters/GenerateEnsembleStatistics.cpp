@@ -915,7 +915,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     }
   }
   size_t numgrains = m->getNumFieldTuples();
-  for (size_t i = 0; i < numgrains; i++)
+  for (size_t i = 1; i < numgrains; i++)
   {
     if(m_SurfaceFields[i] == false)
     {

@@ -45,7 +45,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Look into creating multiple maps at each level (i.e. parent and grain filed maps)
 @li Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 @li Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
-@li Fix reference frame button on import filter to not reset to default
 @li Add filter to calculate microtexture function or equivalent
 @li Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
 @li Add filter to merge twins using surface mesh (5 parameter)
@@ -57,7 +56,6 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Add 3D linear intercept calculation filter (C. Hartley filter)
 @li Design protocol to learn user's 'ontology'
 @li Add filter to perform Tony's hot spot analysis
-@li Check error causing crash in the find mdf filter
 @li Add filter to combine far field data with near field data from HEDM
 @li Remove all "under-the-hood" calls to other filters
 @li Allow the user to specify the phase for minimum neighbors filter
@@ -126,6 +124,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Fix reference frame button on import filter to not reset to default
 @li Add node type calculation during quick mesh
 @li Change the Slip Transmission Metrics filter to store the metrics as Neighborlist values to save space and time for calculation.
 @li Fix data check in numerous filters that are omitting the crystal structures check and performing it in the execute
@@ -142,6 +141,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 @li Output file similar to TSL OIM Analysis software. See example from Brad Fromm (INLFileWriter filter)
 @li Fix TotalSurfaceAreas in MatchCrystallography
 @li Fix phasetype sizecheck in GenerateEnsembleStatistics.
+@li Check error causing crash in the find mdf filter
 @li Hookup setting of PhaseTypes from GUI in GenerateEnsembleStatistics filter
 @li Finish implementing writing of GenerateEnsembleStatistics filter'S GUI values to pref file
 @li Update the H5EbsdVolumeReader to only read those arrays asked for by the user or by the QualityMetricFilters
