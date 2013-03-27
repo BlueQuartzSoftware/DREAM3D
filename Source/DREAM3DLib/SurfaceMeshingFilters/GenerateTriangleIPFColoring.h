@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT GenerateTriangleIPFColoring : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-	/* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+  /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT GenerateTriangleIPFColoring : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT GenerateTriangleIPFColoring : public SurfaceMeshFilter
     * @param ensembles The number of ensembles
     */
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-	void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+  void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
     int32_t* m_SurfaceMeshTriangleLabels;
