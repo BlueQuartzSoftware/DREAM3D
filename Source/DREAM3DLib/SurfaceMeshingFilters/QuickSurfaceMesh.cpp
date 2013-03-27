@@ -84,8 +84,8 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodes);
     StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangles);
-	DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
-	DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, DREAM3D::PointData::SurfaceMeshNodeType);
+	DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+	DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, 1, DREAM3D::PointData::SurfaceMeshNodeType);
 
     sm->setVertices(vertices);
     sm->setFaces(triangles);
