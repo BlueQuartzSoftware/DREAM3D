@@ -34,6 +34,8 @@ This is the list of things to do. It is written with the DOxygen style so it can
 
 
 @section STILL_TO_DO Still To Do
+@li Filter that can execute any program on the users computer
+@li Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
 @li Fix the deformation statistics filter to adapt to new structure of transmission metrics
 @li Add Filter to initialize the Ensemble Map based on a user defined array such as Phase Ids.
 @li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
@@ -84,7 +86,8 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Fix synthetic builder to note if volume is 2D and actually pack slices
 
 
-@section io_filters
+@section io_filters IO Filterse
+@li Add filter to generate IPF Images for each slice of data, or a user defined range of slices and plane by defining the normal to the plane (X, Y or Z)
 @li Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 @li Add filter to write out slices as images of any array
 @li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
@@ -95,6 +98,8 @@ This is the list of things to do. It is written with the DOxygen style so it can
 
 
 @section todo_GUI_Pipeline Add to the Pipeline Gui
+@li Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
+@li When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 @li Add a 'Rename Favorite' menu
 @li allow user to right-click on a favorite and "delete, rename, ..." the favorite
 @li allow user to right-click on a filter and display help in a separate window
