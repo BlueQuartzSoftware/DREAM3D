@@ -233,6 +233,9 @@ namespace DREAM3D
   {
     const std::string SurfaceMeshFaces("SurfaceMeshFaces");
     const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
+    const std::string SurfaceMeshTriangleIPFColors("SurfaceMeshTriangleIPFColors");
+    const std::string SurfaceMeshTriangleIPFColorsGrain1("SurfaceMeshTriangleIPFColorsGrain1");
+    const std::string SurfaceMeshTriangleIPFColorsGrain2("SurfaceMeshTriangleIPFColorsGrain2");
     const std::string SurfaceMeshTriangleLabels("SurfaceMeshTriangleLabels");
     const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
     const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");

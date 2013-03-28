@@ -135,7 +135,7 @@ if (iDataArray.get() == 0) {\
 if (size*numComp != iDataArray->GetSize()) {\
   std::stringstream s;\
   s << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
-  s << " Required: " << size << " Contains: " << iDataArray->GetSize();\
+  s << " Required: " << (size*numComp) << " Contains: " << iDataArray->GetSize();\
   if (NULL != obv) {obv->setErrorCondition(-501);\
   obv->addErrorMessage(obv->getHumanLabel(), s.str(), -501);}\
   return gi;\

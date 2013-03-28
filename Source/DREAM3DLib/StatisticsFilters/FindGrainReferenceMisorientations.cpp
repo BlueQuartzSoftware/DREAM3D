@@ -61,6 +61,7 @@ FindGrainReferenceMisorientations::FindGrainReferenceMisorientations() :
   m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_ReferenceOrientation(0),
   m_GrainIds(NULL),
   m_CellPhases(NULL),

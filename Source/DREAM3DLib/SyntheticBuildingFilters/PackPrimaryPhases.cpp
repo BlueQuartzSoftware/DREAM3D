@@ -164,9 +164,9 @@ class AssignVoxelsGapsImpl
         for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
         {
           row = iter2;
-          size_t row_dim = row * dims[0];
           if (iter2 < 0) row = iter2 + dims[1];
           else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          size_t row_dim = row * dims[0];
 
           for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
@@ -197,10 +197,10 @@ class AssignVoxelsGapsImpl
 //                if (inside >= 0 && newowners[index] > 0)
                 if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
                 {
-                    newowners[index] = curGrain;
-                    ellipfuncs[index] = inside;
-//                    newowners[index] = -2;
+//                    newowners[index] = curGrain;
 //                    ellipfuncs[index] = inside;
+                    newowners[index] = -2;
+                    ellipfuncs[index] = inside;
                 }
                 else if (inside >= 0 && newowners[index] == -1)
                 {
@@ -325,8 +325,8 @@ void PackPrimaryPhases::setupFilterParameters()
     option->setHumanLabel("Goal Attribute CSV File");
     option->setPropertyName("CsvOutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-	option->setFileExtension("*.csv");
-	option->setFileType("Comma Separated Data");
+  option->setFileExtension("*.csv");
+  option->setFileType("Comma Separated Data");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -503,7 +503,6 @@ void PackPrimaryPhases::execute()
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
 
   notifyStatusMessage("Packing Grains - Initializing Volume");
@@ -511,12 +510,12 @@ void PackPrimaryPhases::execute()
   initialize_packinggrid();
 
   Int32ArrayType::Pointer grainOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::grain_owners");
-  grainOwnersPtr->initializeWithZeros();  
+  grainOwnersPtr->initializeWithZeros();
   BoolArrayType::Pointer exclusionZonesPtr = BoolArrayType::CreateArray(m_TotalPackingPoints, 1, "PackPrimaryGrains::exclusions_zones");
-  exclusionZonesPtr->initializeWithValues(false);  
+  exclusionZonesPtr->initializeWithValues(false);
 
   // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method
-  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+  //int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
   bool* exclusionZones = exclusionZonesPtr->GetPointer(0);
   size_t grainOwnersIdx = 0;
 
@@ -719,7 +718,7 @@ void PackPrimaryPhases::execute()
       }
       normalizer = normalizer + previoustotal;
     }
-	normalizer = 1.0/normalizer;
+  normalizer = 1.0/normalizer;
     for (size_t j = 0; j < neighbordist[i].size(); j++)
     {
       for (size_t k = 0; k < neighbordist[i][j].size(); k++)
@@ -772,12 +771,12 @@ void PackPrimaryPhases::execute()
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insert_grain(i);
-	count = 0;
+  count = 0;
     column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
     row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
     plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
     grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-	while(exclusionZones[grainOwnersIdx] == true && count < m_TotalPackingPoints)
+  while(exclusionZones[grainOwnersIdx] == true && count < m_TotalPackingPoints)
     {
         column++;
         if(column >= m_PackingPoints[0])
@@ -796,7 +795,7 @@ void PackPrimaryPhases::execute()
         }
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
         count++;
-	}
+  }
     xc = static_cast<float>((column*m_PackingRes[0]) + (m_PackingRes[0]*0.5));
     yc = static_cast<float>((row*m_PackingRes[1]) + (m_PackingRes[1]*0.5));
     zc = static_cast<float>((plane*m_PackingRes[2]) + (m_PackingRes[2]*0.5));
@@ -840,7 +839,7 @@ void PackPrimaryPhases::execute()
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+  int totalAdjustments = static_cast<int>(10 * (numgrains-1));
 
   millis = MXA::getMilliSeconds();
   startMillis = millis;
@@ -1017,7 +1016,7 @@ void PackPrimaryPhases::execute()
 
   if(m_VtkOutputFile.empty() == false)
   {
-	err = writeVtkFile(grainOwnersPtr->GetPointer(0), exclusionZonesPtr->GetPointer(0));
+  err = writeVtkFile(grainOwnersPtr->GetPointer(0), exclusionZonesPtr->GetPointer(0));
     if(err < 0)
     {
       return;
@@ -1051,7 +1050,7 @@ void PackPrimaryPhases::execute()
 
   if(m_WriteGoalAttributes == true)
   {
-	  write_goal_attributes();
+    write_goal_attributes();
   }
 
   m->removeFieldData(m_EquivalentDiametersArrayName);
@@ -1123,7 +1122,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
         if(i % 20 == 0 && i > 0) outFile << std::endl;
         outFile << "       ";
         if(val == true) outFile << 1;
-		else outFile << 0;
+    else outFile << 0;
       }
     }
   }
@@ -1623,7 +1622,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         int currentGrainOwner = grainOwners[grainOwnersIdx];
         fillingerror = fillingerror + (k1 * currentGrainOwner  + k2);
         grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-		if(efl[i] > 0.25) exclusionZones[grainOwnersIdx] = true;
+    if(efl[i] > 0.25) exclusionZones[grainOwnersIdx] = true;
         packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
       }
       else
@@ -1634,7 +1633,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           int currentGrainOwner = grainOwners[grainOwnersIdx];
           fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
           grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-		  if(efl[i] > 0.25) exclusionZones[grainOwnersIdx] = true;
+      if(efl[i] > 0.25) exclusionZones[grainOwnersIdx] = true;
           packquality = packquality + ((currentGrainOwner) * (currentGrainOwner));
         }
       }
@@ -1651,12 +1650,12 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
     std::vector<int>& rl = rowlist[gremove];
     std::vector<int>& pl = planelist[gremove];
     std::vector<float>& efl = ellipfunclist[gremove];
-	for (size_t i = 0; i < size; i++)
+  for (size_t i = 0; i < size; i++)
     {
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-	  if(m_PeriodicBoundaries == true)
+    if(m_PeriodicBoundaries == true)
       {
         if(col < 0) col = col + m_PackingPoints[0];
         if(col > m_PackingPoints[0] - 1) col = col - m_PackingPoints[0];
@@ -1668,8 +1667,8 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         int currentGrainOwner = grainOwners[grainOwnersIdx];
         fillingerror = fillingerror + ( k1 * currentGrainOwner + k2);
         grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-		if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) exclusionZones[grainOwnersIdx] = false;
-	  }
+    if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) exclusionZones[grainOwnersIdx] = false;
+    }
       else
       {
         if(col >= 0 && col < m_PackingPoints[0] && row >= 0 && row < m_PackingPoints[1] && plane >= 0 && plane < m_PackingPoints[2])
@@ -1678,7 +1677,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           int currentGrainOwner = grainOwners[grainOwnersIdx];
           fillingerror = fillingerror + (k1 * currentGrainOwner + k2);
           grainOwners[grainOwnersIdx] = currentGrainOwner + k3;
-		  if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) exclusionZones[grainOwnersIdx] = false;
+      if(efl[i] > 0.25 && grainOwners[grainOwnersIdx] == 0) exclusionZones[grainOwnersIdx] = false;
         }
       }
     }
@@ -1777,7 +1776,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
           columnlist[gnum].push_back(column);
           rowlist[gnum].push_back(row);
           planelist[gnum].push_back(plane);
-		  ellipfunclist[gnum].push_back(inside);
+      ellipfunclist[gnum].push_back(inside);
         }
       }
     }
@@ -2011,7 +2010,7 @@ void PackPrimaryPhases::assign_gaps_only()
 
   while (count != 0)
   {
-	counter++;
+  counter++;
     count = 0;
     int zStride, yStride;
     for(int i=0;i<zPoints;i++)
@@ -2026,14 +2025,14 @@ void PackPrimaryPhases::assign_gaps_only()
           if (grainname < 0)
           {
             count++;
-			currentMillis = MXA::getMilliSeconds();
-			if (currentMillis - millis > 1000)
-			{
-				ss.str("");
-				ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
-				notifyStatusMessage(ss.str());
-				millis = MXA::getMilliSeconds();
-			}
+      currentMillis = MXA::getMilliSeconds();
+      if (currentMillis - millis > 1000)
+      {
+        ss.str("");
+        ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
+        notifyStatusMessage(ss.str());
+        millis = MXA::getMilliSeconds();
+      }
             current = 0;
             most = 0;
             for (int l = 0; l < 6; l++)
@@ -2091,14 +2090,14 @@ void PackPrimaryPhases::assign_gaps_only()
         m_CellPhases[j] = m_FieldPhases[m_GrainIds[neighbor]];
       }
     }
-	if(counter == 1)
-	{
-		for(int i = 0; i < 1000; i++)
-		{
-				ss.str("");
-				ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
-		}
-	}
+  if(counter == 1)
+  {
+    for(int i = 0; i < 1000; i++)
+    {
+        ss.str("");
+        ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
+    }
+  }
   }
 }
 // -----------------------------------------------------------------------------
@@ -2314,10 +2313,6 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0)
-    {
-      primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
-    }
   }
   // generate the grains
   int gid = 1;

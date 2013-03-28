@@ -68,11 +68,11 @@ class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteNeighborListData)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const std::string getHumanLabel() { return "Write Field Data as CSV File"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
