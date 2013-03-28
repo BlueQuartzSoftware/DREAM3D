@@ -197,10 +197,10 @@ class AssignVoxelsGapsImpl
 //                if (inside >= 0 && newowners[index] > 0)
                 if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
                 {
-                    newowners[index] = curGrain;
-                    ellipfuncs[index] = inside;
-//                    newowners[index] = -2;
+//                    newowners[index] = curGrain;
 //                    ellipfuncs[index] = inside;
+                    newowners[index] = -2;
+                    ellipfuncs[index] = inside;
                 }
                 else if (inside >= 0 && newowners[index] == -1)
                 {
@@ -503,7 +503,6 @@ void PackPrimaryPhases::execute()
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
 
   notifyStatusMessage("Packing Grains - Initializing Volume");
@@ -840,7 +839,7 @@ void PackPrimaryPhases::execute()
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+  int totalAdjustments = static_cast<int>(10 * (numgrains-1));
 
   millis = MXA::getMilliSeconds();
   startMillis = millis;
