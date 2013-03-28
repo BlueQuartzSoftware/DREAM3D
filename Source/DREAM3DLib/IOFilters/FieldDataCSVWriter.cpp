@@ -54,9 +54,9 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FieldDataCSVWriter::FieldDataCSVWriter() :
-AbstractFilter(),
-m_FieldDataFile(""),
-m_WriteNeighborListData(false)
+  AbstractFilter(),
+  m_FieldDataFile(""),
+  m_WriteNeighborListData(false)
 {
   setupFilterParameters();
 }
@@ -78,8 +78,8 @@ void FieldDataCSVWriter::setupFilterParameters()
     option->setHumanLabel("Output File");
     option->setPropertyName("FieldDataFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-  option->setFileExtension("*.csv");
-  option->setFileType("Comma Separated Data");
+    option->setFileExtension("*.csv");
+    option->setFileType("Comma Separated Data");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -108,13 +108,29 @@ void FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::preflight()
 {
+  setErrorCondition(0);
+  std::stringstream ss;
+
   if (getFieldDataFile().empty() == true)
   {
-    std::stringstream ss;
-    ss << ClassName() << " needs the Output File Set and it was not.";
+    ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
+    setErrorCondition(-1);
   }
+
+  std::string parentPath = MXAFileInfo::parentPath(getFieldDataFile());
+  if (MXADir::exists(parentPath) == false)
+  {
+    ss.str("");
+    ss <<  "The directory path for the output file does not exist.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
+  }
+
+  if (MXAFileInfo::extension(getFieldDataFile()).compare("") == 0)
+  {
+    setFieldDataFile(getFieldDataFile().append(".dx"));
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -137,11 +153,11 @@ void FieldDataCSVWriter::execute()
   std::string parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
 
@@ -168,8 +184,8 @@ void FieldDataCSVWriter::execute()
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getFieldData(*iter);
-  if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
-  {
+    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+    {
       if (p->GetNumberOfComponents() == 1) {
         outFile << space << (*iter);
       }
@@ -221,25 +237,25 @@ void FieldDataCSVWriter::execute()
     // Loop throught the list and print the rest of the headers, ignoring those we don't want
     for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
-    // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getFieldData(*iter);
-    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
-    {
-      outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
-      size_t numTuples = p->GetNumberOfTuples();
-  //	  float threshold = 0.0f;
-
-      // Skip the first grain
-      for(size_t i = 1; i < numTuples; ++i)
+      // Only get the array if the name does NOT match those listed
+      IDataArray::Pointer p = m->getFieldData(*iter);
+      if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
-      // Print the grain id
-      outFile << i;
-      // Print a row of data
-      outFile << space;
-      p->printTuple(outFile, i, space);
-      outFile << std::endl;
+        outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
+        size_t numTuples = p->GetNumberOfTuples();
+        //	  float threshold = 0.0f;
+
+        // Skip the first grain
+        for(size_t i = 1; i < numTuples; ++i)
+        {
+          // Print the grain id
+          outFile << i;
+          // Print a row of data
+          outFile << space;
+          p->printTuple(outFile, i, space);
+          outFile << std::endl;
+        }
       }
-    }
     }
   }
   outFile.close();
