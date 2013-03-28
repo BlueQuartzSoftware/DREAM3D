@@ -164,9 +164,9 @@ class AssignVoxelsGapsImpl
         for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
         {
           row = iter2;
-          size_t row_dim = row * dims[0];
           if (iter2 < 0) row = iter2 + dims[1];
           else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          size_t row_dim = row * dims[0];
 
           for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
