@@ -266,8 +266,8 @@ void GenerateEnsembleStatistics::execute()
   setErrorCondition(0);
   std::stringstream ss;
 
-  int totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+//  int totalPoints = m->getTotalPoints();
+//  int totalFields = m->getNumFieldTuples();
   int totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -280,19 +280,19 @@ void GenerateEnsembleStatistics::execute()
   {
     typedef DataArray<unsigned int> PhaseTypeArrayType;
 
-	if(m_PhaseTypeArray.size() < totalEnsembles)
-	{
-	    setErrorCondition(-999);
-	    notifyErrorMessage("The number of PhaseTypes entered is less than the number of Ensembles", -999);
-	    return;
-	}
-	if(m_PhaseTypeArray.size() > totalEnsembles)
-	{
-		ss.str("");
-		ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
-	    notifyWarningMessage(ss.str(), -999);
-	    return;
-	}
+  if(m_PhaseTypeArray.size() < totalEnsembles)
+  {
+      setErrorCondition(-999);
+      notifyErrorMessage("The number of PhaseTypes entered is less than the number of Ensembles", -999);
+      return;
+  }
+  if(m_PhaseTypeArray.size() > totalEnsembles)
+  {
+    ss.str("");
+    ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
+      notifyWarningMessage(ss.str(), -999);
+      return;
+  }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(size_t r = 0; r < totalEnsembles; ++r)
     {
