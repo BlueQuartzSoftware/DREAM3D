@@ -164,9 +164,9 @@ class AssignVoxelsGapsImpl
         for (DimType iter2 = yStart; iter2 < yEnd; iter2++)
         {
           row = iter2;
-          size_t row_dim = row * dims[0];
           if (iter2 < 0) row = iter2 + dims[1];
           else if (iter2 > dims[1] - 1) row = iter2 - dims[1];
+          size_t row_dim = row * dims[0];
 
           for (DimType iter3 = zStart; iter3 < zEnd; iter3++)
           {
@@ -197,10 +197,10 @@ class AssignVoxelsGapsImpl
 //                if (inside >= 0 && newowners[index] > 0)
                 if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
                 {
-                    newowners[index] = curGrain;
-                    ellipfuncs[index] = inside;
-//                    newowners[index] = -2;
+//                    newowners[index] = curGrain;
 //                    ellipfuncs[index] = inside;
+                    newowners[index] = -2;
+                    ellipfuncs[index] = inside;
                 }
                 else if (inside >= 0 && newowners[index] == -1)
                 {
@@ -503,7 +503,6 @@ void PackPrimaryPhases::execute()
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0) primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
   }
 
   notifyStatusMessage("Packing Grains - Initializing Volume");
@@ -840,7 +839,7 @@ void PackPrimaryPhases::execute()
   }
   oldneighborhooderror = check_neighborhooderror(-1000, -1000);
   // begin swaping/moving/adding/removing grains to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * (numgrains-1));
+  int totalAdjustments = static_cast<int>(10 * (numgrains-1));
 
   millis = MXA::getMilliSeconds();
   startMillis = millis;
@@ -2314,10 +2313,6 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0)
-    {
-      primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
-    }
   }
   // generate the grains
   int gid = 1;

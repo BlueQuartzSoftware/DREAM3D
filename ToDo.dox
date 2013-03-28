@@ -124,6 +124,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 @section done Items Completed
+@li Add filter to generate IPF colors for triangles in surface mesh
 @li Fix reference frame button on import filter to not reset to default
 @li Add node type calculation during quick mesh
 @li Change the Slip Transmission Metrics filter to store the metrics as Neighborlist values to save space and time for calculation.
