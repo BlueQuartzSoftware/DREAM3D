@@ -2313,10 +2313,6 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
-    if(i > 0)
-    {
-      primaryphasefractions[i] = primaryphasefractions[i] + primaryphasefractions[i - 1];
-    }
   }
   // generate the grains
   int gid = 1;
