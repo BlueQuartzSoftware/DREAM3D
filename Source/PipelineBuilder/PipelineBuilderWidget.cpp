@@ -181,19 +181,21 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
     QString filterName = prefs.value("Filter_Name", "").toString();
 
     QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+
     if(w) {
+      m_PipelineViewWidget->preflightPipeline();
       w->blockSignals(true);
       w->readOptions(prefs);
       w->blockSignals(false);
-      //w->emitParametersChanged();
     }
     prefs.endGroup();
   }
+  // One last preflight to get the changes introduced by the last filter
   m_PipelineViewWidget->preflightPipeline();
 
 
   QDir tempPathDir = QDir::temp();
-  QString tempPath = tempPathDir.path();
+  //QString tempPath = tempPathDir.path();
 
   //Get Favorites from Pref File and Update Tree Widget
   prefs.beginGroup(Detail::FavoritePipelines);

@@ -395,7 +395,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     precipitatephasefractions[i] = static_cast<float>(precipitatephasefractions[i] / totalprecipitatefractions);
-    if(i > 0) precipitatephasefractions[i] = precipitatephasefractions[i] + precipitatephasefractions[i - 1];
   }
 
   // initialize the sim and goal size distributions for the precipitate phases
