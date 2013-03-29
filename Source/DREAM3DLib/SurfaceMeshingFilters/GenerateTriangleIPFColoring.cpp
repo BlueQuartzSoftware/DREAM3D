@@ -61,19 +61,15 @@ class CalculateTriangleIPFColorsImpl
     double* m_Normals;
     float* m_Eulers;
     uint8_t* m_Colors;
-    uint8_t* m_ColorsG1;
-    uint8_t* m_ColorsG2;
     unsigned int* m_CrystalStructures;
 
   public:
-    CalculateTriangleIPFColorsImpl(int32_t* labels, int32_t* phases, double* normals, float* eulers, uint8_t* colors, uint8_t* colorsG1, uint8_t* colorsG2, unsigned int* crystalStructures) :
+    CalculateTriangleIPFColorsImpl(int32_t* labels, int32_t* phases, double* normals, float* eulers, uint8_t* colors, unsigned int* crystalStructures) :
       m_Labels(labels),
       m_Phases(phases),
       m_Normals(normals),
       m_Eulers(eulers),
       m_Colors(colors),
-      m_ColorsG1(colorsG1),
-      m_ColorsG2(colorsG2),
       m_CrystalStructures(crystalStructures)
     {}
     virtual ~CalculateTriangleIPFColorsImpl(){}
@@ -85,69 +81,51 @@ class CalculateTriangleIPFColorsImpl
      */
     void generate(size_t start, size_t end) const
     {
-    int grain1, grain2, phase1, phase2;
-    uint8_t hkl[3] = { 0, 0, 0 };
+      int grain1, grain2, phase1, phase2;
+      uint8_t hkl[3] = { 0, 0, 0 };
       for (size_t i = start; i < end; i++)
       {
-        grain1 = m_Labels[2*i];
-        grain2 = m_Labels[2*i+1];
-      if(grain1 > 0) phase1 = m_Phases[grain1];
-      else phase1 = 0;
-      if(grain2 > 0) phase2 = m_Phases[grain2];
-      else phase2 = 0;
-      if(phase1 > 0)
-      {
-        if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic)
-        {
-        EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), hkl);
-        m_ColorsG1[3*i+0] = m_Colors[6*i+0];
-        m_ColorsG1[3*i+1] = m_Colors[6*i+1];
-        m_ColorsG1[3*i+2] = m_Colors[6*i+2];
-        }
-        else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal)
-        {
-        EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i));
-        m_ColorsG1[3*i+0] = m_Colors[6*i+0];
-        m_ColorsG1[3*i+1] = m_Colors[6*i+1];
-        m_ColorsG1[3*i+2] = m_Colors[6*i+2];
-        }
-      }
-      else
-      {
-        m_Colors[6*i+0] = 0;
-        m_Colors[6*i+1] = 0;
-        m_Colors[6*i+2] = 0;
-        m_ColorsG1[3*i+0] = 0;
-        m_ColorsG1[3*i+1] = 0;
-        m_ColorsG1[3*i+2] = 0;
-      }
-      if(phase2 > 0)
-      {
-        if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic)
-        {
-        EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), hkl);
-        m_ColorsG2[3*i+0] = m_Colors[6*i+3];
-        m_ColorsG2[3*i+1] = m_Colors[6*i+4];
-        m_ColorsG2[3*i+2] = m_Colors[6*i+5];
-        }
-        else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal)
-        {
-        EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3));
-        m_ColorsG2[3*i+0] = m_Colors[6*i+3];
-        m_ColorsG2[3*i+1] = m_Colors[6*i+4];
-        m_ColorsG2[3*i+2] = m_Colors[6*i+5];
-        }
-      }
-      else
-      {
-        m_Colors[6*i+3] = 0;
-        m_Colors[6*i+4] = 0;
-        m_Colors[6*i+5] = 0;
-        m_ColorsG2[3*i+0] = 0;
-        m_ColorsG2[3*i+1] = 0;
-        m_ColorsG2[3*i+2] = 0;
-      }
-    }
+		  grain1 = m_Labels[2*i];
+		  grain2 = m_Labels[2*i+1];
+		  if(grain1 > 0) phase1 = m_Phases[grain1];
+		  else phase1 = 0;
+		  if(grain2 > 0) phase2 = m_Phases[grain2];
+		  else phase2 = 0;
+		  if(phase1 > 0)
+		  {
+			if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic)
+			{
+				EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), hkl);
+			}
+			else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal)
+			{
+				EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i));
+			}
+		  }
+		  else
+		  {
+			m_Colors[6*i+0] = 0;
+			m_Colors[6*i+1] = 0;
+			m_Colors[6*i+2] = 0;
+		  }
+		  if(phase2 > 0)
+		  {
+			if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic)
+			{
+				EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), hkl);
+			}
+			else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal)
+			{
+				EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3));
+			}
+		  }
+		  else
+		  {
+			m_Colors[6*i+3] = 0;
+			m_Colors[6*i+4] = 0;
+			m_Colors[6*i+5] = 0;
+		  }
+	  }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -251,8 +229,6 @@ void GenerateTriangleIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t vo
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, ss, -387, double, DoubleArrayType, fields, 3)
       CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleIPFColors, ss, uint8_t, UInt8ArrayType, 0, fields, 6)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleIPFColorsGrain1, ss, uint8_t, UInt8ArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleIPFColorsGrain2, ss, uint8_t, UInt8ArrayType, 0, fields, 3)
     }
   }
 }
@@ -321,26 +297,12 @@ void GenerateTriangleIPFColoring::execute()
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range<size_t>(0, sm->getNumFaceTuples()),
-                    CalculateTriangleIPFColorsImpl(m_SurfaceMeshTriangleLabels, m_FieldPhases, m_SurfaceMeshTriangleNormals, m_FieldEulerAngles, m_SurfaceMeshTriangleIPFColors, m_SurfaceMeshTriangleIPFColorsGrain1, m_SurfaceMeshTriangleIPFColorsGrain2, m_CrystalStructures), tbb::auto_partitioner());
+                    CalculateTriangleIPFColorsImpl(m_SurfaceMeshTriangleLabels, m_FieldPhases, m_SurfaceMeshTriangleNormals, m_FieldEulerAngles, m_SurfaceMeshTriangleIPFColors, m_CrystalStructures), tbb::auto_partitioner());
 
 #else
-  CalculateTriangleIPFColorsImpl serial(m_SurfaceMeshTriangleLabels, m_FieldPhases, m_SurfaceMeshTriangleNormals, m_FieldEulerAngles, m_SurfaceMeshTriangleIPFColors, m_SurfaceMeshTriangleIPFColorsGrain1, m_SurfaceMeshTriangleIPFColorsGrain2, m_CrystalStructures);
+  CalculateTriangleIPFColorsImpl serial(m_SurfaceMeshTriangleLabels, m_FieldPhases, m_SurfaceMeshTriangleNormals, m_FieldEulerAngles, m_SurfaceMeshTriangleIPFColors, m_CrystalStructures);
   serial.generate(0, sm->getNumFaceTuples());
 #endif
-
-  DataArray<int32_t>::Pointer faceLabel1Ptr = DataArray<int32_t>::CreateArray(sm->getNumFaceTuples(), 1, "SurfaceMeshTriangleLabelsG1");
-  int32_t* faceLabels1 = faceLabel1Ptr->GetPointer(0);
-  DataArray<int32_t>::Pointer faceLabel2Ptr = DataArray<int32_t>::CreateArray(sm->getNumFaceTuples(), 1, "SurfaceMeshTriangleLabelsG2");
-  int32_t* faceLabels2 = faceLabel2Ptr->GetPointer(0);
-
-  for(int i=0;i<sm->getNumFaceTuples();i++)
-  {
-  faceLabels1[i] = m_SurfaceMeshTriangleLabels[2*i];
-  faceLabels2[i] = m_SurfaceMeshTriangleLabels[2*i+1];
-  }
-
-  sm->addFaceData(faceLabel1Ptr->GetName(), faceLabel1Ptr);
-  sm->addFaceData(faceLabel2Ptr->GetName(), faceLabel2Ptr);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
