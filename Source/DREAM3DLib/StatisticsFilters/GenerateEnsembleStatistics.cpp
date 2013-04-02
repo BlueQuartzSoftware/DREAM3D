@@ -294,7 +294,7 @@ void GenerateEnsembleStatistics::execute()
       return;
   }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
-    for(size_t r = 0; r < totalEnsembles; ++r)
+    for(int r = 0; r < totalEnsembles; ++r)
     {
       phaseTypes->SetValue(r, m_PhaseTypeArray[r]);
     }

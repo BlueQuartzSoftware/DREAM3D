@@ -333,7 +333,7 @@ void GenerateTriangleIPFColoring::execute()
   DataArray<int32_t>::Pointer faceLabel2Ptr = DataArray<int32_t>::CreateArray(sm->getNumFaceTuples(), 1, "SurfaceMeshTriangleLabelsG2");
   int32_t* faceLabels2 = faceLabel2Ptr->GetPointer(0);
 
-  for(int i=0;i<sm->getNumFaceTuples();i++)
+  for(size_t i=0;i<sm->getNumFaceTuples();i++)
   {
   faceLabels1[i] = m_SurfaceMeshTriangleLabels[2*i];
   faceLabels2[i] = m_SurfaceMeshTriangleLabels[2*i+1];
