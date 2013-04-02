@@ -56,6 +56,7 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QKeySequence>
 #include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QDesktopServices>
 
 #include "QtSupport/HelpDialog.h"
 
@@ -677,7 +678,49 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 {
-  QString s = "DREAM3D/index.html";
+#if 1
+  QDir helpDir = QDir(qApp->applicationDirPath());
+  QString s;
+
+#if defined(Q_OS_WIN)
+  if (helpDir.cd("Help") )
+  {
+    s = helpDir.absolutePath();
+  }
+#elif defined(Q_OS_MAC)
+  if (aPluginDir.dirName() == "MacOS")
+  {
+    aPluginDir.cdUp();
+    thePath = aPluginDir.absolutePath() + "/Plugins";
+    m_PluginDirs << thePath;
+    aPluginDir.cdUp();
+    aPluginDir.cdUp();
+  }
+  // aPluginDir.cd("Plugins");
+  thePath = aPluginDir.absolutePath() + "/Plugins";
+  m_PluginDirs << thePath;
+
+   // This is here for Xcode compatibility
+#ifdef CMAKE_INTDIR
+   aPluginDir.cdUp();
+   thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
+   m_PluginDirs << thePath;
+#endif
+#else
+  // We are on Linux - I think
+  aPluginDir.cdUp();
+  if (aPluginDir.cd("plugins"))
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
+#endif
+#else
+
+
+  QString s;
+#endif
+  s = s + "/DREAM3D/index.html";
   return QUrl(s);
 }
 
@@ -687,7 +730,12 @@ QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-    m_HelpDialog->setContentFile(htmlHelpIndexFile());
+   // m_HelpDialog->setContentFile(htmlHelpIndexFile());
+   bool didOpen = QDesktopServices::openUrl(htmlHelpIndexFile());
+   if(false == didOpen)
+   {
+     std::cout << "Could not open URL: " << htmlHelpIndexFile().path().toStdString() << std::endl;
+   }
 }
 
 // -----------------------------------------------------------------------------
