@@ -53,7 +53,7 @@ ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 #-------------------------------------------------------------------------------
 macro(ConfigureMacOSXBundlePlist TARGET_NAME DEBUG_EXTENSION ICON_FILE_PATH VERSION_STRING)
   # message(STATUS "ConfigureMacOSXBundlePlist for ${PROJECT_NAME} ")
-  IF(CMAKE_BUILD_TYPE MATCHES "Release")
+  if(CMAKE_BUILD_TYPE MATCHES "Release")
     SET(DBG_EXTENSION "")
   else()
     set(DBG_EXTENSION ${DEBUG_EXTENSION})
@@ -114,7 +114,7 @@ function(BuildQtAppBundle)
         SET(GUI_TYPE MACOSX_BUNDLE)
         #-- Make sure the qt_menu.nib is copied if we are using Qt Cocoa by setting the
         # source files properties of the qt_menu.nib package
-        IF(QT_MAC_USE_COCOA)
+        if(QT_MAC_USE_COCOA)
             GET_FILENAME_COMPONENT(qt_menu_nib
               "${QT_QTGUI_LIBRARY_RELEASE}/Resources/qt_menu.nib"
               REALPATH)
@@ -130,7 +130,7 @@ function(BuildQtAppBundle)
             )
         ELSE(QT_MAC_USE_COCOA)
             set(qt_menu_nib_sources)
-        ENDIF(QT_MAC_USE_COCOA)
+        ENDif(QT_MAC_USE_COCOA)
 
 #-- Write out a qt.conf file to place in our App bundle
 #        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
@@ -436,17 +436,17 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
     if(BUILD_SHARED_LIBS)
       if(APPLE)
           OPTION (CMP_BUILD_WITH_INSTALL_NAME "Build Libraries with the install_name set to the installation prefix. This is good if you are going to run from the installation location" OFF)
-          IF(CMP_BUILD_WITH_INSTALL_NAME)
+          if(CMP_BUILD_WITH_INSTALL_NAME)
               SET_TARGET_PROPERTIES(${targetName}
                  PROPERTIES
                  LINK_FLAGS "-current_version ${${CMP_PROJECT_NAME}_VERSION} -compatibility_version ${${CMP_PROJECT_NAME}_VERSION}"
                  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
                  BUILD_WITH_INSTALL_RPATH ${CMP_BUILD_WITH_INSTALL_NAME}
               )
-         ENDIF(CMP_BUILD_WITH_INSTALL_NAME)
+         ENDif(CMP_BUILD_WITH_INSTALL_NAME)
      endif(APPLE)
 
-   ENDIF( BUILD_SHARED_LIBS)
+   ENDif( BUILD_SHARED_LIBS)
 
 endmacro(LibraryProperties DEBUG_EXTENSION)
 
@@ -465,7 +465,7 @@ macro(StaticLibraryProperties targetName )
     else(WIN32 AND NOT MINGW)
         SET(LIBRARY_RELEASE_NAME "${targetName}" CACHE INTERNAL "" FORCE)
         SET(LIBRARY_DEBUG_NAME "${targetName}${DEBUG_EXTENSION}" CACHE INTERNAL "" FORCE)
-    ENDIF(WIN32 AND NOT MINGW)
+    ENDif(WIN32 AND NOT MINGW)
 
 
     #-- Set the Debug and Release names for the libraries
@@ -754,9 +754,9 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
                       COMMENT "  Copy: ${${upperlib}_LIBRARY_DLL_${TYPE}}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/")
 
         ENDFOREACH(BTYPE ${TYPES})
-      ENDIF(${upperlib}_IS_SHARED)
+      ENDif(${upperlib}_IS_SHARED)
     ENDFOREACH(lib ${_libraryList})
-  ENDIF(MSVC)
+  ENDif(MSVC)
 endmacro()
 
 # --------------------------------------------------------------------
@@ -800,7 +800,7 @@ MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
 
         ENDFOREACH(BTYPE ${TYPES})
     ENDFOREACH(lib ${_libraryList})
-  ENDIF(MSVC)
+  ENDif(MSVC)
 
 #-- This will create install rules for the dylibs on linux hopefully creating
 #-- a stand alone .zip or .tgz file
