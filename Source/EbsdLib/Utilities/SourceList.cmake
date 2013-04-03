@@ -25,7 +25,7 @@ set(EbsdLib_Utilities_HDRS
 #  ${EbsdLib_SOURCE_DIR}/Utilities/MXALogger.h
 )
 
-IF (MSVC)
+if(MSVC)
     set(EbsdLib_Utilities_SRCS ${EbsdLib_Utilities_SRCS} ${EbsdLib_SOURCE_DIR}/Utilities/MXADirent.c )
     set(EbsdLib_Utilities_HDRS ${EbsdLib_Utilities_HDRS} ${EbsdLib_SOURCE_DIR}/Utilities/MXADirent.h )
 endif()

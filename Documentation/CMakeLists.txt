@@ -13,16 +13,5 @@ else()
 # Add a target that builds just the High Level User Manuals/Tutorial type documentation
 add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
 
-# Add a target that builds just the High Level User Manuals/Tutorial type documentation
-#add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/UserManual ${PROJECT_BINARY_DIR}/Documentation/UserManual)
-
-# Generating the API Docs will also include the other "Developer Documentation"
-#option(DREAM3D_BUILD_API_DOCS "Use Doxygen to generate the HTML API documentation" ON)
-#if(DREAM3D_BUILD_API_DOCS)
-  set(DOXY_OUTPUT_DIR ${PROJECT_BINARY_DIR}/Documentation/API)
-  configure_file(${PROJECT_RESOURCES_DIR}/DREAM3D.doxyfile.in
-                 ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-  add_custom_target(APIDocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
-#endif()
 
 endif()

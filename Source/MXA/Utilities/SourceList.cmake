@@ -14,7 +14,7 @@ set(MXA_Utilities_HDRS
   ${MXA_SOURCE_DIR}/Utilities/MD5.h
 )
 
-IF (MSVC)
+if(MSVC)
     set(MXA_Utilities_SRCS ${MXA_Utilities_SRCS} ${MXA_SOURCE_DIR}/Utilities/MXADirent.c )
     set(MXA_Utilities_HDRS ${MXA_Utilities_HDRS} ${MXA_SOURCE_DIR}/Utilities/MXADirent.h )
 endif()

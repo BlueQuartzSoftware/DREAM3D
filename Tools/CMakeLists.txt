@@ -160,9 +160,9 @@ if(COMPILE_EBSD_TO_TIFF)
      # Prepend our own "FindTiff" code in front of what CMake itself provides
         set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH} )
         FIND_PACKAGE(Tiff)
-        IF (NOT TIFF_FOUND)
+        if(NOT TIFF_FOUND)
               MESSAGE (FATAL_ERROR " Tiff Library was NOT Found and is needed.")
-        ENDIF (NOT TIFF_FOUND)
+        endif(NOT TIFF_FOUND)
         INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIRS})
       # Copy DLL libraries into the correct build location on MSVC platforms
       if(HAVE_TIFF_DLL)

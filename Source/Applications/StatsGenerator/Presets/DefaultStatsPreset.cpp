@@ -92,10 +92,6 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    if(colorOffset >= colorNames.size())
-    {
-      colorOffset = 21;
-    }
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -142,10 +138,6 @@ void DefaultStatsPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QV
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    if(colorOffset >= colorNames.size())
-    {
-      colorOffset = 21;
-    }
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -188,10 +180,6 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
    {
-    if(colorOffset >= colorNames.size())
-    {
-      colorOffset = 21;
-    }
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -212,7 +200,7 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
 void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-  plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
+	plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
   if (NULL == model)
@@ -236,10 +224,6 @@ void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, 
   int middlebin = count / 2;
   for (qint32 i = 0; i < count; ++i)
   {
-    if(colorOffset >= colorNames.size())
-    {
-      colorOffset = 21;
-    }
     mu = log(14.0 + (2.0*float(i - middlebin)));
     sigma = 0.3 + (float(middlebin - i)/float(middlebin*10));
     mus.push_back(mu);

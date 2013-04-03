@@ -2,18 +2,19 @@
 % This is a substitute header file for Doxygen to use to generate the refman.tex file
 %----------------------------------------------------------
 %\batchmode
-\documentclass[12pt,oneside]{book}
-\usepackage{newclude}
-\usepackage{a4wide}
+\documentclass{book}
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
 \usepackage{makeidx}
+\usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{multicol}
 \usepackage{float}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{ifthen}
+\usepackage[table]{xcolor}
 \usepackage{textcomp}
 \usepackage{alltt}
-\usepackage{times}
 \usepackage{ifpdf}
 \ifpdf
 \usepackage[pdftex,
@@ -32,43 +33,56 @@
 \usepackage{pspicture}
 \fi
 \usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage{sectsty}
+\usepackage{amssymb}
+\usepackage[titles]{tocloft}
 \usepackage{doxygen}
-\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=4,numbers=left }
+\lstset{language=C++,inputencoding=utf8,basicstyle=\footnotesize,breaklines=true,breakatwhitespace=true,tabsize=8,numbers=left }
 \makeindex
 \setcounter{tocdepth}{3}
 \renewcommand{\footrulewidth}{0.4pt}
-
-\textheight=9.0in
-\textwidth=6.0in
-\oddsidemargin=0.25in
-\evensidemargin=0.0in
-\topmargin=-0.5in
+\renewcommand{\familydefault}{\sfdefault}
+\hfuzz=15pt
+\setlength{\emergencystretch}{15pt}
+\hbadness=750
+\tolerance=750
 
 %----------------------------------------------------------
-% Set the LaTex variables for the title page
+% Start the Document
 %----------------------------------------------------------
-\title{ @LATEX_TITLE@}
-\author{@LATEX_AUTHOR@}
-\authoraddress{
-  \url{http://dream3d.bluequartz.net}\\
-  Email: \email{dream3d@bluequartz.net}
-}
-\date{\today}
 \begin{document}
-    \maketitle
-    
-\hypersetup{pageanchor=false}
+\hypersetup{pageanchor=false,citecolor=blue}
+
+%----------------------------------------------------------
+% Set the LaTex variables for the title page and
+% create the title page
+%----------------------------------------------------------
+\begin{titlepage}
+\begin{center}
+\line(1,0){500}\\[0.75cm]
+% Upper part of the page
+\textbf{\Huge @LATEX_TITLE@}\\[0.75cm]
+\textbf{\large @LATEX_AUTHOR@\\[0.75cm]
+dream3d@bluequartz.net}\\[0.75cm]
+\line(1,0){500}\\[0.75cm]
+%\HRule \\[1.5cm]
+\vfill
+% Bottom of the page
+{\large \today}
+\end{center}
+\end{titlepage}
+
 
 %----------------------------------------------------------
 % Set Table of Contents
 %----------------------------------------------------------
-%\clearemptydoublepage
 \pagenumbering{roman}
 \tableofcontents
-%\clearemptydoublepage
 \pagenumbering{arabic}
-\hypersetup{pageanchor=true}
-
+\hypersetup{pageanchor=true,citecolor=blue}
 %----------------------------------------------------------
 % This is the end of the header file
 %----------------------------------------------------------
