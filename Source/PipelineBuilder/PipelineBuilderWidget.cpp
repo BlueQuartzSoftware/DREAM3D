@@ -678,48 +678,32 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 {
-#if 1
+
   QDir helpDir = QDir(qApp->applicationDirPath());
-  QString s;
+  QString s("file://");
 
 #if defined(Q_OS_WIN)
-  if (helpDir.cd("Help") )
-  {
-    s = helpDir.absolutePath();
-  }
+//  if (helpDir.cd("Help") )
+//  {
+//    s = helpDir.absolutePath();
+//  }
 #elif defined(Q_OS_MAC)
-  if (aPluginDir.dirName() == "MacOS")
+  if (helpDir.dirName() == "MacOS")
   {
-    aPluginDir.cdUp();
-    thePath = aPluginDir.absolutePath() + "/Plugins";
-    m_PluginDirs << thePath;
-    aPluginDir.cdUp();
-    aPluginDir.cdUp();
+    helpDir.cdUp();
+    helpDir.cdUp();
+    helpDir.cdUp();
   }
-  // aPluginDir.cd("Plugins");
-  thePath = aPluginDir.absolutePath() + "/Plugins";
-  m_PluginDirs << thePath;
-
-   // This is here for Xcode compatibility
-#ifdef CMAKE_INTDIR
-   aPluginDir.cdUp();
-   thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
-   m_PluginDirs << thePath;
-#endif
 #else
   // We are on Linux - I think
-  aPluginDir.cdUp();
-  if (aPluginDir.cd("plugins"))
+  helpDir.cdUp();
+#endif
+
+  if (helpDir.cd("Help") )
   {
-    thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
+    s = s + helpDir.absolutePath();
   }
-#endif
-#else
 
-
-  QString s;
-#endif
   s = s + "/DREAM3D/index.html";
   return QUrl(s);
 }
