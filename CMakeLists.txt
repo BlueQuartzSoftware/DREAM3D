@@ -160,12 +160,12 @@ include_directories(${PROJECT_BINARY_DIR})
 # --------------------------------------------------------------------
 # Add in some compiler definitions
 # --------------------------------------------------------------------
-IF ( CMAKE_BUILD_TYPE MATCHES Debug )
+IF( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-DDEBUG)
   if(NOT MSVC)
   ADD_DEFINITIONS(-Wall)
   endif()
-ENDIF ( CMAKE_BUILD_TYPE MATCHES Debug )
+ENDIF( CMAKE_BUILD_TYPE MATCHES Debug )
 
 # On linux we need to set this because some of the libraries are Static
 # and some are shared.
@@ -188,10 +188,6 @@ endif()
 
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
-
-# -----------------------------------------------------------------------
-# -- Add in the Necessary MXA Sources into a library
-#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/imesh ${PROJECT_BINARY_DIR}/imesh)
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
@@ -223,9 +219,9 @@ if(DREAM3D_BUILD_QT_APPS)
    # ------------------------------------------------------------------------------
    # by default only QtCore and QtGui modules are enabled
    # other modules must be enabled like this:
-   IF (WIN32)
+   IF(WIN32)
        set(QT_USE_QTMAIN TRUE)
-   ENDIF (WIN32)
+   ENDIF(WIN32)
 
    # this command finds Qt4 libraries and sets all required variables
    # note that it's Qt4, not QT4 or qt4
@@ -318,6 +314,7 @@ if(DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
         endif()
     endforeach()
 
+    set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help")
 endif()
 
 #- Add in the Main DREAM.3D Application

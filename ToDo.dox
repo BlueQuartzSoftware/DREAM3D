@@ -14,18 +14,28 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Fix html for AddNoise.html
 @li fix HTML for JumbleOrientations.html
 @li write-up contributors section for website
-
+@li Tutorial on Small IN100 for Docs/Website
+@li Tutorial on Synthetic Generation for Docs/Website
+@li Tutorial on Surface Meshing for Docs/Website
+@li Tutorial on Xdmf files for Docs/Website
+@li Tutorial on Visualization Techniques for Docs/Website
+@li Tutorial on Creating Ensemble Statistics for Docs/Website
+@li Tutorial on Importing Orientation Data for Docs/Website
 
 @section mike_jackson Mike Jackson ToDo List
+@li Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
 @li Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
-@li Create filter to generate Abaqus input files, Albert Cerrone to help with this
+@li Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 @li Write program to read in Pipeline Files on the command line
 @li Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 @li How to incorporate documentation for plugins into the main help system
 @li Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 
 
+
 @section STILL_TO_DO Still To Do
+@li Filter that can execute any program on the users computer
+@li Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
 @li Fix the deformation statistics filter to adapt to new structure of transmission metrics
 @li Add Filter to initialize the Ensemble Map based on a user defined array such as Phase Ids.
 @li Integrate Lisa Chan's Twin Insertion Code - Have Code From Joe Tucker
@@ -76,7 +86,8 @@ This is the list of things to do. It is written with the DOxygen style so it can
 @li Fix synthetic builder to note if volume is 2D and actually pack slices
 
 
-@section io_filters
+@section io_filters IO Filterse
+@li Add filter to generate IPF Images for each slice of data, or a user defined range of slices and plane by defining the normal to the plane (X, Y or Z)
 @li Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 @li Add filter to write out slices as images of any array
 @li Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
@@ -87,6 +98,8 @@ This is the list of things to do. It is written with the DOxygen style so it can
 
 
 @section todo_GUI_Pipeline Add to the Pipeline Gui
+@li Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
+@li When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 @li Add a 'Rename Favorite' menu
 @li allow user to right-click on a favorite and "delete, rename, ..." the favorite
 @li allow user to right-click on a filter and display help in a separate window
