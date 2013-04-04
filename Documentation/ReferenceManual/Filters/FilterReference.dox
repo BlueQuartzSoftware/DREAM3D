@@ -1,0 +1,22 @@
+/*!
+
+
+@page filterreference Filter Reference
+  This is the introduction to the filters
+
+@subpage genericfilters Generic Filters
+
+@subpage iofilters IOFilters
+
+@subpage processingfilters ProcessingFilters
+
+@subpage reconstructionfilters ReconstructionFilters
+
+@subpage samplingfilters SamplingFilters
+
+@subpage statisticsfilters StatisticsFilters
+
+@subpage surfacemeshingfilters SurfaceMeshingFilters
+
+@subpage syntheticbuildingfilters SyntheticBuildingFilters
+*/
