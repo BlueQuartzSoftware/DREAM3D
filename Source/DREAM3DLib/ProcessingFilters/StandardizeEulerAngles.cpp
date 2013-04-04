@@ -56,8 +56,8 @@ class StandardizeEulerAnglesImpl
     float* m_CellEulerAngles;
     int* m_CellPhases;
     unsigned int* m_CrystalStructures;
-    int64_t numCells;
-    size_t numEnsembles;
+//    int64_t numCells;
+//    size_t numEnsembles;
 
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;
@@ -68,9 +68,9 @@ class StandardizeEulerAnglesImpl
     StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs, int64_t numCells, size_t numEnsembles) :
       m_CellEulerAngles(eulers),
       m_CellPhases(phases),
-      m_CrystalStructures(crystructs),
-      numCells(numCells),
-      numEnsembles(numEnsembles)
+      m_CrystalStructures(crystructs)
+//      numCells(numCells),
+//      numEnsembles(numEnsembles)
     {
       m_HexOps = HexagonalOps::New();
       m_OrientationOps.push_back(m_HexOps.get());
