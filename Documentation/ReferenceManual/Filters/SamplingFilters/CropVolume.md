@@ -23,8 +23,8 @@ This Filter allows the user to crop a volume of interest to satisfy the user goa
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 
 ## Created Arrays ##
 None

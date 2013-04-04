@@ -1,7 +1,7 @@
 Write NonConformal Vtk PolyData from SurfaceMesh {#surfacemeshtononconformalvtk}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

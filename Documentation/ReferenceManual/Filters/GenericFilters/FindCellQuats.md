@@ -1,7 +1,7 @@
 Find Cell Quaternions {#findcellquats}
 =======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Generic Filters
 
 ## Description ##
@@ -11,11 +11,12 @@ The FZ is the region of orientation space that contains general positions on whi
  
 
 
-## Parameters ## 
+## Parameters ##
+None
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
+| Type | Default Array Name | Description | Comment |
 |------|------|-------------|---------|
 | Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 | Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
@@ -23,8 +24,8 @@ The FZ is the region of orientation space that contains general positions on whi
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Array Name | Description | Comment |
+|------|--------------------|-------------|---------|
 | Cell | Quats | Five (5) values (floats) that specify the orientation of the voxel/datapoint in quaternion representation | The first value is a dummy value, so each voxel/datapoint has quat = {dummy, q1, q2, q3, q4} - where q1, q2, and q3 contain the axis information and q4 contains the angle information of the quaternion |
 
 ## Authors ##

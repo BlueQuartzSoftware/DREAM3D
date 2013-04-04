@@ -1,7 +1,7 @@
 Shared Grain Face Filter {#sharedgrainfacefilter}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

@@ -1,7 +1,7 @@
 Flatten Image {#flattenimage}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

@@ -1,7 +1,7 @@
 Remove Arrays {#removearrays}
 =============
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Generic Filters
 
 ## Description ##

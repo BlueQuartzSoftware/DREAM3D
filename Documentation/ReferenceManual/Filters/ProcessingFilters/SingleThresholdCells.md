@@ -1,7 +1,7 @@
 Single Threshold (Cell Data) {#singlethresholdcells}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

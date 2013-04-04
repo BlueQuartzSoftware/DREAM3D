@@ -1,4 +1,4 @@
-# DREAM3D Development Notes
+# DREAM3D Development Notes {#developmentnotes}
 
 ## Intro (or why this file)
   This is just a dumping ground for ideas that we are working on.

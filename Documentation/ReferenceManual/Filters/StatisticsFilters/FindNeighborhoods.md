@@ -17,8 +17,8 @@ This Filter searches the __Cell__ and __Field__ arrays based on a user choice of
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 | Field | Centroids | X, Y, Z coordinates (floats) of feature/grain center of mass | Filter will calculate feature/grain centroids if not previously calculated |
 | Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the feature/grain. | Filter will calculate equivalent diameters for the features/grains if not already calculated |
@@ -26,8 +26,8 @@ This Filter searches the __Cell__ and __Field__ arrays based on a user choice of
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | Neighborhoods | Number (int) of features/grains that have their centroid within one equivalent sphere diameter of each feature/grain | Features/grains do not need to actually touch each other, only be within a distance equal to the reference feature/grain's equivalent diameter |
 
 ## Authors ##

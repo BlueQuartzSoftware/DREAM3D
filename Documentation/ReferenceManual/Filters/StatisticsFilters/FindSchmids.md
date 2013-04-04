@@ -28,16 +28,16 @@ Schmid Factor from all of the slip systems is stored for the feature/grain.
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | AvgQuats | Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
 | Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will calculate feature/grain phases if not already calculated. |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | Poles | Three (3) values (ints) giving the crystallographic pole that points along the user defined loading direction. |  |
 | Field | Schmids | Value of the Schmid Factor (float) for the most favorably oriented slip system (ie the one with the highest Schmid Factor). | Only the Schmid Factor was used in determining which slip system's Schmid Factor to report.  The critical resolved shear stress for the different slip systems is not considered. |
 | Field | SlipSystems | Enumeration (int) of the slip system that has the highest Schmid Factor | Numbers correspond to specific slip systems for the different crystal structures as follows: |

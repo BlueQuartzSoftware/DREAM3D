@@ -1,7 +1,7 @@
 Raw Binary Reader {#rawbinaryreader}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

@@ -1,7 +1,7 @@
 Identify Sample {#identifysample}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

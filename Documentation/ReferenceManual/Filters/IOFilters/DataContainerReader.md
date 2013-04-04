@@ -1,7 +1,7 @@
 Read DREAM3D Data File {#datacontainerreader}
 ====
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 I/O Filters
 
 ## Description ##

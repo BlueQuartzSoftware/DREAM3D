@@ -13,22 +13,23 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix html for AddBadData.html
 + Fix html for AddNoise.html
 + fix HTML for JumbleOrientations.html
++ Add Documentation for RenameCell Array
++ Add Documentation for RenameField Array
 + write-up contributors section for website
 + Tutorial on Small IN100 for Docs/Website
 + Tutorial on Synthetic Generation for Docs/Website
-+ Tutorial on Surface Meshing for Docs/Website
+
 + Tutorial on Xdmf files for Docs/Website
 + Tutorial on Visualization Techniques for Docs/Website
 + Tutorial on Creating Ensemble Statistics for Docs/Website
 + Tutorial on Importing Orientation Data for Docs/Website
++ How to Incorporate documentation for plugins into the main help system
 
 ## Mike Jackson ToDo List ##
-+ Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
 + Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
-+ How to incorporate documentation for plugins into the main help system
 + Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 
 
@@ -137,6 +138,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 ##  Items Completed ##
++ Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
++ Tutorial on Surface Meshing for Docs/Website
 + Add filter to generate IPF colors for triangles in surface mesh
 + Fix reference frame button on import filter to not reset to default
 + Add node type calculation during quick mesh

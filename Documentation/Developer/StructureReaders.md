@@ -1,6 +1,6 @@
-/*!
 
- @page structurereaders Structure Readers
+
+ structurereaders Structure Readers
 
 Within the Grain Generator Tab of the User Interface there is an option to read
 an existing grain structure from a file on the local disk. Future programmers may
@@ -11,7 +11,7 @@ method that needs to be implemented in your own reader.
 virtual int readStructure(GrainGeneratorFunc* r) = 0;
 @endcode
 The single current implementation reads from a legacy VTK file which is either
-ASCII or BINARY but <b>must</b> be of the form <i>STRUCTURED_POINTS</i>. The following
+ASCII or BINARY but **must** be of the form _STRUCTURED_POINTS_. The following
 is an example header section from a legacy VTK file:
 
 @code
@@ -43,12 +43,12 @@ OR
 @endcode
 
 The following scalar arrays must also be present in the file:
-@li GrainID
-@li PhaseID
+- GrainID
+- PhaseID
 
 If either of these are missing then the file will not be able to be read.
 
 For those attempting to write a binary VTK file please note that the binary parts
-of the file <b>MUST</b> be written in <b>BIG ENDIAN</b> format. This is assumed
+of the file **MUST** be written in **BIG ENDIAN** format. This is assumed
 and all binary data will be byte swapped during the reading.
- */
+ 

@@ -1,7 +1,7 @@
 Write Field Data as CSV File {#fielddatacsvwriter}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 I/O Filters
 
 

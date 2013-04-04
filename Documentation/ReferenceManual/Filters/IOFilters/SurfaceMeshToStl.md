@@ -1,7 +1,7 @@
 SurfaceMeshToStl Filter {#surfacemeshtostl}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##
