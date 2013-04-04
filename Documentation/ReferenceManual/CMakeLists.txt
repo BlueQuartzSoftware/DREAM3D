@@ -117,71 +117,71 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdCells.md
   ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters/SingleThresholdFields.md
   ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdFields.md
-##--- Filter Group ReconstructionFilters
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/ReconstructionFilters.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMisorientation.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMutualInformation.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeature.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeatureCentroid.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsList.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/EBSDSegmentGrains.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/ScalarSegmentGrains.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/SegmentBetaGrains.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/CAxisSegmentGrains.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/MergeTwins.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/MergeColonies.md
-#  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/GroupMicroTextureRegions.md
-##--- Filter Group SamplingFilters
-#  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/SamplingFilters.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/ChangeResolution.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/RegularizeZSpacing.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/RotateSampleRefFrame.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/CropVolume.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/Hex2SqrConverter.md
-##--- Filter Group StatisticsFilters
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/StatisticsFilters.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgOrientations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgCAxes.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindBoundaryStrengths.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindDeformationStatistics.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindEuclideanDistMap.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceMisorientations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceCAxisMisorientations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindKernelAvgMisorientations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/GenerateEnsembleStatistics.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindMisorientations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighborhoods.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindNumFields.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSchmids.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindShapes.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSizes.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighbors.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlicetoSliceRotations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlipTransmissionMetrics.md
-##--- Filter Group SurfaceMeshingFilters
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateTriangleIPFColoring.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/LaplacianSmoothing.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/M3CSliceBySlice.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/MovingFiniteElementSmoothing.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/QuickSurfaceMesh.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/ReverseTriangleWinding.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SharedGrainFaceFilter.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleCentroidFilter.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleNormalFilter.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/VerifyTriangleWinding.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GrainFaceCurvatureFilter.md
-##--- Filter Group SyntheticBuildingFilters
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/PackPrimaryPhases.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/MatchCrystallography.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/JumbleOrientations.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InsertPrecipitatePhases.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/EstablishMatrixPhase.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddBadData.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddOrientationNoise.md
-#  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InitializeSyntheticVolume.md
+#--- Filter Group ReconstructionFilters
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/ReconstructionFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMisorientation.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMutualInformation.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeature.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeatureCentroid.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsList.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/EBSDSegmentGrains.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/ScalarSegmentGrains.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/SegmentBetaGrains.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/CAxisSegmentGrains.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/MergeTwins.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/MergeColonies.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/GroupMicroTextureRegions.md
+#--- Filter Group SamplingFilters
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/SamplingFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/ChangeResolution.md
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/RegularizeZSpacing.md
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/RotateSampleRefFrame.md
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/CropVolume.md
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/Hex2SqrConverter.md
+#--- Filter Group StatisticsFilters
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/StatisticsFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgOrientations.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgCAxes.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindBoundaryStrengths.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindDeformationStatistics.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindEuclideanDistMap.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceMisorientations.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceCAxisMisorientations.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindKernelAvgMisorientations.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/GenerateEnsembleStatistics.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindMisorientations.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighborhoods.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindNumFields.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSchmids.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindShapes.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSizes.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighbors.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlicetoSliceRotations.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlipTransmissionMetrics.md
+#--- Filter Group SurfaceMeshingFilters
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateTriangleIPFColoring.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/LaplacianSmoothing.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/M3CSliceBySlice.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/MovingFiniteElementSmoothing.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/QuickSurfaceMesh.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/ReverseTriangleWinding.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SharedGrainFaceFilter.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleCentroidFilter.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleNormalFilter.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/VerifyTriangleWinding.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GrainFaceCurvatureFilter.md
+#--- Filter Group SyntheticBuildingFilters
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/PackPrimaryPhases.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/MatchCrystallography.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/JumbleOrientations.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InsertPrecipitatePhases.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/EstablishMatrixPhase.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddBadData.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddOrientationNoise.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InitializeSyntheticVolume.md
 )
 
 set(LATEX_EPS_FILES

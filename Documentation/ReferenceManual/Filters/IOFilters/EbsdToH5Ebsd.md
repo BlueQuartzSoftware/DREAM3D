@@ -1,4 +1,4 @@
-Import Ebsd File(s) to H5Ebsd {#EbsdToH5Ebsd}
+Import Ebsd File(s) to H5Ebsd {#ebsdtoh5ebsd}
 ======
 
 ## Group/Subgroup ##
