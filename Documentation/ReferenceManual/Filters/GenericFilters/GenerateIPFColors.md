@@ -1,7 +1,7 @@
 Generate IPF Colors {#generateipfcolors}
 ========
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Generic Filters
 
 ## Description ##

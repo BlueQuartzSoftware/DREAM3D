@@ -1,7 +1,7 @@
 Laplacian Smoothing Filter {#laplaciansmoothing}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

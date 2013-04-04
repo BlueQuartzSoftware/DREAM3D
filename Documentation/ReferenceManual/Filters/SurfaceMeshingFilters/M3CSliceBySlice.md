@@ -1,7 +1,7 @@
 Multi-Material Marching Cubes (Slice at a Time) {#m3cslicebyslice}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

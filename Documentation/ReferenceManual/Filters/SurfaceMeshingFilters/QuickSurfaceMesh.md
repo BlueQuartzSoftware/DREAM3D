@@ -1,7 +1,7 @@
 Quick Surface Mesh {#quicksurfacemesh}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

@@ -1,7 +1,7 @@
 Erode/Dilate Bad Data {#openclosecoordinationnumber}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

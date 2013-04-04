@@ -1,6 +1,7 @@
 Copy Field Array To Cell Array {#copyfieldarraytocellarray}
 ==============================
-## Group/Subgroup ##
+
+## Group (Subgroup) ##
 Generic Filters
 
 ## Description ##

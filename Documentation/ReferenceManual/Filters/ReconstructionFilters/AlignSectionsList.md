@@ -25,8 +25,8 @@ the user could manually modify those values, and then use them in this filter if
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 
 ## Created Arrays ##
 None

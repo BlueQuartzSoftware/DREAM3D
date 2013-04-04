@@ -1,7 +1,7 @@
 Nodes & Triangles To Vtk File {#nodestrianglestovtk}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

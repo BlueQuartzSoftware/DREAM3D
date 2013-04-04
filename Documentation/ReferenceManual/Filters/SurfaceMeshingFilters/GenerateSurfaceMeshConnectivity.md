@@ -1,7 +1,7 @@
 Generate Surface Mesh Connectivity {#generatesurfacemeshconnectivity}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

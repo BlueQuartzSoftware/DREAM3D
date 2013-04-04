@@ -1,6 +1,6 @@
 Read Field Info File {#fieldinforeader}
 ======
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##
@@ -40,14 +40,14 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z) |  |
 | Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint |  |
 | Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each feature/grain in Bunge convention (Z-X-Z) |  |

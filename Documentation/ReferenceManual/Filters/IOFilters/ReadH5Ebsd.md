@@ -1,7 +1,7 @@
 Read H5Ebsd File {#readh5ebsd}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 I/O Filters
 
 

@@ -1,7 +1,7 @@
 Multi Threshold (Field Data) {#multithresholdfields}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

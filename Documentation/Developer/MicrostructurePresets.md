@@ -1,17 +1,17 @@
-/*!
 
-@page microPreset StatsGenerator Microstructure Presets Developer Guide
 
-The implementation uses the <b>Factory</b> design pattern where a singleton instance
+microPreset StatsGenerator Microstructure Presets Developer Guide
+
+The implementation uses the **Factory** design pattern where a singleton instance
 of MicrostructurePresetManager is responsible for registering each of the
 preset classes and also for creating an instance of each of those classes given
-the name of the class. Each class that wants to implement a <b>MicrostructurePreset</b>
+the name of the class. Each class that wants to implement a **MicrostructurePreset**
 needs to implement 2 classes:
-@li A subclass of AbstractMicrostructurePresetFactory
-@li A subclass of AbstractMicrostructurePreset
+- A subclass of AbstractMicrostructurePresetFactory
+- A subclass of AbstractMicrostructurePreset
 
-The <i>AbstractMicrostructurePresetFactory</i> is the actual factory class that can
-instantiate an actual concrete implementation of <i>AbstractMicrostructurePreset</i>.
+The _AbstractMicrostructurePresetFactory_ is the actual factory class that can
+instantiate an actual concrete implementation of _AbstractMicrostructurePreset_.
 There is a convenience macro (DECLARE_FACTORY_CLASS) that the programmer can use to quickly create the
 factory implementation. Each programmer will need to implement the following pure
 virtual methods from the AbstractMicrostructurePreset class:
@@ -88,10 +88,10 @@ an instance of the DefaultStatsPreset class:
   MicrostructurePresetManager::registerFactory(presetFactory);
 @endcode
 
-@subsection userinputdisplay User Input Display
+### userinputdisplay User Input Display
   If the programmer wishes they can create a QDialog based class to display options
 for the preset class to the user. The programmer simply supplies an actual implementation
-of the <b>displayUserInputDialog</b> method in their Preset class. Inside of this
+of the **displayUserInputDialog** method in their Preset class. Inside of this
 method the programmer can do what ever they want to display a Dialog. Some classes
 use some prebuilt dialogs for their own purpose. For example from the RolledPreset
 class we have the following:
@@ -115,22 +115,22 @@ void RolledPreset::displayUserInputDialog()
 }
 @endcode
 
- This code instantiates a <b>RolledPresetDialog</b> class and presents it to the
-user. If the user clicks the <i>OK</i> button then the code extracts the values
+ This code instantiates a **RolledPresetDialog** class and presents it to the
+user. If the user clicks the _OK_ button then the code extracts the values
 from the dialog and stores it in the class. The programmer can then use these values
 when the default set of data is being generated.
 
-@subsection preset_ui_design User Interface Implementation Methods for Preset Dialogs
+### preset_ui_design User Interface Implementation Methods for Preset Dialogs
  The programmer is welcome to use any technique to develop their dialog. They can
 use the QDesigner program to graphically layout their dialog then use the Multiple
 Inheritance model for the actual implementation details. For simply dialog the programmer
-may find it just as fast to implement a class deriving from <b>QDialog</b> and
+may find it just as fast to implement a class deriving from **QDialog** and
 layout the input fields by hand. Both the Rolled Preset and the Recrystallized
 Preset dialog boxes are done this way.
   During construction of these codes do not forget to update the CMake files with
-the necessary entries for the source files and optionally the <i>uic</i> calls.
+the necessary entries for the source files and optionally the _uic_ calls.
 
- */
+ 
 
 
 

@@ -1,7 +1,7 @@
 Write Vtk PolyData from SolidMesh {#solidmeshtovtk}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

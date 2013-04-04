@@ -1,7 +1,7 @@
 Reverse Triangle Winding Filter {#reversetrianglewinding}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

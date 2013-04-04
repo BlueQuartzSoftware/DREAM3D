@@ -1,7 +1,7 @@
 Write Vtk PolyData File (From SurfaceMesh) {#surfacemeshtovtk}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

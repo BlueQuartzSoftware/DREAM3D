@@ -1,7 +1,7 @@
 Single Threshold (Field Data) {#singlethresholdfields}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

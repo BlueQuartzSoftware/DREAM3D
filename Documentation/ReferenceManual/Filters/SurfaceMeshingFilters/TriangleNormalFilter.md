@@ -2,7 +2,7 @@ Generate Triangle Normals Filter {#trianglenormalfilter}
 ======
 
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##
