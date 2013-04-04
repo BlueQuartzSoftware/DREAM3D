@@ -13,7 +13,7 @@ a low level this filter is simply reading the data into a preallocated array and
 defines. This filter can be used as a sort of bridge to read in binary data from sources like IDL and MatLab.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

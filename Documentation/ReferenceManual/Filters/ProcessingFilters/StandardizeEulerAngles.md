@@ -6,7 +6,7 @@ Processing Filters
 
 ## Description ##
 
-## Parameters ## 
+## Parameters ##
 None
 
 ## Required Arrays ##

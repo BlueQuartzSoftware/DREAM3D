@@ -8,7 +8,7 @@ Find Grain Boundary Strength Metrics {#}
 | <a href="../Filters/FindBoundaryStrengths.html#wp5">Created Arrays</a>
 | <a href="../Filters/FindBoundaryStrengths.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

@@ -34,7 +34,7 @@ Running the _open-close_ operations in pairs can
  operation, then the pores would grow by one _voxel_ and return to their original size. Because the single
 _voxel_s would be gone, they would not be able to grow back.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -45,9 +45,9 @@ _voxel_s would be gone, they would not be able to grow back.
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
 None

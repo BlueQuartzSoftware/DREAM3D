@@ -5,24 +5,24 @@ Find Surface Grains {#findsurfacegrains}
 Generic Filters
 
 ## Description ##
-This filter determines whether a feature/grain touches an outer surface of the sample. This is accomplished by simply querying the feature/grain owners of the voxels/datapoints that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
-Any feature/grain that owns one of those voxels/datapoints is said to touch an outer surface and all other features/grains are said to not touch an outer surface of the sample.
+This filter determines whether a **Field** touches an outer surface of the sample. This is accomplished by simply querying the **Field** owners of the voxels/datapoints that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
+Any **Field** that owns one of those voxels/datapoints is said to touch an outer surface and all other features/grains are said to not touch an outer surface of the sample.
 
 
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | SurfaceFields | Boolean flag equal to 1 if the feature/grain touches an outer surface of the sample and equal to 0 if it does not. |  |
+| Field | SurfaceFields | Boolean flag equal to 1 if the **Field** touches an outer surface of the sample and equal to 0 if it does not. |  |
 
 ## Authors ##
 

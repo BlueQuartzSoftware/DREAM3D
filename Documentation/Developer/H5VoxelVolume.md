@@ -1,127 +1,74 @@
+HDF5 Voxel File (.h5voxel) {#h5voxelvolume}
+=========
 
- *
+## Introduction
+  The Voxel data from the Reconstruction Module is stored in an HDF5 file for use in the MicrostructureStatistics Module.
 
-h5voxelvolume HDF5 Voxel File (.h5voxel)
+## HDF5 File Layout
 
 
-## h1 Introduction
-  The Voxel data from the Reconstruction Module is stored in an HDF5 file for use
-in the MicrostructureStatistics Module.
+    /-|
+      | "VoxelData" HDF Group
+         |- "DIMENSIONS" HDF Dataset
+         |- "ORIGIN" HDF Dataset
+         |- "SPACING" HDF Dataset
+         |- "SCALARS" HDF Group
+             |- "Euler Angles" HDF Dataset
+             |- "GrainID" HDF Dataset
+             |- "PhaseID" HDF Dataset
+         |- "FIELD_DATA" HDF Group
+             |-"CrystalStructure" HDF Dataset
+             |-"PhaseType" HDF Dataset
 
-## h2 HDF5 File Layout
 
-@code
-/-|
-  | "VoxelData" HDF Group
-     |- "DIMENSIONS" HDF Dataset
-     |- "ORIGIN" HDF Dataset
-     |- "SPACING" HDF Dataset
-     |- "SCALARS" HDF Group
-         |- "Euler Angles" HDF Dataset
-         |- "GrainID" HDF Dataset
-         |- "PhaseID" HDF Dataset
-     |- "FIELD_DATA" HDF Group
-         |-"CrystalStructure" HDF Dataset
-         |-"PhaseType" HDF Dataset
-@endcode
-
-## h3 Detailed Description
+##  Detailed Description
 
 - The **VoxelData** group has 2 attributes which are
 
-<table border>
-<tr><td>**Attribute Name**</td><td>**Attribute Value**</td></tr>
-<tr><td>NUM_POINTS</td><td>64 Bit Int: Total Number of points (nPoints)</td></tr>
-<tr><td>VTK_DATA_OBJECT</td><td>String with Value "VTK_STRUCTURED_POINTS"</td></tr>
-</table>
+
+| Attribute Name | Attribute Value |
+|--------------------|---------------------|
+| NUM_POINTS | 64 Bit Int: Total Number of points (nPoints) |
+| VTK_DATA_OBJECT | String with Value "VTK_STRUCTURED_POINTS" |
+
 
 - Datasets in the **VoxelData** group include:
 
-  <table border>
-  <tr>
-      <td>** Dataset Name **</td>
-      <td>** Description **</td>
-   </tr>
 
-   <tr>
-      <td> DIMENSIONS </td>
-      <td> HDF Dataset 64 Bit Int x 3 Values: X, Y, Z Voxel Dims </td>
-   </tr>
-      <tr>
-      <td> ORIGIN </td>
-      <td> HDF Dataset 32 Bit Float x 3 Values: X, Y, Z Origin Values </td>
-   </tr>
-      <tr>
-      <td> SPACING </td>
-      <td> HDF Dataset 32 Bit Float x 3 Values: X, Y, Z Resolution Values </td>
-   </tr>
-   </table>
+| Dataset Name | Description |
+|--------------|-------------|
+| DIMENSIONS | HDF Dataset 64 Bit Int x 3 Values: X, Y, Z Voxel Dims |
+| ORIGIN | HDF Dataset 32 Bit Float x 3 Values: X, Y, Z Origin Values |
+|SPACING | HDF Dataset 32 Bit Float x 3 Values: X, Y, Z Resolution Values |
 
 
 - Groups in the **VoxelData** group include:
 
- <table border>
-  <tr>
-      <td>**Group Name **</td><td>**Attribute Name:Value**</td>
-   </tr>
-  <tr>
-      <td>FIELD_DATA</td>
-      <td>"NAME":"FieldData"</td>
-   </tr>
-     <tr>
-      <td>SCALARS</td>
-      <td>none</td>
-   </tr>
-   </table>
+
+| Group Name | Attribute Name:Value |
+|--------------|-------------|
+| FIELD_DATA | "NAME":"FieldData" |
+| SCALARS | none |
 
 - Datasets in the **SCALARS** Group include:
 
-  <table border>
-  <tr>
-      <td>** Dataset Name **</td>
-      <td>** Description **</td>
-   </tr>
-
-   <tr>
-      <td> Euler Angles </td>
-      <td> HDF Dataset. Rank=2; Dims=[nPoints, 3], 32 Bit Float</td>
-   </tr>
-      <tr>
-      <td> GrainID </td>
-      <td> HDF Dataset. Rank=1; Dims=[nPoints], 32 Bit Int</td>
-   </tr>
-      <tr>
-      <td> PhaseID </td>
-      <td>HDF Dataset. Rank=1; Dims=[nPoints], 32 Bit Int</td>
-   </tr>
-   </table>
+| Dataset Name | Description |
+|--------------|-------------|
+|Euler Angles | HDF Dataset. Rank=2; Dims=[nPoints, 3], 32 Bit Float |
+| GrainID |HDF Dataset. Rank=1; Dims=[nPoints], 32 Bit Int |
+|PhaseID | HDF Dataset. Rank=1; Dims=[nPoints], 32 Bit Int |
 
 - Datasets in the **FIELD_DATA** Group include:
 
-  <table border>
-  <tr>
-      <td>** Dataset Name **</td>
-      <td>** Description **</td>
-   </tr>
 
-   <tr>
-      <td> CrystalStructure </td>
-      <td> - HDF Dataset. 32 Bit Int. List of Phase ID to Crystal
-                                structure mapping. The Zeroth index is always a
-                                value of "999". The real list starts with index 1.</td>
-   </tr>
-   <tr>
-      <td> PhaseType </td>
-      <td> - HDF Dataset. 32 Bit Int. List of Phase ID to Phase Type
-                                mapping. The Zeroth index is always a
-                                value of "999". The real list starts with index 1.</td>
-   </tr>
+| Dataset Name | Description |
+|--------------|-------------|
+| CrystalStructure | HDF Dataset. 32 Bit Int. List of Phase ID to Crystal  structure mapping. The Zeroth index is always a value of "999". The real list starts with index 1. |
+| PhaseType | HDF Dataset. 32 Bit Int. List of Phase ID to Phase Type mapping. The Zeroth index is always a value of "999". The real list starts with index 1.|
 
-   </table>
 
-## h4 Enumeration Values for the Crystal Structure
+##  Enumeration Values for the Crystal Structure
 
-@code
     enum CrystalStructure {
         Hexagonal = 0,
         Cubic = 1,
@@ -129,18 +76,15 @@ in the MicrostructureStatistics Module.
         AxisOrthoRhombic = 3,
         UnknownCrystalStructure = 999
     };
-@endcode
 
-## h5 Enumeration Values for the Phase Type
+##  Enumeration Values for the Phase Type
 
-@code
     enum PhaseType {
-      PrimaryPhase = 0,
-      PrecipitatePhase = 1,
-      TransformationPhase = 2,
-      UnknownPhaseType = 999
+        PrimaryPhase = 0,
+        PrecipitatePhase = 1,
+        TransformationPhase = 2,
+        UnknownPhaseType = 999
     };
-@endcode
 
 
  

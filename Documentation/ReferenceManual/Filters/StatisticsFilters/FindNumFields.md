@@ -10,13 +10,13 @@ Statistics Filters
 This filter determines the number of features/grains in each Ensemble.
 
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined. |
 
 ## Created Arrays ##
 

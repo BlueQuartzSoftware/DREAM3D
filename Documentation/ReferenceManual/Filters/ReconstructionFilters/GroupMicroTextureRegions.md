@@ -11,7 +11,7 @@ This Filter searches for neighboring grains that have c-axes commonly aligned an
 This Filter is similar to the _TwinMisorientation_ and _ColonyMisorientation_ Filters in the sense that grains are grouped according to some criterion.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -21,16 +21,16 @@ This Filter is similar to the _TwinMisorientation_ and _ColonyMisorientation_ Fi
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
+| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Active | Boolean value specifying if the feature/grain is still in the sample (1 if the feature/grain is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
+| Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
 
 ## Authors ##
 

@@ -9,7 +9,7 @@ This filter will write a binary STL File for each unique Grain or Region ID in t
 will be named with the [Grain_id].stl. The user can designate an optional prefix for the files.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------| Comment |

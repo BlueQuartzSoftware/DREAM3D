@@ -20,16 +20,16 @@ The full 3D representation of crystallographic texture is given by the _Orientat
  
 
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each feature/grain in Bunge convention (Z-X-Z) | Filter will calculate average Euler angles for each feature/grain if not already calculated. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
-| Field | Volumes | Volume (float) in um^3 of the feature/grain. | Filter will calculate the volume of each feature/grain if not already calculated |
-| Field | SurfaceFields | Boolean flag of 1 if feature/grain touches an outer surface or of 0 if it does not | Filter will determine if features/grains intersect an outer surface if not already determined |
+| Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each **Field** in Bunge convention (Z-X-Z) | Filter will calculate average Euler angles for each **Field** if not already calculated. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
+| Field | Volumes | Volume (float) in um^3 of the **Field**. | Filter will calculate the volume of each **Field** if not already calculated |
+| Field | SurfaceFields | Boolean flag of 1 if **Field** touches an outer surface or of 0 if it does not | Filter will determine if features/grains intersect an outer surface if not already determined |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##

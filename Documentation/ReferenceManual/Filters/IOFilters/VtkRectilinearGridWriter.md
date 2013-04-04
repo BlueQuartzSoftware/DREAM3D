@@ -9,7 +9,7 @@ I/O Filters
 This Filter reads the grain and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the grains and phases of the grains.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -28,7 +28,7 @@ This Filter reads the grain and phase ids together with image parameters require
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 None

@@ -10,7 +10,7 @@ Reconstruction Filters
 The Merge Twins Filter is essentially identical to the Merge Colonies Filter, except the special misorientations used to determine if grains are grouped together are those misorientations that correspond to twins in an fcc (only fcc) crystal, specifically the Σ 3,5,7,9,11 twins.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -21,16 +21,16 @@ The Merge Twins Filter is essentially identical to the Merge Colonies Filter, ex
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Active | Boolean value specifying if the feature/grain is still in the sample (1 if the feature/grain is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
+| Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
 
 ## Authors ##
 

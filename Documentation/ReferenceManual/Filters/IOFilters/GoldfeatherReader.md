@@ -10,7 +10,7 @@ This class reads a surface mesh from a .jg file as supplied by Dr. Goldfeather i
 addition to the mesh is the data for the Principal Curvatures and Principal Curvature Directions.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -22,9 +22,16 @@ None
 
 
 ## Created Arrays ##
-None
 
-
+| Type | Name | Comment |
+|------|------|---------|
+|  | Nodes | SurfaceMeshDataContainer Property |
+|  | Triangles | SurfaceMeshDataContainer Property |
+| char | Node Type | The Type of Nodes. One value for each Node created. |
+| Float | Principal Direction 1 |  |
+| Float | Principal Direction 2 |  |
+| Float | Principal Curvature 2 |  |
+| Float | Principal Curvature 2 |  |
 
 ## Authors ##
 

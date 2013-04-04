@@ -25,7 +25,7 @@ The values for the __Node Type__ array can take one of the following values.
       }
     }
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

@@ -37,7 +37,7 @@ phase and a Hexagonal Matrix phase the file would be the following:
     2  0  3
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

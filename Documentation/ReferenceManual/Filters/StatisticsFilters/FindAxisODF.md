@@ -12,7 +12,7 @@ The orientation vector is normally identified using three _Euler_ angles which a
 This Filter searches and identifies the ODF axis of the volume fraction of grains.
 
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 
