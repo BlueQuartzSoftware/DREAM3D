@@ -13,18 +13,17 @@ None
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainIds |  |
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-|  | Nodes | SurfaceMeshDataContainer Property |
-|  | Triangles | SurfaceMeshDataContainer Property |
-| char | Node Type | The Type of Nodes. One value for each Node created. |
-
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+| Vertex Attribute Array | SurfaceMeshNodeType | N x 1 Col of unsigned char |
 
 
 ## Authors ##

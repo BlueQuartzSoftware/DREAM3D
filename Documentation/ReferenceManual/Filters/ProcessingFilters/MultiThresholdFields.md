@@ -19,8 +19,8 @@ None
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | Output |  |
 
 ## Authors ##

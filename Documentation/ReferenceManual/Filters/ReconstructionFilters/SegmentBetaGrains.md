@@ -19,16 +19,16 @@ Segment Grains (Misorientation) {#}
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | Quats |  |
 | Ensemble | CrystalStructures |  |
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GoodVoxels |  |
 | Cell | GrainIds |  |
 | Field | Active |  |

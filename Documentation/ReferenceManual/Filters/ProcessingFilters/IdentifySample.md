@@ -13,8 +13,8 @@ None
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GoodVoxels |  |
 
 ## Created Arrays ##

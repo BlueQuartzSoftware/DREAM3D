@@ -32,8 +32,8 @@ only apply the filter to a single phase of the users choosing.
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | Active |      |
 
 ## Authors ##

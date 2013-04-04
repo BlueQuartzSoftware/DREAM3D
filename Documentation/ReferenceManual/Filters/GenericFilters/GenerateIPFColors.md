@@ -22,8 +22,8 @@ This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crys
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellEulerAngles |  |
 | Cell | CellPhases |  |
 | Ensemble | CrystalStructures |  |

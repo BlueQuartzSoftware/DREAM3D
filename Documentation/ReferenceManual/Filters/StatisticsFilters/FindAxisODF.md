@@ -16,8 +16,8 @@ This Filter searches and identifies the ODF axis of the volume fraction of grain
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | AxisEulerAngles |  |
 | Field | FieldPhases |  |
 | Field | SurfaceFields |  |

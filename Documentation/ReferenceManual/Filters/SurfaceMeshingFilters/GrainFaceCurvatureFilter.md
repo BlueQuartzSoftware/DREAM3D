@@ -31,20 +31,23 @@ _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+
+
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Double | Principal Curvature 1 |  |
-| Double | Principal Curvature 2 |  |
-| (optional) Double | Principal Direction 1 | These are 3x1 vector for each triangle in the mesh |
-| (optional) Double | Principal Direction 2 | These are 3x1 vector for each triangle in the mesh |
-| (optional) Double | Mean Curvature |  |
-| (optional) Double | Gaussian Curvature |  |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Triangle Attribute Array | Principal Curvature 1 | N x 1 Col array of double values |
+| Triangle Attribute Array | Principal Curvature 2 | N x 1 Col array of double values |
+| Triangle Attribute Array | Principal Direction 1 | N x 3 Col array of double values |
+| Triangle Attribute Array | Principal Direction 2 | N x 3 Col array of double values |
+| Triangle Attribute Array | Mean Curvature | N x 1 Col array of double values |
+| Triangle Attribute Array | Gaussian Curvature | N x 1 Col array of double values |
 
 ## Authors ##
 

@@ -12,8 +12,8 @@ Find Grain Reference C-Axis Misorientations {#}
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
 | Cell | Quats |  |
@@ -21,8 +21,8 @@ Find Grain Reference C-Axis Misorientations {#}
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainReferenceCAxisMisorientations |  |
 | Cell | GrainReferenceCAxisRotations |  |
 | Field | GrainAvgCAxisMisorientations |  |

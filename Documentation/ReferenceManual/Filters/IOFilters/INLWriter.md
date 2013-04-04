@@ -28,8 +28,8 @@ Some information about the phase is included in the header section of the file i
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainIds |  |
 | Cell | Euler Angles | Values in Radians |
 | Cell | Phases |  |

@@ -30,8 +30,8 @@ None
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | User Defined | Boolean Array |
 
 
