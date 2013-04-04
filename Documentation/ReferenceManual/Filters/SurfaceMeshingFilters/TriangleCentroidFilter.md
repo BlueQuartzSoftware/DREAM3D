@@ -1,21 +1,15 @@
-Generate Triangle Centroids {#}
+Generate Triangle Centroids {#trianglecentroidfilter}
 ======
-<h1 class="pHeading1">Generate Triangle Centroids Filter</h1>
-<p class="pCellBody">
-<a href="../SurfaceMeshFilters/TriangleCentroidFilter.html#wp2">Description</a>
-| <a href="../SurfaceMeshFilters/TriangleCentroidFilter.html#wp3">Options</a>
-| <a href="../SurfaceMeshFilters/TriangleCentroidFilter.html#wp4">Required Arrays</a>
-| <a href="../SurfaceMeshFilters/TriangleCentroidFilter.html#wp5">Created Arrays</a>
-| <a href="../SurfaceMeshFilters/TriangleCentroidFilter.html#wp1">Authors</a> 
 
+## Group/Subgroup ##
 SurfaceMesh
 
-
-This filter computes the centroid of each triangle in the surface mesh by calculating the average position of all 3 nodes
- that make up the triangle.
+## Description ##
+This filter computes the centroid of each triangle in the surface mesh by calculating the average position of all 3 nodes that make up the triangle.
 
 
 ## Parameters ##
+None
 
 ## Required Arrays ##
 

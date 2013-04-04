@@ -1,21 +1,14 @@
-Grain Face Curvature Filter {#}
+Grain Face Curvature Filter {#grainfacecurvaturefilter}
 ======
-<h1 class="pHeading1">Grain Face Curvature Filter</h1>
-<p class="pCellBody">
-<a href="../SurfaceMeshFilters/GrainFaceCurvatureFilter.html#wp2">Description</a>
-| <a href="../SurfaceMeshFilters/GrainFaceCurvatureFilter.html#wp3">Options</a>
-| <a href="../SurfaceMeshFilters/GrainFaceCurvatureFilter.html#wp4">Required Arrays</a>
-| <a href="../SurfaceMeshFilters/GrainFaceCurvatureFilter.html#wp5">Created Arrays</a>
-| <a href="../SurfaceMeshFilters/GrainFaceCurvatureFilter.html#wp1">Authors</a> 
 
+## Group/Subgroup ##
 SurfaceMesh
 
-
+## Description ##
 This filter calculates the mean and Gaussian curvature for each triangle in a surface mesh using the technique in [1]
 and where the groups of triangles are defined as those triangles having the same pair of grain ids (nSpin values).
 
-The Principal Curvature 1 &amp; 2 are the "Kappa 1" and "Kappa 2" values from the paper and are the Eigen values from the
-Wiengarten Matrix.
+The Principal Curvature 1 &amp; 2 are the "Kappa 1" and "Kappa 2" values from the paper and are the Eigen values from the Wiengarten Matrix.
 
 The Principal Direction 1 &amp; 2 are the Eigen vectors from the solution to the least squares fit algorithm.
 
@@ -23,15 +16,14 @@ The Mean Curvature is (Kappa1 + Kappa2)/2
 
 The Gaussian Curvature is (Kappa1 * Kappa2).
 __[1]__
-Jack Goldfeather, Victoria Interrante
- A Novel Cubic-Order Algorithm for Approximating Principal Direction Vectors
+Jack Goldfeather, Victoria Interrante "A Novel Cubic-Order Algorithm for Approximating Principal Direction Vectors"
 _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 
 
 ## Parameters ## 
 
-| Name | Type |
-|------|------| Description |
+| Name | Type | Description |
+|------|------| ----------- |
 | Neighborhood Ring Count | Integer | The size of the nieghborhood to use to calculate the curvature values |
 | Compute Principal Directions | Bool | Compute the Principal Direction Vectors |
 | Compute Mean Curvature | Bool | Compute the Mean Curvature values |
