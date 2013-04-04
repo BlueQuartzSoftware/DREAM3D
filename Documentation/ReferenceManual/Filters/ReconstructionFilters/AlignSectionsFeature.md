@@ -1,12 +1,10 @@
-Align Sections (Feature) {#}
+Align Sections (Feature) {#alignsectionsfeature}
 ======
-<h1 class="pHeading1">Align Sections (Feature) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/AlignSectionsFeature.html#wp2">Description</a> | <a href="../ReconstructionFilters/AlignSectionsFeature.html#wp3">Options</a> | <a href="../ReconstructionFilters/AlignSectionsFeature.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsFeature.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsFeature.html#wp1">Authors</a> 
 
+## Group ##
 Reconstruction Filters
 
-
+## Description ##
 This filter attempts to align consecutive serial sections by determining the position that results in the most overlap
 of previously defined "regions".  The "regions" are defined by a binary/boolean array where the voxels/datapoints have been flagged
 by another filter.  Typically, during reading of the data, each **Cell** is subject to a "Quality Metric" (or threshold) that 

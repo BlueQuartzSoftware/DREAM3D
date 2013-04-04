@@ -1,8 +1,8 @@
-Find Grain Centroids {#findgraincentroids}
+Find Field Centroids {#findgraincentroids}
 =======
 
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Misc)
 
 ## Description ##
 This filter calculates the _centroid_ of each **Field** by determining the average x, y, and z position of all the voxels/datapoints belonging to the **Field**. 
@@ -10,6 +10,8 @@ Note that features/grains that intersect the outer surfaces of the sample will s
 
 
 ## Parameters ##
+
+None
 
 ## Required Arrays ##
 

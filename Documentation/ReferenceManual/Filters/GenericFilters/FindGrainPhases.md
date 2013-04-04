@@ -1,13 +1,15 @@
-Find Grain Phases {#findgrainphases}
+Find Field Phases {#findgrainphases}
 ==========   
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Misc)
 
 ## Description ##
 This filter determines the phase of each **Field** by querying the phase of the voxels/datapoints that belong to the **Field**. 
 Note that it is assumed that all voxels/datapoints belonging to a **Field** are of the same phase, and thus any **Cell** can be used to determine the phase of the **Field** that owns that **Cell**.
 
 ## Parameters ##
+None
+
 
 ## Required Arrays ##
 
@@ -21,7 +23,7 @@ Note that it is assumed that all voxels/datapoints belonging to a **Field** are 
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** |  |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Values will begin at 1 as there is no phase 0, which is used temporarily in some filters for bad data|
 
 ## Authors ##
 
