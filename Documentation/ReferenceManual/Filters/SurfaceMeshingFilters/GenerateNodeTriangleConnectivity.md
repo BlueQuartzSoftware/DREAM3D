@@ -1,4 +1,3 @@
-
 Generate Node Triangle Connectivity Filter {#}
 ======
 <h1 class="pHeading1">Generate Node Triangle Connectivity Filter</h1>

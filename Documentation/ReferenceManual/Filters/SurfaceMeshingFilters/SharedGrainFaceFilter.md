@@ -1,4 +1,3 @@
-
 Shared Grain Face Filter {#}
 ======
 <h1 class="pHeading1">Shared Grain Face Filter Filter</h1>

@@ -1,4 +1,3 @@
-
 Moving Finite Element Smoothing {#}
 ======
 <h1 class="pHeading1">Moving Finite Element Smoothing Filter</h1>

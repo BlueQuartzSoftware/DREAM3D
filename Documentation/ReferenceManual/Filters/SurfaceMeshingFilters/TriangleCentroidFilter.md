@@ -1,4 +1,3 @@
-
 Generate Triangle Centroids {#}
 ======
 <h1 class="pHeading1">Generate Triangle Centroids Filter</h1>
