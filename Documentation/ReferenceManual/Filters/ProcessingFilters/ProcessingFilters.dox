@@ -16,6 +16,8 @@
 
 @subpage minsize
 
+@subpage perphaseminsize
+
 @subpage multithresholdcells
 
 @subpage multithresholdfields
@@ -23,8 +25,6 @@
 @subpage openclosebaddata
 
 @subpage openclosecoordinationnumber
-
-@subpage perphaseminsize
 
 @subpage rotateeulerrefframe
 

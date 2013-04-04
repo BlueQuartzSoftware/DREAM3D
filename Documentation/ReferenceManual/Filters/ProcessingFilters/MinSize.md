@@ -1,4 +1,4 @@
-Minimum Size Filter {#minsize}
+Minimum Size Filter (All Phases) {#minsize}
 ======
 
 ## Group/Subgroup ##
@@ -14,8 +14,8 @@ After removing all the small features/grains, the remaining features/grains are 
 
 ## Parameters ## 
 
-| Name | Type |
-|------|------| Decription |
+| Name | Type | Description |
+|------|------|-------------|
 | Minimum Allowed Grain Size | Integer | Number of voxels/datapoints that must be present in the feature/grain for it to remain in the sample |
 
 ## Required Arrays ##

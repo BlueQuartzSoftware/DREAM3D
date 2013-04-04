@@ -7,6 +7,7 @@ Processing Filters
 ## Description ##
 
 ## Parameters ## 
+None
 
 ## Required Arrays ##
 
@@ -16,8 +17,6 @@ Processing Filters
 
 ## Created Arrays ##
 None
-
-
 
 ## Authors ##
 

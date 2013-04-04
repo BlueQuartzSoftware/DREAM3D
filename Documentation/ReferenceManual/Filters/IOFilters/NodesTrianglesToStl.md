@@ -1,4 +1,4 @@
-Nodes & Triangles To Stl Filter {#cmunodestrianglestostl}
+Nodes & Triangles To Stl File {#cmunodestrianglestostl}
 ======
 
 ## Group/Subgroup ##
