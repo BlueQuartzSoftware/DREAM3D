@@ -1,55 +1,39 @@
-/*!
-
-@page h5ebsdfile EBSD HDF5 Data File Specification
+# EBSD HDF5 Data File Specification {#h5ebsdfile}
 
 
-@section h5ebsd0 Orientations, Reference Frames and Coordinate Systems
-  DREAM.3D's origin follows the sample coordinate system so that the physical
-location of the 0 row and 0 column voxel should visually appear in the lower
-left corner of a computer graphics display.
+## Orientations, Reference Frames and Coordinate Systems
+DREAM.3D's origin follows the sample coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display.
 
-@image html CoordinateSystem1.png "Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow)"
-@image latex CoordinateSystem1.png "Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow)" width=3in
+![](Images/CoordinateSystem1.png) "Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow)")
+@image latex Images/CoordinateSystem1.png "Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow)" width=3in
 
- Commercial EBSD acquisition systems do not typically follow this convention and
-DREAM.3D needs input from the user so that the proper transformations to the data
-can be applied during the Reconstruction and other analysis. Commercial EBSD software
-packages allow for some initial transformations of the data in which case the
-DREAM.3D environment does not have any way of determining if those transformations
-have already occured. During the import process the user is asked a few questions
-regarding the orientation of their EBSD data in relation to the sample coordinate
-system. Currently there are 3 items that must be answered otherwise undefined behavior
-may occur during any of the analysis algorithms.
+Commercial EBSD acquisition systems do not typically follow this convention and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data in which case the DREAM.3D environment does not have any way of determining if those transformations have already occured. During the import process the user is asked a few questions regarding the orientation of their EBSD data in relation to the sample coordinate system. Currently there are 3 items that must be answered otherwise undefined behavior may occur during any of the analysis algorithms.
 
-@li Some Commercial EBSD acquisition systems allow for a <b>scan rotation</b> which
+- Some Commercial EBSD acquisition systems allow for a **scan rotation** which
 rotates the sample coordinate system 180 degrees around the Z axis.
-@li Something here
-@li Should we rotate the Euler angles to bring them in line with the sample
+- Something here
+- Should we rotate the Euler angles to bring them in line with the sample
 reference frame?
 
 
-@section h5ebsd1 Introduction
-  The EBSD Data from multiple vendors are stored in a data file using the HDF5
-file format library. While the general layout of the HDF5 file is the same between
-vendors there are details that are NOT the same between vendor because each
-vendors chooses to save different types of data. The top level datasets that
-deal with the basic volume information is the same for every file.
+## Introduction
+The EBSD Data from multiple vendors are stored in a data file using the HDF5 file format library. While the general layout of the HDF5 file is the same between vendors there are details that are NOT the same between vendor because each vendors chooses to save different types of data. The top level datasets that deal with the basic volume information is the same for every file.
 
-@section h5ebsd2 HDF5 File Layout
+## HDF5 File Layout
 
-@subsection rootlayout HDF5 Root Level Layout Specification
+### HDF5 Root Level Layout Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
   <tr>
-    <td colspan="4"> <b>H5Ebsd Specification</b> </td>
+    <td colspan="4"> **H5Ebsd Specification** </td>
   </tr>
   <tr>
     <td colspan="4">Root Level Datasets and Groups</td>
   </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>Index</td>
@@ -64,7 +48,7 @@ deal with the basic volume information is the same for every file.
 <tr>
     <td>Manufacturer</td>
     <td>H5T_STRING</td>
-    <td colspan="2">The <b>Manufacturer</b> currently is either <i>TSL</i> or <i>HKL</i></td>
+    <td colspan="2">The **Manufacturer** currently is either _TSL_ or _HKL_</td>
 </tr>
 <tr>
     <td>Max X Points</td>
@@ -122,21 +106,21 @@ deal with the basic volume information is the same for every file.
 </tr>
 </table>
 
-@subsection slicelayout Slice Group Specification
+### slicelayout Slice Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>Slice Group Specification</b> </td>
+    <td colspan="4"> **Slice Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4">Each Slice is grouped into its own H5G_GROUP with the Name of
   the group simply the index of the slice. Within each slice group are 2 more groups
-  with names <b>Data</b> and <b>Header</b></td>
+  with names **Data** and **Header**</td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>Data</td>
@@ -151,22 +135,22 @@ deal with the basic volume information is the same for every file.
 </table>
 
 
-@section tslspec TSL Specification
+## TSL Specification
  This section details the data to be imported from a .ang file into the .h5ebsd file
  
-@subsection tsldata TSL (.ang) Data Group Specification
+### TSL (.ang) Data Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>TSL Data Group Specification</b> </td>
+    <td colspan="4"> **TSL Data Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4"></td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>Phi1</td>
@@ -220,19 +204,19 @@ deal with the basic volume information is the same for every file.
 </tr>
 </table>
 
-@subsection tslheader TSL (.ang) Header Group Specification
+### TSL (.ang) Header Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>TSL Header Group Specification</b> </td>
+    <td colspan="4"> **TSL Header Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4"></td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>OriginalFile</td>
@@ -327,19 +311,19 @@ deal with the basic volume information is the same for every file.
 </tr>
 </table>
 
-@subsection tslphase TSL (.ang) Phase Group Specification
+### TSL (.ang) Phase Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>TSL Phase Group Specification</b> </td>
+    <td colspan="4"> **TSL Phase Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4"></td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>Categories</td>
@@ -389,19 +373,19 @@ deal with the basic volume information is the same for every file.
 </tr>
 </table>
 
-@subsection tslhklfamily TSL (.ang) HKLFamily Group Specification
+### TSL (.ang) HKLFamily Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>TSL HKLFamily Group Specification</b> </td>
+    <td colspan="4"> **TSL HKLFamily Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4"></td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>{Based on Index of the family}. If there are 4 families then there are 4
@@ -419,22 +403,22 @@ deal with the basic volume information is the same for every file.
 </tr>
 </table>
 
-@section hklspec HKL Specification
+## HKL Specification
  This section details the data to be imported from a .ctf file into the .h5ebsd file
 
-@subsection hkldata HKL (.ctf) Data Group Specification
+### HKL (.ctf) Data Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>HKL Data Group Specification</b> </td>
+    <td colspan="4"> **HKL Data Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4">1D Array of Values where the number of elements in the array is equal to the total number of points per 2D Slice.</td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>Phase</td>
@@ -518,19 +502,19 @@ deal with the basic volume information is the same for every file.
 </tr>
 </table>
 
-@subsection hklheader HKL (.ctf) Header Specification
+### HKL (.ctf) Header Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>TSL HKLFamily Group Specification</b> </td>
+    <td colspan="4"> **TSL HKLFamily Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4"></td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>OriginalFile</td>
@@ -636,23 +620,23 @@ deal with the basic volume information is the same for every file.
     <td>Phases</td>
     <td>H5G_GROUP</td>
     <td colspan="2">Group that contains a subgroup for each phase where the name
-    of each subgroup is simply the index of the phase starting at <b>1.</b></td>
+    of each subgroup is simply the index of the phase starting at **1.**</td>
 </tr>
 </table>
 
-@subsection hklphase HKL (.ctf) Phase Group Specification
+### HKL (.ctf) Phase Group Specification
 
 <table border="1px" cellspacing="3" cellpadding="2">
 <tr>
-    <td colspan="4"> <b>TSL Phase Group Specification</b> </td>
+    <td colspan="4"> **TSL Phase Group Specification** </td>
 </tr>
 <tr>
   <td colspan="4"></td>
 </tr>
 <tr>
-    <td><b>Name</b></td>
-    <td><b>HDF5 Type</b></td>
-    <td colspan="2"><b>Value</b></td>
+    <td>**Name**</td>
+    <td>**HDF5 Type**</td>
+    <td colspan="2">**Value**</td>
 </tr>
 <tr>
     <td>Comment</td>
@@ -698,19 +682,12 @@ deal with the basic volume information is the same for every file.
 </table>
 
 
-@section h5ebsd3 Detailed Description
+## h5ebsd3 Detailed Description
 
-The <b>Stacking Order</b> refers to the order in which the z slices are stacked
+The **Stacking Order** refers to the order in which the z slices are stacked
 together when they are read from the file. The enumerations are also in the
 EbsdLibConstants.h header file.
 
-  As a further explanation if the ordering is <tt><b>"Low To High"</b></tt> then the
-slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example
-if your data set is numbered from 23 to 86 with file names of the form Slice_023.ang
-and you select "Low To High" then the data inside of file Slice_023.ang will be
-positioned at Z=0 during any method that has to deal with the data. The opposite
-of this is if the user were to select to have their data <tt><b>"High to Low"</b></tt>
-in which case the file with name Slice_086.ang will be positioned at Z=0 and the
-file with name "Slice_023.ang" will be positioned at Z=64.\n
+As a further explanation if the ordering is **"Low To High"** then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High" then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **"High to Low"** in which case the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
 
- */
+ 

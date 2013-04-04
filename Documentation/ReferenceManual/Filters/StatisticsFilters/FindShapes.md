@@ -37,16 +37,16 @@ _
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 | Field | Centroids | X, Y, Z coordinates (floats) of feature/grain center of mass | Filter will calculate feature/grain centroids if not previously calculated |
 | Field | Volumes | Volume (float) in um^3 of the feature/grain. | Filter will calculate volume of each feature/grain if not already calculated |
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | AspectRatios |  |  |
 | Field | AxisEulerAngles |  |  |
 | Field | AxisLengths |  |  |

@@ -1,7 +1,7 @@
 Find Surface Grains {#findsurfacegrains}
 ==========
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Generic Filters
 
 ## Description ##
@@ -14,14 +14,14 @@ Any feature/grain that owns one of those voxels/datapoints is said to touch an o
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | SurfaceFields | Boolean flag equal to 1 if the feature/grain touches an outer surface of the sample and equal to 0 if it does not. |  |
 
 ## Authors ##

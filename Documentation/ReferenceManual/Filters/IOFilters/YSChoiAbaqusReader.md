@@ -1,6 +1,6 @@
 Read YS Choi Abaqus Vtk Output File {#yschoiabaqusreader}
 ======
-## Group/Subgroup ##
+## Group (Subgroup) ##
 I/O Filters
 
 ## Description ##
@@ -13,13 +13,13 @@ I/O Filters
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z) |  |
 | Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint |  |
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. |  |

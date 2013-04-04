@@ -32,8 +32,8 @@ as the last 7x7 grid.
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 | Cell | GoodVoxels | Boolean values specifying whether a voxel/datapoint is of a quality acceptable to be used in the alignment process | Values are typically assigned when reading experimental data and applying a "Quality Metric" to define "good" and "bad" data  |
 | Cell | Quats | Five (5) values (floats) that specify the orientation of the voxel/datapoint in quaternion representation | Filter will calculate the quaternion for each voxel/datapoint if it is not already calculated. |

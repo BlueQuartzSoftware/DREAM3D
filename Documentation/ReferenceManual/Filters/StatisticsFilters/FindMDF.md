@@ -14,8 +14,8 @@ To generate a Misorientation Distribution Function (MDF), this filter uses __Fie
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | AvgQuats | Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
 | Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
 | Field | SurfaceFields | Boolean flag of 1 if feature/grain touches an outer surface or of 0 if it does not | Filter will determine if features/grains intersect an outer surface if not already determined |

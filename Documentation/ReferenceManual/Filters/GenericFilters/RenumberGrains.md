@@ -1,7 +1,7 @@
 Renumber Grains {#renumbergrains}
 ========
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Generic Filters
 
 ## Description ##

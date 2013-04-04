@@ -24,8 +24,8 @@ The full 3D representation of crystallographic texture is given by the _Orientat
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each feature/grain in Bunge convention (Z-X-Z) | Filter will calculate average Euler angles for each feature/grain if not already calculated. |
 | Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
 | Field | Volumes | Volume (float) in um^3 of the feature/grain. | Filter will calculate the volume of each feature/grain if not already calculated |

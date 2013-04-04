@@ -1,7 +1,7 @@
 Read Ph File (Grain Ids) {#phreader}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 I/O Filters
 
 
@@ -45,8 +45,8 @@ None
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 

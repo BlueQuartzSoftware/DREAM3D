@@ -1,6 +1,6 @@
 Write INL File {#inlwriter}
 ======
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

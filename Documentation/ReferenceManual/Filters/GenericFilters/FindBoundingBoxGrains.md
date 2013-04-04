@@ -1,8 +1,8 @@
 Find Bounding Box Grains {#findboundingboxgrains}
 =============
 
-## Group/Subgroup ##
-Generic Filters
+## Group (Subgroup) ##
+Generic Filters (Spacial)
 
 ## Description ##
 This filter determines which features/grains are _biased_ by the outer surfaces of the sample. Larger features/grains are more likely to intersect the outer surfaces and thus it is not sufficient to only note which features/grains touch the outer surfaces of the sample.
@@ -23,15 +23,15 @@ This algorithm works to determine the biased features/grains because all feature
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | Centroids | X, Y, Z coordinates (floats) of feature/grain center of mass | Filter will calculate feature/grain centroids if not previously calculated |
 | Field | SurfaceFields | Boolean flag of 1 if feature/grain touches an outer surface or of 0 if it does not | Filter will determine if features/grains intersect an outer surface if not already determined |
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | BiasedFields | Boolean flag of 1 if feature/grain is biased or of 0 if it is not 
 
 ## Authors ##
