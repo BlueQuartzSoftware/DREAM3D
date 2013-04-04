@@ -16,8 +16,8 @@ Processing Filters
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
 | Field | FieldPhases |  |

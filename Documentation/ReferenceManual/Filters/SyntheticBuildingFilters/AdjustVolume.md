@@ -28,8 +28,8 @@ Synthetic Builder Filters
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | EquivalentDiameters |  |
 
 ## Authors ##

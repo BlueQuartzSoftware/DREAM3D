@@ -16,8 +16,8 @@ IO Filters
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | NodeArray Attribute | SurfaceMeshNodeType | The node types values |
 | FaceArray Attribute | SurfaceMeshTriangleLabels | The Grain Id Labels for each Face(Triangle) |
 | NodeArray | | The shared node (vertex) list |

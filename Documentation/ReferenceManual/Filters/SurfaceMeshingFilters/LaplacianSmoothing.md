@@ -7,8 +7,7 @@ SurfaceMesh
 ## Description ##
 This filter implements a simple Laplcian based smoothing filter. In the Laplacian algorithm the &lambda; term has a range of 0 &le; &lambda; &le; 1 and defines a relative distance that a node can move relative to the positions of the nodes neighbors. A &lambda; = 0 value will effectively stop those node types from any movement during the algorithm thus by allowing the user to set this value for specific types of nodes the user can arrest the shrinkage of the surface mesh during the smoothing process.
 
-Currently if you lock the __Default Lambda__ value to Zero (0) the Triple Lines and Quad points will not be able to move because none of their neighbors can move. The user may want to consider allowing a small value of &lambda; for the default nodes which will allow some movement of the triple lines and/or Quad Points
-This filter will create additional internal arrays in order to facilitate the calculations. These arrays are
+Currently if you lock the __Default Lambda__ value to Zero (0) the Triple Lines and Quad points will not be able to move because none of their neighbors can move. The user may want to consider allowing a small value of &lambda; for the default nodes which will allow some movement of the triple lines and/or Quad Points. This filter will create additional internal arrays in order to facilitate the calculations. These arrays are
 
 - Float - Lambda values (Same size as Nodes array)
 - 64 Bit Integer - Unique Edges Array
@@ -45,11 +44,11 @@ The values for the __Node Type__ array can take one of the following values.
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
-| Node List | Core Property of the Surface Mesh Data Container | The shared list of nodes that make up the mesh |
-| Node Type | Optional | The array that describes the type of node. (See table in description above) |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+| Node Type | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) |
 
 ## Created Arrays ##
 None

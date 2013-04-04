@@ -14,16 +14,16 @@ None
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
-| Node List | Core Property of the Surface Mesh Data Container | The shared list of nodes that make up the mesh |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| double | SurfaceMeshTriangleNormals | 3 Component vector for each Triangle in the Mesh |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Triangle Attribute Array | SurfaceMeshTriangleNormals | N x 3 Col of double values for each Triangle in the Mesh |
 
 ## Authors ##
 

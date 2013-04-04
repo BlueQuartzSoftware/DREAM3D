@@ -39,8 +39,8 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp3"> </a>## Parameters ##
 <a name="wp4"> </a>## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | NearestNeighborDistances |  |
 
 <a name="wp5"> </a>## Created Arrays ##

@@ -231,7 +231,7 @@ namespace DREAM3D
 
   namespace FaceData
   {
-    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
+    //const std::string SurfaceMeshFaces("SurfaceMeshFaces");
     const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
     const std::string SurfaceMeshTriangleIPFColors("SurfaceMeshTriangleIPFColors");
     const std::string SurfaceMeshTriangleIPFColorsGrain1("SurfaceMeshTriangleIPFColorsGrain1");
