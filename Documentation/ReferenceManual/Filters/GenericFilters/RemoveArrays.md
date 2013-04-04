@@ -1,8 +1,8 @@
-Remove Arrays {#removearrays}
+Delete Arrays {#removearrays}
 =============
 
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Memory/Management)
 
 ## Description ##
 This filter allows the user to remove specified arrays from the pipeline by deleting them from memory. This can be helpful
@@ -11,14 +11,17 @@ in memory. For example when creating a surface mesh one typically only needs an 
 volume and then afterwards can be safely deleted.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
-| Arrays to Delete | Unknown Type |
+| Arrays to Delete | String(s) |
 
 ## Required Arrays ##
-None
+
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| Cell/Field/Ensemble | *User Chosen* |  | Array(s) will always be present, since the user may only chose from existing arrays |
 
 
 

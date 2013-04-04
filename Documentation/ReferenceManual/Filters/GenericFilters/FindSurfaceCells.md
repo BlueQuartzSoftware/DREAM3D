@@ -1,7 +1,7 @@
 Find Surface Cells {#findsurfacecells}
 =============
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Spatial)
 
 ## Description ##
 This Filter determines, for each voxel/datapoint, the number of neighboring voxels/datapoints that are owned by a different feature/grain.  The algorithm for determining this is as follows: 
@@ -11,7 +11,8 @@ This Filter determines, for each voxel/datapoint, the number of neighboring voxe
 3) Determine the number of those neighboring voxels/datapoints belonging to a different feature/grain than the current voxel/datapoint. 
 4) Repeat 1-3 for all voxels/datapoints
 
-## Parameters ## 
+## Parameters ##
+None
 
 ## Required Arrays ##
 
@@ -23,7 +24,7 @@ This Filter determines, for each voxel/datapoint, the number of neighboring voxe
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring voxels/datapoints of a given voxel/datapoint that belong to a different feature/grain than itself |  |
+| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring voxels/datapoints of a given voxel/datapoint that belong to a different feature/grain than itself. Values will range from *0* to *6* |  |
 
 ## Authors ##
 

@@ -2,11 +2,10 @@ Generate IPF Colors {#generateipfcolors}
 ========
 
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Misc)
 
 ## Description ##
-This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crystal Structures. The __determination__ is based on the Crystal Structure Ensemble data
- which must be present for this filter to run. The user can enter the Reference direction and is defaulted to [001].
+This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crystal Structures. The user can enter the Reference direction and is defaulted to [001].
 
 ![IPF Color Triangle](IPFFilterLegend.png)
 @image latex IPFFilterLegend.png
@@ -22,17 +21,17 @@ This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crys
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Cell | CellEulerAngles |  |
-| Cell | CellPhases |  |
-| Ensemble | CrystalStructures |  |
+| Type | Name | Desription | Comment |
+|------|------|---------|-------|
+| Cell | CellEulerAngles | | These are the angles used to determine the colors |
+| Cell | CellPhases | | These are used to determine which ensemble the **Cell** belongs to |
+| Ensemble | CrystalStructures | | These are the symmetries of the ensembles, which dictate orientation operations and which color palatte is used |
 
 ## Created Arrays ##
 
-| Type  | Comment | Suggested Name |
-| ------|-------- | -------------- |
-| Cell  | The RGB colors are encoded as an unsigned char triplet  |IPFColors  |
+| Type | Name | Desription | Comment |
+|------|------|---------|-------|
+| Cell  | IPFColors | | The RGB colors are encoded as an unsigned char triplet  |
 
 ### Authors ##
 **Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)

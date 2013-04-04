@@ -1,16 +1,18 @@
-Find Surface Grains {#findsurfacegrains}
+Find Surface Fields {#findsurfacegrains}
 ==========
 
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Spatial)
 
 ## Description ##
-This filter determines whether a feature/grain touches an outer surface of the sample. This is accomplished by simply querying the feature/grain owners of the voxels/datapoints that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
-Any feature/grain that owns one of those voxels/datapoints is said to touch an outer surface and all other features/grains are said to not touch an outer surface of the sample.
+This filter determines whether a feature/grain touches an outer surface of the sample. This is accomplished by simply querying the feature/grain owners of the voxels/datapoints that sit at either xMin, xMax, yMin, yMax, zMin or zMax. Any feature/grain that owns one of those voxels/datapoints is said to touch an outer surface and all other features/grains are said to not touch an outer surface of the sample. 
+
+NOTE: If the structure/data is actually 2D, then the dimension that is planar is not considered and only the **Fields** touching the edges are considered surface **Fields**.
 
 
 
-## Parameters ## 
+## Parameters ##
+None
 
 ## Required Arrays ##
 
