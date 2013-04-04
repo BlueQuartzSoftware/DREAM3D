@@ -20,7 +20,7 @@ Jack Goldfeather, Victoria Interrante "A Novel Cubic-Order Algorithm for Approxi
 _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type | Description |
 |------|------| ----------- |

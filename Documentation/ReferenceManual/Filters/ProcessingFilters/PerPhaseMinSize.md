@@ -15,7 +15,7 @@ The iteration _coarsens_ the grains by one _voxel_ each iteration. This filter h
 only apply the filter to a single phase of the users choosing.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type | Description |
 |------|------| ------- |

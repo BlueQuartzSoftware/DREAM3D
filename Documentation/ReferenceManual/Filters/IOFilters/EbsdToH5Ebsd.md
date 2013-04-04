@@ -8,7 +8,7 @@ I/O Filters
 
 This Filter imports the Ebsd data and converts the data to HDF5 format. An input Ebsd file must be chosen, and an output file to which the converted EBSD data will be written must be named.  
 
-## Parameters ## 
+## Parameters ##
 See Notes.
 
 

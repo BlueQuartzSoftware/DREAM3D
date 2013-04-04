@@ -10,7 +10,7 @@ Sampling Filters
 This Filter allows the user to crop a volume of interest to satisfy the user goal.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

@@ -10,7 +10,7 @@ Sampling Filters
 This Filter changes the _voxel_ resolution based on inputs from the user for x, y, and/or z values.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

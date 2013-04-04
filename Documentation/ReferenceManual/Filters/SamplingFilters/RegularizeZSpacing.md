@@ -10,7 +10,7 @@ Sampling Filters
 This filter
 
 
-## Parameters ## 
+## Parameters ##
 
 <tr bgcolor="#A2A2A2">
 <th>Name | Type</th>

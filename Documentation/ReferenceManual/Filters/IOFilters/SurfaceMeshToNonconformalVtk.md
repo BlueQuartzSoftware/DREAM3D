@@ -7,7 +7,7 @@ IO Filters
 ## Description ##
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

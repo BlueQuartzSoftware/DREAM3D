@@ -12,7 +12,7 @@ The _voxels_ that are contiguous to any group of _bad voxels_ are tested to dete
 -----------------
  _In the Open/Close Filter, for the _close_ option, the __GrainID__ of the bad _voxel_ is changed to the __GrainID__ of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero __GrainID___.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -22,9 +22,9 @@ The _voxels_ that are contiguous to any group of _bad voxels_ are tested to dete
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
 None

@@ -13,7 +13,7 @@ controlled fashion. See the Xdmf web site for more details on Xdmf. The Xdmf fil
 file but with an .xdmf file extension.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

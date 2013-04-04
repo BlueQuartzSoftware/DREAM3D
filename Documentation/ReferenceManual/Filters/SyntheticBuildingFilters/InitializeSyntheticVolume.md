@@ -28,7 +28,7 @@ values the user entered.
 
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -50,8 +50,8 @@ values the user entered.
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint |  |
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. |  |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** |  |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. |  |
 
 ## Authors ##
 

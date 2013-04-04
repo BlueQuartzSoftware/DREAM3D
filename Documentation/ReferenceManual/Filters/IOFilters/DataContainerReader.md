@@ -8,7 +8,7 @@ I/O Filters
 
 The user is able to select which arrays from the DREAM3D data file to read. There are 3 types of arrays for each of the 3 types of DataContainer Objects in the file. Only the arrays that are selected by the user are read into memory.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

@@ -13,7 +13,7 @@ Because there are two criteria (space filling and neighborhood error weight) to 
 The user needs to keep in mind that large values of __Neighborhood Error Weight__ can result in changes in the grains as the Filter works to accomplish the space filling goal. The grains will overlap each other and be changed to accommodate that overlap, which means the user does not have the grains that were placed in the volume initially.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
