@@ -1,0 +1,46 @@
+Identify MicroTexture (C-Axis Misorientation) {#}
+======
+<h1 class="pHeading1">Identify MicroTexture (C-Axis Misorientation) Filter</h1>
+<p class="pCellBody">
+<a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp2">Description</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp3">Options</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp1">Authors</a> 
+
+Reconstruction Filters
+
+
+This Filter searches for neighboring grains that have c-axes commonly aligned and merges them. The user needs to first segment the grains (_EbsdSegmentGrains_ or _CAxisSegmentGrains_ Filters). Once segmented, the grains are examined for c-axis orientation and neighboring grains that have alignment within the misorientation tolerance entered by the user (1-10 degrees). After the grains are grouped together, they are merged into a microtextured region encompassing these grains.
+This Filter is similar to the _TwinMisorientation_ and _ColonyMisorientation_ Filters in the sense that grains are grouped according to some criterion.
+
+
+## Parameters ## 
+
+| Name | Type |
+|------|------|
+| C-Axis Alignment Tolerance | Double |
+
+## Required Arrays ##
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
+
+## Created Arrays ##
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Field | Active | Boolean value specifying if the feature/grain is still in the sample (1 if the feature/grain is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
+
+## Authors ##
+
+**Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+
+**Contact Info** dream3d@bluequartz.net
+
+**Version** 1.0.0
+
+**License**  See the License.txt file that came with DREAM3D.
+
+
+

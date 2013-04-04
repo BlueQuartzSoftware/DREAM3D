@@ -1,0 +1,44 @@
+Find Neighborhoods {#}
+======
+<h1 class="pHeading1">Find Neighborhoods Filter</h1>
+<p class="pCellBody">
+<a href="../StatisticsFilters/FindNeighborhoods.html#wp2">Description</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp3">Options</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp1">Authors</a> 
+
+Statistics Filters
+
+
+This Filter searches the __Cell__ and __Field__ arrays based on a user choice of distribution types to identify the __Neighborhoods__ of the __Cells__. The types available are: LogNormal, Beta, and Power.
+
+## Parameters ## 
+
+| Name | Type |
+|------|------|
+| Distribution Type | Choices |
+
+## Required Arrays ##
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | Centroids | X, Y, Z coordinates (floats) of feature/grain center of mass | Filter will calculate feature/grain centroids if not previously calculated |
+| Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the feature/grain. | Filter will calculate equivalent diameters for the features/grains if not already calculated |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+
+## Created Arrays ##
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Field | Neighborhoods | Number (int) of features/grains that have their centroid within one equivalent sphere diameter of each feature/grain | Features/grains do not need to actually touch each other, only be within a distance equal to the reference feature/grain's equivalent diameter |
+
+## Authors ##
+
+**Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+
+**Contact Info** dream3d@bluequartz.net
+
+**Version** 1.0.0
+
+**License**  See the License.txt file that came with DREAM3D.
+
+
+

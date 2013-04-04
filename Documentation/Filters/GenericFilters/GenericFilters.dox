@@ -1,32 +1,29 @@
 /*!
+
 @page genericfilters GenericFilters
 
+@subpage copyfieldarraytocellarray
 
-@subpage findgrainphases
-
-@subpage findsurfacecells
+@subpage findboundingboxgrains
 
 @subpage findcellquats
 
 @subpage findgraincentroids
 
+@subpage findgrainphases
+
+@subpage findsurfacecells
+
 @subpage findsurfacegrains
-
-@subpage findboundingboxgrains
-
-@subpage copyfieldarraytocellarray
-
-@subpage linkfieldmaptocellarray
 
 @subpage generateipfcolors
 
-@subpage renumbergrains
-
 @subpage removearrays
+
+@subpage renumbergrains
 
 @subpage renamecellarray
 
 @subpage renamefieldarray
 
 */
-

@@ -1,6 +1,6 @@
 /*!
-@page samplingfilters SamplingFilters
 
+@page samplingfilters SamplingFilters
 
 @subpage changeresolution
 
@@ -11,5 +11,4 @@
 @subpage cropvolume
 
 @subpage hex2sqrconverter
-
 */

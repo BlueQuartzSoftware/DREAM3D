@@ -1,6 +1,6 @@
 /*!
-@page surfacemeshingfilters SurfaceMeshingFilters
 
+@page surfacemeshingfilters SurfaceMeshingFilters
 
 @subpage generatesurfacemeshconnectivity
 
@@ -27,4 +27,3 @@
 @subpage grainfacecurvaturefilter
 
 */
-

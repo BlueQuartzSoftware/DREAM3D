@@ -34,9 +34,9 @@ RTF_EXTENSIONS_FILE =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-IMAGE_PATH        = @DOX_IMAGE_DIR@
+IMAGE_PATH        = @DOXYGEN_IMAGE_DIR@
 INPUT             = @DOXYGEN_INPUT_FILES@
-FILE_PATTERNS     = *.dox
+FILE_PATTERNS     = *.dox *.md
 RECURSIVE         = NO
 TAGFILES          =
 ALLEXTERNALS      = NO
@@ -63,7 +63,7 @@ HTML_OUTPUT = @DOX_OUTPUT_SUB_DIR@
 HTML_FILE_EXTENSION = .html
 HTML_HEADER =
 HTML_FOOTER =
-HTML_STYLESHEET = @DOX_TEMPLATE_DIR@/BlueQuartz.css
+HTML_STYLESHEET =
 GENERATE_HTMLHELP = NO
 CHM_FILE =
 HHC_LOCATION =

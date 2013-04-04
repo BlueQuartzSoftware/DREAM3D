@@ -1,0 +1,60 @@
+
+Moving Finite Element Smoothing {#}
+======
+<h1 class="pHeading1">Moving Finite Element Smoothing Filter</h1>
+<p class="pCellBody">
+<a href="../Surface_MeshingFilters/MovingFiniteElementSmoothing.html#wp2">Description</a>
+| <a href="../Surface_MeshingFilters/MovingFiniteElementSmoothing.html#wp3">Options</a>
+| <a href="../Surface_MeshingFilters/MovingFiniteElementSmoothing.html#wp4">Required Arrays</a>
+| <a href="../Surface_MeshingFilters/MovingFiniteElementSmoothing.html#wp5">Created Arrays</a>
+| <a href="../Surface_MeshingFilters/MovingFiniteElementSmoothing.html#wp1">Authors</a> 
+
+Surface Meshing
+
+_Kuprat, A., 2000. Modeling microstructure evolution using gradient-weighted moving
+finite elements. SIAM Journal of Scientific Computing 22, 535-560._
+The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving
+Finite Element method [SIAM].  A conformal triangular surface mesh represents the grain
+ boundary network.  The curvature at each node is computed and used as the driving
+ force for nodal motion. Additional forces are computed based on element
+ quality. The user can choose a balance between the curvature and element quality
+ forces to find a compromise between smoothness and final element quality.  Certain
+ node types can be constrained in their motion.
+ 
+ - Node Contraints .. 
+ -  Nodes on an external surface can be constrained to move in the plane of the surface.
+ -  Triple Lines can be constrained
+ -  Quad point nodes can be prevented from moving.
+ 
+
+
+## Parameters ## 
+
+| Name | Type |
+|------|------|
+
+| Iteration Steps | Integer |
+| Apply Node Contraints | Boolean (On or Off) |
+| Constrain Surface Nodes | Boolean (On or Off) |
+| Constrain Quad Points | Boolean (On or Off) |
+| Smooth Triple Lines | Boolean (On or Off) |
+
+
+## Required Arrays ##
+None
+
+
+
+
+## Created Arrays ##
+None
+
+
+
+## Authors ##
+
+Copyright 2012 Dr. Anthony Rollet, Dr. Jason Gruber, Dr. Stephen Sintay, Dr. Sukbin Lee
+Contact Info: Carnegie-Mellon University, School of Materials Engineering
+Version: 1.0.0
+License: BSD
+
