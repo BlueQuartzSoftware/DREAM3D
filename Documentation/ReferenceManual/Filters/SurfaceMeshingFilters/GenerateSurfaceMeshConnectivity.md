@@ -1,16 +1,10 @@
-Generate Surface Mesh Connectivity {#}
+Generate Surface Mesh Connectivity {#generatesurfacemeshconnectivity}
 ======
-<h1 class="pHeading1">Generate Surface Mesh Connectivity Filter</h1>
-<p class="pCellBody">
-<a href="../SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html#wp2">Description</a>
-| <a href="../SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html#wp3">Options</a>
-| <a href="../SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html#wp4">Required Arrays</a>
-| <a href="../SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html#wp5">Created Arrays</a>
-| <a href="../SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.html#wp1">Authors</a> 
 
-Surface Meshing
+## Group/Subgroup ##
+SurfaceMesh
 
-
+## Description ##
 This filter will generate the following connectivity data structures:
 __Per Vertex Triangle List__ For each vertex in the mesh a list of triangles is generated that the vertex is a part of.
 
@@ -29,14 +23,20 @@ __List of Unique Edges__ This will generate a list of unsigned 64 bit integers w
 | Genereate Unique Edge Ids | Boolean (On or Off) |
 
 ## Required Arrays ##
-None
 
+| Type | Name | Comment |
+|------|------|---------|
+| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
+| Node List | Core Property of the Surface Mesh Data Container | The shared list of nodes that make up the mesh |
 
 
 ## Created Arrays ##
 
 | Type | Name | Comment |
 |------|------|---------|
+| MeshVertLinks | Internal Data Structure |  |
+| TriangleNeighbor List | Internal Data Structure |  |
+| Unique Edges Array | Internal Data Structure |  |
 
 ## Authors ##
 
