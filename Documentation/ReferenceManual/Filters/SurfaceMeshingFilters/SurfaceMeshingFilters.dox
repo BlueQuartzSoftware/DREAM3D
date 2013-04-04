@@ -6,6 +6,8 @@
 
 @subpage generatetriangleipfcoloring
 
+@subpage grainfacecurvaturefilter
+
 @subpage laplaciansmoothing
 
 @subpage m3cslicebyslice
@@ -24,6 +26,5 @@
 
 @subpage verifytrianglewinding
 
-@subpage grainfacecurvaturefilter
 
 */

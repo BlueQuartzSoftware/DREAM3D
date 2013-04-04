@@ -118,7 +118,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters/SingleThresholdFields.md
   ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdFields.md
 #--- Filter Group ReconstructionFilters
-  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/ReconstructionFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/ReconstructionFilters.dox
   ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMisorientation.md
   ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMutualInformation.md
   ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeature.md
@@ -132,14 +132,14 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/MergeColonies.md
   ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters/GroupMicroTextureRegions.md
 #--- Filter Group SamplingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/SamplingFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/SamplingFilters.dox
   ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/ChangeResolution.md
   ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/RegularizeZSpacing.md
   ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/RotateSampleRefFrame.md
   ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/CropVolume.md
   ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters/Hex2SqrConverter.md
 #--- Filter Group StatisticsFilters
-  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/StatisticsFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/StatisticsFilters.dox
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgOrientations.md
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgCAxes.md
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindBoundaryStrengths.md
@@ -159,7 +159,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlicetoSliceRotations.md
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlipTransmissionMetrics.md
 #--- Filter Group SurfaceMeshingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.dox
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateTriangleIPFColoring.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/LaplacianSmoothing.md
@@ -173,7 +173,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/VerifyTriangleWinding.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GrainFaceCurvatureFilter.md
 #--- Filter Group SyntheticBuildingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.md
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.dox
   ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/PackPrimaryPhases.md
   ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/MatchCrystallography.md
   ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/JumbleOrientations.md
