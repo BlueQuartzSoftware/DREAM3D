@@ -4,9 +4,9 @@ Read Vtk File (STRUCTURED_POINTS) Grain Ids Only {#vtkgrainidreader}
 ## Group/Subgroup ##
 IO Filters
 
+## Description ##
 
- This filter reads an IMAGE_DATA type of 3D array from a legacy .vtk file specifically looking for the 
-"Grain Ids" array but the user can set the name of the array to try and read.
+This filter reads an IMAGE_DATA type of 3D array from a legacy .vtk file specifically looking for the Grain Ids" array but the user can set the name of the array to try and read.
 
 
 ## Parameters ## 
@@ -20,12 +20,13 @@ IO Filters
 None
 
 
-
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Cell | GrainIds |  |
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+
+
 
 ## Authors ##
 

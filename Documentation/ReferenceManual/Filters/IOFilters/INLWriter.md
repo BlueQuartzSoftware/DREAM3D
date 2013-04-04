@@ -3,6 +3,8 @@ Write INL File {#inlwriter}
 ## Group/Subgroup ##
 IO Filters
 
+## Description ##
+
 This filter writes out a file in column format that is space delimited. Header lines are denoted by the "#" character. The columns are the following:
 
 - phi1

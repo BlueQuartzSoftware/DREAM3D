@@ -22,6 +22,7 @@ This Filter changes the _voxel_ resolution based on inputs from the user for x, 
 
 | Type | Name | Description | Comment |
 |------|------|-------------|---------|
+
 ## Created Arrays ##
 None
 

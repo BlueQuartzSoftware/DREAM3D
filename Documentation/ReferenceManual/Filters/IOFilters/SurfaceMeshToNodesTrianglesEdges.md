@@ -44,18 +44,25 @@ The edges file format is as follows:
 
 | Name | Type |
 |------|------|
-| Output Nodes File | Output File |
-| Output Edges File | Output File |
-| Output Triangles File | Output File |
+| Output Nodes File | Output File Path |
+| Output Edges File | Output File Path |
+| Output Triangles File | Output File Path |
 
 ## Required Arrays ##
 
+| Type | Name | Comment |
+|------|------|---------|
+| NodeArray Attribute | SurfaceMeshNodeType | The node types values |
+| FaceArray Attribute | SurfaceMeshTriangleLabels | The Grain Id Labels for each Face(Triangle) |
+| NodeArray | | The shared node (vertex) list |
+| FaceArray | | The list of all triangles (faces) in the mesh |
+| EdgeArray | | The list of unique edges in the mesh |
 
 
 ## Created Arrays ##
+None
 
-| Type | Name | Comment |
-|------|------|---------|
+
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)

@@ -18,7 +18,8 @@ SurfaceMeshing
  is encouraged to use a smoothing operation on the surface mesh.
  
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |

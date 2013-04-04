@@ -14,7 +14,8 @@ SurfaceMesh
 This filter calculates a normal vector of length 1 (Normalized) for each triangle.
 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |
@@ -27,6 +28,7 @@ This filter calculates a normal vector of length 1 (Normalized) for each triangl
 | Type | Name | Comment |
 |------|------|---------|
 | double | SurfaceMeshTriangleNormals | 3 Component vector for each Triangle in the Mesh |
+
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)

@@ -5,6 +5,7 @@ Write Dx File (Grain Ids) {#dxwriter}
 I/O Filters
 
 
+## Description ##
 
 This Filter Writes to a Dx file. The file format is that used by the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
 For an example format, see the DXReader filter descriptions.

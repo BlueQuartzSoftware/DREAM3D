@@ -9,7 +9,8 @@ Find Average Orientations {#}
 | <a href="../Filters/FindAvgCAxes.html#wp5">Created Arrays</a>
 | <a href="../Filters/FindAvgCAxes.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |

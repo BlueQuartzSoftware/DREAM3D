@@ -4,9 +4,9 @@ Read DREAM3D Data File {#datacontainerreader}
 ## Group/Subgroup ##
 I/O Filters
 
+## Description ##
 
-The user is able to select which arrays from the DREAM3D data file to read. There are 3 types of arrays for each of the 3
- types of DataContainer Objects in the file. Only the arrays that are selected by the user are read into memory.
+The user is able to select which arrays from the DREAM3D data file to read. There are 3 types of arrays for each of the 3 types of DataContainer Objects in the file. Only the arrays that are selected by the user are read into memory.
 
 ## Parameters ## 
 
@@ -18,9 +18,7 @@ The user is able to select which arrays from the DREAM3D data file to read. Ther
 | Read Ensemble Data | Boolean (On or Off) |
 
 ## Required Arrays ##
-
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+None
 
 ## Created Arrays ##
 None

@@ -1,12 +1,12 @@
 Write Ph File (Grain Ids) {#phwriter}
 ======
+
 ## Group/Subgroup ##
 I/O Filters
 
 
-
+## Description ##
 This Filter writes to a data file in a format used by Carnegie Mellon University.  See the PhReader filter description for example data format. 
-
 
 ## Parameters ## 
 

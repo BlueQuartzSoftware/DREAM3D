@@ -9,7 +9,8 @@ Convert Hexagonal Grid Data to Square Grid Data (HEDM - .mic) {#}
 | <a href="../Filters/MicHex2SqrConverter.html#wp5">Created Arrays</a>
 | <a href="../Filters/MicHex2SqrConverter.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 None
 
@@ -19,6 +20,7 @@ None
 
 | Type | Name | Comment |
 |------|------|---------|
+
 ## Authors ##
 
 Copyright [INSERT YOUR NAME HERE]

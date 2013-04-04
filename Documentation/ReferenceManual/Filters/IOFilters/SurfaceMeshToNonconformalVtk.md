@@ -15,9 +15,13 @@ IO Filters
 | Write Binary Vtk File | Boolean (On or Off) |
 
 ## Required Arrays ##
-None
 
-
+| Type | Name | Comment |
+|------|------|---------|
+| NodeArray Attribute | SurfaceMeshNodeType | The node types values |
+| FaceArray Attribute | SurfaceMeshTriangleLabels | The Grain Id Labels for each Face(Triangle) |
+| NodeArray | | The shared node (vertex) list |
+| FaceArray | | The list of all triangles (faces) in the mesh |
 
 ## Created Arrays ##
 None

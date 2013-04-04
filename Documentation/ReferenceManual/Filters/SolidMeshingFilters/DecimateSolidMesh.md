@@ -9,7 +9,8 @@ Decimate Solid Mesh {#}
 | <a href="../Filters/DecimateSolidMesh.html#wp5">Created Arrays</a>
 | <a href="../Filters/DecimateSolidMesh.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 None
 
@@ -19,6 +20,7 @@ None
 
 | Type | Name | Comment |
 |------|------|---------|
+
 ## Authors ##
 
 Copyright [INSERT YOUR NAME HERE]

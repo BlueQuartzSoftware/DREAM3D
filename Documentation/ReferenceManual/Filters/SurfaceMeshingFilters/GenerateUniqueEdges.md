@@ -14,7 +14,8 @@ SurfaceMesh
  This will generate a list of unsigned 64 bit integers where the high 32 bits are the first vertex index and the 
  low 32 bits are the second vertex. The lowest vertex id is always listed first and therefor the Edge list becomes a unique list.
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |

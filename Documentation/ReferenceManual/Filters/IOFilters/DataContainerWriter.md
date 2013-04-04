@@ -4,6 +4,7 @@ Write DREAM3D Data File {#datacontainerwriter}
 ## Group/Subgroup ##
 IO Filters
 
+## Description ##
 
 This filter will write the contents of memory to an HDF5 based file. The user can specify which data containers to write
 to the file. For each data container all attribute data will be written to the HDF5 file. The user can also specify that
@@ -25,11 +26,9 @@ file but with an .xdmf file extension.
 None
 
 
-
 ## Created Arrays ##
+None
 
-| Type | Name | Comment |
-|------|------|---------|
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
