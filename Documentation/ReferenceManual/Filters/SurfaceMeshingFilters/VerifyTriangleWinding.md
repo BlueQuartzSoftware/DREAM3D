@@ -1,22 +1,15 @@
-Verify Triangle Winding {#}
+Verify Triangle Winding {#verifytrianglewinding}
 ======
-<h1 class="pHeading1">Verify Triangle Winding Filter</h1>
-<p class="pCellBody">
-<a href="../SurfaceMeshFilters/VerifyTriangleWinding.html#wp2">Description</a>
-| <a href="../SurfaceMeshFilters/VerifyTriangleWinding.html#wp3">Options</a>
-| <a href="../SurfaceMeshFilters/VerifyTriangleWinding.html#wp4">Required Arrays</a>
-| <a href="../SurfaceMeshFilters/VerifyTriangleWinding.html#wp5">Created Arrays</a>
-| <a href="../SurfaceMeshFilters/VerifyTriangleWinding.html#wp1">Authors</a> 
 
+## Group/Subgroup ##
 SurfaceMesh
 
-
- This filter analyzes the mesh for consistent triangle winding and fixes any inconsistencies that are found. This algorithm
- can be memory intensive for larger meshes. The algorithm is an advancing wave front type of algorithm. The algorithm is know to have
- problems if there are disconnected grains with the same ID in the surface mesh.
+## Description ##
+This filter analyzes the mesh for consistent triangle winding and fixes any inconsistencies that are found. This algorithm can be memory intensive for larger meshes. The algorithm is an advancing wave front type of algorithm. The algorithm is know to have problems if there are disconnected grains with the same ID in the surface mesh.
 
 
 ## Parameters ##
+None
 
 ## Required Arrays ##
 

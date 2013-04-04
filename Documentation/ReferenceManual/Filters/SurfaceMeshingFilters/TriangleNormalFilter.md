@@ -1,20 +1,16 @@
-Generate Triangle Normals Filter {#}
+Generate Triangle Normals Filter {#trianglenormalfilter}
 ======
-<h1 class="pHeading1">Generate Triangle Normals Filter Filter</h1>
-<p class="pCellBody">
-<a href="../SurfaceMeshFilters/TriangleNormalFilter.html#wp2">Description</a>
-| <a href="../SurfaceMeshFilters/TriangleNormalFilter.html#wp3">Options</a>
-| <a href="../SurfaceMeshFilters/TriangleNormalFilter.html#wp4">Required Arrays</a>
-| <a href="../SurfaceMeshFilters/TriangleNormalFilter.html#wp5">Created Arrays</a>
-| <a href="../SurfaceMeshFilters/TriangleNormalFilter.html#wp1">Authors</a> 
 
+
+## Group/Subgroup ##
 SurfaceMesh
 
-
+## Description ##
 This filter calculates a normal vector of length 1 (Normalized) for each triangle.
 
 
 ## Parameters ##
+None
 
 ## Required Arrays ##
 

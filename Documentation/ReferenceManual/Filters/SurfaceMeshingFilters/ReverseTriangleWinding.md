@@ -1,19 +1,11 @@
-Reverse Triangle Winding Filter {#}
+Reverse Triangle Winding Filter {#reversetrianglewinding}
 ======
-<h1 class="pHeading1">Reverse Triangle Winding Filter</h1>
-<p class="pCellBody">
-<a href="../SurfaceMeshFilters/ReverseTriangleWinding.html#wp2">Description</a>
-| <a href="../SurfaceMeshFilters/ReverseTriangleWinding.html#wp3">Options</a>
-| <a href="../SurfaceMeshFilters/ReverseTriangleWinding.html#wp4">Required Arrays</a>
-| <a href="../SurfaceMeshFilters/ReverseTriangleWinding.html#wp5">Created Arrays</a>
-| <a href="../SurfaceMeshFilters/ReverseTriangleWinding.html#wp1">Authors</a> 
 
+## Group/Subgroup ##
 SurfaceMesh
 
-
- This filter reverses the winding on each triangle. If the next filter is to compute the surface normals the user will
- notice that the normals now point in the opposite direction. Some analysis filters require the normals to be pointing
- "away" from the center of a grain. The current surface meshing algorithms tend to orient the normals pointing "into" the grain.
+## Description ##
+This filter reverses the winding on each triangle. If the next filter is to compute the surface normals the user will notice that the normals now point in the opposite direction. Some analysis filters require the normals to be pointing "away" from the center of a grain. The current surface meshing algorithms tend to orient the normals pointing "into" the grain.
 
 
 ## Parameters ##
@@ -25,9 +17,7 @@ SurfaceMesh
 | Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
 
 ## Created Arrays ##
-
-| Type | Name | Comment |
-|------|------|---------|
+None
 
 ## Authors ##
 
