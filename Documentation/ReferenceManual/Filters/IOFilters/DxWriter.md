@@ -2,7 +2,7 @@ Write Dx File (Grain Ids) {#dxwriter}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Output)
 
 
 ## Description ##
@@ -15,10 +15,10 @@ _See: www.opendx.org for more information._
 
 ## Parameters ## 
 
-| Name | Type |
-|------|------|
+| Name | Type | Comment |
+|------|------|------|
 | Output File | Output File |
-| Add Surface Layer | Boolean (On or Off) |
+| Add Surface Layer | Boolean (On or Off) | This adds and "extra layer" of **Cells** around the outside of the structure and assigns them a *GrainId* of *-3*. |
 
 
 ## Required Arrays ##

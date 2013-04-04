@@ -2,7 +2,7 @@ Find Bounding Box Grains {#findboundingboxgrains}
 =============
 
 ## Group (Subgroup) ##
-Generic Filters (Spacial)
+Generic Filters (Spatial)
 
 ## Description ##
 This filter determines which features/grains are _biased_ by the outer surfaces of the sample. Larger features/grains are more likely to intersect the outer surfaces and thus it is not sufficient to only note which features/grains touch the outer surfaces of the sample.
@@ -19,7 +19,8 @@ The algorithm for determining whether a feature/grain is _biased_ is as follows:
 By definition of the box, no feature/grain that intersects an outer surface of the sample can be considered _unbiased_, but it should be noted that features/grains that do not intersect the outer surfaces may still be considered _biased_ 
 This algorithm works to determine the biased features/grains because all features/grains have one (and only one) centroid, no matter their size. Generally, this method will deem more small features/grains biased than the set of features/grains that just intersect the outer surfaces - and this corrects for the increased likelihood that larger features/grains will touch an outer surface.
 
-## Parameters ## 
+## Parameters ##
+None
 
 ## Required Arrays ##
 
