@@ -163,7 +163,3 @@ install(DIRECTORY ${DREAM3D_SOURCE_DIR}/Help/
         DESTINATION Help/${PROJECT_NAME}/
         COMPONENT Applications )
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/Help ${PROJECT_BINARY_DIR}/Help)
-add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
-
-
