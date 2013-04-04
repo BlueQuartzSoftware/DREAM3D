@@ -16,7 +16,8 @@ SurfaceMesh
  in the array at the same index as the triangle is stored in the triangle array. 
 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |
@@ -29,6 +30,7 @@ SurfaceMesh
 | Type | Name | Comment |
 |------|------|---------|
 | int | SurfaceMeshGrainFaceId | The length of the array is the number of triangles. |
+
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)

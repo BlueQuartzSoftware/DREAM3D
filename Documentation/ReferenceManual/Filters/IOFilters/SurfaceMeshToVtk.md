@@ -30,10 +30,8 @@ will have a grain ID assigned to it.
 
 | Type | Name | Comment |
 |------|------|---------|
-| SurfaceMeshDataContainer Nodes | Nodes | The _nodes_ property of the
- SurfaceMeshDataContainer must have a list of nodes. |
-| SurfaceMeshDataContainer Triangles | Triangles | The _triangles_ property of the SurfaceMeshDataContainer must have a
-list of triangles. |
+| NodeArray | | The shared node (vertex) list |
+| FaceArray | | The list of all triangles (faces) in the mesh |
 
 ## Created Arrays ##
 None

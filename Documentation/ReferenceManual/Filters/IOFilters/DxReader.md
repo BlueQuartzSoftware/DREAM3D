@@ -3,6 +3,7 @@ Read Dx File (Grain Ids) {#dxreader}
 ## Group/Subgroup ##
 I/O Filters
 
+## Description ##
 
 ~~~~~~~~~~~~~~~
 This Filter Reads from a Dx file. This is a file in a format generated using the _OpenDX Source Software_ based on IBM's _Visualization Data Explorer_. 
@@ -57,11 +58,13 @@ _See: www.opendx.org for more information._
 | Input File | File Path |
 
 ## Required Arrays ##
-
-
+None
 
 ## Created Arrays ##
-None
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 
 

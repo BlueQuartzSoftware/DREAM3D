@@ -4,6 +4,7 @@ Import Ebsd File(s) to H5Ebsd {#ebsdtoh5ebsd}
 ## Group/Subgroup ##
 I/O Filters
 
+## Description ##
 
 This Filter imports the Ebsd data and converts the data to HDF5 format. An input Ebsd file must be chosen, and an output file to which the converted EBSD data will be written must be named.  
 
@@ -13,6 +14,7 @@ This Filter imports the Ebsd data and converts the data to HDF5 format. An input
 
 | Type | Name | Description | Comment |
 |------|------|-------------|---------|
+
 ## Created Arrays ##
 None
 

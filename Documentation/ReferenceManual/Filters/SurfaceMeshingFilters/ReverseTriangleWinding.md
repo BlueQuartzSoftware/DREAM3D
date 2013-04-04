@@ -16,7 +16,8 @@ SurfaceMesh
  "away" from the center of a grain. The current surface meshing algorithms tend to orient the normals pointing "into" the grain.
 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |
@@ -27,6 +28,7 @@ SurfaceMesh
 
 | Type | Name | Comment |
 |------|------|---------|
+
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)

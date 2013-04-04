@@ -53,6 +53,7 @@ _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 | (optional) Double | Principal Direction 2 | These are 3x1 vector for each triangle in the mesh |
 | (optional) Double | Mean Curvature |  |
 | (optional) Double | Gaussian Curvature |  |
+
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)

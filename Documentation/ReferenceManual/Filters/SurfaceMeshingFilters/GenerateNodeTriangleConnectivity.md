@@ -15,7 +15,8 @@ For each vertex in the mesh a list of triangles is generated that the vertex is 
  property of the SurfaceMeshDataContainer.
 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |
@@ -28,6 +29,7 @@ For each vertex in the mesh a list of triangles is generated that the vertex is 
 | Type | Name | Comment |
 |------|------|---------|
 | Cell | NodeTriangle List |  |
+
 ## Authors ##
 
 **Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)

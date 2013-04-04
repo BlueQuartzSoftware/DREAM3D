@@ -16,7 +16,8 @@ SurfaceMesh
  problems if there are disconnected grains with the same ID in the surface mesh.
 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |

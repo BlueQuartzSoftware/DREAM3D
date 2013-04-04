@@ -1,4 +1,3 @@
-
 Find Grain Reference C-Axis Misorientations {#}
 ======
 <h1 class="pHeading1">Find Grain Reference C-Axis Misorientations Filter</h1>
@@ -9,7 +8,8 @@ Find Grain Reference C-Axis Misorientations {#}
 | <a href="../Filters/FindGrainReferenceCAxisMisorientations.html#wp5">Created Arrays</a>
 | <a href="../Filters/FindGrainReferenceCAxisMisorientations.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
+
 ## Required Arrays ##
 
 | Type | Name | Comment |

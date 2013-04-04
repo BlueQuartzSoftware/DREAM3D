@@ -4,6 +4,7 @@ Goldfeather Reader {#goldfeatherreader}
 ## Group/Subgroup ##
 IO Filters
 
+## Description ##
 
 This class reads a surface mesh from a .jg file as supplied by Dr. Goldfeather in his paper on curvature estimation. In
 addition to the mesh is the data for the Principal Curvatures and Principal Curvature Directions.

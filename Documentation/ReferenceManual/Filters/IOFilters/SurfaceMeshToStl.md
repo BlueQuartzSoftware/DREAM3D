@@ -18,10 +18,10 @@ will be named with the [Grain_id].stl. The user can designate an optional prefix
 
 ## Required Arrays ##
 
-
-
-| Triangle List | SurfaceMesh_Triangles | The list of Triangles for the surface mesh. |
-| Node List | SurfaceMesh_Nodes | The list of Nodes for the surface mesh. |
+| Type | Name | Comment |
+|------|------|---------|
+| NodeArray | | The shared node (vertex) list |
+| FaceArray | | The list of all triangles (faces) in the mesh |
 
 ## Created Arrays ##
 None

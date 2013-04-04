@@ -44,7 +44,12 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
 None
 
 ## Created Arrays ##
-None
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+
+
 
 ## Authors ##
 
