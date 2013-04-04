@@ -57,137 +57,148 @@ set(LATEX_AUTHOR "DREAM3D Development Team")
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
 set(DOCUMENTATION_SOURCE_FILES
-  ${DOCUMENTATION_SOURCE_DIR}/UserManual/UserManual.dox
+  ${DOCUMENTATION_SOURCE_DIR}/Index.dox
+  ${DOCUMENTATION_SOURCE_DIR}/UserManual/UserManual.md
 #--- Filter Group GenericFilters
+
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/CopyFieldArrayToCellArray.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindBoundingBoxGrains.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindCellQuats.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindGrainCentroids.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindGrainPhases.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindSurfaceCells.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindSurfaceGrains.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/GenerateIPFColors.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/RemoveArrays.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/RenumberGrains.md
   ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/GenericFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindGrainPhases.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindSurfaceCells.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindCellQuats.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindGrainCentroids.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindSurfaceGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/FindBoundingBoxGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/CopyFieldArrayToCellArray.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/LinkFieldMapToCellArray.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/GenerateIPFColors.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/RenumberGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/RemoveArrays.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/RenameCellArray.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters/RenameFieldArray.dox
 #--- Filter Group IOFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/AvizoRectilinearCoordinateWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/AvizoUniformCoordinateWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DataContainerReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DataContainerWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DxReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DxWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/EbsdToH5Ebsd.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/EnsembleInfoReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/FieldDataCSVWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/FieldInfoReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/H5VoxelFileReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/INLWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/NodesTrianglesToStl.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/NodesTrianglesToVtk.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/PhReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/PhWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/ReadH5Ebsd.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToNodesTrianglesEdges.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToStl.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToVtk.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToNonconformalVtk.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/VtkRectilinearGridWriter.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/YSChoiAbaqusReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/RawBinaryReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/VtkGrainIdReader.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SolidMeshToVtk.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SPParksWriter.md
   ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/IOFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/AvizoRectilinearCoordinateWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/AvizoUniformCoordinateWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DataContainerReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DataContainerWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DxReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/DxWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/EbsdToH5Ebsd.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/EnsembleInfoReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/FieldDataCSVWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/FieldInfoReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/H5VoxelFileReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/INLWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/NodesTrianglesToStl.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/NodesTrianglesToVtk.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/PhReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/PhWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/ReadH5Ebsd.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToNodesTrianglesEdges.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToStl.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToVtk.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SurfaceMeshToNonconformalVtk.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/VtkRectilinearGridWriter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/YSChoiAbaqusReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/RawBinaryReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/VtkGrainIdReader.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SolidMeshToVtk.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters/SPParksWriter.dox
 #--- Filter Group ProcessingFilters
   ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/ProcessingFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MinNeighbors.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/FlattenImage.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MinSize.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/ClearData.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/PerPhaseMinSize.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/FillBadData.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/OpenCloseBadData.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/OpenCloseCoordinationNumber.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/ConvertEulerAngles.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/RotateEulerRefFrame.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/IdentifySample.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/SingleThresholdCells.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdCells.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/SingleThresholdFields.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdFields.dox
-#--- Filter Group ReconstructionFilters
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/ReconstructionFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMisorientation.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMutualInformation.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeature.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeatureCentroid.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsList.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/EBSDSegmentGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/ScalarSegmentGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/SegmentBetaGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/CAxisSegmentGrains.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/MergeTwins.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/MergeColonies.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/GroupMicroTextureRegions.dox
-#--- Filter Group SamplingFilters
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/SamplingFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/ChangeResolution.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/RegularizeZSpacing.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/RotateSampleRefFrame.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/CropVolume.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/Hex2SqrConverter.dox
-#--- Filter Group StatisticsFilters
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/StatisticsFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgOrientations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgCAxes.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindBoundaryStrengths.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindDeformationStatistics.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindEuclideanDistMap.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceMisorientations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceCAxisMisorientations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindKernelAvgMisorientations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/GenerateEnsembleStatistics.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindMisorientations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighborhoods.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindNumFields.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSchmids.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindShapes.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSizes.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighbors.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSlicetoSliceRotations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSlipTransmissionMetrics.dox
-#--- Filter Group SurfaceMeshingFilters
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateTriangleIPFColoring.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/LaplacianSmoothing.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/M3CSliceBySlice.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/MovingFiniteElementSmoothing.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/QuickSurfaceMesh.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/ReverseTriangleWinding.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SharedGrainFaceFilter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleCentroidFilter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleNormalFilter.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/VerifyTriangleWinding.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GrainFaceCurvatureFilter.dox
-#--- Filter Group SyntheticBuildingFilters
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/PackPrimaryPhases.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/MatchCrystallography.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/JumbleOrientations.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InsertPrecipitatePhases.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/EstablishMatrixPhase.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddBadData.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddOrientationNoise.dox
-  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InitializeSyntheticVolume.dox
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MinNeighbors.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/FlattenImage.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MinSize.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/ClearData.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/PerPhaseMinSize.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/FillBadData.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/OpenCloseBadData.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/OpenCloseCoordinationNumber.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/ConvertEulerAngles.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/RotateEulerRefFrame.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/IdentifySample.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/SingleThresholdCells.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdCells.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/SingleThresholdFields.md
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters/MultiThresholdFields.md
+##--- Filter Group ReconstructionFilters
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/ReconstructionFilters.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMisorientation.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsMutualInformation.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeature.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsFeatureCentroid.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/AlignSectionsList.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/EBSDSegmentGrains.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/ScalarSegmentGrains.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/SegmentBetaGrains.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/CAxisSegmentGrains.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/MergeTwins.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/MergeColonies.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters/GroupMicroTextureRegions.md
+##--- Filter Group SamplingFilters
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/SamplingFilters.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/ChangeResolution.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/RegularizeZSpacing.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/RotateSampleRefFrame.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/CropVolume.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters/Hex2SqrConverter.md
+##--- Filter Group StatisticsFilters
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/StatisticsFilters.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgOrientations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindAvgCAxes.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindBoundaryStrengths.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindDeformationStatistics.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindEuclideanDistMap.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceMisorientations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindGrainReferenceCAxisMisorientations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindKernelAvgMisorientations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/GenerateEnsembleStatistics.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindMisorientations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighborhoods.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindNumFields.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSchmids.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindShapes.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSizes.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindNeighbors.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSlicetoSliceRotations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters/FindSlipTransmissionMetrics.md
+##--- Filter Group SurfaceMeshingFilters
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateTriangleIPFColoring.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/LaplacianSmoothing.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/M3CSliceBySlice.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/MovingFiniteElementSmoothing.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/QuickSurfaceMesh.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/ReverseTriangleWinding.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SharedGrainFaceFilter.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleCentroidFilter.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleNormalFilter.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/VerifyTriangleWinding.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GrainFaceCurvatureFilter.md
+##--- Filter Group SyntheticBuildingFilters
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/PackPrimaryPhases.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/MatchCrystallography.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/JumbleOrientations.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InsertPrecipitatePhases.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/EstablishMatrixPhase.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddBadData.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/AddOrientationNoise.md
+#  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters/InitializeSyntheticVolume.md
 )
 
 set(LATEX_EPS_FILES
 
+)
+
+set(DOXYGEN_IMAGE_DIRS
+  ${DOCUMENTATION_SOURCE_DIR}/UserManual/Images
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/GenericFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/IOFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ProcessingFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/ReconstructionFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/SamplingFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/StatisticsFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/SurfaceMeshingFilters
+  ${DOCUMENTATION_SOURCE_DIR}/Filters/SyntheticBuildingFilters
 )
 
 if(DOX_GENERATE_LATEX)
@@ -202,13 +213,13 @@ if(DOX_GENERATE_LATEX)
                      GENERATE_LATEX "YES"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${DOCUMENTATION_SOURCE_DIR}/Images"
+                     IMAGE_DIR "${DOXYGEN_IMAGE_DIRS}"
                      OUTPUT_DIR "${DREAM3DProj_BINARY_DIR}/Documentation/${PROJECT_NAME}"
                      OUTPUT_SUB_DIR "latex")
 endif()
 
 set(DOCUMENTATION_SOURCE_FILES
-        ${PROJECT_SOURCE_DIR}/index.dox
+        ${PROJECT_SOURCE_DIR}/index.md
         ${DOCUMENTATION_SOURCE_FILES})
 
 
@@ -224,7 +235,7 @@ if(DOX_GENERATE_HTML)
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${DOCUMENTATION_SOURCE_DIR}/UserManual/Images"
+                     IMAGE_DIR "${DOXYGEN_IMAGE_DIRS}"
                      OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help"
                      OUTPUT_SUB_DIR "DREAM3D")
 endif()
@@ -241,7 +252,7 @@ if(DOX_GENERATE_RTF)
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "YES"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images"
+                     IMAGE_DIR "${DOXYGEN_IMAGE_DIRS}"
                      OUTPUT_DIR "${PROJECT_BINARY_DIR}/DREAM3D_RTF")
 endif()
 

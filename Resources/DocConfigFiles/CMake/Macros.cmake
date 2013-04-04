@@ -12,9 +12,9 @@
 
 function(ADD_DOXYGEN_TARGETS)
     set(options )
-    set(oneValueArgs  PDF_FILENAME PROJECT_NAME PROJECT_BINARY_DIR IMAGE_DIR OUTPUT_DIR OUTPUT_SUB_DIR
+    set(oneValueArgs  PDF_FILENAME PROJECT_NAME PROJECT_BINARY_DIR OUTPUT_DIR OUTPUT_SUB_DIR
                       TITLE AUTHOR GENERATE_HTML GENERATE_LATEX GENERATE_RTF TEMPLATE_DIR )
-    set(multiValueArgs SOURCE_FILES EPS_FILES )
+    set(multiValueArgs SOURCE_FILES EPS_FILES IMAGE_DIR)
     cmake_parse_arguments(DOX "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     if("${DOX_OUTPUT_DIR}" STREQUAL "")
       message(FATAL_ERROR "DOX_OUTPUT_DIR Variable MUST be set and it is empty")
@@ -36,6 +36,7 @@ function(ADD_DOXYGEN_TARGETS)
     set(OUTPUT_SUB_DIR ${OUTPUT_SUB_DIR})
 
     STRING(REPLACE ";" " " DOXYGEN_INPUT_FILES "${DOX_SOURCE_FILES}"  )
+    STRING(REPLACE ";" " " DOXYGEN_IMAGE_DIR "${DOX_IMAGE_DIR}"  )
 
     set(DOXYFILE ${DOX_PROJECT_NAME}_Doxyfile)
     if(DOX_GENERATE_LATEX STREQUAL "YES")
