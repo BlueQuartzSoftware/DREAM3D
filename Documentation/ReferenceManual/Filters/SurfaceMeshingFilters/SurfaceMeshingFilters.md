@@ -46,26 +46,26 @@ In the filter documentation the following terminology will be used:
 
 ## Filter List
 
-[Generate Surface Mesh Connectivity](@ref generatesurfacemeshconnectivity)
+@subpage generatesurfacemeshconnectivity
 
-[Generate Triangle IPF Coloring](@ref generatetriangleipfcoloring)
+@subpage generatetriangleipfcoloring
 
-[Grain Face Curvature](@ref grainfacecurvaturefilter)
+@subpage grainfacecurvaturefilter
 
-[Laplacian Smoothing](@ref laplaciansmoothing)
+@subpage laplaciansmoothing
 
-[Multi-Material Marching Cubes (Slice at a Time)](@ref m3cslicebyslice)
+@subpage m3cslicebyslice
 
-[Moving Finite Element Smoothing](@ref movingfiniteelementsmoothing)
+@subpage movingfiniteelementsmoothing
 
-[Quick Surface Mesh](@ref quicksurfacemesh)
+@subpage quicksurfacemesh
 
-[Reverse Triangle Winding](@ref reversetrianglewinding)
+@subpage reversetrianglewinding
 
-[Shared Grain Face](@ref sharedgrainfacefilter)
+@subpage sharedgrainfacefilter
 
-[Generate Triangle Centroids](@ref trianglecentroidfilter)
+@subpage trianglecentroidfilter
 
-[Generate Triangle Normals](@ref trianglenormalfilter)
+@subpage trianglenormalfilter
 
-[Verify Triangle Winding](@ref verifytrianglewinding)
+@subpage verifytrianglewinding
