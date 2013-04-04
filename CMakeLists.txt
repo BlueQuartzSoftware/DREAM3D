@@ -384,8 +384,16 @@ if(DREAM3D_BUILD_TESTING)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 
+#-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-include(${PROJECT_SOURCE_DIR}/Documentation/CMakeLists.txt)
+FIND_PACKAGE(Doxygen)
+if(NOT DOXYGEN_FOUND)
+      message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
+else()
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
+endif()
+
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)

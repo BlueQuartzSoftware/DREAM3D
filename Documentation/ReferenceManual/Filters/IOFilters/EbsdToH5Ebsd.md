@@ -1,0 +1,30 @@
+Import Ebsd File(s) to H5Ebsd {#EbsdToH5Ebsd}
+======
+
+## Group/Subgroup ##
+I/O Filters
+
+
+This Filter imports the Ebsd data and converts the data to HDF5 format. An input Ebsd file must be chosen, and an output file to which the converted EBSD data will be written must be named.  
+
+## Parameters ## 
+
+## Required Arrays ##
+
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+## Created Arrays ##
+None
+
+## Authors ##
+
+**Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+
+**Contact Info** dream3d@bluequartz.net
+
+**Version** 1.0.0
+
+**License**  See the License.txt file that came with DREAM3D.
+
+
+
