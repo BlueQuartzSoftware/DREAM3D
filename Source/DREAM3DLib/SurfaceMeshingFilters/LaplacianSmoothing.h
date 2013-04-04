@@ -93,13 +93,13 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
+   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Laplacian Smoothing Filter"; }
+    virtual const std::string getHumanLabel() { return "Laplacian Smoothing"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
