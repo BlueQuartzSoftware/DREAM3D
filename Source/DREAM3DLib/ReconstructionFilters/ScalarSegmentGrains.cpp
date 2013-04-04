@@ -184,8 +184,14 @@ bool compareData(IDataArray::Pointer inputData, int referencepoint, int neighbor
   if(numComp > 1) return group;
 
 
-  if((sPtr[referencepoint]-sPtr[neighborpoint]) >= 0 && (sPtr[referencepoint]-sPtr[neighborpoint]) <= tol) group = true;
-  else if((sPtr[referencepoint]-sPtr[neighborpoint]) < 0 && (sPtr[referencepoint]-sPtr[neighborpoint]) >= -tol) group = true;
+  if(sPtr[referencepoint] >= sPtr[neighborpoint])
+  {
+	if ((sPtr[referencepoint]-sPtr[neighborpoint]) <= tol) group = true;
+  }
+  else
+  {
+	if ((sPtr[neighborpoint]-sPtr[referencepoint]) <= tol) group = true;
+  }
   return group;
 }
 
