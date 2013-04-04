@@ -9,7 +9,7 @@ This filter reads information about the features/grains that are in the sample. 
  columnar formatted data listing: Grain Id, PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.
  *If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine.<br/>
 
-__Feature/Grain Ids start from One (1) and Phase Ids start from One (1).
+__**Field** Ids start from One (1) and Phase Ids start from One (1).
 DREAM3D uses Grain Id Zero(0) internally which has several ramifications which the user needs to understand. Statistics
 will _NOT_ be calculated for any voxel or field data with a value of Zero (0). If your segmented data numbering
 starts with Zero (0) then the user needs to find a way to renumber Grain=0 to another value. Max + 1 typically.__
@@ -31,7 +31,7 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
  not be created.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -42,16 +42,16 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z) |  |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint |  |
-| Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each feature/grain in Bunge convention (Z-X-Z) |  |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain |  |
+| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |  |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** |  |
+| Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each **Field** in Bunge convention (Z-X-Z) |  |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** |  |
 
 ## Authors ##
 

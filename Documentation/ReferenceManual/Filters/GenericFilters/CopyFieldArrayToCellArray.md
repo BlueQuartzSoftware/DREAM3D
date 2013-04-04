@@ -8,7 +8,6 @@ Generic Filters (Memory/Management)
 This filter copies the values associated with a **Field** to all the **Cells** that belong to that **Field**.
 
 ## Parameters ##
-
 | Name | Type |
 |------|------|
 | Field Array Name | String |

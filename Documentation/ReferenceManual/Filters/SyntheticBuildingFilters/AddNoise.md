@@ -36,7 +36,7 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 <a name="wp2"> </a>## Description ##
 
 
-<a name="wp3"> </a>## Parameters ## 
+<a name="wp3"> </a>## Parameters ##
 <a name="wp4"> </a>## Required Arrays ##
 
 | Type | Name | Comment |

@@ -24,7 +24,7 @@ grid .ang files. Then use the "Import Ebsd Data to H5Ebsd file" filter to import
 into a .h5ebsd file archive.
 
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 

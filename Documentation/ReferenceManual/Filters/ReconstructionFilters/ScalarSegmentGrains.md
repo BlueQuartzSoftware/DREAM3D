@@ -10,7 +10,7 @@ Segment Grains (Misorientation) {#}
 | <a href="../Filters/ScalarSegmentGrains.html#wp5">Created Arrays</a>
 | <a href="../Filters/ScalarSegmentGrains.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

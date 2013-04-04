@@ -8,7 +8,7 @@ Processing Filters
 This filter writes Zeros (0) into every element of every Voxel Array.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

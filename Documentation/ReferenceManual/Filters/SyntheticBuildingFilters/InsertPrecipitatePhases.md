@@ -11,7 +11,7 @@ If precipitate phases have been included in the _Statistics_ file used by the _I
  Periodic Boundary conditions are selected by the user to be active or inactive. <BR>
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

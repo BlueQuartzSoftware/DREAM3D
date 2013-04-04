@@ -4,27 +4,28 @@ Find Surface Cells {#findsurfacecells}
 Generic Filters (Spatial)
 
 ## Description ##
-This Filter determines, for each voxel/datapoint, the number of neighboring voxels/datapoints that are owned by a different feature/grain.  The algorithm for determining this is as follows: 
+This Filter determines, for each **Cell**, the number of neighboring voxels/datapoints that are owned by a different **Field**.  The algorithm for determining this is as follows: 
 
-1) Identify the feature/grain to which a voxel/datapoint belongs
+1) Identify the **Field** to which a **Cell** belongs
 2) Identify the features/grains to which each of the current voxel's six (6) face-face neighboring voxels (front, back, left, right, up, down) belong
-3) Determine the number of those neighboring voxels/datapoints belonging to a different feature/grain than the current voxel/datapoint. 
+3) Determine the number of those neighboring voxels/datapoints belonging to a different **Field** than the current **Cell**. 
 4) Repeat 1-3 for all voxels/datapoints
 
 ## Parameters ##
 None
 
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring voxels/datapoints of a given voxel/datapoint that belong to a different feature/grain than itself. Values will range from *0* to *6* |  |
+| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
 
 ## Authors ##
 

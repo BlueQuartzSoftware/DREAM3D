@@ -9,7 +9,7 @@ Synthetic Builder Filters
 
 This Filter searches for the crystal structures present and finds where matches occur in the synthetic volume. The _Initialize Synthetic Volume_ Filter must be run before this Filter will function properly, because that Filter generates the Statistics needed by this Filter. __GrainIds__ are also needed and must have been generated in other Synthetic Builder Filters.
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 

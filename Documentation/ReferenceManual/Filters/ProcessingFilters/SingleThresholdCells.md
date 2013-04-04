@@ -14,7 +14,7 @@ This filter allows the user to select a specific array and apply a comparison op
  boolean array.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

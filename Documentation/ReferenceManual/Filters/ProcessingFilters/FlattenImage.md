@@ -7,7 +7,7 @@ Processing Filters
 ## Description ##
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
