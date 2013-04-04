@@ -1,4 +1,3 @@
-
 Reverse Triangle Winding Filter {#}
 ======
 <h1 class="pHeading1">Reverse Triangle Winding Filter</h1>

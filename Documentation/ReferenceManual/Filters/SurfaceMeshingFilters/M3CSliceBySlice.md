@@ -1,4 +1,3 @@
-
 Multi-Material Marching Cubes (Slice at a Time) {#}
 ======
 <h1 class="pHeading1">Multi-Material Marching Cubes (Slice at a Time)</h1>

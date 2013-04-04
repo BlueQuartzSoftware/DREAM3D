@@ -1,4 +1,3 @@
-
 Grain Face Curvature Filter {#}
 ======
 <h1 class="pHeading1">Grain Face Curvature Filter</h1>

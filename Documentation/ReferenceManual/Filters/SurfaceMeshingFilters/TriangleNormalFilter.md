@@ -1,4 +1,3 @@
-
 Generate Triangle Normals Filter {#}
 ======
 <h1 class="pHeading1">Generate Triangle Normals Filter Filter</h1>

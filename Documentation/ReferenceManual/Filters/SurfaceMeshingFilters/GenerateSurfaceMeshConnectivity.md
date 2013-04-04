@@ -1,4 +1,3 @@
-
 Generate Surface Mesh Connectivity {#}
 ======
 <h1 class="pHeading1">Generate Surface Mesh Connectivity Filter</h1>

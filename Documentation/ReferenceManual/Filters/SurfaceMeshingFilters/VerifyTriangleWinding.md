@@ -1,4 +1,3 @@
-
 Verify Triangle Winding {#}
 ======
 <h1 class="pHeading1">Verify Triangle Winding Filter</h1>
