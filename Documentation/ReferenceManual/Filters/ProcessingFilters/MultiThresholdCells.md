@@ -1,7 +1,7 @@
 Multi Threshold (Cell Data) {#multithresholdcells}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

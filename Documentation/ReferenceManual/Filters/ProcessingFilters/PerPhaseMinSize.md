@@ -1,7 +1,7 @@
 Minimum Size Filter (Per Phase) {#perphaseminsize}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##
@@ -24,8 +24,8 @@ only apply the filter to a single phase of the users choosing.
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | CellPhases |  | |
 | Cell | GrainIds |  | |
 | Field | FieldPhases |  |  |

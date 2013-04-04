@@ -1,7 +1,7 @@
 Moving Finite Element Smoothing {#movingfiniteelementsmoothing}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

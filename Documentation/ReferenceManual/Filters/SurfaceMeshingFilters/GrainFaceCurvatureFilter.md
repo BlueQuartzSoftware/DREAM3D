@@ -1,7 +1,7 @@
 Grain Face Curvature Filter {#grainfacecurvaturefilter}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

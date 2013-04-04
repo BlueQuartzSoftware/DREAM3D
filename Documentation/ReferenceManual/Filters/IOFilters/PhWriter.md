@@ -1,7 +1,7 @@
 Write Ph File (Grain Ids) {#phwriter}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 I/O Filters
 
 
@@ -16,8 +16,8 @@ This Filter writes to a data file in a format used by Carnegie Mellon University
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##

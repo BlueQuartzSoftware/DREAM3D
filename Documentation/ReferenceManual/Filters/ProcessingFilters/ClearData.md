@@ -1,7 +1,7 @@
 Clear Data {#cleardata}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

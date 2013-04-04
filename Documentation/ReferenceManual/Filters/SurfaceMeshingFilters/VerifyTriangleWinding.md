@@ -1,7 +1,7 @@
 Verify Triangle Winding {#verifytrianglewinding}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

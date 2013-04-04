@@ -1,6 +1,6 @@
 Read Ensemble Info File {#ensembleinforeader}
 ======
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##
@@ -31,11 +31,10 @@ __Phase numbering starts at One (1). Phase Zero (0) is reserved for internal use
 For example if you have a structure that has 2 phases that consist of a Cubic Primary
 phase and a Hexagonal Matrix phase the file would be the following:
 
-<pre>
-2
-1  1  0
-2  0  3
-</pre>
+
+    2
+    1  1  0
+    2  0  3
 
 
 ## Parameters ## 
@@ -49,8 +48,8 @@ None
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) |  |
 | Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  |
 

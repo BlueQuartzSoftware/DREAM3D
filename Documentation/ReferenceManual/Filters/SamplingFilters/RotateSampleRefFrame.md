@@ -21,8 +21,8 @@ Sampling
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 
 ## Created Arrays ##
 None

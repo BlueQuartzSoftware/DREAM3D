@@ -1,14 +1,14 @@
-/*!
+
  *
 
-@page h5voxelvolume HDF5 Voxel File (.h5voxel)
+h5voxelvolume HDF5 Voxel File (.h5voxel)
 
 
-@section h1 Introduction
+## h1 Introduction
   The Voxel data from the Reconstruction Module is stored in an HDF5 file for use
 in the MicrostructureStatistics Module.
 
-@section h2 HDF5 File Layout
+## h2 HDF5 File Layout
 
 @code
 /-|
@@ -25,22 +25,22 @@ in the MicrostructureStatistics Module.
          |-"PhaseType" HDF Dataset
 @endcode
 
-@section h3 Detailed Description
+## h3 Detailed Description
 
-@li The <b>VoxelData</b> group has 2 attributes which are
+- The **VoxelData** group has 2 attributes which are
 
 <table border>
-<tr><td><b>Attribute Name</b></td><td><b>Attribute Value</b></td></tr>
+<tr><td>**Attribute Name**</td><td>**Attribute Value**</td></tr>
 <tr><td>NUM_POINTS</td><td>64 Bit Int: Total Number of points (nPoints)</td></tr>
 <tr><td>VTK_DATA_OBJECT</td><td>String with Value "VTK_STRUCTURED_POINTS"</td></tr>
 </table>
 
-@li Datasets in the <b>VoxelData</b> group include:
+- Datasets in the **VoxelData** group include:
 
   <table border>
   <tr>
-      <td><b> Dataset Name </b></td>
-      <td><b> Description </b></td>
+      <td>** Dataset Name **</td>
+      <td>** Description **</td>
    </tr>
 
    <tr>
@@ -58,11 +58,11 @@ in the MicrostructureStatistics Module.
    </table>
 
 
-@li Groups in the <b>VoxelData</b> group include:
+- Groups in the **VoxelData** group include:
 
  <table border>
   <tr>
-      <td><b>Group Name </b></td><td><b>Attribute Name:Value</b></td>
+      <td>**Group Name **</td><td>**Attribute Name:Value**</td>
    </tr>
   <tr>
       <td>FIELD_DATA</td>
@@ -74,12 +74,12 @@ in the MicrostructureStatistics Module.
    </tr>
    </table>
 
-@li Datasets in the <b>SCALARS</b> Group include:
+- Datasets in the **SCALARS** Group include:
 
   <table border>
   <tr>
-      <td><b> Dataset Name </b></td>
-      <td><b> Description </b></td>
+      <td>** Dataset Name **</td>
+      <td>** Description **</td>
    </tr>
 
    <tr>
@@ -96,12 +96,12 @@ in the MicrostructureStatistics Module.
    </tr>
    </table>
 
-@li Datasets in the <b>FIELD_DATA</b> Group include:
+- Datasets in the **FIELD_DATA** Group include:
 
   <table border>
   <tr>
-      <td><b> Dataset Name </b></td>
-      <td><b> Description </b></td>
+      <td>** Dataset Name **</td>
+      <td>** Description **</td>
    </tr>
 
    <tr>
@@ -119,7 +119,7 @@ in the MicrostructureStatistics Module.
 
    </table>
 
-@section h4 Enumeration Values for the Crystal Structure
+## h4 Enumeration Values for the Crystal Structure
 
 @code
     enum CrystalStructure {
@@ -131,7 +131,7 @@ in the MicrostructureStatistics Module.
     };
 @endcode
 
-@section h5 Enumeration Values for the Phase Type
+## h5 Enumeration Values for the Phase Type
 
 @code
     enum PhaseType {
@@ -143,4 +143,4 @@ in the MicrostructureStatistics Module.
 @endcode
 
 
- */
+ 

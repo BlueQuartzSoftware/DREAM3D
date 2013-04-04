@@ -1,7 +1,7 @@
 Nodes & Triangles To Stl File {#nodestrianglestostl}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 IO Filters
 
 ## Description ##

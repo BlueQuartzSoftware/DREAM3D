@@ -1,7 +1,7 @@
 Standardize Euler Angles {#standardizeeulerangles}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 Processing Filters
 
 ## Description ##

@@ -1,7 +1,7 @@
 Generate Triangle Centroids {#trianglecentroidfilter}
 ======
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

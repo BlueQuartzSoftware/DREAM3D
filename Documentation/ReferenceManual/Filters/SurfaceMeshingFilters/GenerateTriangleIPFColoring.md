@@ -1,7 +1,7 @@
 Generate Triangle IPF Coloring {#generatetriangleipfcoloring}
 ======================
 
-## Group/Subgroup ##
+## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##

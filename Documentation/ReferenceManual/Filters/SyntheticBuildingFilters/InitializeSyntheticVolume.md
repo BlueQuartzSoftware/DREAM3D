@@ -42,14 +42,14 @@ values the user entered.
 
 ## Required Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the features/grains of each Ensemble/phase (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
 
 ## Created Arrays ##
 
-| Type | Name | Description | Comment |
-|------|------|-------------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Cell | CellPhases | Phase Id (int) specifying the phase of the voxel/datapoint |  |
 | Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. |  |
 
