@@ -10,7 +10,7 @@ Statistics Filters
 This Filter finds the _deformation statistics_ by using data from the __Cells__ and the __Fields__. 
 The Outputs are a Deformation Statistics file and a VTK file.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

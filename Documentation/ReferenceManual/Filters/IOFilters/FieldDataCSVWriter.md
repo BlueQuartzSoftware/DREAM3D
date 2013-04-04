@@ -9,7 +9,7 @@ I/O Filters
 This Filter writes the __Field__ data, using a filename input by the user, to an output file in _CSV_ format.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

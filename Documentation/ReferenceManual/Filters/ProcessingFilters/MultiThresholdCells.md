@@ -17,7 +17,7 @@ This filter is similar to the <a href="SingleThresholdCells.html">SingleThreshol
  &gt 120.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

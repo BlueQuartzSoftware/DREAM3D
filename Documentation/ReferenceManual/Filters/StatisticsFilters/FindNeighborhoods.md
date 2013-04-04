@@ -9,7 +9,7 @@ Statistics Filters
 
 This Filter searches the __Cell__ and __Field__ arrays based on a user choice of distribution types to identify the __Neighborhoods__ of the __Cells__. The types available are: LogNormal, Beta, and Power.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -19,16 +19,16 @@ This Filter searches the __Cell__ and __Field__ arrays based on a user choice of
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | Centroids | X, Y, Z coordinates (floats) of feature/grain center of mass | Filter will calculate feature/grain centroids if not previously calculated |
-| Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the feature/grain. | Filter will calculate equivalent diameters for the features/grains if not already calculated |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will determine feature/grain phases if not previously determined |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | Centroids | X, Y, Z coordinates (floats) of **Field** center of mass | Filter will calculate **Field** centroids if not previously calculated |
+| Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Field**. | Filter will calculate equivalent diameters for the features/grains if not already calculated |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Neighborhoods | Number (int) of features/grains that have their centroid within one equivalent sphere diameter of each feature/grain | Features/grains do not need to actually touch each other, only be within a distance equal to the reference feature/grain's equivalent diameter |
+| Field | Neighborhoods | Number (int) of features/grains that have their centroid within one equivalent sphere diameter of each **Field** | Features/grains do not need to actually touch each other, only be within a distance equal to the reference **Field**'s equivalent diameter |
 
 ## Authors ##
 

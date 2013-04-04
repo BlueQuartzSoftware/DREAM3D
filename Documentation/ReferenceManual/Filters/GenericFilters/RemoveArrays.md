@@ -5,10 +5,7 @@ Delete Arrays {#removearrays}
 Generic Filters (Memory/Management)
 
 ## Description ##
-This filter allows the user to remove specified arrays from the pipeline by deleting them from memory. This can be helpful
-if the user has operations that need as much memory as possible and there are extra arrays that are not needed residing
-in memory. For example when creating a surface mesh one typically only needs an array that defines the structure of the
-volume and then afterwards can be safely deleted.
+This filter allows the user to remove specified arrays from the pipeline by deleting them from memory. This can be helpful if the user has operations that need as much memory as possible and there are extra arrays that are not needed residing in memory. For example when creating a surface mesh one typically only needs an array that defines the structure of the volume and then afterwards can be safely deleted.
 
 
 ## Parameters ##
@@ -16,6 +13,7 @@ volume and then afterwards can be safely deleted.
 | Name | Type |
 |------|------|
 | Arrays to Delete | String(s) |
+
 
 ## Required Arrays ##
 

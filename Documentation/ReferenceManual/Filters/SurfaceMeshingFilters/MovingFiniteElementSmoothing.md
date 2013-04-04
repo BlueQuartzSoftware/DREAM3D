@@ -16,7 +16,7 @@ The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient 
  
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

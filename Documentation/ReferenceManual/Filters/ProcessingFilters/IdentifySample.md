@@ -8,7 +8,7 @@ Processing Filters
 This Filter utilizes __Cell__ __GoodVoxels__ to identify the sample.
 
 
-## Parameters ## 
+## Parameters ##
 None
 
 ## Required Arrays ##

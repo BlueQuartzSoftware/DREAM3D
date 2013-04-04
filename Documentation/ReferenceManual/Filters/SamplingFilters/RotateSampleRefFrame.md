@@ -12,7 +12,7 @@ Rotate Sample Reference Frame {#}
 Sampling
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

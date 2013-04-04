@@ -5,24 +5,25 @@ Find Field Centroids {#findgraincentroids}
 Generic Filters (Misc)
 
 ## Description ##
-This filter calculates the _centroid_ of each feature/grain by determining the average x, y, and z position of all the voxels/datapoints belonging to the feature/grain. 
-Note that features/grains that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the feature/grain that lies inside the sample.
+This filter calculates the _centroid_ of each **Field** by determining the average x, y, and z position of all the voxels/datapoints belonging to the **Field**. 
+Note that features/grains that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Field** that lies inside the sample.
 
 
 ## Parameters ##
+
 None
 
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Centroids | X, Y, Z coordinates (floats) of feature/grain center of mass |  |
+| Field | Centroids | X, Y, Z coordinates (floats) of **Field** center of mass |  |
 
 ## Authors ##
 

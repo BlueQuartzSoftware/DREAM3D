@@ -10,7 +10,7 @@ I/O Filters
 This Filter reads from the _H5 Ebsd_ file the __Cell__ _Euler_ angles, the __Cell__ __Phases__, the __Cell__ __GoodVoxels__, and the __Ensemble__ __Crystalstructures__.
 
 
-## Parameters ## 
+## Parameters ##
 
 ## Required Arrays ##
 None

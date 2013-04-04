@@ -18,7 +18,7 @@ will have a grain ID assigned to it.
 
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|

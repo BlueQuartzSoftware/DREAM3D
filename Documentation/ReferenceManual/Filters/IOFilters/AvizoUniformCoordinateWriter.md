@@ -8,7 +8,7 @@ I/O Filters
 
 This filter writes out a native Avizo Uniform Coordinate data file.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -19,7 +19,7 @@ This filter writes out a native Avizo Uniform Coordinate data file.
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | GrainIds | Ids (ints) that specify to which feature/grain each voxel/datapoint belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 None

@@ -7,18 +7,18 @@ Find Schmid Factors {#}
 Statistics Filters
 
 
-This filter calculates the Schmid Factor of each feature/grain given its average orientation and a user defined loading axis.
+This filter calculates the Schmid Factor of each **Field** given its average orientation and a user defined loading axis.
 The Schmid Factor is the combination of the component of the axial force F that lies parallel to the slip direction and the component 
 that lies perpendicular to the slip plane.  The equation for the Schmid Factor is given as:
 
 Schmid Factor = (cos φ cos λ)
 *The angle φ is the angle between the tensile axis and the slip plane normal, and λ is the angle between the tensile axis and the slip direction in the slip plane.*
  
-The filter determines the Schmid Factor for each feature/grain by using the above equation for all possible slip systems (given the feature/grain's crystal structure).  The largest 
-Schmid Factor from all of the slip systems is stored for the feature/grain.
+The filter determines the Schmid Factor for each **Field** by using the above equation for all possible slip systems (given the **Field**'s crystal structure).  The largest 
+Schmid Factor from all of the slip systems is stored for the **Field**.
 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------| Description |
@@ -30,8 +30,8 @@ Schmid Factor from all of the slip systems is stored for the feature/grain.
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the feature/grain in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the feature/grain | Filter will calculate feature/grain phases if not already calculated. |
+| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for features/grains if not already calculated. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will calculate **Field** phases if not already calculated. |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##

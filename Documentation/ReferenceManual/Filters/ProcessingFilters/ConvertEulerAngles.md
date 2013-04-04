@@ -16,7 +16,7 @@ If the wrong unit is input, the Filter has no way to determine whether or not it
 If unsure about the unit used, check with the software supplier. 
 Additionally, there may be user Filters added that use degrees and not radians. This Filter handles those situations. BUT, again, the user must know what the angle unit is before applying this Filter.
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
@@ -26,7 +26,7 @@ Additionally, there may be user Filters added that use degrees and not radians. 
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the voxel/datapoint in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 
 ## Created Arrays ##
 None

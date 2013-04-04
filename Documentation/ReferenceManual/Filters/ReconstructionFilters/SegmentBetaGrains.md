@@ -9,7 +9,7 @@ Segment Grains (Misorientation) {#}
 | <a href="../Filters/SegmentBetaGrains.html#wp5">Created Arrays</a>
 | <a href="../Filters/SegmentBetaGrains.html#wp1">Authors</a> 
 
-## Parameters ## 
+## Parameters ##
 
 | Name | Type |
 |------|------|
