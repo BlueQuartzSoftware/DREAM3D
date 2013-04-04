@@ -2,11 +2,12 @@ Find Cell Quaternions {#findcellquats}
 =======
 
 ## Group (Subgroup) ##
-Generic Filters
+Generic Filters (Misc)
 
 ## Description ##
+
 This filter determines the _quaternions_ for each **Cell**, given the _Euler_ angles for the **Cell**. 
-The _quaternions_ calculated are rotated such that they all lie within the _Fundamental Zone (FZ) _ nearest to the origin of orientation space for the crystal structure of the **Cell**'s phase.
+The _quaternions_ calculated are rotated such that they all lie within the *Fundamental Zone (FZ)* nearest to the origin of orientation space for the crystal structure of the **Cell**'s phase.
 The FZ is the region of orientation space that contains general positions on which the symmetry operations of the structure cannot operate to generate other positions within the region that are symmetrically equivalent. 
  
 

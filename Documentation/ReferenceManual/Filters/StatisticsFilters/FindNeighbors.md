@@ -2,7 +2,7 @@ Find Neighbors {#findneighbors}
 ==========
 
 ## Group (Subgroup) ##
-Generic Filters
+Statistics Filters (Morphological)
 
 ## Description ##
 This Filter determines, for each **Field**, the number of other features/grains that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Field** is as follows: 
@@ -29,7 +29,7 @@ The filter also notes which features/grains touch the outer surface of the sampl
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring voxels/datapoints of a given **Cell** that belong to a different **Field** than itself |  |
+| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
 | Field | NumNeighbors | Value (int) equal to the number of contiguous neighboring features/grains for a given **Field** |  |
 | Field | SurfaceFields | Boolean flag equal to 1 if the **Field** touches an outer surface of the sample and equal to 0 if it does not. |  |
 
