@@ -678,15 +678,13 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 {
+  QString appPath = qApp->applicationDirPath();
 
-  QDir helpDir = QDir(qApp->applicationDirPath());
+  QDir helpDir = QDir(appPath);
   QString s("file://");
 
 #if defined(Q_OS_WIN)
-//  if (helpDir.cd("Help") )
-//  {
-//    s = helpDir.absolutePath();
-//  }
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
   if (helpDir.dirName() == "MacOS")
   {
@@ -699,12 +697,12 @@ QUrl PipelineBuilderWidget::htmlHelpIndexFile()
   helpDir.cdUp();
 #endif
 
-  if (helpDir.cd("Help") )
-  {
-    s = s + helpDir.absolutePath();
-  }
-
-  s = s + "/DREAM3D/index.html";
+  s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
+//  if (helpDir.cd("Help") )
+//  {
+//    s = s + helpDir.absolutePath();
+//  }
+//  s = s + "/DREAM3D/index.html";
   return QUrl(s);
 }
 
@@ -715,10 +713,14 @@ QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
    // m_HelpDialog->setContentFile(htmlHelpIndexFile());
-   bool didOpen = QDesktopServices::openUrl(htmlHelpIndexFile());
+   QUrl url = htmlHelpIndexFile();
+   bool didOpen = QDesktopServices::openUrl(url);
    if(false == didOpen)
    {
-     std::cout << "Could not open URL: " << htmlHelpIndexFile().path().toStdString() << std::endl;
+   //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
+       displayDialogBox(QString::fromStdString("Error Opening Help File"),
+         QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
+         QMessageBox::Critical);
    }
 }
 
