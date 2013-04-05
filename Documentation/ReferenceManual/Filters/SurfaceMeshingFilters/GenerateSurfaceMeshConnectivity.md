@@ -6,6 +6,7 @@ SurfaceMesh
 
 ## Description ##
 This filter will generate the following connectivity data structures:
+
 __Per Vertex Triangle List__ For each vertex in the mesh a list of triangles is generated that the vertex is a part of.
 
 __Per Triangle Neighbor List__ For each triangle in the mesh a list of triangles that share a common edge is generated. 
@@ -18,25 +19,26 @@ __List of Unique Edges__ This will generate a list of unsigned 64 bit integers w
 
 | Name | Type |
 |------|------|
-| Genereate Per Vertex Triangle List | Boolean (On or Off) |
-| Genereate Triangle Neighbors List | Boolean (On or Off) |
-| Genereate Unique Edge Ids | Boolean (On or Off) |
+| Generate Per Vertex Triangle List | Boolean (On or Off) |
+| Generate Triangle Neighbors List | Boolean (On or Off) |
+| Generate Unique Edge Ids | Boolean (On or Off) |
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
-| Node List | Core Property of the Surface Mesh Data Container | The shared list of nodes that make up the mesh |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
 
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| MeshVertLinks | Internal Data Structure |  |
-| TriangleNeighbor List | Internal Data Structure |  |
-| Unique Edges Array | Internal Data Structure |  |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| MeshVertLinks | Internal Data Structure | For each vertex, the array of triangles that contain it |
+| TriangleNeighbor List | Internal Data Structure | For each triangle, the array of triangles that share its edges |
+| Unique Edges Array | Internal Data Structure | The three unique edge ids for the triangle |
+
 
 ## Authors ##
 

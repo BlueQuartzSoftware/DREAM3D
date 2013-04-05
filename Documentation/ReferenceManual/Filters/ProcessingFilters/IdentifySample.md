@@ -12,10 +12,10 @@ This Filter utilizes __Cell__ __Good**Cells**__ to identify the sample.
 None
 
 ## Required Arrays ##
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Cell | GoodVoxels |  |
 
-| Type | Name | Comment |
-|------|------|---------|
-| Cell | Good**Cells** |  |
 
 ## Created Arrays ##
 None

@@ -13,8 +13,8 @@ This Filter searches for the crystal structures present and finds where matches 
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainIds |  |
 | Field | FieldPhases |  |
 | Field | SurfaceFields |  |
@@ -24,8 +24,8 @@ This Filter searches for the crystal structures present and finds where matches 
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellEulerAngles |  |
 | Field | AvgQuats |  |
 | Field | FieldEulerAngles |  |

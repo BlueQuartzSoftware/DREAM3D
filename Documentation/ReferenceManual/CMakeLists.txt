@@ -98,6 +98,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/IOFilters/VtkGrainIdReader.md
   ${PROJECT_SOURCE_DIR}/Filters/IOFilters/SolidMeshToVtk.md
   ${PROJECT_SOURCE_DIR}/Filters/IOFilters/SPParksWriter.md
+  ${PROJECT_SOURCE_DIR}/Filters/IOFilters/GoldfeatherReader.md  
   ${PROJECT_SOURCE_DIR}/Filters/IOFilters/IOFilters.dox
   
 #--- Filter Group ProcessingFilters
@@ -159,7 +160,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlicetoSliceRotations.md
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters/FindSlipTransmissionMetrics.md
 #--- Filter Group SurfaceMeshingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.dox
+
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateSurfaceMeshConnectivity.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GenerateTriangleIPFColoring.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/LaplacianSmoothing.md
@@ -172,6 +173,8 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/TriangleNormalFilter.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/VerifyTriangleWinding.md
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/GrainFaceCurvatureFilter.md
+  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters/SurfaceMeshingFilters.md
+
 #--- Filter Group SyntheticBuildingFilters
   ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/SyntheticBuildingFilters.dox
   ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters/PackPrimaryPhases.md

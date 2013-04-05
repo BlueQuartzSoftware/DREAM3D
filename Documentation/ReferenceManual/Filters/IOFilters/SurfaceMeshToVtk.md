@@ -28,8 +28,8 @@ will have a **Field** ID assigned to it.
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | NodeArray | | The shared node (vertex) list |
 | FaceArray | | The list of all triangles (faces) in the mesh |
 

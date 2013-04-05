@@ -31,8 +31,8 @@ The user needs to keep in mind that large values of __Neighborhood Error Weight_
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | Active |  |
 | Field | AxisEulerAngles |  |
 | Field | AxisLengths |  |

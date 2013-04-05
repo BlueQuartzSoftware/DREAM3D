@@ -18,8 +18,8 @@ will be named with the [Grain_id].stl. The user can designate an optional prefix
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | NodeArray | | The shared node (vertex) list |
 | FaceArray | | The list of all triangles (faces) in the mesh |
 

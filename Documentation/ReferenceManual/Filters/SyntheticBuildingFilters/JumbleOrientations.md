@@ -44,15 +44,15 @@ p.pCellBody { font-family: Arial, Verdana, Helvetica, sans-serif; font-size: med
 
 <a name="wp4"> </a>## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainIds |  |
 | Field | FieldPhases |  |
 
 <a name="wp5"> </a>## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellEulerAngles |  |
 | Field | AvgQuats |  |
 | Field | FieldEulerAngles |  |

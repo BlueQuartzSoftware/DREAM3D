@@ -29,8 +29,8 @@ If precipitate phases have been included in the _Statistics_ file used by the _I
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | Active |  |
 | Field | AxisEulerAngles |  |
 | Field | AxisLengths |  |

@@ -9,19 +9,17 @@ SurfaceMesh
 ## Parameters ##
 
 ## Required Arrays ##
-
 | Type | Name | Comment |
 |------|------|---------|
-| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
-| Node List | Core Property of the Surface Mesh Data Container | The shared list of nodes that make up the mesh |
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
 | Triangle Attribute Array | SurfaceMeshTriangleLabels | **Field** Id Associated with the triangle |
-| Triangle Attribute Array | SurfaceMeshTriangleNormals | Normal of each Triangle |
 
 ## Created Arrays ##
-
 | Type | Name | Comment |
 |------|------|---------|
 | Triangle Attribute Array | SurfaceMeshTriangleIPFColors | N X 6 Array of Unsigned Chars that are the RGB colors for each **Field** Id Associated with the triangle. |
+
 
 
 ## Authors ##

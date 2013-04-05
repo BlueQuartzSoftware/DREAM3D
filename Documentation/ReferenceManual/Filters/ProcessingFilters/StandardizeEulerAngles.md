@@ -11,8 +11,8 @@ None
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellEulerAngles |  |
 
 ## Created Arrays ##

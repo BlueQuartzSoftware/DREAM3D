@@ -1,5 +1,6 @@
 Goldfeather Reader {#goldfeatherreader}
 ======
+[TOC]
 
 ## Group (Subgroup) ##
 IO Filters (Input)
@@ -23,15 +24,19 @@ None
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-|  | Nodes | SurfaceMeshDataContainer Property |
-|  | Triangles | SurfaceMeshDataContainer Property |
-| char | Node Type | The Type of Nodes. One value for each Node created. |
-| Float | Principal Direction 1 |  |
-| Float | Principal Direction 2 |  |
-| Float | Principal Curvature 2 |  |
-| Float | Principal Curvature 2 |  |
+| Type       | Name | Comment |
+|------------|------|---------|
+| Vert Array | Nodes     | SurfaceMeshDataContainer Property of the Shared Vertex List |
+| Face Array | Triangles | SurfaceMeshDataContainer Property of the list of Triangles |
+| Double | Node Normals | The Normal at each Vertex |
+| Double | Principal Direction 1 | N x 3 Col Double Array |
+| Double | Principal Direction 2 | N x 3 Col Double Array |
+| Double | Principal Curvature 2 | N x 1 Col Double Array |
+| Double | Principal Curvature 2 | N x 1 Col Double Array |
+| Int32 | SurfaceMeshTriangleLabels | Triangle Field Labels |
+| Double | SurfaceMeshTriangleNormals | Triangle Normals |
+
+
 
 ## Authors ##
 
