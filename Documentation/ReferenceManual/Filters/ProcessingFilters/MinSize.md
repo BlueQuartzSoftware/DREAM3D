@@ -2,21 +2,21 @@ Minimum Size Filter (All Phases) {#minsize}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Cleanup)
 
 ## Description ##
-This filter removes features/grains that have a total number of voxels/datapoints below the minimum threshold defined by the user. If the user chooses a
-value larger than the largest **Field**, then all features/grains will be eliminated and the filter will become stuck in an inifinite loop trying to 
-fill the eliminated features/grains. 
-*The number of voxels/datapoints in the largest grain is determined during the running of this filter. Hence, a choice of threshold should be carefully be choosen
-if it is not known how many voxels/datapoints are in the largest features/grains.
-After removing all the small features/grains, the remaining features/grains are isotropically coarsened to fill the gaps left by the small features/grains.
+This filter removes **Fields** that have a total number of **Cells** below the minimum threshold defined by the user. If the user chooses a
+value larger than the largest **Field**, then all **Fields** will be eliminated and the filter will become stuck in an inifinite loop trying to 
+fill the eliminated **Fields**. 
+*The number of **Cells** in the largest **Field** is determined during the running of this filter. Hence, a choice of threshold should be carefully be choosen
+if it is not known how many **Cells** are in the largest **Fields**.
+After removing all the small **Fields**, the remaining **Fields** are isotropically coarsened to fill the gaps left by the small **Fields**.
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|-------------|
-| Minimum Allowed Grain Size | Integer | Number of voxels/datapoints that must be present in the **Field** for it to remain in the sample |
+| Minimum Allowed **Field** Size | Integer | Number of **Cells** that must be present in the **Field** for it to remain in the sample |
 
 ## Required Arrays ##
 
@@ -30,7 +30,7 @@ After removing all the small features/grains, the remaining features/grains are 
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
+| Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all **Fields** will be "Active" as the "Inactive" **Fields** will have been removed.  |
 
 ## Authors ##
 

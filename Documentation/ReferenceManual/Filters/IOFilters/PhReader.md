@@ -1,4 +1,4 @@
-Read Ph File (Grain Ids) {#phreader}
+Read Ph File (**Field** Ids) {#phreader}
 ======
 
 ## Group (Subgroup) ##
@@ -16,7 +16,7 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
     'DREAM3'              52.00  1.000  1.0       {Number of Grains}
     Line 3: (Without the quotes)
     " 0.000 0.000 0.000          0        "
-    {Each Grain Id on a single line}
+    {Each **Field** Id on a single line}
 
 
 **Example File (Partial)**

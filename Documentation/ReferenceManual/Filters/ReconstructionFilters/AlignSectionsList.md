@@ -7,7 +7,7 @@ Align Sections (List) {#}
 Reconstruction Filters
 
 
-This Filter accepts a _.txt_ file that has full **Cell**s shifts that have already been calculated in it.  
+This Filter accepts a _.txt_ file that has full **Cells** shifts that have already been calculated in it.  
 The format of the file is as follows: 
 
 _slice number, xshift, yshift

@@ -2,7 +2,7 @@ Write NonConformal Vtk PolyData from SurfaceMesh {#surfacemeshtononconformalvtk}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Output)
 
 ## Description ##
 
@@ -19,7 +19,7 @@ IO Filters
 | Type | Name | Comment |
 |------|------|---------|
 | NodeArray Attribute | SurfaceMeshNodeType | The node types values |
-| FaceArray Attribute | SurfaceMeshTriangleLabels | The Grain Id Labels for each Face(Triangle) |
+| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Field** Id Labels for each Face(Triangle) |
 | NodeArray | | The shared node (vertex) list |
 | FaceArray | | The list of all triangles (faces) in the mesh |
 

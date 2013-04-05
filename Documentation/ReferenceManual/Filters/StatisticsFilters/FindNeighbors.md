@@ -5,16 +5,16 @@ Find Neighbors {#findneighbors}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter determines, for each **Field**, the number of other features/grains that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Field** is as follows: 
+This Filter determines, for each **Field**, the number of other **Fields** that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Field** is as follows: 
 
 1) Identify the **Field** to which a **Cell** belongs
-2) Identify the features/grains to which each of the current voxel's six (6) face-face neighboring voxels (front, back, left, right, up, down) belong
-3) If a neighboring **Cell** belongs to a different **Field** than the current **Cell**, then that **Field** (owner of the neighboring **Cell**) is added to the list of contiguous neighbors of the **Field** that owns the current voxel. 
-4) Repeat 1-3 for all voxels/datapoints
+2) Identify the **Fields** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
+3) If a neighboring **Cell** belongs to a different **Field** than the current **Cell**, then that **Field** (owner of the neighboring **Cell**) is added to the list of contiguous neighbors of the **Field** that owns the current **Cell**. 
+4) Repeat 1-3 for all **Cells**
 
-While performing the above steps, the number of neighboring voxel(s)/datapoint(s) with different **Field** owner(s) than a given **Cell** is stored, which identifies whether a **Cell** lies on the surface of a **Field** (i.e. the **Field** boundary).
-Additionally, the surface area shared between each set of contiguous features/grains is calculated by tracking the number of times two neighboring voxels/datapoints correspond to a contiguous **Field** pair.
-The filter also notes which features/grains touch the outer surface of the sample (this is obtianed for "free" while performing the above algorithm).
+While performing the above steps, the number of neighboring **Cell**(s)/datapoint(s) with different **Field** owner(s) than a given **Cell** is stored, which identifies whether a **Cell** lies on the surface of a **Field** (i.e. the **Field** boundary).
+Additionally, the surface area shared between each set of contiguous **Fields** is calculated by tracking the number of times two neighboring **Cells** correspond to a contiguous **Field** pair.
+The filter also notes which **Fields** touch the outer surface of the sample (this is obtianed for "free" while performing the above algorithm).
 
 ## Parameters ##
 
@@ -29,8 +29,8 @@ The filter also notes which features/grains touch the outer surface of the sampl
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
-| Field | NumNeighbors | Value (int) equal to the number of contiguous neighboring features/grains for a given **Field** |  |
+| Cell | Surface**Cells** | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
+| Field | NumNeighbors | Value (int) equal to the number of contiguous neighboring **Fields** for a given **Field** |  |
 | Field | SurfaceFields | Boolean flag equal to 1 if the **Field** touches an outer surface of the sample and equal to 0 if it does not. |  |
 
 ## Authors ##

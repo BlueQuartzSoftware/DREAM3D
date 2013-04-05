@@ -1,26 +1,28 @@
-Erode/Dilate Bad Data {#openclosecoordinationnumber}
+Smooth Bad Data {#openclosecoordinationnumber}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Cleanup)
 
 ## Description ##
+This filter smoothes the interface between "good" and "bad" data. The user can specify a *coordination number* that is the number of neighboring **Cells** of opposite type (i.e. "good" or "bad") compared to a given **Cell** that is acceptable.  For example a single "bad" **Cell** surrounded by "good" **Cells** would have a *coordination number* of *6*.  The number entered by the user is actually the maximum tolerated *coordination number*.  If the user entered a value of *4*, then all "good" **Cells** with 5 or more "bad" neighbors and "bad" **Cells** with 5 or more "good" neighbors would be removed.  After **Cells** with unacceptable *coordination number* are removed, then the neighboring **Cells** are *coarsened* to fill the removed **Cells*.  
 
+By default, the filter will only perform a single iteration and will not concern itself with the possibility that after one iteration, **Cells** that were acceptable may become unacceptable by the original *coordination number* criteria due to the small changes to the structure during the *coarsening*.  The user can opt to enable the "Loop Until Gone" parameter, which will continue to run until no **Cells** fail the original criteria.
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Number of Iterations | Integer |
+| Coordination Number | Integer |
 | Loop Until Gone | Boolean (On or Off) |
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Cell | CellPhases |  |
-| Cell | GrainIds |  |
-| Field | FieldPhases |  |
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
 None

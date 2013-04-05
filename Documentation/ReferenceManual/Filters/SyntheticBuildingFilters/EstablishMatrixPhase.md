@@ -8,7 +8,7 @@ Synthetic Builder Filters
 
 
 To run this Filter properly, the _Initialize Synthetic Volume_ Filter must have been run already.
-Based on the phase fraction in the statistics file used in the _Initialize Synthetic Volume_ Filter, this Filter assigns _voxels_ to a matrix phase. 
+Based on the phase fraction in the statistics file used in the _Initialize Synthetic Volume_ Filter, this Filter assigns _**Cells**_ to a matrix phase. 
 
 ## Parameters ##
 
@@ -24,7 +24,7 @@ Based on the phase fraction in the statistics file used in the _Initialize Synth
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all features/grains will be "Active" as the "Inactive" features/grains will have been removed.  |
+| Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all **Fields** will be "Active" as the "Inactive" **Fields** will have been removed.  |
 | Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** |  |
 
 ## Authors ##

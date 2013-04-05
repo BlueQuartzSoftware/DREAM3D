@@ -1,12 +1,12 @@
-Read Legacy DREAM.3D H5Voxel File {#h5voxelfilereader}
+Read Legacy DREAM.3D H5**Cell** File {#h5**Cell**filereader}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Input)
 
 
 ## Description ##
-This Filter reads legacy DREAM.3D file to obtain H5Voxel data.
+This filter reads a legacy DREAM.3D file that holds the *Euler Angles*, *Phases* and *GrainIds* of each **Cell**.  The *Crystal Structures* are also read from the file.  While reading the file, the **Field** map is sized to the largest *GrainId* observed.
 
 ## Parameters ##
 | Name | Type |
@@ -14,9 +14,7 @@ This Filter reads legacy DREAM.3D file to obtain H5Voxel data.
 | Input File | File Path |
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
+None
 
 ## Created Arrays ##
 
@@ -25,6 +23,7 @@ This Filter reads legacy DREAM.3D file to obtain H5Voxel data.
 | Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |  |
 | Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** |  |
 | Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. |  |
+| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase is (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4)
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) |  |
 
 ## Authors ##

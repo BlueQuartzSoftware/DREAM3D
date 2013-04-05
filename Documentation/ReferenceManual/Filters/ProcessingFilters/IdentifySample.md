@@ -5,7 +5,7 @@ Identify Sample {#identifysample}
 Processing Filters
 
 ## Description ##
-This Filter utilizes __Cell__ __GoodVoxels__ to identify the sample.
+This Filter utilizes __Cell__ __Good**Cells**__ to identify the sample.
 
 
 ## Parameters ##
@@ -15,7 +15,7 @@ None
 
 | Type | Name | Comment |
 |------|------|---------|
-| Cell | GoodVoxels |  |
+| Cell | Good**Cells** |  |
 
 ## Created Arrays ##
 None

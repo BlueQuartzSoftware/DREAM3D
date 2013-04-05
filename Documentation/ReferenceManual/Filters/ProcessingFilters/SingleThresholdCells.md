@@ -2,13 +2,13 @@ Single Threshold (Cell Data) {#singlethresholdcells}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Threshold)
 
 ## Description ##
-This filter allows the user to select a specific array and apply a comparison operation (&lt, &gt, =) of a
- value (set by the user). The result is a new array of Boolean values added to the pipeline. The user can set
+This filter allows the user to select a specific **Cell** array and apply a comparison operation (&lt, &gt, =) of a
+ value (set by the user). The result is a new **Cell** array of Boolean values added to the pipeline. The user can set
  the name of the array that is added through the __Output Array Name__ option.
- For example if you wanted to generate a boolean array that indicated which cells had an '_Image Quality_' greater
+ For example if you wanted to generate a boolean array that indicated which **Cells** had an '_Image Quality_' greater
  than '_120_' then the user would select the '_Image Quality_' array from the __Input Cell Array Name__ combobox,
  set the Comparison Operator to "&gt" and set the __Value__ to 120. The user should also input a name for the created
  boolean array.
@@ -24,7 +24,9 @@ This filter allows the user to select a specific array and apply a comparison op
 | Output Array Name | String |
 
 ## Required Arrays ##
-None
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays |
 
 
 

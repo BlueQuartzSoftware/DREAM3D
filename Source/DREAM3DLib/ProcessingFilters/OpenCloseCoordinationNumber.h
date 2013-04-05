@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Erode/Dilate Bad Data (Coordination Number)"; }
+    virtual const std::string getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

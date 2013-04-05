@@ -2,7 +2,7 @@ Goldfeather Reader {#goldfeatherreader}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Input)
 
 ## Description ##
 

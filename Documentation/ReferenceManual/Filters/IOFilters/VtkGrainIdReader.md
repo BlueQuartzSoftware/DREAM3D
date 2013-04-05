@@ -1,4 +1,4 @@
-Read Vtk File (STRUCTURED_POINTS) Grain Ids Only {#vtkgrainidreader}
+Read Vtk File (STRUCTURED_POINTS) **Field** Ids Only {#vtkgrainidreader}
 ======
 
 ## Group (Subgroup) ##
@@ -6,7 +6,7 @@ IO Filters
 
 ## Description ##
 
-This filter reads an IMAGE_DATA type of 3D array from a legacy .vtk file specifically looking for the Grain Ids" array but the user can set the name of the array to try and read.
+This filter reads an IMAGE_DATA type of 3D array from a legacy .vtk file specifically looking for the **Field** Ids" array but the user can set the name of the array to try and read.
 
 
 ## Parameters ##
@@ -14,7 +14,7 @@ This filter reads an IMAGE_DATA type of 3D array from a legacy .vtk file specifi
 | Name | Type |
 |------|------|
 | Input Vtk File | Input File |
-| Grain Id Scalar Name | Unknown Type |
+| **Field** Id Scalar Name | Unknown Type |
 
 ## Required Arrays ##
 None

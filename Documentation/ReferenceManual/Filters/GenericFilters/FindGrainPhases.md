@@ -4,8 +4,8 @@ Find Field Phases {#findgrainphases}
 Generic Filters (Misc)
 
 ## Description ##
-This filter determines the phase of each **Field** by querying the phase of the voxels/datapoints that belong to the **Field**. 
-Note that it is assumed that all voxels/datapoints belonging to a **Field** are of the same phase, and thus any **Cell** can be used to determine the phase of the **Field** that owns that **Cell**.
+This filter determines the phase of each **Field** by querying the phase of the **Cells** that belong to the **Field**. 
+Note that it is assumed that all **Cells** belonging to a **Field** are of the same phase, and thus any **Cell** can be used to determine the phase of the **Field** that owns that **Cell**.
 
 ## Parameters ##
 None

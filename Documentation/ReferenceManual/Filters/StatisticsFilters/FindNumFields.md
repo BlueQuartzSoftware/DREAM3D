@@ -7,7 +7,7 @@ Find Number of Fields {#}
 Statistics Filters
 
 
-This filter determines the number of features/grains in each Ensemble.
+This filter determines the number of **Fields** in each Ensemble.
 
 
 ## Parameters ##
@@ -22,7 +22,7 @@ This filter determines the number of features/grains in each Ensemble.
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Ensemble | NumFields | Number (int) of features/grains that belong the ensemble. |  |
+| Ensemble | NumFields | Number (int) of **Fields** that belong the ensemble. |  |
 
 ## Authors ##
 

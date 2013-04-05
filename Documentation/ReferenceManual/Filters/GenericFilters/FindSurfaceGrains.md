@@ -5,8 +5,8 @@ Find Surface Fields {#findsurfacegrains}
 Generic Filters (Spatial)
 
 ## Description ##
-This filter determines whether a **Field** touches an outer surface of the sample. This is accomplished by simply querying the **Field** owners of the voxels/datapoints that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
-Any **Field** that owns one of those voxels/datapoints is said to touch an outer surface and all other features/grains are said to not touch an outer surface of the sample.
+This filter determines whether a **Field** touches an outer surface of the sample. This is accomplished by simply querying the **Field** owners of the **Cells** that sit at either xMin, xMax, yMin, yMax, zMin or zMax.
+Any **Field** that owns one of those **Cells** is said to touch an outer surface and all other **Fields** are said to not touch an outer surface of the sample.
 
 
 NOTE: If the structure/data is actually 2D, then the dimension that is planar is not considered and only the **Fields** touching the edges are considered surface **Fields**.

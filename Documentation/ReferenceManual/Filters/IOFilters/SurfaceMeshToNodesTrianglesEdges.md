@@ -18,12 +18,12 @@ The nodes file format is as follows:
 
 **Node Types**
 
-- 2 = on the grain boundary
+- 2 = on the **Field** boundary
 - 3 = on the triple line,
 - 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
 For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
-- 12 = on the grain boundary trace area at the surface of microstructure
-- 13 = on the grain boundary trace line
+- 12 = on the **Field** boundary trace area at the surface of microstructure
+- 13 = on the **Field** boundary trace line
 - 14 = on the triple point, and so on
 
 **Triangles File**
@@ -59,7 +59,7 @@ The edges file format is as follows:
 | Type | Name | Comment |
 |------|------|---------|
 | NodeArray Attribute | SurfaceMeshNodeType | The node types values |
-| FaceArray Attribute | SurfaceMeshTriangleLabels | The Grain Id Labels for each Face(Triangle) |
+| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Field** Id Labels for each Face(Triangle) |
 | NodeArray | | The shared node (vertex) list |
 | FaceArray | | The list of all triangles (faces) in the mesh |
 | EdgeArray | | The list of unique edges in the mesh |

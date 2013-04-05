@@ -7,8 +7,8 @@ Find Sizes {#}
 Statistics Filters
 
 
-This filter calculates the sizes of all features/grains.  The filter simply iterates through all voxels/datapoints asking the for **Field** that owns them.  
-The count of voxels/datapoints for each **Field** is then stored as NumCells and the Volume and EquivalentDiameter are also calculated (and stored) by knowing 
+This filter calculates the sizes of all **Fields**.  The filter simply iterates through all **Cells** asking the for **Field** that owns them.  
+The count of **Cells** for each **Field** is then stored as NumCells and the Volume and EquivalentDiameter are also calculated (and stored) by knowing 
 the volume of each **Cell**.
 
 ## Parameters ##
@@ -24,8 +24,8 @@ the volume of each **Cell**.
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Field**. |  |
-| Field | NumCells | Number (int) of voxels/datapoints that are owned by the **Field**. | This value does not place any distinction between voxels/datapoints that may be of a different size. |
-| Field | Volumes | Volume (float) in um^3 of the **Field**. | This value may be "redundant" from the NumCells value if all voxels/datapoints are the same size and is calculable from the EquivalentDiameters value. |
+| Field | NumCells | Number (int) of **Cells** that are owned by the **Field**. | This value does not place any distinction between **Cells** that may be of a different size. |
+| Field | Volumes | Volume (float) in um^3 of the **Field**. | This value may be "redundant" from the NumCells value if all **Cells** are the same size and is calculable from the EquivalentDiameters value. |
 
 ## Authors ##
 

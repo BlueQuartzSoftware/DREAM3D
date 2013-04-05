@@ -2,7 +2,7 @@ Read DREAM3D Data File {#datacontainerreader}
 ====
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Input)
 
 ## Description ##
 
@@ -21,7 +21,9 @@ The user is able to select which arrays from the DREAM3D data file to read. Ther
 None
 
 ## Created Arrays ##
-None
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| Cell/Field/Ensemble | *User Chosen* |  | Array(s) will always be present in file, since the user may only chose from arrays found by the reader |
 
 
 ## Authors ##

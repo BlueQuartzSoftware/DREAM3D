@@ -1,11 +1,11 @@
 Read Ensemble Info File {#ensembleinforeader}
 ======
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Input)
 
 ## Description ##
 This filter reads in information about the Crystal Structure and Phases of
- all the grains or regions that are contained in a voxel based volume. These
+ all the grains or regions that are contained in a **Cell** based volume. These
  values are needed to allow the calculation of statistics on the volume.
  The format of that file is a simple text file where the first line is the
  number of phases that are contained in the volume and subsequent lines in

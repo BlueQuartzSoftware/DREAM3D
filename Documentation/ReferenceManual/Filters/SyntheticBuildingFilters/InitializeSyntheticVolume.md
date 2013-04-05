@@ -8,14 +8,14 @@ Synthetic Builder Filters
 
 
 Based on __ShapeTypes__ in the __Ensemble__ this Filter utilizes the data in the
-Statistics File (see StatsGenerator.app for information about creating a statistics file) designated by the user together with _voxel_ ranges and _resolution_
+Statistics File (see StatsGenerator.app for information about creating a statistics file) designated by the user together with **Cell** ranges and _resolution_
  desired for (x, y, z) to initialize the synthetic volume.
 
-The (x, y, z) determine the size of the volume to be generated. The minimum voxel size is 1;
-the maximum _voxel_ size can be large, but careful consideration is strongly suggested to
+The (x, y, z) determine the size of the volume to be generated. The minimum **Cell** size is 1;
+the maximum **Cell** size can be large, but careful consideration is strongly suggested to
 avoid memory problems.
 
-The _resolution_ refers to the length of an edge of a _voxel_, usually microns, but
+The _resolution_ refers to the length of an edge of a **Cell**, usually microns, but
 other measures of length can be used. __The minimum resolution for each dimension cannot
 be 0.0, i.e, zero for any of the resolution values is forbidden as an input __.
 
@@ -33,9 +33,9 @@ values the user entered.
 | Name | Type |
 |------|------|
 | Statistics File | Input File |
-| X Voxels | Integer |
-| Y Voxels | Integer |
-| Z Voxels | Integer |
+| X **Cells** | Integer |
+| Y **Cells** | Integer |
+| Z **Cells** | Integer |
 | X Res | Double |
 | Y Res | Double |
 | Z Res | Double |
@@ -44,7 +44,7 @@ values the user entered.
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the features/grains of each Ensemble/phase (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
+| Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each Ensemble/phase (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
 
 ## Created Arrays ##
 

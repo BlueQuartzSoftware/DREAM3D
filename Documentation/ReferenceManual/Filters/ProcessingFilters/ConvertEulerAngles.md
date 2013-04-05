@@ -2,7 +2,7 @@ Convert Euler Angles {#converteulerangles}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Conversion)
 
 ## Description ##
 To use this Filter correctly, the user needs to know the angle unit used in the data file. Files for 2D data that are .ctf format use degrees. Files for 3D data that are .ctf format use radians. All .ang files use radians. If other file types are used, determine the angle unit before running this filter.

@@ -1,4 +1,4 @@
-Grain Face Curvature Filter {#grainfacecurvaturefilter}
+**Field** Face Curvature Filter {#grainfacecurvaturefilter}
 ======
 
 ## Group (Subgroup) ##
@@ -6,7 +6,7 @@ SurfaceMesh
 
 ## Description ##
 This filter calculates the mean and Gaussian curvature for each triangle in a surface mesh using the technique in [1]
-and where the groups of triangles are defined as those triangles having the same pair of grain ids (nSpin values).
+and where the groups of triangles are defined as those triangles having the same pair of **Field** ids (nSpin values).
 
 The Principal Curvature 1 &amp; 2 are the "Kappa 1" and "Kappa 2" values from the paper and are the Eigen values from the Wiengarten Matrix.
 

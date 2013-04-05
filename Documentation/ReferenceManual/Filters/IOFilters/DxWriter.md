@@ -1,4 +1,4 @@
-Write Dx File (Grain Ids) {#dxwriter}
+Write Dx File (**Field** Ids) {#dxwriter}
 ======
 
 ## Group (Subgroup) ##

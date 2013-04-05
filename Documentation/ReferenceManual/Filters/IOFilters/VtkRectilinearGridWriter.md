@@ -6,7 +6,7 @@ I/O Filters
 
 
 ## Description ##
-This Filter reads the grain and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the grains and phases of the grains.
+This Filter reads the **Field** and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the grains and phases of the grains.
 
 
 ## Parameters ##
@@ -14,13 +14,13 @@ This Filter reads the grain and phase ids together with image parameters require
 | Name | Type |
 |------|------|
 | Output File | Output File |
-| Write Grain Ids | Boolean (On or Off) |
+| Write **Field** Ids | Boolean (On or Off) |
 | Write Phase Ids | Boolean (On or Off) |
 | Write Band Contrasts | Boolean (On or Off) |
 | Write KAM Value | Boolean (On or Off) |
 | Write GAM Values | Boolean (On or Off) |
 | Write LMG Values | Boolean (On or Off) |
-| Write Good Voxels | Boolean (On or Off) |
+| Write Good **Cells** | Boolean (On or Off) |
 | Write IPF Colors | Boolean (On or Off) |
 | Write Binary File | Boolean (On or Off) |
 

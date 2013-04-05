@@ -4,12 +4,12 @@ Find Surface Cells {#findsurfacecells}
 Generic Filters (Spatial)
 
 ## Description ##
-This Filter determines, for each **Cell**, the number of neighboring voxels/datapoints that are owned by a different **Field**.  The algorithm for determining this is as follows: 
+This Filter determines, for each **Cell**, the number of neighboring **Cells** that are owned by a different **Field**.  The algorithm for determining this is as follows: 
 
 1) Identify the **Field** to which a **Cell** belongs
-2) Identify the features/grains to which each of the current voxel's six (6) face-face neighboring voxels (front, back, left, right, up, down) belong
-3) Determine the number of those neighboring voxels/datapoints belonging to a different **Field** than the current **Cell**. 
-4) Repeat 1-3 for all voxels/datapoints
+2) Identify the **Fields** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
+3) Determine the number of those neighboring **Cells** belonging to a different **Field** than the current **Cell**. 
+4) Repeat 1-3 for all **Cells**
 
 ## Parameters ##
 None
@@ -25,7 +25,7 @@ None
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
+| Cell | Surface**Cells** | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
 
 ## Authors ##
 
