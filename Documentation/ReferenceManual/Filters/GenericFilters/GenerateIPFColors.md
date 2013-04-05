@@ -21,6 +21,7 @@ This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crys
 
 ## Required Arrays ##
 
+
 | Type | Name | Desription | Comment |
 |------|------|---------|-------|
 | Cell | CellEulerAngles | | These are the angles used to determine the colors |
@@ -29,9 +30,9 @@ This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crys
 
 ## Created Arrays ##
 
-| Type | Name | Desription | Comment |
-|------|------|---------|-------|
-| Cell  | IPFColors | | The RGB colors are encoded as an unsigned char triplet  |
+| Type | Name | Description | Comment |
+|------|------|-------------|---------|
+| Cell | IPFColors | | The RGB colors are encoded as an unsigned char triplet  |
 
 ### Authors ##
 **Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)

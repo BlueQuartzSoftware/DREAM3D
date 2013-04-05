@@ -24,8 +24,8 @@ None
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainIds |  |
 | Field | Active |  |
 

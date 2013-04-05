@@ -12,16 +12,17 @@ This filter generates all the unique **Field** id to **Field** id values. For ex
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| Triangle List | Core Property of the Surface Mesh Data Container | The List of triangles in the Surface Mesh |
-| Node List | Core Property of the Surface Mesh Data Container | The shared list of nodes that make up the mesh |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
+| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
-| int | SurfaceMeshGrainFaceId | The length of the array is the number of triangles. |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Triangle Attribute Array | SurfaceMeshGrainFaceId | The length of the array is the number of triangles. |
 
 ## Authors ##
 

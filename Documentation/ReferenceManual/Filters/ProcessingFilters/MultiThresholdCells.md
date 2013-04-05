@@ -33,8 +33,8 @@ This filter is similar to the <a href="SingleThresholdCells.html">SingleThreshol
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | User Defined | Boolean Array |
 
 

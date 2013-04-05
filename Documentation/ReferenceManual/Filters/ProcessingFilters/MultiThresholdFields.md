@@ -30,10 +30,10 @@ This filter is similar to the <a href="SingleThresholdFields.html">SingleThresho
 
 
 ## Created Arrays ##
-
 | Type | Name | Comment |
 |------|------|---------|
 | Field | Output | Boolean Array |
+
 
 ## Authors ##
 

@@ -35,6 +35,7 @@ This filter allows the user to select a specific **Field** array and apply a com
 | Field | User Defined | Boolean Array |
 
 
+
 ## Authors ##
 
 Copyright [INSERT YOUR NAME HERE]

@@ -16,8 +16,8 @@ Find **Field** Boundary Strength Metrics {#}
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | AvgQuats |  |
 | Field | FieldPhases |  |
 | Field | Schmids |  |
@@ -25,8 +25,8 @@ Find **Field** Boundary Strength Metrics {#}
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 
 ## Authors ##
 

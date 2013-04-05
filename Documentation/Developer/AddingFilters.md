@@ -10,7 +10,7 @@ then a default file will be created for you the first time the code is compiled.
 has all the skeleton html in the file and the programmer just needs to document what actions
 the filter performs.
 
-### afexample Example
+### Example
   We want to create a new filter called LaplacianSmoothing. We will do the following:
 
 - Create LaplacianSmoothing.h inside of DREAM3D/Source/DREAM3DLib/SurfaceMeshFilters
@@ -24,8 +24,6 @@ file in the DREAM3D/Documentation/Filters/SurfaceMeshFilters/LaplacianSmoothing.
 - Update the DREAM3D/Documentation/Filters/FilterDocs.qrc file with a new entry for the filter
 
     Surface_MeshingFilters/LaplacianSmoothing.html
-
-
 
 ## Adding New Category
 

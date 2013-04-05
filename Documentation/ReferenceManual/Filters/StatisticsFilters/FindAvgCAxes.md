@@ -13,8 +13,8 @@ Find Average Orientations {#}
 
 ## Required Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
 | Cell | Quats |  |
@@ -22,8 +22,8 @@ Find Average Orientations {#}
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Field | AvgQuats |  |
 | Field | FieldEulerAngles |  |
 
