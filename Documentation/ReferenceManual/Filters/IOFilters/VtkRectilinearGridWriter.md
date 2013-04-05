@@ -6,7 +6,7 @@ I/O Filters
 
 
 ## Description ##
-This Filter reads the **Field** and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the grains and phases of the grains.
+This Filter reads the **Field** and phase ids together with image parameters required by Vtk to an output file named by the user. The file is used to generate the image of the **Fields** and phases of the **Fields**.
 
 
 ## Parameters ##

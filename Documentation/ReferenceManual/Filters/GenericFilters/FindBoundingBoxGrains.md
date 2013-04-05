@@ -1,4 +1,4 @@
-Find Bounding Box Grains {#findboundingboxgrains}
+Find Bounding Box **Fields** {#findboundingboxgrains}
 =============
 
 ## Group (Subgroup) ##

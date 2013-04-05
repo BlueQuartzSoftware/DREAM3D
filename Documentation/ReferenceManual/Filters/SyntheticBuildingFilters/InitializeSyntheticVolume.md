@@ -19,7 +19,7 @@ The _resolution_ refers to the length of an edge of a **Cell**, usually microns,
 other measures of length can be used. __The minimum resolution for each dimension cannot
 be 0.0, i.e, zero for any of the resolution values is forbidden as an input __.
 
-The Filter produces an estimate of the number of grains in the volume associated with the
+The Filter produces an estimate of the number of **Fields** in the volume associated with the
 values the user entered.
 
 <div align="center">

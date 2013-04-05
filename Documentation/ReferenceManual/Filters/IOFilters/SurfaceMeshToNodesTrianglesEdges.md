@@ -21,7 +21,7 @@ The nodes file format is as follows:
 - 2 = on the **Field** boundary
 - 3 = on the triple line,
 - 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
-For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
+For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring **Fields**.
 - 12 = on the **Field** boundary trace area at the surface of microstructure
 - 13 = on the **Field** boundary trace line
 - 14 = on the triple point, and so on

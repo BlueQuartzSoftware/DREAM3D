@@ -7,10 +7,10 @@ Pack Primary Phases {#}
 Synthetic Builder Filters
 
 
-This Filter generates grains and then adds them to a volume at random positions. The grains are then moved within the volume such that the volume is maximally filled by the grains and still satisfies the neighborhood input criterion.
+This Filter generates **Fields** and then adds them to a volume at random positions. The **Fields** are then moved within the volume such that the volume is maximally filled by the **Fields** and still satisfies the neighborhood input criterion.
 Because there are two criteria (space filling and neighborhood error weight) to be satisfied, this Filter uses the _space filling_ criterion as the primary control on the filling actions. Knowledge of neighborhoods is often not detailed enough to use.
  The __Neighborhood Error Weight__ is a number in the range [0, 1]. Hence,a small __Neighborhood Error Weight__ favors the space filling criterion. A large number, e.g., 1.0, means space filling and neighborhoods are equally important.
-The user needs to keep in mind that large values of __Neighborhood Error Weight__ can result in changes in the grains as the Filter works to accomplish the space filling goal. The grains will overlap each other and be changed to accommodate that overlap, which means the user does not have the grains that were placed in the volume initially.
+The user needs to keep in mind that large values of __Neighborhood Error Weight__ can result in changes in the **Fields** as the Filter works to accomplish the space filling goal. The **Fields** will overlap each other and be changed to accommodate that overlap, which means the user does not have the **Fields** that were placed in the volume initially.
 
 
 ## Parameters ##

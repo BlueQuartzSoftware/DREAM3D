@@ -1,7 +1,7 @@
 Align Sections (Feature) {#alignsectionsfeature}
 ======
 
-## Group ##
+## Group (Subgroup) ##
 Reconstruction Filters
 
 ## Description ##

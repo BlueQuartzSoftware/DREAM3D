@@ -1,13 +1,12 @@
 
-Segment Grains (Misorientation) {#}
+Segment **Fields** (Prior Beta Grains) {#segmentbetagrains}
 ======
-<h1 class="pHeading1">Segment Grains (Misorientation) Filter</h1>
-<p class="pCellBody">
-<a href="../Filters/SegmentBetaGrains.html#wp2">Description</a>
-| <a href="../Filters/SegmentBetaGrains.html#wp3">Options</a>
-| <a href="../Filters/SegmentBetaGrains.html#wp4">Required Arrays</a>
-| <a href="../Filters/SegmentBetaGrains.html#wp5">Created Arrays</a>
-| <a href="../Filters/SegmentBetaGrains.html#wp1">Authors</a> 
+
+## Group (Subgroup) ##
+Reconstruction Filters (Segmentation)
+
+## Description ##
+
 
 ## Parameters ##
 

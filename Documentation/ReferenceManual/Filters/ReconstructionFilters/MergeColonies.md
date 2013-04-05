@@ -1,17 +1,16 @@
-Merge Colonies {#}
+Merge Colonies {#mergecolonies}
 ======
-<h1 class="pHeading1">Merge Colonies Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/MergeColonies.html#wp2">Description</a> | <a href="../ReconstructionFilters/MergeColonies.html#wp3">Options</a> | <a href="../ReconstructionFilters/MergeColonies.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/MergeColonies.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/MergeColonies.html#wp1">Authors</a> 
 
-Reconstruction Filters
+## Group (Subgroup) ##
+Reconstruction Filters (Grouping)
 
+## Description ##
 
 In Ti alpha-beta alloys, cooling from the beta (BCC) phase slowly to the alpha phase (HCP) produces collections of alpha phase within a beta **Field** that are referred to as alpha colonies.  
-Once the user has segmented the grains, this Filter can be run.  This Filter looks at
-neighboring grains (as defined by the _Segment Grains (Misorientation)_ Filter) and asks for their
-misorientation (i.e., the misorientation between the average orientation(s) of the two grains).  If the misorientation is found to be "special", i.e., one of the six (6) possible misorientations between colonies transformed from the same beta **Field**,
-then the grains are merged together and called one **Field**.  Hence, the outputs of this Filter are the beta grains, because all the colonies transformed from a beta **Field** will all have the same **Field** id.  
+Once the user has segmented the **Fields**, this Filter can be run.  This Filter looks at
+neighboring **Fields** (as defined by the _Segment **Fields** (Misorientation)_ Filter) and asks for their
+misorientation (i.e., the misorientation between the average orientation(s) of the two **Fields**).  If the misorientation is found to be "special", i.e., one of the six (6) possible misorientations between colonies transformed from the same beta **Field**,
+then the **Fields** are merged together and called one **Field**.  Hence, the outputs of this Filter are the beta **Fields**, because all the colonies transformed from a beta **Field** will all have the same **Field** id.  
 
 ## Parameters ##
 

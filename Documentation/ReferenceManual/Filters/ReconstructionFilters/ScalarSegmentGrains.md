@@ -1,8 +1,8 @@
 
 
-Segment Grains (Misorientation) {#}
+Segment **Fields** (Misorientation) {#}
 ======
-<h1 class="pHeading1">Segment Grains (Misorientation) Filter</h1>
+<h1 class="pHeading1">Segment **Fields** (Misorientation) Filter</h1>
 <p class="pCellBody">
 <a href="../Filters/ScalarSegmentGrains.html#wp2">Description</a>
 | <a href="../Filters/ScalarSegmentGrains.html#wp3">Options</a>

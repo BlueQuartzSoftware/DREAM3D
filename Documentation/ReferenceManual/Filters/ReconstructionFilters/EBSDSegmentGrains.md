@@ -1,21 +1,18 @@
-Segment Grains (Misorientation) {#}
+Segment **Fields** (Misorientation) {#ebsdsegmentgrains}
 ======
 
-<h1 class="pHeading1">Segment Grains (Misorientation) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/EBSDSegmentGrains.html#wp2">Description</a> | <a href="../ReconstructionFilters/EBSDSegmentGrains.html#wp3">Options</a> | <a href="../ReconstructionFilters/EBSDSegmentGrains.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/EBSDSegmentGrains.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/EBSDSegmentGrains.html#wp1">Authors</a> 
+## Group (Subgroup) ##
+Reconstruction Filters (Segmentation)
 
-Reconstruction Filters
-
-
-This Filter segments the grains by grouping neighboring _**Cells**_ that satisfy the _misorientation tolerance_, i.e., have _misorientation angle_ less than the value set by the user (1-10 degrees). The __Cell GrainIds__ established by this Filter are used by the other Filters. 
+## Description ##
+This Filter segments the **Fields** by grouping neighboring **Cells** that satisfy the _misorientation tolerance_, i.e., have _misorientation angle_ less than the value set by the user. The __Cell__  _GrainIds_ established by this filter are used by the other Filters. 
 
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| Misorientation Tolerance | Double |
+| Name | Type | Comment |
+|------|------|------|
+| Misorientation Tolerance | Double | Value is in degress |
 
 ## Required Arrays ##
 

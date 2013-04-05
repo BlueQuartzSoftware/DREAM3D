@@ -13,7 +13,7 @@ __**Field** Ids start from One (1) and Phase Ids start from One (1).
 DREAM3D uses **Field** Id Zero(0) internally which has several ramifications which the user needs to understand. Statistics
 will _NOT_ be calculated for any **Cell** or field data with a value of Zero (0). If your segmented data numbering
 starts with Zero (0) then the user needs to find a way to renumber **Field**=0 to another value. Max + 1 typically.__
-For example if you have a file with 123 grains and 2 phases then the file would be similar to the following: 
+For example if you have a file with 123 **Fields** and 2 phases then the file would be similar to the following: 
 <pre>
 123
 1   2  1.2  0.4  0.8
