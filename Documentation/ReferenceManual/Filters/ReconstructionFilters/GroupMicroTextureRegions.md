@@ -1,14 +1,12 @@
-Identify MicroTexture (C-Axis Misorientation) {#}
+Identify MicroTexture (C-Axis Misorientation) {#groupmicrotextureregions}
 ======
-<h1 class="pHeading1">Identify MicroTexture (C-Axis Misorientation) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp2">Description</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp3">Options</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/GroupMicroTextureRegions.html#wp1">Authors</a> 
 
-Reconstruction Filters
+## Group (Subgroup) ##
+Reconstruction Filters (Grouping)
 
-
-This Filter searches for neighboring grains that have c-axes commonly aligned and merges them. The user needs to first segment the grains (_EbsdSegmentGrains_ or _CAxisSegmentGrains_ Filters). Once segmented, the grains are examined for c-axis orientation and neighboring grains that have alignment within the misorientation tolerance entered by the user (1-10 degrees). After the grains are grouped together, they are merged into a microtextured region encompassing these grains.
-This Filter is similar to the _TwinMisorientation_ and _ColonyMisorientation_ Filters in the sense that grains are grouped according to some criterion.
+## Description ##
+This Filter searches for neighboring **Fields** that have c-axes commonly aligned and merges them. The user needs to first segment the **Fields** (_EbsdSegmentGrains_ or _CAxisSegmentGrains_ Filters). Once segmented, the **Fields** are examined for c-axis orientation and neighboring **Fields** that have alignment within the misorientation tolerance entered by the user (1-10 degrees). After the **Fields** are grouped together, they are merged into a microtextured region encompassing these **Fields**.
+This Filter is similar to the _TwinMisorientation_ and _ColonyMisorientation_ Filters in the sense that **Fields** are grouped according to some criterion.
 
 
 ## Parameters ##

@@ -13,7 +13,7 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
     Line 1:
     {5 Spaces}{x dimension}{5 Spaces}{y dimension}{5 Spaces}{z dimension}
     Line 2:
-    'DREAM3'              52.00  1.000  1.0       {Number of Grains}
+    'DREAM3'              52.00  1.000  1.0       {Number of **Fields**}
     Line 3: (Without the quotes)
     " 0.000 0.000 0.000          0        "
     {Each **Field** Id on a single line}

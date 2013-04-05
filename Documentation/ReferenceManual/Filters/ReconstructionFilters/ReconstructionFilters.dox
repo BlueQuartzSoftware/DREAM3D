@@ -17,8 +17,6 @@
 
 @subpage scalarsegmentgrains
 
-@subpage segmentbetagrains
-
 @subpage caxissegmentgrains
 
 @subpage mergetwins

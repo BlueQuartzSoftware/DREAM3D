@@ -5,7 +5,7 @@ Merge Twins {#mergetwins}
 Reconstruction Filters (Grouping)
 
 ## Description ##
-The Merge Twins Filter is essentially identical to the Merge Colonies Filter, except the special misorientations used to determine if grains are grouped together are those misorientations that correspond to twins in an fcc (only fcc) crystal, specifically the Σ 3,5,7,9,11 twins.
+The Merge Twins Filter is essentially identical to the Merge Colonies Filter, except the special misorientations used to determine if **Fields** are grouped together are those misorientations that correspond to twins in an fcc (currently only fcc) crystal, more specifically the Σ3 (currently only Σ3) twins.
 
 
 ## Parameters ##

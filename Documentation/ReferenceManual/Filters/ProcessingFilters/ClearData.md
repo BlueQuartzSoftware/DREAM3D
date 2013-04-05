@@ -18,7 +18,7 @@ This filter writes Zeros (0) into every element of every **Cell** Array.
 | X Max | Integer |
 | Y Max | Integer |
 | Z Max | Integer |
-| Renumber Grains | Boolean (On or Off) |
+| Renumber **Fields** | Boolean (On or Off) |
 
 ## Required Arrays ##
 None

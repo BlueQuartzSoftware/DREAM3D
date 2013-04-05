@@ -1,20 +1,17 @@
-Segment Grains (C-Axis Misorientation) {#}
+Segment **Fields** (C-Axis Misorientation) {#caxissegmentgrains}
 ======
-<h1 class="pHeading1">Segment Grains (C-Axis Misorientation) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/CAxisSegmentGrains.html#wp2">Description</a> | <a href="../ReconstructionFilters/CAxisSegmentGrains.html#wp3">Options</a> | <a href="../ReconstructionFilters/CAxisSegmentGrains.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/CAxisSegmentGrains.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/CAxisSegmentGrains.html#wp1">Authors</a> 
 
-Reconstruction Filters
+## Group (Subgroup) ##
+Reconstruction Filters (Segmentation)
 
-
-<!-- Write all your documentation here --> 
-The _c-axis misorientation_ refers to the difference in rotation angle, about the c-axis in the hexagonal system, that is present between __Cell__s. This Filter searches for and identifies those __Cell__s that satisfy the tolerance angle (1-5 degrees) entered by the user. 
+## Description ##
+The _c-axis misorientation_ refers to the angle between the <001> directions (c-axis in the hexagonal system) that is present between neighboring __Cells__. This filter searches for and identifies those __Cells__ that satisfy the tolerance angle (in degrees) entered by the user. 
 
 ## Parameters ##
 
-| Name | Type |
-|------|------|
-| C-Axis Misorientation Tolerance | Double |
+| Name | Type | Comment |
+|------|------|-----|
+| C-Axis Misorientation Tolerance | Double | Value is in degrees |
 
 ## Required Arrays ##
 

@@ -18,7 +18,7 @@ This filter writes out a file in column format that is space delimited. Header l
 - Symmetry
  
 Some information about the phase is included in the header section of the file in addtion
- to values for the Origin, Step Size, Dimensions and number of grains in the file.
+ to values for the Origin, Step Size, Dimensions and number of **Fields** in the file.
 
 ## Parameters ##
 
