@@ -1,6 +1,9 @@
 Avizo Rectilinear Coordinate Writer {#avizorectilinearcoordinatewriter}
 ======
 
+## Group (Subgroup) ##
+I/O Filters (Output)
+
 ## Description ##
 
 This filter writes out a native Avizo Rectilinear Coordinate data file.

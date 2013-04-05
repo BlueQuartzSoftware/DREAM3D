@@ -2,9 +2,16 @@ Single Threshold (Field Data) {#singlethresholdfields}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Threshold)
 
 ## Description ##
+This filter allows the user to select a specific **Field** array and apply a comparison operation (&lt, &gt, =) of a
+ value (set by the user). The result is a new **Field** array of Boolean values added to the pipeline. The user can set
+ the name of the array that is added through the __Output Array Name__ option.
+ For example if you wanted to generate a boolean array that indicated which **Fields** had an '_Equivalent Diameter_' greater
+ than '_10_' then the user would select the '_Equivalent Diameters_' array from the __Input Field Array Name__ combobox,
+ set the Comparison Operator to "&gt" and set the __Value__ to 10. The user should also input a name for the created
+ boolean array.
 
 
 ## Parameters ##
@@ -17,13 +24,15 @@ Processing Filters
 | Output Array Name | Unknown Type |
 
 ## Required Arrays ##
-None
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| Field | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays |
 
 ## Created Arrays ##
 
 | Type | Name | Comment |
 |------|------|---------|
-| Field | Output |  |
+| Field | User Defined | Boolean Array |
 
 
 ## Authors ##

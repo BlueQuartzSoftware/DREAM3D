@@ -14,13 +14,13 @@ The nodes file format is as follows:
 -  first line = number of nodes
 -  column 1 = node id, starts from zero.
 -  column 2 = node type,
-  + 2 = on the grain boundary
+  + 2 = on the **Field** boundary
   + 3 = on the triple line,
   + 4 = quadruple point or on quadruple line if 10 is added, eg 12, 13, and 14, then they are on the surface of microstructure.
 
 >For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring grains.
-> + 12 = on the grain boundary trace area at the surface of microstructure
-> + 13 = on the grain boundary trace line
+> + 12 = on the **Field** boundary trace area at the surface of microstructure
+> + 13 = on the **Field** boundary trace line
 > + 14 = on the triple point, and so on
 
 column 3 to 5 = coordinates of nodes, x, y, and z
@@ -36,7 +36,7 @@ The triangles file format is as follows:
 
 If the user selects to __disable__ the <tt>Conformal Mesh</tt> option then 2
 triangles will be written to the file and the scalar data will have 2 entries for
-the __grain id__ one for each grain that the triangle borders.
+the __grain id__ one for each **Field** that the triangle borders.
 
 ## Parameters ##
 

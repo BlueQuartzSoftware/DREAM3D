@@ -2,16 +2,15 @@ Minimum Size Filter (Per Phase) {#perphaseminsize}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Cleanup)
 
 ## Description ##
-This Filter removes grains that have a total of _voxels_ below the _minimum number_ input by the user. The _minimum_ is 1. The _maximum_ is the number of _voxels_ in the largest grain. __Entering 0 is not permitted__ because all grains would be eliminated. Entering the number of _voxels_ associated with the largest grain, all grains will be removed. 
-__NOTE: If the minimum number entered is larger than the largest grain,
-THE PIPELINE WILL EXIT DURING THE FILTER!
-The number of _voxels_ in the largest grain is determined during the running of this filter. Hence, a conservative
-approach to selecting the minimum number of _voxels_ is strongly recommended.__
-After removing all the small grains, the remaining grains are _coarsened_ to fill the gaps left by the small grains.
-The iteration _coarsens_ the grains by one _voxel_ each iteration. This filter has the additional ability to
+This Filter removes **Fields** that have a total number of **Cells** below the _minimum number_ input by the user. The _minimum_ is 1. There is no _maximum_, but entering a number larger than the number of **Cells** in the largest **Field** will cause all **Fields** to be removed and THE PIPELINE WILL EXIT DURING THE FILTER!
+Hence, a conservative approach to selecting the minimum number of **Cells** is strongly recommended. 
+
+After removing all the small **Fields**, the remaining **Fields** are _coarsened_ to fill the gaps left by the small **Fields**.  The iteration _coarsens_ the **Fields** by one **Cell** each iteration. 
+
+This filter has the additional ability to
 only apply the filter to a single phase of the users choosing.
 
 
@@ -19,21 +18,21 @@ only apply the filter to a single phase of the users choosing.
 
 | Name | Type | Description |
 |------|------| ------- |
-| Minimum Allowed Grain Size | Integer | Number of Voxels |
+| Minimum Allowed **Field** Size | Integer | Number of **Cells** |
 | Phase Number | Integer | The phase number to apply this filter to. |
 
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellPhases |  | |
-| Cell | GrainIds |  | |
-| Field | FieldPhases |  |  |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.|
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute.|
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| |
 
 ## Created Arrays ##
 
-| Type | Name | Comment |
-|------|------|---------|
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
 | Field | Active |      |
 
 ## Authors ##

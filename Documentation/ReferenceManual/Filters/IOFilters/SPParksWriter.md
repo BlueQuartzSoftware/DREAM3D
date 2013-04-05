@@ -1,4 +1,4 @@
-Write SPParks File (Grain Ids) {#spparkswriter}
+Write SPParks File (**Field** Ids) {#spparkswriter}
 ======
 
 ## Group (Subgroup) ##
@@ -9,9 +9,9 @@ I/O Filters
 This Filter writes to a data file in a format used by <a href="http://spparks.sandia.gov/">SPPARKS Kinetic Monte Carlo Simulator.</a> 
 
 + The "Values" section is a pair of numbers where the first number is the site ID and the second
- number is the actual value of the Grain Id at that site.
+ number is the actual value of the **Field** Id at that site.
 + LINE 4 evidently must be what is shown in the example file.
-+ LINE 3 is the total number of voxels.
++ LINE 3 is the total number of **Cells**.
 + LINES 5,6 and 7 are the Dimensions of the volume. 
 
 

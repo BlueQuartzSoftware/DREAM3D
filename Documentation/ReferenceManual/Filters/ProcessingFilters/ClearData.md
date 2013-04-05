@@ -5,7 +5,7 @@ Clear Data {#cleardata}
 Processing Filters
 
 ## Description ##
-This filter writes Zeros (0) into every element of every Voxel Array.
+This filter writes Zeros (0) into every element of every **Cell** Array.
 
 
 ## Parameters ##

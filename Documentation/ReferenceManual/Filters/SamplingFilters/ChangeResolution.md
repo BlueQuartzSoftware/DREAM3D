@@ -7,7 +7,7 @@ Change Resolution {#}
 Sampling Filters
 
 
-This Filter changes the _voxel_ resolution based on inputs from the user for x, y, and/or z values.
+This Filter changes the **Cell** resolution based on inputs from the user for x, y, and/or z values.
 
 
 ## Parameters ##

@@ -1,4 +1,4 @@
-Write Ph File (Grain Ids) {#phwriter}
+Write Ph File (**Field** Ids) {#phwriter}
 ======
 
 ## Group (Subgroup) ##

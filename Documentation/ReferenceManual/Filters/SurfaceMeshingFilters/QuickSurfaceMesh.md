@@ -5,7 +5,7 @@ Quick Surface Mesh {#quicksurfacemesh}
 SurfaceMesh
 
 ## Description ##
-This surface meshing algorithm proceeds by creating a pair of triangles for each face of the voxel where the neighboring voxel have a different grain id value. No attempt is made to mimic the operations of a MultiMaterial Marching Cubes algorithm. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a smoothing operation on the surface mesh.
+This surface meshing algorithm proceeds by creating a pair of triangles for each face of the **Cell** where the neighboring **Cell** have a different **Field** id value. No attempt is made to mimic the operations of a MultiMaterial Marching Cubes algorithm. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a smoothing operation on the surface mesh.
  
 
 ## Parameters ##

@@ -1,7 +1,7 @@
 Write INL File {#inlwriter}
 ======
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Output)
 
 ## Description ##
 
@@ -13,7 +13,7 @@ This filter writes out a file in column format that is space delimited. Header l
 - x Position (Microns)
 - y Position (Microns)
 - z Position (Microns)
-- Grain Id
+- **Field** Id
 - Phase Id
 - Symmetry
  

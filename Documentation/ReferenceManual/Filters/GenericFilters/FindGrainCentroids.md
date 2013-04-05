@@ -5,8 +5,8 @@ Find Field Centroids {#findgraincentroids}
 Generic Filters (Misc)
 
 ## Description ##
-This filter calculates the _centroid_ of each **Field** by determining the average x, y, and z position of all the voxels/datapoints belonging to the **Field**. 
-Note that features/grains that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Field** that lies inside the sample.
+This filter calculates the _centroid_ of each **Field** by determining the average x, y, and z position of all the **Cells** belonging to the **Field**. 
+Note that **Fields** that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Field** that lies inside the sample.
 
 
 ## Parameters ##

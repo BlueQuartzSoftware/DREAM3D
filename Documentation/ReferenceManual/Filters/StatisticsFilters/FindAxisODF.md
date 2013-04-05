@@ -8,7 +8,7 @@ Statistics Filters
 
 
 The ODF is defined as the volume fraction of grains with a certain orientation vector.
-The orientation vector is normally identified using three _Euler_ angles which are used to describe the transition from the _sample_’s reference frame into the _crystallographic_ reference frame of each individual grain of the polycrystal. One thus ends up with a large set of different _Euler_ angles, the distribution of which is described by the ODF.
+The orientation vector is normally identified using three _Euler_ angles which are used to describe the transition from the _sample_’s reference frame into the _crystallographic_ reference frame of each individual **Field** of the polycrystal. One thus ends up with a large set of different _Euler_ angles, the distribution of which is described by the ODF.
 This Filter searches and identifies the ODF axis of the volume fraction of grains.
 
 

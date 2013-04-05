@@ -2,11 +2,11 @@ Write Field Data as CSV File {#fielddatacsvwriter}
 ======
 
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Output)
 
 
 ## Description ##
-This Filter writes the __Field__ data, using a filename input by the user, to an output file in _CSV_ format.
+This Filter writes the **Field** data, using a filename input by the user, to an output file in *CSV* format. Every array in the **Field** map is written as a column of data in the csv file.  The user can choose to write the neighbor data. Neighbor data are data arrays that are associated with the neighbors of a **Field**, such as: list of neighbors, list of misorientations, list of shared surface areas, etc. These blocks of info are written after the scalar data arrays.  Since the number of neighbors is variable for each **Field**, the data is written as follows (for each **Field**): Id, number of neighbors, value1, value2,...valueN.
 
 
 ## Parameters ##
@@ -14,6 +14,7 @@ This Filter writes the __Field__ data, using a filename input by the user, to an
 | Name | Type |
 |------|------|
 | Output File | File Path |
+| Write Neighbor Data | Boolean (On of Off) |
 
 ## Required Arrays ##
 None

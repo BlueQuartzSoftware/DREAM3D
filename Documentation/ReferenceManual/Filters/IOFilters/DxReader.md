@@ -1,7 +1,7 @@
-Read Dx File (Grain Ids) {#dxreader}
+Read Dx File (**Field** Ids) {#dxreader}
 ======
 ## Group (Subgroup) ##
-I/O Filters
+I/O Filters (Input)
 
 ## Description ##
 

@@ -2,15 +2,15 @@ Fill Bad Data {#fillbaddata}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Cleanup)
 
 ## Description ##
 This Filter removes small noise in data, but keeps larger regions that are possibly features, e.g., pores or defects.
-This Filter collects the _bad voxels_ (__GrainId__ = 0) and sets the _close_ operation, as in the _open/close_ filter [_see below_], to be run on those _bad voxels_ until none remain. 
-However, those _bad voxels_ that satisfy the following are not changed:
-The _voxels_ that are contiguous to any group of _bad voxels_ are tested to determine if they have as many as or more _voxels_ than the minimum defect size (_voxels_). If true, then the _bad voxels_ remain unchanged when run in the _close_ operations.
+This Filter collects the _bad **Cells**_ (*GrainId* = 0) and sets the _close_ operation, as in the _open/close_ filter [_see below_], to be run on those _bad **Cells**_ until none remain. 
+However, those _bad **Cells**_ that satisfy the following are not changed:
+The _**Cells**_ that are contiguous to any group of _bad **Cells**_ are tested to determine if they have as many as or more _**Cells**_ than the minimum defect size (_**Cells**_). If true, then the _bad **Cells**_ remain unchanged when run in the _close_ operations.
 -----------------
- _In the Open/Close Filter, for the _close_ option, the __GrainID__ of the bad _voxel_ is changed to the __GrainID__ of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero __GrainID___.
+ _In the Open/Close Filter, for the _close_ option, the *GrainId* of the bad **Cell** is changed to the *GrainId* of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero __GrainID___.
 
 ## Parameters ##
 

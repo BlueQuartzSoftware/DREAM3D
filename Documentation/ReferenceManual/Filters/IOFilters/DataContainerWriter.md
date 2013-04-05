@@ -2,7 +2,7 @@ Write DREAM3D Data File {#datacontainerwriter}
 ======
 
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Output)
 
 ## Description ##
 
@@ -18,7 +18,7 @@ file but with an .xdmf file extension.
 | Name | Type |
 |------|------|
 | Output File | Output File |
-| Write Voxel Data | Boolean (On or Off) |
+| Write **Cell** Data | Boolean (On or Off) |
 | Write SurfaceMesh Data | Boolean (On or Off) |
 | Write Xdmf File | Boolean (On or Off) |
 

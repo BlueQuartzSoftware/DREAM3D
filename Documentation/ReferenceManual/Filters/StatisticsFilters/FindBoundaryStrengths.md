@@ -1,6 +1,6 @@
-Find Grain Boundary Strength Metrics {#}
+Find **Field** Boundary Strength Metrics {#}
 ======
-<h1 class="pHeading1">Find Grain Boundary Strength Metrics Filter</h1>
+<h1 class="pHeading1">Find **Field** Boundary Strength Metrics Filter</h1>
 <p class="pCellBody">
 <a href="../Filters/FindBoundaryStrengths.html#wp2">Description</a>
 | <a href="../Filters/FindBoundaryStrengths.html#wp3">Options</a>

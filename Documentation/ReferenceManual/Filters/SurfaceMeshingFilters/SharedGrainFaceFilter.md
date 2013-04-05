@@ -1,11 +1,11 @@
-Shared Grain Face Filter {#sharedgrainfacefilter}
+Shared **Field** Face Filter {#sharedgrainfacefilter}
 ======
 
 ## Group (Subgroup) ##
 SurfaceMesh
 
 ## Description ##
-This filter generates all the unique grain id to grain id values. For example if Grain Id = 4 had 3 neighbors with values of 6, 8 and 9 then at least 3 unique values would be generated for the pairs (4,6), (4, 8) and (4,9). This value is stored in the array at the same index as the triangle is stored in the triangle array.
+This filter generates all the unique **Field** id to **Field** id values. For example if **Field** Id = 4 had 3 neighbors with values of 6, 8 and 9 then at least 3 unique values would be generated for the pairs (4,6), (4, 8) and (4,9). This value is stored in the array at the same index as the triangle is stored in the triangle array.
 
 
 ## Parameters ##

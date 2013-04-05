@@ -2,10 +2,10 @@ Rotate Euler Reference Frame {#rotateeulerrefframe}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Conversion)
 
 ## Description ##
-
+This filter will rotate the *Euler Angles* that exist at each **Cell**.  In actuality, the *reference frame* is being rotated and thus the *Euler Angles* necessary to represent the same orientation must change to account for the new *reference frame*.  
 
 ## Parameters ##
 

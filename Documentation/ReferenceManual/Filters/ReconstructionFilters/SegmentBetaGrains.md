@@ -29,7 +29,7 @@ Segment Grains (Misorientation) {#}
 
 | Type | Name | Comment |
 |------|------|---------|
-| Cell | GoodVoxels |  |
+| Cell | Good**Cells** |  |
 | Cell | GrainIds |  |
 | Field | Active |  |
 

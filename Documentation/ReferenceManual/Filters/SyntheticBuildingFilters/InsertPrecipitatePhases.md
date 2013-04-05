@@ -7,7 +7,7 @@ Insert Precipitate Phases {#}
 Synthetic Builder Filters
 
 
-If precipitate phases have been included in the _Statistics_ file used by the _Initialize Synthetic Volume_ Filter, _voxels_ are assigned based on the volume fraction of the precipitate phase.
+If precipitate phases have been included in the _Statistics_ file used by the _Initialize Synthetic Volume_ Filter, _**Cells**_ are assigned based on the volume fraction of the precipitate phase.
  Periodic Boundary conditions are selected by the user to be active or inactive. <BR>
 
 
@@ -23,7 +23,7 @@ If precipitate phases have been included in the _Statistics_ file used by the _I
 
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
-| Cell | SurfaceVoxels |  |
+| Cell | Surface**Cells** |  |
 | Ensemble | PhaseTypes |  |
 | Ensemble | ShapeTypes |  |
 

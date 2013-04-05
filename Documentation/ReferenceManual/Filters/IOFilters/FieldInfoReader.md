@@ -1,18 +1,18 @@
 Read Field Info File {#fieldinforeader}
 ======
 ## Group (Subgroup) ##
-IO Filters
+IO Filters (Input)
 
 ## Description ##
-This filter reads information about the features/grains that are in the sample. The
- basic format of the file is the number of features/grains on the first line of the file followed by
- columnar formatted data listing: Grain Id, PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.
- *If you do not have Euler Angle data for each grain then substituting Zero (0.0) is fine.<br/>
+This filter reads information about the **Fields** that are in the sample. The
+ basic format of the file is the number of **Fields** on the first line of the file followed by
+ columnar formatted data listing: **Field** Id, PhaseID, Euler Angle 1, Euler Angle 2 and Euler Angle 3.
+ *If you do not have Euler Angle data for each **Field** then substituting Zero (0.0) is fine.<br/>
 
 __**Field** Ids start from One (1) and Phase Ids start from One (1).
-DREAM3D uses Grain Id Zero(0) internally which has several ramifications which the user needs to understand. Statistics
-will _NOT_ be calculated for any voxel or field data with a value of Zero (0). If your segmented data numbering
-starts with Zero (0) then the user needs to find a way to renumber Grain=0 to another value. Max + 1 typically.__
+DREAM3D uses **Field** Id Zero(0) internally which has several ramifications which the user needs to understand. Statistics
+will _NOT_ be calculated for any **Cell** or field data with a value of Zero (0). If your segmented data numbering
+starts with Zero (0) then the user needs to find a way to renumber **Field**=0 to another value. Max + 1 typically.__
 For example if you have a file with 123 grains and 2 phases then the file would be similar to the following: 
 <pre>
 123
@@ -36,7 +36,7 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 | Name | Type |
 |------|------|
 | Input Field Info File | Input File |
-| Create Cell Level Arrays | Boolean |
+| Create Cell Level Arrays | Boolean (On or Off) |
 
 ## Required Arrays ##
 
@@ -48,8 +48,8 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) |  |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** |  |
+| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) | Only created if boolean is checked |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Only created if boolean is checked |
 | Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each **Field** in Bunge convention (Z-X-Z) |  |
 | Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** |  |
 
