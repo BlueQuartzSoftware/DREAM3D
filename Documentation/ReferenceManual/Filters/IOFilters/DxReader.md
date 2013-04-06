@@ -1,4 +1,4 @@
-Read Dx File (**Field** Ids) {#dxreader}
+Read Dx File (Field Ids) {#dxreader}
 ======
 ## Group (Subgroup) ##
 I/O Filters (Input)
