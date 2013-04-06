@@ -1,4 +1,4 @@
-Shared **Field** Face Filter {#sharedgrainfacefilter}
+Shared Field Face Filter {#sharedgrainfacefilter}
 ======
 
 ## Group (Subgroup) ##
