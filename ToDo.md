@@ -7,7 +7,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
-+ RawBinaryReader does not honor the Origin value
+
 
 ## Documentation Issues ##
 
@@ -58,7 +58,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Still to Do ##
-
++ On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
@@ -157,7 +157,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 + Include Expat as part of the DREAM3D Compile?
 
 
-##  Items Completed ##
+## Items Completed ##
++ RawBinaryReader does not honor the Origin value
 + Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
 + Tutorial on Surface Meshing for Docs/Website
 + Add filter to generate IPF colors for triangles in surface mesh
