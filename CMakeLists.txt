@@ -189,6 +189,12 @@ include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
 
 # -----------------------------------------------------------------------
+# Setup some Global Lists that are used to gather Documentation Information
+file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
+
+
+
+# -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
 
@@ -207,6 +213,8 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 # -----------------------------------------------------------------------
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
+
+
 
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
@@ -383,6 +391,7 @@ endif()
 if(DREAM3D_BUILD_TESTING)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
+
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
