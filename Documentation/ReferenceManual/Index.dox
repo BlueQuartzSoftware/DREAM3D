@@ -1,7 +1,7 @@
 /*!
 
 @mainpage DREAM3D Reference
-This is an introduction to what is contained in the Reference Manual
+The DREAM3D Rererence Manual contains all the information to start using DREAM3D quickly. The user is urged to read through the short introduction to get a basic idea of how to use DREAM3D. For a really quick start the user is referred to the various tutorials that have been created. For those uses importing data from other sources the sections on the various file formats will be of interest. Finally the "Filter Reference" lists each of the filters that the user can utilize in their workflows.
 
 @subpage usermanual DREAM3D User Manual
 
