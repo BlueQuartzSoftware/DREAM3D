@@ -1,12 +1,10 @@
-Find Shapes {#}
+Find Field Shapes {#findshapes}
 ======
-<h1 class="pHeading1">Find Shapes Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindShapes.html#wp2">Description</a> | <a href="../StatisticsFilters/FindShapes.html#wp3">Options</a> | <a href="../StatisticsFilters/FindShapes.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindShapes.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindShapes.html#wp1">Authors</a> 
 
-Statistics Filters
+## Group (Subgroup) ##
+Statistics Filters (Morphological)
 
-
+## Description ##
  The user has the option of entering a distribution choice: Beta, LogNormal or Power.
   The 3-D moment invariants of second order are three numbers, represented by the symbols 0≤Ωi≤  1 (i = 1, 2, 3), which are computed starting
 from the shape of an object. The moment invariants are invariant with respect to either similarity
@@ -15,7 +13,7 @@ descriptors that are independent of the reference frame used to represent the ob
 Omega1 and Omega2 are related to aspect ratios, while Omega3 is useful for shape characterization. Details of the Omega3 shape descriptors are given in the Sources that include Tables of all three Omega expressions for basic geometrical shapes.
 
 ------------
-_Sources: 
+Sources: 
 1. Representation and Reconstruction of Three-dimensional
 Microstructures in Ni-based Superalloys, AFOSR FA9550-07-1-0179 Final Report, 20 Dec 2010.
 2. On the use of moment invariants for the automated classifcation of 3-D particle shapes, J.

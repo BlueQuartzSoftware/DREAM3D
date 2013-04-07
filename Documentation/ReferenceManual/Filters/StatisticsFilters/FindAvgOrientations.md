@@ -1,13 +1,10 @@
-Find Average Orientations {#}
+Find Field Average Orientations {#findavgorientations}
 ======
-<h1 class="pHeading1">Find Average Orientations Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindAvgOrientations.html#wp2">Description</a> | <a href="../StatisticsFilters/FindAvgOrientations.html#wp3">Options</a> | <a href="../StatisticsFilters/FindAvgOrientations.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindAvgOrientations.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindAvgOrientations.html#wp1">Authors</a> 
 
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
 
-Statistics Filters
-
-
+## Description ##
 This Filter searches the __Cell GrainIds__ to identify their orientations based 
 on the associated __Quats__ and __Cell CellPhases__, from which the average of 
 the __Cell Quats__ is generated as __Field AvgQuats__. The _Euler_ angles 

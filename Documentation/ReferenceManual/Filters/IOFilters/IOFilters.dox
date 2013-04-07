@@ -23,7 +23,7 @@
 
 @subpage fieldinforeader
 
-@subpage h5**Cell**filereader
+@subpage h5voxelfilereader
 
 @subpage inlwriter
 

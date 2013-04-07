@@ -1,17 +1,11 @@
 
-Align Sections (Feature Centroid) {#}
+Align Sections (Feature Centroid) {#alignsectionsfeaturecentroid}
 ======
-<h1 class="pHeading1">Align Sections (Feature Centroid) Filter</h1>
-<p class="pCellBody">
 
-<a href="../ReconstructionFilters/AlignSectionsFeatureCentroid.html#wp2">Description</a>
-| <a href="../ReconstructionFilters/AlignSectionsFeatureCentroid.html#wp3">Options</a>
-| <a href="../ReconstructionFilters/AlignSectionsFeatureCentroid.html#wp4">Required Arrays</a>
-| <a href="../ReconstructionFilters/AlignSectionsFeatureCentroid.html#wp5">Created Arrays</a>
-| <a href="../ReconstructionFilters/AlignSectionsFeatureCentroid.html#wp1">Authors</a> 
+## Group (Subgroup) ##
+Reconstruction Filters (Alignment)
 
-Reconstruction
-
+## Description ##
 This filter attempts to align consecutive serial sections by determining the position that closest aligns the centroid(s) of previously
 defined "regions".  The "regions" are defined by a binary/boolean array where the **Cells** have been flagged by another filter.
 Typically, during reading of the data, each **Cell** is subject to a "Quality Metric" (or threshold) that defines if the **Cell**

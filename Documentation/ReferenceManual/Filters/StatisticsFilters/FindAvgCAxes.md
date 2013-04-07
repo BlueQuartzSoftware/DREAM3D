@@ -1,15 +1,13 @@
-
-Find Average Orientations {#}
+Find Field Average C-Axes {#findavgcaxes}
 ======
-<h1 class="pHeading1">Find Average Orientations Filter</h1>
-<p class="pCellBody">
-<a href="../Filters/FindAvgCAxes.html#wp2">Description</a>
-| <a href="../Filters/FindAvgCAxes.html#wp3">Options</a>
-| <a href="../Filters/FindAvgCAxes.html#wp4">Required Arrays</a>
-| <a href="../Filters/FindAvgCAxes.html#wp5">Created Arrays</a>
-| <a href="../Filters/FindAvgCAxes.html#wp1">Authors</a> 
+
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
+
+## Description ##
 
 ## Parameters ##
+None
 
 ## Required Arrays ##
 

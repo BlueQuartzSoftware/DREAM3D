@@ -1,16 +1,11 @@
 
-Add Bad Data {#}
+Add Bad Data {#addbaddata}
 ======
-<h1 class="pHeading1">Add Bad Data Filter</h1>
-<p class="pCellBody">
-<a href="../SyntheticBuildingFilters/AddBadData.html#wp2">Description</a>
-| <a href="../SyntheticBuildingFilters/AddBadData.html#wp3">Options</a>
-| <a href="../SyntheticBuildingFilters/AddBadData.html#wp4">Required Arrays</a>
-| <a href="../SyntheticBuildingFilters/AddBadData.html#wp5">Created Arrays</a>
-| <a href="../SyntheticBuildingFilters/AddBadData.html#wp1">Authors</a> 
 
-SyntheticBuilding
+## Group (Subgroup) ##
+Synthetic Builder Filters (Misc)
 
+## Description ##
 
 ## Parameters ##
 
@@ -21,9 +16,7 @@ SyntheticBuilding
 | Cell | GBEuclideanDistances |  |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
+None
 
 ## Authors ##
 

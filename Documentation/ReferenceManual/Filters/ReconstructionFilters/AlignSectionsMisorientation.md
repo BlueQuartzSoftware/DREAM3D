@@ -1,12 +1,10 @@
-Align Sections (Misorientation) {#}
+Align Sections (Misorientation) {#alignsectionsmisorientation}
 ======
-<h1 class="pHeading1">Align Sections (Misorientation) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/AlignSectionsMisorientation.html#wp2">Description</a> | <a href="../ReconstructionFilters/AlignSectionsMisorientation.html#wp3">Options</a> | <a href="../ReconstructionFilters/AlignSectionsMisorientation.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsMisorientation.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsMisorientation.html#wp1">Authors</a> 
 
-Reconstruction Filters
+## Group (Subgroup) ##
+Reconstruction Filters (Alignment)
 
-
+## Description ##
 This filter attempts to align consecutive serial sections by determining the position that results in the minimum amount of misorientation
 between **Cells** directly above-below each other. 
 The algorithm of this filter is as follows:

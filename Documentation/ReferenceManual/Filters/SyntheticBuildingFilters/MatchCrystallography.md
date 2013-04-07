@@ -1,12 +1,10 @@
-Match Crystallography {#}
+Match Crystallography {#matchcrystallography}
 ======
-<h1 class="pHeading1">Match Crystallography Filter</h1>
-<p class="pCellBody">
-<a href="../Synthetic_BuilderFilters/MatchCrystallography.html#wp2">Description</a> | <a href="../Synthetic_BuilderFilters/MatchCrystallography.html#wp3">Options</a> | <a href="../Synthetic_BuilderFilters/MatchCrystallography.html#wp4">Required Arrays</a> | <a href="../Synthetic_BuilderFilters/MatchCrystallography.html#wp5">Created Arrays</a> | <a href="../Synthetic_BuilderFilters/MatchCrystallography.html#wp1">Authors</a> 
 
-Synthetic Builder Filters
+## Group (Subgroup) ##
+Synthetic Builder Filters (Crystallography)
 
-
+## Description ##
 This Filter searches for the crystal structures present and finds where matches occur in the synthetic volume. The _Initialize Synthetic Volume_ Filter must be run before this Filter will function properly, because that Filter generates the Statistics needed by this Filter. *GrainIds* are also needed and must have been generated in other Synthetic Builder Filters.
 
 ## Parameters ##

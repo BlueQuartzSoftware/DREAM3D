@@ -1,12 +1,10 @@
-Align Sections (Mutual Information) {#}
+Align Sections (Mutual Information) {#alignsectionsmutualinformation}
 ======
-<h1 class="pHeading1">Align Sections (Mutual Information) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/AlignSectionsMutualInformation.html#wp2">Description</a> | <a href="../ReconstructionFilters/AlignSectionsMutualInformation.html#wp3">Options</a> | <a href="../ReconstructionFilters/AlignSectionsMutualInformation.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsMutualInformation.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsMutualInformation.html#wp1">Authors</a> 
 
-Reconstruction Filters
+## Group (Subgroup) ##
+Reconstruction Filters (Alignment)
 
-
+## Description ##
 This Filter segments 2D slices, creates *GrainIds* that are used to determine the _mutual information_ and then aligns the slices. These *GrainIds* are temporary, and they apply to this filter only. So they are not related to the *GrainIds* generated in other Filters.
 
 The user choses the level of _misorientation tolerance_ by which to align _**Cells**_, where here the tolerance means the _misorientation_ cannot exceed a given value. If the rotation angle is below the tolerance, then the **Cell** is grouped with other _**Cells**_ that satisfy the criterion.

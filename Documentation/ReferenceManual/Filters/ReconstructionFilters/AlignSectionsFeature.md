@@ -2,7 +2,7 @@ Align Sections (Feature) {#alignsectionsfeature}
 ======
 
 ## Group (Subgroup) ##
-Reconstruction Filters
+Reconstruction Filters (Alignment)
 
 ## Description ##
 This filter attempts to align consecutive serial sections by determining the position that results in the most overlap

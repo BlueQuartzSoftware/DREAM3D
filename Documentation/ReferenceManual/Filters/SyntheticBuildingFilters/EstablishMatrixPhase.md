@@ -1,12 +1,10 @@
-Establish Matrix Phase {#}
+Establish Matrix Phase {#establishmatrixphase}
 ======
-<h1 class="pHeading1">Establish Matrix Phase Filter</h1>
-<p class="pCellBody">
-<a href="../Synthetic_BuilderFilters/EstablishMatrixPhase.html#wp2">Description</a> | <a href="../Synthetic_BuilderFilters/EstablishMatrixPhase.html#wp3">Options</a> | <a href="../Synthetic_BuilderFilters/EstablishMatrixPhase.html#wp4">Required Arrays</a> | <a href="../Synthetic_BuilderFilters/EstablishMatrixPhase.html#wp5">Created Arrays</a> | <a href="../Synthetic_BuilderFilters/EstablishMatrixPhase.html#wp1">Authors</a> 
 
-Synthetic Builder Filters
+## Group (Subgroup) ##
+Synthetic Builder Filters (Packing)
 
-
+## Description ##
 To run this Filter properly, the _Initialize Synthetic Volume_ Filter must have been run already.
 Based on the phase fraction in the statistics file used in the _Initialize Synthetic Volume_ Filter, this Filter assigns _**Cells**_ to a matrix phase. 
 

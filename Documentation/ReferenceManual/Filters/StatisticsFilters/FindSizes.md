@@ -1,14 +1,12 @@
-Find Sizes {#}
+Find Field Sizes {#findsizes}
 ======
-<h1 class="pHeading1">Find Sizes Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindSizes.html#wp2">Description</a> | <a href="../StatisticsFilters/FindSizes.html#wp3">Options</a> | <a href="../StatisticsFilters/FindSizes.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindSizes.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindSizes.html#wp1">Authors</a> 
 
-Statistics Filters
+## Group (Subgroup) ##
+Statistics Filters (Morphological)
 
-
+## Description ##
 This filter calculates the sizes of all **Fields**.  The filter simply iterates through all **Cells** asking the for **Field** that owns them.  
-The count of **Cells** for each **Field** is then stored as NumCells and the Volume and EquivalentDiameter are also calculated (and stored) by knowing 
+The count of **Cells** for each **Field** is then stored as *NumCells* and the *Volume* and *EquivalentDiameter* are also calculated (and stored) by knowing 
 the volume of each **Cell**.
 
 ## Parameters ##
