@@ -184,3 +184,10 @@ endif()
 # the HTML help files
 add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
 
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D
+        DESTINATION Help/
+        COMPONENT Applications )
+
