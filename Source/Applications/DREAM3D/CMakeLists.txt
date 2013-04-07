@@ -151,15 +151,3 @@ BuildQtAppBundle(
     INSTALL_DEST  ${DEST_DIR}
 )
 
-#- This copies all the HTML files into the Build directory so the help
-#- works from the Build Tree
-#file(COPY ${DREAM3D_SOURCE_DIR}/Help/
-#     DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/${PROJECT_NAME}/ )
-
-#- This installs all the help files. Note that we assume a flat directory structure
-#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
-#- folder and NOT in any subfolders beyond that.
-install(DIRECTORY ${DREAM3D_SOURCE_DIR}/Help/
-        DESTINATION Help/${PROJECT_NAME}/
-        COMPONENT Applications )
-

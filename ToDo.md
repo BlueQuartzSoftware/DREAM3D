@@ -3,9 +3,12 @@ DREAM3D Development ToDo List {#todo}
 
 This is the list of things to do. It is written with the Markdown style so it can be integrated with the other documentation pages.
 
-
-
 ## Show Stopping Bugs ##
+
+## Documentation Issues ##
+
+
+### Groeber Documentation
 + Fix html Help for "Standardize Euler Angles"
 + Fix html Help for "Erode Dilate Coordination Number"
 + Fix html for FindSlicetoSliceRotations.html
@@ -13,28 +16,50 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix html for AddBadData.html
 + Fix html for AddNoise.html
 + fix HTML for JumbleOrientations.html
-+ Add Documentation for RenameCell Array
-+ Add Documentation for RenameField Array
++ Missing Documenation File for GenericFilters/LinkFieldMapToCellArray
++ Missing Documenation File for GenericFilters/RenameCellArray
++ Missing Documenation File for GenericFilters/RenameFieldArray
++ Missing Documenation File for StatisticsFilters/GenerateEnsembleStatistics
++ Missing Documenation File for StatisticsFilters/FindMisorientations
++ Missing Documenation File for IOFilters/ImportImageStack
 + write-up contributors section for website
-+ Tutorial on Small IN100 for Docs/Website
-+ Tutorial on Synthetic Generation for Docs/Website
 
-+ Tutorial on Xdmf files for Docs/Website
-+ Tutorial on Visualization Techniques for Docs/Website
-+ Tutorial on Creating Ensemble Statistics for Docs/Website
-+ Tutorial on Importing Orientation Data for Docs/Website
+
+### Jackson Priority ###
++ Usermanual::Import/Export/Favorite Pipelines
++ Usermanual::User Interface Introduction
++ Tutorial::Small IN100 for Docs/Website
++ Tutorial::Synthetic Generation for Docs/Website
++ Tutorial::Visualization Techniques for Docs/Website
++ Tutorial::Creating Ensemble Statistics for Docs/Website
++ Tutorial::Importing Orientation Data for Docs/Website
++ FileFormats::Xdmf files for Docs/Website
++ FileFormats::Native DREAM3D format
++ FileFormats::Other supported file types
+
+
+### User Centric
++ Update/Create a user manual for the stats generator - last parts need pasting
++ Update documentation file structure now that users can specify array names
+
+### Developer Centric ###
 + How to Incorporate documentation for plugins into the main help system
++ Add documentation on how to add new filter directly into DREAM3D
++ Add documentation on how to add new filter group directly into DREAM3D
 
-## Mike Jackson ToDo List ##
+### Ideas/Wish List ###
++ Add "help" button to each filter that would display the help for that specific filter
++ Comprehensive search of the help system (Possibly QAssistant based?)
+
+
+
+## Still to Do ##
++ On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
 + Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 + Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
-
-
-
-## Still To Do ##
 + Filter that can execute any program on the users computer
 + Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -87,7 +112,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix synthetic builder to note if volume is 2D and actually pack slices
 
 
-##  IO Filterse ##
+##  IO Filters ##
 + Add filter to generate IPF Images for each slice of data, or a user defined range of slices and plane by defining the normal to the plane (X, Y or Z)
 + Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 + Add filter to write out slices as images of any array
@@ -112,15 +137,6 @@ to another phase (phase 3), so that they can be visualised differently to the su
 grains (phase 2) and grains that are untwinned (phase 1).
 
 
-##  Documentation Issues ##
-+ Add documentation on how to add new filter directly into DREAM3D
-+ Add documentation on how to add new filter group directly into DREAM3D
-+ Update/Create a user manual for the stats generator - last parts need pasting
-+ Update documentation file structure now that users can specify array names
-+ Add menu for displaying help
-+ Add "help" button to each filter
-
-
 ##  Surface Meshing ##
 + bug in edges file is stopping the use in the smoothing filter
 + Add mesh decimation filter (surface or volume)
@@ -137,7 +153,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 + Include Expat as part of the DREAM3D Compile?
 
 
-##  Items Completed ##
+## Items Completed ##
++ RawBinaryReader does not honor the Origin value
 + Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
 + Tutorial on Surface Meshing for Docs/Website
 + Add filter to generate IPF colors for triangles in surface mesh

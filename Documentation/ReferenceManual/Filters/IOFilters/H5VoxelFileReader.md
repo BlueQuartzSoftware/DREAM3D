@@ -1,5 +1,5 @@
 Read Legacy DREAM.3D H5voxel File {#h5voxelfilereader}
-======
+=======
 
 ## Group (Subgroup) ##
 I/O Filters (Input)

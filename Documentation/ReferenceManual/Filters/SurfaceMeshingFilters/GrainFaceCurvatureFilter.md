@@ -1,4 +1,4 @@
-**Field** Face Curvature Filter {#grainfacecurvaturefilter}
+Field Face Curvature Filter {#grainfacecurvaturefilter}
 ======
 
 ## Group (Subgroup) ##

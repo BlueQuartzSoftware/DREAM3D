@@ -139,6 +139,8 @@ void VoxelDataContainerWriter::execute()
   { m->getXRes(), m->getYRes(), m->getZRes() };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
+  m->getOrigin(origin);
+
 
   writeXdmfGridHeader(origin, spacing, volDims);
 
