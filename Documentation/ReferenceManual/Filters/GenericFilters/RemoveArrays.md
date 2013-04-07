@@ -19,7 +19,7 @@ This filter allows the user to remove specified arrays from the pipeline by dele
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell/Field/Ensemble | *User Chosen* |  | Array(s) will always be present, since the user may only chose from existing arrays |
+| Cell/Field/Ensemble | *User Chosen* | - | Array(s) will always be present, since the user may only chose from existing arrays |
 
 
 

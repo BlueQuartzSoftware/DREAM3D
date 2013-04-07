@@ -1,4 +1,4 @@
-Read Ph File (**Field** Ids) {#phreader}
+Read Ph File (Field Ids) {#phreader}
 ======
 
 ## Group (Subgroup) ##

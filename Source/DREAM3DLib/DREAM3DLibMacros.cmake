@@ -3,16 +3,20 @@
 #-------------------------------------------------------------------------------
 # Macro START_FILTER_GROUP
 macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup)
-    file(APPEND ${AllFiltersHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
-    file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
-    file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
-    file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
+   file(APPEND ${AllFiltersHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
+   file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
+   file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
+   file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
 
-   # string(TOLOWER ${filterGroup} filterGroup_Lower)
-   #file(APPEND ${LATEX_FILTER_INDEX_FILE} "#--- Filter Group ${filterGroup} \n")
-   #file(APPEND ${LATEX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterGroup}.dox\n")
-   # file(WRITE ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help/Filters/${filterGroup}/${filterGroup}.dox "/*!\n@page ${filterGroup_Lower} ${filterGroup} \n\n")
-    message(STATUS "Generating Widgets for ${filterGroup}")
+
+   file(APPEND ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "${filterGroup}\n")
+   file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup} "")
+   #string(TOLOWER ${filterGroup} filterGroup_Lower)
+   #file(APPEND ${DOX_FILTER_INDEX_FILE} "#--- Filter Group ${filterGroup} \n")
+   #file(APPEND ${DOX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterGroup}.dox\n")
+   #file(APPEND ${DOX_FILTER_INDEX_FILE} "${filterGroup_Lower} ${filterGroup}\n\n")
+
+   message(STATUS "Adding Filters for Group ${filterGroup}")
 endmacro()
 
 #-------------------------------------------------------------------------------
@@ -64,7 +68,7 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter
     file(APPEND ${AllFiltersHeaderFile} "#include \"${FilterLib}/${filterGroup}/${filterName}.h\"\n")
 
     if( ${publicFilter} STREQUAL TRUE)
-        message(STATUS "    ${filterName}")
+        #message(STATUS "    ${filterName}")
         file(APPEND ${CodeGeneratorFile} "  ${filterName}::Pointer _${filterName} = ${filterName}::New();\n")
 
         if(NOT EXISTS ${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h )
@@ -85,13 +89,20 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter
             file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${filterGroup}Widgets/Q${filterName}Widget.cpp\");\n")
         endif()
 
-     #   file(APPEND ${CodeGeneratorFile} "  createHTMLFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get());\n\n")
-     #   file(APPEND ${HtmlDocQrcFile} "${filterGroup}/${filterName}.html\n")
-
         file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
 
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   QFilterWidgetFactory<Q${filterName}Widget>::Pointer q${filterName}WidgetFactory = QFilterWidgetFactory<Q${filterName}Widget>::New();\n")
         file(APPEND ${RegisterKnownFilterWidgetsFile} "   FilterWidgetManager::Instance()->addFilterWidgetFactory(\"${filterName}\",q${filterName}WidgetFactory);\n\n")
+
+
+       #-- Check to make sure we have a Documentation file for the filter
+        if(NOT EXISTS ${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/Filters/${filterGroup}/${filterName}.md )
+          message(STATUS "*** Missing Documenation File for ${filterGroup}/${filterName}")
+        endif()
+
+        file(APPEND ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup} "${filterName}\n")
+
+
 
     #--- The next block was to quickly generate some files DO NOT UNCOMMENT IT. You will overwrite files. YOU HAVE BEEN WARNED!
     #    string(TOLOWER ${filterName} filterName_Lower)
