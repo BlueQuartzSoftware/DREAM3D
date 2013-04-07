@@ -3,11 +3,7 @@ DREAM3D Development ToDo List {#todo}
 
 This is the list of things to do. It is written with the Markdown style so it can be integrated with the other documentation pages.
 
-
-
 ## Show Stopping Bugs ##
-
-
 
 ## Documentation Issues ##
 
