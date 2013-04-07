@@ -1,12 +1,10 @@
-Find Schmid Factors {#}
+Find Schmid Factors {#findschmids}
 ======
-<h1 class="pHeading1">Find Schmid Factors Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindSchmids.html#wp2">Description</a> | <a href="../StatisticsFilters/FindSchmids.html#wp3">Options</a> | <a href="../StatisticsFilters/FindSchmids.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindSchmids.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindSchmids.html#wp1">Authors</a> 
 
-Statistics Filters
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
 
-
+## Description ##
 This filter calculates the Schmid Factor of each **Field** given its average orientation and a user defined loading axis.
 The Schmid Factor is the combination of the component of the axial force F that lies parallel to the slip direction and the component 
 that lies perpendicular to the slip plane.  The equation for the Schmid Factor is given as:

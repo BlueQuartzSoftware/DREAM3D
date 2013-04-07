@@ -1,16 +1,10 @@
-
-Find Slice to Slice Crystallographic Misalignments {#}
+Find Slice to Slice Crystallographic Misalignments {#findslicetoslicerotations}
 ======
-<h1 class="pHeading1">Find Slice to Slice Crystallographic Misalignments Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindSlicetoSliceRotations.html#wp2">Description</a>
-| <a href="../StatisticsFilters/FindSlicetoSliceRotations.html#wp3">Options</a>
-| <a href="../StatisticsFilters/FindSlicetoSliceRotations.html#wp4">Required Arrays</a>
-| <a href="../StatisticsFilters/FindSlicetoSliceRotations.html#wp5">Created Arrays</a>
-| <a href="../StatisticsFilters/FindSlicetoSliceRotations.html#wp1">Authors</a> 
 
-Statistics
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
 
+## Description ##
 
 ## Parameters ##
 

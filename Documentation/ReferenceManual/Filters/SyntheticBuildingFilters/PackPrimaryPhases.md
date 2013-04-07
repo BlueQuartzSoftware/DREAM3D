@@ -1,12 +1,10 @@
-Pack Primary Phases {#}
+Pack Primary Phases {#packprimaryphases}
 ======
-<h1 class="pHeading1">Pack Primary Phases Filter</h1>
-<p class="pCellBody">
-<a href="../Synthetic_BuilderFilters/PackPrimaryPhases.html#wp2">Description</a> | <a href="../Synthetic_BuilderFilters/PackPrimaryPhases.html#wp3">Options</a> | <a href="../Synthetic_BuilderFilters/PackPrimaryPhases.html#wp4">Required Arrays</a> | <a href="../Synthetic_BuilderFilters/PackPrimaryPhases.html#wp5">Created Arrays</a> | <a href="../Synthetic_BuilderFilters/PackPrimaryPhases.html#wp1">Authors</a> 
 
-Synthetic Builder Filters
+## Group (Subgroup) ##
+Synthetic Builder Filters (Packing)
 
-
+## Description ##
 This Filter generates **Fields** and then adds them to a volume at random positions. The **Fields** are then moved within the volume such that the volume is maximally filled by the **Fields** and still satisfies the neighborhood input criterion.
 Because there are two criteria (space filling and neighborhood error weight) to be satisfied, this Filter uses the _space filling_ criterion as the primary control on the filling actions. Knowledge of neighborhoods is often not detailed enough to use.
  The __Neighborhood Error Weight__ is a number in the range [0, 1]. Hence,a small __Neighborhood Error Weight__ favors the space filling criterion. A large number, e.g., 1.0, means space filling and neighborhoods are equally important.

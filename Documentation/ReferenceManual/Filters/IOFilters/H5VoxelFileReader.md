@@ -1,4 +1,4 @@
-Read Legacy DREAM.3D H5**Cell** File {#h5**Cell**filereader}
+Read Legacy DREAM.3D H5voxel File {#h5voxelfilereader}
 ======
 
 ## Group (Subgroup) ##

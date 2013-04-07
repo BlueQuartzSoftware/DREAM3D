@@ -1,14 +1,13 @@
 
 
-Segment **Fields** (Misorientation) {#}
+Segment Fields (Scalar) {#scalarsegmentgrains}
 ======
-<h1 class="pHeading1">Segment **Fields** (Misorientation) Filter</h1>
-<p class="pCellBody">
-<a href="../Filters/ScalarSegmentGrains.html#wp2">Description</a>
-| <a href="../Filters/ScalarSegmentGrains.html#wp3">Options</a>
-| <a href="../Filters/ScalarSegmentGrains.html#wp4">Required Arrays</a>
-| <a href="../Filters/ScalarSegmentGrains.html#wp5">Created Arrays</a>
-| <a href="../Filters/ScalarSegmentGrains.html#wp1">Authors</a> 
+
+## Group (Subgroup) ##
+Reconstruction Filters (Segmentation)
+
+## Description ##
+This filter groups together **Cells** that differ in some user defined scalar value by less than a user defined tolerance.  For example, if the user selected array was an 8bit image array, then the array would consist of integer values between *0* and *255*.  If the user then set a tolerance vlaue of 10, then the filter would identify all sets of contiguous **Cells** that have *grayscale* values with *10* of each other.
 
 ## Parameters ##
 

@@ -1,12 +1,10 @@
-Change Resolution {#}
+Change Resolution {#changeresolution}
 ======
-<h1 class="pHeading1">Change Resolution Filter</h1>
-<p class="pCellBody">
-<a href="../SamplingFilters/ChangeResolution.html#wp2">Description</a> | <a href="../SamplingFilters/ChangeResolution.html#wp3">Options</a> | <a href="../SamplingFilters/ChangeResolution.html#wp4">Required Arrays</a> | <a href="../SamplingFilters/ChangeResolution.html#wp5">Created Arrays</a> | <a href="../SamplingFilters/ChangeResolution.html#wp1">Authors</a> 
 
-Sampling Filters
+## Group (Subgroup) ##
+Sampling Filters (Resolution)
 
-
+## Description ##
 This Filter changes the **Cell** resolution based on inputs from the user for x, y, and/or z values.
 
 
@@ -19,9 +17,7 @@ This Filter changes the **Cell** resolution based on inputs from the user for x,
 | Z Res | Double |
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
+None
 
 ## Created Arrays ##
 None

@@ -1,12 +1,10 @@
-Find Neighborhoods {#}
+Find Field Neighborhoods {#findneighborhoods}
 ======
-<h1 class="pHeading1">Find Neighborhoods Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindNeighborhoods.html#wp2">Description</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp3">Options</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindNeighborhoods.html#wp1">Authors</a> 
 
-Statistics Filters
+## Group (Subgroup) ##
+Statistics Filters (Morphological)
 
-
+## Description ##
 This Filter searches the __Cell__ and __Field__ arrays based on a user choice of distribution types to identify the __Neighborhoods__ of the __Cells__. The types available are: LogNormal, Beta, and Power.
 
 ## Parameters ##

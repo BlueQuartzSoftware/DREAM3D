@@ -1,12 +1,10 @@
-Initialize Synthetic Volume {#}
+Initialize Synthetic Volume {#initializesyntheticvolume}
 ======
-<h1 class="pHeading1">Initialize Synthetic Volume Filter</h1>
-<p class="pCellBody">
-<a href="../Synthetic_BuilderFilters/InitializeSyntheticVolume.html#wp2">Description</a> | <a href="../Synthetic_BuilderFilters/InitializeSyntheticVolume.html#wp3">Options</a> | <a href="../Synthetic_BuilderFilters/InitializeSyntheticVolume.html#wp4">Required Arrays</a> | <a href="../Synthetic_BuilderFilters/InitializeSyntheticVolume.html#wp5">Created Arrays</a> | <a href="../Synthetic_BuilderFilters/InitializeSyntheticVolume.html#wp1">Authors</a> 
 
-Synthetic Builder Filters
+## Group (Subgroup) ##
+Synthetic Builder Filters (Packing)
 
-
+## Description ##
 Based on __ShapeTypes__ in the __Ensemble__ this Filter utilizes the data in the
 Statistics File (see StatsGenerator.app for information about creating a statistics file) designated by the user together with **Cell** ranges and _resolution_
  desired for (x, y, z) to initialize the synthetic volume.

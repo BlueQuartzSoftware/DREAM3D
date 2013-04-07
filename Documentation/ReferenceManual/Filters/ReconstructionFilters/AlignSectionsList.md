@@ -1,12 +1,10 @@
-Align Sections (List) {#}
+Align Sections (List) {#alignsectionslist}
 ======
-<h1 class="pHeading1">Align Sections (List) Filter</h1>
-<p class="pCellBody">
-<a href="../ReconstructionFilters/AlignSectionsList.html#wp2">Description</a> | <a href="../ReconstructionFilters/AlignSectionsList.html#wp3">Options</a> | <a href="../ReconstructionFilters/AlignSectionsList.html#wp4">Required Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsList.html#wp5">Created Arrays</a> | <a href="../ReconstructionFilters/AlignSectionsList.html#wp1">Authors</a> 
 
-Reconstruction Filters
+## Group (Subgroup) ##
+Reconstruction Filters (Alignment)
 
-
+## Description ##
 This Filter accepts a _.txt_ file that has full **Cells** shifts that have already been calculated in it.  
 The format of the file is as follows: 
 

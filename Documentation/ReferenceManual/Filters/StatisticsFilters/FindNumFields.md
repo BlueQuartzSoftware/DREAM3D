@@ -1,16 +1,15 @@
-Find Number of Fields {#}
+Find Number of Fields {#findnumfields}
 ======
-<h1 class="pHeading1">Find Number of Fields Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindNumFields.html#wp2">Description</a> | <a href="../StatisticsFilters/FindNumFields.html#wp3">Options</a> | <a href="../StatisticsFilters/FindNumFields.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindNumFields.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindNumFields.html#wp1">Authors</a> 
 
-Statistics Filters
+## Group (Subgroup) ##
+Statistics Filters (Morphological)
 
-
-This filter determines the number of **Fields** in each Ensemble.
+## Description ##
+This filter determines the number of **Fields** in each **Ensemble**.
 
 
 ## Parameters ##
+None 
 
 ## Required Arrays ##
 

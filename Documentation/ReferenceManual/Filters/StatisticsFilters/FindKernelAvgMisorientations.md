@@ -1,12 +1,10 @@
-Find Local Misorientation Gradients {#}
+Find Kernel Average Misorientations {#findkernelavgmisorientations}
 ======
-<h1 class="pHeading1">Find Local Misorientation Gradients Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindLocalMisorientationGradients.html#wp2">Description</a> | <a href="../StatisticsFilters/FindLocalMisorientationGradients.html#wp3">Options</a> | <a href="../StatisticsFilters/FindLocalMisorientationGradients.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindLocalMisorientationGradients.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindLocalMisorientationGradients.html#wp1">Authors</a> 
 
-Statistics Filters
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
 
-
+## Description ##
 This Filter utilizes the __Cell CellPhases, GrainIds__, and __Quats__ to generate __GrainMisorientations, KernelAvgMisorientations__, and __MisorientationGradients__. For the __Field__, it uses the __Field AvgQuats__ data to generate __Field GrainAvgMisorientations__. The user must enter a _Kernel Size_ as an integer.
 
 

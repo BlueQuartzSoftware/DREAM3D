@@ -1,4 +1,4 @@
-Find Neighbors {#findneighbors}
+Find Field Neighbors {#findneighbors}
 ==========
 
 ## Group (Subgroup) ##

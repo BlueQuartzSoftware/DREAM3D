@@ -1,13 +1,20 @@
-Crop Volume {#}
+Crop Volume {#cropvolume}
 ======
-<h1 class="pHeading1">Crop Volume Filter</h1>
-<p class="pCellBody">
-<a href="../SamplingFilters/CropVolume.html#wp2">Description</a> | <a href="../SamplingFilters/CropVolume.html#wp3">Options</a> | <a href="../SamplingFilters/CropVolume.html#wp4">Required Arrays</a> | <a href="../SamplingFilters/CropVolume.html#wp5">Created Arrays</a> | <a href="../SamplingFilters/CropVolume.html#wp1">Authors</a> 
 
-Sampling Filters
+## Group (Subgroup) ##
+Sampling Filters (Cropping/Cutting)
 
+## Description ##
+This Filter allows the user to crop a volume of interest.  The input parameters are in units of **Cells**.  For example, if a volume was 100x100x100 **Cells** and each **Cell** was 0.25x0.25x0.25 microns, then if the user wanted to crop the last 5 microns in the X-direction, then the user would enter the following:
 
-This Filter allows the user to crop a volume of interest to satisfy the user goal.
+Xmin = 80,
+Xmax = 99,
+Ymin = 0,
+Ymax = 99,
+Zmin = 0,
+Zmax = 99
+
+Note: the input parameters are inclusive and begin at *0*, so in the above example *0-99* covers the entire range of **Cells** in a given dimension.
 
 
 ## Parameters ##
@@ -22,9 +29,7 @@ This Filter allows the user to crop a volume of interest to satisfy the user goa
 | Z Max | Integer |
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
+None
 
 ## Created Arrays ##
 None

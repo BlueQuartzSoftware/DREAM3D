@@ -1,16 +1,13 @@
-
-
-Find Slip Transmission Metrics {#}
+Find Slip Transmission Metrics {#findsliptransmissionmetrics}
 ======
-<h1 class="pHeading1">Find Slip Transmission Metrics Filter</h1>
-<p class="pCellBody">
-<a href="../Filters/FindSlipTransmissionMetrics.html#wp2">Description</a>
-| <a href="../Filters/FindSlipTransmissionMetrics.html#wp3">Options</a>
-| <a href="../Filters/FindSlipTransmissionMetrics.html#wp4">Required Arrays</a>
-| <a href="../Filters/FindSlipTransmissionMetrics.html#wp5">Created Arrays</a>
-| <a href="../Filters/FindSlipTransmissionMetrics.html#wp1">Authors</a> 
+
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
+
+## Description ##
 
 ## Parameters ##
+None
 
 ## Required Arrays ##
 
@@ -19,9 +16,7 @@ Find Slip Transmission Metrics {#}
 | Field | FieldPhases |  |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
+None
 
 ## Authors ##
 
