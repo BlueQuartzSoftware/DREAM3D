@@ -68,13 +68,13 @@ set(DOCUMENTATION_SOURCE_FILES
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
 file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList DREAM3D_DOC_GROUPS_FILE_LIST)
-file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "/*!\n\n@page filterreference Filter Reference\n\n")
+file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n\n@page filterdocumentation Filter Documentation\n\n")
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   #message(STATUS "=======>   DOxygen Group: ${group}")
   string(TOLOWER ${group} filterGroup_Lower)
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "@subpage ${filterGroup_Lower} ${group}\n\n")
+  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filterGroup_Lower}\n\n")
 endforeach()
-file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "\n*/\n\n")
+file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "\n*/\n\n")
 
 
 
@@ -83,18 +83,18 @@ file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "\n*/\n\n")
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   string(TOLOWER ${group} filterGroup_Lower)
   file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group} filter_list)
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
+  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
   foreach(filter ${filter_list})
     string(TOLOWER ${filter} filter_Lower)
-    file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "@subpage ${filter_Lower}\n\n")
+    file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filter_Lower}\n\n")
     list(APPEND DOCUMENTATION_SOURCE_FILES ${DREAM3DReferenceManual_SOURCE_DIR}/Filters/${group}/${filter}.md)
   endforeach()
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox "*/\n\n")
+  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
   file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
 endforeach()
 file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
-list(APPEND DOCUMENTATION_SOURCE_FILES ${DREAM3DReferenceManual_BINARY_DIR}/FilterIndex.dox)
+list(APPEND DOCUMENTATION_SOURCE_FILES ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
 
 
 
