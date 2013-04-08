@@ -27,7 +27,7 @@ This Filter utilizes the __Cell CellPhases, GrainIds__, and __Quats__ to generat
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | KernelAverageMisorientations |  |
+| Cell | KernelAverageMisorientations |  |  |
 
 ## Authors ##
 

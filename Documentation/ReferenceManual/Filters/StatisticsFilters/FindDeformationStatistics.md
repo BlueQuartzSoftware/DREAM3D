@@ -17,8 +17,8 @@ The Outputs are a Deformation Statistics file and a VTK file.
 
 ## Required Arrays ##
 
-
-
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | GrainIds |  |
 | Cell | GrainMisorientations |  |
 | Cell | KernelAverageMisorientations |  |

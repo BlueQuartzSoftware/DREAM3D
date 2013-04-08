@@ -18,8 +18,8 @@ Schmid Factor from all of the slip systems is stored for the **Field**.
 
 ## Parameters ##
 
-| Name | Type |
-|------|------| Description |
+| Name | Type | Description |
+|------|------| ----------- |
 | Loading X: | Double | X component of the loading axis in the sample reference frame |
 | Loading Y: | Double | Y component of the loading axis in the sample reference frame |
 | Loading Z: | Double | Z component of the loading axis in the sample reference frame |
