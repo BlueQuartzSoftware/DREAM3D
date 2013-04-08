@@ -1,4 +1,4 @@
-Segment **Fields** (Misorientation) {#ebsdsegmentgrains}
+Segment Fields (Misorientation) {#ebsdsegmentgrains}
 ======
 
 ## Group (Subgroup) ##
