@@ -71,14 +71,13 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Neighbor Misorientations"; }
+    virtual const std::string getHumanLabel() { return "Find Field Neighbor Misorientations"; }
 
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
@@ -98,7 +97,6 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_AvgQuats;
-    bool* m_SurfaceFields;
     int32_t* m_FieldPhases;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_MisorientationList;
