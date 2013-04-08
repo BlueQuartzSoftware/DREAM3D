@@ -6,7 +6,7 @@ I/O Filters
 
 
 ## Description ##
-This Filter writes to a data file in a format used by <a href="http://spparks.sandia.gov/">SPPARKS Kinetic Monte Carlo Simulator.</a> 
+This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Carlo Simulator](http://spparks.sandia.gov/).
 
 + The "Values" section is a pair of numbers where the first number is the site ID and the second
  number is the actual value of the **Field** Id at that site.

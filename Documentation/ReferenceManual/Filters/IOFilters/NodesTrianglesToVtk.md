@@ -34,7 +34,7 @@ The triangles file format is as follows:
 -  column 5 to 7 = edge1 (from node1 and node2), edge2 (from node2 and node3) and edge3 (from node3 and node1) of individual triangle
 -  column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
 
-If the user selects to __disable__ the <tt>Conformal Mesh</tt> option then 2
+If the user selects to __disable__ the **Conformal Mesh** option then 2
 triangles will be written to the file and the scalar data will have 2 entries for
 the __grain id__ one for each **Field** that the triangle borders.
 

@@ -15,7 +15,7 @@ The user can place multiple filters into the pipeline to generate a workflow of 
 
 ----------
 
-![Figure 3: Selected Filter in the pipeline](Images/CreatingPipeline-4.png)
+![Figure 3: Selected Filter in the pipeline & How to remove the filter.](Images/CreatingPipeline-4.png)
 
 ----------
 
@@ -30,7 +30,7 @@ If the preflight did not complete successfully the the user will see the offendi
 
 -------------
 
-Once the errors are resolved the user can not execute the pipeline and generate the users outputs. Because the DREAM3D native file format stores the complete state of the data arrays the user can use this idea to add _checkpoints_ to the pipeline in the case of a long running pipeline.
+Once the errors are resolved the user can now execute the pipeline and generate the outputs. Because the DREAM3D native file format stores the complete state of the data arrays the user can use this idea to add _checkpoints_ to the pipeline in the case of a long running pipeline.
 
 
 |   | Navigation |    |

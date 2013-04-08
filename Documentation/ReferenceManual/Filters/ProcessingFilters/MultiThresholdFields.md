@@ -5,16 +5,9 @@ Multi Threshold (Field Data) {#multithresholdfields}
 Processing Filters (Threshold)
 
 ## Description ##
-This filter is similar to the <a href="SingleThresholdFields.html">SingleThresholdFields</a> filter but allows the user
- to input more than a single **Field** array. Internally the algorithm creates the output boolean arrays for each comparison
- that the user creates. Then all the output arrays are compared and if __any__ of the values for a specific **Field** 
- is __false__ then the corresponding **Field** in the final output array is marked as false. This is considered a
- logical 'or' operation.
+This filter is similar to the [SingleThresholdFields](singlethresholdfields.html) filter but allows the user to input more than a single **Field** array. Internally the algorithm creates the output boolean arrays for each comparison that the user creates. Then all the output arrays are compared and if __any__ of the values for a specific **Field**  is __false__ then the corresponding **Field** in the final output array is marked as false. This is considered a logical 'or' operation.
 
-  An exmaple of this filter's use would be after statistics are calculated with DREAM3D and the user wants to have DREAM3D consider
- **Fields** that the user considers 'critical'. The user could insert this filter and select the criteria that makes a **Field** 'critical'.
- For example if **Fields** that are both large and preferably oriented for slip are of interest, then one could use _Equivalent Diameter_ &gt X and _Schmid Factor_
- &gt 0.45 as good criteria.
+  An exmaple of this filter's use would be after statistics are calculated with DREAM3D and the user wants to have DREAM3D consider **Fields** that the user considers 'critical'. The user could insert this filter and select the criteria that makes a **Field** 'critical'. For example if **Fields** that are both large and preferably oriented for slip are of interest, then one could use _Equivalent Diameter_ > X and _Schmid Factor_ > 0.45 as good criteria.
 
 ## Parameters ##
 

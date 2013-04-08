@@ -46,10 +46,8 @@ In the filter documentation the following terminology will be used:
 For this tutorial we are going to be using a pre-made DREAM3D data file. The file is simply a Single Phase Synthetic Structure that was quickly generated using the Synthetic Microstructure Creation abilities of DREAM3D. There are other options that exist to create a surface mesh. One can read in a Ph or Dx file, use the Raw Binary Reader to read in the Raw Grain Ids from a binary file or have an already existing set of Grain Ids from a DREAM3D pipeline that segmented the grains for you.
 
 ![Surface Meshing Pipeline](Images/SurfaceMeshingPipeline.png)
-@image latex Images/SurfaceMeshingPipeline.png "Surface Meshing Pipeline" width=5.5in
 
-
-After downloading the example file launch DREAM3D and clear out any existing filters. Start by adding the "Read DREAM3D Data File" filter. Select the file that you just downloaded an then only check the "GrainIds" data under the "Cell Data" section. This will ensure that this is the only data that is loaded from the file. Since creating the mesh can take large amounts of memory we only want to load the data necessary. 
+Start by adding the "Read DREAM3D Data File" filter. Select the file that you just downloaded an then only check the "GrainIds" data under the "Cell Data" section. This will ensure that this is the only data that is loaded from the file. Since creating the mesh can take large amounts of memory we only want to load the data necessary. 
 
 Next add in the "M3C Surface Meshing (Slice at a time)" filter which will create the actual surface mesh. Leave the option to "Delete Temp Files" checked on. The files are in a binary format meant for debugging if things go wrong during the meshing.
 
