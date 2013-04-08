@@ -1,4 +1,4 @@
-Segment **Fields** (C-Axis Misorientation) {#caxissegmentgrains}
+Segment Fields (C-Axis Misorientation) {#caxissegmentgrains}
 ======
 
 ## Group (Subgroup) ##

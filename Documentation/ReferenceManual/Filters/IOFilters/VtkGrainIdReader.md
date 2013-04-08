@@ -1,4 +1,4 @@
-Read Vtk File (STRUCTURED_POINTS) **Field** Ids Only {#vtkgrainidreader}
+Read Vtk File (STRUCTURED_POINTS) Field Ids Only {#vtkgrainidreader}
 ======
 
 ## Group (Subgroup) ##

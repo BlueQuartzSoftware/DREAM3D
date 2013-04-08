@@ -1,4 +1,4 @@
-Write SPParks File (**Field** Ids) {#spparkswriter}
+Write SPParks File (Field Ids) {#spparkswriter}
 ======
 
 ## Group (Subgroup) ##
