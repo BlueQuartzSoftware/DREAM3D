@@ -13,15 +13,15 @@ This version of the code does not have any restrictions on the wrapping of the *
  
 The values for the __Node Type__ array can take one of the following values.
 
-    namespace SurfaceMesh {<br/>
-      namespace NodeType {<br/>
-        const int8_t Unused = -1;<br/>
-        const int8_t Default = 2;<br/>
-        const int8_t TriplePoint = 3;<br/>
-        const int8_t QuadPoint = 4;<br/>
-        const int8_t SurfaceDefault = 12;<br/>
-        const int8_t SurfaceTriplePoint = 13;<br/>
-        const int8_t SurfaceQuadPoint = 14;<br/>
+    namespace SurfaceMesh {
+      namespace NodeType {
+        const int8_t Unused = -1;
+        const int8_t Default = 2;
+        const int8_t TriplePoint = 3;
+        const int8_t QuadPoint = 4;
+        const int8_t SurfaceDefault = 12;
+        const int8_t SurfaceTriplePoint = 13;
+        const int8_t SurfaceQuadPoint = 14;
       }
     }
 

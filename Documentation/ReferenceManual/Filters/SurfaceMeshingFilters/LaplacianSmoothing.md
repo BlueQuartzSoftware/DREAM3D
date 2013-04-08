@@ -18,15 +18,15 @@ Currently if you lock the __Default Lambda__ value to Zero (0) the Triple Lines 
 Due to these array allocations this filter can consume large amounts of memory if the starting mesh is large to start, ie, many nodes. 
 The values for the __Node Type__ array can take one of the following values.
 
-    namespace SurfaceMesh {<br/>
-      namespace NodeType {<br/>
-        const int8_t Unused = -1;<br/>
-        const int8_t Default = 2;<br/>
-        const int8_t TriplePoint = 3;<br/>
-        const int8_t QuadPoint = 4;<br/>
-        const int8_t SurfaceDefault = 12;<br/>
-        const int8_t SurfaceTriplePoint = 13;<br/>
-        const int8_t SurfaceQuadPoint = 14;<br/>
+    namespace SurfaceMesh {
+      namespace NodeType {
+        const int8_t Unused = -1;
+        const int8_t Default = 2;
+        const int8_t TriplePoint = 3;
+        const int8_t QuadPoint = 4;
+        const int8_t SurfaceDefault = 12;
+        const int8_t SurfaceTriplePoint = 13;
+        const int8_t SurfaceQuadPoint = 14;
       }
     }
 

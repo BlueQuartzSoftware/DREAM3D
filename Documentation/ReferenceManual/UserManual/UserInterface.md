@@ -10,7 +10,7 @@ DREAM3D has 4 main areas of it's user interface:
 
 ------
 
-![](Images/OverView-1.png)
+![Overview of DREAM3D user interface](Images/OverView-1.png)
 
 ------
 
@@ -23,7 +23,7 @@ DREAM3D provides several _Prebuilt Pipelines_ that can aid the new user in getti
 ### Favorite Pipelines ##
 After the user builds a pipeline that they may want to save for later the user can use the _Pipeline_ menu and select the "Add Favorite" menu to save that specific pipeline configuration. If at a future point in time the user wants to remove the favorite from the _Favorites_ list they user can select from the "Add Favorite" menu and choose *Remove Favorite* to remove it from the list.
 
-![](Images/PipelineMenu.png)
+![Pipeline Menu](Images/PipelineMenu.png)
 
 ## Filter List
   **Area 2**: This section lists the filters that are associated with a specific group that is selected in the _Filter Library_ area. If the _Filter Library_ is itself selected then all filters will be shown in this list. The user typically will select a filter from this list and drag it over to the pipeline area.
@@ -32,7 +32,7 @@ After the user builds a pipeline that they may want to save for later the user c
 ##  Errors & Warnings Tab
  **Area 3**: This area displays any errors and/or warnings associated with the filter if it is actively being used in a pipeline. The display of the errors can be toggled on and off by pressing the appropriate buttons. Also clicking the **?** icon will display all of the help (including filter reference, tutorials and user manual) in the users default web browser.
 
-![](Images/OverView-2.png)
+![Errors and Warnings Tab](Images/OverView-2.png)
 
 
 ## Pipeline Area
