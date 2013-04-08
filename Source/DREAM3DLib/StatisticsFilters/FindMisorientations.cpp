@@ -49,10 +49,8 @@ FindMisorientations::FindMisorientations()  :
 AbstractFilter(),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_AvgQuats(NULL),
-m_SurfaceFields(NULL),
 m_FieldPhases(NULL),
 m_NeighborList(NULL),
 m_MisorientationList(NULL),
@@ -88,18 +86,6 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-    find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) find_surfacefields->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
-
 
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
   if(err == -303)

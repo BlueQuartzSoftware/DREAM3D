@@ -31,6 +31,8 @@ The filter also notes which **Fields** touch the outer surface of the sample (th
 |------|--------------|-------------|---------|
 | Cell | Surface**Cells** | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Field** than itself. Values will range from *0* to *6* |  |
 | Field | NumNeighbors | Value (int) equal to the number of contiguous neighboring **Fields** for a given **Field** |  |
+| Field | NeighborLists | List of the contiguous neighboring **Fields** for a given **Field** |  |
+| Field | SharedSurfaceAreaLists | List of the area shared between contiguous neighboring **Fields** for a given **Field** |  |
 | Field | SurfaceFields | Boolean flag equal to 1 if the **Field** touches an outer surface of the sample and equal to 0 if it does not. |  |
 
 ## Authors ##
