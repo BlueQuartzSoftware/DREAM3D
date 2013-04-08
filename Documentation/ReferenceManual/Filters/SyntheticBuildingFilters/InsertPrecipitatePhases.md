@@ -6,8 +6,7 @@ Synthetic Builder Filters (Packing)
 
 ## Description ##
 If precipitate phases have been included in the _Statistics_ file used by the _Initialize Synthetic Volume_ Filter, _**Cells**_ are assigned based on the volume fraction of the precipitate phase.
- Periodic Boundary conditions are selected by the user to be active or inactive. <BR>
-
+ Periodic Boundary conditions are selected by the user to be active or inactive. 
 
 ## Parameters ##
 
@@ -15,10 +14,11 @@ If precipitate phases have been included in the _Statistics_ file used by the _I
 |------|------|
 | Periodic Boundary | Boolean (On or Off) |
 
+
 ## Required Arrays ##
 
-
-
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
 | Cell | Surface**Cells** |  |
