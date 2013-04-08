@@ -6,10 +6,10 @@ Generic Filters (Spatial)
 ## Description ##
 This Filter determines, for each **Cell**, the number of neighboring **Cells** that are owned by a different **Field**.  The algorithm for determining this is as follows: 
 
-1) Identify the **Field** to which a **Cell** belongs
-2) Identify the **Fields** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
-3) Determine the number of those neighboring **Cells** belonging to a different **Field** than the current **Cell**. 
-4) Repeat 1-3 for all **Cells**
+1. Identify the **Field** to which a **Cell** belongs
+2. Identify the **Fields** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
+3. Determine the number of those neighboring **Cells** belonging to a different **Field** than the current **Cell**. 
+4. Repeat 1-3 for all **Cells**
 
 ## Parameters ##
 None

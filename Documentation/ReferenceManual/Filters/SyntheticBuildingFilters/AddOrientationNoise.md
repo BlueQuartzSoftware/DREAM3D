@@ -19,9 +19,7 @@ Synthetic Builder Filters (Crystallography)
 | Cell | CellEulerAngles |  |
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
+None
 
 ## Authors ##
 
