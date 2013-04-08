@@ -1,17 +1,8 @@
-
 Adjust Volume {#}
 ======
-<h1 class="pHeading1">Adjust Volume Filter</h1>
-<p class="pCellBody">
-<a href="../Synthetic_BuilderFilters/AdjustVolume.html#wp2">Description</a> |
-<a href="../Synthetic_BuilderFilters/AdjustVolume.html#wp3">Options</a> |
-<a href="../Synthetic_BuilderFilters/AdjustVolume.html#wp4">Required Arrays</a> |
-<a href="../Synthetic_BuilderFilters/AdjustVolume.html#wp5">Created Arrays</a> |
-<a href="../Synthetic_BuilderFilters/AdjustVolume.html#wp1">Authors</a> 
 
+## Group (Subgroup)
 Synthetic Builder Filters
-
-
 
 
 ## Parameters ##

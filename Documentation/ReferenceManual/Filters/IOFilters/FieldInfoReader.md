@@ -14,14 +14,14 @@ DREAM3D uses **Field** Id Zero(0) internally which has several ramifications whi
 will _NOT_ be calculated for any **Cell** or field data with a value of Zero (0). If your segmented data numbering
 starts with Zero (0) then the user needs to find a way to renumber **Field**=0 to another value. Max + 1 typically.__
 For example if you have a file with 123 **Fields** and 2 phases then the file would be similar to the following: 
-<pre>
-123
-1   2  1.2  0.4  0.8
-2   1  0.8  0.99  1.0
-.....
-121 1 0.3  0.5  0.9
-123 2 1.0  1.1  0.03
-</pre>
+
+    123
+    1   2  1.2  0.4  0.8
+    2   1  0.8  0.99  1.0
+    .....
+    121 1 0.3  0.5  0.9
+    123 2 1.0  1.1  0.03
+
 __Note the arrays that are being created__. <br>
 If the option to _Create Cell Level Arrays_ is selected then any existing
  arrays will be OVER WRITTEN with new data derived from the field data being written. In plain if the user uses this filter

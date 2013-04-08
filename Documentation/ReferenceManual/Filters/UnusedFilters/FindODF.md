@@ -1,12 +1,11 @@
-Find ODF {#}
+Find ODF {#findodf}
 ======
-<h1 class="pHeading1">Find ODF Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindODF.html#wp2">Description</a> | <a href="../StatisticsFilters/FindODF.html#wp3">Options</a> | <a href="../StatisticsFilters/FindODF.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindODF.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindODF.html#wp1">Authors</a> 
-
-Statistics Filters
 
 
+## Group (Subgroup) ##
+Statistics Filters (Crystallographic)
+
+## Description ##
  The Filter finds the _Orientation Distribution Function _(ODF).
 
 The ODF is defined as the volume fraction of **Fields** with a certain orientation vector.

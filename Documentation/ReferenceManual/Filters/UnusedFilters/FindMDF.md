@@ -1,9 +1,7 @@
-Find MDF {#}
+Find MDF {#findmdf}
 ======
-<h1 class="pHeading1">Find MDF Filter</h1>
-<p class="pCellBody">
-<a href="../StatisticsFilters/FindMDF.html#wp2">Description</a> | <a href="../StatisticsFilters/FindMDF.html#wp3">Options</a> | <a href="../StatisticsFilters/FindMDF.html#wp4">Required Arrays</a> | <a href="../StatisticsFilters/FindMDF.html#wp5">Created Arrays</a> | <a href="../StatisticsFilters/FindMDF.html#wp1">Authors</a> 
 
+## Group (Subgroup) ##
 Statistics Filters
 
 
