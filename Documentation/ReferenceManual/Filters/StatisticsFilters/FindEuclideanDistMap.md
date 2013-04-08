@@ -20,7 +20,7 @@ This Filter utilizes the __Cell GrainIds__ to find __Cell NearestNeighborDistanc
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | NearestNeighborDistances |  |
+| Cell | NearestNeighborDistances |  |  |
 | Cell | NearestNeighbors |  |  |
 
 ## Authors ##

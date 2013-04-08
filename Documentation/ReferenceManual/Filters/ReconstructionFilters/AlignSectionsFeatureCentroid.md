@@ -1,4 +1,3 @@
-
 Align Sections (Feature Centroid) {#alignsectionsfeaturecentroid}
 ======
 
@@ -14,8 +13,8 @@ external references inserted by the user/experimentalist.  If these "regions" of
 sections, then this filter will preserve that by aligning those "regions" on top of one another on consecutive sections.
 The algorithm of this filter is as follows:
 
-1) Determine the centroid of all **Cells** that are flagged with a boolean value of one (or true) for each section 
-2) Determine the full **Cell** shifts that place centroids of consecutive sections as close as possible.
+1. Determine the centroid of all **Cells** that are flagged with a boolean value of one (or true) for each section 
+2. Determine the full **Cell** shifts that place centroids of consecutive sections as close as possible.
 *Note that this is algorithm cannot get caught in a local minima*
 
 
