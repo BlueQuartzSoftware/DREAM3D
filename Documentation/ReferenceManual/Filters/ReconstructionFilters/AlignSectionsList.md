@@ -8,11 +8,11 @@ Reconstruction Filters (Alignment)
 This Filter accepts a _.txt_ file that has full **Cells** shifts that have already been calculated in it.  
 The format of the file is as follows: 
 
-_slice number, xshift, yshift
-slice number, xshift, yshift 
-slice number, xshift, yshift
-etc..._
-*Note: some/many of the other alignment filters write out a _.txt_ file with their calculated shifts in it; so
+    slice number, xshift, yshift
+    slice number, xshift, yshift 
+    slice number, xshift, yshift
+    etc...
+**Note**: some/many of the other alignment filters write out a **txt** file with their calculated shifts in it; so
 the user could manually modify those values, and then use them in this filter if the shifts in the other filter were deemed unsatisfactory.
 
 ## Parameters ##
@@ -22,9 +22,7 @@ the user could manually modify those values, and then use them in this filter if
 | Input File | File Path |
 
 ## Required Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
+None
 
 ## Created Arrays ##
 None

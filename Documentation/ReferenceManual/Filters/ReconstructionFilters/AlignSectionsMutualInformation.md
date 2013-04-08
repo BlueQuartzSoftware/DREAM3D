@@ -18,13 +18,18 @@ High _mutual information_ indicates a large reduction in uncertainty; low _mutua
 indicates a small reduction; and zero _mutual information_ between two random variables
 means the variables are independent.
 
-___Source__: _www.scholarpedia.org/article/Mutual_information _. A more detailed discussion is presented on this site. 
-__Journal articles on _Mutual Information_ that are useful:__
-Cover, T.M. and Thomas, J.A. (1991). _Elements of information theory_. John Wiley & Sons, New York, NY.
-Gray, R.M. (1990). _Entropy and Information Theory_. Springer-Verlag, New York, NY.
-Nirenberg, S. and Latham, P.E. (2003). _Decoding neuronal spike trains: how important are correlations?_ Proc. Natl. Acad. Sci. 100:7348-7353.
-Shannon, C.E. and Weaver, W. (1949). _The mathematical theory of communication_. University of Illinois Press, Urbana, Illinois.
-Mézard, M. and Monatanari, A. (2009). _Information, Physics, and Computation_. Oxford University Press, Oxford._
+_Source:www.scholarpedia.org/article/Mutual\_information_. A more detailed discussion is presented on this site. 
+__Journal articles on _Mutual Information_ that are useful:__ Cover, T.M. and Thomas, J.A. (1991). 
+
+_Elements of information theory_. John Wiley & Sons, New York, NY.Gray, R.M. (1990). 
+
+_Entropy and Information Theory_. Springer-Verlag, New York, NY. Nirenberg, S. and Latham, P.E. (2003). 
+
+_Decoding neuronal spike trains: how important are correlations?_ Proc. Natl. Acad. Sci. 100:7348-7353. Shannon, C.E. and Weaver, W. (1949). 
+
+_The mathematical theory of communication_. University of Illinois Press, Urbana, Illinois. Mézard, M. and Monatanari, A. (2009). 
+
+_Information, Physics, and Computation_. Oxford University Press, Oxford.
 
 ## Parameters ##
 

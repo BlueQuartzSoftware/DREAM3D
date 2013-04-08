@@ -20,11 +20,8 @@ be 0.0, i.e, zero for any of the resolution values is forbidden as an input __.
 The Filter produces an estimate of the number of **Fields** in the volume associated with the
 values the user entered.
 
-<div align="center">
-<img src="InitSynthVol.jpg" alt="InitSynthVol"/>
-</div>
 
-
+![Input Dependencies](InitSynthVol.png)
 
 ## Parameters ##
 

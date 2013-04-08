@@ -20,8 +20,8 @@ The user needs to keep in mind that large values of __Neighborhood Error Weight_
 
 ## Required Arrays ##
 
-
-
+| Type | Default Name | Comment |
+|------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
 | Ensemble | PhaseTypes |  |
