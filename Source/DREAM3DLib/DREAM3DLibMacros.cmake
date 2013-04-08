@@ -2,15 +2,15 @@
 
 #-------------------------------------------------------------------------------
 # Macro START_FILTER_GROUP
-macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup)
+macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
    file(APPEND ${AllFiltersHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
    file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
    file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
    file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
 
 
-   file(APPEND ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "${filterGroup}\n")
-   file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup} "")
+   file(APPEND "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "${filterGroup}\n")
+   file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup}" "")
    #string(TOLOWER ${filterGroup} filterGroup_Lower)
    #file(APPEND ${DOX_FILTER_INDEX_FILE} "#--- Filter Group ${filterGroup} \n")
    #file(APPEND ${DOX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterGroup}.dox\n")
@@ -21,7 +21,7 @@ endmacro()
 
 #-------------------------------------------------------------------------------
 # Macro START_FILTER_GROUP
-macro(END_FILTER_GROUP WidgetsBinaryDir filterGroup)
+macro(END_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
    # file(APPEND ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help/Filters/${filterGroup}/${filterGroup}.dox "\n*/\n")
 endmacro(END_FILTER_GROUP  WidgetsBinaryDir filterGroup)
 
