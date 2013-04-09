@@ -303,10 +303,6 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    for(size_t i = 0; i < readNames.size(); ++i)
-    {
-      addCreatedVertexData(readNames[i]);
-    }
   }
 
   if(m_ReadEdgeData == true)
@@ -319,10 +315,6 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    for(size_t i = 0; i < readNames.size(); ++i)
-    {
-      addCreatedEdgeData(readNames[i]);
-    }
   }
 
   if(m_ReadFaceData == true)
@@ -334,10 +326,6 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       err |= H5Gclose(dcGid);
       setErrorCondition(err);
       return -1;
-    }
-    for(size_t i = 0; i < readNames.size(); ++i)
-    {
-      addCreatedFaceData(readNames[i]);
     }
   }
 
