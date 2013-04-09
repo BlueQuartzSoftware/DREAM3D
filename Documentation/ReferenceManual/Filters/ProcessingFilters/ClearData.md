@@ -2,10 +2,10 @@ Clear Data {#cleardata}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Cleanup)
 
 ## Description ##
-This filter writes Zeros (0) into every element of every **Cell** Array.
+This filter allows the user to define a subvolume of the dataset in which the filter will erase all data by writing *zeros (0)* into every **Cell** array for every element within the subvolume.
 
 
 ## Parameters ##

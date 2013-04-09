@@ -5,22 +5,22 @@ Erode/Dilate Bad Data {#openclosebaddata}
 Processing Filters (Cleanup)
 
 ## Description ##
-Bad data means a **Cell** has a _GrainId_ of *0*, which means the **Cell** has failed some sort of test and been marked 
-as a _Bad **Cell**_. To remedy this situation, this filter _Dilates_ or _Erodes_ the bad data. 
-If the bad data is _dilated_, the filter grows the bad data by one **Cell** in an iteration sequence. The number of
- iterations to grow the **Cell** is limited to the situation in which only one **Field** remains or there is no place to grow.
+Bad data refers to a **Cell** that has a _GrainId_ of *0*, which means the **Cell** has failed some sort of test and been marked 
+as a *bad* **Cell**. 
 
-The _GrainId_ of any neighboring **Cell** will be changed to *0*. 
-For the _erode_ option, the _GrainId_ of the bad data **Cell** is changed to the _GrainId_ of the majority
- of its neighbors, with the requirement that at least one of the neighbors have a non-zero _GrainId_.
- If there is a tie between two _GrainIds_, then one of the *GrainIds*, chosen randomly, will be assigned to the bad **Cell**.
+If the bad data is _dilated_, the filter grows the bad data by one **Cell** in an iterative sequence for a user defined number of
+ iterations.  During the *dilate* process the _GrainId_ of any **Cell** neighboring a *bad* Cell** will be changed to *0*.  
+
+If the bad data is _eroded_ option, the filter shrinks the bad data by one **Cell** in an iterative sequence for a user defined number of
+ iterations.  During the *erode* process the _GrainId_ of the *bad* **Cell** is changed from *0* to the _GrainId_ of the majority
+ of its neighbors. If there is a tie between two _GrainIds_, then one of the *GrainIds*, chosen randomly, will be assigned to the *bad* **Cell**.
 
 Goals a user might be trying to accomplish with this Filter are
 
 - to remove small or thin regions of bad data by running a single
  (or two) iteration _erode_ operation. 
-- to increase the size of a "bad" data region by running an _open operation_. This might be useful if the experimental technique 
- always underestimates the size of certain objects. 
+- to increase the size of a "bad" data region by running an _dilate_ operation. This might be useful if the experimental technique 
+tends to underestimates the size of certain objects. 
 For example, when running EBSD, the pores (which show up as
  bad data) are generally smaller in the scans than in the specimen, because the
  beam, when it is just inside the pore, still can pick up signal from the
@@ -28,11 +28,11 @@ For example, when running EBSD, the pores (which show up as
 
 Running the _erode-dilate_ operations in pairs can
  often change the size of some objects without affecting others.  For
- example, if there were a number of big pores and a number of single **Cell** bad
- data regions, running a single _close_ operation would remove
- the single **Cell** regions and reduce the pores by one **Cell**. If this is followed immediately by  an _open_
- operation, then the pores would grow by one **Cell** and return to near their original size. Because the single
-**Cells** would be gone, they would not be able to grow back.
+ example, if there were a number of big pores and a number of single *bad* **Cells**
+, running a single _erode_ operation would remove
+ the single **Cells** and reduce the pores by one **Cell**. If this is followed immediately by  a _dilate_
+ operation, then the pores would grow by one **Cell** and return to near their original size, while the single
+**Cells** would remain removed and not "grow back".
 
 ## Parameters ##
 
@@ -45,9 +45,7 @@ Running the _erode-dilate_ operations in pairs can
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 | Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
 None

@@ -5,12 +5,8 @@ Fill Bad Data {#fillbaddata}
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter removes small noise in data, but keeps larger regions that are possibly features, e.g., pores or defects.
-This Filter collects the _bad **Cells**_ (*GrainId* = 0) and sets the _close_ operation, as in the _open/close_ filter [_see below_], to be run on those _bad **Cells**_ until none remain. 
-However, those _bad **Cells**_ that satisfy the following are not changed:
-The _**Cells**_ that are contiguous to any group of _bad **Cells**_ are tested to determine if they have as many as or more _**Cells**_ than the minimum defect size (_**Cells**_). If true, then the _bad **Cells**_ remain unchanged when run in the _close_ operations.
------------------
- _In the Open/Close Filter, for the _close_ option, the *GrainId* of the bad **Cell** is changed to the *GrainId* of the majority of its neighbors, with the requirement that at least one of the neighbors have a non-zero __GrainID___.
+This Filter removes small "*noise*" in the data, but keeps larger regions that are possibly features, e.g., pores or defects.
+This Filter collects the *bad* **Cells** (*GrainId = 0*) and runs the _erode_ operation from the [Erode/Dilate Bad Data Filter](OpenCloseBadData.html "") until none remain. However, contiguous groups of *bad* **Cells** that have at least as many **Cells** as the minimum defect size enter by the user will not be *eroded*.
 
 ## Parameters ##
 
@@ -23,8 +19,6 @@ The _**Cells**_ that are contiguous to any group of _bad **Cells**_ are tested t
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
 None

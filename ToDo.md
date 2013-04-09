@@ -9,18 +9,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### Groeber Documentation
-+ Fix html Help for "Standardize Euler Angles"
-+ Fix html Help for "Erode Dilate Coordination Number"
-+ Fix html for FindSlicetoSliceRotations.html
-+ Fix html for FindSlipTransmissionMetrics.html
-+ Fix html for AddBadData.html
-+ Fix html for AddNoise.html
-+ fix HTML for JumbleOrientations.html
-+ Missing Documenation File for GenericFilters/LinkFieldMapToCellArray
-+ Missing Documenation File for GenericFilters/RenameCellArray
-+ Missing Documenation File for GenericFilters/RenameFieldArray
-+ Missing Documenation File for StatisticsFilters/GenerateEnsembleStatistics
-+ Missing Documenation File for StatisticsFilters/FindMisorientations
 + Missing Documenation File for IOFilters/ImportImageStack
 + write-up contributors section for website
 
@@ -54,6 +42,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Still to Do ##
++ Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
 + On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
@@ -155,6 +144,18 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 ## Items Completed ##
++ Fix html Help for "Standardize Euler Angles"
++ Fix html Help for "Erode Dilate Coordination Number"
++ Fix html for FindSlicetoSliceRotations.html
++ Fix html for FindSlipTransmissionMetrics.html
++ Fix html for AddBadData.html
++ Fix html for AddNoise.html
++ fix HTML for JumbleOrientations.html
++ Missing Documenation File for GenericFilters/LinkFieldMapToCellArray
++ Missing Documenation File for GenericFilters/RenameCellArray
++ Missing Documenation File for GenericFilters/RenameFieldArray
++ Missing Documenation File for StatisticsFilters/GenerateEnsembleStatistics
++ Missing Documenation File for StatisticsFilters/FindMisorientations
 + RawBinaryReader does not honor the Origin value
 + Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
 + Tutorial on Surface Meshing for Docs/Website
