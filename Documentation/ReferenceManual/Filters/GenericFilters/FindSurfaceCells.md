@@ -1,4 +1,4 @@
-Find Surface Cells {#findsurfacecells}
+Find Boundary Cells {#findsurfacecells}
 =============
 ## Group (Subgroup) ##
 Generic Filters (Spatial)
