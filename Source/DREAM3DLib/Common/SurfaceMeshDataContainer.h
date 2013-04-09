@@ -60,7 +60,7 @@
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshTriangleNeighbors.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
 
 /**
@@ -79,24 +79,24 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
 
     virtual ~SurfaceMeshDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Point)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getPointData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
 
-    DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer, Vertices)
-    DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer, Faces)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::FaceListPointer_t, Faces)
 
 
-    DOES_DATASET_EXIST_DECL(PointData)
+    DOES_DATASET_EXIST_DECL(VertexData)
     DOES_DATASET_EXIST_DECL(FaceData)
     DOES_DATASET_EXIST_DECL(EdgeData)
 
     /**
-     * @brief buildMeshVertLinks Creates the list of triangles for each vertex that the vertex is a part of
+     * @brief buildMeshVertLinks Creates the list of Faces for each vertex that the vertex is a part of
      */
     void buildMeshVertLinks();
 
@@ -118,27 +118,27 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     void setMeshVertLinks(MeshVertLinks::Pointer vertLinks);
 
     /**
-     * @brief buildMeshTriangleNeighborLists Creates the list of triangles that share a common edge with a triangle. Since
+     * @brief buildMeshFaceNeighborLists Creates the list of Faces that share a common edge with a Face. Since
      * we create non-manifold meshes we can have more than 3 neighbors.
      */
-    void buildMeshTriangleNeighborLists();
+    void buildMeshFaceNeighborLists();
 
     /**
-     * @brief removeMeshTriangleNeighborLists Remove the Triangle neighbor lists to reclaim memory.
+     * @brief removeMeshFaceNeighborLists Remove the Face neighbor lists to reclaim memory.
      */
-    void removeMeshTriangleNeighborLists();
+    void removeMeshFaceNeighborLists();
 
     /**
-     * @brief getMeshTriangleNeighborLists Returns the Triangle Neighbor lists object
+     * @brief getMeshFaceNeighborLists Returns the Face Neighbor lists object
      * @return
      */
-    MeshTriangleNeighbors::Pointer getMeshTriangleNeighborLists();
+    MeshFaceNeighbors::Pointer getMeshFaceNeighborLists();
 
     /**
-     * @brief setMeshTriangleNeighborLists
+     * @brief setMeshFaceNeighborLists
      * @param neighbors
      */
-    void setMeshTriangleNeighborLists(MeshTriangleNeighbors::Pointer neighbors);
+    void setMeshFaceNeighborLists(MeshFaceNeighbors::Pointer neighbors);
 
 
     /**
@@ -146,14 +146,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addPointData(const std::string &name, IDataArray::Pointer data);
+    void addVertexData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getPointData(const std::string &name);
+    IDataArray::Pointer getVertexData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -161,12 +161,12 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removePointData(const std::string &name);
+    IDataArray::Pointer removeVertexData(const std::string &name);
 
     /**
      * @brief Removes all the Point Arrays
      */
-    void clearPointData();
+    void clearVertexData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
@@ -186,7 +186,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumPointTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexTuples)
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -281,12 +281,12 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_PointData;
+     std::map<std::string, IDataArray::Pointer> m_VertexData;
      std::map<std::string, IDataArray::Pointer> m_FaceData;
      std::map<std::string, IDataArray::Pointer> m_EdgeData;
 
      MeshVertLinks::Pointer m_MeshVertLinks;
-     MeshTriangleNeighbors::Pointer m_TriangleNeighbors;
+     MeshFaceNeighbors::Pointer m_FaceNeighbors;
 
      SurfaceMeshDataContainer(const SurfaceMeshDataContainer&);
      void operator =(const SurfaceMeshDataContainer&);

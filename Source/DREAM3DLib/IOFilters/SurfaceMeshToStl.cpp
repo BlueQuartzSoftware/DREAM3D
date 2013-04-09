@@ -172,12 +172,12 @@ void SurfaceMeshToStl::execute()
       return;
   }
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = sm->getVertices();
-  SurfaceMesh::DataStructures::Vert_t* nodes = nodesPtr->GetPointer(0);
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglePtr = sm->getFaces();
-  SurfaceMesh::DataStructures::Face_t* triangles = trianglePtr->GetPointer(0);
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
+  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
+  DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
   // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 

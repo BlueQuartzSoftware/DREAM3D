@@ -122,18 +122,18 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
     std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
     std::vector<std::string> columnNames;
-    AbstractEbsdFields* ebsdFields = NULL;
+//    AbstractEbsdFields* ebsdFields = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
-      ebsdFields = new AngFields;
+//      ebsdFields = new AngFields;
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-       ebsdFields = new CtfFields;
+//       ebsdFields = new CtfFields;
     }
     else if(ext.compare(Ebsd::Mic::FileExt) == 0)
     {
-       ebsdFields = new MicFields;
+//       ebsdFields = new MicFields;
     }
     else
     {
@@ -143,11 +143,11 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
       setErrorCondition(-1);
       return;
     }
-    columnNames = ebsdFields->getFieldNames();
-    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
-    {
-      addCreatedCellData(columnNames[i]);
-    }
+//    columnNames = ebsdFields->getFieldNames();
+//    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
+//    {
+//      addCreatedCellData(columnNames[i]);
+//    }
   }
 
   if(m_OutputFile.empty() == true)

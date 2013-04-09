@@ -116,16 +116,12 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
+   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
     virtual const std::string getHumanLabel() { return "M3C Surface Meshing (Slice at a time)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
-    virtual void addCreatedPointData(const std::string &name);
-    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
-    virtual void addCreatedFaceData(const std::string &name);
     void execute();
 
   protected:
@@ -154,8 +150,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param cVertexNodeTypePtr
      */
-    void initialize_nodes(int NSP, int zID, int *wrappedDims, SurfaceMesh::DataStructures::Float_t* res,
-                          SurfaceMesh::DataStructures::VertList_t::Pointer cVertexPtr,
+    void initialize_nodes(int NSP, int zID, int *wrappedDims, DREAM3D::SurfaceMesh::Float_t* res,
+                          DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                           DataArray<int8_t>::Pointer cVertexNodeTypePtr );
@@ -220,9 +216,9 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param neighborsPtr
      */
-    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, SurfaceMesh::DataStructures::Float_t *res,
+    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, DREAM3D::SurfaceMesh::Float_t *res,
                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                            SurfaceMesh::DataStructures::VertList_t::Pointer cVertexPtr,
+                            DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
                             StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
@@ -232,7 +228,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param xRes
      * @return
      */
-    SurfaceMesh::DataStructures::Float_t find_xcoord(int index, int xDim, SurfaceMesh::DataStructures::Float_t xRes);
+    DREAM3D::SurfaceMesh::Float_t find_xcoord(int index, int xDim, DREAM3D::SurfaceMesh::Float_t xRes);
 
     /**
      * @brief find_ycoord
@@ -242,7 +238,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param yRes
      * @return
      */
-    SurfaceMesh::DataStructures::Float_t find_ycoord(int index, int xDim, int yDim, SurfaceMesh::DataStructures::Float_t yRes);
+    DREAM3D::SurfaceMesh::Float_t find_ycoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t yRes);
 
     /**
      * @brief find_zcoord
@@ -251,7 +247,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param zRes
      * @return
      */
-    SurfaceMesh::DataStructures::Float_t find_zcoord(int index, int xDim, int yDim, SurfaceMesh::DataStructures::Float_t zRes);
+    DREAM3D::SurfaceMesh::Float_t find_zcoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t zRes);
 
     /**
      * @brief treat_anomaly
@@ -351,7 +347,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
                         const std::string &nodesFile,
-                        SurfaceMesh::DataStructures::VertList_t::Pointer cVertexPtr,
+                        DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
                         DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                         DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 

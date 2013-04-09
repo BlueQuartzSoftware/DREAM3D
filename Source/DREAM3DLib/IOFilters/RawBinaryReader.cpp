@@ -352,7 +352,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     }
 
     m->addCellData(p->GetName(), p);
-    addCreatedCellData(p->GetName());
+    //addCreatedCellData(p->GetName());
   }
 }
 

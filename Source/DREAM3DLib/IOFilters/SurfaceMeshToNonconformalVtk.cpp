@@ -173,19 +173,19 @@ void SurfaceMeshToNonconformalVtk::execute()
   setErrorCondition(0);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Make sure we have a node type array or create a default one.
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::PointData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -252,7 +252,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -275,13 +275,13 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Write the triangle indices into the vtk File
   notifyStatusMessage("Writing Faces ....");
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
 
   int triangleCount = triangles.GetNumberOfTuples();
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -403,7 +403,7 @@ template<typename DataContainer, typename T>
 void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
-  IDataArray::Pointer data = dc->getPointData(dataName);
+  IDataArray::Pointer data = dc->getVertexData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
@@ -441,7 +441,7 @@ void writePointVectorData(DataContainer* dc, const std::string &dataName, const 
                           bool writeBinaryData, const std::string &vtkAttributeType,
                           FILE* vtkFile, int nT)
 {
-  IDataArray::Pointer data = dc->getPointData(dataName);
+  IDataArray::Pointer data = dc->getVertexData(dataName);
   std::stringstream ss;
   if (NULL != data.get())
   {
@@ -490,17 +490,17 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
     return -1;
   }
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
   // Make sure we have a node type array or create a default one.
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::PointData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -513,7 +513,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 
 
   //Get the Number of Vertex points in the mesh with a valid node type
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(getSurfaceMeshDataContainer()->getVertices());
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(getSurfaceMeshDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
   // int swapped;
@@ -565,7 +565,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 #endif
 
   // This is from the Goldfeather Paper
-  writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::PointData::SurfaceMeshNodeNormals,
+  writePointVectorData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::VertexData::SurfaceMeshNodeNormals,
                                                          "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
 
@@ -579,9 +579,9 @@ template<typename SurfaceMeshDataContainer, typename T>
 void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataName, const std::string &dataType,
                          bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
 
-  IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -648,8 +648,8 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
                          bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
 
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
-  IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
+  IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -727,7 +727,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
                          bool writeBinaryData, const std::string &vtkAttributeType,
                          FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
 
   int triangleCount = triangles.GetNumberOfTuples();
 
@@ -779,8 +779,8 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
     return -1;
   }
   // Write the triangle region ids
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(getSurfaceMeshDataContainer()->getFaces());
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   if (NULL != flPtr.get())
   {
     DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -864,7 +864,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
   }
 #endif
   notifyStatusMessage("Writing Face Normals...");
-  writeCellNormalData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshTriangleNormals,
+  writeCellNormalData<SurfaceMeshDataContainer, double>(getSurfaceMeshDataContainer(), DREAM3D::FaceData::SurfaceMeshFaceNormals,
                                                         "double", m_WriteBinaryFile, vtkFile, grainIds);
 
   notifyStatusMessage("Writing Principal Curvature 1");

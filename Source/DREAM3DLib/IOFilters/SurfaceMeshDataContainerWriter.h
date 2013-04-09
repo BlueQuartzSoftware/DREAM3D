@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -122,10 +122,10 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
     int writeVertices(hid_t dcGid);
-    int writeTriangles(hid_t dcGid);
+    int writeFaces(hid_t dcGid);
     int writeEdges(hid_t dcGid);
     int writeMeshVertLinks(hid_t dcGid);
-    int writeMeshTriangleNeighborLists(hid_t dcGid);
+    int writeMeshFaceNeighborLists(hid_t dcGid);
     int writeVertexAttributeData(hid_t dcGid);
     int writeFaceAttributeData(hid_t dcGid);
     int writeEdgeAttributeData(hid_t dcGid);

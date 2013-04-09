@@ -96,7 +96,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     ss.str("");
     ss << "Selected array '" << m_SelectedCellDataArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
     setErrorCondition(-11001);
-	addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+  addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
     notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
@@ -106,22 +106,22 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
   if (dType.compare("int32_t") == 0)
   {
       DataArray<int32_t>* field = DataArray<int32_t>::SafePointerDownCast(data.get());
-	  m_SelectedCellData = field->GetPointer(0);
+    m_SelectedCellData = field->GetPointer(0);
   }
   else
   {
     ss.str("");
     ss << "Selected array '" << m_SelectedCellDataArrayName << "' is not an Integer array. Is this the array you want to use?";
     setErrorCondition(-11001);
-	addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+  addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
     notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
 
   m->clearFieldData();
-  BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(fields, 1, DREAM3D::FieldData::Active);
-  bool* mActive = m_Active->GetPointer(0);
-  m->addFieldData(DREAM3D::FieldData::Active, m_Active);
+  BoolArrayType::Pointer active = BoolArrayType::CreateArray(fields, 1, DREAM3D::FieldData::Active);
+ // bool* mActive = m_Active->GetPointer(0);
+  m->addFieldData(DREAM3D::FieldData::Active, active);
 
 }
 
@@ -166,20 +166,20 @@ void LinkFieldMapToCellArray::execute()
   std::vector<bool> active;
   for(size_t i=0;i<voxels;i++)
   {
-	int index = m_SelectedCellData[i];
-	if((index+1) > maxIndex)
-	{
-		active.resize(index+1);
-		active[index] = true;
-		maxIndex = index+1;
-	}
+  int index = m_SelectedCellData[i];
+  if((index+1) > maxIndex)
+  {
+    active.resize(index+1);
+    active[index] = true;
+    maxIndex = index+1;
+  }
   }
 
   BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(maxIndex, 1, DREAM3D::FieldData::Active);
   bool* mActive = m_Active->GetPointer(0);
   for(size_t i=0;i<maxIndex;i++)
   {
-	mActive[i] = active[i];
+  mActive[i] = active[i];
   }
   m->addFieldData(DREAM3D::FieldData::Active, m_Active);
 

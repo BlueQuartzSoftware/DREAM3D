@@ -175,8 +175,8 @@ void SolidMeshToVtk::execute()
   setErrorCondition(0);
   SolidMeshDataContainer* m = getSolidMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Make sure any directory path is also available as the user may have just typed
@@ -223,7 +223,7 @@ void SolidMeshToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
     pos[0] = static_cast<float>(n.pos[0]);
     pos[1] = static_cast<float>(n.pos[1]);
     pos[2] = static_cast<float>(n.pos[2]);
@@ -318,9 +318,9 @@ int SolidMeshToVtk::writePointData(FILE* vtkFile)
   }
 
   // Write the triangle indices into the vtk File
-//  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(getSolidMeshDataContainer()->getTriangles());
+//  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(getSolidMeshDataContainer()->getTriangles());
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(getSolidMeshDataContainer()->getVertices());
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(getSolidMeshDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
 

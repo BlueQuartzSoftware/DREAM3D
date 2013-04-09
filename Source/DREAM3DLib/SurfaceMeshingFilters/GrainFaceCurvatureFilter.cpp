@@ -38,7 +38,7 @@
 
 
 
-//#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeTriangleConnectivity.h"
+//#include "DREAM3DLib/SurfaceMeshingFilters/GenerateNodeFaceConnectivity.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/TriangleCentroidFilter.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/TriangleNormalFilter.h"
 
@@ -57,11 +57,11 @@
 GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
   SurfaceMeshFilter(),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
-  //m_SurfaceMeshTriangleEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshTriangleEdges),
+  //m_SurfaceMeshFaceEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshFaceEdges),
   m_PrincipalCurvature1ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
   m_PrincipalCurvature2ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2),
-  m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleNormals),
-  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleCentroids),
+  m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
   m_SurfaceMeshGrainFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshGrainFaceId),
   m_NRing(3),
   m_ComputePrincipalDirectionVectors(true),
@@ -69,7 +69,7 @@ GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
   m_ComputeGaussianCurvature(false),
   m_UseNormalsForCurveFitting(true),
   m_SurfaceMeshUniqueEdges(NULL),
-  m_SurfaceMeshTriangleEdges(NULL),
+  m_SurfaceMeshFaceEdges(NULL),
   m_TotalGrainFaces(0),
   m_CompletedGrainFaces(0)
 {
@@ -125,7 +125,7 @@ void GrainFaceCurvatureFilter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Use Triangle Normals for Curve Fitting");
+    option->setHumanLabel("Use Face Normals for Curve Fitting");
     option->setPropertyName("UseNormalsForCurveFitting");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
@@ -170,10 +170,10 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
       setErrorCondition(-384);
     }
 
-    // We MUST have Triangles defined also.
+    // We MUST have Faces defined also.
     if(sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Faces", -383);
       setErrorCondition(-384);
     }
 
@@ -183,42 +183,31 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
     DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
     sm->addEdgeData(DREAM3D::EdgeData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
-    // This is just for tracking what Arrays are being created by this filter. Normally the macro
-    // would do this for us.
-    addCreatedEdgeData(DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
-
-
     DoubleArrayType::Pointer principalCurv1 = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
     sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1, principalCurv1);
-    addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
 
     DoubleArrayType::Pointer principalCurv2 = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
     sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2, principalCurv2);
-    addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
 
     if (m_ComputeGaussianCurvature == true)
     {
       DoubleArrayType::Pointer gaussianCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
       sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGaussianCurvatures, gaussianCurv);
-      addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
     }
 
     if (m_ComputeMeanCurvature == true)
     {
       DoubleArrayType::Pointer meanCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
       sm->addFaceData(DREAM3D::FaceData::SurfaceMeshMeanCurvatures, meanCurv);
-      addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
     }
 
     if (m_ComputePrincipalDirectionVectors == true)
     {
       DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
       sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1, prinDir1);
-      addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
 
       DoubleArrayType::Pointer prinDir2 = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
       sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection2, prinDir2);
-      addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
     }
 
   }
@@ -259,17 +248,17 @@ void GrainFaceCurvatureFilter::execute()
     return;
   }
 
-  // Get our Reference counted Array of Triangle Structures
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  // Get our Reference counted Array of Face Structures
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
-    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
+    notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Faces", -556);
     return;
   }
 
 
-  // We need to make sure we have up to date values for the Triangle Centroids and Triangle Normals
+  // We need to make sure we have up to date values for the Face Centroids and Face Normals
   // so we are going to recalculate them all just in case they are stale
   TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
   centroidFilter->setSurfaceMeshTriangleCentroidsArrayName(getSurfaceMeshTriangleCentroidsArrayName());
@@ -283,11 +272,11 @@ void GrainFaceCurvatureFilter::execute()
     return;
   }
 
-  // Calculate/update the Triangle Normals
-  bool clearTriangleNormals = false;
-  if (getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleNormals).get() == NULL)
+  // Calculate/update the Face Normals
+  bool clearFaceNormals = false;
+  if (getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals).get() == NULL)
   {
-    clearTriangleNormals = true;
+    clearFaceNormals = true;
   }
   TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
   normalsFilter->setSurfaceMeshTriangleNormalsArrayName(getSurfaceMeshTriangleNormalsArrayName());
@@ -301,7 +290,7 @@ void GrainFaceCurvatureFilter::execute()
     return;
   }
 
-  // Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
+  // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshVertLinks = false;
   MeshVertLinks::Pointer vertLinks = getSurfaceMeshDataContainer()->getMeshVertLinks();
@@ -311,7 +300,7 @@ void GrainFaceCurvatureFilter::execute()
     getSurfaceMeshDataContainer()->buildMeshVertLinks();
   }
 
-  // Group the Triangles by common neighboring grain face. This means that each group of triangles
+  // Group the Faces by common neighboring grain face. This means that each group of triangles
   // each share the same set of Grain Ids. Since each triangle can only have 2 Grain Ids
   SharedGrainFaceFilter::Pointer sharedGrainFacesFilter = SharedGrainFaceFilter::New();
   sharedGrainFacesFilter->setSurfaceMeshGrainFaceIdArrayName(getSurfaceMeshGrainFaceIdArrayName());
@@ -379,7 +368,7 @@ void GrainFaceCurvatureFilter::execute()
 #else
   //if()
 //  {
-//    std::cout << "CalculateTriangleGroupCurvatures Running in Serial." << std::endl;
+//    std::cout << "CalculateFaceGroupCurvatures Running in Serial." << std::endl;
 //  }
 #endif
   // typedef here for conveneince
@@ -387,7 +376,7 @@ void GrainFaceCurvatureFilter::execute()
 
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {
-    SharedGrainFaceFilter::TriangleIds_t& triangleIds = (*iter).second;
+    SharedGrainFaceFilter::FaceIds_t& triangleIds = (*iter).second;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
                                             principalCurvature1, principalCurvature2,
@@ -398,7 +387,7 @@ void GrainFaceCurvatureFilter::execute()
 
 
 
-    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
+    CalculateFaceGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
                                                principalCurvature1, principalCurvature2,
                                                principalDirection1, principalDirection2,
                                                gaussianCurvature, meanCurvature,
@@ -432,7 +421,7 @@ void GrainFaceCurvatureFilter::execute()
   }
 
   // Now clear up some temp arrays that were created for this filter
-  if (clearTriangleNormals == true)
+  if (clearFaceNormals == true)
   {
     getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshTriangleNormalsArrayName());
   }

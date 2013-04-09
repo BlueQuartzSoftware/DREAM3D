@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -106,11 +106,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     */
     virtual void preflight();
 
-    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
-    virtual void addCreatedPointData(const std::string &name);
-    // We need to implement this to bridge the gap between the Voxel and SurfaceMesh Data containers
-    virtual void addCreatedFaceData(const std::string &name);
-    virtual void addCreatedEdgeData(const std::string &name);
+
   protected:
     SurfaceMeshDataContainerReader();
 

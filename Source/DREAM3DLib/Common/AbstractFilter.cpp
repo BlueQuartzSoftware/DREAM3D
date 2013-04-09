@@ -116,6 +116,7 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
   return contains;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -163,6 +164,9 @@ void AbstractFilter::addCreatedEnsembleData(const std::string &name)
 {
   m_CreatedEnsembleData.insert(name);
 }
+#endif
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -62,14 +62,6 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
 
     virtual ~SurfaceMeshFilter();
 
-    void addRequiredPointData(const std::string &name);
-    void addRequiredFaceData(const std::string &name);
-    void addRequiredEdgeData(const std::string &name);
-
-    void addCreatedPointData(const std::string &name);
-    void addCreatedFaceData(const std::string &name);
-    void addCreatedEdgeData(const std::string &name);
-
 
   protected:
     SurfaceMeshFilter();

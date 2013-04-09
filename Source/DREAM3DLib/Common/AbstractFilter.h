@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     /**
      * @brief These methods are here to collect list of Arrays that a filter may either create or require
-     **/
+
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredCellData)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedCellData)
 
@@ -124,6 +124,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredEnsembleData)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedEnsembleData)
+**/
 
     /**
      * @brief Cancel the operation
@@ -150,14 +151,14 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual bool doesPipelineContainFilterBeforeThis(const std::string &name);
     virtual bool doesPipelineContainFilterAfterThis(const std::string &name);
 
-    virtual void addRequiredCellData(const std::string &name);
-    virtual void addCreatedCellData(const std::string &name);
+//    virtual void addRequiredCellData(const std::string &name);
+//    virtual void addCreatedCellData(const std::string &name);
 
-    virtual void addRequiredFieldData(const std::string &name);
-    virtual void addCreatedFieldData(const std::string &name);
+//    virtual void addRequiredFieldData(const std::string &name);
+//    virtual void addCreatedFieldData(const std::string &name);
 
-    virtual void addRequiredEnsembleData(const std::string &name);
-    virtual void addCreatedEnsembleData(const std::string &name);
+//    virtual void addRequiredEnsembleData(const std::string &name);
+//    virtual void addCreatedEnsembleData(const std::string &name);
 
   protected:
     AbstractFilter();
