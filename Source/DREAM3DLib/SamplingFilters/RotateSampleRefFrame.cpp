@@ -102,8 +102,8 @@ class RotateSampleRefFrameImpl
 
       int64_t* newindicies = newIndicesPtr->GetPointer(0);
       int64_t index = 0;
-    int64_t ktot, jtot;
-//      float rotMatrixInv[3][3];
+      int64_t ktot, jtot;
+      //      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
       int colOld, rowOld, planeOld;
@@ -342,14 +342,25 @@ void RotateSampleRefFrame::execute()
   newIndiciesPtr->initializeWithValues(-1);
   int64_t* newindicies = newIndiciesPtr->GetPointer(0);
 
+  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
-                    RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
-
-#else
-  RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat);
-  serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
+  tbb::task_scheduler_init init;
+  doParallel = true;
 #endif
+
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
+                      RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat);
+    serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
+  }
 
 
   // This could technically be parallelized also where each thred takes an array to adjust. Except

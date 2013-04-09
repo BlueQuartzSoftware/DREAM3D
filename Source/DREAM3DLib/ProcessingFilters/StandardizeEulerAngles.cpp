@@ -56,8 +56,8 @@ class StandardizeEulerAnglesImpl
     float* m_CellEulerAngles;
     int* m_CellPhases;
     unsigned int* m_CrystalStructures;
-//    int64_t numCells;
-//    size_t numEnsembles;
+    //    int64_t numCells;
+    //    size_t numEnsembles;
 
     std::vector<OrientationMath*> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;
@@ -69,8 +69,8 @@ class StandardizeEulerAnglesImpl
       m_CellEulerAngles(eulers),
       m_CellPhases(phases),
       m_CrystalStructures(crystructs)
-//      numCells(numCells),
-//      numEnsembles(numEnsembles)
+    //      numCells(numCells),
+    //      numEnsembles(numEnsembles)
     {
       m_HexOps = HexagonalOps::New();
       m_OrientationOps.push_back(m_HexOps.get());
@@ -170,12 +170,12 @@ void StandardizeEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fie
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
+      addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
 }
 
 // -----------------------------------------------------------------------------
@@ -208,14 +208,24 @@ void StandardizeEulerAngles::execute()
     return;
   }
 
-#if DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles), tbb::auto_partitioner());
-
-#else
-  StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles);
-  serial.convert(0, totalPoints);
+  bool doParallel = false;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  doParallel = true;
 #endif
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      StandardizeEulerAnglesImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    StandardizeEulerAnglesImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, totalPoints, numensembles);
+    serial.convert(0, totalPoints);
+  }
 
   notifyStatusMessage("Complete");
 }
