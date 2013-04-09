@@ -5,7 +5,9 @@ Change Resolution {#changeresolution}
 Sampling Filters (Resolution)
 
 ## Description ##
-This Filter changes the **Cell** resolution based on inputs from the user for x, y, and/or z values.
+This Filter changes the **Cell** spacing/resolution based on inputs from the user.  The values entered are the desired new resolutions (not multiples of the current resolution).  The number of **Cells** in the volume will likely change when the resolution values are changed and thus the user should be cautious of generating "too many" **Cells** by entering very small values (i.e. very high resolution).  
+
+A new grid of **Cells** is created and "overlaid" on the existing grid of **Cells**.  There is currently no *interpolation* performed, rather the attributes of the old **Cell** that each new **Cell**'s centroid lies within is assigned to that new **Cell**.
 
 
 ## Parameters ##
