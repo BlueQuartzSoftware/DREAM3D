@@ -86,6 +86,7 @@ class PipelineViewWidget : public QFrame
   signals:
      void addPlaceHolderFilter(QPoint p);
      void removePlaceHolderFilter();
+     void pipelineFileDropped(const QString& file);
 
   protected:
      void setupGui();
