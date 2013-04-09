@@ -5,12 +5,18 @@ Merge Colonies {#mergecolonies}
 Reconstruction Filters (Grouping)
 
 ## Description ##
+This Filter groups neighboring **Fields** that have a *"special"* misorientation that is associated with *alpha* variants that transformed from the same *beta* grain in titanium.  The algorithm for grouping the **Fields** is analogous to the algorithm for segmenting the **Fields** - only the average orientation of the **Fields** are used instead of the orientations of the individual **Cells** and the criterion for grouping is specific to the *alpha-beta transformation*.  The user can specify a tolerance on both the *axis* and the *angle* that defines the misorientation relationship (i.e. a tolerance of 1 degree for both tolerances would allow the neighboring **Fields** to be grouped if their misorientation was between 59-61 degrees about an axis within 1 degree of a2, as given by the 3rd *"special"* misorientation below).
 
-In Ti alpha-beta alloys, cooling from the beta (BCC) phase slowly to the alpha phase (HCP) produces collections of alpha phase within a beta **Field** that are referred to as alpha colonies.  
-Once the user has segmented the **Fields**, this Filter can be run.  This Filter looks at
-neighboring **Fields** (as defined by the _Segment **Fields** (Misorientation)_ Filter) and asks for their
-misorientation (i.e., the misorientation between the average orientation(s) of the two **Fields**).  If the misorientation is found to be "special", i.e., one of the six (6) possible misorientations between colonies transformed from the same beta **Field**,
-then the **Fields** are merged together and called one **Field**.  Hence, the outputs of this Filter are the beta **Fields**, because all the colonies transformed from a beta **Field** will all have the same **Field** id.  
+The list of *"special"* misorientations can be found in the paper by Germain et al [1] and are listed here: 
+
+| Angle | Axis |
+|------|------|
+| 0 | Identity |
+| 10.529 | c = <0001> |
+| 60 | a2 = <-12-10> |
+| 60.832 | d1 at 80.97 degrees from c in the plane of (d3,c) |
+| 63.262 | d2 at 72.73 degrees from c in the plane of (a2,c) |
+| 90 | d3 at 5.26 degrees from a2 in the basal plane |
 
 ## Parameters ##
 

@@ -5,10 +5,16 @@ Find Field Average Orientations {#findavgorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter searches the __Cell GrainIds__ to identify their orientations based 
-on the associated __Quats__ and __Cell CellPhases__, from which the average of 
-the __Cell Quats__ is generated as __Field AvgQuats__. The _Euler_ angles 
-of the __Field__s are used in this Filter.
+This Filter determines the average orientation of each **Field** by the following algorithm:
+
+1. Gather all **Cells** that belong to the **Field**
+2. Using the symmetry operators of the phase of the **Field**, rotate the quaternion of the **Field**'s first **Cell** into the *Fundamental Zone* nearest to the origin. 
+3. Rotate each subsequent **Cell**'s quaternion (with same symmetry operators) looking for the quaternion closest to the quaternion selected in Step 2.
+4. Average the rotated quaternions for all **Cells** and store as the average for the **Field**
+
+Note: The process of finding the nearest quaternion in Step 3 is to account for the periodicity of orientation space, which would cause problems in the averaging if all quaternions were forced to be rotated into the same *Fundamental Zone* 
+
+Note: The quaternions can be averaged with a simple average because the quaternion space is not distorted like Euler space.  
 
 
 ## Parameters ##
