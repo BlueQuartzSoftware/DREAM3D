@@ -1,4 +1,4 @@
-Generate Triangle IPF Coloring {#generatetriangleipfcoloring}
+Generate Face IPF Coloring {#generatefaceipfcoloring}
 ======================
 
 ## Group (Subgroup) ##

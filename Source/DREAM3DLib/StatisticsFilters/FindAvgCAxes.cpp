@@ -128,7 +128,7 @@ void FindAvgCAxes::execute()
   }
 
   size_t numgrains = m->getNumFieldTuples();
-  int phase;
+  //int phase;
   float q1[5];
   float g1[3][3];
   float g1t[3][3];
@@ -164,7 +164,7 @@ void FindAvgCAxes::execute()
       MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
       MatrixMath::normalize3x1(c1);
-	  if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
+    if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
 
     counter[m_GrainIds[i]]++;
     m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
