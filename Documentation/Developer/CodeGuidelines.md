@@ -2,9 +2,7 @@ Best Practices for Portable Code {#codeguidelines}
 =========
 
 ## Source Code Line Endings ##
-  All source code line endings will be in "Unix" style "\n". Every text editor understands these line
-  endings on every platform **except** the "Notepad" application on Windows which
-  probably should never be used to write code in the first place.
+  All source code line endings will be in "Unix" style "\n". Every text editor understands these line endings on every platform **except** the "Notepad" application on Windows which probably should never be used to write code in the first place.
 
 ## Use of Tabs ##
   Spaces should be used instead of hard tabs. This helps file portability across different editors.
@@ -25,9 +23,7 @@ Always use an "include guard" in your headers.
 ### Discussion ###
   Include guards are _#define_ preprocessor used in header files that ensures
 the header is only ever included **once** during the compiling process for a
-given source file. If these guards are NOT included then it is up to the programmer
-to make sure that headers are only included a single time which can become time-consuming
-and impossible in some situations with larger projects.
+given source file. If these guards are NOT included then it is up to the programmer to make sure that headers are only included a single time which can become time-consuming and impossible in some situations with larger projects.
 
 
 
@@ -41,6 +37,7 @@ should be avoided at all costs.
 
 ### Discussion ###
 This is because  the number of bytes that a  "long" variable occupies will change depending  on CPU type and compiler being  used. This can have  an impact on pointer  arithmetic and binary file  IO just to name  a few instances. All Unix  systems have a *stdint.h*  file included with the compiler.  The Microsoft Visual Studio Compiler does NOT have this file included. There are lots of examples of creating one on the internet. An exemplar file is  also included with the Electronic Imaging software distribution  that is generated using CMake.
+
 #### C99 Integer Types ####
     int8_t    8 Bit Singed Integer
     uint8_t   8 Bit UnSinged Integer
@@ -52,7 +49,8 @@ This is because  the number of bytes that a  "long" variable occupies will chang
     uint64_t  64 Bit UnSinged Integer
 
 ## Special Constants ##
-NULL should be used in conjunction with a Pointer ONLY.\n
+NULL should be used in conjunction with a Pointer ONLY.
+
 0 (Zero) should be used in conjunction with numeric values.
 
 
@@ -171,7 +169,8 @@ Always include a Copyright and/or license block at the start of **every** source
 
 
 ## Always Implement the "Big Three" in C++ Classes ##
-When writing C++ classes the programmer will always define the "Big Three" which are defined as
+When writing C++ classes the programmer will always define the "Big Three" which are defined as:
+
 - copy constructor
 - copy assignment operator
 - destructor
