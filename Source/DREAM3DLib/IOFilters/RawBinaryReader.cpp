@@ -186,7 +186,7 @@ void RawBinaryReader::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("NumberOfComponents");
+    option->setHumanLabel("Number Of Components");
     option->setPropertyName("NumberOfComponents");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
