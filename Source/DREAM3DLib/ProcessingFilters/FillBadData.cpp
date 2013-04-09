@@ -55,14 +55,10 @@ const static float m_pi = static_cast<float>(M_PI);
 FillBadData::FillBadData() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_MinAllowedDefectSize(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_FieldPhases(NULL)
+m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -106,23 +102,7 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
-
-  
-  int err = 0;
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303, int32_t, Int32ArrayType, fields, 1)
-  if(err == -303)
-  {
-	  setErrorCondition(0);
-	  FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-	  find_grainphases->setObservers(this->getObservers());
-	  find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-	  if(preflight == true) find_grainphases->preflight();
-	  if(preflight == false) find_grainphases->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 }
 
 
@@ -239,16 +219,13 @@ void FillBadData::execute()
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = 0;
-//					m_CellPhases[currentvlist[k]] = 0;
 				}
-				m_FieldPhases[0] = 0;
 			}
 			if((int)currentvlist.size() < m_MinAllowedDefectSize)
 			{
 				for (size_t k = 0; k < currentvlist.size(); k++)
 				{
 					m_GrainIds[currentvlist[k]] = -1;
-//					m_CellPhases[currentvlist[k]] = 0;
 				}
 			}
 			currentvlist.clear();
@@ -294,7 +271,6 @@ void FillBadData::execute()
 				if (current > most)
 				{
 					most = current;
-//				    m_Neighbors[i] = grain;
 					m_Neighbors[i] = neighpoint;
 				}
 			}
@@ -331,13 +307,8 @@ void FillBadData::execute()
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }
-//		  m_GrainIds[j] = neighbor;
-//		  m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
-//    std::stringstream ss;
-//     ss << "Assigning Bad Voxels count = " << count;
-//    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
 
   // If there is an error set this to something negative and also set a message

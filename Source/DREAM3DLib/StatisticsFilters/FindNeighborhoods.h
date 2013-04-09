@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Neighborhoods"; }
+    virtual const std::string getHumanLabel() { return "Find Field Neighborhoods"; }
 
     /**
     * @brief Reimplemented from @see AbstractFilter class

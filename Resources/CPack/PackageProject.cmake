@@ -19,24 +19,24 @@ if(MSVC)
     INCLUDE (InstallRequiredSystemLibraries)
 
     # Our own Install rule for Release builds of the MSVC runtime libs
-    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
       INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
         DESTINATION ./
         PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
         COMPONENT Applications
         CONFIGURATIONS Release)
-    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    endif(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 endif()
 
 if(UNIX AND NOT APPLE)
     SET(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP 0)
-    IF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
       INSTALL(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
         DESTINATION ./lib
         PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ
         COMPONENT Applications
         CONFIGURATIONS Release)
-    ENDIF (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    endif(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
 endif()
 
 # Add a short ReadMe file for OS X that warns of moving the applications
@@ -71,7 +71,7 @@ set(CPACK_PACKAGE_EXECUTABLES
     DREAM3D DREAM3D StatsGenerator StatsGenerator PluginMaker PluginMaker)
 set(UPLOAD_FILE_NAME "")
 
-IF (APPLE)
+if(APPLE)
     set(CPACK_PACKAGE_FILE_NAME "DREAM3D-${DREAM3D_VERSION_SHORT}-OSX")
     # This ASSUMES we are creating a tar.gz package. If you change that below to
     # anything else then you need to update this.
@@ -109,7 +109,7 @@ configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
             ${PROJECT_BINARY_DIR}/upload.sh)
 
 # Create an NSIS based installer for Windows Systems
-IF(WIN32 AND NOT UNIX)
+if(WIN32 AND NOT UNIX)
   # There is a bug in NSIS that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
   SET(CPACK_NSIS_DISPLAY_NAME "DREAM.3D Software Tools")
@@ -139,7 +139,7 @@ ELSE(WIN32 AND NOT UNIX)
     SET(CPACK_BINARY_TGZ "ON")
     SET(CPACK_BINARY_TZ "OFF")
     SET(CPACK_BINARY_ZIP "OFF")
-ENDIF(WIN32 AND NOT UNIX)
+ENDif(WIN32 AND NOT UNIX)
 
 
 

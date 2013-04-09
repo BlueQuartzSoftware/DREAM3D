@@ -75,7 +75,7 @@ set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 # Build shared libraries
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 set(LIB_TYPE STATIC)
-IF (BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
   message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
     set(LIB_TYPE SHARED)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
@@ -83,7 +83,7 @@ IF (BUILD_SHARED_LIBS)
         list(APPEND CMP_LIB_SEARCH_DIRS ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
                                     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release )
     endif()
-ENDIF (BUILD_SHARED_LIBS)
+endif(BUILD_SHARED_LIBS)
 
 # ---------- Find Boost Headers/Libraries -----------------------
 #set(Boost_FIND_REQUIRED FALSE)
@@ -99,7 +99,7 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
 find_package(HDF5)
-IF(HDF5_FOUND)
+if(HDF5_FOUND)
     file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
     include_directories(${HDF5_INCLUDE_DIRS} )
     # This copies the DLL (if needed) into the various build directories on MSVC systems
@@ -110,7 +110,7 @@ IF(HDF5_FOUND)
     CMP_LIBRARIES_INSTALL_RULES("hdf5" ".")
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
-ENDIF(HDF5_FOUND)
+ENDif(HDF5_FOUND)
 
 # --------------------------------------------------------------------
 # Should we use Intel Threading Building Blocks
@@ -146,7 +146,6 @@ endif()
 # We do NOT want to install any of the headers
 set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
-
 # --------------------------------------------------------------------
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
@@ -160,27 +159,27 @@ include_directories(${PROJECT_BINARY_DIR})
 # --------------------------------------------------------------------
 # Add in some compiler definitions
 # --------------------------------------------------------------------
-IF( CMAKE_BUILD_TYPE MATCHES Debug )
+if( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-DDEBUG)
   if(NOT MSVC)
   ADD_DEFINITIONS(-Wall)
   endif()
-ENDIF( CMAKE_BUILD_TYPE MATCHES Debug )
+ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 # On linux we need to set this because some of the libraries are Static
 # and some are shared.
-IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND NOT MSVC )
+if( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" AND NOT MSVC )
   ADD_DEFINITIONS(-fPIC)
-ENDIF()
+ENDif()
 
 # --------------------------------------------------------------------
 # If was are using GCC, make the compiler messages on a single line
-IF(CMAKE_COMPILER_IS_GNUCC)
+if(CMAKE_COMPILER_IS_GNUCC)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmessage-length=0")
-ENDIF(CMAKE_COMPILER_IS_GNUCC)
-IF(CMAKE_COMPILER_IS_GNUCXX)
+ENDif(CMAKE_COMPILER_IS_GNUCC)
+if(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmessage-length=0")
-ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ENDif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -188,6 +187,12 @@ endif()
 
 include_directories(${DREAM3DProj_SOURCE_DIR}/Source)
 include_directories(${PROJECT_BINARY_DIR})
+
+# -----------------------------------------------------------------------
+# Setup some Global Lists that are used to gather Documentation Information
+file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
+
+
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
@@ -209,6 +214,8 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
+
+
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
 option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
@@ -219,14 +226,14 @@ if(DREAM3D_BUILD_QT_APPS)
    # ------------------------------------------------------------------------------
    # by default only QtCore and QtGui modules are enabled
    # other modules must be enabled like this:
-   IF(WIN32)
+   if(WIN32)
        set(QT_USE_QTMAIN TRUE)
-   ENDIF(WIN32)
+   ENDif(WIN32)
 
    # this command finds Qt4 libraries and sets all required variables
    # note that it's Qt4, not QT4 or qt4
    FIND_PACKAGE( Qt4 REQUIRED )
-   IF (QT4_FOUND)
+   if(QT4_FOUND)
        CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui")
        CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui" ".")
    endif()
@@ -367,7 +374,7 @@ endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
 
 # Build the StatsGenerator Application
-OPTION (DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
+OPTION(DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
 if(DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 endif()
@@ -376,7 +383,7 @@ endif()
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
-IF ( DREAM3D_BUILD_CLI_TOOLS )
+if( DREAM3D_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
 
@@ -385,8 +392,17 @@ if(DREAM3D_BUILD_TESTING)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 
+
+#-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-include (${PROJECT_SOURCE_DIR}/Documentation/CMakeLists.txt)
+FIND_PACKAGE(Doxygen)
+if(NOT DOXYGEN_FOUND)
+      message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
+else()
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
+endif()
+
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)

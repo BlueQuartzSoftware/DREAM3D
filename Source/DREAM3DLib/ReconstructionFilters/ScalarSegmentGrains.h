@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
 	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const std::string getHumanLabel() { return "Segment Grains (Scalar)"; }
+    virtual const std::string getHumanLabel() { return "Segment Fields (Scalar)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);

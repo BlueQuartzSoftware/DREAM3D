@@ -69,16 +69,13 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
     DREAM3D_INSTANCE_PROPERTY(int, CoordinationNumber)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Erode/Dilate Bad Data (Coordination Number)"; }
+    virtual const std::string getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -95,8 +92,6 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     int32_t* m_Neighbors;
 
     int32_t* m_GrainIds;
-    int32_t* m_CellPhases;
-    int32_t* m_FieldPhases;
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;

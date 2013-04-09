@@ -223,8 +223,6 @@ namespace DREAM3D
   {
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
-    //  const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
-    //   const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
     const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
     const std::string SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
   }
@@ -232,10 +230,7 @@ namespace DREAM3D
   namespace FaceData
   {
     const std::string SurfaceMeshFaces("SurfaceMeshFaces");
- //   const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
     const std::string SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
-//    const std::string SurfaceMeshTriangleIPFColorsGrain1("SurfaceMeshTriangleIPFColorsGrain1");
-//    const std::string SurfaceMeshTriangleIPFColorsGrain2("SurfaceMeshTriangleIPFColorsGrain2");
     const std::string SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
     const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
     const std::string SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");

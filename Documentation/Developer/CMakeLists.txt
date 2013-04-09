@@ -59,13 +59,13 @@ set(LATEX_AUTHOR "DREAM3D Development Team")
 # The order of the files as they appear here is the order they will appear in the
 # Latex/PDF output
 set(DOCUMENTATION_SOURCE_FILES
-  ${DREAM3DProj_SOURCE_DIR}/ToDo.dox
-  ${PROJECT_SOURCE_DIR}/Compiling.dox
-  ${PROJECT_SOURCE_DIR}/AddingFilters.dox
-  ${PROJECT_SOURCE_DIR}/H5EbsdFile.dox
-  ${PROJECT_SOURCE_DIR}/DataContainerStrategies.dox
-  ${PROJECT_SOURCE_DIR}/WritingPlugin.dox
-  ${PROJECT_SOURCE_DIR}/CodeGuidelines.dox
+  ${DREAM3DProj_SOURCE_DIR}/ToDo.md
+  ${PROJECT_SOURCE_DIR}/Compiling.md
+  ${PROJECT_SOURCE_DIR}/AddingFilters.md
+  ${PROJECT_SOURCE_DIR}/H5EbsdFile.md
+  ${PROJECT_SOURCE_DIR}/DataContainerStrategies.md
+  ${PROJECT_SOURCE_DIR}/WritingPlugin.md
+  ${PROJECT_SOURCE_DIR}/CodeGuidelines.md
 )
 
 set(LATEX_EPS_FILES
@@ -73,7 +73,7 @@ set(LATEX_EPS_FILES
 )
 
 if(DOX_GENERATE_LATEX)
-ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_Developer_Documentation"
+ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_Developer_Reference"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX"
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}"
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
@@ -84,7 +84,8 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME "DREAM.3D_Developer_Documentation"
                      GENERATE_LATEX "YES"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images"
+                     OUTPUT_DIR "${PROJECT_BINARY_DIR}")
 endif()
 
 set(DOCUMENTATION_SOURCE_FILES
@@ -104,7 +105,8 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images"
+                     OUTPUT_DIR "${PROJECT_BINARY_DIR}/Developer_Reference")
 endif()
 
 if(DOX_GENERATE_RTF)
@@ -119,6 +121,7 @@ ADD_DOXYGEN_TARGETS (PDF_FILENAME ${PROJECT_NAME}
                      GENERATE_LATEX "NO"
                      GENERATE_RTF "YES"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
-                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images")
+                     IMAGE_DIR "${PROJECT_SOURCE_DIR}/Images"
+                     OUTPUT_DIR "${PROJECT_BINARY_DIR}/Developer_Reference")
 endif()
 
