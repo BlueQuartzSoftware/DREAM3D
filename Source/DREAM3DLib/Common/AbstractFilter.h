@@ -116,6 +116,15 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     /**
      * @brief These methods are here to collect list of Arrays that a filter may either create or require
      **/
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredVertexData)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedVertexData)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedEdgeData)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredFaceData)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedFaceData)
+
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, RequiredCellData)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CreatedCellData)
 
@@ -149,6 +158,15 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual bool doesPipelineContainFilterBeforeThis(const std::string &name);
     virtual bool doesPipelineContainFilterAfterThis(const std::string &name);
+
+    virtual void addRequiredVertexData(const std::string &name);
+    virtual void addCreatedVertexData(const std::string &name);
+
+    virtual void addRequiredEdgeData(const std::string &name);
+    virtual void addCreatedEdgeData(const std::string &name);
+
+    virtual void addRequiredFaceData(const std::string &name);
+    virtual void addCreatedFaceData(const std::string &name);
 
     virtual void addRequiredCellData(const std::string &name);
     virtual void addCreatedCellData(const std::string &name);
