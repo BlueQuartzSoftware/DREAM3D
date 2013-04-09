@@ -202,16 +202,25 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-  //  std::cout << "RotateEulerRefFrame: " << m_ConversionFactor << std::endl;
-  //#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#if 0
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    RotateEulerRefFrameImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
-
-#else
-  RotateEulerRefFrameImpl serial(m_CellEulerAngles, m_RotationAngle, m_RotationAxis);
-  serial.convert(0, totalPoints);
+  bool doParallel = false;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  doParallel = true;
 #endif
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      RotateEulerRefFrameImpl(m_CellEulerAngles, m_RotationAngle, m_RotationAxis), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    RotateEulerRefFrameImpl serial(m_CellEulerAngles, m_RotationAngle, m_RotationAxis);
+    serial.convert(0, totalPoints);
+  }
 
   notifyStatusMessage("Complete");
 }

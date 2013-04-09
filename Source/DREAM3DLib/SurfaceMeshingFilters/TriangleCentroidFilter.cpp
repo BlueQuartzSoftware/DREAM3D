@@ -91,9 +91,9 @@ class CalculateCentroidsImpl
 //
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter() :
-SurfaceMeshFilter(),
-m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
-m_SurfaceMeshTriangleCentroids(NULL)
+  SurfaceMeshFilter(),
+  m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
+  m_SurfaceMeshTriangleCentroids(NULL)
 {
   setupFilterParameters();
 }
@@ -139,7 +139,7 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fie
   }
   else
   {
-      // We MUST have Nodes
+    // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -189,6 +189,12 @@ void TriangleCentroidFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
+  bool doParallel = false;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  doParallel = true;
+#endif
+
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
@@ -198,13 +204,18 @@ void TriangleCentroidFilter::execute()
   dataCheck(false, trianglesPtr->GetNumberOfTuples(), 0, 0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    CalculateCentroidsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids), tbb::auto_partitioner());
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      CalculateCentroidsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids), tbb::auto_partitioner());
 
-#else
-  CalculateCentroidsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids);
-  serial.generate(0, totalPoints);
+  }
+  else
 #endif
+  {
+    CalculateCentroidsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleCentroids);
+    serial.generate(0, totalPoints);
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
