@@ -41,7 +41,7 @@ None
 
 ## Authors ##
 
-**Copyright** 2012 Dr. Anthony Rollet, Dr. Jason Gruber, Dr. Stephen Sintay, Dr. Sukbin Lee
+**Copyright:** 2012 Dr. Anthony Rollet, Dr. Jason Gruber, Dr. Stephen Sintay, Dr. Sukbin Lee
 
 **Contact Info:** Carnegie-Mellon University, School of Materials Engineering
 

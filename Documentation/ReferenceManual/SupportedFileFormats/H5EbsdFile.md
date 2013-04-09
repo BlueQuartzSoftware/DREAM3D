@@ -1,18 +1,17 @@
-# EBSD HDF5 Data File Specification {#h5ebsdfile}
-
+H5EBSD Data File Specification {#h5ebsdfile}
+================
 
 ## Orientations, Reference Frames and Coordinate Systems
 DREAM.3D's origin follows the sample coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display.
 Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow).
 
-![](Images/CoordinateSystem1.png)
+![TSL Coordintate System (Spacial)](Images/CoordinateSystem1.png)
 @image latex Images/CoordinateSystem1.png width=3in
 
 Commercial EBSD acquisition systems do not typically follow this convention and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data in which case the DREAM.3D environment does not have any way of determining if those transformations have already occured. During the import process the user is asked a few questions regarding the orientation of their EBSD data in relation to the sample coordinate system. Currently there are 3 items that must be answered otherwise undefined behavior may occur during any of the analysis algorithms.
 
 - Some Commercial EBSD acquisition systems allow for a **scan rotation** which
 rotates the sample coordinate system 180 degrees around the Z axis.
-- Something here
 - Should we rotate the Euler angles to bring them in line with the sample
 reference frame?
 
@@ -23,24 +22,26 @@ The EBSD Data from multiple vendors are stored in a data file using the HDF5 fil
 ## HDF5 File Layout
 
 ### HDF5 Root Level Layout Specification
+
 | H5Ebsd Specification |   |  |
 |----------------------|---|--|
-|Root Level Datasets and Group |  |  |
+|Root Level Datasets and Group | Attribute Name "FileVersion" Current Value="4" |   |
 | **Name** | **HDF5 Type** | **Value** |
 | Index | H5T\_NATIVE\_INT32 | List of all Slice index values |
-| AlignEulers | H5T\_NATIVE\_INT32 |  |
+| EulerTransformationAngle | H5T\_NATIVE\_FLOAT |  |
+| EulerTransformationAngle | H5T\_NATIVE\_FLOAT |  |
 | Manufacturer | H5T\_STRING | The **Manufacturer** currently is either _TSL_ or _HKL_ |
 | Max X Points | H5T\_NATIVE\_INT64 | The maximum number of X points in the sample grid |
 | Max Y Points | H5T\_NATIVE\_INT64 | The maximum number of Y points in the sample grid |
-| ReorderArray | H5T\_NATIVE\_UINT32 | Reorder data into the correct reference frame |
-| RotateSlice | H5T\_NATIVE\_UINT32 | Rotate the data into the correct reference frame |
-| Stacking Order | H5T\_NATIVE\_UINT32 | Defines which slice corresponds to the Z=0 in the coordinate system. Optional Attribute of type H5T\_STRING, with Name "Name" and Value ("Low To High" | "High To Low") |
+| SampleTransformationAngle | H5T\_NATIVE\_FLOAT |  |
+| SampleTransformationAngle | H5T\_NATIVE\_FLOAT |  |
+| Stacking Order | H5T\_NATIVE\_UINT32 | Defines which slice corresponds to the Z=0 in the coordinate system. Optional Attribute of type H5T\_STRING, with Name "Name" and Value ("Low To High" or "High To Low") |
 | X Resolution | H5T\_NATIVE\_FLOAT | Resolution between sample points in the X direction |
 | Y Resolution | H5T\_NATIVE\_FLOAT | Resolution between sample points in the Y direction |
 | Z Resolution | H5T\_NATIVE\_FLOAT | Resolution between slices in the Z Direction |
 | ZEndIndex | H5T\_NATIVE\_INT64 | Starting Slice index |
 | ZStartIndex | H5T\_NATIVE\_INT64 | Ending Slice index (inclusive) |
-| Slice Data organized by Slice index | |  |
+| Slice Data organized by Slice index |  |  |
 
 ### Slice Group Specification
 Each Slice is grouped into its own H5G_GROUP with the Name of the group simply the index of the slice. Within each slice group are 2 more groups with names **Data** and **Header**
@@ -116,6 +117,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
 | {Based on Index of the family}. If there are 4 families then there are 4 data sets with names "0", "1", "2" and "3". | Custom: See Below | |
+ 
     typedef struct
     {
         int h;@n
@@ -125,6 +127,8 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
         float diffractionIntensity;@n
         int s2;@n
     } HKLFamily_t;
+
+---------------
 
 ## HKL Specification
  This section details the data to be imported from a .ctf file into the .h5ebsd file
@@ -194,10 +198,10 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 
 
 
-## Detailed Description
+## Stacking Order Discussion
 
 The **Stacking Order** refers to the order in which the z slices are stacked together when they are read from the file. The enumerations are also in the EbsdLibConstants.h header file.
 
-As a further explanation if the ordering is **"Low To High"** then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High" then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **"High to Low"** in which case the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
+As a further explanation if the ordering is **Low To High** then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High" then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **High to Low** in which case the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
 
  
