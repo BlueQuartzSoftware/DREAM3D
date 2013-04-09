@@ -48,12 +48,9 @@
 FindAvgCAxes::FindAvgCAxes() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_GrainIds(NULL),
-m_CellPhases(NULL),
 m_Quats(NULL),
 m_AvgCAxes(NULL)
 {
@@ -85,7 +82,6 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
 
   int err = 0;
   TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
@@ -100,9 +96,6 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, float, FloatArrayType, 0, fields, 3)
-
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -156,10 +149,8 @@ void FindAvgCAxes::execute()
 //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
-    if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
+    if(m_GrainIds[i] > 0)
     {
-
-      phase = m_CellPhases[i];
       q1[0] = m_Quats[i*5 + 0];
       q1[1] = m_Quats[i*5 + 1];
       q1[2] = m_Quats[i*5 + 2];
@@ -173,6 +164,7 @@ void FindAvgCAxes::execute()
       MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
       MatrixMath::normalize3x1(c1);
+	  if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
 
     counter[m_GrainIds[i]]++;
     m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];

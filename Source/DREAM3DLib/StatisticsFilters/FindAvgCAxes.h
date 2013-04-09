@@ -69,12 +69,10 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
@@ -98,11 +96,8 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     int32_t* m_GrainIds;
-    int32_t* m_CellPhases;
     float* m_Quats;
     float* m_AvgCAxes;
-
-	unsigned int* m_CrystalStructures;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
