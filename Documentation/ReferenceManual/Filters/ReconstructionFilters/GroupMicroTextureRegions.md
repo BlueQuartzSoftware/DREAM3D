@@ -5,8 +5,8 @@ Identify MicroTexture (C-Axis Misorientation) {#groupmicrotextureregions}
 Reconstruction Filters (Grouping)
 
 ## Description ##
-This Filter searches for neighboring **Fields** that have c-axes commonly aligned and merges them. The user needs to first segment the **Fields** (_EbsdSegmentGrains_ or _CAxisSegmentGrains_ Filters). Once segmented, the **Fields** are examined for c-axis orientation and neighboring **Fields** that have alignment within the misorientation tolerance entered by the user (1-10 degrees). After the **Fields** are grouped together, they are merged into a microtextured region encompassing these **Fields**.
-This Filter is similar to the _TwinMisorientation_ and _ColonyMisorientation_ Filters in the sense that **Fields** are grouped according to some criterion.
+This Filter groups neighboring **Fields** that have c-axes aligned within a user defined tolerance.  The algorithm for grouping the **Fields** is analogous to the algorithm for segmenting the **Fields** - only the average orientation of the **Fields** are used instead of the orientations of the individual **Cells** and the criterion for grouping only considers the alignment of the c-axes.  The user can specify a tolerance for how closely aligned the c-axes must be for neighbor **Fields** to be grouped.
+
 
 
 ## Parameters ##

@@ -7,9 +7,9 @@ Reconstruction Filters (Alignment)
 ## Description ##
 This Filter segments 2D slices, creates *GrainIds* that are used to determine the _mutual information_ and then aligns the slices. These *GrainIds* are temporary, and they apply to this filter only. So they are not related to the *GrainIds* generated in other Filters.
 
-The user choses the level of _misorientation tolerance_ by which to align _**Cells**_, where here the tolerance means the _misorientation_ cannot exceed a given value. If the rotation angle is below the tolerance, then the **Cell** is grouped with other _**Cells**_ that satisfy the criterion.
+The user choses the level of _misorientation tolerance_ by which to align **Cells**, where here the tolerance means the _misorientation_ cannot exceed a given value. If the rotation angle is below the tolerance, then the **Cell** is grouped with other **Cells** that satisfy the criterion.
 
-The approach used in this filter is to group _neighboring **Cells**_ on a slice that have a _misorientation_ below the tolerance the user entered. _Misorientation_ here means the minimum rotation angle of one **Cell**'s crystal axis needed to coincide with another **Cell**'s crystal axis. When the **Fields** in the slices are defined, they are moved until _'disks'_ in neighboring slices align with each other.
+The approach used in this filter is to group neighboring **Cells** on a slice that have a _misorientation_ below the tolerance the user entered. _Misorientation_ here means the minimum rotation angle of one **Cell**'s crystal axis needed to coincide with another **Cell**'s crystal axis. When the **Fields** in the slices are defined, they are moved until _'disks'_ in neighboring slices align with each other.
 
 _Mutual information_ is one of many quantities that measures how much one random variable
 tells us about another. It is a dimensionless quantity with (generally) units of bits, and can be
@@ -42,7 +42,7 @@ _Information, Physics, and Computation_. Oxford University Press, Oxford.
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
-| Cell | Good**Cells** | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  |
+| Cell | GoodVoxels | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  |
 | Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. |
 | Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
 

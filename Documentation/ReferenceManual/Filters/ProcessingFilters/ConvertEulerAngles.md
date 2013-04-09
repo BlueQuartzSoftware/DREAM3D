@@ -5,16 +5,11 @@ Convert Euler Angles {#converteulerangles}
 Processing Filters (Conversion)
 
 ## Description ##
-To use this Filter correctly, the user needs to know the angle unit used in the data file. Files for 2D data that are .ctf format use degrees. Files for 3D data that are .ctf format use radians. All .ang files use radians. If other file types are used, determine the angle unit before running this filter.
-There are several possible situations that can arise when choosing the angle conversion:
-_Data is in degrees: if radians-to-degrees is selected the angles are incorrect._
-__Data is in degrees: if degrees-to-radians is selected the angles are correct.__
-_Data is in radians: If degrees-to-radians is selected, the angles are incorrect._
-__Data is in radians: if radians-to-degrees is selected the angles are correct.__
+This Filter will multiply the Euler angles of every **Cell** by a factor to convert *degrees to radians* or *radians to degrees*.  The user needs to know the units of their data in order to use this filter properly. 2D data files that are in *HKL*'s .ctf format use degrees. 3D data files in *HKL*'s .ctf format use radians. All files in *TSL*'s .ang format use radians. If other file types are used, determine the units before running this filter.  
 
-If the wrong unit is input, the Filter has no way to determine whether or not it is correct, because there is no way to know where the data came from and what the angle format may be.
-If unsure about the unit used, check with the software supplier. 
-Additionally, there may be user Filters added that use degrees and not radians. This Filter handles those situations. BUT, again, the user must know what the angle unit is before applying this Filter.
+Generally, all filters within DREAM.3D use radians as a default unit, but filters may be added that require the Euler angles to be in degrees and this filter will allow the user to move back-and-forth between the units.
+
+If the wrong conversion is selected (i.e. the user chooses *degrees to radians*, but their data is already in radians), the Filter will apply the conversion anyway and will result in erroneous data being used for the rest of the pipeline. If unsure about the units, check with the software supplier. 
 
 ## Parameters ##
 

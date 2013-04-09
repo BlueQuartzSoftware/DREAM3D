@@ -2,7 +2,7 @@ Identify Sample {#identifysample}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Cleanup)
 
 ## Description ##
 This Filter utilizes __Cell__ __Good**Cells**__ to identify the sample.
