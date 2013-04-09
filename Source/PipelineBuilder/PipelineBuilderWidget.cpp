@@ -146,6 +146,15 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
+{
+  QSettings prefs(filePath, QSettings::IniFormat, this);
+  readSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
   prefs.beginGroup("PipelineBuilder");
@@ -360,6 +369,11 @@ void PipelineBuilderWidget::setupGui()
   errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
   m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
+
+  // Connect the PipelineViewWidget Signals to slots
+  connect(m_PipelineViewWidget, SIGNAL(pipelineFileDropped(const QString&)),
+          this, SLOT(openPipelineFile(const QString& )) );
+
 
   m_DocErrorTabsIsOpen = false;
 

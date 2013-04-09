@@ -134,8 +134,7 @@ void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
     m_PipelineBuilderWidget->getLastDirectory(),
     tr("Settings File (*.txt)") );
   if ( true == file.isEmpty() ) { return; }
-  QSettings prefs(file, QSettings::IniFormat, this);
-  m_PipelineBuilderWidget->readSettings(prefs);
+  m_PipelineBuilderWidget->openPipelineFile(file);
 }
 
 // -----------------------------------------------------------------------------
