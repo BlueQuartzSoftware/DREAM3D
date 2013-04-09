@@ -57,16 +57,12 @@ const static float m_pi = static_cast<float>(M_PI);
 MinNeighbors::MinNeighbors() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_MinNumNeighbors(1),
 m_AlreadyChecked(NULL),
 m_Neighbors(NULL),
 m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_FieldPhases(NULL),
 m_NumNeighbors(NULL),
 m_Active(NULL)
 {
@@ -112,19 +108,6 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
-
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
@@ -268,8 +251,6 @@ void MinNeighbors::assign_badpoints()
 		    {
 			  count = kstride+jstride+i;
 			  std::stringstream ss;
-		//	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-		//	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
 			  grainname = m_GrainIds[count];
 			  if (grainname < 0)
 			  {
@@ -296,7 +277,6 @@ void MinNeighbors::assign_badpoints()
 					  if (current > most)
 					  {
 						most = current;
-//					    m_Neighbors[count] = grain;
 					    m_Neighbors[count] = neighpoint;
 					  }
 					}
@@ -304,7 +284,7 @@ void MinNeighbors::assign_badpoints()
 				}
 				for (int l = 0; l < 6; l++)
 				{
-//				  good = 1;
+				  good = 1;
 				  neighpoint = static_cast<int>( count + neighpoints[l] );
 				  if (l == 0 && k == 0) good = 0;
 				  if (l == 5 && k == (dims[2] - 1)) good = 0;
@@ -327,7 +307,7 @@ void MinNeighbors::assign_badpoints()
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
-      if (grainname < 0 && m_GrainIds[neighbor] >= 0)
+      if (grainname < 0 && neighbor >= 0 && m_GrainIds[neighbor] >= 0)
       {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
@@ -335,13 +315,8 @@ void MinNeighbors::assign_badpoints()
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }
-//		  m_GrainIds[j] = neighbor;
-//		  m_CellPhases[j] = m_FieldPhases[neighbor];
       }
     }
-//    std::stringstream ss;
-//     ss << "Assigning Bad Voxels count = " << count;
-//    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
 }
 
@@ -352,20 +327,15 @@ void MinNeighbors::merge_containedgrains()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  int tot = 0;
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t i = 0; i < totalPoints; i++)
   {
 	std::stringstream ss;
-//	ss << "Cleaning Up Grains - Removing Contained Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-//	notifyStatusMessage(ss.str());
     int grainname = m_GrainIds[i];
-    if(m_NumNeighbors[grainname] < m_MinNumNeighbors && m_FieldPhases[grainname] > 0)
+    if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {
       m_Active[grainname] = false;
       m_GrainIds[i] = -1;
-	  tot++;
-	  std::stringstream ss;
     }
   }
 }

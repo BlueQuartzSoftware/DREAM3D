@@ -2,7 +2,7 @@ Find Cell Quaternions {#findcellquats}
 =======
 
 ## Group (Subgroup) ##
-Generic Filters (Misc)
+Generic Filters (Crystallography)
 
 ## Description ##
 

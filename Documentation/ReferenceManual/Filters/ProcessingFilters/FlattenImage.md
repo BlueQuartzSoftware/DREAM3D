@@ -2,27 +2,26 @@ Flatten Image {#flattenimage}
 ======
 
 ## Group (Subgroup) ##
-Processing Filters
+Processing Filters (Image)
 
 ## Description ##
-
+This filter allows the user to selected a "flattening" method for turning an array of RGB or RGBa values to grayscale values.
 
 ## Parameters ##
-
 | Name | Type |
 |------|------|
 | Flattening Method | Choices |
 
 ## Required Arrays ##
-None
-
+| Type | Default Name | Description | Comment |
+|------|--------------|---------|-------|
+| Cell | ImageData | This is either a 3 or 4 component array of RGB or RGBa values |  |
 
 
 ## Created Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | FlatImageData |  |
+| Type | Default Name | Description | Comment |
+|------|--------------|---------|-------|
+| Cell | FlatImageData | This is a 1 component array of grayscale values | |
 
 ## Authors ##
 
