@@ -53,13 +53,13 @@
  */
 class CalculateNormalsImpl
 {
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer m_Nodes;
-    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer m_Triangles;
+    DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
+    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
     double* m_Normals;
 
   public:
-    CalculateNormalsImpl(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes,
-                                      StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles,
+    CalculateNormalsImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
+                                      DREAM3D::SurfaceMesh::FaceListPointer_t triangles,
                                       double* normals) :
       m_Nodes(nodes),
       m_Triangles(triangles),
@@ -69,13 +69,13 @@ class CalculateNormalsImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting SurfaceMesh::DataStructures::Face_t Index
-     * @param end The ending SurfaceMesh::DataStructures::Face_t Index
+     * @param start The starting DREAM3D::SurfaceMesh::Face_t Index
+     * @param end The ending DREAM3D::SurfaceMesh::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
-      SurfaceMesh::DataStructures::Vert_t* nodes = m_Nodes->GetPointer(0);
-      SurfaceMesh::DataStructures::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
+      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
       for (size_t i = start; i < end; i++)
       {
         // Get the true indices of the 3 nodes
@@ -107,7 +107,7 @@ class CalculateNormalsImpl
 // -----------------------------------------------------------------------------
 TriangleNormalFilter::TriangleNormalFilter() :
 SurfaceMeshFilter(),
-m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleNormals),
+m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
 m_SurfaceMeshTriangleNormals(NULL)
 {
   setupFilterParameters();
@@ -203,9 +203,9 @@ void TriangleNormalFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

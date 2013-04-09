@@ -83,7 +83,7 @@ class EdgeFunctions
     public:
     virtual ~EdgeFunctions(){}
 
-    static T Length(typename StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes, SurfaceMesh::DataStructures::Edge_t* e)
+    static T Length(typename DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::Edge_t* e)
     {
       int nid0 = e->verts[0];
       int nid1 = e->verts[1];

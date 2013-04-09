@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT SharedGrainFaceFilter : public SurfaceMeshFilter
     virtual ~SharedGrainFaceFilter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    typedef std::vector<int> TriangleIds_t;
-    typedef std::map<int32_t, TriangleIds_t> SharedGrainFaces_t;
+    typedef std::vector<int> FaceIds_t;
+    typedef std::map<int32_t, FaceIds_t> SharedGrainFaces_t;
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshGrainFaceIdArrayName)
@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT SharedGrainFaceFilter : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

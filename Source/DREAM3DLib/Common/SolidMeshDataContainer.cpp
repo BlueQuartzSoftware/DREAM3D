@@ -51,7 +51,7 @@
 // -----------------------------------------------------------------------------
 SolidMeshDataContainer::SolidMeshDataContainer() :
 Observable(),
-m_NumPointTuples(0),
+m_NumVertexTuples(0),
 m_NumFaceTuples(0),
 m_NumEdgeTuples(0)
 {
@@ -69,7 +69,7 @@ SolidMeshDataContainer::~SolidMeshDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, PointData)
+DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, VertexData)
 DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, EdgeData)
 
@@ -77,7 +77,7 @@ DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, EdgeData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addPointData(const std::string &name, IDataArray::Pointer data)
+void SolidMeshDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -86,18 +86,18 @@ void SolidMeshDataContainer::addPointData(const std::string &name, IDataArray::P
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_PointData[name] = data;
-  m_NumPointTuples = data->GetNumberOfTuples();
+  m_VertexData[name] = data;
+  m_NumVertexTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getPointData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::getVertexData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_PointData.find(name);
-  if ( it == m_PointData.end() )
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -108,25 +108,25 @@ IDataArray::Pointer SolidMeshDataContainer::getPointData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removePointData(const std::string &name)
+IDataArray::Pointer SolidMeshDataContainer::removeVertexData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_PointData.find(name);
-  if ( it == m_PointData.end() )
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_PointData.erase(it);
+  m_VertexData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearPointData()
+void SolidMeshDataContainer::clearVertexData()
 {
-  m_PointData.clear();
+  m_VertexData.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ void SolidMeshDataContainer::clearPointData()
 std::list<std::string> SolidMeshDataContainer::getPointArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_PointData.begin(); iter != m_PointData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -147,7 +147,7 @@ std::list<std::string> SolidMeshDataContainer::getPointArrayNameList()
 // -----------------------------------------------------------------------------
 int SolidMeshDataContainer::getNumPointArrays()
 {
-  return static_cast<int>(m_PointData.size());
+  return static_cast<int>(m_VertexData.size());
 }
 
 

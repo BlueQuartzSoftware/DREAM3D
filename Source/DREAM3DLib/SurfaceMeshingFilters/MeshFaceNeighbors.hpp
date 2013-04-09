@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _MeshTriangleNeighbors_hpp_H_
-#define _MeshTriangleNeighbors_hpp_H_
+#ifndef _MeshFaceNeighbors_hpp_H_
+#define _MeshFaceNeighbors_hpp_H_
 
 #include <string>
 #include <vector>
@@ -48,16 +48,16 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
 
 /**
- * @brief The MeshTriangleNeighbors class contains arrays of Triangles for each Node in the mesh. This allows quick query to the node
+ * @brief The MeshFaceNeighbors class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
-class MeshTriangleNeighbors
+class MeshFaceNeighbors
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(MeshTriangleNeighbors)
-    DREAM3D_STATIC_NEW_MACRO(MeshTriangleNeighbors)
-    DREAM3D_TYPE_MACRO(MeshTriangleNeighbors)
+    DREAM3D_SHARED_POINTERS(MeshFaceNeighbors)
+    DREAM3D_STATIC_NEW_MACRO(MeshFaceNeighbors)
+    DREAM3D_TYPE_MACRO(MeshFaceNeighbors)
 
     class NeighborList {
       public:
@@ -70,7 +70,7 @@ class MeshTriangleNeighbors
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    virtual ~MeshTriangleNeighbors()
+    virtual ~MeshFaceNeighbors()
     {
       if ( this->Array == NULL )
       {
@@ -104,7 +104,7 @@ class MeshTriangleNeighbors
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    unsigned short getNumberOfTriangles(size_t ptId) {
+    unsigned short getNumberOfFaces(size_t ptId) {
       return this->Array[ptId].ncells;
     }
 
@@ -117,48 +117,48 @@ class MeshTriangleNeighbors
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateNeighborLists(SurfaceMesh::DataStructures::VertListPointer_t nodes,
-                               SurfaceMesh::DataStructures::FaceListPointer_t triangles,
+    void generateNeighborLists(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
+                               DREAM3D::SurfaceMesh::FaceListPointer_t faces,
                                MeshVertLinks::Pointer cellLinks)
     {
 
-      size_t nTriangles = triangles->GetNumberOfTuples();
+      size_t nFaces = faces->GetNumberOfTuples();
 
-      allocate(triangles->GetNumberOfTuples());
+      allocate(faces->GetNumberOfTuples());
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
-      boost::shared_array<bool> visitedPtr(new bool[nTriangles]);
+      boost::shared_array<bool> visitedPtr(new bool[nFaces]);
       bool* visited = visitedPtr.get();
-      ::memset(visitedPtr.get(), 0, nTriangles);
+      ::memset(visitedPtr.get(), 0, nFaces);
 
       // Reuse this vector for each loop. Avoids re-allocating the memory each time through the loop
       std::vector<int> loop_neighbors(32, 0);
 
-      // Build up the Triangle Adjacency list now that we have the cell links
-      for(size_t t = 0; t < nTriangles; ++t)
+      // Build up the Face Adjacency list now that we have the cell links
+      for(size_t t = 0; t < nFaces; ++t)
       {
-        //   std::cout << "Analyzing Triangle " << t << std::endl;
-        SurfaceMesh::DataStructures::Face_t& seedTriangle = *(triangles->GetPointer(t));
+        //   std::cout << "Analyzing Face " << t << std::endl;
+        DREAM3D::SurfaceMesh::Face_t& seedFace = *(faces->GetPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
           //   std::cout << " vert " << v << std::endl;
-          int nTris = cellLinks->getNumberOfTriangles(seedTriangle.verts[v]);
-          int* vertIdxs = cellLinks->getTriangleListPointer(seedTriangle.verts[v]);
+          int nTris = cellLinks->getNumberOfFaces(seedFace.verts[v]);
+          int* vertIdxs = cellLinks->getFaceListPointer(seedFace.verts[v]);
 
           for(int vt = 0; vt < nTris; ++vt)
           {
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
-            //      std::cout << "   Comparing Triangle " << vertIdxs[vt] << std::endl;
-            SurfaceMesh::DataStructures::Face_t& vertTri = *(triangles->GetPointer(vertIdxs[vt]));
+            //      std::cout << "   Comparing Face " << vertIdxs[vt] << std::endl;
+            DREAM3D::SurfaceMesh::Face_t& vertTri = *(faces->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
             // then there is a real problem with the mesh and the program is going to assert.
             // Unrolled the loop to shave about 25% of time off the outer loop.
-            int seedTriVert0 = seedTriangle.verts[0];
-            int seedTriVert1 = seedTriangle.verts[1];
-            int seedTriVert2 = seedTriangle.verts[2];
+            int seedTriVert0 = seedFace.verts[0];
+            int seedTriVert1 = seedFace.verts[1];
+            int seedTriVert2 = seedFace.verts[2];
             int trgtTriVert0 = vertTri.verts[0];
             int trgtTriVert1 = vertTri.verts[1];
             int trgtTriVert2 = vertTri.verts[2];
@@ -176,10 +176,10 @@ class MeshTriangleNeighbors
               vCount++;
             }
 
-            BOOST_ASSERT(vCount < 3); // No way 2 triangles can share all 3 vertices. Something is VERY wrong at this point
+            BOOST_ASSERT(vCount < 3); // No way 2 faces can share all 3 vertices. Something is VERY wrong at this point
 
             // So if our vertex match count is 2 and we have not visited the triangle in question then add this triangle index
-            // into the list of Triangle Indices as neighbors for the source triangle.
+            // into the list of Face Indices as neighbors for the source triangle.
             if (vCount == 2)
             {
               //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
@@ -201,7 +201,7 @@ class MeshTriangleNeighbors
         {
           visited[loop_neighbors[k]] = false;
         }
-        // Allocate the array storage for the current triangle to hold its Triangle list
+        // Allocate the array storage for the current triangle to hold its Face list
         this->Array[t].cells = new int[this->Array[t].ncells];
         // Only copy the first "N" values from the loop_neighbors vector into the storage array
         ::memcpy(this->Array[t].cells, &(loop_neighbors[0]), sizeof(int) * this->Array[t].ncells);
@@ -233,14 +233,14 @@ class MeshTriangleNeighbors
 
 
   protected:
-    MeshTriangleNeighbors():Array(NULL),Size(0) {}
+    MeshFaceNeighbors():Array(NULL),Size(0) {}
 
     //----------------------------------------------------------------------------
     // This will allocate memory to hold all the NeighborList structures where each
     // structure is initialized to Zero Entries and a NULL Pointer
     void allocate(size_t sz, size_t ext=1000)
     {
-      static MeshTriangleNeighbors::NeighborList linkInit = {0,NULL};
+      static MeshFaceNeighbors::NeighborList linkInit = {0,NULL};
 
       // This makes sure we deallocate any lists that have been created
       for (size_t i=0; i<this->Size; i++)
@@ -258,7 +258,7 @@ class MeshTriangleNeighbors
 
       this->Size = sz;
       // Allocate a whole new set of structures
-      this->Array = new MeshTriangleNeighbors::NeighborList[sz];
+      this->Array = new MeshFaceNeighbors::NeighborList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i=0; i < sz; i++)
@@ -294,4 +294,4 @@ class MeshTriangleNeighbors
 
 };
 
-#endif /* _MeshTriangleNeighbors_hpp_H_ */
+#endif /* _MeshFaceNeighbors_hpp_H_ */

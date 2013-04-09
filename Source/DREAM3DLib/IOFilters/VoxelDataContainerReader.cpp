@@ -290,10 +290,10 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    for(size_t i = 0; i < readNames.size(); ++i)
-    {
-      addCreatedCellData(readNames[i]);
-    }
+//    for(size_t i = 0; i < readNames.size(); ++i)
+//    {
+//      addCreatedCellData(readNames[i]);
+//    }
   }
 
   if(m_ReadFieldData == true)
@@ -306,10 +306,10 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    for(size_t i = 0; i < readNames.size(); ++i)
-    {
-      addCreatedFieldData(readNames[i]);
-    }
+//    for(size_t i = 0; i < readNames.size(); ++i)
+//    {
+//      addCreatedFieldData(readNames[i]);
+//    }
   }
 
   if(m_ReadEnsembleData == true)
@@ -322,10 +322,10 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    for(size_t i = 0; i < readNames.size(); ++i)
-    {
-      addCreatedEnsembleData(readNames[i]);
-    }
+//    for(size_t i = 0; i < readNames.size(); ++i)
+//    {
+//      addCreatedEnsembleData(readNames[i]);
+//    }
   }
 
   err |= H5Gclose(dcGid);

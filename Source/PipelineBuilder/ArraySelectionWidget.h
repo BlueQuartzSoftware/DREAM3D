@@ -108,10 +108,10 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList),
                                           getSelectedArrays(voxelFieldArrayList),
                                           getSelectedArrays(voxelEnsembleArrayList));
-      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshPointArrayList),
+      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList),
                                                 getSelectedArrays(surfaceMeshFaceArrayList),
                                                 getSelectedArrays(surfaceMeshEdgeArrayList));
-      filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshPointArrayList),
+      filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList),
                                               getSelectedArrays(solidMeshFaceArrayList),
                                               getSelectedArrays(solidMeshEdgeArrayList));
     }

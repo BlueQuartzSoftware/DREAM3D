@@ -50,12 +50,12 @@
  */
 class CalculateCentroidsImpl
 {
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer m_Nodes;
-    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer m_Triangles;
+    DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
+    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
     double* m_Centroids;
 
   public:
-    CalculateCentroidsImpl(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes, StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles, double* centroids) :
+    CalculateCentroidsImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles, double* centroids) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Centroids(centroids)
@@ -65,8 +65,8 @@ class CalculateCentroidsImpl
     void generate(size_t start, size_t end) const
     {
 
-      SurfaceMesh::DataStructures::Vert_t* nodes = m_Nodes->GetPointer(0);
-      SurfaceMesh::DataStructures::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
+      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
@@ -92,7 +92,7 @@ class CalculateCentroidsImpl
 // -----------------------------------------------------------------------------
 TriangleCentroidFilter::TriangleCentroidFilter() :
 SurfaceMeshFilter(),
-m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshTriangleCentroids),
+m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
 m_SurfaceMeshTriangleCentroids(NULL)
 {
   setupFilterParameters();
@@ -189,9 +189,9 @@ void TriangleCentroidFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

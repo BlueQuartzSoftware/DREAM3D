@@ -52,7 +52,7 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshDataContainer::SurfaceMeshDataContainer() :
 Observable(),
-m_NumPointTuples(0),
+m_NumVertexTuples(0),
 m_NumFaceTuples(0),
 m_NumEdgeTuples(0)
 {
@@ -70,7 +70,7 @@ SurfaceMeshDataContainer::~SurfaceMeshDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, PointData)
+DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, VertexData)
 DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, EdgeData)
 
@@ -94,7 +94,7 @@ void SurfaceMeshDataContainer::removeMeshVertLinks()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::buildMeshTriangleNeighborLists()
+void SurfaceMeshDataContainer::buildMeshFaceNeighborLists()
 {
   bool deleteMeshVertLinks = false;
   if (m_MeshVertLinks.get() == NULL)
@@ -102,8 +102,8 @@ void SurfaceMeshDataContainer::buildMeshTriangleNeighborLists()
     buildMeshVertLinks();
     deleteMeshVertLinks = true;
   }
-  m_TriangleNeighbors = MeshTriangleNeighbors::New();
-  m_TriangleNeighbors->generateNeighborLists(m_Vertices, m_Faces, m_MeshVertLinks);
+  m_FaceNeighbors = MeshFaceNeighbors::New();
+  m_FaceNeighbors->generateNeighborLists(m_Vertices, m_Faces, m_MeshVertLinks);
   if (deleteMeshVertLinks == true)
   {
     m_MeshVertLinks = MeshVertLinks::NullPointer();
@@ -113,9 +113,9 @@ void SurfaceMeshDataContainer::buildMeshTriangleNeighborLists()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::removeMeshTriangleNeighborLists()
+void SurfaceMeshDataContainer::removeMeshFaceNeighborLists()
 {
-  m_TriangleNeighbors = MeshTriangleNeighbors::NullPointer();
+  m_FaceNeighbors = MeshFaceNeighbors::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -137,23 +137,23 @@ MeshVertLinks::Pointer SurfaceMeshDataContainer::getMeshVertLinks()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MeshTriangleNeighbors::Pointer SurfaceMeshDataContainer::getMeshTriangleNeighborLists()
+MeshFaceNeighbors::Pointer SurfaceMeshDataContainer::getMeshFaceNeighborLists()
 {
-  return m_TriangleNeighbors;
+  return m_FaceNeighbors;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::setMeshTriangleNeighborLists(MeshTriangleNeighbors::Pointer neighbors)
+void SurfaceMeshDataContainer::setMeshFaceNeighborLists(MeshFaceNeighbors::Pointer neighbors)
 {
-  m_TriangleNeighbors = neighbors;
+  m_FaceNeighbors = neighbors;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::addPointData(const std::string &name, IDataArray::Pointer data)
+void SurfaceMeshDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -162,18 +162,18 @@ void SurfaceMeshDataContainer::addPointData(const std::string &name, IDataArray:
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_PointData[name] = data;
-  m_NumPointTuples = data->GetNumberOfTuples();
+  m_VertexData[name] = data;
+  m_NumVertexTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::getPointData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::getVertexData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_PointData.find(name);
-  if ( it == m_PointData.end() )
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -184,25 +184,25 @@ IDataArray::Pointer SurfaceMeshDataContainer::getPointData(const std::string &na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::removePointData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::removeVertexData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_PointData.find(name);
-  if ( it == m_PointData.end() )
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_PointData.erase(it);
+  m_VertexData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::clearPointData()
+void SurfaceMeshDataContainer::clearVertexData()
 {
-  m_PointData.clear();
+  m_VertexData.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -211,7 +211,7 @@ void SurfaceMeshDataContainer::clearPointData()
 std::list<std::string> SurfaceMeshDataContainer::getPointArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_PointData.begin(); iter != m_PointData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -223,7 +223,7 @@ std::list<std::string> SurfaceMeshDataContainer::getPointArrayNameList()
 // -----------------------------------------------------------------------------
 int SurfaceMeshDataContainer::getNumPointArrays()
 {
-  return static_cast<int>(m_PointData.size());
+  return static_cast<int>(m_VertexData.size());
 }
 
 

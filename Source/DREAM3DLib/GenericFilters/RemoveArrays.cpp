@@ -114,7 +114,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   {
     for(NameList_t::iterator iter = m_SelectedSurfaceMeshVertexArrays.begin(); iter != m_SelectedSurfaceMeshVertexArrays.end(); ++iter)
     {
-      sm->removePointData(*iter);
+      sm->removeVertexData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSurfaceMeshFaceArrays.begin(); iter != m_SelectedSurfaceMeshFaceArrays.end(); ++iter)
     {
@@ -131,7 +131,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   {
     for(NameList_t::iterator iter = m_SelectedSolidMeshVertexArrays.begin(); iter != m_SelectedSolidMeshVertexArrays.end(); ++iter)
     {
-      sol->removePointData(*iter);
+      sol->removeVertexData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSolidMeshFaceArrays.begin(); iter != m_SelectedSolidMeshFaceArrays.end(); ++iter)
     {
