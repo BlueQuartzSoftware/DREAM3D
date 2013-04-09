@@ -141,6 +141,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
     QUrl htmlHelpIndexFile();
+  public slots:
+    void openPipelineFile(const QString& filePath);
 
   protected slots:
     void actionClearPipeline_triggered();

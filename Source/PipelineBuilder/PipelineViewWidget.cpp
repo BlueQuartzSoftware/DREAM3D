@@ -37,6 +37,10 @@
 
 #include <iostream>
 
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QUrl>
+#include <QtCore/QDir>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
@@ -46,6 +50,7 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -537,7 +542,21 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 void PipelineViewWidget::dropEvent(QDropEvent *event)
 {
  // std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
-  if(m_FilterBeingDragged != NULL)
+  if (event->mimeData()->hasUrls())
+  {
+    QList<QUrl> urlList;
+    QString fName;
+    urlList = event->mimeData()->urls(); // returns list of QUrls
+    // if just text was dropped, urlList is empty (size == 0)
+
+    if ( urlList.size() > 0) // if at least one QUrl is present in list
+    {
+      fName = urlList[0].toLocalFile(); // convert first QUrl to local path
+      fName = QDir::toNativeSeparators(fName);
+      emit pipelineFileDropped(fName);
+    }
+  }
+  else if(m_FilterBeingDragged != NULL)
   {
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
