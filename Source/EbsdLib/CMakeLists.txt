@@ -17,12 +17,12 @@ if(DEFINED DREAM3DProj_BINARY_DIR)
     cmake_minimum_required(VERSION 2.8.9)
 
     set(EbsdLib_BUILT_AS_DYNAMIC_LIB)
-    IF (BUILD_SHARED_LIBS)
+    if(BUILD_SHARED_LIBS)
         set(EbsdLib_BUILT_AS_DYNAMIC_LIB 1)
-        IF (WIN32)
+        if(WIN32)
             ADD_DEFINITIONS("-DEbsdLib_BUILT_AS_DYNAMIC_LIB")
-        ENDIF (WIN32)
-    ENDIF (BUILD_SHARED_LIBS)
+        endif(WIN32)
+    endif(BUILD_SHARED_LIBS)
 
     set(GENERATE_GIT_VERSION 1)
 

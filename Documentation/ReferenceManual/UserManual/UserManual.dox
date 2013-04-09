@@ -1,0 +1,22 @@
+/*!
+
+@page usermanual User Manual
+
+Welcome to DREAM.3D, an open and modular software package that allows users to reconstruct, instantiate, quantify, mesh, handle and visualize microstructure digitally. The core software package has four (4) major functionalities.
+
+@li First, a series of EBSD data files (either TSL .ang or HKL .ctf) can be read and packed into a single HDF5 data file in order to reduce data size and clutter.  
+@li The sections can be aligned, cleaned, reconstructed, segmented and statistically characterized. 
+@li Statistics, either synthetically created or from real data, can be used to generate a statistically equivelent microstructure.
+@li The reconstructed volumes and the synthetic volumes can be surfaced meshed to allow the models to be moved into FEM or other simulations.
+
+DREAM3D makes the reconstruction of 3D EBSD data simple and straight forward. The development of more features is always on going and the DREAM3D development team welcomes your feed back whether you are first time user or seasoned user.
+
+
+@subpage acknowledgements Acknowledgements
+
+@subpage userinterface Overview of the User Interface
+
+@subpage creatingpipeline Creating a Pipeline
+
+@subpage importexportsavepipeline Import, Export & Favorite Pipelines
+*/

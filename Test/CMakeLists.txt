@@ -19,7 +19,7 @@ add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
 
 # --------------------------------------------------------------------------
 macro (ConvertPathToHeaderCompatible INPUT)
-    IF (WIN32)
+    if(WIN32)
       STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
       STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
     endif()

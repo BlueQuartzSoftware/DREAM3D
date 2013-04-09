@@ -55,14 +55,10 @@ const static float m_pi = static_cast<float>(M_PI);
 OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_Loop(false),
 m_CoordinationNumber(6),
 m_Neighbors(NULL),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_FieldPhases(NULL)
+m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -119,22 +115,6 @@ void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
-
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    find_grainphases->setMessagePrefix(getMessagePrefix());
-
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
-
 }
 
 
@@ -273,7 +253,6 @@ void OpenCloseCoordinationNumber::execute()
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
     {
-      //int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];
       if (coordinationNumber[j] >= m_CoordinationNumber && coordinationNumber[j] > 0)
       {

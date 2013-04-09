@@ -55,6 +55,9 @@
 //
 // -----------------------------------------------------------------------------
 VoxelDataContainer::VoxelDataContainer() :
+m_NumVertexTuples(0),
+m_NumEdgeTuples(0),
+m_NumFaceTuples(0),
 m_NumCellTuples(0),
 m_NumFieldTuples(0),
 m_NumEnsembleTuples(0)
@@ -76,9 +79,291 @@ VoxelDataContainer::~VoxelDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DOES_DATASET_EXIST_DEFN(VoxelDataContainer, VertexData)
+DOES_DATASET_EXIST_DEFN(VoxelDataContainer, EdgeData)
+DOES_DATASET_EXIST_DEFN(VoxelDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(VoxelDataContainer, CellData)
 DOES_DATASET_EXIST_DEFN(VoxelDataContainer, FieldData)
 DOES_DATASET_EXIST_DEFN(VoxelDataContainer, EnsembleData)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Vertex array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_VertexData[name] = data;
+  m_NumVertexTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer VoxelDataContainer::getVertexData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer VoxelDataContainer::removeVertexData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_VertexData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool VoxelDataContainer::renameVertexData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_VertexData.find(oldname);
+  if ( it == m_VertexData.end() )
+  {
+	  return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeVertexData(oldname);
+  addVertexData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainer::clearVertexData()
+{
+  m_VertexData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> VoxelDataContainer::getVertexArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainer::getNumVertexArrays()
+{
+  return static_cast<int>(m_VertexData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Edge array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_EdgeData[name] = data;
+  m_NumEdgeTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer VoxelDataContainer::getEdgeData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer VoxelDataContainer::removeEdgeData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_EdgeData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool VoxelDataContainer::renameEdgeData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EdgeData.find(oldname);
+  if ( it == m_EdgeData.end() )
+  {
+	  return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeEdgeData(oldname);
+  addEdgeData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainer::clearEdgeData()
+{
+  m_EdgeData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> VoxelDataContainer::getEdgeArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainer::getNumEdgeArrays()
+{
+  return static_cast<int>(m_EdgeData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Face array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_FaceData[name] = data;
+  m_NumFaceTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer VoxelDataContainer::getFaceData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FaceData.find(name);
+  if ( it == m_FaceData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer VoxelDataContainer::removeFaceData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FaceData.find(name);
+  if ( it == m_FaceData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_FaceData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool VoxelDataContainer::renameFaceData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FaceData.find(oldname);
+  if ( it == m_FaceData.end() )
+  {
+	  return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeFaceData(oldname);
+  addFaceData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VoxelDataContainer::clearFaceData()
+{
+  m_FaceData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> VoxelDataContainer::getFaceArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainer::getNumFaceArrays()
+{
+  return static_cast<int>(m_FaceData.size());
+}
 
 // -----------------------------------------------------------------------------
 //
