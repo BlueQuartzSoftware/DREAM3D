@@ -37,13 +37,13 @@ Note: The quaternions can be averaged with a simple average because the quaterni
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
 
-**Contact Info** dream3d@bluequartz.net
+**Contact Info:** dream3d@bluequartz.net
 
-**Version** 1.0.0
+**Version:** 1.0.0
 
-**License**  See the License.txt file that came with DREAM3D.
+**License:**  See the License.txt file that came with DREAM3D.
 
 
 
