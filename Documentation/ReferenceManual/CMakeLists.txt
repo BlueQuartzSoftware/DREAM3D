@@ -57,6 +57,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md
   ${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md
   ${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md
   ${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox
   ${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md
   ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
