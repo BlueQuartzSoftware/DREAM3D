@@ -176,6 +176,27 @@ void VoxelDataContainerWriter::execute()
     return;
   }
 
+  err = writeVertexData(dcGid);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
+  err = writeEdgeData(dcGid);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
+  err = writeFaceData(dcGid);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
   err = writeCellData(dcGid);
   if (err < 0)
   {
@@ -343,6 +364,165 @@ int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t 
   }
 
   err |= H5Gclose(gid);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  // Write the Voxel Data
+  err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-63);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  hid_t VertexGroupId = H5Gopen(dcGid, H5_VERTEX_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-64);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getVertexArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    ss.str("");
+    ss << "Writing Vertex Data '" << *iter << "' to HDF5 File" << std::endl;
+    notifyStatusMessage(ss.str());
+    IDataArray::Pointer array = m->getVertexData(*iter);
+    err = array->writeH5Data(VertexGroupId);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing array '" << *iter << "' to the HDF5 File";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(err);
+      H5Gclose(VertexGroupId); // Close the Vertex Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+  H5Gclose(VertexGroupId); // Close the Vertex Group
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  // Write the Voxel Data
+  err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-63);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  hid_t EdgeGroupId = H5Gopen(dcGid, H5_EDGE_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-64);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getEdgeArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    ss.str("");
+    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << std::endl;
+    notifyStatusMessage(ss.str());
+    IDataArray::Pointer array = m->getEdgeData(*iter);
+    err = array->writeH5Data(EdgeGroupId);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing array '" << *iter << "' to the HDF5 File";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(err);
+      H5Gclose(EdgeGroupId); // Close the Edge Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+  H5Gclose(EdgeGroupId); // Close the Edge Group
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  // Write the Voxel Data
+  err = H5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-63);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  hid_t FaceGroupId = H5Gopen(dcGid, H5_FACE_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-64);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getFaceArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    ss.str("");
+    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << std::endl;
+    notifyStatusMessage(ss.str());
+    IDataArray::Pointer array = m->getFaceData(*iter);
+    err = array->writeH5Data(FaceGroupId);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing array '" << *iter << "' to the HDF5 File";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(err);
+      H5Gclose(FaceGroupId); // Close the Face Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+  H5Gclose(FaceGroupId); // Close the Face Group
   return err;
 }
 
