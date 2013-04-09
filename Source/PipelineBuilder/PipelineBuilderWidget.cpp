@@ -711,12 +711,19 @@ QUrl PipelineBuilderWidget::htmlHelpIndexFile()
   helpDir.cdUp();
 #endif
 
+
+
+ #if defined(Q_OS_WIN)
+  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/index.html");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    helpDir.cdUp();
+  }
+ #endif
+
   s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
-//  if (helpDir.cd("Help") )
-//  {
-//    s = s + helpDir.absolutePath();
-//  }
-//  s = s + "/DREAM3D/index.html";
   return QUrl(s);
 }
 
