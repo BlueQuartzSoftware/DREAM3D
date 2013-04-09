@@ -5,7 +5,11 @@ DREAM3D supports the reading from and writing to a number of different file form
 
 @subpage nativedream3d 
 
-A Discussion of the native DREAM3D file format based on HDF5.
+A discussion of the native DREAM3D file format based on HDF5.
+
+@subpage h5ebsdfile
+
+A discussion of the H5EBSD file format
  
 @subpage xdmf 
 
