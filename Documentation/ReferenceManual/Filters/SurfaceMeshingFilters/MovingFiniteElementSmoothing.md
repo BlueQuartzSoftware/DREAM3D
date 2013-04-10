@@ -27,6 +27,9 @@ The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient 
 | Smooth Triple Lines | Boolean (On or Off) |
 
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

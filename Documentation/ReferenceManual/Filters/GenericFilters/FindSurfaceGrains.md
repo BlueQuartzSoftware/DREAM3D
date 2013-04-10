@@ -15,6 +15,9 @@ NOTE: If the structure/data is actually 2D, then the dimension that is planar is
 ## Parameters ##
 None
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

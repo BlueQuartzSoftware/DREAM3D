@@ -22,7 +22,7 @@ The user can place multiple filters into the pipeline to generate a workflow of 
 To remove a filter from the pipeline the user can simply use the mouse to click the small **X** icon in the upper left corner of the filter.
 
 
-If the preflight did not complete successfully the the user will see the offending filters show a red outline and red title area. This indicates that one or more of the input parameters has an error or the filter requires data that will not be available at that point in the pipeline. By looking at the error table the user can read the error message from the pipeline and act accordingly. An example pipeline with errors is shown in figure 4.
+If the preflight did not complete successfully the user will see the offending filters show a red outline and red title area. This indicates that one or more of the input parameters have an error or the filter requires data that will not be available at that point in the pipeline. By looking at the error table the user can read the error message from the pipeline and act accordingly. An example pipeline with errors is shown in figure 4.
 
 ----------
 

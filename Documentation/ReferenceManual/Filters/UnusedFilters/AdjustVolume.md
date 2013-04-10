@@ -11,6 +11,9 @@ Synthetic Builder Filters
 |------|------|
 | Max Iterations | Integer |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 

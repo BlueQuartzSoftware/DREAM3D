@@ -12,6 +12,9 @@ This filter renames a user chosen **Cell** array to a user defined new name.
 |------|------|
 | Cell Array Name | String |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

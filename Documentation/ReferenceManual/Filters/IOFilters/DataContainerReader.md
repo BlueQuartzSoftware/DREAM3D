@@ -17,6 +17,9 @@ The user is able to select which arrays from the DREAM3D data file to read. Ther
 | Read Field Data | Boolean (On or Off) |
 | Read Ensemble Data | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

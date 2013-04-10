@@ -33,6 +33,9 @@ _
 |------|------|
 | Distribution Type | Choices |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

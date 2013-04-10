@@ -25,6 +25,9 @@ The list of *"special"* misorientations can be found in the paper by Germain et 
 | Axis Tolerance | Double |
 | Angle Tolerance | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

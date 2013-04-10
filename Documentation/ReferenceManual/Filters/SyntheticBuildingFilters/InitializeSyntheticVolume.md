@@ -35,6 +35,9 @@ values the user entered.
 | Y Res | Double |
 | Z Res | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

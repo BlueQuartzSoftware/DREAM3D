@@ -10,6 +10,9 @@ This filter will renumber the GrainIds array to make it contiguous from *0* to *
 ## Parameters ##
  None
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |

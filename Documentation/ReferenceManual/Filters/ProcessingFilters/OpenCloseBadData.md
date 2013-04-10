@@ -41,6 +41,9 @@ Running the _erode-dilate_ operations in pairs can
 | Direction of Operation | Dilate or Erode |
 | Number of Iterations | The number of iterations to use for the filter |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

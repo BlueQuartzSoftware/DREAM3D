@@ -23,6 +23,9 @@ This filter allows the user to select a specific **Field** array and apply a com
 | Value | Double |
 | Output Array Name | Unknown Type |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

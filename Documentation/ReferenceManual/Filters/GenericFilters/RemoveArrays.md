@@ -15,6 +15,9 @@ This filter allows the user to remove specified arrays from the pipeline by dele
 | Arrays to Delete | String(s) |
 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

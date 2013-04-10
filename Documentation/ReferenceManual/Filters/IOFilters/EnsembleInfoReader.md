@@ -44,6 +44,9 @@ For example if you have a structure that has 2 phases that consist of a Cubic Pr
 |------|------|
 | Input Ensemble Info File | Input File |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

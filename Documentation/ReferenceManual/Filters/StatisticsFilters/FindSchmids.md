@@ -24,6 +24,9 @@ Schmid Factor from all of the slip systems is stored for the **Field**.
 | Loading Y: | Double | Y component of the loading axis in the sample reference frame |
 | Loading Z: | Double | Z component of the loading axis in the sample reference frame |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

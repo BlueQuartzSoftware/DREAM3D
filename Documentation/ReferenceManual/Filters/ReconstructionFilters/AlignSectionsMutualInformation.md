@@ -37,6 +37,9 @@ _Information, Physics, and Computation_. Oxford University Press, Oxford.
 |------|------|
 | Misorientation Tolerance | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

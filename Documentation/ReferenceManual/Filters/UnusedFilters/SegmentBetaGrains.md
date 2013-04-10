@@ -16,6 +16,9 @@ Reconstruction Filters (Segmentation)
 | Axis Tolerance | Double |
 | Angle Tolerance | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

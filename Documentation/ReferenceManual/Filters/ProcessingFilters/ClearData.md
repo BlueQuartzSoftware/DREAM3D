@@ -19,6 +19,9 @@ This filter allows the user to define a subvolume of the dataset in which the fi
 | Y Max | Integer |
 | Z Max | Integer |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

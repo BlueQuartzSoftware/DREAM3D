@@ -11,11 +11,15 @@ This surface meshing algorithm proceeds by creating a pair of triangles for each
 ## Parameters ##
 None
 
+## Required DataContainers ##
+Voxel
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Cell | GrainIds |  |
+| Cell | GrainIds | From the Voxel DataContainer | 
 
 ## Created Arrays ##
 

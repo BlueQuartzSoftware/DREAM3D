@@ -16,6 +16,9 @@ This filter is similar to the [SingleThresholdFields](singlethresholdfields.html
 | Output Array Name | Unknown Type |
 | Select Arrays to Threshold | Unknown Type |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

@@ -15,6 +15,9 @@ If precipitate phases have been included in the _Statistics_ file used by the _I
 | Periodic Boundary | Boolean (On or Off) |
 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

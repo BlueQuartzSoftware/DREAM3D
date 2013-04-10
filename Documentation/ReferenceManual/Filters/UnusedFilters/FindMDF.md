@@ -10,6 +10,9 @@ To generate a Misorientation Distribution Function (MDF), this filter uses __Fie
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

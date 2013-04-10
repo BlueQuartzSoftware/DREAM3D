@@ -14,6 +14,9 @@ IO Filters
 | Output Vtk File | Output File |
 | Write Binary Vtk File | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

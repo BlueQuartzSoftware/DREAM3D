@@ -13,6 +13,9 @@ This Filter searches the __Cell__ and __Field__ arrays based on a user choice of
 |------|------|
 | Distribution Type | Choices |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

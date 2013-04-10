@@ -26,6 +26,9 @@ will have a **Field** ID assigned to it.
 | Write Binary Vtk File | Boolean (On or Off) |
 | Write Conformal Mesh | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

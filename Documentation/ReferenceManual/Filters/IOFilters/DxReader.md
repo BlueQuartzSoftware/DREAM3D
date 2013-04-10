@@ -57,6 +57,9 @@ _See: www.opendx.org for more information._
 |------|------|
 | Input File | File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

@@ -2,7 +2,7 @@ Import, Export & Favorite Pipelines {#importexportsavepipeline}
 =========
 
 ## Saving and Loading a Predefined Pipeline
-DREAM3D allows the user to _Export_ and _Import_ pipelines via the **File** menu and the **Save Pipeline** and **Open Pipelin** menu items. The pipeline files are saved in the _.ini_ file format popular among many other programs. This file format is a simple text file with delineated sections with _Key::Value_ entries. This makes the sharing of Pipelines mostly transparent between users. If a pipeline has filters that require files to be read from or written to and the pipeline file is passed to another user that does not have those same paths then the new user may have to make the adjustments inside of DREAM3D after the pipeline is loaded.
+DREAM3D allows the user to _Export_ and _Import_ pipelines via the **File** menu and the **Save Pipeline** and **Open Pipeline** menu items. The pipeline files are saved in the _.ini_ file format popular among many other programs. This file format is a simple text file with delineated sections with _Key::Value_ entries. This makes the sharing of Pipelines mostly transparent between users. If a pipeline has filters that require files to be read from or written to and the pipeline file is passed to another user that does not have those same paths then the new user may have to make the adjustments inside of DREAM3D after the pipeline is loaded.
 
 -------
 

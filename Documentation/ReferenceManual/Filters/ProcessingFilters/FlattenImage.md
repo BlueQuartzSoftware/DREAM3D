@@ -12,6 +12,9 @@ This filter allows the user to selected a "flattening" method for turning an arr
 |------|------|
 | Flattening Method | Choices |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|---------|-------|

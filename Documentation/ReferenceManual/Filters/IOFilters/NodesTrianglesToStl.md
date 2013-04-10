@@ -42,6 +42,9 @@ The triangles file format is as follows:
 | Output STL File Prefix | The prefix that will be added before the id number |
 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

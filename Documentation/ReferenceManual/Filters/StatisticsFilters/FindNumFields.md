@@ -15,6 +15,9 @@ This filter determines the number of **Fields** in each **Ensemble**.
 ## Parameters ##
 None 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

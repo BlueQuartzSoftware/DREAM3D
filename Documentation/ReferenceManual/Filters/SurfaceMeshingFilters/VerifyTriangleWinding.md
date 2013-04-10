@@ -11,6 +11,9 @@ This filter analyzes the mesh for consistent triangle winding and fixes any inco
 ## Parameters ##
 None
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |

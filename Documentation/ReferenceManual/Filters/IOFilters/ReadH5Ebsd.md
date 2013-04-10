@@ -22,6 +22,9 @@ If the processing pipeline is going to process phase based data for crystallogra
 | Use Recommended Transformations | Boolean |  
 | Various Arrays | User selected arrays to read into memory |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

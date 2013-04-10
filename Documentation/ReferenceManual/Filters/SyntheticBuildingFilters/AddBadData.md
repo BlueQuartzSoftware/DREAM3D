@@ -9,6 +9,9 @@ Synthetic Builder Filters (Misc)
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

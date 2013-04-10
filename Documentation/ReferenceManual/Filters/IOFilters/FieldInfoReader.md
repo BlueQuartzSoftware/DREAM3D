@@ -38,6 +38,9 @@ If the option to _Create Cell Level Arrays_ is selected then any existing
 | Input Field Info File | Input File |
 | Create Cell Level Arrays | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

@@ -15,6 +15,9 @@ This Filter determines, for each **Cell**, the number of neighboring **Cells** t
 None
 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

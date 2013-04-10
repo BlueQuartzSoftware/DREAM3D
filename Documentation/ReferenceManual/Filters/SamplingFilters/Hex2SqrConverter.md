@@ -18,6 +18,9 @@ into a .h5ebsd file archive.
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

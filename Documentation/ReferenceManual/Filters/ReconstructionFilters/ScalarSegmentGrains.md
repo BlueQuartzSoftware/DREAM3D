@@ -14,6 +14,9 @@ This filter groups together **Cells** that differ in some user defined scalar va
 | Input Cell Array Name | Unknown Type |
 | Scalar Tolerance | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

@@ -11,6 +11,9 @@ This filter computes the centroid of each triangle in the surface mesh by calcul
 ## Parameters ##
 None
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

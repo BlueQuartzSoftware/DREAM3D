@@ -48,6 +48,9 @@ Note: there is no interpolation of the data and the nearest "old slice" is copie
 | Current Z Positions File | Input File |
 | Z Res | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

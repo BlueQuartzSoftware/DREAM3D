@@ -15,6 +15,9 @@ After **Fields** are removed for not having enough neighbors, the remaining **Fi
 |------|------|
 | Minimum Number Neighbors | Integer |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

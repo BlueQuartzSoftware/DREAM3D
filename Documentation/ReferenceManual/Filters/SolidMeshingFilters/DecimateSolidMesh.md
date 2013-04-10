@@ -5,6 +5,9 @@ Decimate Solid Mesh {#decimatedolidmesh}
 ## Parameters ##
 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

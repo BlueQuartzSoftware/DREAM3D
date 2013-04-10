@@ -9,6 +9,9 @@ This Filter searches for the crystal structures present and finds where matches 
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

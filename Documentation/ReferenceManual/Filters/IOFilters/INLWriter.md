@@ -26,6 +26,9 @@ Some information about the phase is included in the header section of the file i
 |------|------|
 | Output File | String |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

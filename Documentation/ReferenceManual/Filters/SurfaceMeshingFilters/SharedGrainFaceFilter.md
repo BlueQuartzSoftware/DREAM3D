@@ -10,6 +10,9 @@ This filter generates all the unique **Field** id to **Field** id values. For ex
 
 ## Parameters ##
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

@@ -17,6 +17,9 @@ addition to the mesh is the data for the Principal Curvatures and Principal Curv
 |------|------|
 | Input File | File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

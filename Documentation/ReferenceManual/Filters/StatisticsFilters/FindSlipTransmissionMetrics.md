@@ -9,6 +9,9 @@ Statistics Filters (Crystallographic)
 ## Parameters ##
 None
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

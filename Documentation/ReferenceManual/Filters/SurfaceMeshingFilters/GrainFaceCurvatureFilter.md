@@ -29,6 +29,9 @@ _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 | Compute Mean Curvature | Bool | Compute the Mean Curvature values |
 | Compute Gaussian Curvature | Bool | Compute the Gaussian Curvature values |
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

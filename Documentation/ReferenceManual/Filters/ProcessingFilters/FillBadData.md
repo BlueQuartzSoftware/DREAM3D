@@ -14,6 +14,9 @@ This Filter collects the *bad* **Cells** (*GrainId = 0*) and runs the _erode_ op
 |------|------|
 | Minimum Allowed Defect Size | Integer |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

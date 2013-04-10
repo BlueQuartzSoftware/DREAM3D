@@ -16,6 +16,9 @@ By default, the filter will only perform a single iteration and will not concern
 | Coordination Number | Integer |
 | Loop Until Gone | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

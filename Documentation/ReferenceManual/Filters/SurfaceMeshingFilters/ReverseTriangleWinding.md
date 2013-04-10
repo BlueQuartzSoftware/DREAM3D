@@ -10,6 +10,9 @@ This filter reverses the winding on each triangle. If the next filter is to comp
 
 ## Parameters ##
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

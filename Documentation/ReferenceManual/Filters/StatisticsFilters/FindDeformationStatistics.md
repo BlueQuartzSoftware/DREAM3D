@@ -15,6 +15,9 @@ The Outputs are a Deformation Statistics file and a VTK file.
 | Deformation Statistics File | Output File |
 | VTK Output File | Output File |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

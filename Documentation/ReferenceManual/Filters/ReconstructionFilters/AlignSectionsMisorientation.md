@@ -28,6 +28,9 @@ as the last 7x7 grid.
 |------|------|---------|
 | Misorientation Tolerance | Double | The value selected should be similar to the tolerance one would use to define **Fields** (ie 2-10 degrees) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

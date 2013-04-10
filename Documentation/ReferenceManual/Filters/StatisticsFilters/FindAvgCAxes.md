@@ -9,13 +9,18 @@ This Filter determines the average c-axis location of each **Field** by the foll
 
 1. Gather all **Cells** that belong to the **Field**
 2. Determine the location of the c-axis in the sample *reference frame* for the rotated quaternions for all **Cells**.
+
 3.  average the locations and store as the average for the **Field**.
 
 Note: This filter will only work properly for *Hexagonal* materials.  The filter does not apply any symmetry operators because there is only one c-axis (<001>) in *Hexagonal* materials and thus all symmetry operators will leave the c-axis in the same position in the sample *reference frame*.  However, in *Cubic* materials, for example, the {100} family of directions are all equivalent and the <001> direction will change location in the sample *reference frame* when symmetry operators are applied.  
+
  
 
 ## Parameters ##
 None
+
+## Required DataContainers ##
+Voxel
 
 ## Required Arrays ##
 
