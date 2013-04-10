@@ -272,7 +272,7 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
   std::ostream& out = *m_XdmfPtr;
   out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << std::endl;
 
-  out << "    <Topology TopologyType=\"Face\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
+  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   std::vector<char> nameBuffer(nameSize, 0);
@@ -480,21 +480,21 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
   // Write the Vertex Data
-  err = H5Utilities::createGroupsFromPath(H5_POINT_DATA_GROUP_NAME, dcGid);
+  err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_POINT_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_POINT_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t cellGroupId = H5Gopen(dcGid, H5_VERTEX_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_POINT_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -518,7 +518,7 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
-    writeXdmfAttributeData(H5_POINT_DATA_GROUP_NAME, array, "Node");
+    writeXdmfAttributeData(H5_VERTEX_DATA_GROUP_NAME, array, "Node");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
   return err;
