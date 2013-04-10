@@ -55,7 +55,7 @@ class FlattenImageImpl
       convRFactor(Rfactor),
       convGFactor(Gfactor),
       convBFactor(Bfactor),
-	  numComp(comp)
+      numComp(comp)
     {}
     virtual ~FlattenImageImpl(){}
 
@@ -74,12 +74,12 @@ class FlattenImageImpl
     }
 #endif
   private:
-     unsigned char* m_ImageData;
-     int32_t* m_FlatImageData;
-     float  convRFactor;
-     float  convGFactor;
-     float  convBFactor;
-	 size_t numComp;
+    unsigned char* m_ImageData;
+    int32_t* m_FlatImageData;
+    float  convRFactor;
+    float  convGFactor;
+    float  convBFactor;
+    size_t numComp;
 
 };
 
@@ -89,12 +89,12 @@ class FlattenImageImpl
 //
 // -----------------------------------------------------------------------------
 FlattenImage::FlattenImage() :
-AbstractFilter(),
-m_ImageDataArrayName(DREAM3D::CellData::ImageData),
-m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
-m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity), // We convert from Degrees to Radians by Default
-m_ImageData(NULL),
-m_FlatImageData(NULL)
+  AbstractFilter(),
+  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
+  m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
+  m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity), // We convert from Degrees to Radians by Default
+  m_ImageData(NULL),
+  m_FlatImageData(NULL)
 {
   setupFilterParameters();
 }
@@ -148,10 +148,10 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -301, unsigned char, UCharArrayType, voxels, 4)
-  if(err == -301) 
+      if(err == -301)
   {
-	  err = 0;
-	  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -302, unsigned char, UCharArrayType, voxels, 3)
+    err = 0;
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -302, unsigned char, UCharArrayType, voxels, 3)
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -203,18 +203,28 @@ void FlattenImage::execute()
     Bfactor = 0.07;
   }
 
-  size_t comp = m->getCellData(m_ImageDataArrayName)->GetNumberOfComponents();
-
-//  std::cout << "FlattenImage: " << m_ConversionFactor << std::endl;
+  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-//#if 0
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    FlattenImageImpl(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp), tbb::auto_partitioner());
-
-#else
-  FlattenImageImpl serial(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp);
-  serial.convert(0, totalPoints);
+  tbb::task_scheduler_init init;
+  doParallel = true;
 #endif
 
- notifyStatusMessage("Complete");
+  size_t comp = m->getCellData(m_ImageDataArrayName)->GetNumberOfComponents();
+
+  //  std::cout << "FlattenImage: " << m_ConversionFactor << std::endl;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      FlattenImageImpl(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    FlattenImageImpl serial(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp);
+    serial.convert(0, totalPoints);
+  }
+
+  notifyStatusMessage("Complete");
 }

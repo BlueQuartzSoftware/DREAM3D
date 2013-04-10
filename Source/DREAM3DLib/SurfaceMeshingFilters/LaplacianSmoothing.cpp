@@ -610,6 +610,10 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   notifyStatusMessage("Starting to Smooth Vertices");
 
+  bool doParallel = false;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  doParallel = true;
+#endif
 
   // Get a Pointer to the Lambdas
   DataArray<float>::Pointer lambdasPtr = getLambdaArray();
@@ -627,13 +631,18 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     ss << "Iteration " << q;
     notifyStatusMessage(ss.str());
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numVerts),
-                      LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
+    if (doParallel == true)
+    {
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, numVerts),
+                        LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
 
-#else
-    LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr);
-    serial.generate(0, numVerts);
+    }
+    else
 #endif
+    {
+      LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr);
+      serial.generate(0, numVerts);
+    }
 
     // SERIAL ONLY
     ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(DREAM3D::SurfaceMesh::Vert_t) * vertsPtr->GetNumberOfTuples());

@@ -351,10 +351,10 @@ void GrainFaceCurvatureFilter::execute()
   m_TotalGrainFaces = sharedGrainFaces.size();
   m_CompletedGrainFaces = 0;
 
+  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-#else
-  //   int m_NumThreads = 1;
+  doParallel = true;
 #endif
 
 
@@ -378,23 +378,25 @@ void GrainFaceCurvatureFilter::execute()
   {
     SharedGrainFaceFilter::FaceIds_t& triangleIds = (*iter).second;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
-                                            principalCurvature1, principalCurvature2,
-                                            principalDirection1, principalDirection2,
-                                            gaussianCurvature, meanCurvature,
-                                            getSurfaceMeshDataContainer(), this ) );
-#else
-
-
-
-    CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
-                                               principalCurvature1, principalCurvature2,
-                                               principalDirection1, principalDirection2,
-                                               gaussianCurvature, meanCurvature,
-                                               getSurfaceMeshDataContainer(), this );
-    curvature();
+    if (doParallel == true)
+    {
+      g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
+                                              principalCurvature1, principalCurvature2,
+                                              principalDirection1, principalDirection2,
+                                              gaussianCurvature, meanCurvature,
+                                              getSurfaceMeshDataContainer(), this ) );
+    }
+    else
 #endif
-    index++;
+    {
+      CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
+                                                 principalCurvature1, principalCurvature2,
+                                                 principalDirection1, principalDirection2,
+                                                 gaussianCurvature, meanCurvature,
+                                                 getSurfaceMeshDataContainer(), this );
+      curvature();
+      index++;
+    }
   }
   // *********************** END END END END END END  ********************************************************************
 

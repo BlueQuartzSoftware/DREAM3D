@@ -291,14 +291,24 @@ void GenerateFaceIPFColoring::execute()
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
   dataCheckVoxel(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
+  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, sm->getNumFaceTuples()),
-                    CalculateTriangleIPFColorsImpl(m_SurfaceMeshFaceLabels, m_FieldPhases, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_SurfaceMeshFaceIPFColors, m_CrystalStructures), tbb::auto_partitioner());
-
-#else
-  CalculateFaceIPFColorsImpl serial(m_SurfaceMeshFaceLabels, m_FieldPhases, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_SurfaceMeshFaceIPFColors, m_CrystalStructures);
-  serial.generate(0, sm->getNumFaceTuples());
+  doParallel = true;
 #endif
+
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, sm->getNumFaceTuples()),
+                      CalculateTriangleIPFColorsImpl(m_SurfaceMeshFaceLabels, m_FieldPhases, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_SurfaceMeshFaceIPFColors, m_SurfaceMeshFaceIPFColorsGrain1, m_SurfaceMeshFaceIPFColorsGrain2, m_CrystalStructures), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    CalculateTriangleIPFColorsImpl serial(m_SurfaceMeshFaceLabels, m_FieldPhases, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_SurfaceMeshFaceIPFColors, m_SurfaceMeshFaceIPFColorsGrain1, m_SurfaceMeshFaceIPFColorsGrain2, m_CrystalStructures);
+    serial.generate(0, sm->getNumFaceTuples());
+  }
 
 
   /* Let the GUI know we are done with this filter */

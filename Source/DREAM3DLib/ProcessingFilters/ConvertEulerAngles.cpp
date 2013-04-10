@@ -168,6 +168,14 @@ void ConvertEulerAngles::execute()
     return;
   }
 
+  bool doParallel = false;
+  #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    tbb::task_scheduler_init init;
+    doParallel = true;
+  #else
+    //   int m_NumThreads = 1;
+  #endif
+
   float conversionFactor = 1.0;
   if (m_ConversionType == DREAM3D::EulerAngleConversionType::DegreesToRadians)
   {
@@ -179,16 +187,20 @@ void ConvertEulerAngles::execute()
   }
 
   totalPoints = totalPoints * 3;
-//  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
+  //  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-//#if 0
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    ConvertEulerAnglesImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      ConvertEulerAnglesImpl(m_CellEulerAngles, conversionFactor), tbb::auto_partitioner());
 
-#else
-  ConvertEulerAnglesImpl serial(m_CellEulerAngles, conversionFactor);
-  serial.convert(0, totalPoints);
+  }
+  else
 #endif
+  {
+    ConvertEulerAnglesImpl serial(m_CellEulerAngles, conversionFactor);
+    serial.convert(0, totalPoints);
+  }
 
  notifyStatusMessage("Complete");
 }
