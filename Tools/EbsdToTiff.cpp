@@ -187,7 +187,13 @@ void grayScaleEulers(float* euler, int width, int height, const std::string & im
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-
+  if (argc != 4)
+  {
+    std::cout << "Arg 1: .ang or .ctf file" << std::endl;
+    std::cout << "Arg 2: Output tif file" << std::endl;
+    std::cout << "Arg 3: Tiff Orientation value" << std::endl;
+    std::cout << "The reference direction is set to (001)" << std::endl;
+  }
   std::string ebsdFile = argv[1];
   std::string imageFile = argv[2];
   int orientation = atoi(argv[3]);
@@ -222,7 +228,9 @@ int main(int argc, char **argv)
 
   //unsigned char* rgb;
   unsigned char hkl[3] = { 0, 0, 0 };
-  float refDir[3] = { 1.0, 0.0, 1.0 };
+  float refDir[3] = { 0.0, 0.0, 1.0 };
+
+  MatrixMath::normalizeVector(refDir);
 
   int width = ebsdReader->getXDimension();
   int height = ebsdReader->getYDimension();
