@@ -51,12 +51,12 @@
 VoxelDataContainerReader::VoxelDataContainerReader() :
   AbstractFilter(),
   m_HdfFileId(-1),
-  m_ReadVertexData(false),
-  m_ReadEdgeData(false),
-  m_ReadFaceData(false),
-  m_ReadCellData(false),
-  m_ReadFieldData(false),
-  m_ReadEnsembleData(false),
+  m_ReadVertexData(true),
+  m_ReadEdgeData(true),
+  m_ReadFaceData(true),
+  m_ReadCellData(true),
+  m_ReadFieldData(true),
+  m_ReadEnsembleData(true),
   m_ReadAllArrays(false)
 {
   setupFilterParameters();
@@ -157,12 +157,12 @@ void VoxelDataContainerReader::execute()
   m->setResolution(spacing);
   m->setOrigin(origin);
 
-  if(m_VertexArraysToRead.size() > 0 || m_ReadAllArrays == true) m_ReadVertexData = true;
-  if(m_EdgeArraysToRead.size() > 0 || m_ReadAllArrays == true) m_ReadEdgeData = true;
-  if(m_FaceArraysToRead.size() > 0 || m_ReadAllArrays == true) m_ReadFaceData = true;
-  if(m_CellArraysToRead.size() > 0 || m_ReadAllArrays == true) m_ReadCellData = true;
-  if(m_FieldArraysToRead.size() > 0 || m_ReadAllArrays == true) m_ReadFieldData = true;
-  if(m_EnsembleArraysToRead.size() > 0 || m_ReadAllArrays == true) m_ReadEnsembleData = true;
+  if(m_VertexArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexData = false;
+  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadEdgeData = false;
+  if(m_FaceArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadFaceData = false;
+  if(m_CellArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellData = false;
+  if(m_FieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadFieldData = false;
+  if(m_EnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadEnsembleData = false;
 
   if(m_ReadVertexData == true) m->clearVertexData();
   if(m_ReadEdgeData == true) m->clearEdgeData();

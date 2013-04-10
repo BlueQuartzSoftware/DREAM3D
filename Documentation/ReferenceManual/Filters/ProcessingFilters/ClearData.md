@@ -18,7 +18,6 @@ This filter allows the user to define a subvolume of the dataset in which the fi
 | X Max | Integer |
 | Y Max | Integer |
 | Z Max | Integer |
-| Renumber **Fields** | Boolean (On or Off) |
 
 ## Required Arrays ##
 None
