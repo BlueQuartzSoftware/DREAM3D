@@ -112,8 +112,6 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
     // List any arrays that are created during this filter
     Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGrainFaceId);
     sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
-    addCreatedFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId);
-
   }
 }
 
@@ -148,11 +146,11 @@ void SharedGrainFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
-//  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+//  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -204,7 +202,7 @@ void SharedGrainFaceFilter::execute()
   // Allocate all the vectors that we need
   for(std::map<uint64_t, int>::iterator iter = faceSizeMap.begin(); iter != faceSizeMap.end(); ++iter)
   {
-    TriangleIds_t v;
+    FaceIds_t v;
     v.reserve((*iter).second);
     index = faceIdMap[(*iter).first];
     faces[index] = v;

@@ -58,7 +58,7 @@
 #include "DREAM3DLib/Common/SolidMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshTriangleNeighbors.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
 /**
  * @class SolidMeshDataContainer SolidMeshDataContainer.h DREAM3DLib/Common/SolidMeshDataContainer.h
@@ -76,19 +76,19 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
 
     virtual ~SolidMeshDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Point)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getPointData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
 
-    DREAM3D_INSTANCE_PROPERTY(StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
     DREAM3D_INSTANCE_PROPERTY(StructArray<Tetrahedron>::Pointer, Tetrahedrons)
 
 
-    DOES_DATASET_EXIST_DECL(PointData)
+    DOES_DATASET_EXIST_DECL(VertexData)
     DOES_DATASET_EXIST_DECL(FaceData)
     DOES_DATASET_EXIST_DECL(EdgeData)
 
@@ -98,14 +98,14 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addPointData(const std::string &name, IDataArray::Pointer data);
+    void addVertexData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getPointData(const std::string &name);
+    IDataArray::Pointer getVertexData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -113,12 +113,12 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removePointData(const std::string &name);
+    IDataArray::Pointer removeVertexData(const std::string &name);
 
     /**
      * @brief Removes all the Point Arrays
      */
-    void clearPointData();
+    void clearVertexData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumPointTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexTuples)
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -231,12 +231,12 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_PointData;
+     std::map<std::string, IDataArray::Pointer> m_VertexData;
      std::map<std::string, IDataArray::Pointer> m_FaceData;
      std::map<std::string, IDataArray::Pointer> m_EdgeData;
 
      MeshVertLinks::Pointer m_MeshVertLinks;
-     MeshTriangleNeighbors::Pointer m_TriangleNeighbors;
+     MeshFaceNeighbors::Pointer m_FaceNeighbors;
 
      SolidMeshDataContainer(const SolidMeshDataContainer&);
      void operator =(const SolidMeshDataContainer&);

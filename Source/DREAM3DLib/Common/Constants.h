@@ -219,27 +219,22 @@ namespace DREAM3D
   }
 
 
-  namespace PointData
+  namespace VertexData
   {
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
-    //  const std::string SurfaceMeshVoxelCoords("SurfaceMeshVoxelCoords");
-    //   const std::string SurfaceMeshNeighbors("SurfaceMeshNeighbors");
     const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
-    const std::string SurfaceMeshNodeTriangles("SurfaceMeshNodeTriangles");
+    const std::string SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
   }
 
   namespace FaceData
   {
     const std::string SurfaceMeshFaces("SurfaceMeshFaces");
-    const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
-    const std::string SurfaceMeshTriangleIPFColors("SurfaceMeshTriangleIPFColors");
-    const std::string SurfaceMeshTriangleIPFColorsGrain1("SurfaceMeshTriangleIPFColorsGrain1");
-    const std::string SurfaceMeshTriangleIPFColorsGrain2("SurfaceMeshTriangleIPFColorsGrain2");
-    const std::string SurfaceMeshTriangleLabels("SurfaceMeshTriangleLabels");
+    const std::string SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
+    const std::string SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
     const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
-    const std::string SurfaceMeshTriangleCentroids("SurfaceMeshTriangleCentroids");
-    const std::string SurfaceMeshTriangleNormals("SurfaceMeshTriangleNormals");
+    const std::string SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
+    const std::string SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
     const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
     const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
     const std::string SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
@@ -255,7 +250,7 @@ namespace DREAM3D
     const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
     const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
     const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
-    const std::string SurfaceMeshEdgeTriangles("SurfaceMeshEdgeTriangles");
+    const std::string SurfaceMeshEdgeFaces("SurfaceMeshEdgeFaces");
   }
 
 
@@ -276,7 +271,7 @@ namespace DREAM3D
     const std::string FacesName("Faces");
     const std::string EdgesName("Edges");
     const std::string MeshVertLinksName("MeshVertLinks");
-    const std::string MeshTriangleNeighborLists("MeshTriangleNeighborLists");
+    const std::string MeshFaceNeighborLists("MeshFaceNeighborLists");
 
     //  const std::string Grain_ID("Grain_ID");
     // const std::string SchmidFactor ("SchmidFactor");

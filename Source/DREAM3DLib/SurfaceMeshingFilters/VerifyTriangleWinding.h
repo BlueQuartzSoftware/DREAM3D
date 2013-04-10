@@ -61,15 +61,15 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     virtual ~VerifyTriangleWinding();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTrianglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     // DREAM3D_INSTANCE_PROPERTY(float, XRes)
     // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
-    typedef std::map<int, std::set<int> >                      LabelTriangleMapType;
-    typedef std::vector<int32_t>                               TriangleListType;
+    typedef std::map<int, std::set<int> >                      LabelFaceMap_t;
+    typedef std::vector<int32_t>                               FaceList_t;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
-	 /**
+   /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
      * lable value.
      * @param trianglesToLabelMap
      */
-    void getLabelTriangleMap(LabelTriangleMapType &trianglesToLabelMap);
+    void getLabelTriangelMap(LabelFaceMap_t &trianglesToLabelMap);
 
     /**
      * @brief This method verifies the winding of all the triangles and makes them consistent
@@ -145,7 +145,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 
   private:
     bool m_DoUniqueEdgesFilter;
-    bool m_DoNodeTriangleConnectivityFilter;
+    bool m_DoNodeFaceConnectivityFilter;
 
     VerifyTriangleWinding(const VerifyTriangleWinding&); // Copy Constructor Not Implemented
     void operator=(const VerifyTriangleWinding&); // Operator '=' Not Implemented

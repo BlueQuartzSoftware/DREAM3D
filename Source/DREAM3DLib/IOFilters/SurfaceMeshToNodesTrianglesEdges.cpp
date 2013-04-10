@@ -157,11 +157,11 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
       setErrorCondition(-385);
     }
 #endif
-    IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+    IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
     if (nodeKinds.get() == NULL)
     {
       setErrorCondition(-559);
-      notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::PointData::SurfaceMeshNodeType Array", -387);
+      notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::VertexData::SurfaceMeshNodeType Array", -387);
       return;
     }
   }
@@ -196,9 +196,9 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = sm->getVertices();
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = sm->getFaces();
-  IDataArray::Pointer nodeKinds = sm->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+  DREAM3D::SurfaceMesh::VertListPointer_t nodes = sm->getVertices();
+  DREAM3D::SurfaceMesh::FaceListPointer_t triangles = sm->getFaces();
+  IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
@@ -232,7 +232,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   int numNodes = nodes->GetNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
-  SurfaceMesh::DataStructures::Vert_t* v = nodes->GetPointer(0);
+  DREAM3D::SurfaceMesh::Vert_t* v = nodes->GetPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
@@ -313,11 +313,11 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   size_t numTriangles = triangles->GetNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
-  StructArray<SurfaceMesh::DataStructures::Face_t>* ts = StructArray<SurfaceMesh::DataStructures::Face_t>::SafePointerDownCast(triangles.get());
-  SurfaceMesh::DataStructures::Face_t* t = ts->GetPointer(0);
+  StructArray<DREAM3D::SurfaceMesh::Face_t>* ts = DREAM3D::SurfaceMesh::FaceList_t::SafePointerDownCast(triangles.get());
+  DREAM3D::SurfaceMesh::Face_t* t = ts->GetPointer(0);
 
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 

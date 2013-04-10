@@ -146,6 +146,15 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
+{
+  QSettings prefs(filePath, QSettings::IniFormat, this);
+  readSettings(prefs);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
   prefs.beginGroup("PipelineBuilder");
@@ -360,6 +369,11 @@ void PipelineBuilderWidget::setupGui()
   errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
   m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
+
+  // Connect the PipelineViewWidget Signals to slots
+  connect(m_PipelineViewWidget, SIGNAL(pipelineFileDropped(const QString&)),
+          this, SLOT(openPipelineFile(const QString& )) );
+
 
   m_DocErrorTabsIsOpen = false;
 
@@ -697,12 +711,19 @@ QUrl PipelineBuilderWidget::htmlHelpIndexFile()
   helpDir.cdUp();
 #endif
 
+
+
+ #if defined(Q_OS_WIN)
+  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/index.html");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    helpDir.cdUp();
+  }
+ #endif
+
   s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
-//  if (helpDir.cd("Help") )
-//  {
-//    s = s + helpDir.absolutePath();
-//  }
-//  s = s + "/DREAM3D/index.html";
   return QUrl(s);
 }
 

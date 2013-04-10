@@ -62,9 +62,6 @@ class DREAM3DLib_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleCentroidsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    // DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-
 
 
     /**
@@ -73,7 +70,7 @@ class DREAM3DLib_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

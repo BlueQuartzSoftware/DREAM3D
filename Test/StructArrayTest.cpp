@@ -61,13 +61,13 @@ void RemoveTestFiles()
 void TestStructArray()
 {
 
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(10, DREAM3D::PointData::SurfaceMeshNodes);
+    DREAM3D::SurfaceMesh::VertListPointer_t nodes = DREAM3D::SurfaceMesh::VertList_t::CreateArray(10, DREAM3D::VertexData::SurfaceMeshNodes);
     size_t size = nodes->GetNumberOfTuples();
     int typeSize = nodes->GetTypeSize();
-    DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(SurfaceMesh::DataStructures::Vert_t));
+    DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(DREAM3D::SurfaceMesh::Vert_t));
   for (size_t i = 0; i < size; ++i)
   {
-    SurfaceMesh::DataStructures::Vert_t* node = nodes->GetPointer(i);
+    DREAM3D::SurfaceMesh::Vert_t* node = nodes->GetPointer(i);
     node->pos[0] = i+23.0f;
     node->pos[1] = i+11.0f;
     node->pos[2] = i+20.0f;
@@ -77,7 +77,7 @@ void TestStructArray()
   size = nodes->GetNumberOfTuples();
   for (size_t i = 0; i < size; ++i)
   {
-    SurfaceMesh::DataStructures::Vert_t* node = nodes->GetPointer(i);
+    DREAM3D::SurfaceMesh::Vert_t* node = nodes->GetPointer(i);
     DREAM3D_REQUIRE_EQUAL(node->pos[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node->pos[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+20.0f);
@@ -88,7 +88,7 @@ void TestStructArray()
   size = nodes->GetNumberOfTuples();
   for (size_t i = 0; i < size; ++i)
   {
-    SurfaceMesh::DataStructures::Vert_t* node = nodes->GetPointer(i);
+    DREAM3D::SurfaceMesh::Vert_t* node = nodes->GetPointer(i);
     node->pos[0] = i+23.0f;
     node->pos[1] = i+11.0f;
     node->pos[2] = i+20.0f;
@@ -96,16 +96,16 @@ void TestStructArray()
 
   for (size_t i = 0; i < size; ++i)
   {
-    SurfaceMesh::DataStructures::Vert_t* node = nodes->GetPointer(i);
+    DREAM3D::SurfaceMesh::Vert_t* node = nodes->GetPointer(i);
     DREAM3D_REQUIRE_EQUAL(node->pos[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node->pos[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+20.0f);
   }
 
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& vertices = *nodes; // Dereference the Shared_Pointer using the * operator which allows the [] operators
+  DREAM3D::SurfaceMesh::VertList_t& vertices = *nodes; // Dereference the Shared_Pointer using the * operator which allows the [] operators
   for (size_t i = 0; i < size; ++i)
   {
-    SurfaceMesh::DataStructures::Vert_t node = vertices[i]; // Uses the [] operator overload
+    DREAM3D::SurfaceMesh::Vert_t node = vertices[i]; // Uses the [] operator overload
     DREAM3D_REQUIRE_EQUAL(node.pos[0] , i+23.0f);
     DREAM3D_REQUIRE_EQUAL(node.pos[1] , i+11.0f);
     DREAM3D_REQUIRE_EQUAL(node.pos[2] , i+20.0f);

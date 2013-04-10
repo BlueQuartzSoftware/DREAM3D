@@ -24,6 +24,15 @@ EBSD volume data.
   This section details some basic coding guidelines for developers wishing to
 constribute to DREAM.3D
 
+@subpage micropreset Microstructure Presets for StatsGenerator
+  This section explains how to write a new microstructure preset for Stats Generator
+  
+@subpage surfacemeshing Surface Meshing Notes
+ This section contains notes on Surface Meshing and the various file formats that are used.
+
+@subpage writingplugins Writing Plugins
+ This section shows how to add a new plugin into DREAM3D.
+
 @subpage todo "ToDo List"
 List of things that need to be done in the code
 

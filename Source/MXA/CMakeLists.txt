@@ -5,12 +5,12 @@
 #///////////////////////////////////////////////////////////////////////////////
 project(MXA)
 set(MXA_BUILT_AS_DYNAMIC_LIB)
-IF (BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
     set(MXA_BUILT_AS_DYNAMIC_LIB 1)
-    IF (WIN32)
+    if(WIN32)
         ADD_DEFINITIONS("-DMXA_BUILT_AS_DYNAMIC_LIB")
-    ENDIF (WIN32)
-ENDIF (BUILD_SHARED_LIBS)
+    endif(WIN32)
+endif(BUILD_SHARED_LIBS)
 
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 if(NOT PROJECT_RESOURCES_DIR)

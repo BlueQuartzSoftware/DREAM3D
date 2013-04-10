@@ -127,6 +127,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
                               float spacing[3], float origin[3]);
 
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int writeVertexData(hid_t dcGid);
+    int writeEdgeData(hid_t dcGid);
+    int writeFaceData(hid_t dcGid);
     int writeCellData(hid_t dcGid);
     int writeFieldData(hid_t dcGid);
     int writeEnsembleData(hid_t dcGid);

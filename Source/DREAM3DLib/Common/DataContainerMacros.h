@@ -68,7 +68,7 @@
   }\
   else { \
   std::string _s(#Name); \
-  addRequired##DType(_s);\
+  /* addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
     ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named '" << NameSpace::DType::Name  << "' for this filter."\
@@ -86,7 +86,7 @@
     addErrorMessage(getHumanLabel(), ss.str(), -10000);\
   }\
   std::string _s(#Name);\
-  addCreated##DType(_s);\
+  /*addCreated##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL ==  m_##Name ) \
   {\

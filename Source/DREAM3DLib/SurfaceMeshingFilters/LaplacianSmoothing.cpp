@@ -64,17 +64,17 @@
  */
 class LaplacianSmoothingImpl
 {
-    SurfaceMesh::DataStructures::VertListPointer_t m_vertsPtr;
-    SurfaceMesh::DataStructures::VertList_t::Pointer m_newPositions;
+    DREAM3D::SurfaceMesh::VertListPointer_t m_vertsPtr;
+    DREAM3D::SurfaceMesh::VertList_t::Pointer m_newPositions;
     MeshVertLinks::Pointer m_meshVertLinks;
-    SurfaceMesh::DataStructures::FaceList_t::Pointer m_facesPtr;
+    DREAM3D::SurfaceMesh::FaceList_t::Pointer m_facesPtr;
     DataArray<float>::Pointer m_lambdasPtr;
 
   public:
-    LaplacianSmoothingImpl(SurfaceMesh::DataStructures::VertListPointer_t vertsPtr,
-                           SurfaceMesh::DataStructures::VertList_t::Pointer newPositions,
+    LaplacianSmoothingImpl(DREAM3D::SurfaceMesh::VertListPointer_t vertsPtr,
+                           DREAM3D::SurfaceMesh::VertList_t::Pointer newPositions,
                            MeshVertLinks::Pointer meshVertLinks,
-                           SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr,
+                           DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr,
                            DataArray<float>::Pointer lambdasPtr) :
       m_vertsPtr(vertsPtr),
       m_newPositions(newPositions),
@@ -87,28 +87,28 @@ class LaplacianSmoothingImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting SurfaceMesh::DataStructures::Face_t Index
-     * @param end The ending SurfaceMesh::DataStructures::Face_t Index
+     * @param start The starting DREAM3D::SurfaceMesh::Face_t Index
+     * @param end The ending DREAM3D::SurfaceMesh::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
-      SurfaceMesh::DataStructures::Vert_t* vertices = m_vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
-      SurfaceMesh::DataStructures::Face_t* faces = m_facesPtr->GetPointer(0);
-      SurfaceMesh::DataStructures::Vert_t* newPositions = m_newPositions->GetPointer(0);
+      DREAM3D::SurfaceMesh::Vert_t* vertices = m_vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+      DREAM3D::SurfaceMesh::Face_t* faces = m_facesPtr->GetPointer(0);
+      DREAM3D::SurfaceMesh::Vert_t* newPositions = m_newPositions->GetPointer(0);
 
       float* lambdas = m_lambdasPtr->GetPointer(0);
 
 
       for(size_t v = start; v < end; ++v)
       {
-        SurfaceMesh::DataStructures::Vert_t& currentVert = vertices[v];
-        SurfaceMesh::DataStructures::Vert_t& newVert = newPositions[v];
+        DREAM3D::SurfaceMesh::Vert_t& currentVert = vertices[v];
+        DREAM3D::SurfaceMesh::Vert_t& newVert = newPositions[v];
         // Initialize the "newPosition" with the current position
         newVert.pos[0] = currentVert.pos[0];
         newVert.pos[1] = currentVert.pos[1];
         newVert.pos[2] = currentVert.pos[2];
         // Get the Triangles for this vertex
-        MeshVertLinks::TriangleList& list = m_meshVertLinks->getTriangleList(v);
+        MeshVertLinks::FaceList& list = m_meshVertLinks->getFaceList(v);
         std::set<int32_t> neighbours;
         // Create the unique List of Vertices that are directly connected to this vertex (vert)
         for(int32_t t = 0; t < list.ncells; ++t )
@@ -119,12 +119,12 @@ class LaplacianSmoothingImpl
         }
         neighbours.erase(v); // Remove the current vertex id from the list as we don't need it
 
-        SurfaceMesh::DataStructures::Float_t konst1 = lambdas[v]/neighbours.size();
+        DREAM3D::SurfaceMesh::Float_t konst1 = lambdas[v]/neighbours.size();
 
         // Now that we have our connectivity iterate over the vertices generating a new position
         for(std::set<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
         {
-          SurfaceMesh::DataStructures::Vert_t& vert = vertices[*iter];
+          DREAM3D::SurfaceMesh::Vert_t& vert = vertices[*iter];
 
           newVert.pos[0] += konst1 * (vert.pos[0] - currentVert.pos[0]);
           newVert.pos[1] += konst1 * (vert.pos[1] - currentVert.pos[1]);
@@ -360,7 +360,7 @@ void LaplacianSmoothing::execute()
 int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
 {
   notifyStatusMessage("Generating Lambda values");
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
   if(NULL == nodesPtr.get())
   {
     setErrorCondition(-555);
@@ -414,19 +414,19 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   int err = 0;
 
   //
-  SurfaceMesh::DataStructures::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
   int nvert = nodesPtr->GetNumberOfTuples();
-  SurfaceMesh::DataStructures::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  DREAM3D::SurfaceMesh::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::PointData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -530,7 +530,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];
-        SurfaceMesh::DataStructures::Vert_t& node = vsm[i];
+        DREAM3D::SurfaceMesh::Vert_t& node = vsm[i];
         node.pos[j] += ll*dlta;
         delta[in0] = 0.0; //reset for next iteration
       }
@@ -565,9 +565,9 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
 
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
-  SurfaceMesh::DataStructures::VertListPointer_t vertsPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t vertsPtr = getSurfaceMeshDataContainer()->getVertices();
   int numVerts = vertsPtr->GetNumberOfTuples();
-  //  SurfaceMesh::DataStructures::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  //  DREAM3D::SurfaceMesh::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
@@ -578,17 +578,17 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   }
 
 
-  SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr = getSurfaceMeshDataContainer()->getFaces();
-  //  SurfaceMesh::DataStructures::Face_t* faces = facesPtr->GetPointer(0);
+  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = getSurfaceMeshDataContainer()->getFaces();
+  //  DREAM3D::SurfaceMesh::Face_t* faces = facesPtr->GetPointer(0);
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
-  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getPointData(DREAM3D::PointData::SurfaceMeshNodeType);
+  IDataArray::Pointer iNodeTypePtr = getSurfaceMeshDataContainer()->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(vertsPtr->GetNumberOfTuples(), DREAM3D::PointData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(vertsPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -615,7 +615,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   DataArray<float>::Pointer lambdasPtr = getLambdaArray();
 
   // We need an array to store the new positions
-  SurfaceMesh::DataStructures::VertList_t::Pointer newPositionsPtr = SurfaceMesh::DataStructures::VertList_t::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
+  DREAM3D::SurfaceMesh::VertList_t::Pointer newPositionsPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
   newPositionsPtr->initializeWithZeros();
 
 
@@ -636,7 +636,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 #endif
 
     // SERIAL ONLY
-    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(SurfaceMesh::DataStructures::Vert_t) * vertsPtr->GetNumberOfTuples());
+    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(DREAM3D::SurfaceMesh::Vert_t) * vertsPtr->GetNumberOfTuples());
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
     std::stringstream testFile;
@@ -683,8 +683,8 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
   bool m_WriteConformalMesh = true;
@@ -719,7 +719,7 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
     //  if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -743,13 +743,13 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
   int triangleCount = 0;
   int end = triangles.GetNumberOfTuples();
   int grainInterest = 25;
   for(int i = 0; i < end; ++i)
   {
-    SurfaceMesh::DataStructures::Face_t* tri = triangles.GetPointer(i);
+    DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(i);
     if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
     {
       ++triangleCount;
@@ -767,7 +767,7 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
-    SurfaceMesh::DataStructures::Face_t* tri = triangles.GetPointer(tid);
+    DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(tid);
     if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
     {
       tData[1] = triangles[tid].verts[0];
