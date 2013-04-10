@@ -220,7 +220,7 @@ int SurfaceMeshDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight
 
   // Read all the Vertex Attribute data
   std::vector<std::string> readNames;
-  err = readGroupsData(dcGid, H5_POINT_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
+  err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
     err = 0;
@@ -555,7 +555,7 @@ int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::strin
 
     if (NULL != dPtr.get())
     {
-      if(groupName.compare(H5_POINT_DATA_GROUP_NAME) == 0)
+      if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
       {
         getSurfaceMeshDataContainer()->addVertexData(dPtr->GetName(), dPtr);
       }
