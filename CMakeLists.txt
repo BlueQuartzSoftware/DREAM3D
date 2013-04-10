@@ -8,7 +8,7 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
-project (DREAM3DProj)
+project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
 
 include (CMakeParseArguments)
@@ -399,8 +399,39 @@ FIND_PACKAGE(Doxygen)
 if(NOT DOXYGEN_FOUND)
       message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 else()
+  set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
+
+
+  set(DOX_GENERATE_RTF "NO")
+  option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
+  if(DREAM3D_GENERATE_RTF STREQUAL "ON")
+      set(DOX_GENERATE_RTF "YES")
+  endif()
+
+
+  set(DOX_GENERATE_HTML "YES")
+  option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
+  if(DREAM3D_GENERATE_HTML STREQUAL "ON")
+      set(DOX_GENERATE_HTML "YES")
+  endif()
+
+
+  set(DOX_GENERATE_LATEX "NO")
+  option(DREAM3D_GENERATE_LATEX "Generate HTML Documentation" OFF)
+  if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
+      set(DOX_GENERATE_LATEX "YES")
+      # Check for existence of LaTex executable files
+      INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
+      if(APPLE)
+          option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+      endif()
+  endif()
+
+
+
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
 endif()
 
 

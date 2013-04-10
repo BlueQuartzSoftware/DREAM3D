@@ -161,21 +161,3 @@ if(BUILD_SHARED_LIBS  AND NOT APPLE)
         BUNDLE DESTINATION "."
     )
 endif()
-
-if(DOXYGEN_FOUND)
-  set(DOXY_OUTPUT_DIR ${DREAM3DProj_BINARY_DIR}/Documentation/API)
-  configure_file(${PROJECT_RESOURCES_DIR}/DREAM3DLib_API.doxyfile.in
-                 ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-  add_custom_target(APIDocs COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile)
-endif()
-
-
-
-
-
-foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
-  message(STATUS "*********->   DOxygen Group: ${group}")
-endforeach()
-
-
-
