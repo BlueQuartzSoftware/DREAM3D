@@ -45,6 +45,7 @@
 #include <QtCore/QObject>
 
 #include <QtGui/QMainWindow>
+#include <QtGui/QMessageBox>
 
 #include "SGWidget.h"
 #include "PrimaryPhaseWidget.h"
@@ -80,6 +81,8 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
     SGWidget* createNewSGWidget();
 
     QUrl htmlHelpIndexFile();
+
+    void displayDialogBox(QString title, QString text, QMessageBox::Icon icon);
 
   signals:
       void windowIsClosing(StatsGeneratorUI*);

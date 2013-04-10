@@ -35,6 +35,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md
   ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
   ${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md
+  ${PROJECT_SOURCE_DIR}/StatsGenerator/index.md
 )
 
 
@@ -87,6 +88,7 @@ set(DOXYGEN_IMAGE_DIRS
   ${PROJECT_SOURCE_DIR}/UserManual/Images
   ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
   ${PROJECT_SOURCE_DIR}/Tutorials/Images
+  ${PROJECT_SOURCE_DIR}/StatsGenerator/Images
   ${PROJECT_SOURCE_DIR}/Filters/GenericFilters
   ${PROJECT_SOURCE_DIR}/Filters/IOFilters
   ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters
@@ -94,7 +96,7 @@ set(DOXYGEN_IMAGE_DIRS
   ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters
   ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters
   ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters
+  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters 
 )
 
 if(DOX_GENERATE_LATEX)
