@@ -33,7 +33,7 @@ The values for the __Node Type__ array can take one of the following values.
 
 ## Required DataContainers ##
 Voxel
-SurfaceMesh
+SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surface mesh over writing anything that is currently in the SurfaceMeshDataContainer
 
 ## Required Arrays ##
 

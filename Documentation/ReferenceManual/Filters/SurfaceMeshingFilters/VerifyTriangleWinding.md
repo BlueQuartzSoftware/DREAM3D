@@ -12,12 +12,10 @@ This filter analyzes the mesh for consistent triangle winding and fixes any inco
 None
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
-
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+None
 
 ## Created Arrays ##
 None

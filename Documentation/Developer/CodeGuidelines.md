@@ -79,7 +79,7 @@ Initializing your own variables ensures that you are starting from a known state
 When compiled in Debug on *some* compilers this will execute as you would expect. The problems come when the code is compiled in *Release* mode. The _ptr_ variable will **NOT** be set to _NULL_ but instead some random memory address. As you can see this would cause problems because the initialization code that should have been running will be skipped because the conditional _if (!ptr) _ will be true. Do not get caught with this bug. Initialize your variables.
 
 ## Array Initialization ##
-	\verbatim
+
     define MY_ARRAY_SIZE  10;
     int array[10];              // Good - Will compile on all platforms
     int array[MY_ARRAY_SIZE];   // Good - Will compile on all Platforms

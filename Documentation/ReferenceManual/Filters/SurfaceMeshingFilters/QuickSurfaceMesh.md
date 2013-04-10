@@ -13,7 +13,8 @@ None
 
 ## Required DataContainers ##
 Voxel
-SurfaceMesh
+SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surface mesh over writing anything that is currently in the SurfaceMeshDataContainer
+
 
 ## Required Arrays ##
 
@@ -27,7 +28,7 @@ SurfaceMesh
 |------|--------------|---------|
 | Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
 | Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
-| Vertex Attribute Array | SurfaceMeshNodeType | N x 1 Col of unsigned char |
+| Vertex | SurfaceMeshNodeType | N x 1 Col of unsigned char |
 
 
 ## Authors ##

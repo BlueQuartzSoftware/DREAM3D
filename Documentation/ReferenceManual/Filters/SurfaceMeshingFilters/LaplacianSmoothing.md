@@ -43,15 +43,13 @@ The values for the __Node Type__ array can take one of the following values.
 | Surface Quad Points Lambda | Double | Value of Lambda for the Quad Points that lie on the outer surface of the volume. |
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
-| Node Type | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) |
+| Vertex | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) |
 
 ## Created Arrays ##
 None
