@@ -16,6 +16,9 @@ This Filter writes the **Field** data, using a filename input by the user, to an
 | Output File | File Path |
 | Write Neighbor Data | Boolean (On of Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

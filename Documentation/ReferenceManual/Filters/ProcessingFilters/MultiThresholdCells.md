@@ -16,6 +16,9 @@ This filter is similar to the [SingleThresholdCells](singlethresholdcells.html) 
 |------|------|
 | Select Arrays to Compare | Defined by the user |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|

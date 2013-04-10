@@ -21,6 +21,9 @@ the user could manually modify those values, and then use them in this filter if
 |------|------|
 | Input File | File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

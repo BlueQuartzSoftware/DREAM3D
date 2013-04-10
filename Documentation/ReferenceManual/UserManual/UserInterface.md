@@ -1,7 +1,7 @@
 Overview of the User Interface {#userinterface}
 =========
 
-DREAM3D has 4 main areas of it's user interface:
+DREAM3D has 4 main areas of its user interface:
 
 1. The Filter Library
 2. The Filter List

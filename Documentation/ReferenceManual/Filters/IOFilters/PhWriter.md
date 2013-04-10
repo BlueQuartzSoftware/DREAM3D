@@ -14,6 +14,9 @@ This Filter writes to a data file in a format used by Carnegie Mellon University
 |------|------|
 | Output File | Output File |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

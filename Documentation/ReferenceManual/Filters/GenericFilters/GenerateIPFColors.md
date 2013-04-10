@@ -19,6 +19,9 @@ This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crys
 | Z Reference Direction | Double |
 
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 

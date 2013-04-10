@@ -17,6 +17,9 @@ If the wrong conversion is selected (i.e. the user chooses *degrees to radians*,
 |------|------|
 | Conversion Type | Choices |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

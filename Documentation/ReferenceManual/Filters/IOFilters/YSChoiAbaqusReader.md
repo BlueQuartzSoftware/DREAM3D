@@ -11,6 +11,9 @@ I/O Filters
 |------|------|
 | Input File | File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

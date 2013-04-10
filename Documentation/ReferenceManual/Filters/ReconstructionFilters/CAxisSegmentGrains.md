@@ -13,6 +13,9 @@ The _c-axis misorientation_ refers to the angle between the <001> directions (c-
 |------|------|-----|
 | C-Axis Misorientation Tolerance | Double | Value is in degrees |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

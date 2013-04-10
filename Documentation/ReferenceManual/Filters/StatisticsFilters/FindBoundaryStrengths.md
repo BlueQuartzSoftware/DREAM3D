@@ -12,6 +12,9 @@ Statistics Filters (Crystallographic)
 |------|------|
 | VTK Output File | Output File |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

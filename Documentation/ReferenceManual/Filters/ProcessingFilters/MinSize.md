@@ -18,6 +18,9 @@ After removing all the small **Fields**, the remaining **Fields** are isotropica
 |------|------|-------------|
 | Minimum Allowed **Field** Size | Integer | Number of **Cells** that must be present in the **Field** for it to remain in the sample |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

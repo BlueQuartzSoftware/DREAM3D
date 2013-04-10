@@ -77,6 +77,9 @@ Using this filter in combination with an existing pipeline that would already ha
 ## Parameters ##
 See above
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

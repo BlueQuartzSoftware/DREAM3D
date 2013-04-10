@@ -31,11 +31,15 @@ The values for the __Node Type__ array can take one of the following values.
 |------|------|
 | Delete Temp Files | Boolean: Should the temporary files that are generated be deleted at the end of the filter. This is mostly for debugging. |
 
+## Required DataContainers ##
+Voxel
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Cell | GrainIds |  |
+| Cell | GrainIds |  From the VoxelDataContainer |
 
 ## Created Arrays ##
 
@@ -43,7 +47,8 @@ The values for the __Node Type__ array can take one of the following values.
 |------|--------------|---------|
 | Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
 | Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
-| Vertex Attribute Array | SurfaceMeshNodeType | N x 1 Col of unsigned char |
+| Vertex | SurfaceMeshNodeType | N x 1 Col of unsigned char |
+| Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |
 
 ## Authors ##
 

@@ -12,6 +12,9 @@ Synthetic Builder Filters (Crystallography)
 |------|------|
 | Magnitude of Orientation Noise | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

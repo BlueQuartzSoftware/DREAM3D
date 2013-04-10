@@ -12,6 +12,9 @@ This filter calculates a normal vector of length 1 (Normalized) for each triangl
 ## Parameters ##
 None
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

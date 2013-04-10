@@ -12,6 +12,9 @@ Statistics Filters (Crystallographic)
 |------|------|
 | Slice to Slice Rotations File | Output File |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

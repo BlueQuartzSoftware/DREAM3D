@@ -12,6 +12,9 @@ This filter copies the values associated with a **Field** to all the **Cells** t
 |------|------|
 | Field Array Name | String |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

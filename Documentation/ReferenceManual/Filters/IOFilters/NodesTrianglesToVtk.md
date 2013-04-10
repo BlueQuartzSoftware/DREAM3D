@@ -48,6 +48,9 @@ the __grain id__ one for each **Field** that the triangle borders.
 | Binary VTK File | Write the Vtk file using binary instead of ASCII |
 | Conformal Mesh | Write a conformal mesh |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

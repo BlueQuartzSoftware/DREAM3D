@@ -23,6 +23,9 @@ __List of Unique Edges__ This will generate a list of unsigned 64 bit integers w
 | Generate Triangle Neighbors List | Boolean (On or Off) |
 | Generate Unique Edge Ids | Boolean (On or Off) |
 
+## Required DataContainers ##
+SurfaceMesh
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

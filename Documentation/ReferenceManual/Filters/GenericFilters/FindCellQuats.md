@@ -15,6 +15,9 @@ The FZ is the region of orientation space that contains general positions on whi
 ## Parameters ##
 None
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |

@@ -1,9 +1,12 @@
 H5EBSD Data File Specification {#h5ebsdfile}
 ================
 
+## Introduction
+The EBSD Data from multiple vendors is stored in a data file using the HDF5 file format library. While the general layout of the HDF5 file is the same between vendors there are details that are NOT the same between vendors because each vendors chooses to save different types of data. The top-level datasets that deal with the basic volume information is the same for every file.
+
+
 ## Orientations, Reference Frames and Coordinate Systems
-DREAM.3D's origin follows the sample coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display.
-Sample Coordinate System (White) overlayed with EBSD Coordinate System (Yellow).
+DREAM.3D's origin follows the sample coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display. Sample Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
 
 ![TSL Coordintate System (Spatial)](Images/CoordinateSystem1.png)
 @image latex Images/CoordinateSystem1.png width=3in
@@ -14,10 +17,6 @@ Commercial EBSD acquisition systems do not typically follow this convention and 
 rotates the sample coordinate system 180 degrees around the Z axis.
 - Should we rotate the Euler angles to bring them in line with the sample
 reference frame?
-
-
-## Introduction
-The EBSD Data from multiple vendors are stored in a data file using the HDF5 file format library. While the general layout of the HDF5 file is the same between vendors there are details that are NOT the same between vendor because each vendors chooses to save different types of data. The top level datasets that deal with the basic volume information is the same for every file.
 
 ## HDF5 File Layout
 

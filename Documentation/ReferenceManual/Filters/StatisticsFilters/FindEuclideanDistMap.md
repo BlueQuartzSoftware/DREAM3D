@@ -10,6 +10,9 @@ This Filter utilizes the __Cell GrainIds__ to find __Cell NearestNeighborDistanc
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

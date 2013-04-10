@@ -11,6 +11,9 @@ This Filter utilizes __Cell__ __Good**Cells**__ to identify the sample.
 ## Parameters ##
 None
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 | Type | Default Name | Comment |
 |------|--------------|---------|

@@ -16,6 +16,9 @@ will be named with the [Grain_id].stl. The user can designate an optional prefix
 | Output STL Directory | Path to Directory | The path to the output directory where all of the individual STL files will be saved |
 | Stl File Prefix | String | Optional Prefix to use when creating the stl file name. |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

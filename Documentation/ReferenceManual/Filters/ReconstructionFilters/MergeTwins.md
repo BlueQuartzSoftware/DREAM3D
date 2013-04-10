@@ -15,6 +15,9 @@ This Filter groups neighboring **Fields** that are in a twin relationship with e
 | Axis Tolerance | Double |
 | Angle Tolerance | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

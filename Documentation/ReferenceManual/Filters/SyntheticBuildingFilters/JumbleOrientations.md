@@ -13,6 +13,9 @@ Synthetic Builder Filters (Crystallography)
 |------|------|
 | Number of Iterations (Swaps) | Integer |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

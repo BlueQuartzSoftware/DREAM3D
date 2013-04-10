@@ -13,6 +13,9 @@ This filter reads a legacy DREAM.3D file that holds the *Euler Angles*, *Phases*
 |------|------|
 | Input File | File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

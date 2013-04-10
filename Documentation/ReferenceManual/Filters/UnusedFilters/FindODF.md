@@ -21,6 +21,9 @@ The full 3D representation of crystallographic texture is given by the _Orientat
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

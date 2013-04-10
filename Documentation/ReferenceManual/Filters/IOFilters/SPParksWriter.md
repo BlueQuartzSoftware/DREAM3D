@@ -45,6 +45,9 @@ This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Car
 |------|------|
 | Output File | Output File |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

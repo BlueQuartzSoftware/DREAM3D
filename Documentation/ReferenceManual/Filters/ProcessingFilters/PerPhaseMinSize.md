@@ -15,6 +15,9 @@ This filter is identical to the [Minimum Size Filter (All Phases)](MinSize.html 
 | Minimum Allowed **Field** Size | Integer | Number of **Cells** |
 | Phase Number | Integer | The phase number to apply this filter to. |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

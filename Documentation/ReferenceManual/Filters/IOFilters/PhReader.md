@@ -40,6 +40,9 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
 |------|------|
 | Input File | File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

@@ -18,6 +18,9 @@ The filter also notes which **Fields** touch the outer surface of the sample (th
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

@@ -14,6 +14,9 @@ This Filter utilizes the __Cell CellPhases, GrainIds__, and __Quats__ to generat
 |------|------|
 | Kernel Size | Integer |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

@@ -22,6 +22,9 @@ file but with an .xdmf file extension.
 | Write SurfaceMesh Data | Boolean (On or Off) |
 | Write Xdmf File | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

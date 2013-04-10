@@ -20,6 +20,9 @@ The algorithm of this filter is as follows:
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

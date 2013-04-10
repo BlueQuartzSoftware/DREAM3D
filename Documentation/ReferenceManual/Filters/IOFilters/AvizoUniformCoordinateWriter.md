@@ -15,6 +15,9 @@ This filter writes out a native Avizo Uniform Coordinate data file.
 | Output File | Output File |
 | Write Binary File | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

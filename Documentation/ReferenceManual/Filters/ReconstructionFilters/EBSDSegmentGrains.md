@@ -14,6 +14,9 @@ This Filter segments the **Fields** by grouping neighboring **Cells** that satis
 |------|------|------|
 | Misorientation Tolerance | Double | Value is in degress |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

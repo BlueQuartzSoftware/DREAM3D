@@ -24,6 +24,9 @@ This Filter reads the **Field** and phase ids together with image parameters req
 | Write IPF Colors | Boolean (On or Off) |
 | Write Binary File | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

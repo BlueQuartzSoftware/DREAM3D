@@ -10,6 +10,9 @@ Based on the phase fraction in the statistics file used in the _Initialize Synth
 
 ## Parameters ##
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

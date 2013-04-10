@@ -54,6 +54,9 @@ The edges file format is as follows:
 | Output Edges File | Output File Path |
 | Output Triangles File | Output File Path |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

@@ -18,6 +18,9 @@ A new grid of **Cells** is created and "overlaid" on the existing grid of **Cell
 | Y Res | Double |
 | Z Res | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

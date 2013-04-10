@@ -16,6 +16,9 @@ This filter reads an IMAGE_DATA type of 3D array from a legacy .vtk file specifi
 | Input Vtk File | Input File |
 | **Field** Id Scalar Name | Unknown Type |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 None
 

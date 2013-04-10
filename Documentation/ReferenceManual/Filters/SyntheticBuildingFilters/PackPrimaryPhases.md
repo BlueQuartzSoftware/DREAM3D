@@ -18,6 +18,9 @@ The user needs to keep in mind that large values of __Neighborhood Error Weight_
 | Neighborhood Error Weight | Double |
 | Periodic Boundary | Boolean (On or Off) |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Comment |

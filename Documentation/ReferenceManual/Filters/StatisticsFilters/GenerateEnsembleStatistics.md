@@ -22,6 +22,9 @@ This filter will fit "common" statistical distributions (as chosen by the user) 
 | Omega3 Distribution Fit Type | Choice | Which distribution to fit the omega3 distibution with |
 | Neighborhoods Distribution Fit Type | Choice | Which distribution to fit the neighborhood distibution with |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |

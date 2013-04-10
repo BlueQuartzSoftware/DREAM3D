@@ -17,6 +17,9 @@ NOTE: This filter is intended for use with *Heaxgonal* materials.  While the c-a
 |------|------|
 | C-Axis Alignment Tolerance | Double |
 
+## Required DataContainers ##
+Voxel
+
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment |
