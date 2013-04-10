@@ -29,7 +29,7 @@ This Filter segments the **Fields** by grouping neighboring **Cells** that satis
 |------|--------------|-------------|---------|
 | Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. |  |
 | Field | Active | Boolean value specifying if the **Field** is still in the sample (1 if the **Field** is in the sample and 0 if it is not) | At the end of the filter, all **Fields** will be "Active" as the "Inactive" **Fields** will have been removed.  |
-| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** |  |
+|
 
 ## Authors ##
 
