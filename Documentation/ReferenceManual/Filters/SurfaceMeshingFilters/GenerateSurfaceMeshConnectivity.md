@@ -24,15 +24,10 @@ __List of Unique Edges__ This will generate a list of unsigned 64 bit integers w
 | Generate Unique Edge Ids | Boolean (On or Off) |
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
-
+None
 
 ## Created Arrays ##
 
