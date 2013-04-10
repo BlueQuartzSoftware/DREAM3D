@@ -50,7 +50,7 @@ private:
 public:
   Plane(VectorType& normal, double d);
   Plane(VectorType& normal, VectorType& x);
-  Plane(VectorType& normal, SurfaceMesh::DataStructures::Vert_t &x);
+  Plane(VectorType& normal, DREAM3D::SurfaceMesh::Vert_t &x);
 
   //#################### PUBLIC METHODS ####################
 public:

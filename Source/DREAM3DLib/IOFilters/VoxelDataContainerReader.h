@@ -64,10 +64,16 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)

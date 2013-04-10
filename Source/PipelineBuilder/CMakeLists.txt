@@ -13,9 +13,9 @@ project(PipelineBuilderLib)
 
 set(PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB)
 set(PipelineBuilderLib_BUILT_AS_DYNAMIC_LIB 1)
-IF (WIN32)
+if(WIN32)
     ADD_DEFINITIONS("-DPipelineBuilderLib_BUILT_AS_DYNAMIC_LIB")
-ENDIF (WIN32)
+endif(WIN32)
 
 # Get the Directory where the plugin lives
 #get_filename_component(PluginPath ${PROJECT_SOURCE_DIR} PATH)

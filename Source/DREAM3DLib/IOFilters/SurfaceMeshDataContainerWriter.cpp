@@ -200,13 +200,13 @@ void SurfaceMeshDataContainerWriter::execute()
   }
 
 
-  err = writeTriangles(dcGid);
+  err = writeFaces(dcGid);
   if (err < 0)
   {
     return;
   }
 
-  err = writeMeshTriangleNeighborLists(dcGid);
+  err = writeMeshFaceNeighborLists(dcGid);
   if (err < 0)
   {
     return;
@@ -258,12 +258,12 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
   {
     return;
   }
-  SurfaceMesh::DataStructures::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
   }
-  SurfaceMesh::DataStructures::VertListPointer_t verts = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t verts = getSurfaceMeshDataContainer()->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -272,7 +272,7 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
   std::ostream& out = *m_XdmfPtr;
   out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << std::endl;
 
-  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
+  out << "    <Topology TopologyType=\"Face\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   std::vector<char> nameBuffer(nameSize, 0);
@@ -300,7 +300,7 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridFooter()
   {
     return;
   }
-  SurfaceMesh::DataStructures::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
@@ -395,16 +395,16 @@ int SurfaceMeshDataContainerWriter::createVtkObjectGroup(const std::string &hdfG
 int SurfaceMeshDataContainerWriter::writeVertices(hid_t dcGid)
 {
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  SurfaceMesh::DataStructures::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), SurfaceMesh::DataStructures::k_VertexNumElements};
+  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::SurfaceMesh::k_VertexNumElements};
 
-  SurfaceMesh::DataStructures::Float_t* data = reinterpret_cast<SurfaceMesh::DataStructures::Float_t*>(verticesPtr->GetPointer(0));
+  DREAM3D::SurfaceMesh::Float_t* data = reinterpret_cast<DREAM3D::SurfaceMesh::Float_t*>(verticesPtr->GetPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {
@@ -425,7 +425,7 @@ int SurfaceMeshDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
     return 0;
   }
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  SurfaceMesh::DataStructures::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -436,7 +436,7 @@ int SurfaceMeshDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
   size_t nVerts = verticesPtr->GetNumberOfTuples();
   for(size_t v = 0; v < nVerts; ++v)
   {
-    total += links->getNumberOfTriangles(v);
+    total += links->getNumberOfFaces(v);
   }
 
   size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
@@ -448,8 +448,8 @@ int SurfaceMeshDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
 
   for(size_t v = 0; v < nVerts; ++v)
   {
-    uint16_t ncells = links->getNumberOfTriangles(v);
-    int32_t* cells = links->getTriangleListPointer(v);
+    uint16_t ncells = links->getNumberOfFaces(v);
+    int32_t* cells = links->getFaceListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
     ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
@@ -506,7 +506,7 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
     ss.str("");
     ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
     notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = sm->getPointData(*iter);
+    IDataArray::Pointer array = sm->getVertexData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
@@ -528,15 +528,15 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeMeshTriangleNeighborLists(hid_t dcGid)
+int SurfaceMeshDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 {
-  MeshTriangleNeighbors::Pointer links = getSurfaceMeshDataContainer()->getMeshTriangleNeighborLists();
+  MeshFaceNeighbors::Pointer links = getSurfaceMeshDataContainer()->getMeshFaceNeighborLists();
   if (NULL == links.get())
   {
     return 0;
   }
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr = sm->getFaces();
+  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
   if (NULL == facesPtr.get())
   {
     return -1;
@@ -547,7 +547,7 @@ int SurfaceMeshDataContainerWriter::writeMeshTriangleNeighborLists(hid_t dcGid)
   size_t nFaces = facesPtr->GetNumberOfTuples();
   for(size_t v = 0; v < nFaces; ++v)
   {
-    total += links->getNumberOfTriangles(v);
+    total += links->getNumberOfFaces(v);
   }
 
   size_t totalBytes = nFaces * sizeof(uint16_t) + total * sizeof(int32_t);
@@ -559,7 +559,7 @@ int SurfaceMeshDataContainerWriter::writeMeshTriangleNeighborLists(hid_t dcGid)
 
   for(size_t v = 0; v < nFaces; ++v)
   {
-    uint16_t ncells = links->getNumberOfTriangles(v);
+    uint16_t ncells = links->getNumberOfFaces(v);
     int32_t* cells = links->getNeighborListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
@@ -570,10 +570,10 @@ int SurfaceMeshDataContainerWriter::writeMeshTriangleNeighborLists(hid_t dcGid)
   int32_t rank = 1;
   hsize_t dims[1] = {totalBytes};
 
-  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshTriangleNeighborLists, rank, dims, bufPtr);
+  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, rank, dims, bufPtr);
   if (err < 0)
   {
-    notifyErrorMessage("Error writing the Mesh Triangle Neighbor Lists", -998);
+    notifyErrorMessage("Error writing the Mesh Face Neighbor Lists", -998);
     return err;
   }
 
@@ -583,17 +583,17 @@ int SurfaceMeshDataContainerWriter::writeMeshTriangleNeighborLists(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeTriangles(hid_t dcGid)
+int SurfaceMeshDataContainerWriter::writeFaces(hid_t dcGid)
 {
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  SurfaceMesh::DataStructures::FaceList_t::Pointer facesPtr = sm->getFaces();
+  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
   if (facesPtr.get() == NULL)
   {
     return -1;
   }
 
   int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->GetNumberOfTuples(), SurfaceMesh::DataStructures::k_FaceNumElements};
+  hsize_t dims[2] = {facesPtr->GetNumberOfTuples(), DREAM3D::SurfaceMesh::k_FaceNumElements};
 
   int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
 

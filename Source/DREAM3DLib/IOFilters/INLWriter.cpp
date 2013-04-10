@@ -132,10 +132,10 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
     addErrorMessage(getHumanLabel(), ss.str(), -1111);
     setErrorCondition(-1111);
   }
-  else
-  {
-    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
-  }
+//  else
+//  {
+//    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
+//  }
 
 
 }

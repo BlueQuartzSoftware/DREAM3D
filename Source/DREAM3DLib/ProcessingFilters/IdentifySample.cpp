@@ -253,7 +253,7 @@ void IdentifySample::execute()
         {
           Sample[j] = false;
         }
-        for(int j = 0; j < currentvlist.size(); j++)
+        for(size_t j = 0; j < currentvlist.size(); j++)
         {
           Sample[currentvlist[j]] = true;
         }

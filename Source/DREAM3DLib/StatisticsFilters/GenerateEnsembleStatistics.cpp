@@ -861,7 +861,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
  // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)
   {
-    for(int j=0;j<misobin[i]->GetSize();j++)
+    for(size_t j=0;j<misobin[i]->GetSize();j++)
     {
       misobin[i]->SetValue(j, (misobin[i]->GetValue(j)/totalSurfaceArea[i]));
     }

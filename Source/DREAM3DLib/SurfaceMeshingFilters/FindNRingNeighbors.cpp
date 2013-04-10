@@ -79,7 +79,7 @@ void FindNRingNeighbors::setRegionIds(int g, int r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMesh::DataStructures::UniqueTriangleIds_t& FindNRingNeighbors::getNRingTriangles()
+DREAM3D::SurfaceMesh::UniqueFaceIds_t &FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -96,8 +96,8 @@ void FindNRingNeighbors::generate()
   m_NRingTriangles.clear();
 
   // Get the Triangle List from the Data Container
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
-  SurfaceMesh::DataStructures::Face_t* triangles = trianglesPtr->GetPointer(0);
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // Make sure we have the proper connectivity built
   MeshVertLinks::Pointer node2TrianglePtr =sm->getMeshVertLinks();
@@ -107,7 +107,7 @@ void FindNRingNeighbors::generate()
     node2TrianglePtr =sm->getMeshVertLinks();
   }
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -133,18 +133,18 @@ void FindNRingNeighbors::generate()
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
-    SurfaceMesh::DataStructures::UniqueTriangleIds_t lcvTriangles(m_NRingTriangles);
+    DREAM3D::SurfaceMesh::UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for(SurfaceMesh::DataStructures::UniqueTriangleIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for(DREAM3D::SurfaceMesh::UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
-      SurfaceMesh::DataStructures::Face_t& face = triangles[*triIter];
+      DREAM3D::SurfaceMesh::Face_t& face = triangles[*triIter];
       // For each node, get the triangle ids that the node belongs to
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        uint16_t tCount = node2TrianglePtr->getNumberOfTriangles(face.verts[i]);
-        int32_t* data = node2TrianglePtr->getTriangleListPointer(face.verts[i]);
+        uint16_t tCount = node2TrianglePtr->getNumberOfFaces(face.verts[i]);
+        int32_t* data = node2TrianglePtr->getFaceListPointer(face.verts[i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for(uint16_t t = 0; t < tCount; ++t)
@@ -179,8 +179,8 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
 
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   /* Place all your code to execute your filter here. */
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = m->getVertices();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>& nodes = *(nodesPtr);
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   std::stringstream ss;
@@ -214,7 +214,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
     //  if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -238,7 +238,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<SurfaceMesh::DataStructures::Face_t>& triangles = *(m->getFaces());
+  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = m_NRingTriangles.size();

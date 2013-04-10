@@ -186,7 +186,7 @@ void RawBinaryReader::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("NumberOfComponents");
+    option->setHumanLabel("Number Of Components");
     option->setPropertyName("NumberOfComponents");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
@@ -352,7 +352,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     }
 
     m->addCellData(p->GetName(), p);
-    addCreatedCellData(p->GetName());
+    //addCreatedCellData(p->GetName());
   }
 }
 

@@ -45,9 +45,9 @@
 /**
  * @brief These are the basic data structures to use for our triangle based surface meshes.
  */
-namespace SurfaceMesh
+namespace DREAM3D
 {
-  namespace DataStructures
+  namespace SurfaceMesh
   {
     typedef float Float_t;
     typedef double Double_t;
@@ -56,6 +56,7 @@ namespace SurfaceMesh
     {
         Float_t pos[3];
     } Vert_t;
+
     typedef struct
     {
       Double_t pos[3];
@@ -78,8 +79,8 @@ namespace SurfaceMesh
     typedef VertList_t::Pointer VertListPointer_t;
     typedef FaceList_t::Pointer FaceListPointer_t;
 
-    typedef std::set<int32_t> UniqueTriangleIds_t;
-    typedef std::map<int32_t, UniqueTriangleIds_t > NodeTrianglesMap_t;
+    typedef std::set<int32_t> UniqueFaceIds_t;
+    typedef std::map<int32_t, UniqueFaceIds_t > VertexFaceMap_t;
 
   }
 }
@@ -93,7 +94,7 @@ namespace SurfaceMesh
     namespace M3C
     {
       typedef struct {
-          SurfaceMesh::DataStructures::Float_t coord[3];
+          DREAM3D::SurfaceMesh::Float_t coord[3];
       } VoxelCoord;
 
       typedef struct {
@@ -145,9 +146,9 @@ namespace SurfaceMesh
       {
           int nodeId;
           int nodeKind;
-          SurfaceMesh::DataStructures::Float_t x;
-          SurfaceMesh::DataStructures::Float_t y;
-          SurfaceMesh::DataStructures::Float_t z;
+          DREAM3D::SurfaceMesh::Float_t x;
+          DREAM3D::SurfaceMesh::Float_t y;
+          DREAM3D::SurfaceMesh::Float_t z;
       } NodesFileRecord_t;
       const int ByteCount = sizeof(NodesFileRecord_t);
     }

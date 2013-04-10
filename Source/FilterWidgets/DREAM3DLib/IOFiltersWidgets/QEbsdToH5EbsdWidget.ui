@@ -359,32 +359,6 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="label_3">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Reference Frame Options</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_4">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Z Spacing</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
       <widget class="QRadioButton" name="m_StackLowToHigh">
        <property name="text">
@@ -392,32 +366,6 @@ font-size: 11px;
        </property>
        <property name="checked">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QPushButton" name="m_RefFrameOptionsBtn">
-       <property name="toolTip">
-        <string>This will show the advanced reference frame options</string>
-       </property>
-       <property name="text">
-        <string>Set Reference Frame</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLineEdit" name="m_zSpacing">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>The spacing between each layer.</string>
-       </property>
-       <property name="text">
-        <string>0.25</string>
        </property>
       </widget>
      </item>
@@ -440,6 +388,58 @@ font-size: 11px;
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="3" column="2">
+      <widget class="QPushButton" name="m_RefFrameOptionsBtn">
+       <property name="toolTip">
+        <string>This will show the advanced reference frame options</string>
+       </property>
+       <property name="text">
+        <string>Set Reference Frame</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_3">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Reference Frame Options</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_4">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Z Spacing (Microns)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="m_zSpacing">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>The spacing between each layer.</string>
+       </property>
+       <property name="text">
+        <string>0.25</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -464,7 +464,7 @@ font-size: 12px;
 }</string>
        </property>
        <property name="text">
-        <string>EBSD Source Data</string>
+        <string>Orientation Source Data</string>
        </property>
       </widget>
      </item>
@@ -503,7 +503,7 @@ font-size: 11px;
 }</string>
        </property>
        <property name="text">
-        <string>Total Ebsd Files Found:</string>
+        <string>Total Files Found:</string>
        </property>
       </widget>
      </item>

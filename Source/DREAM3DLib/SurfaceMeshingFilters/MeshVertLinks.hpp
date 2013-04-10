@@ -46,7 +46,7 @@
 //#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 
 /**
- * @brief The MeshVertLinks class contains arrays of Triangles for each Node in the mesh. This allows quick query to the node
+ * @brief The MeshVertLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
 class MeshVertLinks
@@ -57,7 +57,7 @@ class MeshVertLinks
     DREAM3D_STATIC_NEW_MACRO(MeshVertLinks)
     DREAM3D_TYPE_MACRO(MeshVertLinks)
 
-    class TriangleList {
+    class FaceList {
       public:
       uint16_t ncells;
       int* cells;
@@ -97,44 +97,44 @@ class MeshVertLinks
     //----------------------------------------------------------------------------
     // Description:
     // Get a link structure given a point id.
-    TriangleList& getTriangleList(size_t ptId) {
+    FaceList& getFaceList(size_t ptId) {
       return this->Array[ptId];
     }
 
     //----------------------------------------------------------------------------
     // Description:
     // Get the number of cells using the point specified by ptId.
-    uint16_t getNumberOfTriangles(size_t ptId) {
+    uint16_t getNumberOfFaces(size_t ptId) {
       return this->Array[ptId].ncells;
     }
 
     //----------------------------------------------------------------------------
     // Description:
     // Return a list of cell ids using the point.
-    int* getTriangleListPointer(size_t ptId) {
+    int* getFaceListPointer(size_t ptId) {
       return this->Array[ptId].cells;
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getCellPoints(SurfaceMesh::DataStructures::FaceList_t::Pointer triangles, size_t cellId, size_t npts, size_t* pts)
+    void getCellPoints(DREAM3D::SurfaceMesh::FaceList_t::Pointer Faces, size_t cellId, size_t npts, size_t* pts)
     {
-      SurfaceMesh::DataStructures::Face_t& triangle = *(triangles->GetPointer(cellId));
-      pts[0] = triangle.verts[0];
-      pts[1] = triangle.verts[1];
-      pts[2] = triangle.verts[2];
+      DREAM3D::SurfaceMesh::Face_t& Face = *(Faces->GetPointer(cellId));
+      pts[0] = Face.verts[0];
+      pts[1] = Face.verts[1];
+      pts[2] = Face.verts[2];
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateMeshVertLinks(SurfaceMesh::DataStructures::VertListPointer_t nodes,
-                               SurfaceMesh::DataStructures::FaceListPointer_t triangles )
+    void generateMeshVertLinks(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
+                               DREAM3D::SurfaceMesh::FaceListPointer_t Faces )
     {
 
       size_t numPts = nodes->GetNumberOfTuples();
-      size_t numCells = triangles->GetNumberOfTuples();
+      size_t numCells = Faces->GetNumberOfTuples();
 
       // Allocate the basic structures
       allocate(numPts);
@@ -151,13 +151,13 @@ class MeshVertLinks
 
 
       size_t pts[3];
-      size_t npts = 3; // ALWAYS 3 points for a triangle
+      size_t npts = 3; // ALWAYS 3 points for a Face
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getCellPoints(triangles, cellId, npts, pts);
+        getCellPoints(Faces, cellId, npts, pts);
         for (size_t j=0; j < npts; j++)
         {
           this->incrementLinkCount(pts[j]);
@@ -169,7 +169,7 @@ class MeshVertLinks
 
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getCellPoints(triangles, cellId, npts, pts);
+        getCellPoints(Faces, cellId, npts, pts);
         for (size_t j=0; j < npts; j++)
         {
           this->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
@@ -207,7 +207,7 @@ class MeshVertLinks
     //----------------------------------------------------------------------------
     void allocate(size_t sz, size_t ext=1000)
     {
-      static MeshVertLinks::TriangleList linkInit = {0,NULL};
+      static MeshVertLinks::FaceList linkInit = {0,NULL};
 
 
       // This makes sure we deallocate any lists that have been created
@@ -226,7 +226,7 @@ class MeshVertLinks
 
       this->Size = sz;
       // Allocate a whole new set of structures
-      this->Array = new MeshVertLinks::TriangleList[sz];
+      this->Array = new MeshVertLinks::FaceList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i=0; i < sz; i++)
@@ -255,7 +255,7 @@ class MeshVertLinks
     }
 
   private:
-    TriangleList* Array;   // pointer to data
+    FaceList* Array;   // pointer to data
     size_t Size;
 
     MeshVertLinks(const MeshVertLinks&); // Copy Constructor Not Implemented

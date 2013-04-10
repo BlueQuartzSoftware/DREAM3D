@@ -56,13 +56,9 @@ const static float m_pi = static_cast<float>(M_PI);
 MinSize::MinSize() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_MinAllowedGrainSize(1),
   m_GrainIds(NULL),
-  m_CellPhases(NULL),
-  m_FieldPhases(NULL),
   m_Active(NULL)
 {
   setupFilterParameters();
@@ -90,33 +86,6 @@ void MinSize::setupFilterParameters()
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Grain Ids Array Name");
-    option->setPropertyName("GrainIdsArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Cell Phase Array Name");
-    option->setPropertyName("CellPhasesArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Field Phase Array Name");
-    option->setPropertyName("FieldPhasesArrayName");
-    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
-    parameters.push_back(option);
-  }
 
   setFilterParameters(parameters);
 }
@@ -127,9 +96,6 @@ void MinSize::setupFilterParameters()
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
-  writer->writeValue("GrainIdsArrayName", getGrainIdsArrayName());
-  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName());
-  writer->writeValue("FieldPhasesArrayName", getFieldPhasesArrayName());
 }
 
 // -----------------------------------------------------------------------------
@@ -142,10 +108,6 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1);
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1);
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
 }
@@ -266,8 +228,6 @@ void MinSize::assign_badpoints()
         {
           count = kstride+jstride+i;
           std::stringstream ss;
-          //	  ss << "Cleaning Up Grains - Removing Bad Points - Cycle " << count << " - " << ((float)i/totalPoints)*100 << "Percent Complete";
-          //	  notify(ss.str(), 0, Observable::UpdateProgressMessage);
           grainname = m_GrainIds[count];
           if (grainname < 0)
           {
@@ -338,9 +298,6 @@ void MinSize::assign_badpoints()
         }
       }
     }
-    //    std::stringstream ss;
-    //     ss << "Assigning Bad Voxels count = " << count;
-    //    notify(ss.str().c_str(), 0, Observable::UpdateProgressMessage);
   }
 }
 

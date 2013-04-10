@@ -201,15 +201,15 @@ void FindBoundaryStrengths::execute()
     return;
   }
 
-  SurfaceMesh::DataStructures::VertList_t::Pointer nodesPtr = sm->getVertices();
-  SurfaceMesh::DataStructures::VertList_t& nodes = *(nodesPtr);
+  DREAM3D::SurfaceMesh::VertList_t::Pointer nodesPtr = sm->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Write the triangle indices into the vtk File
-  SurfaceMesh::DataStructures::FaceList_t& triangles = *(sm->getFaces());
+  DREAM3D::SurfaceMesh::FaceList_t& triangles = *(sm->getFaces());
   int nTriangles = triangles.GetNumberOfTuples();
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshTriangleLabels);
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -326,7 +326,7 @@ void FindBoundaryStrengths::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    SurfaceMesh::DataStructures::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
     pos[0] = static_cast<float>(n.pos[0]);
     pos[1] = static_cast<float>(n.pos[1]);
     pos[2] = static_cast<float>(n.pos[2]);
@@ -349,7 +349,7 @@ void FindBoundaryStrengths::execute()
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int j = 0; j < nT; j++)
   {
-    //  SurfaceMesh::DataStructures::Face_t& t = triangles[j];
+    //  DREAM3D::SurfaceMesh::Face_t& t = triangles[j];
     tData[1] = triangles[j].verts[0];
     tData[2] = triangles[j].verts[1];
     tData[3] = triangles[j].verts[2];
@@ -376,7 +376,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
-    //SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+    //DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     int Gid = faceLabels[i*2];
     MXA::Endian::FromSystemToBig::convert<int>(Gid);
@@ -396,7 +396,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
-  //  SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+  //  DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float mPrime = mPrimes[i];
     MXA::Endian::FromSystemToBig::convert<float>(mPrime);
@@ -416,7 +416,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
-   // SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+   // DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float F1 = F1s[i];
     MXA::Endian::FromSystemToBig::convert<float>(F1);
@@ -436,7 +436,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
- //   SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+ //   DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float maxF1 = maxF1s[i];
     MXA::Endian::FromSystemToBig::convert<float>(maxF1);
@@ -456,7 +456,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
- //   SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+ //   DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float F1spt = F1spts[i];
     MXA::Endian::FromSystemToBig::convert<float>(F1spt);
@@ -476,7 +476,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
-//    SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+//    DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float maxF1spt = maxF1spts[i];
     MXA::Endian::FromSystemToBig::convert<float>(maxF1spt);
@@ -496,7 +496,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
- //   SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+ //   DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float F7 = F7s[i];
     MXA::Endian::FromSystemToBig::convert<float>(F7);
@@ -516,7 +516,7 @@ void FindBoundaryStrengths::execute()
 
   for(int i = 0; i < nT; ++i)
   {
- //   SurfaceMesh::DataStructures::Face_t& t = triangles[i]; // Get the current Node
+ //   DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
 
     float maxF7 = maxF7s[i];
     MXA::Endian::FromSystemToBig::convert<float>(maxF7);

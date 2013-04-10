@@ -116,6 +116,55 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
   return contains;
 }
 
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addRequiredVertexData(const std::string &name)
+{
+  m_RequiredVertexData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addCreatedVertexData(const std::string &name)
+{
+  m_CreatedVertexData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addRequiredEdgeData(const std::string &name)
+{
+  m_RequiredEdgeData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addCreatedEdgeData(const std::string &name)
+{
+  m_CreatedEdgeData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addRequiredFaceData(const std::string &name)
+{
+  m_RequiredFaceData.insert(name);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AbstractFilter::addCreatedFaceData(const std::string &name)
+{
+  m_CreatedFaceData.insert(name);
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -163,6 +212,9 @@ void AbstractFilter::addCreatedEnsembleData(const std::string &name)
 {
   m_CreatedEnsembleData.insert(name);
 }
+#endif
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

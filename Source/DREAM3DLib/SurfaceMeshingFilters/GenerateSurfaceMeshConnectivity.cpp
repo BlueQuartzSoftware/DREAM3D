@@ -182,8 +182,8 @@ void GenerateSurfaceMeshConnectivity::execute()
   }
   if (m_GenerateTriangleNeighbors == true)
   {
-    notifyStatusMessage("Generating Triangle Neighbors List");
-    getSurfaceMeshDataContainer()->buildMeshTriangleNeighborLists();
+    notifyStatusMessage("Generating Face Neighbors List");
+    getSurfaceMeshDataContainer()->buildMeshFaceNeighborLists();
   }
 
   if (m_GenerateEdgeIdList == true)
