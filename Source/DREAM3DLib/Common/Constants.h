@@ -466,17 +466,17 @@ namespace DREAM3D
   {
     namespace NodeType
     {
-      const int8_t Unused = 0;
-      const int8_t Default = 2;
-      const int8_t TriplePoint = 3;
-      const int8_t QuadPoint = 4;
-      const int8_t SurfaceDefault = 12;
-      const int8_t SurfaceTriplePoint = 13;
-      const int8_t SurfaceQuadPoint = 14;
+      const signed char Unused = 0;
+      const signed char Default = 2;
+      const signed char TriplePoint = 3;
+      const signed char QuadPoint = 4;
+      const signed char SurfaceDefault = 12;
+      const signed char SurfaceTriplePoint = 13;
+      const signed char SurfaceQuadPoint = 14;
     }
     namespace NodeId
     {
-      const int8_t Unused = -1;
+      const signed char Unused = -1;
     }
   }
 
