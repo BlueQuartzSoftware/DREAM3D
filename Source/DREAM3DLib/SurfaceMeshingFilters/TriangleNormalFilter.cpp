@@ -59,8 +59,8 @@ class CalculateNormalsImpl
 
   public:
     CalculateNormalsImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
-                                      DREAM3D::SurfaceMesh::FaceListPointer_t triangles,
-                                      double* normals) :
+                         DREAM3D::SurfaceMesh::FaceListPointer_t triangles,
+                         double* normals) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Normals(normals)
@@ -106,9 +106,9 @@ class CalculateNormalsImpl
 //
 // -----------------------------------------------------------------------------
 TriangleNormalFilter::TriangleNormalFilter() :
-SurfaceMeshFilter(),
-m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-m_SurfaceMeshTriangleNormals(NULL)
+  SurfaceMeshFilter(),
+  m_SurfaceMeshTriangleNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshTriangleNormals(NULL)
 {
   setupFilterParameters();
 }
@@ -154,7 +154,7 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
   }
   else
   {
-      // We MUST have Nodes
+    // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -203,6 +203,11 @@ void TriangleNormalFilter::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
+  bool doParallel = false;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  doParallel = true;
+#endif
+
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
 
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
@@ -212,13 +217,18 @@ void TriangleNormalFilter::execute()
   dataCheck(false, trianglesPtr->GetNumberOfTuples(), 0, 0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                    CalculateNormalsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      CalculateNormalsImpl(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals), tbb::auto_partitioner());
 
-#else
-  CalculateNormalsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals);
-  serial.generate(0, totalPoints);
+  }
+  else
 #endif
+  {
+    CalculateNormalsImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshTriangleNormals);
+    serial.generate(0, totalPoints);
+  }
 
 
   /* Let the GUI know we are done with this filter */
