@@ -19,6 +19,8 @@ __[1]__
 Jack Goldfeather, Victoria Interrante "A Novel Cubic-Order Algorithm for Approximating Principal Direction Vectors"
 _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 
+![Sample Output from filter](GrainFaceCurvatureFilter.png)
+
 
 ## Parameters ##
 
