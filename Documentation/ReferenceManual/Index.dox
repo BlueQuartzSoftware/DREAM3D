@@ -11,5 +11,6 @@ The DREAM3D Rererence Manual contains all the information to start using DREAM3D
 
 @subpage filterdocumentation
 
+@subpage statsgenerator
 
 */
