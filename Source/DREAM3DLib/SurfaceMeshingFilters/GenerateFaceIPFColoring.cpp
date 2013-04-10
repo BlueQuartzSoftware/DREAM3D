@@ -85,47 +85,47 @@ class CalculateFaceIPFColorsImpl
       uint8_t hkl[3] = { 0, 0, 0 };
       for (size_t i = start; i < end; i++)
       {
-		  grain1 = m_Labels[2*i];
-		  grain2 = m_Labels[2*i+1];
-		  if(grain1 > 0) phase1 = m_Phases[grain1];
-		  else phase1 = 0;
-		  if(grain2 > 0) phase2 = m_Phases[grain2];
-		  else phase2 = 0;
-		  if(phase1 > 0)
-		  {
-			if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic)
-			{
-				EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), hkl);
-			}
-			else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal)
-			{
-				EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i));
-			}
-		  }
-		  else
-		  {
-			m_Colors[6*i+0] = 0;
-			m_Colors[6*i+1] = 0;
-			m_Colors[6*i+2] = 0;
-		  }
-		  if(phase2 > 0)
-		  {
-			if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic)
-			{
-				EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), hkl);
-			}
-			else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal)
-			{
-				EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3));
-			}
-		  }
-		  else
-		  {
-			m_Colors[6*i+3] = 0;
-			m_Colors[6*i+4] = 0;
-			m_Colors[6*i+5] = 0;
-		  }
-	  }
+      grain1 = m_Labels[2*i];
+      grain2 = m_Labels[2*i+1];
+      if(grain1 > 0) phase1 = m_Phases[grain1];
+      else phase1 = 0;
+      if(grain2 > 0) phase2 = m_Phases[grain2];
+      else phase2 = 0;
+      if(phase1 > 0)
+      {
+      if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic)
+      {
+        EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), hkl);
+      }
+      else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal)
+      {
+        EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i));
+      }
+      }
+      else
+      {
+      m_Colors[6*i+0] = 0;
+      m_Colors[6*i+1] = 0;
+      m_Colors[6*i+2] = 0;
+      }
+      if(phase2 > 0)
+      {
+      if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic)
+      {
+        EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), hkl);
+      }
+      else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal)
+      {
+        EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3));
+      }
+      }
+      else
+      {
+      m_Colors[6*i+3] = 0;
+      m_Colors[6*i+4] = 0;
+      m_Colors[6*i+5] = 0;
+      }
+    }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -291,9 +291,8 @@ void GenerateFaceIPFColoring::execute()
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
   dataCheckVoxel(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
 

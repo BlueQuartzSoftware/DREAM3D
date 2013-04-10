@@ -342,10 +342,9 @@ void RotateSampleRefFrame::execute()
   newIndiciesPtr->initializeWithValues(-1);
   int64_t* newindicies = newIndiciesPtr->GetPointer(0);
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
 
