@@ -9,49 +9,86 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
+set(_filterGroupName IOFilters)
+set(${_filterGroupName}_FILTERS_HDRS "")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Filters")
 
-set(DREAM3D_FILTER_GROUP_NAME IOFilters)
-set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
-START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}"  "IO Filters")
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} AvizoRectilinearCoordinateWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} AvizoUniformCoordinateWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} DataContainerReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} DataContainerWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} DxReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} DxWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} EbsdToH5Ebsd TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} EnsembleInfoReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FieldDataCSVWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FieldInfoReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} H5VoxelFileReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} INLWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} NodesTrianglesToStl TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} NodesTrianglesToVtk TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} PhReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} PhWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ReadH5Ebsd TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToNodesTrianglesEdges TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToStl TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToVtk TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshToNonconformalVtk TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} VtkRectilinearGridWriter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} YSChoiAbaqusReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RawBinaryReader TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} VtkGrainIdReader TRUE)
-# This is a reader to read some Data from Jack Goldfeather to validate the Curvature Calculation codes
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GoldfeatherReader FALSE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SolidMeshToVtk TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SPParksWriter TRUE)
 
-# These are private, internal use only, filters
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} VoxelDataContainerWriter FALSE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} VoxelDataContainerReader FALSE)
+#---------
+# List your public filters here
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshDataContainerWriter FALSE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshDataContainerReader FALSE)
+set(_PublicFilters
+  AvizoRectilinearCoordinateWriter
+  AvizoUniformCoordinateWriter
+  DataContainerReader
+  DataContainerWriter
+  DxReader
+  DxWriter
+  EbsdToH5Ebsd
+  EnsembleInfoReader
+  FieldDataCSVWriter
+  FieldInfoReader
+  H5VoxelFileReader
+  INLWriter
+  NodesTrianglesToStl
+  NodesTrianglesToVtk
+  PhReader
+  PhWriter
+  ReadH5Ebsd
+  SurfaceMeshToNodesTrianglesEdges
+  SurfaceMeshToStl
+  SurfaceMeshToVtk
+  SurfaceMeshToNonconformalVtk
+  VtkRectilinearGridWriter
+  YSChoiAbaqusReader
+  RawBinaryReader
+  VtkGrainIdReader
+  # This is a reader to read some Data from Jack Goldfeather to validate the Curvature Calculation codes
+  SolidMeshToVtk
+  SPParksWriter
+)
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SolidMeshDataContainerWriter FALSE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SolidMeshDataContainerReader FALSE)
 
-END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}"  "IO Filters")
+#--------------
+# Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
+# interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
+foreach(f ${_PublicFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md TRUE)
+endforeach()
+
+
+#---------------
+# This is the list of Private Filters. These filters are available from other filters but the user will not
+# be able to use them from the DREAM3D user interface.
+set(_PrivateFilters
+  GoldfeatherReader
+
+  VoxelDataContainerWriter
+  VoxelDataContainerReader
+
+  SurfaceMeshDataContainerWriter
+  SurfaceMeshDataContainerReader
+
+  SolidMeshDataContainerWriter
+  SolidMeshDataContainerReader
+)
+
+#-----------------
+# Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
+foreach(f ${_PrivateFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
+endforeach()
+
+
+
+
+
+
+
+
+END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Filters")

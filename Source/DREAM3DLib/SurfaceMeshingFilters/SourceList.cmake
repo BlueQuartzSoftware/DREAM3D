@@ -2,58 +2,91 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-set(DREAM3D_FILTER_GROUP_NAME SurfaceMeshingFilters)
-set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+set(_filterGroupName SurfaceMeshingFilters)
+set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Surface Meshing Filters")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Surface Meshing Filters")
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateSurfaceMeshConnectivity TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateFaceIPFColoring TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateUniqueEdges FALSE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} LaplacianSmoothing TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} M3CSliceBySlice TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MovingFiniteElementSmoothing TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} QuickSurfaceMesh TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ReverseTriangleWinding TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SharedGrainFaceFilter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} TriangleCentroidFilter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} TriangleNormalFilter TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} VerifyTriangleWinding TRUE)
+#---------
+# List your public filters here
 
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshFilter.h)
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} SurfaceMeshFilter.cpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} MeshFaceNeighbors.hpp)
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} MeshVertLinks.hpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} BinaryNodesTrianglesReader.h)
-ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} BinaryNodesTrianglesReader.cpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} MeshFunctions.h)
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} MeshLinearAlgebra.h)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} FindNRingNeighbors.h)
-ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} FindNRingNeighbors.cpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/Vector3.h)
-ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/Vector3.cpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/Plane.h)
-ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/Plane.cpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/TriangleOps.h)
-ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/TriangleOps.cpp)
-
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/Exception.h)
-ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} util/InvalidParameterException.h)
+set(_PublicFilters
+  GenerateSurfaceMeshConnectivity
+  GenerateFaceIPFColoring
+  LaplacianSmoothing
+  M3CSliceBySlice
+  MovingFiniteElementSmoothing
+  QuickSurfaceMesh
+  ReverseTriangleWinding
+  SharedGrainFaceFilter
+  TriangleCentroidFilter
+  TriangleNormalFilter
+  VerifyTriangleWinding
+)
 
 if(EIGEN_FOUND)
-  ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GrainFaceCurvatureFilter TRUE)
+  set(_PublicFilters ${_PublicFilters} GrainFaceCurvatureFilter)
 
-  ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} CalculateTriangleGroupCurvatures.h)
-  ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${DREAM3D_FILTER_GROUP_NAME} CalculateTriangleGroupCurvatures.cpp)
+  ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} CalculateTriangleGroupCurvatures.h)
+  ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} CalculateTriangleGroupCurvatures.cpp)
 endif()
 
-END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Surface Meshing Filters")
+#--------------
+# Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
+# interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
+foreach(f ${_PublicFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md TRUE)
+endforeach()
+
+
+#---------------
+# This is the list of Private Filters. These filters are available from other filters but the user will not
+# be able to use them from the DREAM3D user interface.
+set(_PrivateFilters
+  GenerateUniqueEdges
+)
+
+#-----------------
+# Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
+foreach(f ${_PrivateFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
+endforeach()
+
+
+#-------------
+# These are files that need to be compiled into DREAM3DLib but are NOT filters
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.h)
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} SurfaceMeshFilter.cpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} MeshFaceNeighbors.hpp)
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} MeshVertLinks.hpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} BinaryNodesTrianglesReader.cpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} MeshFunctions.h)
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} MeshLinearAlgebra.h)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} FindNRingNeighbors.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} FindNRingNeighbors.cpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/Vector3.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/Vector3.cpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/Plane.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/Plane.cpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/TriangleOps.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/TriangleOps.cpp)
+
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/Exception.h)
+ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} util/InvalidParameterException.h)
+
+
+
+END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Surface Meshing Filters")
 

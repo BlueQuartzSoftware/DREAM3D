@@ -9,30 +9,60 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(DREAM3D_FILTER_GROUP_NAME ProcessingFilters)
-set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+set(_filterGroupName ProcessingFilters)
+set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Processing Filters")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Processing Filters")
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MinNeighbors TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FlattenImage TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MinSize TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ClearData TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} PerPhaseMinSize TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FillBadData TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} OpenCloseBadData TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} OpenCloseCoordinationNumber TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} ConvertEulerAngles TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} StandardizeEulerAngles FALSE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RotateEulerRefFrame TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} IdentifySample TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SingleThresholdCells TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MultiThresholdCells TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} SingleThresholdFields TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} MultiThresholdFields TRUE)
+#---------
+# List your public filters here
+
+set(_PublicFilters
+  MinNeighbors
+  FlattenImage
+  MinSize
+  ClearData
+  PerPhaseMinSize
+  FillBadData
+  OpenCloseBadData
+  OpenCloseCoordinationNumber
+  ConvertEulerAngles
+  RotateEulerRefFrame
+  IdentifySample
+  SingleThresholdCells
+  MultiThresholdCells
+  SingleThresholdFields
+  MultiThresholdFields
+)
+
+
+#--------------
+# Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
+# interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
+foreach(f ${_PublicFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md TRUE)
+endforeach()
+
+
+#---------------
+# This is the list of Private Filters. These filters are available from other filters but the user will not
+# be able to use them from the DREAM3D user interface.
+set(_PrivateFilters
+  StandardizeEulerAngles
+)
+
+#-----------------
+# Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
+foreach(f ${_PrivateFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
+endforeach()
 
 
 
-END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Processing Filters")
+END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Processing Filters")
 
 

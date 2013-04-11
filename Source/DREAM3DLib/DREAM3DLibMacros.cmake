@@ -51,7 +51,7 @@ endmacro()
 
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_FILTER
-macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter)
+macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPath publicFilter)
     set(Project_SRCS ${Project_SRCS}
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.h
                     ${${FilterLib}_SOURCE_DIR}/${filterGroup}/${filterName}.cpp)
@@ -96,18 +96,11 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName publicFilter
 
 
        #-- Check to make sure we have a Documentation file for the filter
-        if(NOT EXISTS ${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/Filters/${filterGroup}/${filterName}.md )
-          message(STATUS "*** Missing Documenation File for ${filterGroup}/${filterName}")
+        if(NOT EXISTS ${filterDocPath} )
+          message(FATAL_ERROR "*** Missing Documenation File for ${filterDocPath}")
         endif()
 
-        file(APPEND ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup} "${filterName}\n")
-
-
-
-    #--- The next block was to quickly generate some files DO NOT UNCOMMENT IT. You will overwrite files. YOU HAVE BEEN WARNED!
-    #    string(TOLOWER ${filterName} filterName_Lower)
-    #    file(APPEND ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help/Filters/${filterGroup}/${filterGroup}.dox "\n@subpage ${filterName_Lower}\n")
-    #   file(APPEND ${LATEX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterName}.dox\n")
+        file(APPEND ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup} "${filterDocPath}\n")
 
     endif()
 endmacro()

@@ -9,26 +9,57 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(DREAM3D_FILTER_GROUP_NAME GenericFilters)
-set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+set(_filterGroupName GenericFilters)
+set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Generic Filters")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic Filters")
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainPhases TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSurfaceCells TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindCellQuats TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainCentroids TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSurfaceGrains TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindBoundingBoxGrains TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} CopyFieldArrayToCellArray TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} LinkFieldMapToCellArray TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateIPFColors TRUE)
+#---------
+# List your public filters here
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenumberGrains TRUE)
+set(_PublicFilters
+  FindGrainPhases
+  FindSurfaceCells
+  FindCellQuats
+  FindGrainCentroids
+  FindSurfaceGrains
+  FindBoundingBoxGrains
+  CopyFieldArrayToCellArray
+  LinkFieldMapToCellArray
+  GenerateIPFColors
+  RenumberGrains
+  RemoveArrays
+  RenameCellArray
+  RenameFieldArray
+)
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RemoveArrays TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenameCellArray TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} RenameFieldArray TRUE)
+
+#--------------
+# Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
+# interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
+foreach(f ${_PublicFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md TRUE)
+endforeach()
 
 
-END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Generic Filters")
+#---------------
+# This is the list of Private Filters. These filters are available from other filters but the user will not
+# be able to use them from the DREAM3D user interface.
+set(_PrivateFilters
+
+)
+
+#-----------------
+# Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
+foreach(f ${_PrivateFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
+endforeach()
+
+
+#-----------------
+# This makes sure some Filter Group meta data is written to build files that is needed later
+END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic Filters")
