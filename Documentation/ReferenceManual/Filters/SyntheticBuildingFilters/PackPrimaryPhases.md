@@ -35,14 +35,6 @@ Voxel
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | Field | Active |  |
-| Field | AxisEulerAngles |  |
-| Field | AxisLengths |  |
-| Field | Centroids |  |
-| Field | EquivalentDiameters |  |
-| Field | FieldPhases |  |
-| Field | Neighborhoods |  |
-| Field | Omega3s |  |
-| Field | Volumes |  |
 
 ## Authors ##
 
