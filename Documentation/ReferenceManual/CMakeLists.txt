@@ -38,7 +38,12 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/StatsGenerator/index.md
 )
 
-
+set(DOXYGEN_IMAGE_DIRS
+  ${PROJECT_SOURCE_DIR}/UserManual/Images
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
+  ${PROJECT_SOURCE_DIR}/Tutorials/Images
+  ${PROJECT_SOURCE_DIR}/StatsGenerator/Images
+)
 
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
@@ -57,17 +62,21 @@ file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "\n*/\n
 # Now Append the list of filters for each Group into the same file
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   string(TOLOWER ${group} filterGroup_Lower)
-  file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group} filter_list)
+  file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group} filter_path_list)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
-  foreach(filter ${filter_list})
+  foreach(filterPath ${filter_path_list})
+    get_filename_component(filter  ${filterPath} NAME_WE)
+    get_filename_component(group_path ${filterPath} PATH)
+    list(APPEND DOXYGEN_IMAGE_DIRS ${group_path})
     string(TOLOWER ${filter} filter_Lower)
     file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filter_Lower}\n\n")
-    list(APPEND DOCUMENTATION_SOURCE_FILES ${DREAM3DReferenceManual_SOURCE_DIR}/Filters/${group}/${filter}.md)
+    list(APPEND DOCUMENTATION_SOURCE_FILES ${filterPath})
   endforeach()
+  list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
-  file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
+#  file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
 endforeach()
-file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
+#file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
 set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
 
@@ -84,20 +93,7 @@ set(LATEX_EPS_FILES
 
 )
 
-set(DOXYGEN_IMAGE_DIRS
-  ${PROJECT_SOURCE_DIR}/UserManual/Images
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
-  ${PROJECT_SOURCE_DIR}/Tutorials/Images
-  ${PROJECT_SOURCE_DIR}/StatsGenerator/Images
-  ${PROJECT_SOURCE_DIR}/Filters/GenericFilters
-  ${PROJECT_SOURCE_DIR}/Filters/IOFilters
-  ${PROJECT_SOURCE_DIR}/Filters/ProcessingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/ReconstructionFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SamplingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/StatisticsFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SurfaceMeshingFilters
-  ${PROJECT_SOURCE_DIR}/Filters/SyntheticBuildingFilters 
-)
+
 
 if(DOX_GENERATE_LATEX)
   ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_Reference_Manual"

@@ -46,7 +46,7 @@ set(CMP_ENABLE_PLUGINS "0")
 set(CMP_LIB_SEARCH_DIRS "")
 set(CMP_GENERATE_VERSION_STRING 1)
 
-
+set(DREAM3DLib_FILTER_DOC_DIR ${DREAM3D_DOCUMENTATION_DIR}/ReferenceManual/Filters)
 
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 configure_file(${DREAM3DLib_SOURCE_DIR}/DREAM3DConfiguration.h.in

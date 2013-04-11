@@ -9,28 +9,61 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-set(DREAM3D_FILTER_GROUP_NAME StatisticsFilters)
-set(${DREAM3D_FILTER_GROUP_NAME}_FILTERS_HDRS "")
+set(_filterGroupName StatisticsFilters)
+set(${_filterGroupName}_FILTERS_HDRS "")
 
-START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Statistics Filters")
+START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Statistics Filters")
 
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindAvgOrientations TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindAvgCAxes TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindBoundaryStrengths TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindDeformationStatistics TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindEuclideanDistMap TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainReferenceMisorientations TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindGrainReferenceCAxisMisorientations TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindKernelAvgMisorientations TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} GenerateEnsembleStatistics  TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindMisorientations  TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindNeighborhoods TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindNumFields TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSchmids TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindShapes TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSizes TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindNeighbors TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSlicetoSliceRotations TRUE)
-ADD_DREAM3D_FILTER( "DREAM3DLib" "FilterWidgetsLib" ${DREAM3D_FILTER_GROUP_NAME} FindSlipTransmissionMetrics TRUE)
+#---------
+# List your public filters here
 
-END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${DREAM3D_FILTER_GROUP_NAME}" "Statistics Filters")
+set(_PublicFilters
+  FindAvgOrientations
+  FindAvgCAxes
+  FindBoundaryStrengths
+  FindDeformationStatistics
+  FindEuclideanDistMap
+  FindGrainReferenceMisorientations
+  FindGrainReferenceCAxisMisorientations
+  FindKernelAvgMisorientations
+  GenerateEnsembleStatistics
+  FindMisorientations
+  FindNeighborhoods
+  FindNumFields
+  FindSchmids
+  FindShapes
+  FindSizes
+  FindNeighbors
+  FindSlicetoSliceRotations
+  FindSlipTransmissionMetrics
+)
+
+
+#--------------
+# Loop on all the filters adding each one. In this loop we default to making each filter exposed in the user
+# interface in DREAM3D. If you want to have the filter compiled but NOT exposed to the user then use the next loop
+foreach(f ${_PublicFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md TRUE)
+endforeach()
+
+
+#---------------
+# This is the list of Private Filters. These filters are available from other filters but the user will not
+# be able to use them from the DREAM3D user interface.
+set(_PrivateFilters
+
+)
+
+#-----------------
+# Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.
+foreach(f ${_PrivateFilters} )
+  ADD_DREAM3D_FILTER(  "DREAM3DLib" "FilterWidgetsLib"
+                        ${_filterGroupName} ${f}
+                        ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
+endforeach()
+
+
+
+END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Statistics Filters")
