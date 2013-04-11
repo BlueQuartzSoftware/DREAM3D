@@ -315,7 +315,7 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridFooter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::stringstream SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, std::string attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, std::string xdmfTypeName)
+std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, std::string attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, std::string xdmfTypeName)
 {
   std::stringstream out;
   std::stringstream dimStr;
@@ -397,7 +397,7 @@ std::stringstream SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(i
 	  out << "      </DataItem>" << std::endl;
 	  out << "    </Attribute>" << std::endl << std::endl;
   }
-  return out;
+  return out.str();
 }
 
 // -----------------------------------------------------------------------------
@@ -431,9 +431,9 @@ void SurfaceMeshDataContainerWriter::writeXdmfAttributeData(const std::string &g
   std::string attrType = "Scalar";
   if(numComp > 2) attrType = "Vector";
 
-  std::stringstream block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  std::string block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
 
-  out << block.str() << std::endl;
+  out << block << std::endl;
 }
 
 
