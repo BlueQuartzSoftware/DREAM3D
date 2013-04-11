@@ -303,14 +303,14 @@ void FindBoundaryStrengths::execute()
         F1spt_2 = 0;
         F7_2 = 0;
     }
-    m_SurfaceMeshmPrimes[3*i] = mPrime_1;
-    m_SurfaceMeshmPrimes[3*i+1] = mPrime_2;
-    m_SurfaceMeshF1s[3*i] = F1_1;
-    m_SurfaceMeshF1s[3*i+1] = F1_2;
-    m_SurfaceMeshF1spts[3*i] = F1spt_1;
-    m_SurfaceMeshF1spts[3*i+1] = F1spt_2;
-    m_SurfaceMeshF7s[3*i] = F7_1;
-    m_SurfaceMeshF7s[3*i+1] = F7_2;
+    m_SurfaceMeshmPrimes[2*i] = mPrime_1;
+    m_SurfaceMeshmPrimes[2*i+1] = mPrime_2;
+    m_SurfaceMeshF1s[2*i] = F1_1;
+    m_SurfaceMeshF1s[2*i+1] = F1_2;
+    m_SurfaceMeshF1spts[2*i] = F1spt_1;
+    m_SurfaceMeshF1spts[2*i+1] = F1spt_2;
+    m_SurfaceMeshF7s[2*i] = F7_1;
+    m_SurfaceMeshF7s[2*i+1] = F7_2;
   }
 
 
