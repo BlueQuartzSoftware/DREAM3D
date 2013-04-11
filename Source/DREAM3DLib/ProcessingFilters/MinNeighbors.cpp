@@ -327,7 +327,21 @@ void MinNeighbors::merge_containedgrains()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VoxelDataContainer* m = getVoxelDataContainer();
 
+  bool good = false;
+
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
+  size_t totalFields = static_cast<size_t>(m->getNumFieldTuples());
+  for (size_t i = 0; i < totalFields; i++)
+  {
+	  m_Active[i] = true;
+	  if(m_NumNeighbors[i] >= m_MinNumNeighbors) good = true;
+  }
+  if(good == false)
+  {
+    setErrorCondition(-1);
+    notifyErrorMessage("The minimum number of neighbors is larger than the Field with the most neighbors.  All Fields would be removed.  The filter has quit.", -1);
+    return;
+  }
   for (size_t i = 0; i < totalPoints; i++)
   {
 	std::stringstream ss;

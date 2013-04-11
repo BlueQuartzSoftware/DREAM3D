@@ -5,8 +5,7 @@ Find Field Shapes {#findshapes}
 Statistics Filters (Morphological)
 
 ## Description ##
- The user has the option of entering a distribution choice: Beta, LogNormal or Power.
-  The 3-D moment invariants of second order are three numbers, represented by the symbols 0≤Ωi≤  1 (i = 1, 2, 3), which are computed starting
+  The 3-D moment invariants of second order are three numbers, represented by the symbols 0≤Ωi≤1 (i = 1, 2, 3), which are computed starting
 from the shape of an object. The moment invariants are invariant with respect to either similarity
 or affine coordinate transformations, which renders them particularly useful as quantitative shape
 descriptors that are independent of the reference frame used to represent the object(s).
@@ -14,6 +13,7 @@ Omega1 and Omega2 are related to aspect ratios, while Omega3 is useful for shape
 
 ------------
 Sources: 
+
 1. Representation and Reconstruction of Three-dimensional
 Microstructures in Ni-based Superalloys, AFOSR FA9550-07-1-0179 Final Report, 20 Dec 2010.
 2. On the use of moment invariants for the automated classifcation of 3-D particle shapes, J.
@@ -28,10 +28,7 @@ _
 
 
 ## Parameters ##
-
-| Name | Type |
-|------|------|
-| Distribution Type | Choices |
+None
 
 ## Required DataContainers ##
 Voxel

@@ -5,9 +5,7 @@ Minimum Size Filter (All Phases) {#minsize}
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter removes **Fields** that have a total number of **Cells** below the minimum threshold defined by the user. If the user chooses a
-value larger than the largest **Field**, then all **Fields** will be eliminated and the filter will become stuck in an inifinite loop trying to 
-fill the eliminated **Fields**. 
+This filter removes **Fields** that have a total number of **Cells** below the minimum threshold defined by the user. Entering a number larger than the largest **Field** generates an _error_ (since all **Fields** would be removed). 
 *The number of **Cells** in the largest **Field** is determined during the running of this filter. Hence, a choice of threshold should be carefully be choosen
 if it is not known how many **Cells** are in the largest **Fields**.
 After removing all the small **Fields**, the remaining **Fields** are isotropically coarsened to fill the gaps left by the small **Fields**.
