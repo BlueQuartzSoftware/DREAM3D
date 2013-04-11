@@ -17,6 +17,8 @@ Voxel
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | Field | FieldPhases |  |
+| Field | AvgQuats |  |
+| Ensemble | FieldPhases |  |
 
 ## Created Arrays ##
 None
