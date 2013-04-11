@@ -80,13 +80,11 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 
     virtual ~FindSlipTransmissionMetrics();
 
-    //------ Required Cell Data
+    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
@@ -95,7 +93,7 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Slip Transmission Metrics"; }
+    virtual const std::string getHumanLabel() { return "Find Neighbor Slip Transmission Metrics"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
@@ -116,7 +114,6 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    int32_t* m_GrainIds;
     int32_t* m_FieldPhases;
     float* m_AvgQuats;
     NeighborList<float>* m_F1;
