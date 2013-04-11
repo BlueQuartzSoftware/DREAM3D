@@ -5,8 +5,14 @@ Establish Matrix Phase {#establishmatrixphase}
 Synthetic Builder Filters (Packing)
 
 ## Description ##
-To run this Filter properly, the _Initialize Synthetic Volume_ Filter must have been run already.
-Based on the phase fraction in the statistics file used in the _Initialize Synthetic Volume_ Filter, this Filter assigns _**Cells**_ to a matrix phase. 
+This Filter inserts matrix phase(s) into a synthetic volume. The algorithm/steps for inserting matrix phase(s) is as follows:
+
+1. Identify all the Matrix phases from the **Ensemble** *PhaseTypes* array
+2. Determine the relative volume fractions of the Matrix phases (i.e. if there are two Matrix phases and they have volume fractions of *0.2* and *0.3*, respectively, then they would *0.4* and *0.6* when scaled to total *1*) 
+3. Identify all **Cells** that are not currently assigned to a **Field** (i.e. belong to **Field** *0*).
+4. For each "unassigned" **Cell**, generate a random number to decide which Matrix phase the **Cell** will be assigned to.  
+
+Note: The filter does not actually try to match the volume fractions of the Matrix phases, but rather just uses the relative volume fractions to decide what fraction of the "unassigned"  **Cells** get assigned to each Matrix phase.  If the fraction of "unassigned"  **Cells** is smaller or larger than the total volume fractions of the Matrix phases, then the absolute volume fractions of the Matrix phases will not match the goal (at least at the end of this filter).
 
 ## Parameters ##
 

@@ -111,7 +111,6 @@ namespace DREAM3D
     const std::string TJEuclideanDistances("TJEuclideanDistances");
     const std::string QPEuclideanDistances("QPEuclideanDistances");
     const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
-    const std::string GrainReferenceRotations("GrainReferenceRotations");
     const std::string GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQualityNoSpace("ImageQuality");
