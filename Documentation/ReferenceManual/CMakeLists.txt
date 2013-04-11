@@ -74,9 +74,9 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   endforeach()
   list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
   file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
-#  file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
+  file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
 endforeach()
-#file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
+file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
 set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
 
