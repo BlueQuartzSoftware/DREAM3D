@@ -46,6 +46,8 @@
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
+#include <QtGui/QDesktopServices>
+
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -944,8 +946,54 @@ QString StatsGeneratorUI::getFilePath()
 // -----------------------------------------------------------------------------
 QUrl StatsGeneratorUI::htmlHelpIndexFile()
 {
-  QString s = "StatsGenerator/index.html";
+  QString appPath = qApp->applicationDirPath();
+
+  QDir helpDir = QDir(appPath);
+  QString s("file://");
+
+#if defined(Q_OS_WIN)
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+#elif defined(Q_OS_MAC)
+  if (helpDir.dirName() == "MacOS")
+  {
+    helpDir.cdUp();
+    helpDir.cdUp();
+    helpDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  helpDir.cdUp();
+#endif
+
+
+
+ #if defined(Q_OS_WIN)
+  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/index.html");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    helpDir.cdUp();
+  }
+ #endif
+
+  s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
   return QUrl(s);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorUI::displayDialogBox(QString title, QString text, QMessageBox::Icon icon)
+{
+
+  QMessageBox msgBox;
+  msgBox.setText(title);
+  msgBox.setInformativeText(text);
+  msgBox.setStandardButtons(QMessageBox::Ok);
+  msgBox.setDefaultButton(QMessageBox::Ok);
+  msgBox.setIcon(icon);
+  msgBox.exec();
 }
 
 
@@ -955,5 +1003,14 @@ QUrl StatsGeneratorUI::htmlHelpIndexFile()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
 {
-  m_HelpDialog->setContentFile(htmlHelpIndexFile());
+   // m_HelpDialog->setContentFile(htmlHelpIndexFile());
+   QUrl url = htmlHelpIndexFile();
+   bool didOpen = QDesktopServices::openUrl(url);
+   if(false == didOpen)
+   {
+   //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
+       displayDialogBox(QString::fromStdString("Error Opening Help File"),
+         QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
+         QMessageBox::Critical);
+   }
 }

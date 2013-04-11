@@ -12,20 +12,16 @@ This filter computes the centroid of each triangle in the surface mesh by calcul
 None
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+None
 
 ## Created Arrays ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Triangle Attribute Array | SurfaceMeshTriangleCentroids | 3x1 double Vector for each Triangle in the Mesh |
+| Face | SurfaceMeshFaceCentroids | 3x1 double Vector for each face in the Mesh |
 
 
 ## Authors ##

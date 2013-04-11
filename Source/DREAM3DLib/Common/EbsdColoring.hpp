@@ -154,10 +154,10 @@ class EbsdColoring
 
     /**
      * @brief Wrapper for convenience - Generates an RGB color based on the Inverse
-     * Pole Figure coloring for a Cubic Crystal Structure
+     * Pole Figure coloring for a Cubic Crystal Structure.  <b>The Reference Direction MUST be a Normalized vector for this algorithm to work correctly</b>
      * @param eulers The euler angles which MUST be encode into the array in the following order:
      * phi1, Phi, phi2
-     * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
+     * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010). <b></b>
      * @param rgb A pointer to store the RGB value into
      * @param hkl Stores the hkl values
      */
@@ -170,13 +170,13 @@ class EbsdColoring
 
     /**
      * @brief Generates an RGB color based on the Inverse Pole Figure coloring
-     * for a Cubic Crystal Structure
+     * for a Cubic Crystal Structure. <b>The Reference Direction MUST be a Normalized vector for this algorithm to work correctly</b>
      * @param phi1 The phi1 euler Angle
      * @param phi The Phi euler Angle
      * @param phi2 The phi2 euler Angle
-     * @param refDir0 The first component of the Reference direction vector
-     * @param refDir1 The Second component of the Reference direction vector
-     * @param refDir2 The third component of the Reference direction vector
+     * @param refDirZ The first component of the Reference direction vector
+     * @param refDirY The Second component of the Reference direction vector
+     * @param refDirZ The third component of the Reference direction vector
      * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
      * @param hkl Output
      * @param degToRad Convert the euler angles to radians
@@ -295,7 +295,7 @@ class EbsdColoring
 
     /**
      * @brief Wrapper for convenience - Generates an RGB color based on the Inverse
-     * Pole Figure coloring for a Hex Crystal Structure
+     * Pole Figure coloring for a Hex Crystal Structure.  <b>The Reference Direction MUST be a Normalized vector for this algorithm to work correctly</b>
      * @param eulers The euler angles which MUST be encode into the array in the following order:
      * phi1, Phi, phi2
      * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
@@ -310,7 +310,7 @@ class EbsdColoring
 
     /**
      * @brief Generates an RGB color based on the Inverse Pole Figure coloring
-     * for a Hex Crystal Structure
+     * for a Hex Crystal Structure.  <b>The Reference Direction MUST be a Normalized vector for this algorithm to work correctly</b>
      * @param phi1 The phi1 euler Angle
      * @param phi The Phi euler Angle
      * @param phi2 The phi2 euler Angle

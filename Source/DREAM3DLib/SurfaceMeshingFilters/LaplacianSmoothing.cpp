@@ -610,9 +610,8 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   notifyStatusMessage("Starting to Smooth Vertices");
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
   // Get a Pointer to the Lambdas

@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef AIM_CONSTANTS_H_
-#define AIM_CONSTANTS_H_
+#ifndef _DREAM3D_CONSTANTS_H_
+#define _DREAM3D_CONSTANTS_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -43,42 +43,6 @@
 
 
 #include <string>
-#include <vector>
-#include <boost/shared_ptr.hpp>
-
-#include "DREAM3DLib/DREAM3DLib.h"
-
-//typedef boost::shared_ptr<std::vector<int> >    IntVectorType;
-//typedef boost::shared_ptr<std::vector<float> > FloatVectorType;
-//typedef boost::shared_ptr<std::vector<double> > DoubleVectorType;
-//typedef boost::shared_ptr<std::vector<size_t> > SizeTVectorType;
-
-#define COPY_ARRAY_3(var, obj)\
-  var[0] = obj->var[0];var[1] = obj->var[1];var[2] = obj->var[2];
-
-#define COPY_ARRAY_4(var, obj)\
-  var[0] = obj->var[0];var[1] = obj->var[1];\
-  var[2] = obj->var[2]; var[3] = obj->var[3];
-
-#define COPY_ARRAY_5(var, obj)\
-  var[0] = obj->var[0];var[1] = obj->var[1];\
-  var[2] = obj->var[2]; var[3] = obj->var[3];\
-  var[4] = obj->var[4];
-
-
-/**
- * This will perform a deep copy of the content of the shared vector from
- * target to destination. This is NOT just a simple pointer copy.
- */
-#define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, m_msgType)\
-  if (NULL != sharedPtr.get())\
-{\
-  sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
-  }\
-  if (NULL != obj->sharedPtr.get())\
-{\
-  sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
-  }
 
 
 // -----------------------------------------------------------------------------
@@ -506,17 +470,17 @@ namespace DREAM3D
   {
     namespace NodeType
     {
-      const int8_t Unused = 0;
-      const int8_t Default = 2;
-      const int8_t TriplePoint = 3;
-      const int8_t QuadPoint = 4;
-      const int8_t SurfaceDefault = 12;
-      const int8_t SurfaceTriplePoint = 13;
-      const int8_t SurfaceQuadPoint = 14;
+      const signed char Unused = 0;
+      const signed char Default = 2;
+      const signed char TriplePoint = 3;
+      const signed char QuadPoint = 4;
+      const signed char SurfaceDefault = 12;
+      const signed char SurfaceTriplePoint = 13;
+      const signed char SurfaceQuadPoint = 14;
     }
     namespace NodeId
     {
-      const int8_t Unused = -1;
+      const signed char Unused = -1;
     }
   }
 
@@ -590,4 +554,4 @@ const double Textures[15][3] =
 #endif
 
 
-#endif /* AIM_CONSTANTS_H_ */
+#endif /* _DREAM3D_CONSTANTS_H_ */

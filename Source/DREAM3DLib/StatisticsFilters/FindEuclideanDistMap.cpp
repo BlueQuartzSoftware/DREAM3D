@@ -387,10 +387,9 @@ void FindEuclideanDistMap::find_euclideandistmap()
     else m_NearestNeighbors[a*3+0] = 0, m_NearestNeighbors[a*3+1] = 0, m_NearestNeighbors[a*3+2] = 0;
   }
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
 
