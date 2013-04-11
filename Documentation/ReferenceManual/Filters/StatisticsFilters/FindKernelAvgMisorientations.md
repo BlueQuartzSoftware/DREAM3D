@@ -5,7 +5,11 @@ Find Kernel Average Misorientations {#findkernelavgmisorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter utilizes the __Cell CellPhases, GrainIds__, and __Quats__ to generate __GrainMisorientations, KernelAvgMisorientations__, and __MisorientationGradients__. For the __Field__, it uses the __Field AvgQuats__ data to generate __Field GrainAvgMisorientations__. The user must enter a _Kernel Size_ as an integer.
+This Filter determines the Kernel Average Misorientation (KAM) for each **Cell**.  The user can select the size of the kernel to be used in teh calculation.  The kernel size entered by the user is the *radius* of the kernel (i.e. entering values of *1* and *2* will result in a *3x3* and a *5x5* kernel, respectively).  The algorithm for determination of KAM is as follows:
+
+1. Calculate the misorientation angle between each **Cell** in a kernel and the central **Cell** of the kernel.
+2. Average all of the misorientations for the kernel and store at the central **Cell**.
+
 
 
 ## Parameters ##

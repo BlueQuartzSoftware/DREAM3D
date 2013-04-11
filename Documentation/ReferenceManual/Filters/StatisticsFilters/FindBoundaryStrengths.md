@@ -7,13 +7,13 @@ Statistics Filters (Crystallographic)
 ## Description ##
 
 ## Parameters ##
-
 | Name | Type |
 |------|------|
 | VTK Output File | Output File |
 
 ## Required DataContainers ##
 Voxel
+SurfaceMesh
 
 ## Required Arrays ##
 

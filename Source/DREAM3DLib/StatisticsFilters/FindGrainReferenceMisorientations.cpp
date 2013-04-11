@@ -58,7 +58,6 @@ FindGrainReferenceMisorientations::FindGrainReferenceMisorientations() :
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
-  m_GrainReferenceRotationsArrayName(DREAM3D::CellData::GrainReferenceRotations),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -67,7 +66,6 @@ FindGrainReferenceMisorientations::FindGrainReferenceMisorientations() :
   m_CellPhases(NULL),
   m_GBEuclideanDistances(NULL),
   m_GrainReferenceMisorientations(NULL),
-  m_GrainReferenceRotations(NULL),
   m_AvgQuats(NULL),
   m_GrainAvgMisorientations(NULL),
   m_Quats(NULL),
@@ -144,7 +142,6 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceRotations, ss, float, FloatArrayType, 0, voxels, 3)
 
       if(m_ReferenceOrientation == 0)
   {
@@ -308,9 +305,6 @@ void FindGrainReferenceMisorientations::execute()
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w *(180.0f/m_pi);
           m_GrainReferenceMisorientations[point] = w;
-          m_GrainReferenceRotations[3*point] = r1;
-          m_GrainReferenceRotations[3*point+1] = r2;
-          m_GrainReferenceRotations[3*point+2] = r3;
           avgmiso[m_GrainIds[point]][0]++;
           avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;
         }

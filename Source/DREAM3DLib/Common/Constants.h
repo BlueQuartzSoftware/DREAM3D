@@ -111,7 +111,6 @@ namespace DREAM3D
     const std::string TJEuclideanDistances("TJEuclideanDistances");
     const std::string QPEuclideanDistances("QPEuclideanDistances");
     const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
-    const std::string GrainReferenceRotations("GrainReferenceRotations");
     const std::string GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
     const std::string KernelAverageMisorientations("KernelAverageMisorientations");
     const std::string ImageQualityNoSpace("ImageQuality");
@@ -196,6 +195,10 @@ namespace DREAM3D
     const std::string SurfaceMeshFaces("SurfaceMeshFaces");
     const std::string SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
     const std::string SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
+    const std::string SurfaceMeshF1s("SurfaceMeshF1s");
+    const std::string SurfaceMeshF1spts("SurfaceMeshF1spts");
+    const std::string SurfaceMeshF7s("SurfaceMeshF7s");
+    const std::string SurfaceMeshmPrimes("SurfaceMeshmPrimes");
     const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
     const std::string SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
     const std::string SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");

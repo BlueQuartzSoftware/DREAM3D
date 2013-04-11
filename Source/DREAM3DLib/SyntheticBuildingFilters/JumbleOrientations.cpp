@@ -59,7 +59,6 @@ m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
 m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-m_Iterations(1),
 m_GrainIds(NULL),
 m_CellEulerAngles(NULL),
 m_FieldPhases(NULL),
@@ -80,24 +79,14 @@ JumbleOrientations::~JumbleOrientations()
 // -----------------------------------------------------------------------------
 void JumbleOrientations::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Number of Iterations (Swaps)");
-    option->setPropertyName("Iterations");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    option->setUnits("");
-    parameters.push_back(option);
-  }
-  setFilterParameters(parameters);
+
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("Iterations", getIterations() );
+
 }
 // -----------------------------------------------------------------------------
 //
@@ -160,10 +149,6 @@ void JumbleOrientations::execute()
     return;
   }
 
-
-  m_Iterations = 1;
-  for(int i=0;i<m_Iterations;i++)
-  {
     // Generate all the numbers up front
     const int rangeMin = 1;
     const int rangeMax = totalFields - 1;
@@ -181,11 +166,16 @@ void JumbleOrientations::execute()
     int r;
     float temp1, temp2, temp3;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (int i=1; i< totalFields; i++) {
-        r = numberGenerator(); // Random remaining position.
-        if (r >= totalFields) {
-          continue;
-        }
+    for (int i=1; i< totalFields; i++) 
+	{
+		bool good = false;
+        while(good == false)
+		{
+			good = true;
+			r = numberGenerator(); // Random remaining position.
+	        if (r >= totalFields) good = false;
+			if (m_FieldPhases[i] != m_FieldPhases[r]) good = false;
+		}
         temp1 = m_FieldEulerAngles[3*i];
         temp2 = m_FieldEulerAngles[3*i+1];
         temp3 = m_FieldEulerAngles[3*i+2];
@@ -197,9 +187,7 @@ void JumbleOrientations::execute()
         m_FieldEulerAngles[3*r+2] = temp3;
     }
 
-  }
-
-  // Now adjust all the Grain Id values for each Voxel
+  // Now adjust all the Euler angle values for each Voxel
   for(int64_t i = 0; i < totalPoints; ++i)
   {
      m_CellEulerAngles[3*i] = m_FieldEulerAngles[3*(m_GrainIds[i])];

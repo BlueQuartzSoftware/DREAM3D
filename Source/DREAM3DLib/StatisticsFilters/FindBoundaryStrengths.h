@@ -79,7 +79,12 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 
     virtual ~FindBoundaryStrengths();
 
-    //------ Required Cell Data
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF1sArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF1sptsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF7sArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshmPrimesArrayName)
 
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
@@ -119,7 +124,14 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     float* m_AvgQuats;
     unsigned int* m_CrystalStructures;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    int32_t* m_SurfaceMeshFaceLabels;
+    float* m_SurfaceMeshF1s;
+    float* m_SurfaceMeshF1spts;
+    float* m_SurfaceMeshF7s;
+    float* m_SurfaceMeshmPrimes;
+
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindBoundaryStrengths(const FindBoundaryStrengths&); // Copy Constructor Not Implemented
     void operator=(const FindBoundaryStrengths&); // Operator '=' Not Implemented
