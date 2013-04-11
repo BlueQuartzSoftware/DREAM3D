@@ -5,15 +5,22 @@ Find Field Shapes {#findshapes}
 Statistics Filters (Morphological)
 
 ## Description ##
- The user has the option of entering a distribution choice: Beta, LogNormal or Power.
-  The 3-D moment invariants of second order are three numbers, represented by the symbols 0≤Ωi≤  1 (i = 1, 2, 3), which are computed starting
-from the shape of an object. The moment invariants are invariant with respect to either similarity
-or affine coordinate transformations, which renders them particularly useful as quantitative shape
-descriptors that are independent of the reference frame used to represent the object(s).
-Omega1 and Omega2 are related to aspect ratios, while Omega3 is useful for shape characterization. Details of the Omega3 shape descriptors are given in the Sources that include Tables of all three Omega expressions for basic geometrical shapes.
+This Filter calculates the second-order moments of each **Field** in order to determine the *principal axis lengths, pricipal axis directions, aspect ratios and moment invariant Omega3*.  The *principal axis lengths* are those of a "best-fit" ellipsoid.  The algorithm for determining the moments and these values is as follows:
+
+1. Obtain the centroid for each **Field**.
+2. For each **Cell**, determine the x, y and z distance to the centroid of the **Field** that owns the **Cell**.
+3. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 2.
+4. Sum the individual Ixx, Iyy, Izz, Ixy, Ixz and Iyz values for all **Cells** belonging to the same **Field**.
+5. Find the *eigenvalues* and *eigenvectors* of the *3x3* symmetric matrix defined by the *6* values calculated in step 4 for each **Field**.
+6. Use the relationship of *principal moments* to the *principal axis lengths* for an ellipsoid, which can be found in [4], to determine the *Axis Lengths*
+7. Calculate the *Aspect Ratios* from the *Axis Lengths* found in step 6.
+8. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Field**'s *Axis Euler Angles*.
+9. Calculate the moment variant Omega3 as definied in [2] and is discussed further in [1] and [3].
+
 
 ------------
 Sources: 
+
 1. Representation and Reconstruction of Three-dimensional
 Microstructures in Ni-based Superalloys, AFOSR FA9550-07-1-0179 Final Report, 20 Dec 2010.
 2. On the use of moment invariants for the automated classifcation of 3-D particle shapes, J.
@@ -24,14 +31,12 @@ n-Dimensional Moment Invariants and
 Conceptual Mathematical Theory of
 Recognition n-Dimensional Solids,
 Alexander G. Mamistvalov, IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE, VOL. 20, NO. 8, AUGUST 1998, p. 819-831.
+4. M. Groeber, M. Uchic, D. Dimiduk, and S. Ghosh. “A Framework for Automated Analysis and Simulation of 3D Polycrystalline Microstructures, Part 1: Statistical Characterization” Acta Materialia, 56 (2008), 1257-1273. 
 _
 
 
 ## Parameters ##
-
-| Name | Type |
-|------|------|
-| Distribution Type | Choices |
+None
 
 ## Required DataContainers ##
 Voxel

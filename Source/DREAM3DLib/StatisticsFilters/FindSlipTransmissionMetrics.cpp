@@ -52,10 +52,8 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   m_F1sptArrayName(DREAM3D::FieldData::F1spt),
   m_F7ArrayName(DREAM3D::FieldData::F7),
   m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-  m_GrainIds(NULL),
   m_FieldPhases(NULL),
   m_AvgQuats(NULL),
   m_F1(NULL),
@@ -105,8 +103,6 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
   

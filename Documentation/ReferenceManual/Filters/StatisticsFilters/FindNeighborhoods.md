@@ -5,13 +5,17 @@ Find Field Neighborhoods {#findneighborhoods}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter searches the __Cell__ and __Field__ arrays based on a user choice of distribution types to identify the __Neighborhoods__ of the __Cells__. The types available are: LogNormal, Beta, and Power.
+This Filter determines the number of **Fields** whose *centroids* lie within a distance of one *Equivalent Sphere Diameter* from a each **Field**.  The algorithm for determining the number of **Fields** is given below:
+
+1. Find the *centroid* of a **Field**.
+2. Define a sphere centered at the the **Field**'s *centroid*  and with radius equal to the **Field**'s *Equivalent Sphere Diameter*.
+3. Check every other **Field**'s centroid to see if it lies within the sphere and keep count of those that satisfy.
+4. Repeat 1-3 for all **Fields**.
+
+
 
 ## Parameters ##
-
-| Name | Type |
-|------|------|
-| Distribution Type | Choices |
+None
 
 ## Required DataContainers ##
 Voxel

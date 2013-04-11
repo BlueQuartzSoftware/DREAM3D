@@ -5,7 +5,7 @@ Find Field Reference C-Axis Misorientations {#findgrainreferencecaxismisorientat
 Statistics Filters (Crystallographic)
 
 ## Description ##
-
+This filter is essentially the same as the [Find Field Reference Misorientations](FindGrainReferenceMisorientations.html "") filter, but with the misalignment between c-axes of interest, rather than full misorientations.  The average c-axis orientation for each **Field** is compared with the c-axis orientation of each of the **Cells** within the **Field**. 
 
 ## Parameters ##
 None
@@ -27,7 +27,6 @@ Voxel
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | Cell | GrainReferenceCAxisMisorientations |  |
-| Cell | GrainReferenceCAxisRotations |  |
 | Field | GrainAvgCAxisMisorientations |  |
 
 ## Authors ##

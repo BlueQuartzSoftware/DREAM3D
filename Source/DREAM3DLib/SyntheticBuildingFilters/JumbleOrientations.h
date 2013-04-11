@@ -79,8 +79,6 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, Iterations)
-
     virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
 	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const std::string getHumanLabel() {return "Jumble Orientations";}

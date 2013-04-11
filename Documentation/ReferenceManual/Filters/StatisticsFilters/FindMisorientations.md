@@ -5,7 +5,7 @@ Find Field Neighbor Misorientations {#findmisorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter determines, for each **Field**, the misorientations with the **Fields** that are in contact with it.  
+This Filter determines, for each **Field**, the misorientations with the **Fields** that are in contact with it.  The misorientations are stored as a list (for each **Field**) of angles.  The axis of the misorientation is not stored by this filter.
 
 ## Parameters ##
 
@@ -25,7 +25,7 @@ Voxel
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | MisorientationLists | List of the misorientations with the contiguous neighboring **Fields** for a given **Field** |  |
+| Field | MisorientationLists | List of the misorientation angles with the contiguous neighboring **Fields** for a given **Field** |  |
 
 ## Authors ##
 
