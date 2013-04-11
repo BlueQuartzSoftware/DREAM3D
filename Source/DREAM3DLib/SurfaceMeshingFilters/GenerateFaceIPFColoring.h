@@ -65,8 +65,6 @@ class DREAM3DLib_EXPORT GenerateFaceIPFColoring : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceIPFColorsArrayName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceIPFColorsGrain1ArrayName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceIPFColorsGrain2ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 

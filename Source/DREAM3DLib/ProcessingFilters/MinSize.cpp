@@ -309,6 +309,8 @@ void MinSize::remove_smallgrains()
   VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  bool good = false;
+
   int gnum;
 
   int numgrains = m->getNumFieldTuples();
@@ -322,22 +324,22 @@ void MinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-    std::stringstream ss;
-    //	  ss << "Cleaning Up Grains - Removing Small Fields" << ((float)i/totalPoints)*100 << "Percent Complete";
-    //	  notifyStatusMessage(ss.str());
-    if(voxcounts[i] >= m_MinAllowedGrainSize )
-    {
-      m_Active[i] = true;
-    }
-    else
-    {
-      m_Active[i] = false;
-    }
+	m_Active[i] = true;
+    if(voxcounts[i] >= m_MinAllowedGrainSize ) good = true;
   }
-
+  if(good == false)
+  {
+    setErrorCondition(-1);
+    notifyErrorMessage("The minimum size is larger than the largest Field.  All Fields would be removed.  The filter has quit.", -1);
+    return;
+  }
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
-    if(m_Active[gnum] == false) m_GrainIds[i] = -1;
+    if(voxcounts[gnum] < m_MinAllowedGrainSize && gnum > 0)
+	{
+		m_GrainIds[i] = -1;
+		m_Active[gnum] = false;
+	}
   }
 }

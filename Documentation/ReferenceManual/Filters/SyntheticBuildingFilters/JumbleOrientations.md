@@ -5,13 +5,13 @@ Jumble Orientations {#jumbleorientations}
 Synthetic Builder Filters (Crystallography)
 
 ## Description ##
+This filter "jumbles" the orientations of the **Fields** amongst each other.  The filter cycles through all the **Fields**, randomly choosing another **Field** to swap orientations with.  On each swap, it is checked that the randomly selected **Field** is of the same phase.
+
+Note: by cycling through the **Fields**, it is garaunteed that each **Field** will be swapped at least once, but it could actually be swapped multiple times if a later **Field** randomly selects it to swap with.
 
 
 ## Parameters ##
-
-| Name | Type |
-|------|------|
-| Number of Iterations (Swaps) | Integer |
+None
 
 ## Required DataContainers ##
 Voxel

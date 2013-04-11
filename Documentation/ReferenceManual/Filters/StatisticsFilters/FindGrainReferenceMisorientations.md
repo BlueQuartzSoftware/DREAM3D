@@ -5,14 +5,15 @@ Find Field Reference Misorientations {#findgrainreferencemisorientations}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter utilizes the __Cell CellPhases, GrainIds__, and __Quats__ to generate __GrainMisorientations, KernelAvgMisorientations__, and __MisorientationGradients__. For the __Field__, it uses the __Field AvgQuats__ data to generate __Field GrainAvgMisorientations__. The user must enter a _Kernel Size_ as an integer.
+This Filter calculates the misorientation angle between each **Cell** within a **Field** and a *reference orientation* for that **Field**.  The user can choose the *reference orientation* to be used for the **Fields** from a drop-down menu.  The options for the *reference orientation* are the average orientation of the **Field** or the orientation at the centroid of the **Field**.
 
+Note: the average orientation of the **Field** is a typical choice, but if the **Field** has undergone plastic deformation and the amount of lattice rotation developed is of interest, then it may be more reasonable to use the orientation at the center of the grain as it may not have rotated and thus serve as a better *reference orientation*.
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Kernel Size | Integer |
+| Reference Orientation | Choice |
 
 ## Required DataContainers ##
 Voxel

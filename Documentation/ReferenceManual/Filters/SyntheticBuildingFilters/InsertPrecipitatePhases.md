@@ -24,7 +24,7 @@ Voxel
 |------|--------------|---------|
 | Cell | CellPhases |  |
 | Cell | GrainIds |  |
-| Cell | Surface**Cells** |  |
+| Cell | SurfaceVoxels |  |
 | Ensemble | PhaseTypes |  |
 | Ensemble | ShapeTypes |  |
 

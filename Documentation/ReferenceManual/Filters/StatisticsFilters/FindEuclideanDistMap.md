@@ -5,7 +5,21 @@ Find Euclidean Distance Map {#findeuclideandistmap}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter utilizes the __Cell GrainIds__ to find __Cell NearestNeighborDistances__ and the __Cell NearestNeighbors__.
+This Filter calculates the distance of each **Cell** from the nearest **Field** boundary, triple line and quadruple point.  The following algorithm explains the process:
+
+1. Find the **Field** that owns each **Cell**
+2. Find the number of different **Fields** that own the six face-face neighbors of each **Cell**
+3. For all **Cells** that have *at least 2* different neighbors, set their *GBEuclideanDistance* to *0*.  For all **Cells** that have *at least 3* different neighbors, set their *TJEuclideanDistance* to *0*.  For all **Cells** that have *at least 4* different neighbors, set their *QPEuclideanDistance* to *0*.
+4. For each of the three *EuclideanDistace* maps, iteratively "grow" out from the **Cells** identified to have a distance of *0* by the following sub-steps:
+
+	- Determine the **Cells** that neighbor a **Cell** of distance *0* in the current map.
+	- Assign a distance of *1* to those **Cells**.
+	- Repeat previous two sub-steps, increasing the distances by *1* each iteration, until no **Cells** remain without a distance assigned.
+
+
+
+Note : the distances calculated are "city-block" distances and not "shortest distance" distances.
+
 
 
 ## Parameters ##
@@ -23,8 +37,10 @@ Voxel
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Cell | NearestNeighborDistances |  |  |
 | Cell | NearestNeighbors |  |  |
+| Cell | GBEuclideanDistances |  |  |
+| Cell | TJEuclideanDistances |  |  |
+| Cell | QPEuclideanDistances |  |  |
 
 ## Authors ##
 
