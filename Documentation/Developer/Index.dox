@@ -16,19 +16,10 @@ for the DREAM.3D environment
 @subpage DataContainerStrategies "DataContainer Use Strategies"
   How to properly use the Data Container object
 
-@subpage h5ebsdfile "HDF5 EBSD Data File"
-  This page details the internal organization of the HDF5 file that contains the
-EBSD volume data.
-
 @subpage codeguidelines Best Practices for Portable Code in DREAM.3D
   This section details some basic coding guidelines for developers wishing to
 constribute to DREAM.3D
 
-@subpage micropreset Microstructure Presets for StatsGenerator
-  This section explains how to write a new microstructure preset for Stats Generator
-  
-@subpage surfacemeshing Surface Meshing Notes
- This section contains notes on Surface Meshing and the various file formats that are used.
 
 @subpage writingplugins Writing Plugins
  This section shows how to add a new plugin into DREAM3D.

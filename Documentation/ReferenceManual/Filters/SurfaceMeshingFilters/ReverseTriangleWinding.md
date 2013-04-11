@@ -11,14 +11,10 @@ This filter reverses the winding on each triangle. If the next filter is to comp
 ## Parameters ##
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+None
 
 
 ## Created Arrays ##

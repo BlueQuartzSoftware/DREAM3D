@@ -13,20 +13,16 @@ This filter calculates a normal vector of length 1 (Normalized) for each triangl
 None
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
-
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
+None
 
 ## Created Arrays ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Triangle Attribute Array | SurfaceMeshTriangleNormals | N x 3 Col of double values for each Triangle in the Mesh |
+| Face | SurfaceMeshFaceNormals | N x 3 Col of double values for each face in the Mesh |
 
 ## Authors ##
 

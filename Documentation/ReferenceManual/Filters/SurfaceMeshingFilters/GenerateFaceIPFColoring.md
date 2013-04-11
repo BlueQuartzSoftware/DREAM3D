@@ -9,14 +9,15 @@ SurfaceMesh
 ## Parameters ##
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
+
 
 ## Required Arrays ##
 | Type | Name | Comment |
 |------|------|---------|
 | Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
 | Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
-| Triangle Attribute Array | SurfaceMeshTriangleLabels | **Field** Id Associated with the triangle |
+| Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |
 
 ## Created Arrays ##
 | Type | Name | Comment |

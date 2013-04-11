@@ -28,14 +28,12 @@ The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient 
 
 
 ## Required DataContainers ##
-SurfaceMesh
+SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Vertex Array | SurfaceMeshNodes | The shared list of nodes that make up the mesh |
-| Triangle Array | SurfaceMeshTriangles | The List of triangles in the Surface Mesh |
 | Vertex Attribute Array | SurfaceMeshNodeType | N x 1 Col of unsigned char |
 
 

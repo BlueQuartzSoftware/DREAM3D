@@ -351,10 +351,9 @@ void GrainFaceCurvatureFilter::execute()
   m_TotalGrainFaces = sharedGrainFaces.size();
   m_CompletedGrainFaces = 0;
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
 
