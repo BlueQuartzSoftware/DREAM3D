@@ -9,21 +9,18 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### Groeber Documentation
-+ Missing Documenation File for IOFilters/ImportImageStack
++ Missing Documentation File for IOFilters/ImportImageStack
 + write-up contributors section for website
 
 
 ### Jackson Priority ###
-+ Usermanual::Import/Export/Favorite Pipelines
-+ Usermanual::User Interface Introduction
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
 + Tutorial::Visualization Techniques for Docs/Website
 + Tutorial::Creating Ensemble Statistics for Docs/Website
 + Tutorial::Importing Orientation Data for Docs/Website
 + FileFormats::Xdmf files for Docs/Website
-+ FileFormats::Native DREAM3D format
-+ FileFormats::Other supported file types
+
 
 
 ### User Centric
@@ -31,7 +28,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Update documentation file structure now that users can specify array names
 
 ### Developer Centric ###
-+ How to Incorporate documentation for plugins into the main help system
+
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
 
@@ -114,7 +111,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ##  Add to the Pipeline Gui ##
-+ Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Add a 'Rename Favorite' menu
 + allow user to right-click on a favorite and "delete, rename, ..." the favorite
@@ -144,6 +140,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 ## Items Completed ##
++ Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
++ How to Incorporate documentation for plugins into the main help system
 + Fix html Help for "Standardize Euler Angles"
 + Fix html Help for "Erode Dilate Coordination Number"
 + Fix html for FindSlicetoSliceRotations.html
