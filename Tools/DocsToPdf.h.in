@@ -48,7 +48,7 @@ namespace DocsToPdf
 
   QString FilterDirectory()
   {
-    return QString::fromAscii("@DREAM3D_DOCS_ROOT_DIR@/Filters");
+    return QString::fromAscii("@DREAM3D_DOCS_ROOT_DIR@");
   }
 
   QString GetDocsPdfOutputFilename()
