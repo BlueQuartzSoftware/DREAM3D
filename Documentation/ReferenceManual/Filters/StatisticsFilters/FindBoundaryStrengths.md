@@ -7,9 +7,7 @@ Statistics Filters (Crystallographic)
 ## Description ##
 
 ## Parameters ##
-| Name | Type |
-|------|------|
-| VTK Output File | Output File |
+None
 
 ## Required DataContainers ##
 Voxel
@@ -19,13 +17,18 @@ SurfaceMesh
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Field | AvgQuats |  |
-| Field | FieldPhases |  |
-| Field | Schmids |  |
-| Field | SlipSystems |  |
+| Field (Voxel) | AvgQuats |  |
+| Field (Voxel) | FieldPhases |  |
+| Field (Voxel) | Schmids |  |
+| Field (Voxel) | SlipSystems |  |
 
 ## Created Arrays ##
-None
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Face (SurfaceMesh) | SurfaceMeshF1s |  |
+| Face (SurfaceMesh) | SurfaceMeshF1spts |  |
+| Face (SurfaceMesh) | SurfaceMeshF7s |  |
+| Face (SurfaceMesh) | SurfaceMeshmPrimes |  |
 
 
 ## Authors ##
