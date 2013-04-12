@@ -36,6 +36,7 @@
 #ifndef _SurfaceMeshDataContainerWriter_H_
 #define _SurfaceMeshDataContainerWriter_H_
 
+#include <sstream>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -133,7 +134,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();
     void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
-	std::string writeXdmfAttributeDataHelper(int numComp, std::string attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, std::string xdmfTypeName);
+    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
 
   private:
     std::ostream* m_XdmfPtr;

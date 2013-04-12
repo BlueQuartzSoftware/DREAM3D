@@ -158,7 +158,7 @@ void @ClassName@::execute()
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    notifyErrorMessage("The DataContainer Object was NULL", getErrorCondition());
     return;
   }
   setErrorCondition(0);

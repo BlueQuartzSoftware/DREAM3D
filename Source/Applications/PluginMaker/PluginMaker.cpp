@@ -251,7 +251,7 @@ void PluginMaker::setupGui()
   PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin
   // CPP and H files in a FilterBundler)
 
-  FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc);
+  FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc, true);
   // m_FilterBundles.push_back(fb);
 
 
@@ -331,14 +331,14 @@ void PluginMaker::setupGui()
   }
 
 
-  PMGeneratorTreeItem* pluginDocs = new PMGeneratorTreeItem(F_doc);
-  pluginDocs->setText(0, "PluginDocumentation.qrc");
+//  PMGeneratorTreeItem* pluginDocs = new PMGeneratorTreeItem(F_doc);
+//  pluginDocs->setText(0, "PluginDocumentation.qrc");
 
 
   PMGeneratorTreeItem* filterHTML = new PMGeneratorTreeItem(F_namefilters);
   filterHTML->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
-  resourceTemplate = ":/Template/Documentation/Filter/Documentation.html.in";
+  resourceTemplate = ":/Template/Documentation/Filter/Documentation.md.in";
   PMFileGenerator* htmlFilterDoc = new PMFileGenerator(m_OutputDir->text(),
                                                        pathTemplate,
                                                        QString(""),
@@ -346,7 +346,7 @@ void PluginMaker::setupGui()
                                                        filterHTML,
                                                        this);
   filterHTML->setFileGenPtr(htmlFilterDoc);
-  htmlFilterDoc->setDisplaySuffix("Filter.html");
+  htmlFilterDoc->setDisplaySuffix("Filter.md");
   htmlFilterDoc->setDoesGenerateOutput(true);
   htmlFilterDoc->setNameChangeable(true);
   connect(m_PluginName, SIGNAL(textChanged(const QString &)),
@@ -360,7 +360,7 @@ void PluginMaker::setupGui()
           this, SLOT(generationError(const QString &)));
 
 
-  FilterBundler fb2(cppFilterGen, hFilterGen, htmlFilterDoc);
+  FilterBundler fb2(cppFilterGen, hFilterGen, htmlFilterDoc, true);
   m_FilterBundles.push_back(fb2);
 
   m_PluginName->setText("Unknown Plugin Name");
@@ -404,7 +404,7 @@ void PluginMaker::on_generateButton_clicked()
     return;
   }
 
-  // WE need to generate the SourceList.cmake file here because we possibly have
+  // We need to generate the SourceList.cmake file here because we possibly have
   // more than a single filter
   QString text = generateCmakeContents();
 
@@ -426,7 +426,7 @@ void PluginMaker::on_generateButton_clicked()
 
   // WE need to generate the QRC file here because we possibly have
   // more than a single filter
-  text = generateQrcContents();
+  // text = generateQrcContents();
 
   pathTemplate = "@PluginName@/Documentation/";
   parentPath = m_OutputDir->text() + QDir::separator()
@@ -436,13 +436,13 @@ void PluginMaker::on_generateButton_clicked()
   QDir dir2(parentPath);
   dir2.mkpath(parentPath);
 
-  parentPath = parentPath + QDir::separator() + "PluginDocumentation.qrc";
-  //Write to file
-  QFile f2(parentPath);
-  if ( f2.open(QIODevice::WriteOnly | QIODevice::Text) ) {
-    QTextStream out(&f2);
-    out << text;
-  }
+//  parentPath = parentPath + QDir::separator() + "PluginDocumentation.qrc";
+//  //Write to file
+//  QFile f2(parentPath);
+//  if ( f2.open(QIODevice::WriteOnly | QIODevice::Text) ) {
+//    QTextStream out(&f2);
+//    out << text;
+//  }
 
   statusbar->showMessage("Generation Completed");
 }
@@ -452,7 +452,7 @@ void PluginMaker::on_generateButton_clicked()
 // -----------------------------------------------------------------------------
 QString PluginMaker::cleanName(QString name) {
   //Remove all uses of "Plugin", "plugin", "Filter", and "filter"
-  QRegExp rx("Plugin|plugin|Filter|filter");
+  QRegExp rx("Filter|filter");
   name = name.replace(rx, "");
   //Remove all spaces and illegal characters from plugin name
   name = name.trimmed();
@@ -476,7 +476,7 @@ QString PluginMaker::cleanName_filters(QString name) {
 //
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString & text) {
-  QString pluginName = cleanName(m_PluginName->text());
+//  QString pluginName = cleanName(m_PluginName->text());
 
   statusbar->showMessage("Ready");
 
@@ -593,12 +593,12 @@ void PluginMaker::on_addFilterBtn_clicked()
 
     /* This simulates the user clicking on the "Add Filter" button */
     QTreeWidgetItem* filt2html = new QTreeWidgetItem(F_namefilters);
-    filt2html->setText(0, filterTitle + ".html");
+    filt2html->setText(0, filterTitle + ".md");
     pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
-    resourceTemplate = ":/Template/Documentation/Filter/Documentation.html.in";
+    resourceTemplate = ":/Template/Documentation/Filter/Documentation.md.in";
     PMFilterGenerator* htmlgen = new PMFilterGenerator(m_OutputDir->text(),
                                                        pathTemplate,
-                                                       QString(filterTitle + ".html"),
+                                                       QString(filterTitle + ".md"),
                                                        QString(filterTitle),
                                                        resourceTemplate,
                                                        filt2html,
@@ -620,13 +620,13 @@ void PluginMaker::on_addFilterBtn_clicked()
     //m_itemMap[filt2html] = htmlgen;
 
 
-    FilterBundler filterpack(cppgen, hgen, htmlgen);
+    FilterBundler filterpack(cppgen, hgen, htmlgen, addFilterDialog->isPublic());
     m_FilterBundles.push_back(filterpack);
   }
-  for(int i = 0;i < m_FilterBundles.count(); ++i)
-  {
-    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << std::endl;
-  }
+//  for(int i = 0;i < m_FilterBundles.count(); ++i)
+//  {
+//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << std::endl;
+//  }
 }
 
 // -----------------------------------------------------------------------------
@@ -681,10 +681,6 @@ void PluginMaker::on_treeWidget_itemSelectionChanged() {
   if ( currentFile->text(0).contains(".cmake") )
   {
     text = generateCmakeContents();
-  }
-  else if ( currentFile->text(0).contains(".qrc") )
-  {
-    text = generateQrcContents();
   }
   else
   {
@@ -838,12 +834,14 @@ QString PluginMaker::generateCmakeContents() {
   QString cmakeHdrCode("${@PluginName@Plugin_SOURCE_DIR}/@PluginName@Filters/");
   cmakeHdrCode.replace("@PluginName@", pluginName);
 
-  QString srcContents;
+  QString publicFilterList;
+  QString privateFilterList;
   QString hdrContents;
   for (int i = 0; i < m_FilterBundles.count(); ++i)
   {
     PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
+    bool isPublic = m_FilterBundles[i].isPublic();
 
     std::cout << cppGen->getFileName().toStdString() << std::endl;
     std::cout << hGen->getFileName().toStdString() << std::endl;
@@ -853,12 +851,14 @@ QString PluginMaker::generateCmakeContents() {
 
     QFileInfo fi(hGen->getFileName());
     QString className = fi.baseName();
-
-    srcContents.append("ADD_DREAM3D_FILTER( \"").append(pluginName).append("\" ");
-    srcContents.append("${").append(pluginName).append("Plugin_BINARY_DIR} ");
-    srcContents.append("${DREAM3D_FILTER_GROUP_NAME} ");
-    srcContents.append(className).append(" ").append(className).append(".html \"\" TRUE)\n");
-
+    if (isPublic == true)
+    {
+      publicFilterList.append("  ").append(className).append("\n");
+    }
+    else
+    {
+      privateFilterList.append("  ").append(className).append("\n");
+    }
     pluginName = m_PluginName->text();
   }
 
@@ -872,11 +872,13 @@ QString PluginMaker::generateCmakeContents() {
     text = in.readAll();
     text.replace("@PluginName@", pluginName);
     text.replace("@GENERATED_CMAKE_HEADERS_CODE@", hdrContents);
-    text.replace("@GENERATED_CMAKE_SOURCE_CODE@", srcContents);
+    text.replace("@PUBLIC_FILTERS@", publicFilterList);
+    text.replace("@PRIVATE_FILTERS@", privateFilterList);
   }
   return text;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -910,3 +912,5 @@ QString PluginMaker::generateQrcContents() {
 
   return text;
 }
+#endif
+

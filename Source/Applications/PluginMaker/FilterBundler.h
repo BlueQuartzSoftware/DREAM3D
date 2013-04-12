@@ -46,12 +46,24 @@ class FilterBundler
 
   public:
     FilterBundler();
+    FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile,
+                  PMFileGenerator* htmlfile, bool pub_filter);
+    virtual ~FilterBundler() {}
+
+    PMFileGenerator* getCPPGenerator();
+    PMFileGenerator* getHGenerator();
+    PMFileGenerator* getHTMLGenerator();
+    bool             isPublic();
+
+
+    bool containsTreeWidgetItem(QTreeWidgetItem* item);
 
     FilterBundler(const FilterBundler& rhs)
     {
       cppfile = rhs.cppfile;
       hfile = rhs.hfile;
       htmlfile = rhs.htmlfile;
+      publicFilter = rhs.publicFilter;
     }
 
     void operator=(const FilterBundler& rhs)
@@ -59,30 +71,17 @@ class FilterBundler
       cppfile = rhs.cppfile;
       hfile = rhs.hfile;
       htmlfile = rhs.htmlfile;
+      publicFilter = rhs.publicFilter;
     }
 
-    FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile, PMFileGenerator* htmlfile);
-    virtual ~FilterBundler() {
-
-}
-
-    PMFileGenerator* getCPPGenerator();
-    PMFileGenerator* getHGenerator();
-    PMFileGenerator* getHTMLGenerator();
-
-
-    bool containsTreeWidgetItem(QTreeWidgetItem* item);
-
   protected:
-
 
   private:
     PMFileGenerator* cppfile;
     PMFileGenerator* hfile;
     PMFileGenerator* htmlfile;
+    bool publicFilter;
 
-    // Copy Constructor Not Implemented
-     // Operator '=' Not Implemented
 
 };
 

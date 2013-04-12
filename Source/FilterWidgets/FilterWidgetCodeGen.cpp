@@ -178,18 +178,18 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options, const std::string &outSubPath)
+void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options, const std::string &outputPath)
 {
   std::stringstream ss;
-  std::string completePath;
-  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 
-  completePath = MXADir::toNativeSeparators(ss.str());
+//  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
+
+  std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
   std::string parentPath = MXADir::parentPath(completePath);
   if (MXADir::exists(parentPath) == false)
   {
-    MXADir::mkdir(ss.str(), true);
+    MXADir::mkdir(parentPath, true);
   }
 
   ss.str("");
@@ -380,13 +380,13 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
 void createSourceFile( const std::string &group,
                        const std::string &filter,
                        std::vector<FilterParameter::Pointer> options,
-                       const std::string &outSubPath)
+                       const std::string &outputPath)
 {
   std::stringstream ss;
-  std::string completePath;
-  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
+//  std::string completePath;
+//  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 
-  completePath = MXADir::toNativeSeparators(ss.str());
+  std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
   std::string parentPath = MXADir::parentPath(completePath);
   if (MXADir::exists(parentPath) == false)

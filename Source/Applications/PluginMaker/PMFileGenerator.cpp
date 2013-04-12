@@ -137,6 +137,7 @@ void PMFileGenerator::generateOutput()
       return;
   }
 
+//  QString classNameLowerCase = m_ClassName.toLower();
 
   //Open file
     QFile rfile(getCodeTemplateResourcePath());
@@ -147,7 +148,10 @@ void PMFileGenerator::generateOutput()
       QFileInfo fi(m_FileName);
       QString className = fi.baseName();
       text.replace("@ClassName@", className);
-      text.replace("@HTML_FILE_NAME@", m_FileName);
+      text.replace("@MD_FILE_NAME@", m_FileName);
+//      text.replace("@ClassNameLowerCase@", classNameLowerCase);
+      text.replace("@FilterGroup@", pluginName);
+      text.replace("@FilterSubgroup@", pluginName);
 
       QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
       parentPath = QDir::toNativeSeparators(parentPath);
@@ -181,7 +185,8 @@ QString PMFileGenerator::generateFileContents() {
     QFileInfo fi( getFileName() );
     QString className = fi.baseName();
     text.replace("@ClassName@", className);
-    text.replace( "@HTML_FILE_NAME@", getFileName() );
+ //   text.replace( "@HTML_FILE_NAME@", getFileName() );
+
   }
   return text;
 }
