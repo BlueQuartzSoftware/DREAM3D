@@ -26,23 +26,23 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/UserManual/UserInterface.md
   ${PROJECT_SOURCE_DIR}/UserManual/CreatingPipeline.md
   ${PROJECT_SOURCE_DIR}/UserManual/ImportExportPipelines.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md
+  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/SupportedFileFormats.dox
+  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/NativeDREAM3DFileFormat.md
+  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/XdmfForVisualization.md
+  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/MiscFileFormats.md
+  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/H5EbsdFile.md
   ${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox
   ${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md
   ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
   ${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md
-  ${PROJECT_SOURCE_DIR}/StatsGenerator/index.md
+  ${PROJECT_SOURCE_DIR}/UserManual/StatsGenerator/index.md
 )
 
 set(DOXYGEN_IMAGE_DIRS
   ${PROJECT_SOURCE_DIR}/UserManual/Images
-  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
+  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/Images
   ${PROJECT_SOURCE_DIR}/Tutorials/Images
-  ${PROJECT_SOURCE_DIR}/StatsGenerator/Images
+  ${PROJECT_SOURCE_DIR}/UserManual/StatsGenerator/Images
 )
 
 #-------------------------------------------------------------------------------
