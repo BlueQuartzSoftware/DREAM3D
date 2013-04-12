@@ -83,7 +83,8 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     virtual void execute();
 
     /**
-     * @brief
+     * @brief This will preflight the pipeline and report any errors that would occur during
+     * execution of the pipeline
      */
     virtual int preflightPipeline();
 
@@ -117,12 +118,12 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
 
     virtual void printFilterNames(std::ostream &out);
 
-    
+
 
   protected:
     FilterPipeline();
     void updatePrevNextFilters();
-    
+
 
   private:
     bool m_Cancel;

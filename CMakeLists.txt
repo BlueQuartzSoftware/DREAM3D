@@ -322,7 +322,7 @@ if(DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
         endif()
     endforeach()
 
-    set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help")
+    set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
 #- Add in the Main DREAM.3D Application
