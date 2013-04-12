@@ -15,8 +15,8 @@
  * other materials provided with the distribution.
  *
  * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be 
- * used to endorse or promote products derived from this software without specific 
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
  * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -41,10 +41,13 @@ FilterBundler::FilterBundler() {
 
 }
 
-FilterBundler::FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile, PMFileGenerator* htmlfile) {
+FilterBundler::FilterBundler(PMFileGenerator* cppfile, PMFileGenerator* hfile,
+                      PMFileGenerator* htmlfile, bool pub_filter)
+                      {
   this->cppfile = cppfile;
   this->hfile = hfile;
   this->htmlfile = htmlfile;
+  this->publicFilter = pub_filter;
 }
 
 PMFileGenerator* FilterBundler::getCPPGenerator() {
@@ -59,9 +62,14 @@ PMFileGenerator* FilterBundler::getHTMLGenerator() {
   return htmlfile;
 }
 
+bool FilterBundler::isPublic()
+{
+  return this->publicFilter;
+}
+
 bool FilterBundler::containsTreeWidgetItem(QTreeWidgetItem* item) {
-  if ( item == cppfile->getTreeWidgetItem() || 
-        item == hfile->getTreeWidgetItem() || 
+  if ( item == cppfile->getTreeWidgetItem() ||
+        item == hfile->getTreeWidgetItem() ||
           item == htmlfile->getTreeWidgetItem() )
     return true;
   else

@@ -47,6 +47,7 @@ class AddFilterWidget : public QDialog, public Ui::Dialog
   public:
     AddFilterWidget(QWidget* parent = 0);
     QString getFilterName();
+    bool isPublic();
     bool getBtnClicked();
 
   protected slots:
