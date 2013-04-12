@@ -87,7 +87,7 @@
   }\
   std::string _s(#Name);\
   /*addCreated##DType(_s);*/\
-  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL ==  m_##Name ) \
   {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
@@ -142,7 +142,7 @@ if (size*numComp != iDataArray->GetSize()) {\
 }\
 if (numComp != iDataArray->GetNumberOfComponents()) {\
       if (NULL != obv) {std::stringstream ss;\
-      ss << "\nFilter " << obv->getHumanLabel() << " requires an array where the number of components is " << 1 << " but the array"\
+      ss << "\nFilter " << obv->getHumanLabel() << " requires an array where the number of components is " << numComp << " but the array"\
       << " that was supplied has " << iDataArray->GetNumberOfComponents() << "." << std::endl;\
       obv->addErrorMessage(obv->getHumanLabel(), ss.str(),503);}\
       return gi;\

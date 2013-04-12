@@ -312,11 +312,11 @@ void FilterPipeline::execute()
   // Run the preflight first to make sure we can run this combination of filters
   // Inside the function we create a new DataContainer object so we don't mess
   // with any currently set DataContainer
-  err = preflightPipeline();
-  if(err < 0)
-  {
-    return;
-  }
+  // err = preflightPipeline();
+//  if(err < 0)
+//  {
+//    return;
+//  }
 
   // Create the DataContainer object
 //  if(NULL == m_DataContainer.get())
