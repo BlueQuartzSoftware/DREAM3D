@@ -15,8 +15,9 @@ The user needs to keep in mind that large values of __Neighborhood Error Weight_
 
 | Name | Type |
 |------|------|
-| Neighborhood Error Weight | Double |
 | Periodic Boundary | Boolean (On or Off) |
+| Write Goal Attributes | Boolean (On or Off) |
+| Goal Attributes CSV File | Output File |
 
 ## Required DataContainers ##
 Voxel

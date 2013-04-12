@@ -13,6 +13,8 @@ If precipitate phases have been included in the _Statistics_ file used by the _I
 | Name | Type |
 |------|------|
 | Periodic Boundary | Boolean (On or Off) |
+| Write Goal Attributes | Boolean (On or Off) |
+| Goal Attributes CSV File | Output File |
 
 
 ## Required DataContainers ##

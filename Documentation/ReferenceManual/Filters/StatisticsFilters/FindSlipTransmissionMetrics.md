@@ -1,10 +1,11 @@
-Find Slip Transmission Metrics {#findsliptransmissionmetrics}
+Find Neighbor Slip Transmission Metrics {#findsliptransmissionmetrics}
 ======
 
 ## Group (Subgroup) ##
 Statistics Filters (Crystallographic)
 
 ## Description ##
+This filter calculates a suite of *Slip Transmission Metrics* that are related to the alignment of slip directions and planes across **Field** boundaries.  
 
 ## Parameters ##
 None
@@ -21,7 +22,12 @@ Voxel
 | Ensemble | FieldPhases |  |
 
 ## Created Arrays ##
-None
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Field | F1 |  |
+| Field | F1spt |  |
+| Field | F7 |  |
+| Field | mPrime |  |
 
 
 ## Authors ##

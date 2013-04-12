@@ -21,16 +21,14 @@ The Filter produces an estimate of the number of **Fields** in the volume associ
 values the user entered.
 
 
-![Input Dependencies](InitSynthVol.png)
-
 ## Parameters ##
 
 | Name | Type |
 |------|------|
 | Statistics File | Input File |
-| X **Cells** | Integer |
-| Y **Cells** | Integer |
-| Z **Cells** | Integer |
+| X Cells | Integer |
+| Y Cells | Integer |
+| Z Cells | Integer |
 | X Res | Double |
 | Y Res | Double |
 | Z Res | Double |
@@ -43,6 +41,7 @@ Voxel
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each Ensemble/phase (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
+| Ensemble | Statistics |  | Values are obtained from input .dream3d file |
 
 ## Created Arrays ##
 
