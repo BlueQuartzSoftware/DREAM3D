@@ -41,6 +41,15 @@ AddFilterWidget::AddFilterWidget(QWidget *parent) {
   setupUi(this);
   addfilterOKButton->setEnabled(false);
   BtnClicked = false;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool AddFilterWidget::isPublic()
+{
+  return m_PublicFilter->isChecked();
 }
 
 // -----------------------------------------------------------------------------

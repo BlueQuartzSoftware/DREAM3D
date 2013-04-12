@@ -222,7 +222,7 @@ void PMDirGenerator::generateOutput()
 QString PMDirGenerator::cleanName(QString name)
 {
   //Remove all uses of "Plugin", "plugin", "Filter", and "filter"
-  QRegExp rx("Plugin|plugin|Filter|filter");
+  QRegExp rx("Filter|filter");
   name = name.replace(rx, "");
   //Remove all spaces and illegal characters from plugin name
   name = name.trimmed();
