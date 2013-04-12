@@ -12,15 +12,15 @@ Welcome to DREAM.3D, an open and modular software package that allows users to r
 DREAM3D makes the reconstruction of 3D EBSD data simple and straight forward. The development of more features is always on going and the DREAM3D development team welcomes your feed back whether you are first time user or seasoned user.
 
 
-@subpage acknowledgements Acknowledgements
+@subpage acknowledgements
 
-@subpage supportedfileformats Supported File Formats
+@subpage supportedfileformats
 
-@subpage userinterface Overview of the User Interface
+@subpage userinterface
 
-@subpage creatingpipeline Creating a Pipeline
+@subpage creatingpipeline
 
-@subpage importexportsavepipeline Import, Export & Favorite Pipelines
+@subpage importexportsavepipeline
 
-@subpage statsgenerator Stats Generator
+@subpage statsgenerator
 */
