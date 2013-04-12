@@ -75,18 +75,22 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPat
           #  message(STATUS "${${WidgetLib}_SOURCE_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h")
           #  set(FILTER_WIDGET_HDR_FILE ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
           #  set(FILTER_WIDGET_SRC_FILE ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
-            file(APPEND ${FilterWidget_GEN_HDRS_File} "${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h;")
-            file(APPEND ${FilterWidget_GEN_SRCS_File} "${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp;")
-            if( NOT EXISTS ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
+          #-- Write all the headers to this file which gets read later on in order to have Qt4 wrap them with moc
+            set(FiltWidgHeaderFile ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
+            set(FiltWidgSourceFile ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
+            file(APPEND ${FilterWidget_GEN_HDRS_File} "${FiltWidgHeaderFile};")
+            file(APPEND ${FilterWidget_GEN_SRCS_File} "${FiltWidgSourceFile};")
+            if( NOT EXISTS ${FiltWidgHeaderFile})
                 set(GENERATED_MOC_SOURCE_FILE "moc_Q${name}Widget.cpp")
                 configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.h.in
-                              ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h)
+                               ${FiltWidgHeaderFile})
                 configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.cpp.in
-                              ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
+                               ${FiltWidgSourceFile})
+            #    message(STATUS "${FiltWidgSourceFile}")
             endif()
 
-            file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${filterGroup}Widgets/Q${filterName}Widget.h\");\n")
-            file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${filterGroup}Widgets/Q${filterName}Widget.cpp\");\n")
+            file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${FiltWidgHeaderFile}\");\n")
+            file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${FiltWidgSourceFile}\");\n")
         endif()
 
         file(APPEND ${AllFilterWidgetsHeaderFile} "#include \"${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.h\"\n")
