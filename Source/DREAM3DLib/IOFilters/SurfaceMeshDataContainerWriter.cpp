@@ -353,7 +353,6 @@ std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int num
   }
   else
   {
-<<<<<<< HEAD
     //First Slab
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 0)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -403,57 +402,6 @@ std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int num
     out << "        </DataItem>" << std::endl;
     out << "      </DataItem>" << std::endl;
     out << "    </Attribute>" << std::endl << std::endl;
-=======
-	  //First Slab
-	  out << "    <Attribute Name=\"" << array->GetName() << " (Field 0)\" ";
-	  out << "AttributeType=\"" << attrType << "\" ";
-	  dimStr1 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-	  dimStr1half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
-	  out << "Center=\"" << centering << "\">" << std::endl;
-	  // Open the <DataItem> Tag
-	  out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr1half.str() <<  "\" ";
-	  out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 0)\" >" << std::endl;
-	  out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << std::endl; 
-	  out << "          0        0" << std::endl;
-	  out << "          1        1" << std::endl;
-	  out << "          " << dimStr1half.str() << " </DataItem>" << std::endl;
-	  out << std::endl;
-	  out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr1.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl; 
-	  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-	  std::vector<char> nameBuffer(nameSize, 0);
-	  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
-	  std::string hdfFileName(&(nameBuffer.front()), nameSize);
-	  hdfFileName = MXAFileInfo::filename(hdfFileName);
-	  out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/" << groupName << "/" << array->GetName() << std::endl;
-	  out << "        </DataItem>" << std::endl;
-	  out << "      </DataItem>" << std::endl;
-	  out << "    </Attribute>" << std::endl << std::endl;
-
-	  //Second Slab
-	  out << "    <Attribute Name=\"" << array->GetName() << " (Field 1)\" ";
-	  out << "AttributeType=\"" << attrType << "\" ";
-	  dimStr2 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-	  dimStr2half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
-	  out << "Center=\"" << centering << "\">" << std::endl;
-	  // Open the <DataItem> Tag
-	  out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr2half.str() <<  "\" ";
-	  out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << std::endl;
-	  out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << std::endl; 
-	  out << "          0        " << (array->GetNumberOfComponents()/2) << std::endl;
-	  out << "          1        1" << std::endl;
-	  out << "          " << dimStr2half.str() << " </DataItem>" << std::endl;
-	  out << std::endl;
-	  out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr2.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl; 
-	  ssize_t nameSize2 = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-	  std::vector<char> nameBuffer2(nameSize2, 0);
-	  nameSize2 = H5Fget_name(m_HdfFileId, &(nameBuffer2.front()), nameSize2);
-	  std::string hdfFileName2(&(nameBuffer2.front()), nameSize2);
-	  hdfFileName2 = MXAFileInfo::filename(hdfFileName2);
-	  out << "        " << hdfFileName2 << ":/SurfaceMeshDataContainer/" << groupName << "/" << array->GetName() << std::endl;
-	  out << "        </DataItem>" << std::endl;
-	  out << "      </DataItem>" << std::endl;
-	  out << "    </Attribute>" << std::endl << std::endl;
->>>>>>> 2fb783495ae971f28d6507e2b08a985c98b18ee5
   }
   return out.str();
 }
