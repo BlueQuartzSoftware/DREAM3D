@@ -251,7 +251,7 @@ void PluginMaker::setupGui()
   PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin
   // CPP and H files in a FilterBundler)
 
-  FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc);
+  FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc, true);
   // m_FilterBundles.push_back(fb);
 
 
@@ -360,7 +360,7 @@ void PluginMaker::setupGui()
           this, SLOT(generationError(const QString &)));
 
 
-  FilterBundler fb2(cppFilterGen, hFilterGen, htmlFilterDoc);
+  FilterBundler fb2(cppFilterGen, hFilterGen, htmlFilterDoc, true);
   m_FilterBundles.push_back(fb2);
 
   m_PluginName->setText("Unknown Plugin Name");
@@ -620,13 +620,13 @@ void PluginMaker::on_addFilterBtn_clicked()
     //m_itemMap[filt2html] = htmlgen;
 
 
-    FilterBundler filterpack(cppgen, hgen, htmlgen);
+    FilterBundler filterpack(cppgen, hgen, htmlgen, addFilterDialog->isPublic());
     m_FilterBundles.push_back(filterpack);
   }
-  for(int i = 0;i < m_FilterBundles.count(); ++i)
-  {
-    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << std::endl;
-  }
+//  for(int i = 0;i < m_FilterBundles.count(); ++i)
+//  {
+//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << std::endl;
+//  }
 }
 
 // -----------------------------------------------------------------------------
@@ -834,12 +834,14 @@ QString PluginMaker::generateCmakeContents() {
   QString cmakeHdrCode("${@PluginName@Plugin_SOURCE_DIR}/@PluginName@Filters/");
   cmakeHdrCode.replace("@PluginName@", pluginName);
 
-  QString srcContents;
+  QString publicFilterList;
+  QString privateFilterList;
   QString hdrContents;
   for (int i = 0; i < m_FilterBundles.count(); ++i)
   {
     PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
+    bool isPublic = m_FilterBundles[i].isPublic();
 
     std::cout << cppGen->getFileName().toStdString() << std::endl;
     std::cout << hGen->getFileName().toStdString() << std::endl;
@@ -849,9 +851,14 @@ QString PluginMaker::generateCmakeContents() {
 
     QFileInfo fi(hGen->getFileName());
     QString className = fi.baseName();
-
-    srcContents.append("  ").append(className).append("\n");
-
+    if (isPublic == true)
+    {
+      publicFilterList.append("  ").append(className).append("\n");
+    }
+    else
+    {
+      privateFilterList.append("  ").append(className).append("\n");
+    }
     pluginName = m_PluginName->text();
   }
 
@@ -865,8 +872,8 @@ QString PluginMaker::generateCmakeContents() {
     text = in.readAll();
     text.replace("@PluginName@", pluginName);
     text.replace("@GENERATED_CMAKE_HEADERS_CODE@", hdrContents);
-    text.replace("@PUBLIC_FILTERS@", srcContents);
-    text.replace("@PRIVATE_FILTERS@", "");
+    text.replace("@PUBLIC_FILTERS@", publicFilterList);
+    text.replace("@PRIVATE_FILTERS@", privateFilterList);
   }
   return text;
 }

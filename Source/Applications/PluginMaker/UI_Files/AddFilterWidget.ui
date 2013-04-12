@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>489</width>
-    <height>131</height>
+    <height>137</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -52,7 +52,7 @@
         <number>10</number>
        </property>
        <item>
-        <widget class="QRadioButton" name="privateFilter">
+        <widget class="QRadioButton" name="m_PublicFilter">
          <property name="text">
           <string>Public Filter</string>
          </property>
@@ -62,9 +62,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QRadioButton" name="publicFilter">
+        <widget class="QRadioButton" name="m_PrivateFilter">
          <property name="text">
           <string>Private Filter</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
