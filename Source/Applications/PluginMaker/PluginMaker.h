@@ -86,7 +86,7 @@ private:
   void readWindowSettings(QSettings &prefs);
   void writeWindowSettings(QSettings &prefs);
   QString generateCmakeContents();
-  QString generateQrcContents();
+ // QString generateQrcContents();
 
   QVector<FilterBundler> m_FilterBundles;
   QTreeWidgetItem* F_name;

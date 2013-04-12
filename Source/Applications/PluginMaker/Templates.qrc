@@ -7,7 +7,6 @@
  <file>Template/Filter/Filter.cpp.in</file>
  <file>Template/Filter/Filter.h.in</file>
  <file>Template/Filter/SourceList.cmake.in</file>
- <file>Template/Documentation/FilterDocs.qrc.in</file>
- <file>Template/Documentation/Filter/Documentation.html.in</file>
+ <file>Template/Documentation/Filter/Documentation.md.in</file>
  </qresource>
  </RCC>
