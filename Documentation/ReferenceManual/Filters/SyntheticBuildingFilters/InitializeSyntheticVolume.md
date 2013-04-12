@@ -40,7 +40,9 @@ Voxel
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each Ensemble/phase (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
+| Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each **Ensemble** (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
+| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase each Ensemble is (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) | Values are obtained from input .dream3d file |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the symmetry of the **Fields** of each **Ensemble** (Hexagonal=0, Cubic=1, OrthoRhombic=2) | Values are obtained from input .dream3d file |
 | Ensemble | Statistics |  | Values are obtained from input .dream3d file |
 
 ## Created Arrays ##
