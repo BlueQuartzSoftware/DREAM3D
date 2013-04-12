@@ -1,4 +1,4 @@
-StatsGenerator {#statsgenerator}
+Stats Generator {#statsgenerator}
 ========
 
 ## Introduction ##
