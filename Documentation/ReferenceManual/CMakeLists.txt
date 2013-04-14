@@ -23,6 +23,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Index.dox
   ${PROJECT_SOURCE_DIR}/UserManual/UserManual.dox
   ${PROJECT_SOURCE_DIR}/UserManual/Acknowledgements.md
+  ${PROJECT_SOURCE_DIR}/UserManual/DataStructure.md
   ${PROJECT_SOURCE_DIR}/UserManual/UserInterface.md
   ${PROJECT_SOURCE_DIR}/UserManual/CreatingPipeline.md
   ${PROJECT_SOURCE_DIR}/UserManual/ImportExportPipelines.md

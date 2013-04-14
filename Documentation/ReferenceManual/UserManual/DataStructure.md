@@ -15,13 +15,19 @@ DREAM.3D uses two additional levels above the topological levels required to def
 At each level, DREAM.3D creates a *Map* to store information/data about the individual elements at that level.  Additional information about the maps of the DREAM.3D data structure and "typical" data are given below:
 
 ## Vertex ##
-V
+  - Map of attributes associated with single *oints* - often these *points* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
+  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually aquired.
+  - Calculated values (i.e. Field Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Field** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
 
 ## Edge ##
-g
+  - Map of attributes associated with single *datapoints* - often these *datapoints* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
+  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually aquired.
+  - Calculated values (i.e. Field Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Field** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
 
 ## Face ##
-  - 
+  - Map of attributes associated with single *datapoints* - often these *datapoints* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
+  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually aquired.
+  - Calculated values (i.e. Field Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Field** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
 
 ## Cell ##
   - Map of attributes associated with single *datapoints* - often these *datapoints* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
