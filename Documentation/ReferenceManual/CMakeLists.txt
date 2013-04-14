@@ -37,6 +37,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/SurfaceMeshing.md
   ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/SyntheticSinglePhase.md
   ${PROJECT_SOURCE_DIR}/UserManual/AuxiliaryTools/StatsGenerator.md
+  ${PROJECT_SOURCE_DIR}/UserManual/AuxiliaryTools/AuxiliaryTools.dox
 )
 
 set(DOXYGEN_IMAGE_DIRS
