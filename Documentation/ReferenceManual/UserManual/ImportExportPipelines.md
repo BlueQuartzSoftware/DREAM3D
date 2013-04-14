@@ -74,4 +74,4 @@ As a convenience for those situations where the user has created a large pipelin
 
 |   | Navigation |    |
 |----|---------|------|
-| [Back](@ref creatingpipeline) | [Top](@ref usermanual) |  |
+| [Back](@ref creatingpipeline) | [Top](@ref usermanual) | [Next Section](@ref statsgenerator) |
