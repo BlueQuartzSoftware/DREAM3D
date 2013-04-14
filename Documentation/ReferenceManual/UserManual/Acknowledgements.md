@@ -4,19 +4,22 @@ Acknowledgements {#acknowledgements}
 ## Funding Sources ##
 Parts of DREAM3D were written under US Air Force (AFRL) Contract FA8650-07-D-5800 and Navy Research Labs (NRL) Contract N00173-07-C-2068. Many others have contributed to the code including the following:
 
+![](Images/All_Logos.png) @image latex Images/BlueQuartzSoftware_Logo.png "User Interface" width=1.0in
+
+
 ## AFRL ###
-![](Images/AFRL_Logo.png)
-@image latex Images/AFRL_Logo.png "User Interface" width=1.5in
+
 Dr. Michael A. Groeber
+Dr. Adam Pilchak
+Dr. Megna Shah
+Dr. Michael Uchic
 
 ## BlueQuartz Software ###
-![](Images/BlueQuartzSoftware_Logo.png)
-@image latex Images/BlueQuartzSoftware_Logo.png "User Interface" width=1.5in
+
 Mr. Michael A. Jackson
 
 ## Carnegie Mellon University ###
-![](Images/CMU_MRSEC_Logo.png)
-@image latex Images/CMU_MRSEC_Logo.png "User Interface" width=1.5in
+
 
 + Dr. Tony Rollett
 + Dr. Greg Rohrer
