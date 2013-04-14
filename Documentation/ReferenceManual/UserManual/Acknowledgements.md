@@ -49,4 +49,4 @@ Dr. Somnath Ghosh (The Ohio State University)
 
 |   | Navigation |    |
 |----|---------|------|
-| --| [Top](@ref usermanual) | [Next Section](@ref userinterface) |
+| --| [Top](@ref usermanual) | [Next Section](@ref datastructure) |
