@@ -28,14 +28,14 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Update documentation file structure now that users can specify array names
 
 ### Developer Centric ###
-
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
 
 ### Ideas/Wish List ###
 + Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
-
++ Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
++ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
 
 
 ## Still to Do ##
