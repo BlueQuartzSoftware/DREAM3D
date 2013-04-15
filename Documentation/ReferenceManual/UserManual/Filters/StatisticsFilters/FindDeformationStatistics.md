@@ -5,8 +5,9 @@ Find Deformation Statistics {#finddeformationstatistics}
 Statistics Filters (Crystallographic)
 
 ## Description ##
-This Filter finds the _deformation statistics_ by using data from the __Cells__ and the __Fields__. 
-The Outputs are a Deformation Statistics file and a VTK file.
+This Filter looks for correlations between various local deformation metrics (i.e. Kernel Average Misorientation (KAM) of Grain Reference Misorientation (GRM)) and distance from a **Field** boundary.  The filter builds histograms of these metrics as a function of distance from a **Field** boundary and writes them to a user specified output file.  
+
+Note: this filter was developed for analyzing microtension specimens that had been deformed and then serial-sectioned at AFRL.
 
 ## Parameters ##
 
