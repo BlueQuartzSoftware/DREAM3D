@@ -21,42 +21,42 @@ set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 # Create the initial list of Files for DOxygen to process
 set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Index.dox
-  ${PROJECT_SOURCE_DIR}/UserManual/UserManual.dox
-  ${PROJECT_SOURCE_DIR}/UserManual/Acknowledgements.md
-  ${PROJECT_SOURCE_DIR}/UserManual/DataStructure.md
-  ${PROJECT_SOURCE_DIR}/UserManual/UserInterface.md
-  ${PROJECT_SOURCE_DIR}/UserManual/CreatingPipeline.md
-  ${PROJECT_SOURCE_DIR}/UserManual/ImportExportPipelines.md
-  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/SupportedFileFormats.dox
-  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/NativeDREAM3DFileFormat.md
-  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/XdmfForVisualization.md
-  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/MiscFileFormats.md
-  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/H5EbsdFile.md
-  ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/Tutorials.dox
-  ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/EBSDReconstruction.md
-  ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/SurfaceMeshing.md
-  ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/SyntheticSinglePhase.md
-  ${PROJECT_SOURCE_DIR}/UserManual/AuxiliaryTools/StatsGenerator.md
-  ${PROJECT_SOURCE_DIR}/UserManual/AuxiliaryTools/AuxiliaryTools.dox
+  ${PROJECT_SOURCE_DIR}/UserManual.dox
+  ${PROJECT_SOURCE_DIR}/Acknowledgements.md
+  ${PROJECT_SOURCE_DIR}/DataStructure.md
+  ${PROJECT_SOURCE_DIR}/UserInterface.md
+  ${PROJECT_SOURCE_DIR}/CreatingPipeline.md
+  ${PROJECT_SOURCE_DIR}/ImportExportPipelines.md
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/SupportedFileFormats.dox
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/NativeDREAM3DFileFormat.md
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/XdmfForVisualization.md
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/MiscFileFormats.md
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/H5EbsdFile.md
+  ${PROJECT_SOURCE_DIR}/Tutorials/Tutorials.dox
+  ${PROJECT_SOURCE_DIR}/Tutorials/EBSDReconstruction.md
+  ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
+  ${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md
+  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md
+  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox
 )
 
 set(DOXYGEN_IMAGE_DIRS
-  ${PROJECT_SOURCE_DIR}/UserManual/Images
-  ${PROJECT_SOURCE_DIR}/UserManual/SupportedFileFormats/Images
-  ${PROJECT_SOURCE_DIR}/UserManual/Tutorials/Images
-  ${PROJECT_SOURCE_DIR}/UserManual/AuxiliaryTools/Images
+  ${PROJECT_SOURCE_DIR}/Images
+  ${PROJECT_SOURCE_DIR}/SupportedFileFormats/Images
+  ${PROJECT_SOURCE_DIR}/Tutorials/Images
+  ${PROJECT_SOURCE_DIR}/AuxiliaryTools/Images
 )
 
 #-------------------------------------------------------------------------------
 # Read the list of Groups back into CMake
 file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList DREAM3D_DOC_GROUPS_FILE_LIST)
-file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox "/*!\n\n@page filterdocumentation Filter Documentation\n\n")
+file(WRITE ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n\n@page filterdocumentation Filter Documentation\n\n")
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   #message(STATUS "=======>   DOxygen Group: ${group}")
   string(TOLOWER ${group} filterGroup_Lower)
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox "@subpage ${filterGroup_Lower}\n\n")
+  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filterGroup_Lower}\n\n")
 endforeach()
-file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox "\n*/\n\n")
+file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "\n*/\n\n")
 
 
 
@@ -65,22 +65,22 @@ file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.
 foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
   string(TOLOWER ${group} filterGroup_Lower)
   file(STRINGS ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group} filter_path_list)
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
+  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "/*!\n@page ${filterGroup_Lower} ${group}\n\n")
   foreach(filterPath ${filter_path_list})
     get_filename_component(filter  ${filterPath} NAME_WE)
     get_filename_component(group_path ${filterPath} PATH)
     list(APPEND DOXYGEN_IMAGE_DIRS ${group_path})
     string(TOLOWER ${filter} filter_Lower)
-    file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox "@subpage ${filter_Lower}\n\n")
+    file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "@subpage ${filter_Lower}\n\n")
     list(APPEND DOCUMENTATION_SOURCE_FILES ${filterPath})
   endforeach()
   list(REMOVE_DUPLICATES DOXYGEN_IMAGE_DIRS)
-  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox "*/\n\n")
+  file(APPEND ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox "*/\n\n")
   file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${group})
 endforeach()
 file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
-set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" ${DREAM3DReferenceManual_BINARY_DIR}/UserManual/FilterDocumentation.dox)
+set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
 
 
 
@@ -98,7 +98,7 @@ set(LATEX_EPS_FILES
 
 
 if(DOX_GENERATE_LATEX)
-  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_Reference_Manual"
+  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D_User_Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_LATEX"
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}_LATEX"
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
@@ -120,7 +120,7 @@ set(DOCUMENTATION_SOURCE_FILES
 
 
 if(DOX_GENERATE_HTML)
-  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D Reference Manual"
+  ADD_DOXYGEN_TARGETS(PDF_FILENAME "DREAM3D User Manual"
                      PROJECT_NAME  "${PROJECT_NAME}_HTML"
                      PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}"
                      SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}"
