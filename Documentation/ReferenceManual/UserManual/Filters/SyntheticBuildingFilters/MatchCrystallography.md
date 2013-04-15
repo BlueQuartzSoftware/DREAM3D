@@ -5,15 +5,17 @@ Match Crystallography {#matchcrystallography}
 Synthetic Builder Filters (Crystallography)
 
 ## Description ##
-This Filter searches for the crystal structures present and finds where matches occur in the synthetic volume. The _Initialize Synthetic Volume_ Filter must be run before this Filter will function properly, because that Filter generates the Statistics needed by this Filter. *GrainIds* are also needed and must have been generated in other Synthetic Builder Filters.
+This Filter iteratively either swaps out the orientation of a **Field** (selected at random) for a new orientation (sampled from the goal Orientation Distribution Function) or switches the orientations of two **Fields** (selected at random).  The switch or swap is accepted if it lowers the error of the current ODF and Misorientation Distribution Function from the goal.  This is done for a user defined number of iterations.  
 
 ## Parameters ##
+| Name | Type |
+|------|------|
+| Maximum Number of Iterations (Swaps) | Integer |
 
 ## Required DataContainers ##
 Voxel
 
 ## Required Arrays ##
-
 | Type | Default Name | Comment |
 |------|--------------|---------|
 | Cell | GrainIds |  |

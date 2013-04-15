@@ -13,7 +13,7 @@ This filter writes out a file in column format that is space delimited. Header l
 - x Position (Microns)
 - y Position (Microns)
 - z Position (Microns)
-- **Field** Id
+- Field Id
 - Phase Id
 - Symmetry
  

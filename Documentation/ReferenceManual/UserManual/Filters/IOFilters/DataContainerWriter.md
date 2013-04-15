@@ -18,7 +18,7 @@ file but with an .xdmf file extension.
 | Name | Type |
 |------|------|
 | Output File | Output File |
-| Write **Cell** Data | Boolean (On or Off) |
+| Write Cell Data | Boolean (On or Off) |
 | Write SurfaceMesh Data | Boolean (On or Off) |
 | Write Xdmf File | Boolean (On or Off) |
 
