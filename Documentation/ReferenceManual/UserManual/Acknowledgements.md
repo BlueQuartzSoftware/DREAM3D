@@ -18,10 +18,9 @@ By 2013, Jackson and Groeber had fully documented the tools, created a Software 
 Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-5800 and Navy Research Labs (NRL) Contract N00173-07-C-2068. Many others have contributed to the code including the following:
 
 ## Major Contributing Institutions ##
-![](Images/All_Logos.png)
-@image latex Images/All_Logos.png "User Interface" width=3.0in
+![](Images/DREAM3D_Contributors.png)
 
-## List of Code Contributors (CC) and Vision Contributiors (VC) ###
+## List of Code Contributors (CC) and Vision Contributors (VC) ###
  
 ### Air Force Research Laboratory (AFRL) ###
 + Dr. Michael A. Groeber (VC, CC)
@@ -56,11 +55,6 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ### Other Insitituations ###
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
-
->
-
-
-
 
 
 |   | Navigation |    |
