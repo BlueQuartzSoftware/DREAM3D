@@ -4,7 +4,7 @@ DREAM.3D Data Structure {#datastructure}
 DREAM3D uses a data structure that is based on the concepts of combinatorial topology and common methods for describing mesh structures.  Any topological network (in 2- or 3-D) can be decribed with a the following hierarchy:
 ![](Images/DataStructure-2.png)
 
-If the mesh (or network) is 2-D, then the *Volume* element does not exist and the *Face* element is the highest level element. For typical *voxel-based* data, the *voxels* are the *Volume* elements and are referred to within DREAM.3D as **Cells**.  Similarly, in a surface mesh with triangluar patches, the triangles are the *Face* elements and are referred to within DREAM.3D as **Faces**.  This topology is required to describe the "mesh" or "structure" of the data itself and is not/cannot be adjusted/defined by the user. 
+If the mesh (or network) is 2-D, then the *Volume* element does not exist and the *Face* element is the highest level element. For typical *voxel-based* data, the *voxels* are the *Volume* elements and are referred to within DREAM.3D as **Cells**.  Similarly, in a surface mesh with triangular patches, the triangles are the *Face* elements and are referred to within DREAM.3D as **Faces**.  This topology is required to describe the "mesh" or "structure" of the data itself and is not/cannot be adjusted/defined by the user. 
 
 However, once the topology of the "structure" is set, the user can begin *grouping* topological elements into higher level features of the "structure".  Below is an example of this grouping for a *voxel-based* dataset of a polycrystalline metal.
 
@@ -16,7 +16,7 @@ At each level, DREAM.3D creates a *Map* to store information/data about the indi
 
 ## Vertex ##
   - Map of attributes associated with single *points*.    
-  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - generally measured data is not represented at the **Vertex** level, but the user could choose to store measured values at the **Verticies** rather than the more typical **Cell**-centered convention.
+  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - generally measured data is not represented at the **Vertex** level, but the user could choose to store measured values at the **Vertices** rather than the more typical **Cell**-centered convention.
   - Calculated values (i.e. Curvatures, Coordination, etc.) - these calculated values are typically values associated with the connectivity or geometry of the "mesh" or "structure" itself. 
 
 ## Edge ##
@@ -31,7 +31,7 @@ At each level, DREAM.3D creates a *Map* to store information/data about the indi
 
 ## Cell ##
   - Map of attributes associated with single *datapoints* - often these *datapoints* are not truly *volumes*, but rather point-probe measurements that are homogenized over the volume nearest to each probe-point.    
-  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually aquired.
+  - Measured values (i.e. Orientation, Chemistry, Greyscale, etc.) - typically this is the level at which most data is actually acquired.
   - Calculated values (i.e. Field Ids, Kernel Avg. Misorientation, Euclidean Distance, etc.) - these calculated values are typically IDs to the higher level maps (**Field** and **Ensemble**), related to gradients of the measured values or relationships to values calculated in the higher level maps. 
 
 
