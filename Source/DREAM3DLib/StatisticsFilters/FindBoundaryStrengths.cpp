@@ -60,16 +60,14 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_SurfaceMeshF1sptsArrayName(DREAM3D::FaceData::SurfaceMeshF1spts),
   m_SurfaceMeshF7sArrayName(DREAM3D::FaceData::SurfaceMeshF7s),
   m_SurfaceMeshmPrimesArrayName(DREAM3D::FaceData::SurfaceMeshmPrimes),
-  m_SurfaceMeshFaceLabels(NULL),  
-  m_SurfaceMeshF1s(NULL),  
-  m_SurfaceMeshF1spts(NULL),  
-  m_SurfaceMeshF7s(NULL),  
-  m_SurfaceMeshmPrimes(NULL),  
-  m_XLoading(1.0f),
-  m_YLoading(1.0f),
-  m_ZLoading(1.0f),
   m_FieldPhases(NULL),
-  m_AvgQuats(NULL)
+  m_AvgQuats(NULL),
+  m_CrystalStructures(NULL),
+  m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshF1s(NULL),
+  m_SurfaceMeshF1spts(NULL),
+  m_SurfaceMeshF7s(NULL),
+  m_SurfaceMeshmPrimes(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -79,6 +77,11 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+
+  m_Loading.x = 1.0f;
+  m_Loading.y = 1.0f;
+  m_Loading.z = 1.0f;
+
   setupFilterParameters();
 }
 
@@ -97,29 +100,11 @@ void FindBoundaryStrengths::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Loading X:");
-    option->setPropertyName("XLoading");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Loading");
+    option->setPropertyName("Loading");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
-    option->setCastableValueType("double");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Loading Y:");
-    option->setPropertyName("YLoading");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Loading Z:");
-    option->setPropertyName("ZLoading");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
+    option->setUnits("XYZ");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -127,9 +112,7 @@ void FindBoundaryStrengths::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("XLoading", getXLoading() );
-  writer->writeValue("YLoading", getYLoading() );
-  writer->writeValue("ZLoading", getZLoading() );
+  writer->writeValue("Loading", getLoading() );
 }
 
 // -----------------------------------------------------------------------------
@@ -182,8 +165,8 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-      TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-      if(err == -302)
+  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
+  if(err == -302)
   {
     setErrorCondition(0);
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
@@ -194,7 +177,7 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
@@ -251,9 +234,9 @@ void FindBoundaryStrengths::execute()
   float q1[5], q2[5];
   float LD[3];
 
-  LD[0] = m_XLoading;
-  LD[1] = m_YLoading;
-  LD[2] = m_ZLoading;
+  LD[0] = m_Loading.x;
+  LD[1] = m_Loading.y;
+  LD[2] = m_Loading.z;
   MatrixMath::normalize3x1(LD);
 
   int nTriangles = sm->getNumFaceTuples();

@@ -16,10 +16,14 @@ This filter calculates the same metrics as in the [Find Slip Transmission Metric
 Note: each metric is calculated twice for the two different directions slip could approach the boundary.  The values are stored on each **Face** in the **Face** map in a way that notes the direction (i.e. 1 to 2 vs. 2 to 1).
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------| ----------- |
+| Loading | Float Vector | The X, Y & Z Loading for the sample. |
 
 ## Required DataContainers ##
-Voxel; SurfaceMesh
+
++ Voxel
++ SurfaceMesh
 
 ## Required Arrays ##
 
