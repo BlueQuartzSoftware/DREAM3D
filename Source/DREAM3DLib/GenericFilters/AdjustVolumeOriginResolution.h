@@ -62,13 +62,8 @@ class DREAM3DLib_EXPORT AdjustVolumeOriginResolution : public AbstractFilter
 
     virtual ~AdjustVolumeOriginResolution();
 
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-    DREAM3D_INSTANCE_PROPERTY(float, XOrig)
-    DREAM3D_INSTANCE_PROPERTY(float, YOrig)
-    DREAM3D_INSTANCE_PROPERTY(float, ZOrig)
-
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -76,7 +71,7 @@ class DREAM3DLib_EXPORT AdjustVolumeOriginResolution : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

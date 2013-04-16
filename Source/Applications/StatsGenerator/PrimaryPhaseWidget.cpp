@@ -172,17 +172,17 @@ void PrimaryPhaseWidget::setupGui()
 
   microstructurePresetCombo->blockSignals(true);
   // Register all of our Microstructure Preset Factories
-  AbstractMicrostructurePresetFactory::Pointer presetFactory = RegisterPresetFactory<DefaultStatsPresetFactory>(microstructurePresetCombo);
+  AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
+
+  //Register the Equiaxed Preset
+  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
   QString presetName = QString::fromStdString(presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
   m_MicroPreset = manager->createNewPreset(presetName.toStdString());
 
-  //Register the Equiaxed Preset
-  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
-  // Register the Recrystallized Preset
-  //  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
+
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);

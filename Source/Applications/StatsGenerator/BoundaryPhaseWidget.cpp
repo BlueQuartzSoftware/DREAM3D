@@ -233,6 +233,7 @@ void BoundaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int in
   m_CrystalStructure = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
+  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_PhaseType = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();

@@ -102,6 +102,9 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
   qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
 
+  qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
+  qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
+
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
     m_OpenDialogLastDirectory = QDir::homePath();
@@ -135,7 +138,7 @@ QString QFilterWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 QString QFilterWidget::getFilterSubGroup()
 {
-	return QString::fromStdString(DREAM3D::FilterSubGroups::MiscFilters);
+  return QString::fromStdString(DREAM3D::FilterSubGroups::MiscFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -661,6 +664,8 @@ void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QString prop = QString::fromStdString(option->getPropertyName());
+  QVariant v = property(option->getPropertyName().c_str());
+  IntVec3Widget_t v3 = v.value<IntVec3Widget_t>();
 
   QHBoxLayout* horizontalLayout = new QHBoxLayout();
   horizontalLayout->setSpacing(8);
@@ -669,18 +674,21 @@ void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
   Dimensions_0->setObjectName(QString::fromUtf8("0_") + prop);
   QIntValidator* val_0 = new QIntValidator(this);
   Dimensions_0->setValidator(val_0);
+  Dimensions_0->setText(QString::number(v3.x));
   horizontalLayout->addWidget(Dimensions_0);
 
   QLineEdit* Dimensions_1 = new QLineEdit(this);
   Dimensions_1->setObjectName(QString::fromUtf8("1_") + prop);
   QIntValidator* val_1 = new QIntValidator(this);
   Dimensions_1->setValidator(val_1);
+  Dimensions_1->setText(QString::number(v3.y));
   horizontalLayout->addWidget(Dimensions_1);
 
   QLineEdit* Dimensions_2 = new QLineEdit(this);
   Dimensions_2->setObjectName(QString::fromUtf8("2_") + prop);
   QIntValidator* val_2 = new QIntValidator(this);
   Dimensions_2->setValidator(val_2);
+  Dimensions_2->setText(QString::number(v3.z));
   horizontalLayout->addWidget(Dimensions_2);
 
   frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
@@ -697,26 +705,35 @@ void QFilterWidget::setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex,
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QString prop = QString::fromStdString(option->getPropertyName());
+  QVariant v = property(option->getPropertyName().c_str());
+  FloatVec3Widget_t v3 = v.value<FloatVec3Widget_t>();
 
   QHBoxLayout* horizontalLayout = new QHBoxLayout();
   horizontalLayout->setSpacing(8);
   horizontalLayout->setContentsMargins(-1, 0, -1, -1);
+
   QLineEdit* Dimensions_0 = new QLineEdit(this);
   Dimensions_0->setObjectName(QString::fromUtf8("0_") + prop);
   QDoubleValidator* val_0 = new QDoubleValidator(this);
+  val_0->setDecimals(8);
   Dimensions_0->setValidator(val_0);
+  Dimensions_0->setText(QString::number(v3.x));
   horizontalLayout->addWidget(Dimensions_0);
 
   QLineEdit* Dimensions_1 = new QLineEdit(this);
   Dimensions_1->setObjectName(QString::fromUtf8("1_") + prop);
   QDoubleValidator* val_1 = new QDoubleValidator(this);
+  val_1->setDecimals(8);
   Dimensions_1->setValidator(val_1);
+  Dimensions_1->setText(QString::number(v3.y));
   horizontalLayout->addWidget(Dimensions_1);
 
   QLineEdit* Dimensions_2 = new QLineEdit(this);
   Dimensions_2->setObjectName(QString::fromUtf8("2_") + prop);
   QDoubleValidator* val_2 = new QDoubleValidator(this);
+  val_2->setDecimals(8);
   Dimensions_2->setValidator(val_2);
+  Dimensions_2->setText(QString::number(v3.z));
   horizontalLayout->addWidget(Dimensions_2);
 
   frmLayout->setLayout(optIndex, QFormLayout::FieldRole, horizontalLayout);
