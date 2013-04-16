@@ -41,14 +41,15 @@
 //
 // -----------------------------------------------------------------------------
 AdjustVolumeOriginResolution::AdjustVolumeOriginResolution() :
-  AbstractFilter(),
-  m_XRes(0.0),
-  m_YRes(0.0),
-  m_ZRes(0.0),
-  m_XOrig(0.0),
-  m_YOrig(0.0),
-  m_ZOrig(0.0)
+  AbstractFilter()
 {
+
+  m_Resolution.x = 1.0f;
+  m_Resolution.y = 1.0f;
+  m_Resolution.z = 1.0f;
+  m_Origin.x = 0.0f;
+  m_Origin.y = 0.0f;
+  m_Origin.z = 0.0f;
   setupFilterParameters();
 }
 
@@ -67,56 +68,20 @@ void AdjustVolumeOriginResolution::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Res");
-    option->setPropertyName("XRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Resolution");
+    option->setPropertyName("Resolution");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
-	option->setUnits("Microns");
+    option->setUnits("Microns");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Res");
-    option->setPropertyName("YRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Origin");
+    option->setPropertyName("Origin");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
-	option->setUnits("Microns");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Res");
-    option->setPropertyName("ZRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Origin");
-    option->setPropertyName("XOrig");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Origin");
-    option->setPropertyName("YOrig");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Origin");
-    option->setPropertyName("ZOrig");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
+    option->setUnits("Microns");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -127,12 +92,8 @@ void AdjustVolumeOriginResolution::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void AdjustVolumeOriginResolution::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("XRes", getXRes() );
-  writer->writeValue("YRes", getYRes() );
-  writer->writeValue("ZRes", getZRes() );
-  writer->writeValue("XOrig", getXOrig() );
-  writer->writeValue("YOrig", getYOrig() );
-  writer->writeValue("ZOrig", getZOrig() );
+  writer->writeValue("Origin", getOrigin() );
+  writer->writeValue("Resolution", getResolution() );
 }
 
 // -----------------------------------------------------------------------------
@@ -172,8 +133,8 @@ void AdjustVolumeOriginResolution::execute()
   setErrorCondition(0);
   std::stringstream ss;
 
-  m->setOrigin(m_XOrig, m_YOrig, m_ZOrig);
-  m->setResolution(m_XRes, m_YRes, m_ZRes);
+  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 
   notifyStatusMessage("Complete");
 }
