@@ -5,6 +5,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
+
+## Critical to Fix before Bad Things Happen ##
++ All the shape ops classes need to be fully reentrant for parallel applications
+
+
 ## Documentation Issues ##
 
 

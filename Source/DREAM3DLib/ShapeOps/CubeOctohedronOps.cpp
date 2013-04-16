@@ -127,9 +127,6 @@ float CubeOctohedronOps::radcur1(std::map<ArgName, float> args)
   }
   radcur1 = powf(radcur1, 0.333333333333f);
   radcur1 = radcur1 * 0.5f;
-
-  std::cout << omega3 << ", " << bestGvaluedist  << ", " <<  Gvalue << std::endl;
-
   return radcur1;
 }
 
