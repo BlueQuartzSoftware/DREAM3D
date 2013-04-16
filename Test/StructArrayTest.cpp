@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"
@@ -58,13 +59,35 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TestFilterParameter()
+{
+ FloatVec3Widget_t a;
+ a.x = 1.0f;
+ a.y = 2.0f;
+ a.z = 3.0f;
+
+ FloatVec3Widget_t b;
+ b.x = 0.0f;
+ b.y = 0.0f;
+ b.z = 0.0f;
+ b = a;
+
+DREAM3D_REQUIRE_EQUAL(a.x, b.x)
+DREAM3D_REQUIRE_EQUAL(a.y, b.y)
+DREAM3D_REQUIRE_EQUAL(a.z, b.z)
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestStructArray()
 {
 
-    DREAM3D::SurfaceMesh::VertListPointer_t nodes = DREAM3D::SurfaceMesh::VertList_t::CreateArray(10, DREAM3D::VertexData::SurfaceMeshNodes);
-    size_t size = nodes->GetNumberOfTuples();
-    int typeSize = nodes->GetTypeSize();
-    DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(DREAM3D::SurfaceMesh::Vert_t));
+  DREAM3D::SurfaceMesh::VertListPointer_t nodes = DREAM3D::SurfaceMesh::VertList_t::CreateArray(10, DREAM3D::VertexData::SurfaceMeshNodes);
+  size_t size = nodes->GetNumberOfTuples();
+  int typeSize = nodes->GetTypeSize();
+  DREAM3D_REQUIRE_EQUAL(typeSize, sizeof(DREAM3D::SurfaceMesh::Vert_t));
   for (size_t i = 0; i < size; ++i)
   {
     DREAM3D::SurfaceMesh::Vert_t* node = nodes->GetPointer(i);
@@ -83,7 +106,7 @@ void TestStructArray()
     DREAM3D_REQUIRE_EQUAL(node->pos[2] , i+20.0f);
   }
 
-// Resize UP
+  // Resize UP
   nodes->Resize(8);
   size = nodes->GetNumberOfTuples();
   for (size_t i = 0; i < size; ++i)
@@ -124,7 +147,7 @@ void TestStructArray()
     node.nodeKind = 2;
   }
 #endif
-  std::cout << "Test COmplete" << std::endl;
+//  std::cout << "Test Complete" << std::endl;
 }
 
 
@@ -138,12 +161,13 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  DREAM3D_REGISTER_TEST( TestStructArray() )
+   DREAM3D_REGISTER_TEST( TestStructArray() )
+   DREAM3D_REGISTER_TEST( TestFilterParameter() )
 
 
-#if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
+    #if REMOVE_TEST_FILES
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    #endif
 
 
   PRINT_TEST_SUMMARY();
