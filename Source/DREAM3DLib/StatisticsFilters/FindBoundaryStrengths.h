@@ -79,6 +79,11 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 
     virtual ~FindBoundaryStrengths();
 
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF1sArrayName)
@@ -86,19 +91,10 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshF7sArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshmPrimesArrayName)
 
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(vtkOutputFile)
-    DREAM3D_INSTANCE_PROPERTY(float, XLoading)
-    DREAM3D_INSTANCE_PROPERTY(float, YLoading)
-    DREAM3D_INSTANCE_PROPERTY(float, ZLoading)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Loading)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
 
     virtual void setupFilterParameters();
