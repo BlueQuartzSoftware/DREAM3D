@@ -5,11 +5,11 @@ Find Field Neighbors {#findneighbors}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter determines, for each **Field**, the number of other **Fields** that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Field** is as follows: 
+This Filter determines, for each **Field**, the number of other **Fields** that are in contact with it.  The algorithm for determining the number of "contiguous" neighbors of each **Field** is as follows:
 
 1) Identify the **Field** to which a **Cell** belongs
 2) Identify the **Fields** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
-3) If a neighboring **Cell** belongs to a different **Field** than the current **Cell**, then that **Field** (owner of the neighboring **Cell**) is added to the list of contiguous neighbors of the **Field** that owns the current **Cell**. 
+3) If a neighboring **Cell** belongs to a different **Field** than the current **Cell**, then that **Field** (owner of the neighboring **Cell**) is added to the list of contiguous neighbors of the **Field** that owns the current **Cell**.
 4) Repeat 1-3 for all **Cells**
 
 While performing the above steps, the number of neighboring **Cell**(s)/datapoint(s) with different **Field** owner(s) than a given **Cell** is stored, which identifies whether a **Cell** lies on the surface of a **Field** (i.e. the **Field** boundary).
@@ -17,6 +17,7 @@ Additionally, the surface area shared between each set of contiguous **Fields** 
 The filter also notes which **Fields** touch the outer surface of the sample (this is obtianed for "free" while performing the above algorithm).
 
 ## Parameters ##
+None
 
 ## Required DataContainers ##
 Voxel
