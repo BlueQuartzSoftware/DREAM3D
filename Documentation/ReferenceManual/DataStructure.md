@@ -50,4 +50,4 @@ At each level, DREAM.3D creates a *Map* to store information/data about the indi
 
 |   | Navigation |    |
 |----|---------|------|
-| [Back](@ref acknowledgements) | [Top](@ref usermanual) | [Next Section](@ref supportedfileformats) |
+| [Back](acknowledgements.html) | [Top](index.html) | [Next Section](supportedfileformats.html) |
