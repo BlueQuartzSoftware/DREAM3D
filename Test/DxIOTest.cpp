@@ -60,7 +60,8 @@ class GenerateGrainIds : public AbstractFilter
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    virtual ~GenerateGrainIds(){};
+    virtual ~GenerateGrainIds(){}
+
     virtual const std::string getGroupName()
     {
       return "UnitTest";
@@ -149,8 +150,10 @@ int TestDxWriter()
   DxWriter::Pointer writer = DxWriter::New();
   writer->setOutputFile(UnitTest::DxIOTest::TestFile);
   pipeline->pushBack(writer);
+  int err = pipeline->preflightPipeline();
+  DREAM3D_REQUIRE(err < 0);
   pipeline->execute();
-  int err = pipeline->getErrorCondition();
+  err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE(err < 0);
 
   // Now create some GrainIds and lets setup a real pipeline that should work
@@ -163,7 +166,8 @@ int TestDxWriter()
   writer = DxWriter::New();
   writer->setOutputFile(UnitTest::DxIOTest::TestFile);
   pipeline->pushBack(writer);
-
+  err = pipeline->preflightPipeline();
+  DREAM3D_REQUIRE_EQUAL(err, 0);
   pipeline->execute();
   err = pipeline->getErrorCondition();
   DREAM3D_REQUIRE_EQUAL(err, 0);
