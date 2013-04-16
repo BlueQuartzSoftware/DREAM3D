@@ -68,6 +68,7 @@ void AdjustVolumeOriginResolution::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
+
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
     option->setWidgetType(FilterParameter::FloatVec3Widget);

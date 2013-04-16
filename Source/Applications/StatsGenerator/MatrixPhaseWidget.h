@@ -42,7 +42,7 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
      MXA_INSTANCE_PROPERTY(unsigned int, PhaseType)
      MXA_INSTANCE_PROPERTY(float, PhaseFraction)
      MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+ //    MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
      void extractStatsData(VoxelDataContainer::Pointer m, int index);
 
@@ -55,7 +55,7 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
      int gatherStatsData(VoxelDataContainer::Pointer m);
 
   // public slots:
-     void on_m_GenerateDefaultData_clicked();
+  //s   void on_m_GenerateDefaultData_clicked();
 
    protected slots:
 
