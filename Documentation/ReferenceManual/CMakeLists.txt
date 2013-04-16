@@ -21,7 +21,6 @@ set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 # Create the initial list of Files for DOxygen to process
 set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Index.dox
-  ${PROJECT_SOURCE_DIR}/UserManual.dox
   ${PROJECT_SOURCE_DIR}/Acknowledgements.md
   ${PROJECT_SOURCE_DIR}/DataStructure.md
   ${PROJECT_SOURCE_DIR}/UserInterface.md
