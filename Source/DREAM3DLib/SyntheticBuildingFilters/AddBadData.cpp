@@ -74,7 +74,7 @@ void AddBadData::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Add Poisson Noise");
+    option->setHumanLabel("Add Random Noise");
     option->setPropertyName("PoissonNoise");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
@@ -82,7 +82,7 @@ void AddBadData::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Volume Fraction of Poisson Noise");
+    option->setHumanLabel("Volume Fraction of Random Noise");
     option->setPropertyName("PoissonVolFraction");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");

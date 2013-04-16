@@ -11,12 +11,15 @@ Each array is stored as an individual data set in HDF5 under one of several diff
 + SolidMesh DataContainer
 
 
-Depending on the type of data created the actual data array that a user may be interested in may be stored in various subgroups in the HDF5 file. For example with a Voxel Data Container there are three types of Data: Cell, Field and Ensemble. Arrays created for each type are stored in subgroups. For example with Voxel based data the following HDF5 group organization is used:
+Depending on the type of data created the actual data array that a user may be interested in may be stored in various subgroups in the HDF5 file. For example with a Voxel Data Container there are six (6) types of Data: Vertex, Edge, Face, Cell, Field and Ensemble. Arrays created for each type are stored in subgroups. For example with Voxel based data the following HDF5 group organization is used:
 
 + VoxelDataContainer ( _Group_ )
     + DIMENSIONS ( _Dataset_ )
     + ORIGIN ( _Dataset_ )
     + SPACING ( _Dataset_ )
+    + VERTEX_DATA ( _Group_ )
+    + EDGE_DATA ( _Group_ )
+    + FACE_DATA ( _Group_ )
     + CELL_DATA ( _Group_ )
         - GrainIds ( _Dataset_ )
         - EulerAngles ( _Dataset_ )
@@ -30,16 +33,25 @@ Depending on the type of data created the actual data array that a user may be i
 
 In the above example we have shown a number of data arrays for each group type. The user should note that the data sets shown in the above example are hypothetical and may or may not appear in data sets that the user generates.
 
+With a SurfaceMesh Data Container there are only five (5) types of Data: Vertex, Edge, Face, Field and Ensemble. The missing type of Data in the SurfaceMesh is the Cell.  This is because the SurfaceMesh is a 2-D feature and thus the Face is the Cell and thus a level can be ommitted.
+
+
 + SurfaceMeshDataContainer ( _Group_ )
     + Faces ( _Dataset_ )
     + Vertices ( _Dataset_ )
-    + CELL_DATA ( _Group_ )
+    + VERTEX_DATA ( _Group_ )
+        - VertexNormal ( _Dataset_ )
+    + EDGE_DATA ( _Group_ )
+    + FACE_DATA ( _Group_ )
         - Normals ( _Dataset_ )
         - Centroids ( _Dataset_ )
         - Curvature ( _Dataset_ )
         - IPFColor ( _Dataset_ )
-    + POINT_DATA ( _Group_ )
-        - VertexNormal ( _Dataset_ )
+    + FIELD_DATA ( _Group_ )
+        - AvgCurvature ( _Dataset_ )
+        - MeanWidth ( _Dataset_ )
+    + ENSEMBLE_DATA ( _Group_ )
+        - GBCD ( _Dataset_ )
  
 In the above we show how a surface mesh is stored. For more information on the actual data structure of the surface mesh please see the [Surface Meshing Tutorial](tutorialsurfacemeshingtutorial.html).
 
