@@ -337,12 +337,12 @@ void StatsGeneratorUI::on_editPhase_clicked()
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
   {
     PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(sgwidget);
-    dialog.setPptFraction(ppw->getPptFraction());
+    if (ppw) dialog.setPptFraction(ppw->getPptFraction());
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
   {
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
-    dialog.setParentPhase(tpw->getParentPhase());
+    if (tpw) dialog.setParentPhase(tpw->getParentPhase());
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
   {
@@ -666,7 +666,10 @@ void StatsGeneratorUI::on_actionSave_triggered()
     err = sgwidget->gatherStatsData(m);
     if(err < 0)
     {
-
+      QString  msg("Could not save file due to an internal error gathering statistics.\nError code ");
+      msg.append(QString::number(err));
+      QMessageBox::critical(this, QString("File Save Error"), msg , QMessageBox::Ok);
+      return;
     }
   }
 

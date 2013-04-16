@@ -210,8 +210,14 @@ int MatrixPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
   MatrixStatsData* matrixStatsData = MatrixStatsData::SafePointerDownCast(statsData.get());
-
-  matrixStatsData->setPhaseFraction(calcPhaseFraction);
+  if(NULL != matrixStatsData)
+  {
+    matrixStatsData->setPhaseFraction(calcPhaseFraction);
+  }
+  else
+  {
+    retErr = -1000;
+  }
 
   return retErr;
 }
@@ -231,6 +237,7 @@ void MatrixPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int inde
   m_CrystalStructure = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
+  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_PhaseType = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
