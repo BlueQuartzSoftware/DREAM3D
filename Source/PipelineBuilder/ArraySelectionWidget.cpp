@@ -405,3 +405,30 @@ void ArraySelectionWidget::setSolidMeshEnabled(bool b)
 {
   solidmesh_data->setEnabled(b);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::removeVoxelData()
+{
+  int index = indexOf(voxel_data);
+  removeTab(index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::removeSurfaceMeshData()
+{
+  int index = indexOf(surfacemesh_data);
+  removeTab(index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::removeSolidMeshData()
+{
+  int index = indexOf(solidmesh_data);
+  removeTab(index);
+}
