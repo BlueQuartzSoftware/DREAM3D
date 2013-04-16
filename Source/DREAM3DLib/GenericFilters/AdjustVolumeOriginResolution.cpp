@@ -34,16 +34,20 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "RenameCellArray.h"
+#include "AdjustVolumeOriginResolution.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RenameCellArray::RenameCellArray() :
+AdjustVolumeOriginResolution::AdjustVolumeOriginResolution() :
   AbstractFilter(),
-  m_SelectedCellArrayName(""),
-  m_NewCellArrayName("")
+  m_XRes(0.0),
+  m_YRes(0.0),
+  m_ZRes(0.0),
+  m_XOrig(0.0),
+  m_YOrig(0.0),
+  m_ZOrig(0.0)
 {
   setupFilterParameters();
 }
@@ -51,85 +55,101 @@ RenameCellArray::RenameCellArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RenameCellArray::~RenameCellArray()
+AdjustVolumeOriginResolution::~AdjustVolumeOriginResolution()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::setupFilterParameters()
+void AdjustVolumeOriginResolution::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Current Cell Array Name");
-    option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
-    option->setValueType("string");
-    option->setUnits("");
+    option->setHumanLabel("X Res");
+    option->setPropertyName("XRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+	option->setUnits("Microns");
     parameters.push_back(option);
   }
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Cell Array Name");
-    parameter->setPropertyName("NewCellArrayName");
-    parameter->setWidgetType(FilterParameter::StringWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Y Res");
+    option->setPropertyName("YRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+	option->setUnits("Microns");
+    parameters.push_back(option);
   }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Z Res");
+    option->setPropertyName("ZRes");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+	option->setUnits("Microns");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("X Origin");
+    option->setPropertyName("XOrig");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+	option->setUnits("Microns");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Y Origin");
+    option->setPropertyName("YOrig");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+	option->setUnits("Microns");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Z Origin");
+    option->setPropertyName("ZOrig");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+	option->setUnits("Microns");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AdjustVolumeOriginResolution::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->writeValue("XRes", getXRes() );
+  writer->writeValue("YRes", getYRes() );
+  writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("XOrig", getXOrig() );
+  writer->writeValue("YOrig", getYOrig() );
+  writer->writeValue("ZOrig", getZOrig() );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void AdjustVolumeOriginResolution::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
   setErrorCondition(0);
   std::stringstream ss;
 
-  if(m_SelectedCellArrayName.empty() == true)
-  {
-    setErrorCondition(-11000);
-	ss << "An array from the Voxel Data Container must be selected.";
-	addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
-	notifyErrorMessage(ss.str(), getErrorCondition());
-  }
-  else
-  {
-	bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
-	if(check == false)
-	{ 
-		ss << "Array to be renamed could not be found in DataContainer";
-		addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
-		notifyErrorMessage(ss.str(), getErrorCondition());
-	}
-  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::preflight()
+void AdjustVolumeOriginResolution::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -140,7 +160,7 @@ void RenameCellArray::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::execute()
+void AdjustVolumeOriginResolution::execute()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -152,14 +172,8 @@ void RenameCellArray::execute()
   setErrorCondition(0);
   std::stringstream ss;
 
-  bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
-
-  if(check == false)
-  {
-	ss << "Array to be renamed could not be found in DataContainer";
-	setErrorCondition(-11000);
-	notifyErrorMessage(ss.str(), getErrorCondition());
-  }
+  m->setOrigin(m_XOrig, m_YOrig, m_ZOrig);
+  m->setResolution(m_XRes, m_YRes, m_ZRes);
 
   notifyStatusMessage("Complete");
 }

@@ -31,6 +31,7 @@ set(_PublicFilters
   RemoveArrays
   RenameCellArray
   RenameFieldArray
+  AdjustVolumeOriginResolution
 )
 
 
