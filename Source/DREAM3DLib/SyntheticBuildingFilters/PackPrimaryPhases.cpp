@@ -183,9 +183,9 @@ class AssignVoxelsGapsImpl
               coords[1] = float(iter2) * res[1];
               coords[2] = float(iter3) * res[2];
 
-              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              if (dist < radcur1squared)
-              {
+//              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+//              if (dist < radcur1squared)
+//              {
                 coords[0] = coords[0] - xc;
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
@@ -207,7 +207,7 @@ class AssignVoxelsGapsImpl
                   newowners[index] = curGrain;
                   ellipfuncs[index] = inside;
                 }
-              }
+//              }
             }
 
           }

@@ -103,7 +103,6 @@ SGWidget(parent),
 m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
-m_DataHasBeenGenerated(true),
 m_PhaseIndex(0),
 m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
 m_grid(NULL)
@@ -247,14 +246,6 @@ void BoundaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int in
 
   m_PhaseFraction = boundaryStatsData->getPhaseFraction();
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::on_m_GenerateDefaultData_clicked()
-{
-  m_DataHasBeenGenerated = true;
 }
 
 // -----------------------------------------------------------------------------
