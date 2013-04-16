@@ -145,6 +145,8 @@ void QReadH5EbsdWidget::setupGui()
 
   arraySelectionWidget->setSurfaceMeshEnabled(false);
   arraySelectionWidget->setSolidMeshEnabled(false);
+  arraySelectionWidget->removeSurfaceMeshData();
+  arraySelectionWidget->removeSolidMeshData();
 }
 
 // -----------------------------------------------------------------------------
