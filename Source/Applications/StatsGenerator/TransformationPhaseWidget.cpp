@@ -168,17 +168,16 @@ void TransformationPhaseWidget::setupGui()
 
   microstructurePresetCombo->blockSignals(true);
   // Register all of our Microstructure Preset Factories
-  AbstractMicrostructurePresetFactory::Pointer presetFactory = RegisterPresetFactory<DefaultStatsPresetFactory>(microstructurePresetCombo);
+  AbstractMicrostructurePresetFactory::Pointer presetFactory = AbstractMicrostructurePresetFactory::NullPointer();
+
+  //Register the Equiaxed Preset
+  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
   QString presetName = QString::fromStdString(presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
   m_MicroPreset = manager->createNewPreset(presetName.toStdString());
 
-  //Register the Equiaxed Preset
-  presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
-  // Register the Recrystallized Preset
-//  presetFactory = RegisterPresetFactory<RecrystallizedPresetFactory>(microstructurePresetCombo);
 
   // Select the first Preset in the list
   microstructurePresetCombo->setCurrentIndex(0);
@@ -854,6 +853,7 @@ void TransformationPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, 
   m_CrystalStructure = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
+  data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_PhaseType = data->GetValue(index);
 
   iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
