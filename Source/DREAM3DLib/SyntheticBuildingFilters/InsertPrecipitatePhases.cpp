@@ -319,6 +319,11 @@ void InsertPrecipitatePhases::execute()
     return;
   }
 
+  if(m_WriteGoalAttributes == true)
+  {
+    write_goal_attributes();
+  }
+
   m->removeFieldData(m_EquivalentDiametersArrayName);
   m->removeFieldData(m_Omega3sArrayName);
   m->removeFieldData(m_AxisEulerAnglesArrayName);
