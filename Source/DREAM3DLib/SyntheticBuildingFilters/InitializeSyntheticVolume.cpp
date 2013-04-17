@@ -81,6 +81,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     option->setHumanLabel("Statistics File");
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setFileExtension("*.dream3d *.h5stats");
     option->setValueType("string");
     parameters.push_back(option);
   }
