@@ -276,8 +276,7 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
   H5G_info_t group_info;
   err = H5Gget_info(loc_id, &group_info);
   if (err < 0) {
-    std::cout << "Error getting number of objects for group: "
-        << loc_id << std::endl;
+    //std::cout << "Error getting number of objects for group: " << loc_id << std::endl;
     return err;
   }
   numObjs = group_info.nlinks;
