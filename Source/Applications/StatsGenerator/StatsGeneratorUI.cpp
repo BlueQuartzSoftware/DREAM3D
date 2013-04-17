@@ -579,7 +579,7 @@ void StatsGeneratorUI::openRecentFile()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionSaveAs_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.h5";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
     proposedFile,
     tr("DREAM3D Files (*.dream3d)") );
