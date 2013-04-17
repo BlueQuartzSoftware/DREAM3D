@@ -229,6 +229,11 @@ void CopyFieldArrayToCellArray::execute()
   {
     p = copyData<double>(inputData, voxels, m_GrainIds);
   }
+  else if (dType.compare("bool") == 0)
+  {
+    p = copyData<bool>(inputData, voxels, m_GrainIds);
+  }
+
 
   if (p.get() != NULL)
   {
