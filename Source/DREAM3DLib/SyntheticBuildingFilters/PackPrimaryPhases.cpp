@@ -246,7 +246,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
   m_ErrorOutputFile(""),
-  m_VtkOutputFile(""),
+  m_VtkOutputFile("test.vtk"),
   m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
