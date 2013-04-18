@@ -55,12 +55,20 @@
 PhReader::PhReader() :
 FileReader(),
 m_InputFile(""),
-  m_XRes(1.0f),
-  m_YRes(1.0f),
-  m_ZRes(1.0f),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_GrainIds(NULL)
+m_GrainIds(NULL),
+m_InStream(NULL)
+
 {
+  m_Origin.x = 0.0;
+  m_Origin.y = 0.0;
+  m_Origin.z = 0.0;
+
+  m_Resolution.x = 1.0;
+  m_Resolution.y = 1.0;
+  m_Resolution.z = 1.0;
+
+  m_Dims[0] = 0; m_Dims[1] = 0; m_Dims[2] = 0;
   setupFilterParameters();
 }
 
@@ -80,34 +88,29 @@ void PhReader::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input PH File");
+    option->setHumanLabel("Input File");
     option->setPropertyName("InputFile");
     option->setWidgetType(FilterParameter::InputFileWidget);
+    option->setFileExtension("*.dx");
     option->setValueType("string");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Res");
-    option->setPropertyName("XRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Origin");
+    option->setPropertyName("Origin");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
+    option->setUnits("XYZ");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Res");
-    option->setPropertyName("YRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Resolution");
+    option->setPropertyName("Resolution");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Res");
-    option->setPropertyName("ZRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
+    option->setUnits("XYZ");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -119,9 +122,8 @@ void PhReader::setupFilterParameters()
 void PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("XRes", getXRes() );
-  writer->writeValue("YRes", getYRes() );
-  writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("Origin", getOrigin() );
+  writer->writeValue("Resolution", getResolution() );
 }
 
 // -----------------------------------------------------------------------------
@@ -148,6 +150,30 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+
+// We need to read the header of the input file to get the dimensions
+  m_InStream = fopen(getInputFile().c_str(), "r");
+  if(m_InStream == NULL)
+  {
+    setErrorCondition(-48802);
+    notifyErrorMessage("Error opening input file", getErrorCondition());
+    return;
+  }
+
+
+  int error = readHeader();
+  fclose(m_InStream);
+  m_InStream = NULL;
+  if (error < 0)
+  {
+    setErrorCondition(error);
+    ss.clear();
+    ss << "Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?";
+    addErrorMessage(getHumanLabel(), ss.str(), -48010);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -161,8 +187,72 @@ void PhReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PhReader::execute()
+{
+  /* DO NOT CALL THE DATACHECK() from this method. You will end up in an endless loop.
+   * The array will get allocated down in the 'readFile()' method.
+   */
+  if (NULL == getVoxelDataContainer())
+  {
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    setErrorCondition(-48020);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
+  }
+
+  std::stringstream ss;
+  int err = 0;
+
+  m_InStream = fopen(getInputFile().c_str(), "r");
+  if(m_InStream == NULL)
+  {
+    setErrorCondition(-48030);
+    notifyErrorMessage("Error opening input file", getErrorCondition());
+    return;
+  }
+
+
+  err = readHeader();
+  if(err < 0)
+  {
+  fclose(m_InStream);
+  m_InStream = NULL;
+    return;
+  }
+  err = readFile();
+  fclose(m_InStream);
+  m_InStream = NULL;
+  if(err < 0)
+  {
+    return;
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int PhReader::readHeader()
 {
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  int nx = 0;
+  int ny = 0;
+  int nz = 0;
+
+
+  // Read Line #1 which has the dimensions
+  fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
+  m->setDimensions(nx, ny, nz);
+
+  char buf[BUF_SIZE];
+  // Read Line #2 and dump it
+  ::memset(buf, 0, BUF_SIZE);
+  fgets(buf, BUF_SIZE, m_InStream);
+  // Read Line #3 and dump it
+  ::memset(buf, 0, BUF_SIZE);
+  fgets(buf, BUF_SIZE, m_InStream);
   return 0;
 }
 
@@ -172,58 +262,30 @@ int PhReader::readHeader()
 int  PhReader::readFile()
 {
 
-  if (NULL == getVoxelDataContainer())
-  {
-    std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-1);
-    return -1;
-  }
+  VoxelDataContainer* m = getVoxelDataContainer();
 
-  int nx = 0;
-  int ny = 0;
-  int nz = 0;
-
-  FILE* f = fopen(getInputFile().c_str(), "r");
-  if(f == NULL)
-  {
-    setErrorCondition(-1);
-    notifyErrorMessage("Error opening input file", getErrorCondition());
-    return getErrorCondition();
-  }
-
-  // Read Line #1 which has the dimensions
-  fscanf(f, "%d %d %d\n", &nx, &ny, &nz);
-  char buf[BUF_SIZE];
-  // Read Line #2 and dump it
-  ::memset(buf, 0, BUF_SIZE);
-  fgets(buf, BUF_SIZE, f);
-  // Read Line #3 and dump it
-  ::memset(buf, 0, BUF_SIZE);
-  fgets(buf, BUF_SIZE, f);
-
-  size_t total = nx * ny * nz;
-  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(total, DREAM3D::CellData::GrainIds);
+  size_t totalPoints = m->getTotalPoints();
+  Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);
   m_GrainIdData->initializeWithValues(-1);
   int32_t* grainIds = m_GrainIdData->GetPointer(0);
-  for(size_t n = 0; n < total; ++n)
+  for(size_t n = 0; n < totalPoints; ++n)
   {
-    if (fscanf(f, "%d", grainIds+n) == 0)
+    if (fscanf(m_InStream, "%d", grainIds+n) == 0)
     {
-      fclose(f);
-      setErrorCondition(-1);
+      fclose(m_InStream);
+      m_InStream = NULL;
+      setErrorCondition(-48040);
       notifyErrorMessage("Error reading Ph data", getErrorCondition());
-      return -1;
+      return getErrorCondition();
     }
   }
-  fclose(f);
 
   // Read the data and stick it in the data Container
   getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
-  getVoxelDataContainer()->setDimensions(nx, ny, nz);
-  getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
-  getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
+
+  // Now set the Resolution and Origin that the user provided on the GUI or as parameters
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
   notifyStatusMessage("Complete");
   return 0;

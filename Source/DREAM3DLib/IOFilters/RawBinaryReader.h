@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfComponents)
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Spacing)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 
@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

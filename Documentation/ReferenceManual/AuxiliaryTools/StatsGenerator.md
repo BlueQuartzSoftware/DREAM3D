@@ -99,7 +99,7 @@ The main features are:
 - There are three PFs formed for each of the crystal structures that can be chosen (though they are of different directions for the different crystal structures).
       
     
-**MDF Sub Tab** ;This sub-tab will display the baseline MDF for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from  the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
+**MDF Sub Tab** This sub-tab will display the baseline MDF for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from  the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
 
 ![MDF Gui](Images/image007.png)
   

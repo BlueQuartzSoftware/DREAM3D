@@ -36,24 +36,26 @@
 
 #include "H5VoxelFileReader.h"
 
+#include <limits>
+
 #include "MXA/Utilities/MXAFileInfo.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 H5VoxelFileReader::H5VoxelFileReader() :
-FileReader(),
-m_InputFile(""),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_CellEulerAngles(NULL),
-m_CrystalStructures(NULL),
-m_PhaseTypes(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_CellEulerAngles(NULL),
+  m_CrystalStructures(NULL),
+  m_PhaseTypes(NULL)
 {
   setupFilterParameters();
 }
@@ -117,12 +119,64 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   typedef DataArray<unsigned int> PTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+
+  int err = 0;
+  H5VoxelReader::Pointer reader = H5VoxelReader::New();
+  reader->setFileName(getInputFile());
+  int64_t dims[3];
+  float spacing[3];
+  float origin[3];
+  err = reader->getSizeResolutionOrigin(dims, spacing, origin);
+
+    /* Sanity check what we are trying to load to make sure it can fit in our address space.
+     * Note that this does not guarantee the user has enough left, just that the
+     * size of the volume can fit in the address space of the program
+     */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+    if(dims[0] * dims[1] * dims[2] > max)
+    {
+      err = -1;
+      std::stringstream s;
+      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+      setErrorCondition(err);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
+      return;
+    }
+
+    if(dims[0] > max || dims[1] > max || dims[2] > max)
+    {
+      err = -1;
+      std::stringstream s;
+      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+      setErrorCondition(err);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
+      return;
+    }
+    /* ************ End Sanity Check *************************** */
+    size_t dcDims[3] =
+    { dims[0], dims[1], dims[2] };
+    m->setDimensions(dcDims);
+    m->setResolution(spacing);
+    m->setOrigin(origin);
+
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void H5VoxelFileReader::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void H5VoxelFileReader::execute()
 {
   if(NULL == getVoxelDataContainer())
@@ -143,7 +197,7 @@ void H5VoxelFileReader::execute()
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "Error Reading the Dimensions, Origin and Scaling values from the HDF5 Voxel File", -1);
-  addErrorMessage(em);
+    addErrorMessage(em);
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
   getVoxelDataContainer()->setDimensions(dcDims);
@@ -163,7 +217,7 @@ void H5VoxelFileReader::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the GrainIDs from the .h5voxel file.", err);
-  addErrorMessage(em);
+    addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
   arrayname = "PhaseID";
@@ -172,7 +226,7 @@ void H5VoxelFileReader::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the Phases from the .h5voxel file.", err);
-  addErrorMessage(em);
+    addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
   arrayname = "Euler Angles";
@@ -181,7 +235,7 @@ void H5VoxelFileReader::execute()
   {
     setErrorCondition(err);
     PipelineMessage em (getHumanLabel(), "Error Reading the Euler Angles from the .h5voxel file.", err);
-  addErrorMessage(em);
+    addErrorMessage(em);
     grainIds = DataArray<int>::NullPointer();
   }
 
@@ -205,15 +259,15 @@ void H5VoxelFileReader::execute()
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);
   if(err < 0)
   {
-      PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
-      addErrorMessage(em);
+    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Crystal Structure Field Data", err);
+    addErrorMessage(em);
   }
   arrayname = "PhaseType";
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, phaseType);
   if(err < 0)
   {
-      PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);
-      addErrorMessage(em);
+    PipelineMessage em (getHumanLabel(), "H5VoxelReader Error Reading the Phase Type Data", err);
+    addErrorMessage(em);
   }
 
   DataArray<unsigned int>::Pointer crystructs = DataArray<unsigned int>::CreateArray(crystruct.size(), DREAM3D::EnsembleData::CrystalStructures);

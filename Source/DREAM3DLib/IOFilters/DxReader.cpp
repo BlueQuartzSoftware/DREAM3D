@@ -46,12 +46,18 @@
 DxReader::DxReader() :
 FileReader(),
 m_InputFile(""),
-m_XRes(1.0f),
-m_YRes(1.0f),
-m_ZRes(1.0f),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
 {
+  m_Origin.x = 0.0;
+  m_Origin.y = 0.0;
+  m_Origin.z = 0.0;
+
+  m_Resolution.x = 1.0;
+  m_Resolution.y = 1.0;
+  m_Resolution.z = 1.0;
+
+  m_Dims[0] = 0; m_Dims[1] = 0; m_Dims[2] = 0;
   setupFilterParameters();
 }
 
@@ -79,26 +85,20 @@ void DxReader::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Res");
-    option->setPropertyName("XRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Origin");
+    option->setPropertyName("Origin");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
+    option->setUnits("XYZ");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Res");
-    option->setPropertyName("YRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setHumanLabel("Resolution");
+    option->setPropertyName("Resolution");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Res");
-    option->setPropertyName("ZRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
+    option->setUnits("XYZ");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -108,9 +108,8 @@ void DxReader::setupFilterParameters()
 void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
-    writer->writeValue("XRes", getXRes() );
-  writer->writeValue("YRes", getYRes() );
-  writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("Origin", getOrigin() );
+  writer->writeValue("Resolution", getResolution() );
 }
 
 // -----------------------------------------------------------------------------
@@ -136,6 +135,36 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+
+  if (m_InStream.is_open() == true)
+  {
+    m_InStream.close();
+  }
+// We need to read the header of the input file to get the dimensions
+  m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
+  if(!m_InStream)
+  {
+    ss.clear();
+    ss << " Runtime Error. The input file '" << getInputFile() << "' could not be"
+        << " opened for reading. Do you have access to this file?";
+    setErrorCondition(-49800);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
+  }
+
+  int error = readHeader();
+  m_InStream.close();
+  if (error < 0)
+  {
+    setErrorCondition(error);
+    ss.clear();
+    ss << "Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?";
+    addErrorMessage(getHumanLabel(), ss.str(), -11000);
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -146,49 +175,55 @@ void DxReader::preflight()
   dataCheck(true, 1, 1, 1);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DxReader::execute()
+{
+  std::stringstream ss;
+  int err = 0;
+
+  m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
+  if(!m_InStream)
+  {
+    ss.clear();
+    ss << " Runtime Error. The input file '" << getInputFile() << "' could not be"
+        << " opened for reading. Do you have access to this file?";
+    setErrorCondition(-49801);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
+  }
+
+  err = readHeader();
+  if(err < 0)
+  {
+    m_InStream.close();
+    return;
+  }
+  err = readFile();
+  m_InStream.close();
+  if(err < 0)
+  {
+    return;
+  }
+
+}
+
+
 //-----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int DxReader::readHeader()
 {
-  return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int DxReader::readFile()
-{
-  std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  if (NULL == m)
-  {
-    ss.clear();
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -5);
-    setErrorCondition(-5);
-    return -1;
-  }
+  std::stringstream ss;
+  int error = 0;
 
   std::string line;
   std::string delimeters(", ;\t"); /* delimeters to split the data */
   std::vector<std::string> tokens; /* vector to store the split data */
 
-  int error, spin; /* dummy variables */
-
-  std::ifstream inFile;
-  inFile.open(getInputFile().c_str(), std::ios_base::binary);
-  if(!inFile)
-  {
-    ss.clear();
-    ss << ClassName() << " Runtime Error. The input file '" << getInputFile() << "' could not be"
-        << " opened for reading. Do you have access to this file?";
-    addErrorMessage(getHumanLabel(), ss.str(), -6);
-    setErrorCondition(-498);
-    return -498;
-  }
-
-  getline(inFile, line, '\n');
+  getline(m_InStream, line, '\n');
   tokenize(line, tokens, delimeters);
 
   // Process the header information and look for the std::string "counts"
@@ -208,7 +243,7 @@ int DxReader::readFile()
     if(pos1 == 0)
     {
       tokens.clear();
-      getline(inFile, line, '\n');
+      getline(m_InStream, line, '\n');
       tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
@@ -216,7 +251,7 @@ int DxReader::readFile()
         ss << "ERROR: Unable to read data dimensions from the header" << std::endl;
         addErrorMessage(getHumanLabel(), ss.str(), -7);
         setErrorCondition(-499);
-        inFile.close();
+        m_InStream.close();
         return -499;
       }
     }
@@ -270,7 +305,7 @@ int DxReader::readFile()
     if(pos1 == 0)
     {
       tokens.clear();
-      getline(inFile, line, '\n');
+      getline(m_InStream, line, '\n');
       tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
@@ -278,7 +313,7 @@ int DxReader::readFile()
         ss << "ERROR: Unable to locate the last header line" << std::endl;
         addErrorMessage(getHumanLabel(), ss.str(), -8);
         setErrorCondition(-496);
-        inFile.close();
+        m_InStream.close();
         return -496;
       }
     }
@@ -290,27 +325,57 @@ int DxReader::readFile()
     error += sscanf(tokens[pos1 + 1].c_str(), "%d", &points);
     tokens.clear();
   }
+  m->setDimensions(nx, ny, nz);
 //  std::cout << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << std::endl;
+  return error;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DxReader::readFile()
+{
+  std::stringstream ss;
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if (NULL == m)
+  {
+    ss.clear();
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -5);
+    setErrorCondition(-5);
+    return -1;
+  }
+
+  std::string line;
+  std::string delimeters(", ;\t"); /* delimeters to split the data */
+  std::vector<std::string> tokens; /* vector to store the split data */
+
+  int error, spin; /* dummy variables */
 
   bool finished_header, finished_data;
   finished_header = true;
   finished_data = false;
   size_t index = 0;
 
-  size_t totalPoints = nx * ny * nz;
+  size_t totalPoints = m->getTotalPoints();
+
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
   // m_GrainIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
   m->removeCellData(m_GrainIdsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+//  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, totalPoints, 1)
+
+
   if (getErrorCondition() < 0)
   {
+    m_InStream.close();
     return -1;
   }
 
 
-  while (getline(inFile, line, '\n') != NULL)
+  while (getline(m_InStream, line, '\n') != NULL)
   {
 
     // Get the remaining lines of the header and ignore
@@ -318,9 +383,7 @@ int DxReader::readFile()
     error = 0;
     tokenize(line, tokens, delimeters);
 
-    //    if(tokens.size()==20)
-    //      finished_header = true;
-    size_t total = nz * ny * nx;
+    size_t total = m->getTotalPoints();
     if( index == total || ( finished_header && tokens.size() != 0 && tokens[0] == "attribute") )
     {
       finished_data = true;
@@ -338,26 +401,19 @@ int DxReader::readFile()
     }
   }
 
-  if(index != static_cast<size_t>(nz * ny * nx))
+  if(index != static_cast<size_t>(m->getTotalPoints()))
   {
     ss.clear();
     ss << "ERROR: data size does not match header dimensions" << std::endl;
-    ss << "\t" << index << "\t" << nz * nx * ny << std::endl;
-    addErrorMessage(getHumanLabel(), ss.str(), -9);
+    ss << "\t" << index << "\t" << m->getTotalPoints() << std::endl;
     setErrorCondition(-495);
-    inFile.close();
-    return -495;
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    m_InStream.close();
+    return getErrorCondition();
   }
 
-//  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_Data);
-  getVoxelDataContainer()->setDimensions(nx, ny, nz);
-
-  getVoxelDataContainer()->setResolution(m_XRes, m_YRes, m_ZRes);
-
-  getVoxelDataContainer()->setOrigin(0.0f, 0.0f, 0.0f);
-
   tokens.clear();
-  inFile.close();
+  m_InStream.close();
 
 
   // Find the unique set of grain ids

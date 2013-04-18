@@ -116,8 +116,6 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 }
 

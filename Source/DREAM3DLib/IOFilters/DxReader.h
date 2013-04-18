@@ -39,6 +39,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -62,10 +63,8 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual ~DxReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -78,6 +77,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void preflight();
+    virtual void execute();
 
   protected:
     DxReader();
@@ -89,6 +89,8 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 
   private:
     int32_t* m_GrainIds;
+    size_t m_Dims[3];
+    std::ifstream  m_InStream;
 
     DxReader(const DxReader&); // Copy Constructor Not Implemented
     void operator=(const DxReader&); // Operator '=' Not Implemented
