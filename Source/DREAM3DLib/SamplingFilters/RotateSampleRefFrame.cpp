@@ -215,6 +215,99 @@ void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  m_RotationAngle = m_RotationAngle*m_pi/180.0;
+
+  int32_t xp, yp, zp;
+  float xRes, yRes, zRes;
+  int32_t xpNew, ypNew, zpNew;
+  float xResNew, yResNew, zResNew;
+  RotateSampleRefFrameImplArg_t params;
+
+
+  xp = static_cast<int32_t>(m->getXPoints());
+  xRes = m->getXRes();
+  yp = static_cast<int32_t>(m->getYPoints());
+  yRes = m->getYRes();
+  zp = static_cast<int32_t>(m->getZPoints());
+  zRes = m->getZRes();
+
+  params.xp = xp;
+  params.xRes = xRes;
+  params.yp = yp;
+  params.yRes = yRes;
+  params.zp = zp;
+  params.zRes = zRes;
+
+  size_t col, row, plane;
+  float rotMat[3][3];
+  float coords[3];
+  float newcoords[3];
+  float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
+
+  OrientationMath::axisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  for(int i=0;i<8;i++)
+  {
+    if(i == 0) col = 0, row = 0, plane = 0;
+    if(i == 1) col = xp-1, row = 0, plane = 0;
+    if(i == 2) col = 0, row = yp-1, plane = 0;
+    if(i == 3) col = xp-1, row = yp-1, plane = 0;
+    if(i == 4) col = 0, row = 0, plane = zp-1;
+    if(i == 5) col = xp-1, row = 0, plane = zp-1;
+    if(i == 6) col = 0, row = yp-1, plane = zp-1;
+    if(i == 7) col = xp-1, row = yp-1, plane = zp-1;
+    coords[0] = col*xRes;
+    coords[1] = row*yRes;
+    coords[2] = plane*zRes;
+    MatrixMath::multiply3x3with3x1(rotMat,coords,newcoords);
+    if(newcoords[0] < xMin) xMin = newcoords[0];
+    if(newcoords[0] > xMax) xMax = newcoords[0];
+    if(newcoords[1] < yMin) yMin = newcoords[1];
+    if(newcoords[1] > yMax) yMax = newcoords[1];
+    if(newcoords[2] < zMin) zMin = newcoords[2];
+    if(newcoords[2] > zMax) zMax = newcoords[2];
+  }
+  float xAxis[3] = {1,0,0};
+  float yAxis[3] = {0,1,0};
+  float zAxis[3] = {0,0,1};
+  float xAxisNew[3];
+  float yAxisNew[3];
+  float zAxisNew[3];
+  MatrixMath::multiply3x3with3x1(rotMat,xAxis,xAxisNew);
+  MatrixMath::multiply3x3with3x1(rotMat,yAxis,yAxisNew);
+  MatrixMath::multiply3x3with3x1(rotMat,zAxis,zAxisNew);
+  float closestAxis;
+  xResNew = xRes;
+  closestAxis = fabs(MatrixMath::dotProduct(xAxis,xAxisNew));
+  if(fabs(MatrixMath::dotProduct(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,xAxisNew));
+  if(fabs(MatrixMath::dotProduct(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,xAxisNew));
+  yResNew = yRes;
+  closestAxis = fabs(MatrixMath::dotProduct(yAxis,yAxisNew));
+  if(fabs(MatrixMath::dotProduct(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,yAxisNew));
+  if(fabs(MatrixMath::dotProduct(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,yAxisNew));
+  zResNew = zRes;
+  closestAxis = fabs(MatrixMath::dotProduct(zAxis,zAxisNew));
+  if(fabs(MatrixMath::dotProduct(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,zAxisNew));
+  if(fabs(MatrixMath::dotProduct(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,zAxisNew));
+
+  xpNew = ((xMax-xMin)/xResNew)+1;
+  ypNew = ((yMax-yMin)/yResNew)+1;
+  zpNew = ((zMax-zMin)/zResNew)+1;
+
+  params.xpNew = xpNew;
+  params.xResNew = xResNew;
+  params.xMinNew = xMin;
+  params.ypNew = ypNew;
+  params.yResNew = yResNew;
+  params.yMinNew = yMin;
+  params.zpNew = zpNew;
+  params.zResNew = zResNew;
+  params.zMinNew = zMin;
+
+  m->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
 }
 
 // -----------------------------------------------------------------------------

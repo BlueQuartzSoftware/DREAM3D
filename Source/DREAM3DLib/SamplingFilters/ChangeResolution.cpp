@@ -114,7 +114,20 @@ void ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void ChangeResolution::preflight()
 {
+  VoxelDataContainer* m = getVoxelDataContainer();
 
+  size_t dims[3];
+  m->getDimensions(dims);
+
+  float sizex = (dims[0])*m->getXRes();
+  float sizey = (dims[1])*m->getYRes();
+  float sizez = (dims[2])*m->getZRes();
+  int m_XP = int(sizex / getXRes());
+  int m_YP = int(sizey / getYRes());
+  int m_ZP = int(sizez / getZRes());
+
+  m->setDimensions(m_XP, m_YP, m_ZP);
+  m->setResolution(getXRes(), getYRes(), getZRes());
 }
 
 // -----------------------------------------------------------------------------
