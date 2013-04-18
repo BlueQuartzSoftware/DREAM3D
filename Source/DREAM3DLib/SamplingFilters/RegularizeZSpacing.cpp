@@ -110,7 +110,21 @@ void RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::preflight()
 {
+  VoxelDataContainer* m = getVoxelDataContainer();
 
+  ifstream inFile;
+  inFile.open(m_InputFile.c_str());
+
+  float zval;
+  for (size_t iter = 0; iter < m->getZPoints() + 1; iter++)
+  {
+    inFile >> zval;
+  }
+  size_t zP = static_cast<size_t>(zval / getZRes());
+
+  m->setDimensions(m->getXPoints(),m->getYPoints(),zP);
+
+  inFile.close();
 }
 
 // -----------------------------------------------------------------------------
