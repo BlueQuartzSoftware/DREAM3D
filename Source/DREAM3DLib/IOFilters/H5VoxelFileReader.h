@@ -56,19 +56,19 @@
  * @date Dec 21, 2011
  * @version 1.0
  */
- class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
-  {
-    public:
-      DREAM3D_SHARED_POINTERS(H5VoxelFileReader)
-      DREAM3D_STATIC_NEW_MACRO(H5VoxelFileReader)
-      DREAM3D_TYPE_MACRO_SUPER(H5VoxelFileReader, FileReader)
+class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
+{
+  public:
+    DREAM3D_SHARED_POINTERS(H5VoxelFileReader)
+    DREAM3D_STATIC_NEW_MACRO(H5VoxelFileReader)
+    DREAM3D_TYPE_MACRO_SUPER(H5VoxelFileReader, FileReader)
 
 
-      virtual ~H5VoxelFileReader();
+    virtual ~H5VoxelFileReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-	//------ Created Cell Data
+    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
@@ -77,32 +77,32 @@
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read Legacy DREAM.3D H5Voxel File"; }
 
-	  virtual void setupFilterParameters();
-	  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	  virtual void preflight();
-	  virtual void execute();
+    virtual void preflight();
+    virtual void execute();
 
-    protected:
-      H5VoxelFileReader();
+  protected:
+    H5VoxelFileReader();
 
-    private:
-      int32_t* m_GrainIds;
-      int32_t* m_CellPhases;
-	  float* m_CellEulerAngles;
+  private:
+    int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
+    float* m_CellEulerAngles;
 
-	  unsigned int* m_CrystalStructures;
-	  unsigned int* m_PhaseTypes;
+    unsigned int* m_CrystalStructures;
+    unsigned int* m_PhaseTypes;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-	  H5VoxelFileReader(const H5VoxelFileReader&); // Copy Constructor Not Implemented
-      void operator=(const H5VoxelFileReader&); // Operator '=' Not Implemented
+    H5VoxelFileReader(const H5VoxelFileReader&); // Copy Constructor Not Implemented
+    void operator=(const H5VoxelFileReader&); // Operator '=' Not Implemented
 
-  };
+};
 
 
 #endif /* H5VoxelFileReader_H_ */

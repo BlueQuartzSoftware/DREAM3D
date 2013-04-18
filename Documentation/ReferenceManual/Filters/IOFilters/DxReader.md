@@ -56,6 +56,8 @@ _See: www.opendx.org for more information._
 | Name | Type |
 |------|------|
 | Input File | File Path |
+| Resolution | X, Y, Z Resolution of the data |
+| Origin     | The location in space coordinates of the (0,0,0) voxel |
 
 ## Required DataContainers ##
 Voxel
