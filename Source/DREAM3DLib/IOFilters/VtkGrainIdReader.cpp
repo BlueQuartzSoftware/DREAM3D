@@ -121,6 +121,12 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+
+  // Errors will get propagated to the user through the normal mechanism
+  // Reading the header will set the Dimensions, Resolution and Origin
+  readHeader();
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -206,9 +212,9 @@ int VtkGrainIdReader::readHeader()
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-1);
-    return -1;
+    setErrorCondition(-51000);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
   }
 
 
@@ -216,9 +222,9 @@ int VtkGrainIdReader::readHeader()
   {
     std::stringstream ss;
     ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-1);
-    return -1;
+    setErrorCondition(-51010);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
   }
 
 
@@ -228,8 +234,9 @@ int VtkGrainIdReader::readHeader()
   {
     std::stringstream ss;
     ss << "Vtk file could not be opened: " << getInputFile();
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    return -1;
+    setErrorCondition(-51020);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
   }
   char buf[kBufferSize];
   instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
@@ -249,11 +256,11 @@ int VtkGrainIdReader::readHeader()
   }
   else
   {
-    err = -1;
     std::stringstream ss;
     ss << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    return err;
+    setErrorCondition(-51030);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
   }
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
@@ -264,8 +271,9 @@ int VtkGrainIdReader::readHeader()
     {
       std::stringstream ss;
       ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
-      return -1;
+    setErrorCondition(-51040);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
     }
     std::string dataset(&(text[16]));
     setDatasetType(dataset);
@@ -295,7 +303,6 @@ int VtkGrainIdReader::readHeader()
 
   instream.close();
   return err;
-
 }
 
 

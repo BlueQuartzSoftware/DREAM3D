@@ -126,9 +126,9 @@ RawBinaryReader::RawBinaryReader() :
   m_Origin.y = 0.0;
   m_Origin.z = 0.0;
 
-  m_Spacing.x = 1.0;
-  m_Spacing.y = 1.0;
-  m_Spacing.z = 1.0;
+  m_Resolution.x = 1.0;
+  m_Resolution.y = 1.0;
+  m_Resolution.z = 1.0;
   setupFilterParameters();
 }
 
@@ -224,8 +224,8 @@ void RawBinaryReader::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Spacing");
-    option->setPropertyName("Spacing");
+    option->setHumanLabel("Resolution");
+    option->setPropertyName("Resolution");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("float");
     option->setUnits("XYZ");
@@ -256,7 +256,7 @@ void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("Endian", getEndian() );
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("Spacing", getSpacing() );
+  writer->writeValue("Resolution", getResolution() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
 }
@@ -352,7 +352,10 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     }
 
     m->addCellData(p->GetName(), p);
-    //addCreatedCellData(p->GetName());
+
+    m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   }
 }
 
@@ -387,7 +390,7 @@ void RawBinaryReader::execute()
   // Get the total size of the array from the options
   size_t voxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  m->setResolution(m_Spacing.x, m_Spacing.y, m_Spacing.z);
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
 

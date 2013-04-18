@@ -38,6 +38,8 @@
 #ifndef _PHReader_h_
 #define _PHReader_h_
 
+
+#include <stdio.h>
 #include <string>
 #include <vector>
 
@@ -63,21 +65,21 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     virtual ~PhReader();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read Ph File (Grain Ids)"; }
 
     virtual void setupFilterParameters();
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     virtual void preflight();
+    virtual void execute();
 
   protected:
     PhReader();
@@ -89,6 +91,8 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 
   private:
     int32_t* m_GrainIds;
+    size_t m_Dims[3];
+    FILE* m_InStream;
 
     PhReader(const PhReader&); //Not Implemented
     void operator=(const PhReader&); //Not Implemented

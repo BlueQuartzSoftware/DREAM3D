@@ -6,7 +6,7 @@ Compiling DREAM.3D {#compilingdream3d}
 - A Compiler suite for your Operating System (Visual Studio, Xcode, GCC)
 - CMake version 2.8.5
 - Git for checking out source code from the repositories
-- Qt Version 4.8.3 or greater (Tested with Qt 4.7.4)
+- Qt Version 4.8.4 or greater (Tested with Qt 4.8.4)
 - Qwt Library (2D Plots)
 - HDF5 Version 1.8.10.1
 - Boost Version 1.44
