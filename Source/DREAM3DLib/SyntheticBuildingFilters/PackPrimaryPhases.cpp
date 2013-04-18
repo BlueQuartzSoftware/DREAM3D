@@ -149,8 +149,8 @@ class AssignVoxelsGapsImpl
       int index = 0;
       float coords[3] = {0.0f, 0.0f, 0.0f};
       float inside = 0.0f;
-      float dist = 0.0f;
-      float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
+   //   float dist = 0.0f;
+   //   float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
       float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
       int32_t* newowners = newownersPtr->GetPointer(0);
       float* ellipfuncs = ellipfuncsPtr->GetPointer(0);

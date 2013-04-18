@@ -168,12 +168,9 @@ void ConvertEulerAngles::execute()
     return;
   }
 
-  bool doParallel = false;
   #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     tbb::task_scheduler_init init;
-    doParallel = true;
-  #else
-    //   int m_NumThreads = 1;
+    bool doParallel = true;
   #endif
 
   float conversionFactor = 1.0;
