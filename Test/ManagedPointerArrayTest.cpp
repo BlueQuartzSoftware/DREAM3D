@@ -66,12 +66,12 @@ template<typename T>
 void __TestManagedArray()
 {
 
-  ManagedArrayOfArrays<T>::Pointer mArray = ManagedArrayOfArrays<T>::CreateArray(NUM_ELEMENTS, "test");
+  typename ManagedArrayOfArrays<T>::Pointer mArray = ManagedArrayOfArrays<T>::CreateArray(NUM_ELEMENTS, "test");
 
   // Allocate some memory for each array
-  for(int i = 0; i < NUM_ELEMENTS; ++i)
+  for(size_t i = 0; i < NUM_ELEMENTS; ++i)
   {
-    ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->GetPointer(i));
+    typename ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->GetPointer(i));
     // First make sure we have a properly initialized Data structure
     DREAM3D_REQUIRE_EQUAL(ptr.count, 0)
     DREAM3D_REQUIRE_EQUAL(ptr.data, NULL)
@@ -80,9 +80,9 @@ void __TestManagedArray()
     ptr.data = (T*)(malloc(sizeof(T) * ptr.count));
   }
 
-  for(int i = 0; i < NUM_ELEMENTS; ++i)
+  for(size_t i = 0; i < NUM_ELEMENTS; ++i)
   {
-    ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->GetPointer(i));
+    typename ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->GetPointer(i));
     DREAM3D_REQUIRE_EQUAL(ptr.count, i)
     DREAM3D_REQUIRE_NE(ptr.data, NULL)
   }
