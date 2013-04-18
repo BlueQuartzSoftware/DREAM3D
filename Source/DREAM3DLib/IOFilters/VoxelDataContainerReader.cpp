@@ -279,7 +279,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  if(false == preflight)
+  //if(false == preflight)
   {
     err = gatherMetaData(dcGid, volDims, spacing, origin);
     if(err < 0)

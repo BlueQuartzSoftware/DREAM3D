@@ -165,65 +165,65 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   if (getXMax() < getXMin())
   {
     ss.str("");
-    ss << ClassName() << " X Max (" << getXMax() << ") less than X Min (" << getXMin() << ")";
+    ss << "X Max (" << getXMax() << ") less than X Min (" << getXMin() << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
   if (getYMax() < getYMin())
   {
     ss.str("");
-    ss << ClassName() << " Y Max (" << getYMax() << ") less than Y Min (" << getYMin() << ")";
+    ss << "Y Max (" << getYMax() << ") less than Y Min (" << getYMin() << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
   if (getZMax() < getZMin())
   {
     ss.str("");
-    ss << ClassName() << " Z Max (" << getZMax() << ") less than Z Min (" << getZMin() << ")";
+    ss << "Z Max (" << getZMax() << ") less than Z Min (" << getZMin() << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
   if (getXMin() < 0)
   {
     ss.str("");
-    ss << ClassName() << " X Min (" << getXMin() << ") less than 0";
+    ss << "X Min (" << getXMin() << ") less than 0";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
   if (getYMin() < 0)
   {
     ss.str("");
-    ss << ClassName() << " Y Min (" << getYMin() << ") less than 0";
+    ss << "Y Min (" << getYMin() << ") less than 0";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
   if (getZMin() < 0)
   {
     ss.str("");
-    ss << ClassName() << " Z Min (" << getZMin() << ") less than 0";
+    ss <<"Z Min (" << getZMin() << ") less than 0";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }  
-  if (getXMax() > (m->getXPoints()-1))
+  if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
   {
     ss.str("");
-	ss << ClassName() << " X Max (" << getXMin() << ") greater than" << (m->getXPoints()-1);
+	ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints())-1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
-  if (getYMax() > (m->getYPoints()-1))
+  if (getYMax() > (static_cast<int64_t>(m->getYPoints())-1))
   {
     ss.str("");
-    ss << ClassName() << " Y Max (" << getYMin() << ") greater than" << (m->getYPoints()-1);
+    ss << "The Y Max you entered of " << getYMax() << " is greater than your Max Y Point of " << static_cast<int64_t>(m->getYPoints())-1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
-    setErrorCondition(-5555);
+    setErrorCondition(-5556);
   }
-  if (getZMax() > (m->getZPoints()-1))
+  if (getZMax() > (static_cast<int64_t>(m->getZPoints())-1))
   {
     ss.str("");
-    ss << ClassName() << " Z Max (" << getZMin() << ") greater than" << (m->getZPoints()-1);
+    ss << "The Z Max you entered of " << getZMax() << ") greater than your Max Z Point of " << static_cast<int64_t>(m->getZPoints())-1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
-    setErrorCondition(-5555);
+    setErrorCondition(-5557);
   }
 
   if (m_RenumberGrains == true)
