@@ -254,10 +254,6 @@ void test(T x, T y, T z, const std::string &type)
 int main(int argc, char **argv)
 {
 
-//  test<int>(4000, 4000, 4000, "int");
-//  test<size_t>(4000, 4000, 4000, "size_t");
-//  test<int64_t>(4000, 4000, 4000, "int64_t");
-
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestPhWriter() )

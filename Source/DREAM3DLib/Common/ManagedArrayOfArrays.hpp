@@ -575,12 +575,6 @@ class ManagedArrayOfArrays : public IDataArray
      */
     void _deallocate()
     {
-      // We are going to splat 0xABABAB across the first value of the array as a debugging aid
-      unsigned char* cptr = reinterpret_cast<unsigned char*>(this->Array);
-      if (sizeof(Data_t) >= 1 && Size > 0) { cptr[0] = 0xAB; }
-      if (sizeof(Data_t) >= 2 && Size > 0) { cptr[1] = 0xAB; }
-      if (sizeof(Data_t) >= 4 && Size > 0) { cptr[2] = 0xAB; cptr[3] = 0xAB;}
-      if (sizeof(Data_t) >= 8 && Size > 0) { cptr[4] = 0xAB; cptr[5] = 0xAB; cptr[6] = 0xAB; cptr[7] = 0xAB;}
 #if 0
       if (MUD_FLAP_0 != 0xABABABABABABABABul
           || MUD_FLAP_1 != 0xABABABABABABABABul
@@ -597,6 +591,8 @@ class ManagedArrayOfArrays : public IDataArray
     {
       Data_t& d = Array[i];
       free(d.data);
+      d.count = 0;
+      d.data = NULL;
     }
     // Then free this set of memory
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
