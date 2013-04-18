@@ -443,7 +443,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
     factories = fm->getFactories(item->text(0).toStdString());
     updateFilterGroupList(factories);
   }
-  else if (NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  else if (NULL != item->parent() && NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
     updateFilterGroupList(factories);
@@ -481,11 +481,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
     factories = fm->getFactories(item->text(0).toStdString());
     updateFilterGroupList(factories);
   }
-  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
+  else if (NULL != item->parent() && NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
   {
     factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
     updateFilterGroupList(factories);
-  }}
+  }
+}
 
 // -----------------------------------------------------------------------------
 //

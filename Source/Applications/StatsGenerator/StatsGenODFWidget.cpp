@@ -63,7 +63,7 @@
 #include "DREAM3DLib/Common/StatsGen.h"
 
 #define SHOW_POLE_FIGURES 1
-#define COLOR_POLE_FIGURES 1
+#define COLOR_POLE_FIGURES 0
 
 
 // -----------------------------------------------------------------------------
