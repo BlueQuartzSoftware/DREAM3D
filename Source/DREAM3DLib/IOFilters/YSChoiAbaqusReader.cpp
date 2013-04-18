@@ -139,6 +139,36 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
+  else
+  {
+    const unsigned int size(1024);
+    char buf[size];
+  // Read header from data file to figure out how many points there are
+    std::ifstream in(getInputFile().c_str());
+    std::string word;
+    bool headerdone = false;
+    int xpoints, ypoints, zpoints;
+    float resx, resy, resz;
+    while (headerdone == false)
+    {
+      in.getline(buf, size);
+      std::string line = buf;
+      in >> word;
+      if (DIMS == word)
+      {
+        in >> xpoints >> ypoints >> zpoints;
+        size_t dims[3] = {xpoints, ypoints, zpoints};
+        m->setDimensions(dims);
+		m->setOrigin(0,0,0);
+      }
+      if (RES == word)
+      {
+        in >> resx >> resy >> resz;
+        float res[3] = {resx, resy, resz};
+        m->setResolution(res);
+      }
+	}
+  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
@@ -176,16 +206,17 @@ void YSChoiAbaqusReader::execute()
       if (DIMS == word)
       {
         in >> xpoints >> ypoints >> zpoints;
-      size_t dims[3] = {xpoints, ypoints, zpoints};
-      m->setDimensions(dims);
+        size_t dims[3] = {xpoints, ypoints, zpoints};
+        m->setDimensions(dims);
+		m->setOrigin(0,0,0);
         totalpoints = xpoints * ypoints * zpoints;
         mat = new float **[totalpoints];
       }
-    if (RES == word)
+      if (RES == word)
       {
         in >> resx >> resy >> resz;
-      float res[3] = {resx, resy, resz};
-    m->setResolution(res);
+        float res[3] = {resx, resy, resz};
+        m->setResolution(res);
       }
       if (LOOKUP == word)
       {
@@ -195,7 +226,7 @@ void YSChoiAbaqusReader::execute()
     }
   // Read header from grian info file to figure out how many grains there are
     std::ifstream in2(getInputGrainInfoFile().c_str());
-  int numgrains;
+    int numgrains;
     in2 >> numgrains;
     in2.getline(buf, size);
     std::string line = buf;
