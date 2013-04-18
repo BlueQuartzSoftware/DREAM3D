@@ -36,6 +36,8 @@
 
 #include "H5VoxelFileReader.h"
 
+#include <limits>
+
 #include "MXA/Utilities/MXAFileInfo.h"
 
 // -----------------------------------------------------------------------------

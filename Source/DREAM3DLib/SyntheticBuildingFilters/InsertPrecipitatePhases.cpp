@@ -1332,7 +1332,7 @@ void InsertPrecipitatePhases::assign_voxels()
   float inside;
   float xc, yc, zc;
   float coordsRotated[3];
-  float dist;
+  //float dist;
   float coords[3];
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
   // int64_t totpoints = m->totalPoints();

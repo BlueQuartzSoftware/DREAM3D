@@ -208,10 +208,9 @@ void StandardizeEulerAngles::execute()
     return;
   }
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
