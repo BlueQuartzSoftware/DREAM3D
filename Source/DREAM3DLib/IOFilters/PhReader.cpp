@@ -279,8 +279,6 @@ int  PhReader::readFile()
       return getErrorCondition();
     }
   }
-  fclose(m_InStream);
-  m_InStream = NULL;
 
   // Read the data and stick it in the data Container
   getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
