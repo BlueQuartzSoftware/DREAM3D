@@ -39,6 +39,8 @@ This Filter reads a custom data file used by Carnegie-Mellon Univ. The file form
 | Name | Type |
 |------|------|
 | Input File | File Path |
+| Resolution | X, Y, Z Resolution of the data |
+| Origin     | The location in space coordinates of the (0,0,0) voxel |
 
 ## Required DataContainers ##
 Voxel

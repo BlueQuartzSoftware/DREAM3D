@@ -153,7 +153,7 @@ int testComponents(const std::string &name, int scalarType)
   filt->setOrigin(origin);
   FloatVec3Widget_t spacing;
   spacing.x = spacing.y = spacing.z = 0.55f;
-  filt->setSpacing(spacing);
+  filt->setResolution(spacing);
   filt->setOutputArrayName("Test_Array");
 
   filt->setVoxelDataContainer(m.get());
