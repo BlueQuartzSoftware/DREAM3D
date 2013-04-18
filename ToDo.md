@@ -15,7 +15,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 + Missing Documentation File for IOFilters/ImportImageStack
-+ write-up contributors section for website
+
 
 
 ### Jackson Priority ###
@@ -39,7 +39,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### Ideas/Wish List ###
 + Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
-+ Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
 
 
@@ -146,6 +145,8 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 ## Items Completed ##
++ Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
++ write-up contributors section for website
 + Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
 + How to Incorporate documentation for plugins into the main help system
 + Fix html Help for "Standardize Euler Angles"
