@@ -183,6 +183,48 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
+  if (getXMin() < 0)
+  {
+    ss.str("");
+    ss << ClassName() << " X Min (" << getXMin() << ") less than 0";
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getYMin() < 0)
+  {
+    ss.str("");
+    ss << ClassName() << " Y Min (" << getYMin() << ") less than 0";
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getZMin() < 0)
+  {
+    ss.str("");
+    ss << ClassName() << " Z Min (" << getZMin() << ") less than 0";
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }  
+  if (getXMax() > (m->getXPoints()-1))
+  {
+    ss.str("");
+	ss << ClassName() << " X Max (" << getXMin() << ") greater than" << (m->getXPoints()-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getYMax() > (m->getYPoints()-1))
+  {
+    ss.str("");
+    ss << ClassName() << " Y Max (" << getYMin() << ") greater than" << (m->getYPoints()-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
+  if (getZMax() > (m->getZPoints()-1))
+  {
+    ss.str("");
+    ss << ClassName() << " Z Max (" << getZMin() << ") greater than" << (m->getZPoints()-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+    setErrorCondition(-5555);
+  }
 
   if (m_RenumberGrains == true)
   {

@@ -5,7 +5,7 @@ Adjust Voxel Origin & Resolution {#adjustvolumeoriginresolution}
 Generic Filters (Spatial)
 
 ## Description ##
-This filter changes the resolution and/or origin of the volume without "resampling" the data.  This filter effectively scales and/or translates the volume.
+This filter changes the resolution and/or origin of the volume ***without*** "resampling" the data.  This filter effectively scales and/or translates the volume.
 
 ## Parameters ##
 | Name | Type |
