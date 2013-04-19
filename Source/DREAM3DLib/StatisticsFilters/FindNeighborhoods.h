@@ -63,8 +63,6 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual ~FindNeighborhoods();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
@@ -90,13 +88,9 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
   protected:
     FindNeighborhoods();
 
-    void find_centroids();
-    void find_centroids2D();
     void find_neighborhoods();
 
 private:
-    int32_t* m_GrainIds;
-
     int32_t* m_FieldPhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
