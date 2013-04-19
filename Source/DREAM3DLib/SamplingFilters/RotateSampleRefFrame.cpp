@@ -215,7 +215,17 @@ void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+
+  setErrorCondition(0);
+  std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   m_RotationAngle = m_RotationAngle*m_pi/180.0;
@@ -308,14 +318,6 @@ void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t field
 
   m->setResolution(params.xResNew, params.yResNew, params.zResNew);
   m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RotateSampleRefFrame::preflight()
-{
-  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------

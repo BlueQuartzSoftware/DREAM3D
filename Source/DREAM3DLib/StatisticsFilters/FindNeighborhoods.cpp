@@ -49,12 +49,10 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindNeighborhoods::FindNeighborhoods() :
 AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-m_GrainIds(NULL),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
@@ -90,7 +88,6 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, err, -302, float, FloatArrayType, fields, 1)
   if(err == -302)
