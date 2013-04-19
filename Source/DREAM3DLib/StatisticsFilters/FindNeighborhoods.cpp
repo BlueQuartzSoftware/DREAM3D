@@ -87,42 +87,11 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, err, -302, float, FloatArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSizes::Pointer find_sizes = FindSizes::New();
-    find_sizes->setObservers(this->getObservers());
-    find_sizes->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_sizes->preflight();
-    if(preflight == false) find_sizes->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -304, int32_t, Int32ArrayType, fields, 1)
-  if(err == -304)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, err, -305, float, FloatArrayType, fields, 3)
-  if(err == -305)
-  {
-    setErrorCondition(0);
-    FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
-    find_graincentroids->setObservers(this->getObservers());
-    find_graincentroids->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_graincentroids->preflight();
-    if(preflight == false) find_graincentroids->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
