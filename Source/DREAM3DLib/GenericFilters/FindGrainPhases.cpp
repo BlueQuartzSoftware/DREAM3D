@@ -108,27 +108,17 @@ void FindGrainPhases::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-//  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
   // This makes sure we get the allocated arrays and we size the Fields to 1 to avoid any errors
-  dataCheck(false, totalPoints, 1, totalEnsembles);
+  dataCheck(false, totalPoints, totalFields, totalEnsembles);
 
-  // Figure out how many unique grain ids we have
-  int gnum = -1;
-  for(int64_t i = 0; i < totalPoints; i++)
-  {
-    if (m_GrainIds[i] > gnum) { gnum = m_GrainIds[i];}
-  }
-
-  Int32ArrayType::Pointer fieldPhasesPtr = Int32ArrayType::CreateArray(gnum + 1, getFieldPhasesArrayName());
-  m_FieldPhases = fieldPhasesPtr->GetPointer(0);
-  gnum = 0;
+  int gnum = 0;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
     m_FieldPhases[gnum] = m_CellPhases[i];
   }
-  m->addFieldData(fieldPhasesPtr->GetName(), fieldPhasesPtr);
 
   notifyStatusMessage("Complete");
 }

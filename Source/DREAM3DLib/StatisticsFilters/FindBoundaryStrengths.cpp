@@ -165,16 +165,6 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -302, int32_t, Int32ArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;

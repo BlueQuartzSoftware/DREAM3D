@@ -150,20 +150,7 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType,  true, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
-  if(err== -303)
-  {
 
-    setErrorCondition(0);
-    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    std::stringstream ss;
-    ss << getMessagePrefix() << " |--> " << find_cellquats->getNameOfClass();
-    find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
-    find_cellquats->setMessagePrefix(ss.str());
-    if(preflight == true) find_cellquats->preflight();
-    if(preflight == false) find_cellquats->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
 

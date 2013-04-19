@@ -1,4 +1,4 @@
-Find Field Neighborhoods {#findneighborhoods}
+Find Field Radial Distribution Function {#findradialdist}
 ======
 
 ## Group (Subgroup) ##
@@ -24,15 +24,10 @@ Voxel
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Field | Centroids | X, Y, Z coordinates (floats) of **Field** center of mass | Filter will calculate **Field** centroids if not previously calculated |
-| Field | EquivalentDiameters | Diameter (float) of a sphere with the same volume as the **Field**. | Filter will calculate equivalent diameters for the **Fields** if not already calculated |
 | Field | FieldPhases | Phase Id (int) specifying the phase of the **Field** | Filter will determine **Field** phases if not previously determined |
 
 ## Created Arrays ##
-
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Field | Neighborhoods | Number (int) of **Fields** that have their centroid within one equivalent sphere diameter of each **Field** | **Fields** do not need to actually touch each other, only be within a distance equal to the reference **Field**'s equivalent diameter |
+None 
 
 ## Authors ##
 

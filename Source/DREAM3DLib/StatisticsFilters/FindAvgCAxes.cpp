@@ -84,15 +84,6 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
 
   int err = 0;
-  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
-  if (err == -303)
-  {
-    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_cellquats->preflight();
-    if(preflight == false) find_cellquats->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, float, FloatArrayType, 0, fields, 3)

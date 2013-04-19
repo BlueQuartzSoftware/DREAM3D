@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDNEIGHBORHOODS_H_
-#define FINDNEIGHBORHOODS_H_
+#ifndef FindRadialDist_H_
+#define FindRadialDist_H_
 
 #include <vector>
 #include <string>
@@ -48,32 +48,32 @@
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
- * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h
+ * @class FindRadialDist FindRadialDist.h DREAM3DLib/GenericFilters/FindRadialDist.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
+class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindNeighborhoods)
-    DREAM3D_STATIC_NEW_MACRO(FindNeighborhoods)
-    DREAM3D_TYPE_MACRO_SUPER(FindNeighborhoods, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindRadialDist)
+    DREAM3D_STATIC_NEW_MACRO(FindRadialDist)
+    DREAM3D_TYPE_MACRO_SUPER(FindRadialDist, AbstractFilter)
 
-    virtual ~FindNeighborhoods();
+    virtual ~FindRadialDist();
 
     //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Neighborhoods"; }
+    virtual const std::string getHumanLabel() { return "Find Field Radial Distribution Function"; }
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -86,20 +86,21 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     virtual void preflight();
 
   protected:
-    FindNeighborhoods();
+    FindRadialDist();
 
-    void find_neighborhoods();
+    void find_radialdist();
 
 private:
     int32_t* m_FieldPhases;
-    float* m_Centroids;
     float* m_EquivalentDiameters;
-    int32_t* m_Neighborhoods;
+    float* m_Volumes;
+    float* m_Centroids;
+    bool* m_SurfaceFields;
 
 	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
-    void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented
+    FindRadialDist(const FindRadialDist&); // Copy Constructor Not Implemented
+    void operator=(const FindRadialDist&); // Operator '=' Not Implemented
 };
 
-#endif /* FINDNEIGHBORHOODS_H_ */
+#endif /* FindRadialDist_H_ */
