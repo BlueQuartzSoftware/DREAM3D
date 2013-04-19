@@ -146,18 +146,6 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
     setErrorCondition(-1);
   }
 
- // CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-
-  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -301, float, FloatArrayType, voxels, 5)
-  if(err == -301)
-  {
-    setErrorCondition(0);
-    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_cellquats->preflight();
-    if(preflight == false) find_cellquats->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
 
 

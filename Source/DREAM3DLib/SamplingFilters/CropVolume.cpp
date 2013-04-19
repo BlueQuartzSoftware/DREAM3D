@@ -57,7 +57,7 @@ m_ZMin(0),
 m_XMax(0),
 m_YMax(0),
 m_ZMax(0),
-m_RenumberGrains(false),
+m_RenumberGrains(true),
 m_GrainIds(NULL),
 m_Active(NULL)
 {
@@ -161,7 +161,36 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+  if (m_RenumberGrains == true)
+  {
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  }
+}
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CropVolume::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  setErrorCondition(0);
+  std::stringstream ss;
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   if (getXMax() < getXMin())
   {
     ss.str("");
@@ -227,21 +256,6 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
 
   m->setDimensions((getXMax()-getXMin())-1,(getYMax()-getYMin())-1,(getZMax()-getZMin())-1);
-
-  if (m_RenumberGrains == true)
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CropVolume::preflight()
-{
-  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------

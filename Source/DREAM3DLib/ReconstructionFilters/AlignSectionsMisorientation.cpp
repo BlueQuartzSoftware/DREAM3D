@@ -142,17 +142,6 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   // The 'err' variable is set inside the macro to the value you pass in (-301 in this case)
   //  if the named array does NOT exist.
   int err = 0; // Pay Attention to the arguments: | Some have changed
-  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -301, float, FloatArrayType, voxels, 5)
-  if(err == -301) // If err is the same as the error code we passed in then the array was not in the DataContainer
-  {
-    setErrorCondition(0);
-    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
-    find_cellquats->setMessagePrefix(getMessagePrefix());
-    if(preflight == true) find_cellquats->preflight();
-    if(preflight == false) find_cellquats->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
 
 

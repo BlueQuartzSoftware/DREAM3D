@@ -137,36 +137,8 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
 
   // Field Data
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-    find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    find_surfacefields->setMessagePrefix(this->getMessagePrefix());
-    if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) {
-      notifyStatusMessage("Finding Surface Fields");
-      find_surfacefields->execute();
-    }
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303, int32_t, Int32ArrayType, fields, 1)
-  if(getErrorCondition() == -303)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    find_grainphases->setMessagePrefix(getMessagePrefix());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) {
-      notifyStatusMessage("Finding Grain Phases");
-      find_grainphases->execute();
-     }
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
@@ -212,21 +184,6 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  TEST_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, err, -308, int32_t, Int32ArrayType, ensembles, 1)
-  if(err == -308)
-  {
-    setErrorCondition(0);
-    FindNumFields::Pointer find_numfields = FindNumFields::New();
-    find_numfields->setObservers(this->getObservers());
-    find_numfields->setVoxelDataContainer(getVoxelDataContainer());
-    find_numfields->setMessagePrefix(getMessagePrefix());
-    if(preflight == true) find_numfields->preflight();
-    if(preflight == false)
-    {
-      notifyStatusMessage("Finding Number of Fields");
-      find_numfields->execute();
-    }
-  }
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
 
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());

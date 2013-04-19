@@ -30,6 +30,7 @@ set(_PublicFilters
   FindMisorientations
   FindNeighborhoods
   FindNumFields
+  FindRadialDist
   FindSchmids
   FindShapes
   FindSizes

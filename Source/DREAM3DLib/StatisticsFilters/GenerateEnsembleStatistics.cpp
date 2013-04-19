@@ -128,18 +128,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
-  if(err == -303)
-  {
-      setErrorCondition(0);
-      FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-      find_grainphases->setObservers(this->getObservers());
-      find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-      if(preflight == true) find_grainphases->preflight();
-      if(preflight == false) find_grainphases->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
@@ -171,16 +160,6 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   {
     typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-    find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) find_surfacefields->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
   }
   if(m_CalculateODF == true)

@@ -84,19 +84,8 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -303,  int32_t, Int32ArrayType, fields, 1)
-  if(err == -303)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
@@ -206,13 +195,13 @@ void FindMisorientations::execute()
       q2[3] = m_AvgQuats[5*nname+3];
       q2[4] = m_AvgQuats[5*nname+4];
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
-      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
       if (phase1 == phase2)
       {
+		w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
       OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
       misorientationlists[i][j] = w;
       }
-      if (phase1 != phase2)
+	  else
       {
       misorientationlists[i][j] = -100;
       }

@@ -34,29 +34,31 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindNeighborhoods.h"
+#include "FindRadialDist.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
+#include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighborhoods::FindNeighborhoods() :
+FindRadialDist::FindRadialDist() :
 AbstractFilter(),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+m_VolumesArrayName(DREAM3D::FieldData::Volumes),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_FieldPhases(NULL),
-m_Centroids(NULL),
-m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL)
+m_Volumes(NULL),
+m_SurfaceFields(NULL),
+m_Centroids(NULL)
 {
   setupFilterParameters();
 }
@@ -64,51 +66,54 @@ m_Neighborhoods(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindNeighborhoods::~FindNeighborhoods()
+FindRadialDist::~FindRadialDist()
 {
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::setupFilterParameters()
+void FindRadialDist::setupFilterParameters()
 {
 
 }
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
 
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::preflight()
+void FindRadialDist::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::execute()
+void FindRadialDist::execute()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -125,53 +130,98 @@ void FindNeighborhoods::execute()
     return;
   }
 
-  find_neighborhoods();
- notifyStatusMessage("FindNeighborhoods Completed");
+  find_radialdist();
+ notifyStatusMessage("FindRadialDist Completed");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::find_neighborhoods()
+void FindRadialDist::find_radialdist()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
 
   float x, y, z;
   float xn, yn, zn;
-  float dx, dy, dz;
+  float dist;
   size_t numgrains = m->getNumFieldTuples();
 
+  std::string m_OutputFile = "test.txt";
+  std::ofstream outFile;
+  outFile.open(m_OutputFile.c_str());
+
+  float orig[3] =
+  { 0, 0, 0 };
+  m->getOrigin(orig);
+
+  size_t udims[3] =
+  { 0, 0, 0 };
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]), };
+
+  float sizex = dims[0] * m->getXRes();
+  float sizey = dims[1] * m->getYRes();
+  float sizez = dims[2] * m->getZRes();
+
+  int number = 0;
+  float totalvolume = 0;
+  std::vector<float> distToSurface(numgrains,-1);
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_Neighborhoods[i] = 0;
+	if(m_SurfaceFields[i] == false)
+	{
+		number++;
+		totalvolume = totalvolume+m_Volumes[i];
+		dist = (m_Centroids[3*i] - orig[0]);
+		if(((orig[0]+sizex) - m_Centroids[3*i]) < dist) dist = ((orig[0]+sizex) - m_Centroids[3*i]);
+		if((m_Centroids[3*i+1] - orig[1]) < dist) dist = (m_Centroids[3*i+1] - orig[1]);
+		if(((orig[1]+sizey) - m_Centroids[3*i+1]) < dist) dist = ((orig[1]+sizey) - m_Centroids[3*i+1]);
+		if((m_Centroids[3*i+2] - orig[2]) < dist) dist = (m_Centroids[3*i+2] - orig[2]);
+		if(((orig[2]+sizez) - m_Centroids[3*i+2]) < dist) dist = ((orig[2]+sizez) - m_Centroids[3*i+2]);
+		distToSurface[i] = dist;
+	}
   }
+  outFile << number << "	" << totalvolume << std::endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
-    if(m->getXPoints() == 1) x = 0;
-    if(m->getYPoints() == 1) y = 0;
-    if(m->getZPoints() == 1) z = 0;
-      for (size_t j = i; j < numgrains; j++)
-      {
-      xn = m_Centroids[3*j];
-      yn = m_Centroids[3*j+1];
-      zn = m_Centroids[3*j+2];
-      if(m->getXPoints() == 1) xn = 0;
-      if(m->getYPoints() == 1) yn = 0;
-      if(m->getZPoints() == 1) zn = 0;
-        dx = fabs(x - xn);
-        dy = fabs(y - yn);
-        dz = fabs(z - zn);
-        if (dx < m_EquivalentDiameters[i] && dy < m_EquivalentDiameters[i] && dz < m_EquivalentDiameters[i])
-        {
-            m_Neighborhoods[i]++;
-        }
-        if (dx < m_EquivalentDiameters[j] && dy < m_EquivalentDiameters[j] && dz < m_EquivalentDiameters[j])
-        {
-            m_Neighborhoods[j]++;
-        }
-      }
+	if(m_SurfaceFields[i] == false)
+	{
+		x = m_Centroids[3*i];
+		y = m_Centroids[3*i+1];
+		z = m_Centroids[3*i+2];
+		if(m->getXPoints() == 1) x = 0;
+		if(m->getYPoints() == 1) y = 0;
+		if(m->getZPoints() == 1) z = 0;
+		for (size_t j = 1; j < numgrains; j++)
+		{
+			if(m_SurfaceFields[j] == false && i != j)
+			{
+			  xn = m_Centroids[3*j];
+			  yn = m_Centroids[3*j+1];
+			  zn = m_Centroids[3*j+2];
+			  if(m->getXPoints() == 1) xn = 0;
+			  if(m->getYPoints() == 1) yn = 0;
+			  if(m->getZPoints() == 1) zn = 0;
+			  dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
+			  dist = sqrt(dist);
+			  if(dist < distToSurface[i])
+			  {
+				  outFile << (dist/m_EquivalentDiameters[i]) << std::endl;
+			  }
+			  if(dist < distToSurface[j])
+			  {
+				  outFile << (dist/m_EquivalentDiameters[j]) << std::endl;
+			  }
+			}
+		}
+	}
   }
 }
