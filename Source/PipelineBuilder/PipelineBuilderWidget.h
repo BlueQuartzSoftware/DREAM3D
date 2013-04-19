@@ -163,6 +163,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
 
+    void clearMessagesTable();
 
    // void on_helpText_anchorClicked ( const QUrl & link );
 
