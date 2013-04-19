@@ -16,11 +16,13 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>
 
 #include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
 
 
 /**
@@ -185,6 +187,11 @@ class DREAM3DLib_EXPORT IDataArray
       void operator=(const IDataArray&); //Not Implemented
 
 };
+
+
+typedef std::map<std::string, IDataArray::Pointer>         MXAAbstractAttributes;
+
+
 
 #endif //_IDATAARRAY_HPP_
 

@@ -477,3 +477,166 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
   }
   return iDataArray;
 }
+
+#if 0
+/**
+  * @brief Reads data from an Attribute into an IAttributePtr
+  * @param locId The hdf5 object id of the parent
+  * @param datasetPath The path to the data set containing the attributes you want
+  * @param key The name of the attribute to read
+  * @param dims The dimensions of the attribute
+  * @return Boost shared pointer to the attribute
+  */
+  template<typename T>
+  DataArray<T>::Pointer readH5Attribute(  hid_t locId,
+                                               const std::string &datasetPath,
+                                               const std::string &key,
+                                               const std::vector<hsize_t> &dims)
+  {
+    herr_t err = -1;
+    DataArray<T>::Pointer ptr;
+    if (dims.size() == 1 && dims.at(0) == 1) // One Dimensional Array with 1 element
+    {
+      T data;
+      err = H5Lite::readScalarAttribute(locId, datasetPath, key, data);
+      if (err >= 0) {
+        DataArray<T>::Pointer attr = DataArray<T>::CreateSingleValueArray( data);
+        if (attr.get() != NULL)
+        {
+          ptr = attr;
+        }
+      }
+    }
+    else // Multi-Dimensional Data
+    {
+     // const size_t* dimPtr = reinterpret_cast<const size_t*>(&(dims.front()));
+      size_t* _dims = new size_t[dims.size()];
+      for(size_t i = 0; i < dims.size(); ++i)
+      {
+        _dims[i] = dims[i];
+      }
+      DataArray<T>::Pointer attr =
+            DataArray<T>::CreateMultiDimensionalArray( dims.size(), _dims);
+      delete [] _dims;
+      if (attr.get() == NULL)
+      {
+        return ptr; // empty attribute
+      }
+      // All the needed space is now preallocated in the attribute
+      T* data = static_cast<T*>(attr->getVoidPointer(0) );
+      err = H5Lite::readPointerAttribute(locId, datasetPath, key, data);
+      if (err >= 0)
+      {
+         ptr = attr;
+      }
+    }
+    return ptr;
+  }
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+herr_t H5Utilities::readAllAttributes(hid_t fileId,
+                                      const std::string &datasetPath,
+                                      MXAAbstractAttributes &attributes)
+{
+  herr_t err = -1;
+  herr_t retErr = 1;
+  hid_t typeId = -1;
+  H5T_class_t attr_type;
+  size_t attr_size;
+  std::string res;
+
+  std::vector<hsize_t> dims;  //Reusable for the loop
+  std::list<std::string> names;
+  err = H5Utilities::getAllAttributeNames(fileId, datasetPath, names );
+  for (std::list<std::string>::iterator iter=names.begin(); iter != names.end(); iter++)
+  {
+    //std::cout << "Reading Attribute " << *iter << std::endl;
+    err = H5Lite::getAttributeInfo(fileId, datasetPath, (*iter), dims, attr_type, attr_size, typeId);
+    if (err < 0) {
+      std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
+    } else {
+      switch(attr_type)
+      {
+      case H5T_STRING:
+        res.clear(); //Clear the string out first
+        err = H5Lite::readStringAttribute(fileId, datasetPath, (*iter), res );
+        if (err >= 0) {
+          IDataArray::Pointer attr = MXAAsciiStringData::Create( res );
+          attr->setName(*iter);
+          attributes[*iter] = attr;
+        }
+        break;
+      case H5T_INTEGER:
+        //std::cout << "User Meta Data Type is Integer" << std::endl;
+        if ( H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId,H5T_STD_U8LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<uint8_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId,H5T_STD_U16LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<uint16_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId,H5T_STD_U32LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<uint32_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId,H5T_STD_U64LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<uint64_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId,H5T_STD_I8LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<int8_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId,H5T_STD_I16LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<int16_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId,H5T_STD_I32LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<int32_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if ( H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId,H5T_STD_I64LE) ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<int64_t>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else {
+          std::cout << "Unknown Type: " << typeId << " at " <<  datasetPath << std::endl;
+          err = -1;
+          retErr = -1;
+        }
+        break;
+      case H5T_FLOAT:
+        if (attr_size == 4) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<float32>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else if (attr_size == 8 ) {
+          IDataArray::Pointer ptr = H5Utilities::readH5Attribute<float64>(fileId, const_cast<std::string&>(datasetPath), (*iter), dims);
+          attributes[*iter] = ptr;
+          ptr->setName(*iter);
+        } else {
+          std::cout << "Unknown Floating point type" << std::endl;
+          err = -1;
+          retErr = -1;
+        }
+        break;
+      default:
+        std::cout << "Error: readUserMetaData() Unknown attribute type: " << attr_type << std::endl;
+        H5Utilities::printHDFClassType(attr_type);
+      }
+      CloseH5T(typeId, err, retErr); //Close the H5A type Id that was retrieved during the loop
+    }
+   if (retErr < 0)
+   {
+     break;
+   }
+  }
+
+  return retErr;
+}
+#endif

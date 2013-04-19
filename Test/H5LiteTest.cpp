@@ -51,7 +51,7 @@
   m_msgType##_attr->setKey(key);
 
 
-//TODO: Test the Read/Write IMXAArray methods
+//TODO: Test the Read/Write IDataArray methods
 
 /* Methods to test
  *
@@ -615,8 +615,8 @@ herr_t testMXAAttribute(hid_t file_id, const std::string &dsetName)
   std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
   DREAM3D_REQUIRE(attributeKey.empty() == false);
   attributeKey = "MXAAttribute<" + attributeKey + ">";
-  IMXAArray* array = MXAArrayTemplate<T>::New(10);
-  IMXAArray::Pointer arrayPtr (array);
+  IDataArray* array = MXAArrayTemplate<T>::New(10);
+  IDataArray::Pointer arrayPtr (array);
   T* p = static_cast<T*>(array->getVoidPointer(0));
   for (int var = 0; var < 10; ++var) {
     p[var] = static_cast<T>(var+65);
@@ -625,10 +625,10 @@ herr_t testMXAAttribute(hid_t file_id, const std::string &dsetName)
   DREAM3D_REQUIRE(err >= 0);
 
   // Now Read the Attribute back into an MXAArray object and test against the previous for equality
-  IMXAArray* rArray = H5Lite::readMXAAttribute(file_id, dsetName, attributeKey);
+  IDataArray* rArray = H5Lite::readMXAAttribute(file_id, dsetName, attributeKey);
   DREAM3D_REQUIRE (rArray != NULL);
   //hid_t t = rArray->getDataType();
-  IMXAArray::Pointer rArrayPtr(rArray); // Let boost clean up the pointer
+  IDataArray::Pointer rArrayPtr(rArray); // Let boost clean up the pointer
   T* r = static_cast<T*>(rArrayPtr->getVoidPointer(0));
 //  for (int var = 0; var < 10; ++var) {
 //    std::cout << "p=" << p[var] << "  r=" << (r[var]) << std::endl;
@@ -659,8 +659,8 @@ herr_t testWriteMXAArray(hid_t file_id)
   dsetName = "MXAArrayDataset<" + dsetName + ">";
   std::cout << "Running " << dsetName << " ... ";
 
-  IMXAArray* array = MXAArrayTemplate<T>::New(10);
-  IMXAArray::Pointer arrayPtr (array);
+  IDataArray* array = MXAArrayTemplate<T>::New(10);
+  IDataArray::Pointer arrayPtr (array);
   T* p = static_cast<T*>(array->getVoidPointer(0));
   for (int var = 0; var < 10; ++var) {
     p[var] = static_cast<T>(var);
@@ -680,9 +680,9 @@ herr_t testWriteMXAArray(hid_t file_id)
    DREAM3D_REQUIRE ( testMXAAttribute<float64>(file_id, dsetName) >= 0 );
 
    // Now Read the Attribute back into an MXAArray object and test against the previous for equality
-   IMXAArray* rArray = H5Lite::readMXAArray(file_id, dsetName);
+   IDataArray* rArray = H5Lite::readMXAArray(file_id, dsetName);
    DREAM3D_REQUIRE (rArray != NULL);
-   IMXAArray::Pointer rArrayPtr(rArray); // Let boost clean up the pointer
+   IDataArray::Pointer rArrayPtr(rArray); // Let boost clean up the pointer
    T* r = static_cast<T*>(rArrayPtr->getVoidPointer(0));
  //  for (int var = 0; var < 10; ++var) {
  //    std::cout << "p=" << p[var] << "  r=" << (r[var]) << std::endl;

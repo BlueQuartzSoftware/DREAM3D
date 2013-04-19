@@ -54,12 +54,14 @@ set(H5Support_SRCS
     ${H5Support_SOURCE_DIR}/H5Lite.cpp
     ${H5Support_SOURCE_DIR}/H5Utilities.cpp
     ${H5Support_SOURCE_DIR}/HDF5ScopedFileSentinel.cpp
+#    ${H5Support_SOURCE_DIR}/H5Image.cpp
  )
 
 set(H5Support_HDRS
     ${H5Support_SOURCE_DIR}/H5Lite.h
     ${H5Support_SOURCE_DIR}/H5Utilities.h
     ${H5Support_SOURCE_DIR}/HDF5ScopedFileSentinel.h
+#    ${H5Support_SOURCE_DIR}/H5Image.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "H5Support" "${H5Support_HDRS}" "${H5Support_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

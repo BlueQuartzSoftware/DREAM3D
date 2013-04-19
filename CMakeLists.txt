@@ -325,12 +325,6 @@ if(DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
     set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
 
-#- Add in the Main DREAM.3D Application
-option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
-if(DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
-endif()
-
 # --- Look for user defined external Plugins that the user has entered
 # into CMake-GUI or through CCMake by the user.
 set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
@@ -381,7 +375,19 @@ if(DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
 endif()
 
 
-# add the Command line utilities
+#- Add in the PluginMaker Application
+option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
+if(DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
+endif()
+
+#- Add in the QHDFViewer Application
+option(DREAM3D_BUILD_QHDFVIEWER "Compile the QHDFViewer Application" OFF)
+if(DREAM3D_BUILD_QHDFVIEWER AND DREAM3D_BUILD_QT_APPS)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/QHDFViewer  ${PROJECT_BINARY_DIR}/Applications/QHDFViewer)
+endif()
+
+
 # Figure out here if we are going to build the command line tools
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 if( DREAM3D_BUILD_CLI_TOOLS )

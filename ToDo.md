@@ -5,20 +5,20 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ JPEG File import is resulting in corrupted data. See 'Braid' Data set for example
++ StatsGenerator - Rolled Structure Default NOT saving the Axis Length ratios
 
 ## Critical to Fix before Bad Things Happen ##
 + All the shape ops classes need to be fully reentrant for parallel applications
 
 
 ## Documentation Issues ##
-
-
-### Groeber Documentation
++ Add "help" button to each filter that would display the help for that specific filter
 + Missing Documentation File for IOFilters/ImportImageStack
 
 
-
 ### Jackson Priority ###
+
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
 + Tutorial::Visualization Techniques for Docs/Website
@@ -29,28 +29,29 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### User Centric
-+ Update/Create a user manual for the stats generator - last parts need pasting
 + Update documentation file structure now that users can specify array names
+
 
 ### Developer Centric ###
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
++ Add template files for general filter and some specific types of filters
+
 
 ### Ideas/Wish List ###
-+ Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
-+ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
-
++ Compile the QHView application from MXA Tools as part of the DREAM3D Project
 
 ## Still to Do ##
+
++ Sanity Check DREAM3D Writer so that a user does not accidentally over write an existing stats file
++ Look into 'ALGLIB' for some special mathematical functions
 + Add "Tool" example program that shows writing a command line pipeline program
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
 + On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
-+ Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
-+ Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 + Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 + Filter that can execute any program on the users computer
 + Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
@@ -60,7 +61,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Change Field to Region in all codes
 + Add/Modify filter to note if grain is a twin, parent or untwinned
 + Add ability to define twins of interest on merge twin filter
-+ Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
 + Add ability to flag regions as 'defects' or a new phase in the fill bad data filter
 + Look into incorporating genetic algorithms in the packing algorithms of the synthetic builder
 + Include a filter to calculate 2-pt statistics
@@ -71,7 +71,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add GBCD calculation filters from G. Rohrer
 + Add a filter to calculate 'clustering' statistics on 'marked' features
 + Look into creating multiple maps at each level (i.e. parent and grain filed maps)
-+ Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 + Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
 + Add filter to calculate microtexture function or equivalent
 + Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
@@ -79,8 +78,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add virtual sectioning filter
 + Add/Finish filter to 'standardize' euler angles within a grain
 + Look into creating a filter to color orientations using C. Shuh's color scale
-+ Add mesh quantification filter (code from Tony)
-+ Create filter to generate surface mesh from volume mesh
 + Add 3D linear intercept calculation filter (C. Hartley filter)
 + Design protocol to learn user's 'ontology'
 + Add filter to perform Tony's hot spot analysis
@@ -98,6 +95,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix the mPrime, F1, F1spt, F7 functions in Hex- and Ortho- Ops
 
 
+## StatsGenerator ##
++ Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
++ Speed up the initial calculations when clicking "Create Data"
++ Provide a progress bar when calculating the initial statistics
+
+
+
 ##  Synthetic Building Filters ##
 + Add ability to read list of ellipsoids into packing algorithms
 + Look into bias near outside of box during synthetic building
@@ -105,6 +109,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ##  IO Filters ##
++ Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
++ Be able to append only changed/new data to a DREAM3D file.
++ Import a pipeline from an existing DREAM3D file.
++ Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 + Add filter to generate IPF Images for each slice of data, or a user defined range of slices and plane by defining the normal to the plane (X, Y or Z)
 + Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 + Add filter to write out slices as images of any array
@@ -119,32 +127,41 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Add a 'Rename Favorite' menu
 + allow user to right-click on a favorite and "delete, rename, ..." the favorite
-+ allow user to right-click on a filter and display help in a separate window
-
-
-##  Feature Request ##
-+ A filter that finds all the twins in the microstructure and assigns them
-to another phase (phase 3), so that they can be visualised differently to the surrouding
-grains (phase 2) and grains that are untwinned (phase 1).
++ allow user to right-click on a filter and display help in a separate window or add a button to each filter that would allow the user to click the button and then take them directly to that filter help file
 
 
 ##  Surface Meshing ##
++ Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
++ Add mesh quantification filter (code from Tony)
++ Create filter to generate surface mesh from volume mesh
++ Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 + bug in edges file is stopping the use in the smoothing filter
 + Add mesh decimation filter (surface or volume)
++ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
 
 
 ##  MFE Smoothing ##
+
 + add ability to stop the smoothing
 
 
 ##  Bruker EBSD System Support ##
+
 + BASE64 decoder
 + XML Parser for the SEM Image file
 + Create XML Parsing code for each file from the Bruker File Archive
 + Include Expat as part of the DREAM3D Compile?
 
 
+##  Feature Request ##
+
++ A filter that finds all the twins in the microstructure and assigns them
+to another phase (phase 3), so that they can be visualised differently to the surrouding grains (phase 2) and grains that are untwinned (phase 1).
+
+
+
 ## Items Completed ##
++ Update/Create a user manual for the stats generator - last parts need pasting
 + Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
 + write-up contributors section for website
 + Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file

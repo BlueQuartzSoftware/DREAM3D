@@ -38,7 +38,7 @@
 #include <string.h>
 
 #ifdef H5LITE_USE_MXA_CONSTRUCTS
-#include <MXA/Base/IMXAArray.h>
+#include <MXA/Base/IDataArray.h>
 #include <MXA/DataWrappers/MXAAsciiStringData.h>
 #endif
 
@@ -928,7 +928,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
 // -----------------------------------------------------------------------------
 herr_t H5Lite::writeMXAArray(hid_t loc_id,
                             const std::string &dsetName,
-                            IMXAArray* array)
+                            IDataArray* array)
 {
   herr_t err    = -1;
   hid_t did     = -1;
@@ -995,7 +995,7 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
 herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
                             const std::string &objName,
                             const std::string &attrName,
-                            IMXAArray* array)
+                            IDataArray* array)
 {
   hid_t      obj_id, sid, attr_id;
    int32_t        has_attr;
@@ -1096,14 +1096,14 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
+IDataArray* H5Lite::readMXAArray(hid_t loc_id,
                            const std::string &dsetName)
 {
   hid_t   did;
   herr_t  err = 0;
   herr_t retErr = 0;
   hid_t spaceId;
-  IMXAArray* data = NULL;
+  IDataArray* data = NULL;
   std::string sData;
 
  /* Open the dataset. */
@@ -1214,7 +1214,7 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
+IDataArray* H5Lite::readMXAAttribute(hid_t loc_id,
                                    const std::string &dsetName,
                                    const std::string &attributeKey)
  {
@@ -1225,7 +1225,7 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
   herr_t err = 0;
   herr_t retErr = 0;
   hid_t attr_id;
-  IMXAArray* data = NULL;
+  IDataArray* data = NULL;
   std::string sData;
   //std::cout << "   Reading Vector Attribute at Path '" << objName << "' with Key: '" << attrName << "'" << std::endl;
   /* Get the type of object */
