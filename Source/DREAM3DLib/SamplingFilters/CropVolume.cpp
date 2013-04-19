@@ -57,7 +57,7 @@ m_ZMin(0),
 m_XMax(0),
 m_YMax(0),
 m_ZMax(0),
-m_RenumberGrains(false),
+m_RenumberGrains(true),
 m_GrainIds(NULL),
 m_Active(NULL)
 {
