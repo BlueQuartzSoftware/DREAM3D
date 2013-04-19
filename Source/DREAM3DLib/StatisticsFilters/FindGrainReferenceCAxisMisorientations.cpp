@@ -126,7 +126,7 @@ void FindGrainReferenceCAxisMisorientations::preflight()
 void FindGrainReferenceCAxisMisorientations::execute()
 {
   setErrorCondition(0);
-
+  std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -144,15 +144,20 @@ void FindGrainReferenceCAxisMisorientations::execute()
     return;
   }
 
-  float** avgmiso = new float *[m->getNumFieldTuples()];
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
-  {
-    avgmiso[i] = new float[2];
-    for (int j = 0; j < 2; j++)
-    {
-      avgmiso[i][j] = 0.0;
-    }
-  }
+//  float** avgmiso = new float *[m->getNumFieldTuples()];
+//  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+//  {
+//    avgmiso[i] = new float[2];
+//    for (int j = 0; j < 2; j++)
+//    {
+//      avgmiso[i][j] = 0.0;
+//    }
+//  }
+  size_t numFields = m->getNumFieldTuples();
+  int avgMisoComps = 2;
+  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
+  avgmisoPtr->initializeWithZeros();
+  float* avgmiso = avgmisoPtr->GetPointer(0);
 
   float q1[5];
   //float q2[5];
@@ -168,9 +173,11 @@ void FindGrainReferenceCAxisMisorientations::execute()
   // We have more points than can be allocated on a 32 bit machine. Assert Now.
   if(totalPoints > maxUInt32)
   {
-      setErrorCondition(-666);
-      notifyErrorMessage("More Points than can be help in memory on a 32 bit machine. Try reducing the size of the input volume.", -666);
-      return;
+    setErrorCondition(-666);
+    ss.str("");
+    ss << "The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: " << totalPoints;
+    notifyErrorMessage(ss.str(), getErrorCondition());
+    return;
   }
 #else
   typedef int64_t DimType;
@@ -184,11 +191,10 @@ void FindGrainReferenceCAxisMisorientations::execute()
 
   float g1[3][3];
   float g1t[3][3];
- // float n1, n2, n3;
-// unsigned int phase1, phase2;
   float caxis[3] = {0,0,1};
   float c1[3];
   float AvgCAxis[3];
+  size_t index = 0;
 
   for (DimType col = 0; col < xPoints; col++)
   {
@@ -226,8 +232,9 @@ void FindGrainReferenceCAxisMisorientations::execute()
       if(w > 90.0) w = 180.0-w;
 
           m_GrainReferenceCAxisMisorientations[point] = w;
-          avgmiso[m_GrainIds[point]][0]++;
-          avgmiso[m_GrainIds[point]][1] = avgmiso[m_GrainIds[point]][1] + w;
+          index = m_GrainIds[point] * avgMisoComps;
+          avgmiso[index]++;
+          avgmiso[index+1] = avgmiso[index] + w;
         }
         if (m_GrainIds[point] == 0 || m_CellPhases[point] == 0)
         {
@@ -237,19 +244,20 @@ void FindGrainReferenceCAxisMisorientations::execute()
     }
   }
 
-  size_t grainsSize = m->getNumFieldTuples();
-  for (size_t i = 1; i < grainsSize; i++)
+
+  for (size_t i = 1; i < numFields; i++)
   {
-    m_GrainAvgCAxisMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
-      if(avgmiso[i][0] == 0) m_GrainAvgCAxisMisorientations[i] = 0.0;
+    index = i * avgMisoComps;
+    m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];
+    if(avgmiso[index] == 0) { m_GrainAvgCAxisMisorientations[i] = 0.0; }
   }
 
   // Clean up all the heap allocated memory
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
-  {
-    delete[] avgmiso[i];
-  }
-  delete avgmiso;
+//  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+//  {
+//    delete[] avgmiso[i];
+//  }
+//  delete avgmiso;
 
- notifyStatusMessage("FindAvgCAxisMisorientations Completed");
+  notifyStatusMessage("Completed");
 }
