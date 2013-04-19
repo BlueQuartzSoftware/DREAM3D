@@ -91,6 +91,7 @@ class PipelineViewWidget : public QFrame
   protected:
      void setupGui();
       void dragEnterEvent(QDragEnterEvent *event);
+     // void dragLeaveEvent(QDragLeaveEvent* event);
       void dragMoveEvent(QDragMoveEvent *event);
       void dropEvent(QDropEvent *event);
    //   void mousePressEvent(QMouseEvent *event);
