@@ -108,10 +108,10 @@ void FindGrainPhases::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-//  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
   // This makes sure we get the allocated arrays and we size the Fields to 1 to avoid any errors
-  dataCheck(false, totalPoints, 1, totalEnsembles);
+  dataCheck(false, totalPoints, totalFields, totalEnsembles);
 
   int gnum = 0;
   for(int64_t i = 0; i < totalPoints; i++)
