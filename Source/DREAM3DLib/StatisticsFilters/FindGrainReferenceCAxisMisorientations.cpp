@@ -101,30 +101,10 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
   int err = 0;
-  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
-  if(err == -303)
-  {
-    setErrorCondition(0);
-    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_cellquats->preflight();
-    if(preflight == false) find_cellquats->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, err, -303, float, FloatArrayType, fields, 3)
-  if(err == -303)
-  {
-       setErrorCondition(0);
-       FindAvgCAxes::Pointer find_avgcaxes = FindAvgCAxes::New();
-       find_avgcaxes->setObservers(this->getObservers());
-       find_avgcaxes->setVoxelDataContainer(getVoxelDataContainer());
-       if(preflight == true) find_avgcaxes->preflight();
-       if(preflight == false) find_avgcaxes->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, -303, float, FloatArrayType, fields, 3)
 
 

@@ -128,47 +128,17 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
       GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-      int err = 0;
-  TEST_PREREQ_DATA(m, DREAM3D, CellData, Quats, err, -303, float, FloatArrayType, voxels, 5)
-      if(err == -303)
-  {
-    setErrorCondition(0);
-    FindCellQuats::Pointer find_cellquats = FindCellQuats::New();
-    find_cellquats->setObservers(this->getObservers());
-    find_cellquats->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_cellquats->preflight();
-    if(preflight == false) find_cellquats->execute();
-  }
+
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
 
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
 
       if(m_ReferenceOrientation == 0)
   {
-    TEST_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, err, -303, float, FloatArrayType, fields, 5)
-        if(err == -303)
-    {
-      setErrorCondition(0);
-      FindAvgOrientations::Pointer find_avgorients = FindAvgOrientations::New();
-      find_avgorients->setObservers(this->getObservers());
-      find_avgorients->setVoxelDataContainer(getVoxelDataContainer());
-      if(preflight == true) find_avgorients->preflight();
-      if(preflight == false) find_avgorients->execute();
-    }
     GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 5)
   }
   else if(m_ReferenceOrientation == 1)
   {
-    TEST_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, err, -301, float, FloatArrayType, voxels, 1)
-        if(err == -301)
-    {
-      setErrorCondition(0);
-      FindEuclideanDistMap::Pointer find_euclideandistmap = FindEuclideanDistMap::New();
-      find_euclideandistmap->setObservers(this->getObservers());
-      find_euclideandistmap->setVoxelDataContainer(getVoxelDataContainer());
-      if(preflight == true) find_euclideandistmap->preflight();
-      if(preflight == false) find_euclideandistmap->execute();
-    }
     GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -301, float, FloatArrayType, voxels, 1)
   }
 

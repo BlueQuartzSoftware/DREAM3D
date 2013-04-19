@@ -91,69 +91,14 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, err, -304, int32_t, Int32ArrayType, fields, 1)
-  if(err == -304)
-  {
-    setErrorCondition(0);
-    FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
-    find_grainphases->setObservers(this->getObservers());
-    find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
-    find_surfacefields->setObservers(this->getObservers());
-    find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    find_surfacefields->setMessagePrefix(this->getMessagePrefix());
-    if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) 
-	{
-      notifyStatusMessage("Finding Surface Fields");
-      find_surfacefields->execute();
-    }
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, err, -305, float, FloatArrayType, fields, 3)
-  if(err == -305)
-  {
-    setErrorCondition(0);
-    FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
-    find_graincentroids->setObservers(this->getObservers());
-    find_graincentroids->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_graincentroids->preflight();
-    if(preflight == false) find_graincentroids->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, err, -302, float, FloatArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSizes::Pointer find_sizes = FindSizes::New();
-    find_sizes->setObservers(this->getObservers());
-    find_sizes->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_sizes->preflight();
-    if(preflight == false) find_sizes->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
 
-  TEST_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, err, -302, float, FloatArrayType, fields, 1)
-  if(err == -302)
-  {
-    setErrorCondition(0);
-    FindSizes::Pointer find_sizes = FindSizes::New();
-    find_sizes->setObservers(this->getObservers());
-    find_sizes->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_sizes->preflight();
-    if(preflight == false) find_sizes->execute();
-  }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 }
 
