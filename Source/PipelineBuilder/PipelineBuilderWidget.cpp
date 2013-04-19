@@ -42,6 +42,7 @@
 #include <QtCore/QFileInfoList>
 #include <QtCore/QPropertyAnimation>
 #include <QtCore/QResource>
+
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
@@ -57,6 +58,9 @@
 #include <QtGui/QKeySequence>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QScrollArea>
+#include <QtGui/QScrollBar>
+
 
 #include "QtSupport/HelpDialog.h"
 
@@ -420,6 +424,7 @@ void PipelineBuilderWidget::setupGui()
     m_presetMap["Synthetic(Primary + Precipitate)"] = presetFilterList;
   }
 
+  m_PipelineViewWidget->setParent(m_QDroppableScrollArea);
 
 }
 
@@ -686,6 +691,8 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 {
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
   m_PipelineViewWidget->preflightPipeline();
+
+//  m_QDroppableScrollArea->verticalScrollBar()->setValue(m_QDroppableScrollArea->verticalScrollBar()->maximum());
 }
 
 // -----------------------------------------------------------------------------
@@ -762,6 +769,24 @@ void PipelineBuilderWidget::actionClearPipeline_triggered()
 {
   // Clear Any Existing Pipeline
   m_PipelineViewWidget->clearWidgets();
+  clearMessagesTable();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::clearMessagesTable()
+{
+  QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
+  QStringList m_PipelineErrorList = m_PipelineViewWidget->getPipelineErrorList();
+
+  // clear all the error messages
+  m_PipelineErrorList.clear();
+
+  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
+    errorTableWidget->removeRow(i);
+  }
+  errorTableWidget->setRowCount(0);
 }
 
 // -----------------------------------------------------------------------------
@@ -783,16 +808,7 @@ void PipelineBuilderWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_m_GoBtn_clicked()
 {
-  QTableWidget* errorTableWidget = m_PipelineViewWidget->getTableWidget();
-  QStringList m_PipelineErrorList = m_PipelineViewWidget->getPipelineErrorList();
 
-  // clear all the error messages
-  m_PipelineErrorList.clear();
-
-  for (int i=0; i<errorTableWidget->rowCount(); ++i) {
-    errorTableWidget->removeRow(i);
-  }
-  errorTableWidget->setRowCount(0);
 
   if (m_GoBtn->text().compare("Cancel") == 0)
   {
@@ -806,6 +822,8 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 
   // Save the preferences file NOW in case something happens
   emit fireWriteSettings();
+
+  clearMessagesTable();
 
   m_hasErrors = false;
   m_hasWarnings = false;
