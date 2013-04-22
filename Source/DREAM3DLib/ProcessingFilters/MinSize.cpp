@@ -118,6 +118,27 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 void MinSize::preflight()
 {
   dataCheck(true, 1, 1, 1);
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  renumber_grains->setObservers(this->getObservers());
+  renumber_grains->setVoxelDataContainer(m);
+  renumber_grains->setMessagePrefix(getMessagePrefix());
+  renumber_grains->preflight();
+  int err = renumber_grains->getErrorCondition();
+  if (err < 0)
+  {
+    setErrorCondition(renumber_grains->getErrorCondition());
+    addErrorMessages(renumber_grains->getPipelineMessages());
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------

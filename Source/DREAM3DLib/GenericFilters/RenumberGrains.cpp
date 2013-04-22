@@ -108,6 +108,21 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 void RenumberGrains::preflight()
 {
   dataCheck(true, 1, 1, 1);
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+  std::list<std::string> headers = m->getFieldArrayNameList();
+  for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  {
+      IDataArray::Pointer p = m->getFieldData(*iter);
+	  std::string type = p->getTypeAsString();
+      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -168,8 +183,8 @@ void RenumberGrains::execute()
       //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
-      if((*iter).compare(DREAM3D::FieldData::NeighborList) == 0) { m->removeFieldData(*iter);}
-      else if((*iter).compare(DREAM3D::FieldData::SharedSurfaceAreaList) == 0) {m->removeFieldData(*iter);}
+	  std::string type = p->getTypeAsString();
+      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
       //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
     }
