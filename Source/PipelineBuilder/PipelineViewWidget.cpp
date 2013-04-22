@@ -60,7 +60,7 @@
 
 #include "FilterWidgetManager.h"
 #include "QFilterPipeline.h"
-
+#include "QDroppableScrollArea.h"
 
 
 
@@ -220,6 +220,7 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
+
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
   if (NULL == wf) { return NULL;}
@@ -263,7 +264,6 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
           this, SLOT(preflightPipeline()));
 
   setSelectedFilterWidget(w);
-
   //preflightPipeline();
 
   return w;
@@ -422,10 +422,8 @@ void PipelineViewWidget::removeFilterWidget()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 {
- // std::cout << "PipelineViewWidget::filterBeingDragged: " << w->getFilter()->getNameOfClass() << std::endl;
- // m_FilterWidgetLayout->removeWidget(w);
+  //std::cout << "PipelineViewWidget::filterBeingDragged: " << w->getFilter()->getHumanLabel() << std::endl;
   m_FilterBeingDragged = w;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -433,6 +431,8 @@ void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 {
+ // std::cout << "PipelineViewWidget::setSelectedFilterWidget: " << w->getFilter()->getHumanLabel() << std::endl;
+
   if(NULL != m_SelectedFilterWidget && w != m_SelectedFilterWidget)
   {
     m_SelectedFilterWidget->setIsSelected(false);
@@ -451,8 +451,9 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
-#if 0
-  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+//  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+ #if 0
+
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
   if (w != NULL)
   {
@@ -476,7 +477,7 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
-//  std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+ // std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
 //  QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
 //  if(w != NULL)
 //  {
@@ -487,8 +488,19 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 //  {
 //    std::cout << "PipelineViewWidget::dragMoveEvent: Found the QVBoxLayout" << std::endl;
 //  }
+
+
+//  if (event->dropAction() == Qt::MoveAction )
+//  {
+//    std::cout << "  Dragging a current filter" << std::endl;
+//  }
+//  else if (event->dropAction() == Qt::CopyAction)
+//  {
+//    std::cout << "  Dragging a new filter into pipeline" << std::endl;
+//  }
+
   QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
-  if(o == NULL)
+  if(o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
   {
     int count = filterCount();
     for (int i = 0; i < count; ++i)
@@ -541,7 +553,7 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent *event)
 {
- // std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+//  std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   if (event->mimeData()->hasUrls())
   {
     QList<QUrl> urlList;
@@ -556,8 +568,9 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
       emit pipelineFileDropped(fName);
     }
   }
-  else if(m_FilterBeingDragged != NULL)
+  else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
+    std::cout << "  m_FilterBeingDragged != NULL: " << m_FilterBeingDragged->getFilter()->getHumanLabel() << std::endl;
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
     preflightPipeline();
