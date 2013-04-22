@@ -112,20 +112,10 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    setErrorCondition(0);
-    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) find_neighbors->execute();
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-    if(m_NeighborList == NULL)
-    {
       ss.str("");
       ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
-   }
   }
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();

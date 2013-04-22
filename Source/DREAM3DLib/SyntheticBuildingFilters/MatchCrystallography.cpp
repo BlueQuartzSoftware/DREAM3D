@@ -150,33 +150,18 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    setErrorCondition(0);
-    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
-    find_neighbors->setMessagePrefix(getMessagePrefix());
-    if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) {
-      notifyStatusMessage("Finding Neighbors");
-      find_neighbors->execute();
-    }
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-    if(m_NeighborList == NULL)
-    {
       ss.str("");
       ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
-    }
-    m_SharedSurfaceAreaList =
-        NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-    if(m_SharedSurfaceAreaList == NULL)
-    {
+  }
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  if(m_SharedSurfaceAreaList == NULL)
+  {
       ss.str("");
       ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), -306);
-    }
   }
 
   // Ensemble Data
