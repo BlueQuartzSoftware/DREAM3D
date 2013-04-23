@@ -242,6 +242,13 @@ add_executable(RawBinaryReaderTest ${DREAM3DTest_SOURCE_DIR}/RawBinaryReaderTest
 target_link_libraries(RawBinaryReaderTest EbsdLib MXA DREAM3DLib)
 add_test(RawBinaryReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RawBinaryReaderTest)
 
+# --------------------------------------------------------------------------
+# Synthetic Generation Test
+# --------------------------------------------------------------------------
+add_executable(SyntheticTest SyntheticTest.cpp )
+target_link_libraries(SyntheticTest DREAM3DLib)
+add_test(SyntheticTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticTest)
+
 # --------
 if(0)
 include_directories(${VXL_CORE_INCLUDE_DIR} ${VXL_VCL_INCLUDE_DIR} )
