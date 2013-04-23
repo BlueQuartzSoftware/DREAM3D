@@ -42,6 +42,9 @@
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+
+  const static float m_pi = static_cast<float>(M_PI);
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -93,20 +96,10 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    setErrorCondition(0);
-    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) find_neighbors->execute();
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-    if(m_NeighborList == NULL)
-    {
       ss.str("");
       ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
-   }
   }
 
   m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
@@ -165,13 +158,15 @@ void FindMisorientations::execute()
   std::vector<std::vector<float> > misorientationlists;
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
-  float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
+  //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
  // int mbin = 0;
   float w;
   float q1[5];
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
+
+  float radToDeg = 180.0/m_pi;
 
   size_t nname;
  // float nsa;
@@ -197,13 +192,12 @@ void FindMisorientations::execute()
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if (phase1 == phase2)
       {
-		w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-      OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
-      misorientationlists[i][j] = w;
+    w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+        misorientationlists[i][j] = w*radToDeg;
       }
-	  else
+    else
       {
-      misorientationlists[i][j] = -100;
+        misorientationlists[i][j] = -100;
       }
     }
   }

@@ -131,7 +131,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
+  //int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
@@ -145,38 +145,24 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
+
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    setErrorCondition(0);
-    FindNeighbors::Pointer find_neighbors = FindNeighbors::New();
-    find_neighbors->setObservers(this->getObservers());
-    find_neighbors->setVoxelDataContainer(getVoxelDataContainer());
-    find_neighbors->setMessagePrefix(getMessagePrefix());
-    if(preflight == true) find_neighbors->preflight();
-    if(preflight == false) {
-      notifyStatusMessage("Finding Neighbors");
-      find_neighbors->execute();
-    }
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-    if(m_NeighborList == NULL)
-    {
       ss.str("");
       ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
-    }
-    m_SharedSurfaceAreaList =
-        NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-    if(m_SharedSurfaceAreaList == NULL)
-    {
+  }
+  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  if(m_SharedSurfaceAreaList == NULL)
+  {
       ss.str("");
       ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), -306);
-    }
   }
 
   // Ensemble Data
@@ -234,6 +220,10 @@ void MatchCrystallography::execute()
 
   notifyStatusMessage("Initializing Arrays");
   initializeArrays();
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
   notifyStatusMessage("Determining Volumes");
   determine_volumes();
   notifyStatusMessage("Determining Boundary Areas");
@@ -266,29 +256,36 @@ void MatchCrystallography::initializeArrays()
   simmdf.resize(size);
   for (size_t i = 1; i < size; ++i)
   {
-  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-  {
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-    actualodf[i] = pp->getODF();
-    actualmdf[i] = pp->getMisorientationBins();
-  }
-  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-  {
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-    actualodf[i] = pp->getODF();
-    actualmdf[i] = pp->getMisorientationBins();
-  }
-
-  simodf[i] = FloatArrayType::CreateArray(actualodf[i]->GetSize(), DREAM3D::HDF5::ODF);
-  simmdf[i] = FloatArrayType::CreateArray(actualmdf[i]->GetSize(), DREAM3D::HDF5::MisorientationBins);
-  for (size_t j = 0; j < simodf[i]->GetSize(); j++)
-  {
-    simodf[i]->SetValue(j, 0.0);
-  }
-  for (size_t j = 0; j < simmdf[i]->GetSize(); j++)
-  {
-    simmdf[i]->SetValue(j, 0.0);
-  }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      actualodf[i] = pp->getODF();
+      actualmdf[i] = pp->getMisorientationBins();
+    }
+    else if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      actualodf[i] = pp->getODF();
+      actualmdf[i] = pp->getMisorientationBins();
+    }
+    else
+    {
+      setErrorCondition(-55000);
+      std::stringstream ss;
+      ss << "MatchCrystallography only supports 'Primary' and 'Precipitate' phases. Please either edit the phase types if possible or remove this fitler";
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+      return;
+    }
+    simodf[i] = FloatArrayType::CreateArray(actualodf[i]->GetSize(), DREAM3D::HDF5::ODF);
+    simmdf[i] = FloatArrayType::CreateArray(actualmdf[i]->GetSize(), DREAM3D::HDF5::MisorientationBins);
+    for (size_t j = 0; j < simodf[i]->GetSize(); j++)
+    {
+      simodf[i]->SetValue(j, 0.0);
+    }
+    for (size_t j = 0; j < simmdf[i]->GetSize(); j++)
+    {
+      simmdf[i]->SetValue(j, 0.0);
+    }
   }
 }
 
