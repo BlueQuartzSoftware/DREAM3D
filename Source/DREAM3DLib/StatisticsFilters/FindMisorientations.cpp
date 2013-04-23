@@ -158,7 +158,7 @@ void FindMisorientations::execute()
   std::vector<std::vector<float> > misorientationlists;
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
-  float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
+  //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
  // int mbin = 0;
   float w;
   float q1[5];
@@ -192,10 +192,10 @@ void FindMisorientations::execute()
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if (phase1 == phase2)
       {
-		w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+    w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         misorientationlists[i][j] = w*radToDeg;
       }
-	  else
+    else
       {
         misorientationlists[i][j] = -100;
       }

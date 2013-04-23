@@ -73,33 +73,33 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     virtual ~MatchCrystallography();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumFieldsArrayName)
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-	virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const std::string getHumanLabel() {return "Match Crystallography";}
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
     /**
@@ -139,24 +139,24 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     //Ensemble Data
     unsigned int* m_CrystalStructures;
     unsigned int* m_PhaseTypes;
-	int32_t* m_NumFields;
-	StatsDataArray* m_StatsDataArray;
+    int32_t* m_NumFields;
+    StatsDataArray* m_StatsDataArray;
 
     // All other private instance variables
-	  float mdfchange;
-	  float odfchange;
+    float mdfchange;
+    float odfchange;
 
     std::vector<float> unbiasedvol;
-	std::vector<float> totalSurfaceArea;
+    std::vector<float> totalSurfaceArea;
 
 
     std::vector<FloatArrayType::Pointer> actualodf;
     std::vector<FloatArrayType::Pointer> simodf;
     std::vector<FloatArrayType::Pointer> actualmdf;
-	std::vector<FloatArrayType::Pointer> simmdf;
+    std::vector<FloatArrayType::Pointer> simmdf;
 
 
-	std::vector<std::vector<float> > misorientationlists;
+    std::vector<std::vector<float> > misorientationlists;
 
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
