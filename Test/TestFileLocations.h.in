@@ -2,7 +2,7 @@
 #define _TestFileLocation_h_
 #include <string>
 
-#define REMOVE_TEST_FILES 0
+#define REMOVE_TEST_FILES 1
 
 namespace UnitTest
 {
@@ -112,6 +112,12 @@ namespace UnitTest
     const std::string OutputFile("@MXA_TEMP_DIR@RawBinaryReaderTest/Output.bin");
   }
 
+  namespace SyntheticTest
+  {
+    const std::string TestDir("@DREAM3DTest_BINARY_DIR@SyntheticTest");
+    const std::string MatrixPrecipitateInputFile("@DREAM3D_SUPPORT_DIR@/Data/2Phase_Matrix_Precipitate.dream3d");
+    const std::string OutputFile("@DREAM3DTest_BINARY_DIR@SyntheticTestOutput.dream3d");
+  }
 
 }
 
