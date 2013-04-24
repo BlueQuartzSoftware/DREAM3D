@@ -68,11 +68,11 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
+	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Radial Distribution Function"; }
 
     /**
@@ -89,15 +89,18 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     FindRadialDist();
 
     void find_radialdist();
+    void find_boundingbox();
 
 private:
     int32_t* m_FieldPhases;
     float* m_EquivalentDiameters;
     float* m_Volumes;
-    bool* m_SurfaceFields;
     float* m_Centroids;
+    bool* m_SurfaceFields;
 
-  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+	float boundbox[7];
+
+	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindRadialDist(const FindRadialDist&); // Copy Constructor Not Implemented
     void operator=(const FindRadialDist&); // Operator '=' Not Implemented
