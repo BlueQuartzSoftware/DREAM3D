@@ -182,7 +182,7 @@ void RotateSampleRefFrame::setupFilterParameters()
     option->setHumanLabel("Rotation Axis");
     option->setPropertyName("RotationAxis");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("ijk");
     parameters.push_back(option);
   }

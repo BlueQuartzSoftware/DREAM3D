@@ -134,7 +134,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     option->setHumanLabel("Rotation Axis");
     option->setPropertyName("RotationAxis");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("ijk");
     parameters.push_back(option);
   }
@@ -202,10 +202,10 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-  bool doParallel = false;
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

@@ -50,6 +50,7 @@
 #include <boost/assert.hpp>
 
 // Qt Includes
+#include "QtGui/QApplication"
 #include "QtCore/QSettings"
 
 
@@ -58,9 +59,50 @@
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
-//#include "PipelineBuilder/PipelineViewWidget.h"
-//#include "PipelineBuilder/QFilterWidget.h"
+#include "FilterWidgets/FilterWidgetsLib.h"
+#include "PipelineBuilder/FilterWidgetManager.h"
+#include "PipelineBuilder/IFilterWidgetFactory.h"
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main (int argc, char  *argv[])
+{
+  QApplication app(argc, argv);
+
+  FilterWidgetsLib::RegisterKnownQFilterWidgets();
+
+
+
+
+  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
+
+  FilterWidgetManager::Collection allFactories = wm->getFactories();
+
+
+  for(FilterWidgetManager::Collection::iterator iter = allFactories.begin(); iter != allFactories.end(); ++iter)
+  {
+    QString filterName = QString::fromStdString((*iter).first);
+    std::cout << "Writing " << filterName.toStdString() << std::endl;
+    IFilterWidgetFactory::Pointer wf = (*iter).second;
+    if (NULL == wf) { return NULL;}
+    QFilterWidget* w = wf->createWidget();
+    QString filePath = QString("/tmp/") + filterName + QString(".ini");
+    QSettings prefs(filePath, QSettings::IniFormat, NULL);
+    prefs.beginGroup(QString("FILTER_NUMBER"));
+    w->writeOptions(prefs);
+    prefs.endGroup();
+
+  }
+
+
+  return EXIT_SUCCESS;
+}
+
+
+#if 0
 
 // -----------------------------------------------------------------------------
 //
@@ -141,3 +183,4 @@ int main (int argc, char const *argv[])
 
   return EXIT_SUCCESS;
 }
+#endif

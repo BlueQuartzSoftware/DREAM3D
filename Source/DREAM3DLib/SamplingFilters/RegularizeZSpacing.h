@@ -62,18 +62,17 @@ class DREAM3DLib_EXPORT RegularizeZSpacing : public AbstractFilter
 
     virtual ~RegularizeZSpacing();
 
-	DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
+
+    DREAM3D_INSTANCE_PROPERTY(float, NewZRes)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-	virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const std::string getHumanLabel() { return "Regularize Z Spacing"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

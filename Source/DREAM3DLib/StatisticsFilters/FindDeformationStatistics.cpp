@@ -139,7 +139,6 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
@@ -366,8 +365,8 @@ void FindDeformationStatistics::execute()
     else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
       if((grm/avgGRM) >= 1) grmbin = 10+int(((grm/avgGRM)-1.0)/0.25);
     else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
-	  kambin2 = int(kam/0.25);
-	  grmbin2 = int(grm/0.5);
+    kambin2 = int(kam/0.25);
+    grmbin2 = int(grm/0.5);
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
@@ -531,31 +530,31 @@ void FindDeformationStatistics::execute()
   float xFZ, yFZ, zFZ;
   for(size_t i=1;i<size;i++)
   {
-	  xtemp = m_Poles[3*i];
-	  ytemp = m_Poles[3*i+1];
-	  ztemp = m_Poles[3*i+2];
-	  
-	  if(ztemp<0) xtemp = -xtemp, ytemp = -ytemp, ztemp = -ztemp;
-	  if(xtemp >= ytemp && xtemp >= ztemp)
-	  {
-		  z = xtemp;
-		  if(ytemp >= ztemp) x = ytemp, y = ztemp;
-		  else x = ztemp, y = ytemp;
-	  }
-	  if(ytemp >= xtemp && ytemp >= ztemp)
-	  {
-		  z = ytemp;
-		  if(xtemp >= ztemp) x = xtemp, y = ztemp;
-		  else x = ztemp, y = xtemp;
-	  }
-	  if(ztemp >= xtemp && ztemp >= ytemp)
-	  {
-		  z = ztemp;
-		  if(xtemp >= ytemp) x = xtemp, y = ytemp;
-		  else x = ytemp, y = xtemp;
-	  }
-      
-	  xFZ = static_cast<float>( x - (x * (z / (z + 1.0))) );
+    xtemp = m_Poles[3*i];
+    ytemp = m_Poles[3*i+1];
+    ztemp = m_Poles[3*i+2];
+
+    if(ztemp<0) xtemp = -xtemp, ytemp = -ytemp, ztemp = -ztemp;
+    if(xtemp >= ytemp && xtemp >= ztemp)
+    {
+      z = xtemp;
+      if(ytemp >= ztemp) x = ytemp, y = ztemp;
+      else x = ztemp, y = ytemp;
+    }
+    if(ytemp >= xtemp && ytemp >= ztemp)
+    {
+      z = ytemp;
+      if(xtemp >= ztemp) x = xtemp, y = ztemp;
+      else x = ztemp, y = xtemp;
+    }
+    if(ztemp >= xtemp && ztemp >= ytemp)
+    {
+      z = ztemp;
+      if(xtemp >= ytemp) x = xtemp, y = ytemp;
+      else x = ytemp, y = xtemp;
+    }
+
+    xFZ = static_cast<float>( x - (x * (z / (z + 1.0))) );
       yFZ = static_cast<float>( y - (y * (z / (z + 1.0))) );
       zFZ = 0.0;
       fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
