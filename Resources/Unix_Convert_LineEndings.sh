@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /Users/mjackson/Workspace/DREAM3D/Source
+cd /Users/mjackson/Desktop/DREAM3D/Source
 
 files=`find . -type f -name "*.cpp"`
 
@@ -20,9 +20,18 @@ for x in $files;
         mv "$x.tmp" "$x"
     done
 
-cd /Users/mjackson/Workspace/DREAM3D/Documentation/Filters
+    files=`find . -type f -name "*.hpp"`
 
-    files=`find . -type f -name "*.html"`
+    for x in $files;
+      do
+          echo "Converting $x"
+          tr -d '\015' < "$x" > "$x.tmp"
+          mv "$x.tmp" "$x"
+      done
+      
+cd /Users/mjackson/Workspace/DREAM3D/Documentation/
+
+    files=`find . -type f -name "*.md"`
 
     for x in $files;
       do
