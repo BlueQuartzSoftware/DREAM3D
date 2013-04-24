@@ -50,15 +50,16 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 FindRadialDist::FindRadialDist() :
 AbstractFilter(),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_FieldPhases(NULL),
+m_EquivalentDiameters(NULL),
 m_Volumes(NULL),
-m_SurfaceFields(NULL),
-m_Centroids(NULL)
+m_Centroids(NULL),
+m_SurfaceFields(NULL)
 {
   setupFilterParameters();
 }
@@ -89,7 +90,6 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
@@ -176,52 +176,52 @@ void FindRadialDist::find_radialdist()
   std::vector<float> distToSurface(numgrains,-1);
   for (size_t i = 1; i < numgrains; i++)
   {
-	if(m_SurfaceFields[i] == false)
-	{
-		number++;
-		totalvolume = totalvolume+m_Volumes[i];
-		dist = (m_Centroids[3*i] - orig[0]);
-		if(((orig[0]+sizex) - m_Centroids[3*i]) < dist) dist = ((orig[0]+sizex) - m_Centroids[3*i]);
-		if((m_Centroids[3*i+1] - orig[1]) < dist) dist = (m_Centroids[3*i+1] - orig[1]);
-		if(((orig[1]+sizey) - m_Centroids[3*i+1]) < dist) dist = ((orig[1]+sizey) - m_Centroids[3*i+1]);
-		if((m_Centroids[3*i+2] - orig[2]) < dist) dist = (m_Centroids[3*i+2] - orig[2]);
-		if(((orig[2]+sizez) - m_Centroids[3*i+2]) < dist) dist = ((orig[2]+sizez) - m_Centroids[3*i+2]);
-		distToSurface[i] = dist;
-	}
+  if(m_SurfaceFields[i] == false)
+  {
+    number++;
+    totalvolume = totalvolume+m_Volumes[i];
+    dist = (m_Centroids[3*i] - orig[0]);
+    if(((orig[0]+sizex) - m_Centroids[3*i]) < dist) dist = ((orig[0]+sizex) - m_Centroids[3*i]);
+    if((m_Centroids[3*i+1] - orig[1]) < dist) dist = (m_Centroids[3*i+1] - orig[1]);
+    if(((orig[1]+sizey) - m_Centroids[3*i+1]) < dist) dist = ((orig[1]+sizey) - m_Centroids[3*i+1]);
+    if((m_Centroids[3*i+2] - orig[2]) < dist) dist = (m_Centroids[3*i+2] - orig[2]);
+    if(((orig[2]+sizez) - m_Centroids[3*i+2]) < dist) dist = ((orig[2]+sizez) - m_Centroids[3*i+2]);
+    distToSurface[i] = dist;
+  }
   }
   outFile << number << "	" << totalvolume << std::endl;
   for (size_t i = 1; i < numgrains; i++)
   {
-	if(m_SurfaceFields[i] == false)
-	{
-		x = m_Centroids[3*i];
-		y = m_Centroids[3*i+1];
-		z = m_Centroids[3*i+2];
-		if(m->getXPoints() == 1) x = 0;
-		if(m->getYPoints() == 1) y = 0;
-		if(m->getZPoints() == 1) z = 0;
-		for (size_t j = 1; j < numgrains; j++)
-		{
-			if(m_SurfaceFields[j] == false && i != j)
-			{
-			  xn = m_Centroids[3*j];
-			  yn = m_Centroids[3*j+1];
-			  zn = m_Centroids[3*j+2];
-			  if(m->getXPoints() == 1) xn = 0;
-			  if(m->getYPoints() == 1) yn = 0;
-			  if(m->getZPoints() == 1) zn = 0;
-			  dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
-			  dist = sqrt(dist);
-			  if(dist < distToSurface[i])
-			  {
-				  outFile << (dist/m_EquivalentDiameters[i]) << std::endl;
-			  }
-			  if(dist < distToSurface[j])
-			  {
-				  outFile << (dist/m_EquivalentDiameters[j]) << std::endl;
-			  }
-			}
-		}
-	}
+  if(m_SurfaceFields[i] == false)
+  {
+    x = m_Centroids[3*i];
+    y = m_Centroids[3*i+1];
+    z = m_Centroids[3*i+2];
+    if(m->getXPoints() == 1) x = 0;
+    if(m->getYPoints() == 1) y = 0;
+    if(m->getZPoints() == 1) z = 0;
+    for (size_t j = 1; j < numgrains; j++)
+    {
+      if(m_SurfaceFields[j] == false && i != j)
+      {
+        xn = m_Centroids[3*j];
+        yn = m_Centroids[3*j+1];
+        zn = m_Centroids[3*j+2];
+        if(m->getXPoints() == 1) xn = 0;
+        if(m->getYPoints() == 1) yn = 0;
+        if(m->getZPoints() == 1) zn = 0;
+        dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
+        dist = sqrt(dist);
+        if(dist < distToSurface[i])
+        {
+          outFile << (dist/m_EquivalentDiameters[i]) << std::endl;
+        }
+        if(dist < distToSurface[j])
+        {
+          outFile << (dist/m_EquivalentDiameters[j]) << std::endl;
+        }
+      }
+    }
+  }
   }
 }
