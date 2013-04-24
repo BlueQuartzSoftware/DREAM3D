@@ -18,7 +18,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 
-### Jackson Priority ###
+### Workshop Priority
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
 + Tutorial::Visualization Techniques for Docs/Website
@@ -123,19 +123,16 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ##  Feature Request ##
-+ A filter that finds all the twins in the microstructure and assigns them
-to another phase (phase 3), so that they can be visualised differently to the surrouding
-grains (phase 2) and grains that are untwinned (phase 1).
++ A filter that finds all the twins in the microstructure and assigns them to another phase (phase 3), so that they can be visualised differently to the surrouding grains (phase 2) and grains that are untwinned (phase 1).
 
 
 ##  Surface Meshing ##
-+ bug in edges file is stopping the use in the smoothing filter
 + Add mesh decimation filter (surface or volume)
 
 
 ##  MFE Smoothing ##
 + add ability to stop the smoothing
-
++ bug in edges file is stopping the use in the smoothing filter
 
 ##  Bruker EBSD System Support ##
 + BASE64 decoder

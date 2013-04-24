@@ -47,19 +47,19 @@
 // -----------------------------------------------------------------------------
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
-  m_OutputArrayName(DREAM3D::CellData::ImageData),
+  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_Output(NULL)
+  m_ImageData(NULL)
 {
 
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
   m_Origin.z = 0.0;
 
-  m_Spacing.x = 1.0;
-  m_Spacing.y = 1.0;
-  m_Spacing.z = 1.0;
+  m_Resolution.x = 1.0;
+  m_Resolution.y = 1.0;
+  m_Resolution.z = 1.0;
 
 
   setupFilterParameters();
@@ -92,11 +92,11 @@ void ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* wri
   /* Place code that will write the inputs values into a file. reference the
   * AbstractFilterParametersWriter class for the proper API to use.
   */
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("Spacing", getSpacing() );
+  writer->writeValue("Resolution", getResolution() );
 
 }
 
@@ -119,10 +119,10 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   else
   {
     // This would be for a gray scale image
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
-        // If we have RGB or RGBA Images then we are going to have to change things a bit.
-        // We should read the file and see what we have? Of course Qt is going to read it up into
-        // an RGB array by default
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+    // If we have RGB or RGBA Images then we are going to have to change things a bit.
+    // We should read the file and see what we have? Of course Qt is going to read it up into
+    // an RGB array by default
   }
 
 }
@@ -156,7 +156,7 @@ void ImportImageStack::execute()
   std::stringstream ss;
 
 
-  m->setResolution(m_Spacing.x, m_Spacing.y, m_Spacing.z);
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
 
@@ -183,10 +183,6 @@ void ImportImageStack::execute()
     ss << "Importing file " << imageFName;
     notifyStatusMessage(ss.str());
 
-
-
-
-
     QImage image(QString::fromStdString(imageFName));
     if (image.isNull() == true)
     {
@@ -209,7 +205,7 @@ void ImportImageStack::execute()
       {
         pixelBytes = 4;
       }
-      data = UInt8ArrayType::CreateArray(totalPixels * m_ImageFileList.size(), pixelBytes, m_OutputArrayName);
+      data = UInt8ArrayType::CreateArray(totalPixels * m_ImageFileList.size(), pixelBytes, m_ImageDataArrayName);
 
     }
 
