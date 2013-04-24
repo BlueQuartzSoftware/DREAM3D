@@ -570,7 +570,7 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
   }
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
-    std::cout << "  m_FilterBeingDragged != NULL: " << m_FilterBeingDragged->getFilter()->getHumanLabel() << std::endl;
+    //std::cout << "  m_FilterBeingDragged != NULL: " << m_FilterBeingDragged->getFilter()->getHumanLabel() << std::endl;
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
     preflightPipeline();

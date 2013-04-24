@@ -102,10 +102,10 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
+  //int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-  
+
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
@@ -122,7 +122,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   f1Ptr->SetName(DREAM3D::FieldData::F1);
   f1Ptr->Resize(fields);
   m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
-  if (f1Ptr.get() == NULL) 
+  if (f1Ptr.get() == NULL)
   {
       ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
@@ -132,7 +132,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   f1sptPtr->SetName(DREAM3D::FieldData::F1spt);
   f1sptPtr->Resize(fields);
   m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
-  if (f1sptPtr.get() == NULL) 
+  if (f1sptPtr.get() == NULL)
   {
       ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
@@ -142,7 +142,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   f7Ptr->SetName(DREAM3D::FieldData::F7);
   f7Ptr->Resize(fields);
   m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
-  if (f7Ptr.get() == NULL) 
+  if (f7Ptr.get() == NULL)
   {
       ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
@@ -152,12 +152,12 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   mPrimePtr->SetName(DREAM3D::FieldData::mPrime);
   mPrimePtr->Resize(fields);
   m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
-  if (mPrimePtr.get() == NULL) 
+  if (mPrimePtr.get() == NULL)
   {
       ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
   }
-	
+
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
@@ -220,10 +220,10 @@ void FindSlipTransmissionMetrics::execute()
   mPrimelists.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-	F1lists[i].resize(neighborlist[i].size(),0);
-	F1sptlists[i].resize(neighborlist[i].size(),0);
-	F7lists[i].resize(neighborlist[i].size(),0);
-	mPrimelists[i].resize(neighborlist[i].size(),0);
+  F1lists[i].resize(neighborlist[i].size(),0);
+  F1sptlists[i].resize(neighborlist[i].size(),0);
+  F7lists[i].resize(neighborlist[i].size(),0);
+  mPrimelists[i].resize(neighborlist[i].size(),0);
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
@@ -250,7 +250,7 @@ void FindSlipTransmissionMetrics::execute()
       F1lists[i][j] = F1;
       F1sptlists[i][j] = F1spt;
       F7lists[i][j] = F7;
-	}
+  }
   }
 
   // We do this to create new set of List objects
