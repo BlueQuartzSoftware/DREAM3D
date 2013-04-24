@@ -74,8 +74,20 @@ QFilterWidget(parent)
     setOpenDialogLastDirectory( QDir::homePath() );
   }
   setupUi(this);
-  ImportImageStack::Pointer filter = ImportImageStack::New();
+
   setupGui();
+  ImportImageStack::Pointer filter = ImportImageStack::New();
+  FloatVec3Widget_t origin = filter->getOrigin();
+  FloatVec3Widget_t resolution = filter->getResolution();
+  // Get the default values from the filter
+  xOrigin->setText(QString::number(origin.x));
+  yOrigin->setText(QString::number(origin.y));
+  zOrigin->setText(QString::number(origin.z));
+
+  xRes->setText(QString::number(resolution.x));
+  yRes->setText(QString::number(resolution.y));
+  zRes->setText(QString::number(resolution.z));
+
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
 }
@@ -131,6 +143,19 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter()
   }
 
   filter->setImageFileList(realFileList);
+
+  bool ok = false;
+
+  FloatVec3Widget_t vec3f;
+  vec3f.x = xOrigin->text().toFloat(&ok);
+  vec3f.y = yOrigin->text().toFloat(&ok);
+  vec3f.z = zOrigin->text().toFloat(&ok);
+  filter->setOrigin(vec3f);
+
+  vec3f.x = xRes->text().toFloat(&ok);
+  vec3f.y = yRes->text().toFloat(&ok);
+  vec3f.z = zRes->text().toFloat(&ok);
+  filter->setResolution(vec3f);
 
   return filter;
 }
@@ -194,7 +219,53 @@ void QImportImageStackWidget::setupGui()
   m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex;
+  m_WidgetList << xOrigin << yOrigin << zOrigin;
+  m_WidgetList << xRes << yRes << zRes;
   m_ErrorMessage->setVisible(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QImportImageStackWidget::writeOptions(QSettings &prefs)
+{
+  prefs.setValue("Filter_Name", "ImportImageStack");
+  WRITE_STRING_SETTING(prefs, m_, InputDir)
+  WRITE_STRING_SETTING(prefs, m_, FilePrefix)
+  WRITE_STRING_SETTING(prefs, m_, FileSuffix)
+  WRITE_STRING_SETTING(prefs, m_, FileExt)
+  WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
+  WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
+  WRITE_STRING_SETTING(prefs, m_, TotalDigits)
+
+  bool ok = false;
+  // ------------- Origin ----------------------------------
+  FloatVec3Widget_t v_Origin;
+  v_Origin.x = xOrigin->text().toFloat(&ok);
+  v_Origin.y = yOrigin->text().toFloat(&ok);
+  v_Origin.z = zOrigin->text().toFloat(&ok);
+  prefs.beginWriteArray("Origin", 3);
+  prefs.setArrayIndex(0);
+  prefs.setValue("x", (double)(v_Origin.x));
+  prefs.setArrayIndex(1);
+  prefs.setValue("y", (double)(v_Origin.y));
+  prefs.setArrayIndex(2);
+  prefs.setValue("z", (double)(v_Origin.z));
+  prefs.endArray();
+  // ------------- Resolution ----------------------------------
+  FloatVec3Widget_t v_Resolution;
+  v_Resolution.x = xRes->text().toFloat(&ok);
+  v_Resolution.y = yRes->text().toFloat(&ok);
+  v_Resolution.z = zRes->text().toFloat(&ok);
+  prefs.beginWriteArray("Resolution", 3);
+  prefs.setArrayIndex(0);
+  prefs.setValue("x", (double)(v_Resolution.x));
+  prefs.setArrayIndex(1);
+  prefs.setValue("y", (double)(v_Resolution.y));
+  prefs.setArrayIndex(2);
+  prefs.setValue("z", (double)(v_Resolution.z));
+  prefs.endArray();
+
 }
 
 
@@ -218,23 +289,44 @@ void QImportImageStackWidget::readOptions(QSettings &prefs)
   READ_SETTING(prefs, m_, TotalDigits, ok, i, 4 , Int);
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
-  READ_STRING_SETTING(prefs, m_, FileExt, "ang");
+  READ_STRING_SETTING(prefs, m_, FileExt, "tif");
+
+    // ------------- Origin ----------------------------------
+  {
+   QVariant p_Origin = prefs.value("Origin");
+
+   FloatVec3Widget_t v3 = p_Origin.value<FloatVec3Widget_t>();
+   prefs.beginReadArray("Origin");
+   prefs.setArrayIndex(0);
+   v3.x = prefs.value("x", v3.x).toFloat(&ok);
+   xOrigin->setText(QString::number(v3.x));
+   prefs.setArrayIndex(1);
+   v3.y = prefs.value("y", v3.y).toFloat(&ok);
+   yOrigin->setText(QString::number(v3.y));
+   prefs.setArrayIndex(2);
+   v3.z = prefs.value("z", v3.z).toFloat(&ok);
+   zOrigin->setText(QString::number(v3.z));
+   prefs.endArray();
+  }
+  // ------------- Resolution ----------------------------------
+  {
+   QVariant p_Resolution = prefs.value("Resolution");
+
+   FloatVec3Widget_t v3 = p_Resolution.value<FloatVec3Widget_t>();
+   prefs.beginReadArray("Resolution");
+   prefs.setArrayIndex(0);
+   v3.x = prefs.value("x", v3.x).toFloat(&ok);
+   xRes->setText(QString::number(v3.x));
+   prefs.setArrayIndex(1);
+   v3.y = prefs.value("y", v3.y).toFloat(&ok);
+   yRes->setText(QString::number(v3.y));
+   prefs.setArrayIndex(2);
+   v3.z = prefs.value("z", v3.z).toFloat(&ok);
+   zRes->setText(QString::number(v3.z));
+   prefs.endArray();
+  }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QImportImageStackWidget::writeOptions(QSettings &prefs)
-{
-  prefs.setValue("Filter_Name", "ImportImageStack");
-  WRITE_STRING_SETTING(prefs, m_, InputDir)
-  WRITE_STRING_SETTING(prefs, m_, FilePrefix)
-  WRITE_STRING_SETTING(prefs, m_, FileSuffix)
-  WRITE_STRING_SETTING(prefs, m_, FileExt)
-  WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
-  WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
-  WRITE_STRING_SETTING(prefs, m_, TotalDigits)
-}
 
 // -----------------------------------------------------------------------------
 //

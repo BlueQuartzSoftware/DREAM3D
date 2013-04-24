@@ -60,12 +60,12 @@ class ImportImageStack : public AbstractFilter
 
     virtual ~ImportImageStack();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Spacing)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
 
 
@@ -125,7 +125,7 @@ class ImportImageStack : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_Output;
+    uint8_t* m_ImageData;
 
     ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
     void operator=(const ImportImageStack&); // Operator '=' Not Implemented
