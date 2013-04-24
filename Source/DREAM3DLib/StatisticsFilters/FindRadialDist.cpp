@@ -130,6 +130,7 @@ void FindRadialDist::execute()
     return;
   }
 
+  find_boundingbox();
   find_radialdist();
  notifyStatusMessage("FindRadialDist Completed");
 }
@@ -150,10 +151,6 @@ void FindRadialDist::find_radialdist()
   std::ofstream outFile;
   outFile.open(m_OutputFile.c_str());
 
-  float orig[3] =
-  { 0, 0, 0 };
-  m->getOrigin(orig);
-
   size_t udims[3] =
   { 0, 0, 0 };
   m->getDimensions(udims);
@@ -167,12 +164,12 @@ void FindRadialDist::find_radialdist()
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]), };
 
-  float sizex = dims[0] * m->getXRes();
-  float sizey = dims[1] * m->getYRes();
-  float sizez = dims[2] * m->getZRes();
 
+  int numbins = 40;
   int number = 0;
   float totalvolume = 0;
+  float largestESD = 0;
+  float largestDistToSurface = 0;
   std::vector<float> distToSurface(numgrains,-1);
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -180,26 +177,40 @@ void FindRadialDist::find_radialdist()
 	{
 		number++;
 		totalvolume = totalvolume+m_Volumes[i];
-		dist = (m_Centroids[3*i] - orig[0]);
-		if(((orig[0]+sizex) - m_Centroids[3*i]) < dist) dist = ((orig[0]+sizex) - m_Centroids[3*i]);
-		if((m_Centroids[3*i+1] - orig[1]) < dist) dist = (m_Centroids[3*i+1] - orig[1]);
-		if(((orig[1]+sizey) - m_Centroids[3*i+1]) < dist) dist = ((orig[1]+sizey) - m_Centroids[3*i+1]);
-		if((m_Centroids[3*i+2] - orig[2]) < dist) dist = (m_Centroids[3*i+2] - orig[2]);
-		if(((orig[2]+sizez) - m_Centroids[3*i+2]) < dist) dist = ((orig[2]+sizez) - m_Centroids[3*i+2]);
+		if(m_EquivalentDiameters[i] > largestESD) largestESD = m_EquivalentDiameters[i];
+		dist = (m_Centroids[3*i] - boundbox[1]);
+		if((boundbox[2] - m_Centroids[3*i]) < dist) dist = (boundbox[2] - m_Centroids[3*i]);
+		if((m_Centroids[3*i+1] - boundbox[3]) < dist) dist = (m_Centroids[3*i+1] - boundbox[3]);
+		if((boundbox[4] - m_Centroids[3*i+1]) < dist) dist = (boundbox[4] - m_Centroids[3*i+1]);
+		if((m_Centroids[3*i+2] - boundbox[5]) < dist) dist = (m_Centroids[3*i+2] - boundbox[5]);
+		if((boundbox[6] - m_Centroids[3*i+2]) < dist) dist = (boundbox[6] - m_Centroids[3*i+2]);
 		distToSurface[i] = dist;
+		if(dist > largestDistToSurface) largestDistToSurface = dist;
 	}
   }
-  outFile << number << "	" << totalvolume << std::endl;
+  float binSize = largestDistToSurface/float(numbins);
+  float avgDensity = float(number)/totalvolume;
+  std::vector<std::vector<float> > count(int(largestESD)+1);
+  std::vector<std::vector<float> > volume(int(largestESD)+1);
+  for (size_t i = 0; i < count.size(); i++)
+  {
+	  count[i].resize(numbins,0);
+	  volume[i].resize(numbins,0);
+  }
   for (size_t i = 1; i < numgrains; i++)
   {
 	if(m_SurfaceFields[i] == false)
 	{
+		for(int j = 0; j < numbins; j++)
+		{
+			if(j < int(distToSurface[i]/binSize))
+			{
+				volume[int(m_EquivalentDiameters[i])][j] = volume[int(m_EquivalentDiameters[i])][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
+			}
+		}
 		x = m_Centroids[3*i];
 		y = m_Centroids[3*i+1];
 		z = m_Centroids[3*i+2];
-		if(m->getXPoints() == 1) x = 0;
-		if(m->getYPoints() == 1) y = 0;
-		if(m->getZPoints() == 1) z = 0;
 		for (size_t j = 1; j < numgrains; j++)
 		{
 			if(m_SurfaceFields[j] == false && i != j)
@@ -207,21 +218,87 @@ void FindRadialDist::find_radialdist()
 			  xn = m_Centroids[3*j];
 			  yn = m_Centroids[3*j+1];
 			  zn = m_Centroids[3*j+2];
-			  if(m->getXPoints() == 1) xn = 0;
-			  if(m->getYPoints() == 1) yn = 0;
-			  if(m->getZPoints() == 1) zn = 0;
 			  dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
 			  dist = sqrt(dist);
-			  if(dist < distToSurface[i])
+			  if(int(dist/binSize) < int(distToSurface[i]/binSize))
 			  {
-				  outFile << (dist/m_EquivalentDiameters[i]) << std::endl;
+				  count[int(m_EquivalentDiameters[i])][int(dist/binSize)]++;
 			  }
-			  if(dist < distToSurface[j])
-			  {
-				  outFile << (dist/m_EquivalentDiameters[j]) << std::endl;
-			  }
+			  //if(dist < distToSurface[j])
+			  //{
+				 // count[int(m_EquivalentDiameters[j])][int(dist/m_EquivalentDiameters[j])]++;
+			  //}
 			}
 		}
 	}
   }
+  for (size_t i = 0; i < numbins; i++)
+  {
+	  outFile << float(i)*binSize << "	";
+  }
+  outFile << std::endl;
+  for (size_t i = 0; i < count.size(); i++)
+  {
+	  for (size_t j = 0; j < numbins; j++)
+	  {
+		  float value = (count[i][j]/volume[i][j])/avgDensity;
+		  if(count[i][j] == 0) value = 0;
+		  outFile << value << "	"; 
+	  }
+	  outFile << std::endl;
+  }
+}
+void FindRadialDist::find_boundingbox()
+{
+  VoxelDataContainer* m = getVoxelDataContainer();
+  size_t size = m->getNumFieldTuples();
+
+  float coords[7];
+  float x, y, z;
+  float dist[7];
+  float mindist;
+  int sidetomove, move;
+  boundbox[1] = 0;
+  boundbox[2] = m->getXPoints()*m->getXRes();
+  boundbox[3] = 0;
+  boundbox[4] = m->getYPoints()*m->getYRes();
+  boundbox[5] = 0;
+  boundbox[6] = m->getZPoints()*m->getZRes();
+  for (size_t i = 1; i < size; i++)
+  {
+	  if(m_SurfaceFields[i] == true)
+	  {
+		  move = 1;
+		  mindist = 10000000000.0;
+		  x = m_Centroids[3*i];
+		  y = m_Centroids[3*i+1];
+		  z = m_Centroids[3*i+2];
+		  coords[1] = x;
+		  coords[2] = x;
+		  coords[3] = y;
+		  coords[4] = y;
+		  coords[5] = z;
+		  coords[6] = z;
+		  for(int j=1;j<7;j++)
+		  {
+		    dist[j] = 10000000000.0;
+			if(j%2 == 1)
+			{
+				if(coords[j] > boundbox[j]) dist[j] = (coords[j]-boundbox[j]);
+				if(coords[j] <= boundbox[j]) move = 0;
+			}
+			if(j%2 == 0)
+			{
+				if(coords[j] < boundbox[j]) dist[j] = (boundbox[j]-coords[j]);
+				if(coords[j] >= boundbox[j]) move = 0;
+			}
+			if(dist[j] < mindist) mindist = dist[j], sidetomove = j;
+		  }
+		  if(move == 1)
+		  {
+				  boundbox[sidetomove] = coords[sidetomove];
+		  }
+	  }
+  }
+
 }

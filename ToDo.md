@@ -43,6 +43,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Still to Do ##
++ Fix match crystallogrpahy to deal with matrix phases, etc.
 + Add "Tool" example program that shows writing a command line pipeline program
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
@@ -85,7 +86,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Design protocol to learn user's 'ontology'
 + Add filter to perform Tony's hot spot analysis
 + Add filter to combine far field data with near field data from HEDM
-+ Remove all "under-the-hood" calls to other filters
 + Allow the user to specify the phase for minimum neighbors filter
 + Look at adding a mirror option to the rotate sample reference frame filter
 + Add the option for the user to set the name of a copied array (from field to cell)
@@ -145,6 +145,7 @@ grains (phase 2) and grains that are untwinned (phase 1).
 
 
 ## Items Completed ##
++ Remove all "under-the-hood" calls to other filters
 + Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
 + write-up contributors section for website
 + Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
