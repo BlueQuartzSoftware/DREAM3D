@@ -19,7 +19,6 @@ The regions of the image that represent a phase or grain each have a unique iden
 
 ## Type 2 Image ##
 
-
 There are regions that represent grains where each region has a unique identifier but there are multiple regions with the same identifier.
 
 ![Type 2 Image](Type2.png "Type 2 Image")
@@ -28,12 +27,14 @@ There are regions that represent grains where each region has a unique identifie
 
 ## Type 3 Image ##
 
-
 Each Grain is traced out via a another pixel identifier so that grain boundaries are "black" and each grain is "white".
 
 ![Type 3 Image](Type3.png "Type 3 Image")
 
 -----
+
+## Notes
+When importing color images they will be imported as RGBA, or color with Alpha values. Due to some limitations of the XDMF wrapper the 4 component arrays will only show as 3 component arrays in the XDMF description which will mess up the rendering in ParaView. The only current way to solve this issue is to import the image data and then follow that with the [Flatten Image](flattenimage.html) filter which will convert the color data to gray scale data. Then writing out the .dream3d file with the xdmf wrapper will allow the user to properly see their data.
 
 
 ## Parameters ##

@@ -3,12 +3,32 @@
 ## Intro (or why this file)
   This is just a dumping ground for ideas that we are working on.
 
+## Help Index Generation
+Be able to automatically generate a cross referenced Help/Filter index. The index would allow the user to look up what filters produce which arrays. Ideally we would add something to the macros used in the DataCheck() function that would automatically add those arrays to some global index.
+struct
+{
+Filter Name
+Filter Human Label
+type (Cell | Field | Ensemble )
+Default Name
+Num. Components
+Array Type (int | float | double | ...)
+Description
+Information Type
+}
+
+What about using the QAssistant APIs to allow the user to search through the documentation files? Doesn't QAssisitant index the files that you feed it?
+
+## H5EBSD & XDMF
+
+Figure out a way to write an XDMF image for the H5EBSD files so we do not have to import into a DREAM3D and filter that filter within ParaView.
 
 ## Grain Face Curvature Updates
 Add user specified option to use the Normals for the fitting routine or NOT use the normals. Update documentation with some of the equations for the curve fitting portion of the calculation. Use LATEX to generate the equation images.
 
 ## Surface Mesh Output
-Figure out how to write an XDMF file that has a non-conformal mesh, ie, 2 triangles so the user can extract single grains
+Figure out how to write an XDMF file that has a non-conformal mesh, ie, 2 triangles so the user can extract single grains. This can be solved with the use hyperslabs in the XDMF file. DREAM3D needs a class that can properly write those
+hyperslabs
 
 ## Export Binary File
 We should be able to export any of the arrays into a raw binary file for import into other analysis programs. 
@@ -32,6 +52,7 @@ Be able to "right click" on a "Favorite" filter and Delete/Rename/export it
 
 ## Image Filters
 Now that we can import an image we should create a filter that can export a volume as a stack of images and do the coloring based on one of the arrays in the Cell Data like grain Ids or IPF Colors.
+Add option to the Image Image to collapse from RGBA to just RGB. There is also the filter that converts color images into gray scale images.
 
 ## Image Processing Library Addition
 We need to probably include ITK, VTK, OpenCV or some other image processing library in DREAM3D if possible rather than writing each filter individually. Lets ride on the coat-tails of someone else.
@@ -48,9 +69,7 @@ What about adding this information to the QFilterWidget and a "pop-up" window or
 ## Python Bindings
   We need to figure out if it is possible to auto generate python bindings for DREAM3D. This would come in very handy for writing python scripts for processing of data and using other python frameworks like PyQt and Image processing libraries written in python.
   
-## Documentation
-  As always the documentation for each filter is woefully underdone.
-  
+
 ## Tutorials
   We need more tutorials on the following:
   

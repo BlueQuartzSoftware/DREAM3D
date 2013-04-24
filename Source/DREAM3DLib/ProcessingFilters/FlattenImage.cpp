@@ -147,12 +147,24 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -301, unsigned char, UCharArrayType, voxels, 4)
-      if(err == -301)
+  int numImageComp = 1;
+  IDataArray::Pointer iDataArray = m->getCellData(m_ImageDataArrayName);
+  if(NULL != iDataArray.get())
   {
-    err = 0;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -302, unsigned char, UCharArrayType, voxels, 3)
+    UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());
+    if (NULL != imageDataPtr)
+    {
+      numImageComp = imageDataPtr->GetNumberOfComponents();
+    }
   }
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -301, unsigned char, UCharArrayType, voxels, numImageComp)
+//  if(err == -301)
+//  {
+//    setErrorCondition(0);
+//    err = 0;
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -302, unsigned char, UCharArrayType, voxels, 3)
+//  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 }
