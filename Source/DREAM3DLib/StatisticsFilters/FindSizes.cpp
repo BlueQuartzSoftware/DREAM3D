@@ -137,6 +137,7 @@ void FindSizes::find_sizes()
 
   float radcubed;
   float diameter;
+
   size_t numgrains = m->getNumFieldTuples();
 
   DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");

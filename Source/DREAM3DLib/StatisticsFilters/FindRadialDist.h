@@ -89,6 +89,7 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     FindRadialDist();
 
     void find_radialdist();
+    void find_boundingbox();
 
 private:
     int32_t* m_FieldPhases;
@@ -96,6 +97,8 @@ private:
     float* m_Volumes;
     float* m_Centroids;
     bool* m_SurfaceFields;
+
+	float boundbox[7];
 
 	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
