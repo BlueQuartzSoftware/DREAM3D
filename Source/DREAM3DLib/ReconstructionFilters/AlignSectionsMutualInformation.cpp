@@ -138,7 +138,6 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
@@ -257,7 +256,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-	  misorients[a].resize(dims[1], 0.0);
+    misorients[a].resize(dims[1], 0.0);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
@@ -321,7 +320,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
                       mutualinfo12[curgnum][refgnum]++;
                       mutualinfo1[curgnum]++;
                       mutualinfo2[refgnum]++;
-	                  count++;
+                    count++;
                   }
                 }
                 else
