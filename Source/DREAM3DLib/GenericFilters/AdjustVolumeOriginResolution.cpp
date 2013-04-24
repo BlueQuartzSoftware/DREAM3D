@@ -72,7 +72,7 @@ void AdjustVolumeOriginResolution::setupFilterParameters()
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("Microns");
     parameters.push_back(option);
   }
@@ -81,7 +81,7 @@ void AdjustVolumeOriginResolution::setupFilterParameters()
     option->setHumanLabel("Origin");
     option->setPropertyName("Origin");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("Microns");
     parameters.push_back(option);
   }

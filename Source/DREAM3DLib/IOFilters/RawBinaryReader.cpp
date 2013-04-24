@@ -209,7 +209,7 @@ void RawBinaryReader::setupFilterParameters()
     option->setHumanLabel("Dimensions");
     option->setPropertyName("Dimensions");
     option->setWidgetType(FilterParameter::IntVec3Widget);
-    option->setValueType("int");
+    option->setValueType("IntVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
   }
@@ -218,7 +218,7 @@ void RawBinaryReader::setupFilterParameters()
     option->setHumanLabel("Origin");
     option->setPropertyName("Origin");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
   }
@@ -227,7 +227,7 @@ void RawBinaryReader::setupFilterParameters()
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
   }

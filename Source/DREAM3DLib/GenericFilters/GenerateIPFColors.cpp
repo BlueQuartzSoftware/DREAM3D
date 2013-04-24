@@ -48,14 +48,15 @@ GenerateIPFColors::GenerateIPFColors() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
-  m_XRefDirection(0.0f),
-  m_YRefDirection(0.0f),
-  m_ZRefDirection(1.0f),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
   m_CellIPFColors(NULL)
 {
+
+  m_ReferenceDir.x = 0.0f;
+  m_ReferenceDir.y = 0.0f;
+  m_ReferenceDir.z = 1.0f;
   setupFilterParameters();
 }
 
@@ -72,36 +73,13 @@ GenerateIPFColors::~GenerateIPFColors()
 void GenerateIPFColors::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
-  /* Place all your option initialization code here */
-  /* For String input use this code */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Reference Direction");
-    option->setPropertyName("XRefDirection");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Reference Direction");
-    option->setPropertyName("YRefDirection");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("");
-    parameters.push_back(option);
-  }
-    {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Reference Direction");
-    option->setPropertyName("ZRefDirection");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    option->setUnits("");
+
+    option->setHumanLabel("Reference Direction");
+    option->setPropertyName("ReferenceDir");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("FloatVec3Widget_t");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -114,9 +92,7 @@ void GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("XRefDirection", getXRefDirection() );
-  writer->writeValue("YRefDirection", getYRefDirection() );
-  writer->writeValue("ZRefDirection", getZRefDirection() );
+  writer->writeValue("ReferenceDir", getReferenceDir() );
 }
 
 // -----------------------------------------------------------------------------
@@ -184,7 +160,7 @@ void GenerateIPFColors::execute()
   size_t index = 0;
 
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::normalizeVector(m_XRefDirection, m_YRefDirection, m_ZRefDirection);
+  MatrixMath::normalizeVector(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
 
   uint8_t hkl[3] = { 0, 0, 0 };
   // Write the IPF Coloring Cell Data
@@ -201,12 +177,12 @@ void GenerateIPFColors::execute()
       if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic)
       {
         EbsdColoring::GenerateCubicIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_XRefDirection, m_YRefDirection, m_ZRefDirection, m_CellIPFColors + index, hkl);
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, hkl);
       }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal)
       {
         EbsdColoring::GenerateHexIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_XRefDirection, m_YRefDirection, m_ZRefDirection, m_CellIPFColors + index);
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
       }
     }
   }

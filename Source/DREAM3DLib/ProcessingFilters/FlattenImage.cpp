@@ -203,10 +203,9 @@ void FlattenImage::execute()
     Bfactor = 0.07;
   }
 
-  bool doParallel = false;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  doParallel = true;
+  bool doParallel = true;
 #endif
 
   size_t comp = m->getCellData(m_ImageDataArrayName)->GetNumberOfComponents();

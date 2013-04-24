@@ -55,9 +55,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
 AbstractFilter(),
-m_XRes(1.0f),
-m_YRes(1.0f),
-m_ZRes(1.0f)
+m_NewZRes(1.0f)
 {
   setupFilterParameters();
 }
@@ -86,11 +84,12 @@ void RegularizeZSpacing::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("New Z Res");
-    option->setPropertyName("ZRes");
+    option->setPropertyName("NewZRes");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
-	option->setUnits("Microns");
-	parameters.push_back(option);
+    option->setCastableValueType("double");
+    option->setUnits("Microns");
+    parameters.push_back(option);
   }
 
   setFilterParameters(parameters);
@@ -102,7 +101,7 @@ void RegularizeZSpacing::setupFilterParameters()
 void RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("NewZRes", getNewZRes() );
 }
 
 // -----------------------------------------------------------------------------
@@ -120,7 +119,7 @@ void RegularizeZSpacing::preflight()
   {
     inFile >> zval;
   }
-  size_t zP = static_cast<size_t>(zval / getZRes());
+  size_t zP = static_cast<size_t>(zval / getNewZRes());
 
   m->setDimensions(m->getXPoints(),m->getYPoints(),zP);
 
@@ -166,14 +165,13 @@ void RegularizeZSpacing::execute()
   }
   inFile.close();
 
-  m_XRes = m->getXRes();
-  m_YRes = m->getYRes();
-//  float sizex = (dims[0]) * m_XRes;
-//  float sizey = (dims[1]) * m_YRes;
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];
   size_t m_YP = dims[1];
-  size_t m_ZP = static_cast<size_t>(sizez / m_ZRes);
+  size_t m_ZP = static_cast<size_t>(sizez / m_NewZRes);
   int64_t totalPoints = m_XP * m_YP * m_ZP;
 
   int index, oldindex;
@@ -185,7 +183,7 @@ void RegularizeZSpacing::execute()
     plane = 0;
     for (size_t iter = 1; iter < dims[2]; iter++)
     {
-      if((i * m_ZRes) > zboundvalues[iter]) plane = iter;
+      if((i * m_NewZRes) > zboundvalues[iter]) plane = iter;
     }
     for (size_t j = 0; j < m_YP; j++)
     {
@@ -222,7 +220,7 @@ void RegularizeZSpacing::execute()
     }
     m->addCellData(*iter, data);
   }
-  m->setResolution(m_XRes, m_YRes, m_ZRes);
+  m->setResolution(xRes, yRes, m_NewZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
 
   notifyStatusMessage("Changing Resolution Complete");

@@ -141,7 +141,6 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
 
   // The 'err' variable is set inside the macro to the value you pass in (-301 in this case)
   //  if the named array does NOT exist.
-  int err = 0; // Pay Attention to the arguments: | Some have changed
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
 
 
