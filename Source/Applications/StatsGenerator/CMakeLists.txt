@@ -247,15 +247,3 @@ BuildQtAppBundle(
     COMPONENT     Applications
     INSTALL_DEST  ${DEST_DIR}
 )
-
-set(${PROJECT_NAME}_HELP_FILES
-    ${PROJECT_SOURCE_DIR}/Help/index.html
-    ${PROJECT_SOURCE_DIR}/Help/image001.png
-    ${PROJECT_SOURCE_DIR}/Help/image002.png
-    ${PROJECT_SOURCE_DIR}/Help/image003.png
-    ${PROJECT_SOURCE_DIR}/Help/image004.png
-    ${PROJECT_SOURCE_DIR}/Help/image005.png
-    ${PROJECT_SOURCE_DIR}/Help/image006.png
-    ${PROJECT_SOURCE_DIR}/Help/image007.png
-    ${PROJECT_SOURCE_DIR}/Help/image008.png
-)
