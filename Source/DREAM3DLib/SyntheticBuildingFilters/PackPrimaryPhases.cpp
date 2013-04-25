@@ -193,8 +193,8 @@ class AssignVoxelsGapsImpl
                 float axis2comp = coordsRotated[1] * Invradcur[1];
                 float axis3comp = coordsRotated[2] * Invradcur[2];
                 inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
-                //                if (inside >= 0 && newowners[index] > 0)
-                if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
+                if (inside >= 0 && newowners[index] > 0)
+                //if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
                 {
                   //                    newowners[index] = curGrain;
                   //                    ellipfuncs[index] = inside;
