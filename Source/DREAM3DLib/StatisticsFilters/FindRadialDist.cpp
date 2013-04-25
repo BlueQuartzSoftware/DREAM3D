@@ -159,10 +159,10 @@ void FindRadialDist::find_radialdist()
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]), };
+//  DimType dims[3] =
+//  { static_cast<DimType>(udims[0]),
+//    static_cast<DimType>(udims[1]),
+//    static_cast<DimType>(udims[2]), };
 
 
   int numbins = 40;
@@ -247,7 +247,7 @@ void FindRadialDist::find_radialdist()
    {
     float value = (count[i][j]/volume[i][j])/avgDensity;
     if(count[i][j] == 0) value = 0;
-    outFile << value << " "; 
+    outFile << value << " ";
    }
    outFile << std::endl;
   }
