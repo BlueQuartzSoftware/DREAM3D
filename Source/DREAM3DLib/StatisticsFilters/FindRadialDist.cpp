@@ -166,6 +166,7 @@ void FindRadialDist::find_radialdist()
 
 
   int numbins = 40;
+  int ESDStepSize = 10;
   int number = 0;
   float totalvolume = 0;
   float largestESD = 0;
@@ -190,8 +191,9 @@ void FindRadialDist::find_radialdist()
   }
   float binSize = largestDistToSurface/float(numbins);
   float avgDensity = float(number)/totalvolume;
-  std::vector<std::vector<float> > count(int(largestESD)+1);
-  std::vector<std::vector<float> > volume(int(largestESD)+1);
+  int sizebins = (largestESD/ESDStepSize)+1;
+  std::vector<std::vector<float> > count(sizebins);
+  std::vector<std::vector<float> > volume(sizebins);
   for (size_t i = 0; i < count.size(); i++)
   {
 	  count[i].resize(numbins,0);
@@ -205,7 +207,7 @@ void FindRadialDist::find_radialdist()
 		{
 			if(j < int(distToSurface[i]/binSize))
 			{
-				volume[int(m_EquivalentDiameters[i])][j] = volume[int(m_EquivalentDiameters[i])][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
+				volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
 			}
 		}
 		x = m_Centroids[3*i];
@@ -222,7 +224,7 @@ void FindRadialDist::find_radialdist()
 			  dist = sqrt(dist);
 			  if(int(dist/binSize) < int(distToSurface[i]/binSize))
 			  {
-				  count[int(m_EquivalentDiameters[i])][int(dist/binSize)]++;
+				  count[int(m_EquivalentDiameters[i]/ESDStepSize)][int(dist/binSize)]++;
 			  }
 			  //if(dist < distToSurface[j])
 			  //{
