@@ -129,11 +129,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
 
-    void readFavoritesFromPrefs(QSettings &prefs);
-    void loadFavoriteIntoPipeline(QString path);
+    void readFavoritePipelines();
+    void readPrebuiltPipelines();
 
-    void readPrebuiltPipelinesFromPrefs(QSettings &prefs);
-    void loadPrebuiltPipelineIntoPipelineView(QString path);
+    void loadPipelineFileIntoPipelineView(QString path);
 
     QStringList generateFilterListFromPipelineFile(QString path);
     void populateFilterList(QStringList filterNames);
@@ -201,9 +200,9 @@ signals:
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
 
-    QMap<QString,QString>       m_favoritesMap;
+    //QMap<QString,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;
-    QMap<QString, QString>      m_prebuiltsMap;
+    //QMap<QString, QString>      m_prebuiltsMap;
     QTreeWidgetItem*            m_prebuilts;
     bool                        m_hasErrors;
     bool                        m_hasWarnings;
