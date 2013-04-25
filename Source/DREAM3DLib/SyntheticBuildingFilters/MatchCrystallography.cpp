@@ -147,24 +147,30 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-  if(m_NeighborList == NULL)
+  if (NULL == m->getFieldData(DREAM3D::FieldData::NeighborList).get())
   {
       ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
       setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss.str(), -305);
-  }
-  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
-  if(m_SharedSurfaceAreaList == NULL)
-  {
-      ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
-      setErrorCondition(-306);
-      addErrorMessage(getHumanLabel(), ss.str(), -306);
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
+  if(NULL == m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get())
+  {
+      ss.str("");
+      ss << "'Shared SurfaceArea Lists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
+      setErrorCondition(-306);
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+
+  if(NULL == m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get())
+  {
+    ss.str("");
+    ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
+    setErrorCondition(-310);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+
+  }
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -172,18 +178,8 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
 
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
-  if(m_StatsDataArray == NULL)
-  {
-    ss.str("");
-    ss << "Stats Array Not Initialized correctly" << std::endl;
-    setErrorCondition(-310);
-    addErrorMessage(getHumanLabel(), ss.str(), -310);
-  }
-  if (preflight == true)
-  {
-    notifyStatusMessage("Finished running required filters");
-  }
+
+
 }
 
 // -----------------------------------------------------------------------------
