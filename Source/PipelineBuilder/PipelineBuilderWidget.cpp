@@ -207,20 +207,16 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   // One last preflight to get the changes introduced by the last filter
   m_PipelineViewWidget->preflightPipeline();
 
+  readPrebuiltPipelinesFromPrefs(prefs);
 
-  //QDir tempPathDir = QDir::temp();
-  //QString tempPath = tempPathDir.path();
-
-  populatePrebuiltPipelinesTreeWidget(prefs);
-
-  populateFavoritesTreeWidget(prefs);
+  readFavoritesFromPrefs(prefs);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::populateFavoritesTreeWidget(QSettings &prefs)
+void PipelineBuilderWidget::readFavoritesFromPrefs(QSettings &prefs)
 {
   bool ok = false;
 //Get Favorites from Pref File and Update Tree Widget
@@ -253,7 +249,7 @@ void PipelineBuilderWidget::populateFavoritesTreeWidget(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::populatePrebuiltPipelinesTreeWidget(QSettings &prefs)
+void PipelineBuilderWidget::readPrebuiltPipelinesFromPrefs(QSettings &prefs)
 {
   bool ok = false;
 
@@ -300,6 +296,9 @@ void PipelineBuilderWidget::populatePrebuiltPipelinesTreeWidget(QSettings &prefs
     //   and use that name as the text in the QTreeWidgetItem and place that into the QMap m_prebuiltsMap variable.
     // Take a look at the favorites loading to figure this stuff out.
     std::cout << fi.baseName().toStdString() << std::endl;
+
+    //presetFilter->setText(0, "Ebsd 3D Reconstruction");
+    //presetFilter->setIcon(0, QIcon(":/scroll.png"));
 
   }
 
@@ -455,41 +454,6 @@ void PipelineBuilderWidget::setupGui()
 
   on_filterLibraryTree_itemClicked(library, 0);
 
-  {
-    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-    presetFilter->setText(0, "Ebsd 3D Reconstruction");
-    presetFilter->setIcon(0, QIcon(":/scroll.png"));
-    QStringList presetFilterList;
-    presetFilterList << "ReadH5Ebsd" << "MultiThresholdCells"  << "AlignSectionsMisorientation" << "EBSDSegmentGrains" << "GenerateIPFColors" << "DataContainerWriter";
-    m_presetMap["Ebsd 3D Reconstruction"] = presetFilterList;
-  }
-
-  {
-    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-    presetFilter->setText(0, "Statistics");
-    presetFilter->setIcon(0, QIcon(":/scroll.png"));
-    QStringList presetFilterList;
-    presetFilterList << "DataContainerReader" << "FindSizes"  << "FindShapes" << "FindNeighborhoods" << "FindAvgOrientations" << "FindODF" << "FindMDF"
-      << "FindAxisODF" << "FieldDataCSVWriter" << "DataContainerWriter";
-    m_presetMap["Statistics"] = presetFilterList;
-  }
-  {
-    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-    presetFilter->setText(0, "Synthetic(Single Phase)");
-    presetFilter->setIcon(0, QIcon(":/scroll.png"));
-    QStringList presetFilterList;
-    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter";
-    m_presetMap["Synthetic(Single Phase)"] = presetFilterList;
-  }
-  {
-    QTreeWidgetItem* presetFilter = new QTreeWidgetItem(presets);
-    presetFilter->setText(0, "Synthetic(Primary + Precipitate)");
-    presetFilter->setIcon(0, QIcon(":/scroll.png"));
-    QStringList presetFilterList;
-    presetFilterList << "InitializeSyntheticVolume" << "PackPrimaryPhases"  << "InsertPrecipitatePhases" << "MatchCrystallography" << "GenerateIPFColors" << "DataContainerWriter";
-    m_presetMap["Synthetic(Primary + Precipitate)"] = presetFilterList;
-  }
-
   m_PipelineViewWidget->setParent(m_QDroppableScrollArea);
 
 }
@@ -521,15 +485,16 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   }
   else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::PrebuiltPipelines) == 0)
   {
-      QString text = item->text(0);
-      QStringList filterList = m_presetMap[text];
+      QString prebuiltName = item->text(0);
+      QString prebuiltPath = m_favoritesMap[prebuiltName];
+      QStringList filterList = generateFilterListFromPipelineFile(prebuiltPath);
       populateFilterList(filterList);
   }
   else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
   {
       QString favoriteName = item->text(0);
       QString favoritePath = m_favoritesMap[favoriteName];
-      QStringList filterList = generateFilterListFromFavorite(favoritePath);
+      QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
       populateFilterList(filterList);
   }
 }
@@ -1240,7 +1205,7 @@ void PipelineBuilderWidget::loadFavoriteIntoPipeline(QString path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList PipelineBuilderWidget::generateFilterListFromFavorite(QString path)
+QStringList PipelineBuilderWidget::generateFilterListFromPipelineFile(QString path)
 {
 
   QStringList filterNames;
