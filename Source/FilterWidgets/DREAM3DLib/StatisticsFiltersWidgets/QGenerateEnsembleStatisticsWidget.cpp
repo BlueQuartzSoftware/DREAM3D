@@ -98,6 +98,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
   filter->setCalculateODF(calcODF->isChecked());
   filter->setCalculateMDF(calcMDF->isChecked());
   filter->setCalculateAxisODF(calcAODF->isChecked());
+  filter->setSizeCorrelationResolution(m_SizeCorrRes->value());
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
@@ -144,6 +145,8 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
   WRITE_CHECKBOX_SETTING(prefs, calc, MDF)
   WRITE_CHECKBOX_SETTING(prefs, calc, AODF)
 
+  WRITE_SETTING(prefs, m_, SizeCorrRes)
+
   WRITE_CHECKBOX_SETTING(prefs, m_, DefinePhaseTypes)
 
   if (m_DefinePhaseTypes->isChecked() == true)
@@ -169,7 +172,10 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
 {
-  // Read the values back from the prefs and set them into the DistributionTypeWidgets
+  bool ok;
+  qint32 i;
+
+	// Read the values back from the prefs and set them into the DistributionTypeWidgets
   READ_CHECKBOX_SETTING(prefs, calc, SizeDistribution, false)
   READ_COMBO_BOX(prefs, m_, SizeDistributionFitType)
 
@@ -186,9 +192,11 @@ void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, calc, MDF, false)
   READ_CHECKBOX_SETTING(prefs, calc, AODF, false)
 
+  READ_SETTING(prefs, m_, SizeCorrRes, ok, i, 1 , Int);
+
   READ_CHECKBOX_SETTING(prefs, m_, DefinePhaseTypes, false)
 
-  bool ok = false;
+  ok = false;
   int size = prefs.beginReadArray("PhaseTypes");
   for (int r = 0; r < size; ++r) {
     prefs.setArrayIndex(r);
@@ -224,6 +232,7 @@ QFilterWidget* QGenerateEnsembleStatisticsWidget::createDeepCopy()
   w->calcODF->setChecked(calcODF->isChecked());
   w->calcMDF->setChecked(calcMDF->isChecked());
   w->calcAODF->setChecked(calcAODF->isChecked());
+  w->m_SizeCorrRes->setValue(m_SizeCorrRes->value());
   w->m_DefinePhaseTypes->setChecked(m_DefinePhaseTypes->isChecked());
 
 
