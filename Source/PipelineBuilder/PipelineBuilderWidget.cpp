@@ -208,12 +208,23 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   m_PipelineViewWidget->preflightPipeline();
 
 
-  QDir tempPathDir = QDir::temp();
+  //QDir tempPathDir = QDir::temp();
   //QString tempPath = tempPathDir.path();
 
-  //Get Favorites from Pref File and Update Tree Widget
-  prefs.beginGroup(Detail::FavoritePipelines);
+  populatePrebuiltPipelinesTreeWidget(prefs);
 
+  populateFavoritesTreeWidget(prefs);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::populateFavoritesTreeWidget(QSettings &prefs)
+{
+  bool ok = false;
+//Get Favorites from Pref File and Update Tree Widget
+  prefs.beginGroup(Detail::FavoritePipelines);
   int favoriteCount = prefs.value("count").toInt(&ok);
   if (false == ok) {
     favoriteCount = 0;
@@ -221,20 +232,77 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
 
   for(int r = 0; r < favoriteCount; ++r)
   {
+    // Generate the key for this favorite
     QString favNameKey = QString::number(r) + QString("_Favorite_Name");
+    // Using the key, get the string that the user used to name this favorite
     QString favName = prefs.value(favNameKey).toString();
-
+    // Now get the actual file path that holds the pipeline
     QString favFilePath = QString::number(r) + QString("_Favorite_File");
     QString favPath = prefs.value(favFilePath).toString();
-
+    // Add the favorite to a map for faster loading later when the user double clicks the favorite.
     m_favoritesMap[favName] = favPath;
 
+    // Add a tree widget item for this favorite
     QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
   }
-
   prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::populatePrebuiltPipelinesTreeWidget(QSettings &prefs)
+{
+  bool ok = false;
+
+  QString appPath = qApp->applicationDirPath();
+
+  QDir prebuiltDir = QDir(appPath);
+
+
+#if defined(Q_OS_WIN)
+
+#elif defined(Q_OS_MAC)
+  if (prebuiltDir.dirName() == "MacOS")
+  {
+    prebuiltDir.cdUp();
+    prebuiltDir.cdUp();
+    prebuiltDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  prebuiltDir.cdUp();
+#endif
+
+ #if defined(Q_OS_WIN)
+  QFileInfo fi( prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines");
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    prebuiltDir.cdUp();
+  }
+ #endif
+  prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
+
+  // So Now we have the top level Directory for the Prebuilts
+  // Get a list of all the directories
+  QFileInfoList dirList = prebuiltDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  foreach(QFileInfo fi, dirList)
+  {
+    // At this point we have the first level of directories and we want to do 2 things:
+    // 1.Create an entry in the tree widget with this name
+    // 2.drop into the directory and look for all the .txt files and add entries for those items.
+    //  Look at the code you did for the "SubGroups" to figure out how to add things into the tree
+    //  Then you will need to create a new QSettings for each file, read out the name that you set inside the file,
+    //   and use that name as the text in the QTreeWidgetItem and place that into the QMap m_prebuiltsMap variable.
+    // Take a look at the favorites loading to figure this stuff out.
+    std::cout << fi.baseName().toStdString() << std::endl;
+
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -245,8 +313,6 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs)
 
   prefs.setValue("splitter_1", splitter_1->saveState());
   prefs.setValue("splitter_2", splitter_2->saveState());
-
-
 
   prefs.beginGroup(Detail::FavoritePipelines);
   prefs.clear();
@@ -502,14 +568,14 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
   QTreeWidgetItem* parent = item->parent();
   if (NULL != parent) {
     if (parent->text(0).compare(Detail::PrebuiltPipelines) == 0) {
-      QString text = item->text(0);
-      QStringList presetList = m_presetMap[text];
-      loadPreset(presetList);
+      QString prebuiltName = item->text(0);
+      QString prebuiltPath = m_prebuiltsMap[prebuiltName];
+      loadPrebuiltPipelineIntoPipelineView(prebuiltPath);
     }
     else if (parent->text(0).compare(Detail::FavoritePipelines) == 0) {
       QString favoriteName = item->text(0);
       QString favoritePath = m_favoritesMap[favoriteName];
-      loadFavorites(favoritePath);
+      loadFavoriteIntoPipeline(favoritePath);
     }
   }
 }
@@ -1030,19 +1096,6 @@ void PipelineBuilderWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::loadPreset(QStringList filterList) {
-  //Clear any existing pipeline
-  m_PipelineViewWidget->clearWidgets();
-
-  for (int i=0; i< filterList.size(); i++) {
-    m_PipelineViewWidget->addFilter(filterList[i]);
-  }
-  m_PipelineViewWidget->preflightPipeline();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionAddFavorite_triggered() {
   AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
   addfavoriteDialog->exec();
@@ -1165,10 +1218,20 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered()
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::loadFavorites(QString path)
+void PipelineBuilderWidget::loadPrebuiltPipelineIntoPipelineView(QString path)
+{
+  QSettings prefs(path, QSettings::IniFormat);
+  readSettings(prefs, m_PipelineViewWidget);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::loadFavoriteIntoPipeline(QString path)
 {
   QSettings prefs(path, QSettings::IniFormat);
   readSettings(prefs, m_PipelineViewWidget);
