@@ -515,7 +515,7 @@ void PackPrimaryPhases::execute()
   exclusionZonesPtr->initializeWithValues(false);
 
   // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method
-  //int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
   bool* exclusionZones = exclusionZonesPtr->GetPointer(0);
   size_t grainOwnersIdx = 0;
 
@@ -891,20 +891,20 @@ void PackPrimaryPhases::execute()
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
       good = false;
       count = 0;
-      //while(good == false && count < (numgrains-firstPrimaryField))
-      //{
-      //  xc = m_Centroids[3*randomgrain];
-      //  yc = m_Centroids[3*randomgrain+1];
-      //  zc = m_Centroids[3*randomgrain+2];
-      //  column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-      //  row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-      //  plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-      //  grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-      //  if(grainOwners[grainOwnersIdx] > 1) good = true;
-      //  else randomgrain++;
-      //  if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-      //  count++;
-      //}
+      while(good == false && count < (numgrains-firstPrimaryField))
+      {
+        xc = m_Centroids[3*randomgrain];
+        yc = m_Centroids[3*randomgrain+1];
+        zc = m_Centroids[3*randomgrain+2];
+        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) good = true;
+        else randomgrain++;
+        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+        count++;
+      }
       Seed++;
 
       count = 0;
@@ -963,20 +963,20 @@ void PackPrimaryPhases::execute()
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
       good = false;
       count = 0;
-      //while(good == false && count < (numgrains-firstPrimaryField))
-      //{
-      //  xc = m_Centroids[3*randomgrain];
-      //  yc = m_Centroids[3*randomgrain+1];
-      //  zc = m_Centroids[3*randomgrain+2];
-      //  column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
-      //  row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
-      //  plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
-      //  grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
-      //  if(grainOwners[grainOwnersIdx] > 1) good = true;
-      //  else randomgrain++;
-      //  if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
-      //  count++;
-      //}
+      while(good == false && count < (numgrains-firstPrimaryField))
+      {
+        xc = m_Centroids[3*randomgrain];
+        yc = m_Centroids[3*randomgrain+1];
+        zc = m_Centroids[3*randomgrain+2];
+        column = static_cast<int>( (xc - (m_HalfPackingRes[0])) * m_OneOverPackingRes[0] );
+        row = static_cast<int>( (yc - (m_HalfPackingRes[1])) * m_OneOverPackingRes[1] );
+        plane = static_cast<int>( (zc - (m_HalfPackingRes[2])) * m_OneOverPackingRes[2] );
+        grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
+        if(grainOwners[grainOwnersIdx] > 1) good = true;
+        else randomgrain++;
+        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+        count++;
+      }
       Seed++;
       oldxc = m_Centroids[3 * randomgrain];
       oldyc = m_Centroids[3 * randomgrain + 1];
