@@ -101,21 +101,39 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      */
     Collection getFactories(const std::string &groupName, const std::string &subGroupName);
 
-	/**
+  /**
      * @brief Adds a Factory that creates QFilterWidgets
      * @param name
      * @param factory
      */
     void addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
 
+    /**
+     * @brief getGroupNames Returns the uniqe set of group names for all the filters
+     * @return
+     */
     std::set<std::string> getGroupNames();
+
+    /**
+     * @brief getSubGroupNames For a given group, returns all the subgroups
+     * @param groupName The name of the Filter group
+     * @return
+     */
     std::set<std::string> getSubGroupNames(const std::string &groupName);
 
 
-
+    /**
+     * @brief getFactoryForFilter Returns a FilterWidgetFactory for a given filter
+     * @param filterName
+     * @return
+     */
     IFilterWidgetFactory::Pointer getFactoryForFilter(const std::string &filterName);
 
-
+    /**
+     * @brief getFactoryForFilterHumanName For a given human label, the FilterWidgetFactory is given
+     * @param humanName
+     * @return
+     */
     IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const std::string &humanName);
 
 

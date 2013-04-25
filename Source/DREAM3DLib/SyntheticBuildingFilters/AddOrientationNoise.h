@@ -66,17 +66,17 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
 
     virtual ~AddOrientationNoise();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, Magnitude)
 
-	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const std::string getHumanLabel() { return "Add Orientation Noise"; }
 
-	virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void setupFilterParameters();
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
   private:
     float* m_CellEulerAngles;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     AddOrientationNoise(const AddOrientationNoise&); // Copy Constructor Not Implemented
     void operator=(const AddOrientationNoise&); // Operator '=' Not Implemented

@@ -68,9 +68,8 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellIPFColorsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(float, XRefDirection)
-    DREAM3D_INSTANCE_PROPERTY(float, YRefDirection)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRefDirection)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceDir)
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -78,7 +77,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
