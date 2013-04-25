@@ -203,7 +203,6 @@ void FindRadialDist::find_radialdist()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-<<<<<<< HEAD
 	if(m_SurfaceFields[i] == false)
 	{
 		for(int j = 0; j < numbins; j++)
