@@ -68,6 +68,7 @@ m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+m_SizeCorrelationResolution(1),
 m_SizeDistribution(false),
 m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
 m_AspectRatioDistribution(false),
@@ -349,10 +350,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setGrainSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-      int numbins = 10.0;
-      pp->setGrainDiameterInfo(numbins, maxdiam, mindiam);
+      int numbins = int(maxdiam/m_SizeCorrelationResolution)+1;
+      pp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
-      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, numbins, binnumbers);
+      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -362,10 +363,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setGrainSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-      int numbins = 10.0;
-      pp->setGrainDiameterInfo(numbins, maxdiam, mindiam);
+      int numbins = int(maxdiam/m_SizeCorrelationResolution)+1;
+      pp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
-      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, numbins, binnumbers);
+      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
       pp->setBinNumbers(binnumbers);
     }
@@ -376,10 +377,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       tp->setGrainSizeDistribution(sizedist[i]);
       DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-      int numbins = 10.0;
-      tp->setGrainDiameterInfo(numbins, maxdiam, mindiam);
+      int numbins = int(maxdiam/m_SizeCorrelationResolution)+1;
+      tp->setGrainDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::BinNumber);
-      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, numbins, binnumbers);
+      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
       tp->setBinNumbers(binnumbers);
     }
