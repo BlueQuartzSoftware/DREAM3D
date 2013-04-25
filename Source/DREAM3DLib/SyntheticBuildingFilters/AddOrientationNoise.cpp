@@ -54,6 +54,7 @@ const static float m_pi = static_cast<float>(M_PI);
 AddOrientationNoise::AddOrientationNoise() :
 AbstractFilter(),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_Magnitude(1.0f),
 m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
@@ -77,6 +78,7 @@ void AddOrientationNoise::setupFilterParameters()
     option->setPropertyName("Magnitude");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
+    option->setCastableValueType("double");
     option->setUnits("Degrees");
     parameters.push_back(option);
   }

@@ -50,7 +50,6 @@
 class ReverseWindingImpl
 {
     DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
-    double* m_Normals;
 
   public:
     ReverseWindingImpl(DREAM3D::SurfaceMesh::FaceListPointer_t triangles) :

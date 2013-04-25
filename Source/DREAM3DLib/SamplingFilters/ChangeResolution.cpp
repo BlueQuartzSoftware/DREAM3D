@@ -50,11 +50,12 @@
 //
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
-AbstractFilter(),
-m_XRes(1.0f),
-m_YRes(1.0f),
-m_ZRes(1.0f)
+AbstractFilter()
 {
+  m_Resolution.x = 1.0f;
+  m_Resolution.y = 1.0f;
+  m_Resolution.z = 1.0f;
+
   setupFilterParameters();
 }
 
@@ -73,29 +74,12 @@ void ChangeResolution::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Res");
-    option->setPropertyName("XRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Res");
-    option->setPropertyName("YRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Res");
-    option->setPropertyName("ZRes");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-	option->setUnits("Microns");
+
+    option->setHumanLabel("Resolution");
+    option->setPropertyName("Resolution");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("FloatVec3Widget_t");
+    option->setUnits("Microns");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -105,10 +89,9 @@ void ChangeResolution::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("XRes", getXRes() );
-  writer->writeValue("YRes", getYRes() );
-  writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("Resolution", getResolution() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -122,12 +105,12 @@ void ChangeResolution::preflight()
   float sizex = (dims[0])*m->getXRes();
   float sizey = (dims[1])*m->getYRes();
   float sizez = (dims[2])*m->getZRes();
-  int m_XP = int(sizex / getXRes());
-  int m_YP = int(sizey / getYRes());
-  int m_ZP = int(sizez / getZRes());
+  int m_XP = int(sizex / m_Resolution.x);
+  int m_YP = int(sizey / m_Resolution.y);
+  int m_ZP = int(sizez / m_Resolution.z);
 
   m->setDimensions(m_XP, m_YP, m_ZP);
-  m->setResolution(getXRes(), getYRes(), getZRes());
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
 }
 
 // -----------------------------------------------------------------------------
@@ -154,9 +137,9 @@ void ChangeResolution::execute()
     return;
   }
 
-  if(m->getXRes() == m_XRes
-      && m->getYRes() == m_YRes
-      && m->getZRes() == m_ZRes)
+  if(m->getXRes() == m_Resolution.x
+      && m->getYRes() == m_Resolution.y
+      && m->getZRes() == m_Resolution.z)
   {
     return;
   }
@@ -168,9 +151,9 @@ void ChangeResolution::execute()
   float sizex = (dims[0])*m->getXRes();
   float sizey = (dims[1])*m->getYRes();
   float sizez = (dims[2])*m->getZRes();
-  int m_XP = int(sizex / m_XRes);
-  int m_YP = int(sizey / m_YRes);
-  int m_ZP = int(sizez / m_ZRes);
+  int m_XP = int(sizex / m_Resolution.x);
+  int m_YP = int(sizey / m_Resolution.y);
+  int m_ZP = int(sizez / m_Resolution.z);
   int64_t totalPoints = m_XP*m_YP*m_ZP;
 
   float x, y, z;
@@ -188,15 +171,15 @@ void ChangeResolution::execute()
     {
       for (int k = 0; k < m_XP; k++)
       {
-        x = (k * m_XRes);
-        y = (j * m_YRes);
-        z = (i * m_ZRes);
+        x = (k * m_Resolution.x);
+        y = (j * m_Resolution.y);
+        z = (i * m_Resolution.z);
         col = int(x / m->getXRes());
         row = int(y / m->getYRes());
         plane = int(z / m->getZRes());
         index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
         index = (i * m_XP * m_YP) + (j * m_XP) + k;
-		newindicies[index] = index_old;
+    newindicies[index] = index_old;
       }
     }
   }
@@ -225,7 +208,7 @@ void ChangeResolution::execute()
     }
     m->addCellData(*iter, data);
   }
-  m->setResolution(m_XRes, m_YRes, m_ZRes);
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setDimensions(m_XP, m_YP, m_ZP);
 
   notifyStatusMessage("Complete");

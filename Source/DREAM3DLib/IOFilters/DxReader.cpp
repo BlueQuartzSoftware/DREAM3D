@@ -88,7 +88,7 @@ void DxReader::setupFilterParameters()
     option->setHumanLabel("Origin");
     option->setPropertyName("Origin");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
   }
@@ -97,7 +97,7 @@ void DxReader::setupFilterParameters()
     option->setHumanLabel("Resolution");
     option->setPropertyName("Resolution");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
-    option->setValueType("float");
+    option->setValueType("FloatVec3Widget_t");
     option->setUnits("XYZ");
     parameters.push_back(option);
   }

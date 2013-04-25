@@ -544,10 +544,11 @@ void createSourceFile( const std::string &group,
       std::string cType = opt->getCastableValueType();
 
       fprintf(f, "// -----------------------------------------------------------------------------\n");
-      fprintf(f, "void Q%sWidget::set%s(%s v, bool emitChanged)\n{\n  m_%s = static_cast<%s>(v);\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str(), typ.c_str());
+      fprintf(f, "void Q%sWidget::set%s(%s v, bool emitChanged)\n{\n", filter.c_str(), prop.c_str(), cType.c_str() );
+      fprintf(f, "  m_%s = v;\n", prop.c_str());
       fprintf(f, "  if (true == emitChanged) { emit parametersChanged();}\n}\n");
       fprintf(f, "// -----------------------------------------------------------------------------\n");
-      fprintf(f, "%s  Q%sWidget::get%s() { \n  return static_cast<%s>(m_%s); \n}\n", cType.c_str(), filter.c_str(), prop.c_str(), typ.c_str(), prop.c_str());
+      fprintf(f, "%s  Q%sWidget::get%s() { \n  return m_%s; \n}\n", cType.c_str(), filter.c_str(), prop.c_str(),  prop.c_str());
     }
     else if(opt->getValueType().compare("string") == 0)
     {
@@ -623,11 +624,11 @@ void createSourceFile( const std::string &group,
       fprintf(f, "  FloatVec3Widget_t v_%s = get%s();\n", prop.c_str(), prop.c_str());
       fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.c_str());
       fprintf(f, "  prefs.setArrayIndex(0);\n");
-      fprintf(f, "  prefs.setValue(\"x\", (double)(v_%s.x));\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"x\", static_cast<double>(v_%s.x));\n", prop.c_str());
       fprintf(f, "  prefs.setArrayIndex(1);\n");
-      fprintf(f, "  prefs.setValue(\"y\", (double)(v_%s.y));\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"y\", static_cast<double>(v_%s.y));\n", prop.c_str());
       fprintf(f, "  prefs.setArrayIndex(2);\n");
-      fprintf(f, "  prefs.setValue(\"z\", (double)(v_%s.z));\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"z\", static_cast<double>(v_%s.z));\n", prop.c_str());
       fprintf(f, "  prefs.endArray();\n");
     }
     else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)

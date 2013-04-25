@@ -87,7 +87,6 @@ class AssignVoxelsGapsImpl
     DimType dims[3];
     float Invradcur[3];
     float res[3];
-    float size[3];
     int32_t* m_GrainIds;
     float xc;
     float yc;
