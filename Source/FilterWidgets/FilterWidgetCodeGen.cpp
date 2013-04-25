@@ -72,7 +72,6 @@ std::string FILTER_INCLUDE_PREFIX();
 // -----------------------------------------------------------------------------
 void copyFile(const std::string &src, const std::string &dest)
 {
-  // Now compare the file just generated with any possible existing file
   size_t tempFileSize = MXAFileInfo::fileSize(src);
 
   unsigned char* contents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
@@ -92,6 +91,7 @@ void copyFile(const std::string &src, const std::string &dest)
   free(contents);
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -174,6 +174,160 @@ void writeArrayNameDeepCopyCode(FILE* f, std::set<std::string> &list, const std:
     fprintf(f, "  w->set%s( get%s() );\n", arrayname.c_str(), arrayname.c_str() );
   }
 }
+#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void createProxyHeaderFile(const std::string &group,
+                           const std::string &filter,
+                           std::vector<FilterParameter::Pointer> options,
+                           const std::string &outputPath)
+{
+  std::stringstream ss;
+
+  //  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
+
+  std::string completePath = MXADir::toNativeSeparators(outputPath);
+  // Make sure the output path exists
+  std::string parentPath = MXADir::parentPath(completePath);
+  if (MXADir::exists(parentPath) == false)
+  {
+    MXADir::mkdir(parentPath, true);
+  }
+
+  ss << FILTER_WIDGETS_TEMP_DIR() << "/Q" << filter << "Proxy.h";
+  std::string tempPath = ss.str();
+  tempPath = MXAFileInfo::toNativeSeparators(tempPath);
+
+  FILE* f = fopen(tempPath.c_str(), "wb");
+  fprintf(f, "/*\n");
+  fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
+  fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
+  fprintf(f, "  The code generated is based off values from the filter located at\n");
+  if (FILTER_INCLUDE_PREFIX().empty() == true) {
+    fprintf(f, "  %s/%s.h\n*/\n", group.c_str(), filter.c_str());
+  }
+  else
+  {
+    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+  }
+
+  fprintf(f, "#ifndef _Q%sProxy_H_\n", filter.c_str());
+  fprintf(f, "#define _Q%sProxy_H_\n\n", filter.c_str());
+
+  fprintf(f, "#include <QtCore/QObject>\n");
+  fprintf(f, "#include <QtCore/QSettings>\n\n");
+
+  // fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
+  fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
+  if (FILTER_INCLUDE_PREFIX().empty() == true) {
+    fprintf(f, "#include \"%s/%s.h\"\n\n", group.c_str(), filter.c_str());
+  }
+  else
+  {
+    fprintf(f, "#include \"%s/%s/%s.h\"\n\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+  }
+
+  fprintf(f, "class Q%sProxy : public QObject, public %s \n{\n", filter.c_str(), filter.c_str());
+  fprintf(f, "   Q_OBJECT\n");
+  fprintf(f, "  public:\n");
+  fprintf(f, "    Q%sProxy(QObject* parent = NULL);\n", filter.c_str());
+  fprintf(f, "    virtual ~Q%sProxy();\n", filter.c_str());
+  fprintf(f, "    virtual AbstractFilter::Pointer getFilter();\n");
+  fprintf(f, "    QString getFilterGroup();\n\n");
+  fprintf(f, "    QString getFilterSubGroup();\n\n");
+  fprintf(f, "    void writeOptions(QSettings &prefs);\n");
+  fprintf(f, "    void readOptions(QSettings &prefs);\n\n");
+
+
+  std::stringstream privVarsDecls;
+  std::stringstream pubMethods;
+  std::stringstream qProps;
+  std::stringstream pubSlots;
+
+  bool implementArrayNameComboBoxUpdated = false;
+
+  // Loop on all the filter options
+  for(size_t i = 0; i < options.size(); ++i)
+  {
+    FilterParameter::Pointer opt = options[i];
+    std::string prop = opt->getPropertyName();
+    std::string typ = opt->getValueType();
+
+    if (opt->getCastableValueType().empty() == false)
+    {
+      std::string cType = opt->getCastableValueType();
+      privVarsDecls << "    " << cType << " m_" << prop << ";\n";
+      qProps << "    Q_PROPERTY(" << cType << " " << prop << " READ get" << prop << " WRITE set" << prop << ")\n";
+      pubSlots << "    void set" << prop << "(" << cType << " v, bool emitChanged = true);\n";
+      pubMethods << "    " << cType << " get" << prop << "();\n";
+    }
+    else if (opt->getValueType().compare("string") == 0)
+    {
+      std::string cType = "QString";
+      privVarsDecls << "    QString m_" << prop << ";\n";
+       qProps << "    Q_PROPERTY(" << cType << " " << prop << " READ get" << prop << " WRITE set" << prop << ")\n";
+      pubSlots << "    void set" << prop << "(const " << cType << " &v, bool emitChanged = true);\n";
+      fprintf(f, "    %s  get%s();\n\n", cType.c_str(), prop.c_str());
+      pubMethods << "    " << cType << " get" << prop << "();\n";
+    }
+    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
+    {
+      fprintf(f, "  public:\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "\n\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
+    {
+      fprintf(f, "    Q_PROPERTY(IntVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(IntVec3Widget_t, %s)\n\n", prop.c_str());
+    }
+    else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+    {
+      fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.c_str());
+    }
+    else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    {
+      fprintf(f, "  public:\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "\n\n");
+    }
+    else
+    {
+      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
+    }
+
+    if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
+        && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget )
+    { implementArrayNameComboBoxUpdated = true; }
+  }
+
+  if (true == implementArrayNameComboBoxUpdated)
+  {
+    fprintf(f, "  public:\n    virtual void arrayNameComboBoxUpdated(QComboBox* cb);\n\n");
+  }
+
+  fprintf(f, "\n  public:\n");
+  fprintf(f, "%s", qProps.str().c_str());
+  fprintf(f, "%s", pubMethods.str().c_str());
+  fprintf(f, "\n  public slots:\n");
+  fprintf(f, "%s", pubSlots.str().c_str());
+
+
+
+
+  fprintf(f, "\n  private:\n");
+  fprintf(f, "%s\n", privVarsDecls.str().c_str());
+  fprintf(f, "    Q%sProxy(const Q%sProxy);\n", filter.c_str(), filter.c_str());
+  fprintf(f, "    void operator=(const Q%sProxy);\n", filter.c_str());
+  fprintf(f, "};\n\n");
+  fprintf(f, "#endif /* Q%sProxy_H_ */\n", filter.c_str());
+
+  fclose(f);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -182,7 +336,9 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
 {
   std::stringstream ss;
 
-//  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
+  createProxyHeaderFile(group, filter, options, outputPath);
+
+  //  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 
   std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
@@ -310,10 +466,6 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
   }
 
 
-  // This template function will generate all the necessary code to set the name of each
-  // required and created array.
-  //appendArrayNameCodeToHeader<T>(t, f);
-
   fprintf(f, "  private:\n");
   fprintf(f, "    QString m_FilterGroup;\n\n");
   fprintf(f, "    QString m_FilterSubGroup;\n\n");
@@ -383,8 +535,8 @@ void createSourceFile( const std::string &group,
                        const std::string &outputPath)
 {
   std::stringstream ss;
-//  std::string completePath;
-//  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
+  //  std::string completePath;
+  //  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 
   std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
@@ -931,7 +1083,7 @@ void createPreflightTestCode( const std::string &group, const std::string &filte
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
- // if (true) return 0;
+  // if (true) return 0;
 
 #if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
   std::string s = FILTER_WIDGETS_TEMP_DIR();

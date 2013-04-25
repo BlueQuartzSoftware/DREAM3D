@@ -145,7 +145,7 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  int err = 0;
+  //int err = 0;
 
   int numImageComp = 1;
   IDataArray::Pointer iDataArray = m->getCellData(m_ImageDataArrayName);

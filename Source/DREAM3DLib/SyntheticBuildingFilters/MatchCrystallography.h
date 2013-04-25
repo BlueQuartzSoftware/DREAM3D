@@ -111,15 +111,15 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
   protected:
     MatchCrystallography();
 
-    void initializeArrays();
+    void initializeArrays(int ensem);
 
     void determine_volumes();
     void determine_boundary_areas();
-    void assign_eulers();
+    void assign_eulers(int ensem);
     void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
     void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
-    void matchCrystallography();
-    void measure_misorientations();
+    void matchCrystallography(int ensem);
+    void measure_misorientations(int ensem);
 
   private:
 
@@ -150,10 +150,10 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     std::vector<float> totalSurfaceArea;
 
 
-    std::vector<FloatArrayType::Pointer> actualodf;
-    std::vector<FloatArrayType::Pointer> simodf;
-    std::vector<FloatArrayType::Pointer> actualmdf;
-    std::vector<FloatArrayType::Pointer> simmdf;
+    FloatArrayType::Pointer actualodf;
+    FloatArrayType::Pointer simodf;
+    FloatArrayType::Pointer actualmdf;
+    FloatArrayType::Pointer simmdf;
 
 
     std::vector<std::vector<float> > misorientationlists;

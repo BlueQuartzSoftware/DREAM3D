@@ -159,13 +159,14 @@ void FindRadialDist::find_radialdist()
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] =
-  { static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]), };
+//  DimType dims[3] =
+//  { static_cast<DimType>(udims[0]),
+//    static_cast<DimType>(udims[1]),
+//    static_cast<DimType>(udims[2]), };
 
 
   int numbins = 40;
+  int ESDStepSize = 10;
   int number = 0;
   float totalvolume = 0;
   float largestESD = 0;
@@ -192,8 +193,9 @@ void FindRadialDist::find_radialdist()
   }
   float binSize = largestDistToSurface/float(numbins);
   float avgDensity = float(number)/totalvolume;
-  std::vector<std::vector<float> > count(int(largestESD)+1);
-  std::vector<std::vector<float> > volume(int(largestESD)+1);
+  int sizebins = (largestESD/ESDStepSize)+1;
+  std::vector<std::vector<float> > count(sizebins);
+  std::vector<std::vector<float> > volume(sizebins);
   for (size_t i = 0; i < count.size(); i++)
   {
    count[i].resize(numbins,0);
@@ -201,40 +203,38 @@ void FindRadialDist::find_radialdist()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-
- if(m_SurfaceFields[i] == false)
- {
-  for(int j = 0; j < numbins; j++)
-  {
-   if(j < int(distToSurface[i]/binSize))
-   {
-    volume[int(m_EquivalentDiameters[i])][j] = volume[int(m_EquivalentDiameters[i])][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
-   }
-  }
-  x = m_Centroids[3*i];
-  y = m_Centroids[3*i+1];
-  z = m_Centroids[3*i+2];
-  for (size_t j = 1; j < numgrains; j++)
-  {
-   if(m_SurfaceFields[j] == false && i != j)
-   {
-     xn = m_Centroids[3*j];
-     yn = m_Centroids[3*j+1];
-     zn = m_Centroids[3*j+2];
-     dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
-     dist = sqrt(dist);
-     if(int(dist/binSize) < int(distToSurface[i]/binSize))
-     {
-      count[int(m_EquivalentDiameters[i])][int(dist/binSize)]++;
-     }
-     //if(dist < distToSurface[j])
-     //{
-     // count[int(m_EquivalentDiameters[j])][int(dist/m_EquivalentDiameters[j])]++;
-     //}
-   }
-  }
- }
-
+	if(m_SurfaceFields[i] == false)
+	{
+		for(int j = 0; j < numbins; j++)
+		{
+			if(j < int(distToSurface[i]/binSize))
+			{
+				volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
+			}
+		}
+		x = m_Centroids[3*i];
+		y = m_Centroids[3*i+1];
+		z = m_Centroids[3*i+2];
+		for (size_t j = 1; j < numgrains; j++)
+		{
+			if(m_SurfaceFields[j] == false && i != j)
+			{
+			  xn = m_Centroids[3*j];
+			  yn = m_Centroids[3*j+1];
+			  zn = m_Centroids[3*j+2];
+			  dist = ((x - xn)*(x - xn))+((y - yn)*(y - yn))+((z - zn)*(z - zn));
+			  dist = sqrt(dist);
+			  if(int(dist/binSize) < int(distToSurface[i]/binSize))
+			  {
+				  count[int(m_EquivalentDiameters[i]/ESDStepSize)][int(dist/binSize)]++;
+			  }
+			  //if(dist < distToSurface[j])
+			  //{
+				 // count[int(m_EquivalentDiameters[j])][int(dist/m_EquivalentDiameters[j])]++;
+			  //}
+			}
+		}
+	}
   }
   for (size_t i = 0; i < numbins; i++)
   {
@@ -247,11 +247,12 @@ void FindRadialDist::find_radialdist()
    {
     float value = (count[i][j]/volume[i][j])/avgDensity;
     if(count[i][j] == 0) value = 0;
-    outFile << value << " "; 
+    outFile << value << " ";
    }
    outFile << std::endl;
   }
 }
+
 void FindRadialDist::find_boundingbox()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
