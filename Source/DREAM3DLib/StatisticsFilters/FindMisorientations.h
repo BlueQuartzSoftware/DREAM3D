@@ -55,7 +55,7 @@
 /**
  * @class FindMisorientations FindMisorientations.h DREAM3DLib/GenericFilters/FindMisorientations.h
  * @brief
- * @author
+ * @author Michael A Groeber (AFRL)
  * @date Nov 19, 2011
  * @version 1.0
  */
@@ -68,20 +68,21 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
 
     virtual ~FindMisorientations();
 
-    //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
 
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Neighbor Misorientations"; }
 
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	/**
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
