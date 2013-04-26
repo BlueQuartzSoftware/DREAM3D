@@ -15,12 +15,18 @@ In the DREAM3D project folder there is subfolder called *Support* and under that
 
 Create a pipeline in DREAM3D like normal and save the pipeline to a text file with a _.txt_ extension into one of the directories above or create a new subdirectory under the *PrebuiltPipelines* folder. If you simply need to edit a pipeline edit the file in **this** location. Then compile the project. The prebuilt pipeline files will be copied into the correct location so they are found by DREAM3D when starting up.
 
-In addition to the pipeline that you save you need to open the file in a text editor and add some *ini* text at the top that tell DREAM3D what text to display for the prebuilt pipeline.
+In addition to the pipeline that you save you need to open the file in a text editor and add some text at the **top of the file** that tells DREAM3D what text to display for the prebuilt pipeline.
 
 	[prebuilt_config]
-	Name=[INSERT TEXT HERE]
+	Name=INSERT_TEXT_HERE
 
 Save the pipeline file, compile and relaunch DREAM3D.
+
+For example if I wanted to have a prebuilt pipeline that had text in DREAM3D that showed _My Awesome Pipeline (Synthetic Generation)_ the the top of my pipeline file would be:
+
+	[prebuilt_config]
+	Name=My Awesome Pipeline (Synthetic Generation)
+
 
 ### CAUTION ###
 
