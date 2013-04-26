@@ -74,8 +74,25 @@ class NeighborList : public IDataArray
      */
     void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
     {
-      xdmfTypeName = getNameOfClass();
+      T value = 0x00;
+      xdmfTypeName = "UNKNOWN";
       precision = 0;
+      if (typeid(value) == typeid(int8_t)) { xdmfTypeName = "Char"; precision = 1;}
+      if (typeid(value) == typeid(uint8_t)) { xdmfTypeName = "UChar"; precision = 1;}
+
+      if (typeid(value) == typeid(int16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+      if (typeid(value) == typeid(uint16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+
+      if (typeid(value) == typeid(int32_t)) { xdmfTypeName = "Int"; precision = 4;}
+      if (typeid(value) == typeid(uint32_t)) { xdmfTypeName = "UInt"; precision = 4;}
+
+      if (typeid(value) == typeid(int64_t)) { xdmfTypeName = "Int"; precision = 8;}
+      if (typeid(value) == typeid(uint64_t)) { xdmfTypeName = "UInt"; precision = 8;}
+
+      if (typeid(value) == typeid(float)) { xdmfTypeName = "Float"; precision = 4;}
+      if (typeid(value) == typeid(double)) { xdmfTypeName = "Float"; precision = 8;}
+
+      if (typeid(value) == typeid(bool)) { xdmfTypeName = "uchar"; precision = 1;}
     }
 
 
@@ -83,7 +100,7 @@ class NeighborList : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return "NeighborList<T>";}
+    virtual std::string getTypeAsString() { return NeighborList<T>::ClassName();}
 
     void SetName(const std::string &name) { m_Name = name; }
     std::string GetName() { return m_Name; }
@@ -137,7 +154,20 @@ class NeighborList : public IDataArray
 
 
     size_t GetNumberOfTuples() {   return _data.size(); }
-    size_t GetSize() { return _data.size(); }
+
+    /**
+     * @brief GetSize Returns the total number of data items that are being stored. This is the sum of all the sizes
+     * of the internal storage arrays for this class.
+     * @return
+     */
+    size_t GetSize() {
+      size_t total = 0;
+      for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
+      {
+        total += _data[dIdx]->size();
+      }
+      return total;
+    }
 
 
     void SetNumberOfComponents(int nc) { }
@@ -164,21 +194,27 @@ class NeighborList : public IDataArray
       return 1;
     }
 
+    /**
+     * @brief Resize
+     * @param numTuples
+     * @return
+     */
     virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
 
     //FIXME: These need to be implemented
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
-		SharedVectorType sharedVec = _data[i];
-		VectorType* vec = sharedVec.get();
-		size_t size = vec->size();
-		out << size;
-		for(size_t i=0;i<size;i++)
-		{
-			out << delimiter << vec->at(i);
-		}
+      SharedVectorType sharedVec = _data[i];
+      VectorType* vec = sharedVec.get();
+      size_t size = vec->size();
+      out << size;
+      for(size_t i=0;i<size;i++)
+      {
+        out << delimiter << vec->at(i);
+      }
     }
+
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
@@ -234,6 +270,8 @@ class NeighborList : public IDataArray
           rewrite = true;
         }
       }
+
+      // Write out the NumNeighbors Array
       if(rewrite == true)
       {
         std::vector<hsize_t> dims(1, numNeighbors.size());
@@ -254,7 +292,9 @@ class NeighborList : public IDataArray
         }
       }
 
-      // Allocate an array of the proper size
+      // Allocate an array of the proper size to we can concatenate all the arrays together into a single array that
+      // can be written to the HDF5 File. This operation can ballon the memory size temporarily until this operation
+      // is complete.
       std::vector<T> flat (total);
       size_t currentStart = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
@@ -262,7 +302,7 @@ class NeighborList : public IDataArray
         size_t nEle = _data[dIdx]->size();
         if (nEle == 0) { continue; }
         T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
-    //    T* end = start + nEle; // Get the pointer to the end of the array
+        //    T* end = start + nEle; // Get the pointer to the end of the array
         T* dst = &(flat.front()) + currentStart;
         ::memcpy(dst, start, nEle*sizeof(T));
 
@@ -274,7 +314,7 @@ class NeighborList : public IDataArray
       err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
       if(err < 0)
       {
-        //FIXME: Add Error Handling Code
+        return -605;
       }
       err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
       if(err < 0)
@@ -288,8 +328,46 @@ class NeighborList : public IDataArray
         return -607;
       }
 
+      err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", DREAM3D::FieldData::NumNeighbors);
+      if(err < 0)
+      {
+        return -608;
+      }
 
       return err;
+    }
+
+    /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @param hdfFileName
+     * @param groupPath
+     * @return
+     */
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath)
+    {
+
+      std::stringstream dimStr;
+      dimStr << volDims[0] << " " << volDims[1] << " " << volDims[2] << " ";
+      int precision = 0;
+      std::string xdmfTypeName;
+      GetXdmfTypeAndSize(xdmfTypeName, precision);
+
+      /*
+     <Attribute Name="MisorientationList" AttributeType="Scalar" Center="Cell">
+      <DataItem Format="HDF" Dimensions="52140" NumberType="Float" Precision="4" >
+        test40638_01.dream3d:/VoxelDataContainer/FIELD_DATA/MisorientationList
+      </DataItem>
+    </Attribute>
+    */
+      out << "    <Attribute Name=\"" << GetName() << "\" AttributeType=\"Scalar\" Center=\"Node\">" << std::endl;
+      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
+      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+      out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;
+      out << "      </DataItem>" << std::endl;
+      out << "    </Attribute>" << std::endl << std::endl;
+      return 1;
     }
 
     /**
@@ -353,7 +431,7 @@ class NeighborList : public IDataArray
       return err;
     }
 
-/**
+    /**
  *
  */
     void addEntry(int grainId, int value)
@@ -416,7 +494,8 @@ class NeighborList : public IDataArray
     }
 
     /**
-     *
+     * @brief getNumberOfLists
+     * @return
      */
     int getNumberOfLists()
     {
@@ -424,7 +503,9 @@ class NeighborList : public IDataArray
     }
 
     /**
-     *
+     * @brief getListSize
+     * @param grainId
+     * @return
      */
     int getListSize(int grainId)
     {
@@ -436,7 +517,9 @@ class NeighborList : public IDataArray
 
 
     /**
-     *
+     * @brief getList
+     * @param grainId
+     * @return
      */
     SharedVectorType getList(int grainId)
     {
@@ -447,7 +530,9 @@ class NeighborList : public IDataArray
     }
 
     /**
-     *
+     * @brief copyOfList
+     * @param grainId
+     * @return
      */
     VectorType copyOfList(int grainId)
     {
@@ -459,6 +544,11 @@ class NeighborList : public IDataArray
       return copy;
     }
 
+    /**
+     * @brief operator []
+     * @param grainId
+     * @return
+     */
     VectorType& operator[](int grainId)
     {
 #ifndef NDEBUG
@@ -467,6 +557,11 @@ class NeighborList : public IDataArray
       return *(_data[grainId]);
     }
 
+    /**
+     * @brief operator []
+     * @param grainId
+     * @return
+     */
     VectorType& operator[](size_t grainId)
     {
 #ifndef NDEBUG
@@ -475,9 +570,14 @@ class NeighborList : public IDataArray
       return *(_data[grainId]);
 
     }
+
+
   protected:
+    /**
+     * @brief NeighborList
+     */
     NeighborList() :
-        m_Name("NeighborList")  {    }
+      m_Name("NeighborList")  {    }
 
   private:
     std::string m_Name;

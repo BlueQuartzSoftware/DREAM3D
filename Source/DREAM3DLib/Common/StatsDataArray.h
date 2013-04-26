@@ -261,6 +261,20 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId);
     virtual int readH5Data(hid_t parentId);
 
+    /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @param hdfFileName
+     * @param groupPath
+     * @return
+     */
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath)
+    {
+      out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
+      return -1;
+    }
+
   protected:
     StatsDataArray();
 
