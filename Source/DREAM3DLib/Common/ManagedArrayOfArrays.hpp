@@ -520,6 +520,20 @@ class ManagedArrayOfArrays : public IDataArray
     }
 
     /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @param hdfFileName
+     * @param groupPath
+     * @return
+     */
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath)
+    {
+      out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
+      return -1;
+    }
+
+    /**
      * @brief
      * @param parentId
      * @return
