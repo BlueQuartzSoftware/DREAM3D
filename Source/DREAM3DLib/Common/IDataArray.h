@@ -176,7 +176,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath) = 0;
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath, const std::string &label) = 0;
 //    {
 //      std::cout << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." << std::endl;
 //      return -1;

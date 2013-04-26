@@ -345,7 +345,8 @@ class NeighborList : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
+            const std::string &groupPath, const std::string &label)
     {
 
       std::stringstream dimStr;
@@ -361,7 +362,7 @@ class NeighborList : public IDataArray
       </DataItem>
     </Attribute>
     */
-      out << "    <Attribute Name=\"" << GetName() << "\" AttributeType=\"Scalar\" Center=\"Node\">" << std::endl;
+      out << "    <Attribute Name=\"" << GetName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">" << std::endl;
       out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
       out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
       out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;

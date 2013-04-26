@@ -102,6 +102,8 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
       ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
     }
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(m_NeighborListArrayName).get());
   }
 
   // And we do the same for the SharedSurfaceArea list
@@ -120,6 +122,8 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                 (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)

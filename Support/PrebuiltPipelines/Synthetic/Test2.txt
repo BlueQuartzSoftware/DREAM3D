@@ -1,2 +1,0 @@
-[prebuilt_config]
-Name=Synthetic Test 1
