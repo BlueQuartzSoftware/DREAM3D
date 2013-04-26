@@ -72,7 +72,7 @@ m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
 m_SharedSurfaceAreaListArrayName(DREAM3D::FieldData::SharedSurfaceAreaList),
-m_StatisticsArrayName(DREAM3D::EnsembleData::Statistics),
+m_StatsDataArrayName(DREAM3D::EnsembleData::Statistics),
 m_MaxIterations(1),
 m_GrainIds(NULL),
 m_CellEulerAngles(NULL),
@@ -149,6 +149,8 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
 
+
+
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   if (NULL == m->getFieldData(m_NeighborListArrayName).get())
   {
@@ -156,6 +158,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+  else
+  {
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   }
 
   if(NULL == m->getFieldData(m_SharedSurfaceAreaListArrayName).get())
@@ -165,14 +171,21 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
+  else
+  {
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+  }
 
-  if(NULL == m->getEnsembleData(m_StatisticsArrayName).get())
+  if(NULL == m->getEnsembleData(m_StatsDataArrayName).get())
   {
     ss.str("");
     ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-
+  }
+  else
+  {
+    m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(m_StatsDataArrayName).get());
   }
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
