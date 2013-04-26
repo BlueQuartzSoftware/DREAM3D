@@ -154,8 +154,17 @@ BuildQtAppBundle(
 
 #- This copies all the HTML files into the Build directory so the help
 #- works from the Build Tree
-file(COPY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-    DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ )
+#file(COPY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+#    DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ )
+    
+add_custom_target(PrebuiltPipelinesCopy ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines/
+            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/PrebuiltPipelines/
+            COMMENT "Copying Prebuilt Pipelines into Binary Directory")
+#-------------------------------------------------------------------------------
+# Make Sure this target is built so that the DREAM3D Application has access to
+# the HTML help files
+add_dependencies(DREAM3D PrebuiltPipelinesCopy)
 
 #- This installs all the help files. Note that we assume a flat directory structure
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
