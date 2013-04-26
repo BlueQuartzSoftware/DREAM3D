@@ -67,25 +67,24 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
 
     virtual ~FindKernelAvgMisorientations();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(KernelAverageMisorientationsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Kernel Average Misorientations"; }
 
-    DREAM3D_INSTANCE_PROPERTY(int, KernelXSize)
-    DREAM3D_INSTANCE_PROPERTY(int, KernelYSize)
-    DREAM3D_INSTANCE_PROPERTY(int, KernelZSize)
+
+    DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, KernelSize)
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
