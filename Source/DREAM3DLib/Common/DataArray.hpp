@@ -768,7 +768,8 @@ class DataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
+    const std::string &label)
     {
       std::stringstream dimStr;
       int precision = 0;
@@ -781,7 +782,7 @@ class DataArray : public IDataArray
       }
 
       int numComp = GetNumberOfComponents();
-      out << "    <Attribute Name=\"" << GetName() << "\" ";
+      out << "    <Attribute Name=\"" << GetName() << label  << "\" ";
       if (numComp == 1)
       {
         out << "AttributeType=\"Scalar\" ";

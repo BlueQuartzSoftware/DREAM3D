@@ -135,10 +135,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     int writeEnsembleData(hid_t dcGid);
 
     void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeCellXdmfGridFooter();
-
-    void writeFieldNeighborXdmfGridHeader(size_t numElements);
-    void writeFieldNeighborXdmfGridFooter();
+    void writeFieldXdmfGridHeader(size_t numElements, const std::string &label);
+    //void writeFieldNeighborXdmfGridHeader(size_t numElements);
+    void writeXdmfGridFooter(const std::string &label);
 
 
     // -----------------------------------------------------------------------------
