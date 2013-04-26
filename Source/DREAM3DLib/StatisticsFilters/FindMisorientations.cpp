@@ -43,21 +43,23 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-  const static float m_pi = static_cast<float>(M_PI);
+const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()  :
-AbstractFilter(),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_AvgQuats(NULL),
-m_FieldPhases(NULL),
-m_NeighborList(NULL),
-m_MisorientationList(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
+  m_MisorientationListArrayName(DREAM3D::FieldData::MisorientationList),
+  m_AvgQuats(NULL),
+  m_FieldPhases(NULL),
+  m_NeighborList(NULL),
+  m_MisorientationList(NULL),
+  m_CrystalStructures(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -87,29 +89,34 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-  if(m_NeighborList == NULL)
+  IDataArray::Pointer neighborListPtr = m->getFieldData(m_NeighborListArrayName);
+  if (NULL == neighborListPtr.get())
   {
-      ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
-      setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss.str(), -305);
+    ss.str("");
+    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
+    setErrorCondition(-305);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+  else
+  {
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
   }
 
-  m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getFieldData(DREAM3D::FieldData::MisorientationList).get());
-  if(m_MisorientationList == NULL)
+  IDataArray::Pointer misorientationPtr = m->getFieldData(m_MisorientationListArrayName);
+  if(NULL == misorientationPtr.get())
   {
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
-    misorientationListPtr->SetName(DREAM3D::FieldData::MisorientationList);
+    misorientationListPtr->SetName(m_MisorientationListArrayName);
     misorientationListPtr->Resize(fields);
-    m->addFieldData(DREAM3D::FieldData::MisorientationList, misorientationListPtr);
+    m->addFieldData(m_MisorientationListArrayName, misorientationListPtr);
+    m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
       ss.str("");
@@ -117,6 +124,11 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
+  }
+  else
+  {
+    m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misorientationPtr.get());
+    m_MisorientationList->Resize(fields);
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -159,7 +171,7 @@ void FindMisorientations::execute()
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
- // int mbin = 0;
+  // int mbin = 0;
   float w;
   float q1[5];
   float q2[5];
@@ -169,7 +181,7 @@ void FindMisorientations::execute()
   float radToDeg = 180.0/m_pi;
 
   size_t nname;
- // float nsa;
+  // float nsa;
   misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -192,10 +204,10 @@ void FindMisorientations::execute()
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if (phase1 == phase2)
       {
-    w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+        w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         misorientationlists[i][j] = w*radToDeg;
       }
-    else
+      else
       {
         misorientationlists[i][j] = -100;
       }
@@ -213,5 +225,5 @@ void FindMisorientations::execute()
     m_MisorientationList->setList(static_cast<int>(i), misoL);
   }
 
- notifyStatusMessage("FindMisorientations Completed");
+  notifyStatusMessage("FindMisorientations Completed");
 }
