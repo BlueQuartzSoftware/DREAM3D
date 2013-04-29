@@ -336,7 +336,7 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
 {
   std::stringstream ss;
 
-  createProxyHeaderFile(group, filter, options, outputPath);
+ // createProxyHeaderFile(group, filter, options, outputPath);
 
   //  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
 

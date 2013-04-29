@@ -474,7 +474,7 @@ void PipelineBuilderWidget::setupGui()
 
   on_filterLibraryTree_itemClicked(library, 0);
 
-  m_PipelineViewWidget->setParent(m_QDroppableScrollArea);
+  m_PipelineViewWidget->setParent(m_PipelineViewScrollArea);
 
 
 }

@@ -75,10 +75,10 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
      int gatherStatsData(VoxelDataContainer::Pointer m);
 
    public slots:
-     void on_m_GenerateDefaultData_clicked();
+
 
    protected slots:
-
+     void on_m_GenerateDefaultData_clicked();
      void on_m_Mu_SizeDistribution_textChanged(const QString &text);
      void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
      void on_m_MinSigmaCutOff_textChanged(const QString &text);

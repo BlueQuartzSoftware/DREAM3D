@@ -62,6 +62,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${DREAM3DProj_SOURCE_DIR}/ToDo.md
   ${PROJECT_SOURCE_DIR}/Compiling.md
   ${PROJECT_SOURCE_DIR}/AddingFilters.md
+  ${PROJECT_SOURCE_DIR}/AddingPrebuiltPipelines.md
   ${PROJECT_SOURCE_DIR}/H5EbsdFile.md
   ${PROJECT_SOURCE_DIR}/DataContainerStrategies.md
   ${PROJECT_SOURCE_DIR}/WritingPlugin.md

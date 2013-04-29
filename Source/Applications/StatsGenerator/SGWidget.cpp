@@ -81,7 +81,7 @@ int SGWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 void SGWidget::on_m_GenerateDefaultData_clicked()
 {
-  BOOST_ASSERT(false);
+ // BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------
