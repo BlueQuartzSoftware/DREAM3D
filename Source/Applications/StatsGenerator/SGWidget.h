@@ -75,8 +75,10 @@ class SGWidget : public QWidget
     virtual QString getComboString();
     virtual QString getTabTitle();
 
+    virtual void on_m_GenerateDefaultData_clicked();
+
    public slots:
-     virtual void on_m_GenerateDefaultData_clicked();
+
 
    protected slots:
 
