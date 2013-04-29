@@ -53,9 +53,6 @@ m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_KernelXSize(1),
-m_KernelYSize(1),
-m_KernelZSize(1),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_KernelAverageMisorientations(NULL),
@@ -70,6 +67,10 @@ m_CrystalStructures(NULL)
 
   m_OrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
+
+  m_KernelSize.x = 1;
+  m_KernelSize.y = 1;
+  m_KernelSize.z = 1;
 
   setupFilterParameters();
 }
@@ -89,39 +90,22 @@ void FindKernelAvgMisorientations::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Kernel Radius in X Direction");
-    option->setPropertyName("KernelXSize");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
+    option->setHumanLabel("Kernel Radius");
+    option->setPropertyName("KernelSize");
+    option->setWidgetType(FilterParameter::IntVec3Widget);
+    option->setValueType("IntVec3Widget_t");
     option->setUnits("Pixels");
     parameters.push_back(option);
   }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Kernel Radius in Y Direction");
-    option->setPropertyName("KernelYSize");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    option->setUnits("Pixels");
-    parameters.push_back(option);
-  }  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Kernel Radius in Z Direction");
-    option->setPropertyName("KernelZSize");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    option->setUnits("Pixels");
-    parameters.push_back(option);
-  }
+
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("KernelXSize", getKernelXSize() );
-  writer->writeValue("KernelYSize", getKernelYSize() );
-  writer->writeValue("KernelZSize", getKernelZSize() );
+  writer->writeValue("KernelSize", getKernelSize() );
+
 }
 
 // -----------------------------------------------------------------------------
@@ -217,13 +201,13 @@ void FindKernelAvgMisorientations::execute()
           q1[3] = m_Quats[point*5 + 3];
           q1[4] = m_Quats[point*5 + 4];
           phase1 = m_CrystalStructures[m_CellPhases[point]];
-          for (int j = -m_KernelZSize; j < m_KernelZSize + 1; j++)
+          for (int j = -m_KernelSize.z; j < m_KernelSize.z + 1; j++)
           {
             jStride = j * xPoints * yPoints;
-            for (int k = -m_KernelYSize; k < m_KernelYSize + 1; k++)
+            for (int k = -m_KernelSize.y; k < m_KernelSize.y + 1; k++)
             {
               kStride = k * xPoints;
-              for (int l = -m_KernelXSize; l < m_KernelXSize + 1; l++)
+              for (int l = -m_KernelSize.x; l < m_KernelSize.z + 1; l++)
               {
                 good = 1;
                 neighbor = point + (jStride) + (kStride) + (l);

@@ -98,7 +98,7 @@ class DataArray : public IDataArray
     UInt64,
     Float,
     Double,
-  Bool,
+    Bool,
     UnknownNumType
   };
 
@@ -760,6 +760,49 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+    }
+
+    /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @return
+     */
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
+    const std::string &label)
+    {
+      std::stringstream dimStr;
+      int precision = 0;
+      std::string xdmfTypeName;
+      GetXdmfTypeAndSize(xdmfTypeName, precision);
+      if (0 == precision)
+      {
+        out << "<!-- " << GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+        return -100;
+      }
+
+      int numComp = GetNumberOfComponents();
+      out << "    <Attribute Name=\"" << GetName() << label  << "\" ";
+      if (numComp == 1)
+      {
+        out << "AttributeType=\"Scalar\" ";
+        dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " ";
+      }
+      else
+      {
+        out << "AttributeType=\"Vector\" ";
+        dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " " << numComp << " ";
+      }
+      out << "Center=\"Cell\">" << std::endl;
+      // Open the <DataItem> Tag
+      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
+      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+
+
+      out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;
+      out << "      </DataItem>" << std::endl;
+      out << "    </Attribute>" << std::endl << std::endl;
+      return 1;
     }
 
     /**

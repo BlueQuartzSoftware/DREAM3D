@@ -336,6 +336,21 @@ class StringDataArray : public IDataArray
     }
 
     /**
+     * @brief writeXdmfAttribute
+     * @param out
+     * @param volDims
+     * @param hdfFileName
+     * @param groupPath
+     * @return
+     */
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
+                                    const std::string &groupPath, const std::string &labelb)
+    {
+      out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
+      return -1;
+    }
+
+    /**
      * @brief readH5Data
      * @param parentId
      * @return

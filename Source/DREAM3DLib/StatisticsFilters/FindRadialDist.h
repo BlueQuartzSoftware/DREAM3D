@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
@@ -98,9 +99,9 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     float* m_Centroids;
     bool* m_SurfaceFields;
 
-	  float boundbox[7];
+    float boundbox[7];
 
-	  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
     FindRadialDist(const FindRadialDist&); // Copy Constructor Not Implemented

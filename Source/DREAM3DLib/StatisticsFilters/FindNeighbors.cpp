@@ -52,6 +52,8 @@ m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
 m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+m_SharedSurfaceAreaListArrayName(DREAM3D::FieldData::SharedSurfaceAreaList),
+m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
 m_GrainIds(NULL),
 m_SurfaceVoxels(NULL),
 m_SurfaceFields(NULL),
@@ -89,35 +91,39 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+                                          (m->getFieldData(m_NeighborListArrayName).get());
   if(m_NeighborList == NULL)
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-    neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
+    neighborlistPtr->SetName(m_NeighborListArrayName);
     neighborlistPtr->Resize(fields);
-    m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+    m->addFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
-      ss << "NeighborLists Array Not Initialized At Beginning of FindNeighbors Filter" << std::endl;
+      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
     }
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(m_NeighborListArrayName).get());
   }
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+                                 (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
-    sharedSurfaceAreaListPtr->SetName(DREAM3D::FieldData::SharedSurfaceAreaList);
+    sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
     sharedSurfaceAreaListPtr->Resize(fields);
-    m->addFieldData(DREAM3D::FieldData::SharedSurfaceAreaList, sharedSurfaceAreaListPtr);
+    m->addFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
+                                 (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)

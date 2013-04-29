@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -134,9 +134,10 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     int writeFieldData(hid_t dcGid);
     int writeEnsembleData(hid_t dcGid);
 
-    void writeXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeXdmfGridFooter();
-    void writeXdmfCellData(const std::string groupName, IDataArray::Pointer array);
+    void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
+    void writeFieldXdmfGridHeader(size_t numElements, const std::string &label);
+    //void writeFieldNeighborXdmfGridHeader(size_t numElements);
+    void writeXdmfGridFooter(const std::string &label);
 
 
     // -----------------------------------------------------------------------------

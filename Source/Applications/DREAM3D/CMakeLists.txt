@@ -152,15 +152,40 @@ BuildQtAppBundle(
 )
 
 
-#- This copies all the HTML files into the Build directory so the help
+#-------------------------------------------------------------------------------
+#- This copies all the Prebuilt Pipeline files into the Build directory so the help
 #- works from the Build Tree
-file(COPY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
-    DESTINATION ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ )
+add_custom_target(PrebuiltPipelinesCopy ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines/
+            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/PrebuiltPipelines/
+            COMMENT "Copying Prebuilt Pipelines into Binary Directory")
+
+# Make Sure this target is built so that the DREAM3D Application has access to
+# the HTML help files
+add_dependencies(DREAM3D PrebuiltPipelinesCopy)
 
 #- This installs all the help files. Note that we assume a flat directory structure
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
 #- folder and NOT in any subfolders beyond that.
 install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
+        DESTINATION .
+        COMPONENT Applications )
+
+
+
+#-------------------------------------------------------------------------------
+# Copy the Data Folder to the build directory
+add_custom_target(DataFolderCopy ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/Data/
+            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Data/
+            COMMENT "Copying Data Folder into Binary Directory")
+
+#-------------------------------------------------------------------------------
+# Make Sure the DataFolderCopy target is run before the DREAM3D target is built
+add_dependencies(DREAM3D DataFolderCopy)
+
+#- This installs all the Data files during a "make install" or "make package"
+install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/Data
         DESTINATION .
         COMPONENT Applications )
 
