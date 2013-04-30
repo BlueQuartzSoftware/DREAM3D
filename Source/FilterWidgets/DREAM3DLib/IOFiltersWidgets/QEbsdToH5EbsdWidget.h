@@ -72,7 +72,7 @@
  */
 class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     QEbsdToH5EbsdWidget(QWidget *parent = 0);
@@ -107,7 +107,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     Ebsd::RefFrameZDir getRefFrameZDir();
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
-                                                   bool stackLowToHigh, QString filename);
+                                              bool stackLowToHigh, QString filename);
 
   protected slots:
     /* OIM Data Import Slots */
@@ -135,14 +135,14 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
 
-	bool m_TSLchecked;
-	bool m_HKLchecked;
-	bool m_HEDMchecked;
-	bool m_NoTranschecked;
+    bool m_TSLchecked;
+    bool m_HKLchecked;
+    bool m_HEDMchecked;
+    bool m_NoTranschecked;
     float m_SampleTransformationAngle;
     float m_EulerTransformationAngle;
-	std::vector<float> m_SampleTransformationAxis;
-	std::vector<float> m_EulerTransformationAxis;
+    std::vector<float> m_SampleTransformationAxis;
+    std::vector<float> m_EulerTransformationAxis;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
