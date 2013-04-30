@@ -55,17 +55,17 @@ The edges file format is as follows:
 | Output Triangles File | Output File Path |
 
 ## Required DataContainers ##
-Voxel
+SurfaceMesh
 
 ## Required Arrays ##
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| NodeArray Attribute | SurfaceMeshNodeType | The node types values |
-| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Field** Id Labels for each Face(Triangle) |
-| NodeArray | | The shared node (vertex) list |
-| FaceArray | | The list of all triangles (faces) in the mesh |
-| EdgeArray | | The list of unique edges in the mesh |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| NodeArray Attribute | SurfaceMeshNodeType | The node types values |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| FaceArray Attribute | SurfaceMeshTriangleLabels | The **Field** Id Labels for each Face(Triangle) |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| EdgeArray | | The list of unique edges in the mesh |   | Generate Surface Mesh Connectivity (SurfaceMeshing) | 
 
 
 ## Created Arrays ##

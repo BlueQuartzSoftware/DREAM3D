@@ -27,9 +27,10 @@ This filter allows the user to select a specific **Cell** array and apply a comp
 Voxel
 
 ## Required Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays |
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
 
 
 

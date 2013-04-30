@@ -16,9 +16,10 @@ This filter allows the user to selected a "flattening" method for turning an arr
 Voxel
 
 ## Required Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|---------|-------|
-| Cell | ImageData | This is either a 3 or 4 component array of RGB or RGBa values |  |
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | ImageData | This is either a 3 or 4 component array of RGB or RGBa values |  | Import Images (3D Stack) (ImageImport) |
 
 
 ## Created Arrays ##

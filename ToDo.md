@@ -35,7 +35,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Still to Do ##
-+ Fix match crystallogrpahy to deal with matrix phases, etc.
++ Add filter to calculate histograms of user selected arrays (cell or field)
++ Add filter to insert subgrains
 + Add "Tool" example program that shows writing a command line pipeline program
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
@@ -134,8 +135,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
+
 + Added a widget to draw attention to the 'Set Reference Frame' button which is yellow until they click the button.
 + Fixed slow calculation in StatsGenerator when initially calculating default statistics
++ Allow user to set the bin step size in generate ensemble statistics filter
++ Fix match crystallogrpahy to deal with matrix phases, etc.
 + Remove all "under-the-hood" calls to other filters
 + Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
 + write-up contributors section for website

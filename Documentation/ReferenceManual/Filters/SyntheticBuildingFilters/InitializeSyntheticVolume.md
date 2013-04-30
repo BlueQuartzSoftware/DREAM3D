@@ -28,12 +28,12 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each **Ensemble** (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | Values are obtained from user input on GUI |
-| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase each Ensemble is (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) | Values are obtained from input .dream3d file |
-| Ensemble | CrystalStructures | Enumeration (int) specifying the symmetry of the **Fields** of each **Ensemble** (Hexagonal=0, Cubic=1, OrthoRhombic=2) | Values are obtained from input .dream3d file |
-| Ensemble | Statistics |  | Values are obtained from input .dream3d file |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each **Ensemble** (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | | Values are obtained from user input on GUI |
+| Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  | Intialize Synthetic Volume (SyntheticBuilding), Generate Ensemble Statistics (Statistics) |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Ensemble | Statistics |  |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |
 
 ## Created Arrays ##
 
