@@ -21,9 +21,10 @@ None
 Voxel
 
 ## Required Arrays ##
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | GoodVoxels |  |
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | GoodVoxels |  |  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
 
 
 ## Created Arrays ##

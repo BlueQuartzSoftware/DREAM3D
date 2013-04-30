@@ -27,12 +27,12 @@ Note: each metric is calculated twice for the two different directions slip coul
 
 ## Required Arrays ##
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Field (Voxel) | AvgQuats |  |
-| Field (Voxel) | FieldPhases |  |
-| Field (Voxel) | Schmids |  |
-| Field (Voxel) | SlipSystems |  |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Field (Voxel) | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for **Fields** if not already calculated. | Find Field Average Orientations (Statistics) |
+| Field (Voxel) | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Field (Voxel) | Schmids |  |  | Find Schmid Factors (Statistics) |
+| Field (Voxel) | SlipSystems |  |  | Find Schmid Factors (Statistics) |
 
 ## Created Arrays ##
 | Type | Default Name | Comment |

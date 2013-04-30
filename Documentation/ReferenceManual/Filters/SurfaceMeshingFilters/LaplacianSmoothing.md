@@ -47,9 +47,9 @@ SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face lis
 
 ## Required Arrays ##
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Vertex | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Vertex | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Arrays ##
 None

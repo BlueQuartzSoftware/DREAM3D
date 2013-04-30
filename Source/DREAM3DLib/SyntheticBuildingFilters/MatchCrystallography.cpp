@@ -235,9 +235,12 @@ void MatchCrystallography::execute()
   ss << "Determining Volumes";
   notifyStatusMessage(ss.str());
   determine_volumes();
+  ss.str("");
+
   ss << "Determining Boundary Areas";
   notifyStatusMessage(ss.str());
   determine_boundary_areas();
+  ss.str("");
 
   size_t size = m->getNumEnsembleTuples();
   for (size_t i = 1; i < size; ++i)
