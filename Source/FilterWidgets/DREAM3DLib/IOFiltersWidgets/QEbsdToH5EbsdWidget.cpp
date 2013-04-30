@@ -68,7 +68,7 @@ QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   QFilterWidget(parent),
   m_SampleTransformationAngle(0.0),
   m_EulerTransformationAngle(0.0)
-{
+  {
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
   m_SampleTransformationAxis[1] = 0.0;
@@ -370,6 +370,8 @@ void QEbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
     m_InputDir->blockSignals(false);
+    referenceFrameCheck->setStyleSheet(QString("background-color: rgb(255, 232, 61);"));
+    referenceFrameCheck->setText("Have you set the Reference Frame?");
   }
   else
   {
@@ -542,6 +544,10 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
       .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   //m_GeneratedFileNameExample->setText(filename);
 
+
+  referenceFrameCheck->setStyleSheet(QString(""));
+  referenceFrameCheck->setText("");
+
   int start = m_ZStartIndex->value();
   int end = m_ZEndIndex->value();
   bool hasMissingFiles = false;
@@ -565,10 +571,10 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   {
 
     Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
-	m_TSLchecked = d.getTSLchecked();
-	m_HKLchecked = d.getHKLchecked();
-	m_HEDMchecked = d.getHEDMchecked();
-	m_NoTranschecked = d.getNoTranschecked();
+  m_TSLchecked = d.getTSLchecked();
+  m_HKLchecked = d.getHKLchecked();
+  m_HEDMchecked = d.getHEDMchecked();
+  m_NoTranschecked = d.getNoTranschecked();
     m_SampleTransformationAxis.resize(3);
     m_EulerTransformationAxis.resize(3);
     if (mapping == Ebsd::TSLdefault)

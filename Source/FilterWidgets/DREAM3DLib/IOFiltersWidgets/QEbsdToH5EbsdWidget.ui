@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>670</width>
-    <height>652</height>
+    <width>664</width>
+    <height>648</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,13 +21,13 @@
     <number>6</number>
    </property>
    <property name="topMargin">
-    <number>12</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
     <number>6</number>
    </property>
    <property name="bottomMargin">
-    <number>12</number>
+    <number>6</number>
    </property>
    <property name="spacing">
     <number>4</number>
@@ -331,21 +331,6 @@ font-size: 11px;
      <property name="spacing">
       <number>6</number>
      </property>
-     <item row="1" column="0" colspan="2">
-      <widget class="QLabel" name="label_6">
-       <property name="styleSheet">
-        <string notr="true">QLabel 
-{
-font-style: italic;
-font-weight: bold;
-font-size: 12px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Conversion Parameters</string>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="styleSheet">
@@ -376,19 +361,6 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="3" column="3">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
      <item row="3" column="2">
       <widget class="QPushButton" name="m_RefFrameOptionsBtn">
        <property name="toolTip">
@@ -396,6 +368,9 @@ font-size: 11px;
        </property>
        <property name="text">
         <string>Set Reference Frame</string>
+       </property>
+       <property name="default">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -441,15 +416,56 @@ font-size: 11px;
        </property>
       </widget>
      </item>
+     <item row="1" column="0" colspan="3">
+      <widget class="QLabel" name="label_6">
+       <property name="styleSheet">
+        <string notr="true">QLabel 
+{
+font-style: italic;
+font-weight: bold;
+font-size: 12px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Conversion Parameters</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="referenceFrameCheck">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 232, 61);</string>
+       </property>
+       <property name="text">
+        <string>Have you set the Reference Frame?</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
      <property name="topMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="bottomMargin">
-      <number>6</number>
+      <number>0</number>
      </property>
      <property name="spacing">
       <number>6</number>
