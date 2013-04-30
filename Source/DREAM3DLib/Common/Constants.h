@@ -201,6 +201,7 @@ namespace DREAM3D
     const std::string SurfaceMeshmPrimes("SurfaceMeshmPrimes");
     const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
     const std::string SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
+    const std::string SurfaceMeshFaceAreas("SurfaceMeshFaceAreas");
     const std::string SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
     const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
     const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");

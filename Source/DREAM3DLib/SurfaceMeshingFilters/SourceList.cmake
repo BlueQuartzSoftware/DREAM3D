@@ -20,6 +20,7 @@ set(_PublicFilters
   ReverseTriangleWinding
   SharedGrainFaceFilter
   TriangleCentroidFilter
+  TriangleAreaFilter
   TriangleNormalFilter
   VerifyTriangleWinding
 )
