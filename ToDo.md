@@ -143,6 +143,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
++ Add info in the documentation files that state where a required array could be created from
 + Allow user to set the bin step size in generate ensemble statistics filter
 + Fix match crystallogrpahy to deal with matrix phases, etc.
 + Remove all "under-the-hood" calls to other filters
