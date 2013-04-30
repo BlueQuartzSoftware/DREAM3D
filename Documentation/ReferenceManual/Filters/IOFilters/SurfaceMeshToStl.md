@@ -17,14 +17,14 @@ will be named with the [Grain_id].stl. The user can designate an optional prefix
 | Stl File Prefix | String | Optional Prefix to use when creating the stl file name. |
 
 ## Required DataContainers ##
-Voxel
+SurfaceMesh
 
 ## Required Arrays ##
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| NodeArray | | The shared node (vertex) list |
-| FaceArray | | The list of all triangles (faces) in the mesh |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| NodeArray | | The shared node (vertex) list |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| FaceArray | | The list of all triangles (faces) in the mesh |   | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Arrays ##
 None

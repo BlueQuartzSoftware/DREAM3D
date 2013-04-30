@@ -21,20 +21,25 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | GrainIds |  |
-| Cell | GrainMisorientations |  |
-| Cell | KernelAverageMisorientations |  |
-| Cell | MisorientationGradients |  |
-| Cell | NearestNeighborDistances |  |
-| Cell | NearestNeighbors |  |
-| Field | AvgQuats |  |
-| Field | FieldPhases |  |
-| Field | GrainAvgMisorientations |  |
-| Field | Poles |  |
-| Field | Schmids |  |
-| Field | SlipSystems |  |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | GrainReferenceMisorientations |  |  | Find Field Reference Misorientations (Statistics) |
+| Cell | KernelAverageMisorientations |  |  | Find Kernel Average Misorientations (Statistics) |
+| Cell | GBEuclideanDistances |  |  | Find Euclidean Distance Map (Statistics) |
+| Cell | TJEuclideanDistances |  |  | Find Euclidean Distance Map (Statistics) |
+| Cell | QPEuclideanDistances |  |  | Find Euclidean Distance Map (Statistics) |
+| Cell | NearestNeighbors |  |  | Find Euclidean Distance Map (Statistics) |
+| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | Filter will calculate average quaternions for **Fields** if not already calculated. | Find Field Average Orientations (Statistics) |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Field | GrainAvgMisorientations |  |  | Find Field Reference Misorientations (Statistics) |
+| Field | Poles |  |  | Find Schmid Factors (Statistics) |
+| Field | Schmids |  |  | Find Schmid Factors (Statistics) |
+| Field | F1 |  |  | Find Slip Neighbor Transmission Metrics (Statistics) |
+| Field | F1spt |  |  | Find Slip Neighbor Transmission Metrics (Statistics) |
+| Field | F7 |  |  | Find Slip Neighbor Transmission Metrics (Statistics) |
+| Field | mPrime |  |  | Find Slip Neighbor Transmission Metrics (Statistics) |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Arrays ##
 None

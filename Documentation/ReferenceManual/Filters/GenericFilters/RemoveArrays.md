@@ -20,9 +20,9 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell/Field/Ensemble | *User Chosen* | - | Array(s) will always be present, since the user may only chose from existing arrays |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell/Field/Ensemble | *User Chosen* | - | Array(s) will always be present, since the user may only chose from existing arrays | N/A |
 
 
 

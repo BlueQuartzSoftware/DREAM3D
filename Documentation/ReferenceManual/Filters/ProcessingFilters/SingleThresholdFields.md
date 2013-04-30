@@ -27,9 +27,10 @@ This filter allows the user to select a specific **Field** array and apply a com
 Voxel
 
 ## Required Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Field | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays |
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Field | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
 
 ## Created Arrays ##
 
