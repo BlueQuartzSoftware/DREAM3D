@@ -20,9 +20,10 @@ This filter is similar to the [SingleThresholdCells](singlethresholdcells.html) 
 Voxel
 
 ## Required Arrays ##
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | *User Chosen* |  | Array(s) will always be present, since the user may only chose from existing arrays|
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | *User Chosen* |  | Array(s) will always be present, since the user may only chose from existing arrays| N/A |
 
 
 

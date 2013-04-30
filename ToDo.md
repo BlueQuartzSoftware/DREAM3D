@@ -43,6 +43,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Still to Do ##
++ Add filter to calculate histograms of user selected arrays (cell or field)
++ Add filter to insert subgrains
 + Add "Tool" example program that shows writing a command line pipeline program
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView

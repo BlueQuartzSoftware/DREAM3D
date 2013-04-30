@@ -43,7 +43,7 @@ The triangles file format is as follows:
 
 
 ## Required DataContainers ##
-Voxel
+SurfaceMesh
 
 ## Required Arrays ##
 None

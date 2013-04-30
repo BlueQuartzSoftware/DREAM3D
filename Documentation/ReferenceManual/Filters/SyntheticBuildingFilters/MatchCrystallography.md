@@ -16,14 +16,15 @@ This Filter iteratively either swaps out the orientation of a **Field** (selecte
 Voxel
 
 ## Required Arrays ##
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | GrainIds |  |
-| Field | FieldPhases |  |
-| Field | SurfaceFields |  |
-| Ensemble | CrystalStructures |  |
-| Ensemble | NumFields |  |
-| Ensemble | TotalSurfaceAreas |  |
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | GrainIds | Ids (ints) that specify to which **Field** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Fields (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Field | FieldPhases | Phase Id (int) specifying the phase of the **Field**| | Find Field Phases (Generic), Read Field Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Field | SurfaceFields |  |  | Find Surface Fields (Generic)
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Ensemble | NumFields |  |  | Find Number of Fields (Statistics) |
+| Ensemble | Statistics |  |  | Generate Ensemble Statistics (Statistics), StatsGenerator Application |
 
 ## Created Arrays ##
 

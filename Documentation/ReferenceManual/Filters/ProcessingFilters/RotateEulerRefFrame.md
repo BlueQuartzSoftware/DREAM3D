@@ -19,9 +19,9 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment |
-|------|--------------|-------------|---------|
-| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | CellEulerAngles | Three (3) angles (floats) defining the orientation of the **Cell** in Bunge convention (Z-X-Z) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
 
 ## Created Arrays ##
 None

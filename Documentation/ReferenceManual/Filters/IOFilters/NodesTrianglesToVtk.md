@@ -49,7 +49,7 @@ the __grain id__ one for each **Field** that the triangle borders.
 | Conformal Mesh | Write a conformal mesh |
 
 ## Required DataContainers ##
-Voxel
+SurfaceMesh
 
 ## Required Arrays ##
 None

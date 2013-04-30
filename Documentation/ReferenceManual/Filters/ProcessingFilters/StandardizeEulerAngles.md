@@ -14,9 +14,9 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Comment |
-|------|--------------|---------|
-| Cell | CellEulerAngles |  |
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Cell | CellEulerAngles |  |   | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
 
 ## Created Arrays ##
 None

@@ -25,9 +25,11 @@ SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face lis
 
 
 ## Required Arrays ##
-| Type | Name | Comment |
-|------|------|---------|
-| Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |
+
+| Type | Default Name | Description | Comment | Filters Known to Create Data
+|------|--------------|-------------|---------|-----|
+| Face   | SurfaceMeshFaceLabels | N x 2 Col of signed integer |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+
 
 ## Created Arrays ##
 | Type | Name | Comment |
