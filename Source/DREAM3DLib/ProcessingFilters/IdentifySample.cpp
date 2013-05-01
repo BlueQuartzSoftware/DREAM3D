@@ -191,7 +191,7 @@ void IdentifySample::execute()
         }
         count++;
       }
-      if(currentvlist.size() >= biggestBlock)
+      if(static_cast<int>(currentvlist.size()) >= biggestBlock)
       {
         biggestBlock = currentvlist.size();
         for(int j = 0; j < totalPoints; j++)
@@ -246,7 +246,7 @@ void IdentifySample::execute()
         }
         count++;
       }
-      if(currentvlist.size() >= biggestBlock)
+      if(static_cast<int>(currentvlist.size()) >= biggestBlock)
       {
         biggestBlock = currentvlist.size();
         for(int j = 0; j < totalPoints; j++)

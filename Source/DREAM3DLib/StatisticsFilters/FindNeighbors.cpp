@@ -104,6 +104,17 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
                                           (m->getFieldData(m_NeighborListArrayName).get());
+
+    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
+    e->setFilterName(this->getNameOfClass());
+    e->setFilterHumanLabel(this->getHumanLabel());
+    e->setFilterGroup(this->getGroupName());
+    e->setFilterSubGroup(this->getSubGroupName());
+    e->setArrayDefaultName(m_NeighborListArrayName);
+    e->setArrayGroup("Field");
+    e->setArrayNumComponents(0);
+    e->setArrayType("NeighborList");
+    addCreatedArrayHelpIndexEntry(e);
   }
 
   // And we do the same for the SharedSurfaceArea list
@@ -124,6 +135,16 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
                                  (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
+    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
+    e->setFilterName(this->getNameOfClass());
+    e->setFilterHumanLabel(this->getHumanLabel());
+    e->setFilterGroup(this->getGroupName());
+    e->setFilterSubGroup(this->getSubGroupName());
+    e->setArrayDefaultName(m_SharedSurfaceAreaListArrayName);
+    e->setArrayGroup("Field");
+    e->setArrayNumComponents(0);
+    e->setArrayType("SurfaceAreaLists");
+    addCreatedArrayHelpIndexEntry(e);
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)

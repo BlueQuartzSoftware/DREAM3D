@@ -48,6 +48,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
 
 
 
@@ -66,6 +67,12 @@ std::string FILTER_WIDGETS_TEMP_DIR();
 std::string FILTER_WIDGETS_DOCS_DIR();
 std::string DREAM3D_SOURCE_DIR();
 std::string FILTER_INCLUDE_PREFIX();
+std::string DREAM3D_SOURCE_DIR();
+std::string DREAM3D_BINARY_DIR();
+
+typedef std::map<std::string, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
+
+std::map<std::string, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 
 // -----------------------------------------------------------------------------
 //
@@ -91,12 +98,74 @@ void copyFile(const std::string &src, const std::string &dest)
   free(contents);
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createHeaderFile(const std::string &group, const std::string &filter, std::vector<FilterParameter::Pointer> options, const std::string &outputPath)
+void extractHelpIndexEntries(AbstractFilter* filter)
+{
+  VoxelDataContainer::Pointer vdc = VoxelDataContainer::New();
+  SurfaceMeshDataContainer::Pointer surf = SurfaceMeshDataContainer::New();
+  SolidMeshDataContainer::Pointer sol = SolidMeshDataContainer::New();
+  filter->setVoxelDataContainer(vdc.get());
+  filter->setSurfaceMeshDataContainer(surf.get());
+  filter->setSolidMeshDataContainer(sol.get());
+  filter->preflight();
+  CreatedArrayHelpIndexEntry::VectorType entries = filter->getCreatedArrayHelpIndexEntries();
+
+  for(CreatedArrayHelpIndexEntry::VectorType::iterator entry = entries.begin(); entry != entries.end(); ++entry)
+  {
+    std::string entryName = (*entry)->getArrayDefaultName();
+    entryName = entryName + " (" + (*entry)->getArrayGroup() + ")";
+    CreatedArrayHelpIndexEntry::VectorType& vec = helpIndex[entryName]; // Will Create one if not there already
+    vec.push_back((*entry));
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void createMarkdownCreatedArrayIndex()
+{
+
+  std::string path = DREAM3D_BINARY_DIR();
+  path = path + MXADir::Separator + "createdarrayindex.md";
+
+  FILE* f = fopen(path.c_str(), "wb");
+
+  fprintf(f, "Created Array Index {#createdarrayindex}\n======\n");
+
+  for(IndexMap_t::iterator entry = helpIndex.begin(); entry != helpIndex.end(); ++entry)
+  {
+    std::string name = (*entry).first;
+    fprintf (f, "## %s ##\n\n", (*entry).first.c_str());
+
+    CreatedArrayHelpIndexEntry::VectorType& filters = (*entry).second;
+
+
+    for(CreatedArrayHelpIndexEntry::VectorType::iterator indexEntry = filters.begin(); indexEntry != filters.end(); ++indexEntry)
+    {
+      std::string lower = (*indexEntry)->getFilterName();
+      std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+      fprintf(f, "+ [%s](%s.html) (%s->%s)\n", (*indexEntry)->getFilterHumanLabel().c_str(), lower.c_str(), (*indexEntry)->getFilterGroup().c_str(), (*indexEntry)->getFilterSubGroup().c_str());
+    }
+
+    fprintf(f, "\n");
+  }
+  fclose(f);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void createHeaderFile(const std::string &group, const std::string &filterName, AbstractFilter* filterPtr, const std::string &outputPath)
 {
   std::stringstream ss;
+
+  extractHelpIndexEntries(filterPtr);
 
   std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
@@ -106,26 +175,33 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
     MXADir::mkdir(parentPath, true);
   }
 
+  std::vector<FilterParameter::Pointer> options = filterPtr->getFilterParameters();
+
   ss.str("");
   ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.h";
   std::string tempPath = ss.str();
 
   FILE* f = fopen(tempPath.c_str(), "wb");
+  if (NULL == f)
+  {
+    std::cout << "Could not open file '" << tempPath << "' for writing." << std::endl;
+     return;
+  }
 
   fprintf(f, "/*\n");
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "  The code generated is based off values from the filter located at\n");
   if (FILTER_INCLUDE_PREFIX().empty() == true) {
-    fprintf(f, "  %s/%s.h\n*/\n", group.c_str(), filter.c_str());
+    fprintf(f, "  %s/%s.h\n*/\n", group.c_str(), filterName.c_str());
   }
   else
   {
-    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filterName.c_str());
   }
 
-  fprintf(f, "#ifndef _Q%sWidget_H_\n", filter.c_str());
-  fprintf(f, "#define _Q%sWidget_H_\n\n", filter.c_str());
+  fprintf(f, "#ifndef _Q%sWidget_H_\n", filterName.c_str());
+  fprintf(f, "#define _Q%sWidget_H_\n\n", filterName.c_str());
 
   fprintf(f, "#include <QtCore/QObject>\n");
   fprintf(f, "#include <QtCore/QSettings>\n\n");
@@ -134,17 +210,17 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
   if (FILTER_INCLUDE_PREFIX().empty() == true) {
-    fprintf(f, "#include \"%s/%s.h\"\n", group.c_str(), filter.c_str());
+    fprintf(f, "#include \"%s/%s.h\"\n", group.c_str(), filterName.c_str());
   }
   else
   {
-    fprintf(f, "#include \"%s/%s/%s.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+    fprintf(f, "#include \"%s/%s/%s.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filterName.c_str());
   }
-  fprintf(f, "class Q%sWidget : public QFilterWidget \n{\n", filter.c_str());
+  fprintf(f, "class Q%sWidget : public QFilterWidget \n{\n", filterName.c_str());
   fprintf(f, "   Q_OBJECT\n");
   fprintf(f, "  public:\n");
-  fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filter.c_str());
-  fprintf(f, "    virtual ~Q%sWidget();\n", filter.c_str());
+  fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filterName.c_str());
+  fprintf(f, "    virtual ~Q%sWidget();\n", filterName.c_str());
   fprintf(f, "    virtual AbstractFilter::Pointer getFilter();\n");
   fprintf(f, "    void writeOptions(QSettings &prefs);\n");
   fprintf(f, "    void readOptions(QSettings &prefs);\n\n");
@@ -227,10 +303,10 @@ void createHeaderFile(const std::string &group, const std::string &filter, std::
   fprintf(f, "  private:\n");
   fprintf(f, "    QString m_FilterGroup;\n\n");
   fprintf(f, "    QString m_FilterSubGroup;\n\n");
-  fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filter.c_str(), filter.c_str());
-  fprintf(f, "    void operator=(const Q%sWidget&);\n", filter.c_str());
+  fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filterName.c_str(), filterName.c_str());
+  fprintf(f, "    void operator=(const Q%sWidget&);\n", filterName.c_str());
   fprintf(f, "};\n");
-  fprintf(f, "#endif /* Q%sWidget_H_ */\n", filter.c_str());
+  fprintf(f, "#endif /* Q%sWidget_H_ */\n", filterName.c_str());
 
   fclose(f);
 
@@ -856,6 +932,8 @@ int main(int argc, char **argv)
 #endif
 
   setFilters();
+
+  createMarkdownCreatedArrayIndex();
 
   return 0;
 }
