@@ -21,6 +21,7 @@ set(_PublicFilters
   SharedGrainFaceFilter
   TriangleCentroidFilter
   TriangleAreaFilter
+  TriangleDihedralAngleFilter
   TriangleNormalFilter
   VerifyTriangleWinding
 )
