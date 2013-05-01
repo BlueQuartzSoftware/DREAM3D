@@ -53,49 +53,49 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
-AbstractFilter(),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
-m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::FieldEulerAngles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
-m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
-m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_SizeCorrelationResolution(1),
-m_SizeDistribution(false),
-m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
-m_AspectRatioDistribution(false),
-m_AspectRatioDistributionFitType(DREAM3D::DistributionType::LogNormal),
-m_Omega3Distribution(false),
-m_Omega3DistributionFitType(DREAM3D::DistributionType::LogNormal),
-m_NeighborhoodDistribution(false),
-m_NeighborhoodDistributionFitType(DREAM3D::DistributionType::LogNormal),
-m_CalculateODF(false),
-m_CalculateMDF(false),
-m_CalculateAxisODF(false),
-m_AvgQuats(NULL),
-m_FieldEulerAngles(NULL),
-m_Volumes(NULL),
-m_BiasedFields(NULL),
-m_SurfaceFields(NULL),
-m_FieldPhases(NULL),
-m_AxisEulerAngles(NULL),
-m_Omega3s(NULL),
-m_AspectRatios(NULL),
-m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL),
-m_CrystalStructures(NULL),
-m_PhaseTypes(NULL),
-m_NeighborList(NULL),
-m_SharedSurfaceAreaList(NULL),
-m_StatsDataArray(NULL)
+  AbstractFilter(),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
+  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::FieldEulerAngles),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+  m_AspectRatiosArrayName(DREAM3D::FieldData::AspectRatios),
+  m_Omega3sArrayName(DREAM3D::FieldData::Omega3s),
+  m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+  m_AxisEulerAnglesArrayName(DREAM3D::FieldData::AxisEulerAngles),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_SizeCorrelationResolution(1),
+  m_SizeDistribution(false),
+  m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_AspectRatioDistribution(false),
+  m_AspectRatioDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_Omega3Distribution(false),
+  m_Omega3DistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_NeighborhoodDistribution(false),
+  m_NeighborhoodDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_CalculateODF(false),
+  m_CalculateMDF(false),
+  m_CalculateAxisODF(false),
+  m_AvgQuats(NULL),
+  m_FieldEulerAngles(NULL),
+  m_Volumes(NULL),
+  m_BiasedFields(NULL),
+  m_SurfaceFields(NULL),
+  m_FieldPhases(NULL),
+  m_AxisEulerAngles(NULL),
+  m_Omega3s(NULL),
+  m_AspectRatios(NULL),
+  m_EquivalentDiameters(NULL),
+  m_Neighborhoods(NULL),
+  m_CrystalStructures(NULL),
+  m_PhaseTypes(NULL),
+  m_NeighborList(NULL),
+  m_SharedSurfaceAreaList(NULL),
+  m_StatsDataArray(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
@@ -133,11 +133,11 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-  if(m_SizeDistribution == true || m_Omega3Distribution == true
-      || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
+      if(m_SizeDistribution == true || m_Omega3Distribution == true
+         || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
   if(m_NeighborhoodDistribution == true)
   {
@@ -161,32 +161,32 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   {
     typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
   }
   if(m_CalculateODF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)
   }
   if(m_CalculateMDF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+        m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
-        ss.str("");
-        ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
-        setErrorCondition(-306);
-        addErrorMessage(getHumanLabel(), ss.str(), -306);
+      ss.str("");
+      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+      setErrorCondition(-306);
+      addErrorMessage(getHumanLabel(), ss.str(), -306);
     }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-        ss.str("");
-        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
-        setErrorCondition(-305);
-        addErrorMessage(getHumanLabel(), ss.str(), -305);
+      ss.str("");
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      setErrorCondition(-305);
+      addErrorMessage(getHumanLabel(), ss.str(), -305);
     }
   }
 
@@ -194,7 +194,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
 
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     StatsDataArray::Pointer p = StatsDataArray::New();
@@ -226,8 +226,8 @@ void GenerateEnsembleStatistics::execute()
   setErrorCondition(0);
   std::stringstream ss;
 
-//  int totalPoints = m->getTotalPoints();
-//  int totalFields = m->getNumFieldTuples();
+  //  int totalPoints = m->getTotalPoints();
+  //  int totalFields = m->getNumFieldTuples();
   int totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
@@ -240,19 +240,19 @@ void GenerateEnsembleStatistics::execute()
   {
     typedef DataArray<unsigned int> PhaseTypeArrayType;
 
-  if(m_PhaseTypeArray.size() < totalEnsembles)
-  {
+    if(static_cast<int>(m_PhaseTypeArray.size()) < totalEnsembles)
+    {
       setErrorCondition(-999);
       notifyErrorMessage("The number of PhaseTypes entered is less than the number of Ensembles", -999);
       return;
-  }
-  if(m_PhaseTypeArray.size() > totalEnsembles)
-  {
-    ss.str("");
-    ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
+    }
+    if(static_cast<int>(m_PhaseTypeArray.size()) > totalEnsembles)
+    {
+      ss.str("");
+      ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
       notifyWarningMessage(ss.str(), -999);
       return;
-  }
+    }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)
     {
@@ -298,7 +298,7 @@ void GenerateEnsembleStatistics::execute()
     gatherAxisODFStats();
   }
 
- notifyStatusMessage("GenerateEnsembleStatistics Completed");
+  notifyStatusMessage("GenerateEnsembleStatistics Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +307,7 @@ void GenerateEnsembleStatistics::execute()
 void GenerateEnsembleStatistics::gatherSizeStats()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
- // int64_t totalPoints = m->getTotalPoints();
+  // int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -339,7 +339,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       vol = (1.0/6.0)*m_pi*m_EquivalentDiameters[i]*m_EquivalentDiameters[i]*m_EquivalentDiameters[i];
       fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + vol;
       totalUnbiasedVolume = totalUnbiasedVolume + vol;
-  }
+    }
   }
   for (size_t i = 1; i < numensembles; i++)
   {
@@ -445,12 +445,12 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-  if(m_BiasedFields[i] == false)
-  {
-    bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-    bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
-    cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
-  }
+    if(m_BiasedFields[i] == false)
+    {
+      bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+      bvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i]);
+      cvalues[m_FieldPhases[i]][bin].push_back(m_AspectRatios[2*i+1]);
+    }
   }
   for (size_t i = 1; i < numensembles; i++)
   {
@@ -534,11 +534,11 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-  if(m_BiasedFields[i] == false)
-  {
-    bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-    values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
-  }
+    if(m_BiasedFields[i] == false)
+    {
+      bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+      values[m_FieldPhases[i]][bin].push_back(m_Omega3s[i]);
+    }
   }
   for (size_t i = 1; i < numensembles; i++)
   {
@@ -612,8 +612,8 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   {
     if(m_BiasedFields[i] == false)
     {
-    bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
-    values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
+      bin = size_t((m_EquivalentDiameters[i]-mindiams[m_FieldPhases[i]])/binsteps[m_FieldPhases[i]]);
+      values[m_FieldPhases[i]][bin].push_back(static_cast<float>( m_Neighborhoods[i] ));
     }
   }
   for (size_t i = 1; i < numensembles; i++)
@@ -669,19 +669,19 @@ void GenerateEnsembleStatistics::gatherODFStats()
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       dims = 36 * 36 * 12;
-    eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
-      eulerodf[i]->SetValue(j, 0.0);
+        eulerodf[i]->SetValue(j, 0.0);
       }
     }
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
     {
       dims = 18 * 18 * 18;
-    eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
       for (unsigned long long j = 0; j < dims; j++)
       {
-      eulerodf[i]->SetValue(j, 0.0);
+        eulerodf[i]->SetValue(j, 0.0);
       }
     }
   }
@@ -766,21 +766,21 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   totalSurfaceArea.resize(numensembles);
   for(size_t i=1;i<numensembles;++i)
   {
-  totalSurfaceArea[i] = 0;
+    totalSurfaceArea[i] = 0;
     if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
     {
       numbins = 36 * 36 * 12;
-    misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
     else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
     {
       numbins = 18 * 18 * 18;
-    misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
     // Now initialize all bins to 0.0
     for (int j = 0; j < numbins; j++)
     {
-    misobin[i]->SetValue(j, 0.0);
+      misobin[i]->SetValue(j, 0.0);
     }
   }
   size_t nname;
@@ -806,19 +806,19 @@ void GenerateEnsembleStatistics::gatherMDFStats()
       if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
       if (phase1 == phase2)
       {
-      OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+        OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
         if ((nname > i || m_SurfaceFields[nname] == true))
         {
-        mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
-        nsa = neighborsurfacearealist[i][j];
-        misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + nsa));
-        totalSurfaceArea[m_FieldPhases[i]] = totalSurfaceArea[m_FieldPhases[i]] + nsa;
+          mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
+          nsa = neighborsurfacearealist[i][j];
+          misobin[m_FieldPhases[i]]->SetValue(mbin, (misobin[m_FieldPhases[i]]->GetValue(mbin) + nsa));
+          totalSurfaceArea[m_FieldPhases[i]] = totalSurfaceArea[m_FieldPhases[i]] + nsa;
         }
       }
     }
   }
 
- // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
+  // unsigned long long int dims = static_cast<unsigned long long int>(numbins);
   for (size_t i = 1; i < numensembles; i++)
   {
     for(size_t j=0;j<misobin[i]->GetSize();j++)
