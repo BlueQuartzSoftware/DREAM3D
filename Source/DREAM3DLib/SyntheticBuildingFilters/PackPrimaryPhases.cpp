@@ -591,7 +591,7 @@ void PackPrimaryPhases::execute()
         std::stringstream ss;
         ss << "Packing Grains (1/2) - Generating Grain #" << gid;
         notifyStatusMessage(ss.str());
-        if (gid + 1 >= m->getNumFieldTuples())
+        if (gid + 1 >= static_cast<int>(m->getNumFieldTuples()))
         {
           m->resizeFieldDataArrays(gid + 1);
           dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -641,7 +641,7 @@ void PackPrimaryPhases::execute()
           std::stringstream ss;
           ss << "Packing Grains (2/2) - Generating Grain #" << gid;
           notifyStatusMessage(ss.str());
-          if (gid + 1 >= m->getNumFieldTuples())
+          if (gid + 1 >= static_cast<int>(m->getNumFieldTuples()) )
           {
             m->resizeFieldDataArrays(gid + 1);
             dataCheck(false, totalPoints, gid + 1, m->getNumEnsembleTuples());
@@ -890,7 +890,7 @@ void PackPrimaryPhases::execute()
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
       good = false;
       count = 0;
-      while(good == false && count < (numgrains-firstPrimaryField))
+      while(good == false && count < static_cast<int>((numgrains-firstPrimaryField)) )
       {
         xc = m_Centroids[3*randomgrain];
         yc = m_Centroids[3*randomgrain+1];
@@ -901,7 +901,7 @@ void PackPrimaryPhases::execute()
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
         if(grainOwners[grainOwnersIdx] > 1) good = true;
         else randomgrain++;
-        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+        if(static_cast<size_t>(randomgrain) >= numgrains) randomgrain = firstPrimaryField;
         count++;
       }
       Seed++;
@@ -962,7 +962,7 @@ void PackPrimaryPhases::execute()
       randomgrain = firstPrimaryField + int(rg.genrand_res53() * (numgrains-firstPrimaryField));
       good = false;
       count = 0;
-      while(good == false && count < (numgrains-firstPrimaryField))
+      while(good == false && count < static_cast<int>((numgrains-firstPrimaryField)) )
       {
         xc = m_Centroids[3*randomgrain];
         yc = m_Centroids[3*randomgrain+1];
@@ -973,7 +973,7 @@ void PackPrimaryPhases::execute()
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*plane) + (m_PackingPoints[0]*row) + column;
         if(grainOwners[grainOwnersIdx] > 1) good = true;
         else randomgrain++;
-        if(randomgrain >= numgrains) randomgrain = firstPrimaryField;
+        if(static_cast<size_t>(randomgrain) >= numgrains) randomgrain = firstPrimaryField;
         count++;
       }
       Seed++;

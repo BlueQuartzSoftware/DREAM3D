@@ -89,7 +89,7 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPat
             #    message(STATUS "${FiltWidgSourceFile}")
             endif()
 
-            file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${FiltWidgHeaderFile}\");\n")
+            file(APPEND ${CodeGeneratorFile} "  createHeaderFile(\"${filterGroup}\", \"${filterName}\", _${filterName}.get(), \"${FiltWidgHeaderFile}\");\n")
             file(APPEND ${CodeGeneratorFile} "  createSourceFile(\"${filterGroup}\", \"${filterName}\", _${filterName}->getFilterParameters(), \"${FiltWidgSourceFile}\");\n")
         endif()
 

@@ -86,7 +86,6 @@
     addErrorMessage(getHumanLabel(), ss.str(), -10000);\
   }\
   std::string _s(#Name);\
-  /*addCreated##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL ==  m_##Name ) \
   {\
@@ -118,6 +117,16 @@
       p->SetName(m_##Name##ArrayName);\
       dc->add##DType(m_##Name##ArrayName, p);\
       m_##Name = p->GetPointer(0);\
+      CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
+      e->setFilterName(this->getNameOfClass());\
+      e->setFilterHumanLabel(this->getHumanLabel());\
+      e->setFilterGroup(this->getGroupName());\
+      e->setFilterSubGroup(this->getSubGroupName());\
+      e->setArrayDefaultName(m_##Name##ArrayName);\
+      e->setArrayGroup(#DType);\
+      e->setArrayNumComponents(NumComp);\
+      e->setArrayType(#ArrayType);\
+      addCreatedArrayHelpIndexEntry(e);\
     }\
   }\
 }

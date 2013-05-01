@@ -116,104 +116,13 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
   return contains;
 }
 
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredVertexData(const std::string &name)
+void AbstractFilter::addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry)
 {
-  m_RequiredVertexData.insert(name);
+  m_CreatedArrayHelpIndexEntries.push_back(entry);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedVertexData(const std::string &name)
-{
-  m_CreatedVertexData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredEdgeData(const std::string &name)
-{
-  m_RequiredEdgeData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedEdgeData(const std::string &name)
-{
-  m_CreatedEdgeData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredFaceData(const std::string &name)
-{
-  m_RequiredFaceData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedFaceData(const std::string &name)
-{
-  m_CreatedFaceData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredCellData(const std::string &name)
-{
-  m_RequiredCellData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedCellData(const std::string &name)
-{
-  m_CreatedCellData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredFieldData(const std::string &name)
-{
-  m_RequiredFieldData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedFieldData(const std::string &name)
-{
-  m_CreatedFieldData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addRequiredEnsembleData(const std::string &name)
-{
-  m_RequiredEnsembleData.insert(name);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedEnsembleData(const std::string &name)
-{
-  m_CreatedEnsembleData.insert(name);
-}
-#endif
-
 
 // -----------------------------------------------------------------------------
 //

@@ -106,7 +106,7 @@ class RotateSampleRefFrameImpl
       //      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
-      int colOld, rowOld, planeOld;
+      size_t colOld, rowOld, planeOld;
 
       //MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
 
