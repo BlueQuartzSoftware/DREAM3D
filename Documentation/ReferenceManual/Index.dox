@@ -27,6 +27,8 @@ DREAM3D makes the reconstruction of 3D EBSD data simple and straight forward. Th
 
 @subpage filterdocumentation
 
+@subpage createdarrayindex
+
 @subpage tutorials
 
 @subpage auxiliarytools

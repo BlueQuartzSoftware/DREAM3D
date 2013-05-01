@@ -256,7 +256,7 @@ void FindSlipTransmissionMetrics::execute()
   // We do this to create new set of List objects
   dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
-  for (size_t i = 1; i < totalFields; i++)
+  for (int64_t i = 1; i < totalFields; i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType f1L(new std::vector<float>);

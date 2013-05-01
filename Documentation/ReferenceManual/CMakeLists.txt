@@ -79,7 +79,7 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
 endforeach()
 file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
-set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
+set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md" ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
 
 
 
@@ -156,6 +156,7 @@ endif()
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
 add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
+add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
 
 #- This installs all the help files. Note that we assume a flat directory structure
 #- in the "Help" folder, ie, all html files, images, etc are all in the "Help"

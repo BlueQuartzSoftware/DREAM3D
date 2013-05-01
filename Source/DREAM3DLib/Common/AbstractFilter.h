@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
-
+#include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
 
 
 /**
@@ -121,6 +121,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<FilterParameter::Pointer>, FilterParameters)
 
+    DREAM3D_INSTANCE_PROPERTY(std::vector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
+    void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
+
     virtual void printValues(std::ostream &out){}
 
 
@@ -139,12 +142,16 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual bool doesPipelineContainFilterAfterThis(const std::string &name);
 
 
+
+
   protected:
     AbstractFilter();
 
 
 
   private:
+
+
     AbstractFilter(const AbstractFilter&); // Copy Constructor Not Implemented
     void operator=(const AbstractFilter&); // Operator '=' Not Implemented
 };
