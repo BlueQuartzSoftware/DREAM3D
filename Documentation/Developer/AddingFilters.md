@@ -13,14 +13,11 @@ Adding Filters to DREAM3D {#addingfilters}
 
 - Create LaplacianSmoothing.h inside of DREAM3D/Source/DREAM3DLib/SurfaceMeshFilters
 - Create LaplacianSmoothing.cpp inside of DREAM3D/Source/DREAM3DLib/SurfaceMeshFilters
-- Update the DREAM3D/Source/DREAM3DLib/SurfaceMeshFilters/SourceList.cmake file to include the
-file in the *_PublicFilters* list.
-- The first time the code is compiled the build system will add a template html documentation
-file in the DREAM3D/Documentation/Filters/SurfaceMeshFilters/LaplacianSmoothing.html
-- Update the DREAM3D/Documentation/Filters/index.html file with links to the new filter
-- Update the DREAM3D/Documentation/Filters/FilterDocs.qrc file with a new entry for the filter
+- Update the DREAM3D/Source/DREAM3DLib/SurfaceMeshFilters/SourceList.cmake file to include the file in the *_PublicFilters* list.
+- Add a .md file for the documentation for the filter into DREAM3D Documentation/ReferenceManual/Filters/SurfaceMeshFilters/LaplacianSmoothing.md
+- Open cmake-gui (or cmake); configure and generate
+- Reopen (reload/update) project file (Visual Studio Solution)
 
-    Surface_MeshingFilters/LaplacianSmoothing.html
 
 ## Adding New Category
 
