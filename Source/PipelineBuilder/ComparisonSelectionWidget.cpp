@@ -43,6 +43,7 @@
 // -----------------------------------------------------------------------------
 ComparisonSelectionWidget::ComparisonSelectionWidget(QWidget *parent) :
   QWidget(parent),
+  m_ArrayListType(CellListType),
   m_ComparisonSelectionTableModel(NULL)
 {
   setupUi(this);
@@ -125,7 +126,14 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
                                                    SurfaceMeshDataContainer::Pointer smdc,
                                                    SolidMeshDataContainer::Pointer sdc)
 {
+
+  if (m_ArrayListType >= CellListType && m_ArrayListType <= EnsembleListType )
+  {
   populateVoxelArrayNames(vdc);
+  }
+  else if (m_ArrayListType >= PointListType && m_ArrayListType <= EdgeListType)
+  { populateSurfaceMeshArrayNames(smdc);}
+
 
   // We need to do this each time the possible arrays names are changed upstream in the
   // pipeline so that we get a new/updated array list.
@@ -134,8 +142,7 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
   m_ComparisonSelectionTableView->setItemDelegate(aid);
 
 
-  //  populateSurfaceMeshArrayNames(smdc);
-  //  populateSolidMeshArrayNames(sdc);
+
 }
 
 
@@ -144,11 +151,21 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
 {
-  std::list<std::string> cellNames = vdc->getCellArrayNameList();
-  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 
-  //  std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
-  //  std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
+  std::list<std::string> cellNames;
+  if (m_ArrayListType == CellListType)
+  {
+    cellNames = vdc->getCellArrayNameList();
+  }
+  else if (m_ArrayListType == FieldListType)
+  {
+    cellNames = vdc->getFieldArrayNameList();
+  }
+  else if (m_ArrayListType == EnsembleListType)
+  {
+    cellNames = vdc->getEnsembleArrayNameList();
+  }
+  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -156,10 +173,20 @@ void ComparisonSelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Poin
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
 {
-  std::list<std::string> cellNames = vdc->getPointArrayNameList();
-
-  //  std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
-  //  std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
+  std::list<std::string> cellNames;
+  if (m_ArrayListType == PointListType)
+  {
+    cellNames = vdc->getPointArrayNameList();
+  }
+  else if (m_ArrayListType == FaceListType)
+  {
+    cellNames = vdc->getFaceArrayNameList();
+  }
+  else if (m_ArrayListType == EdgeListType)
+  {
+    cellNames = vdc->getEdgeArrayNameList();
+  }
+  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 }
 
 // -----------------------------------------------------------------------------

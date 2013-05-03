@@ -18,25 +18,25 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Statist
 # List your public filters here
 
 set(_PublicFilters
-  FindAvgOrientations
   FindAvgCAxes
+  FindAvgOrientations
   FindBoundaryStrengths
   FindDeformationStatistics
   FindEuclideanDistMap
-  FindGrainReferenceMisorientations
   FindGrainReferenceCAxisMisorientations
+  FindGrainReferenceMisorientations
   FindKernelAvgMisorientations
-  GenerateEnsembleStatistics
   FindMisorientations
   FindNeighborhoods
+  FindNeighbors
   FindNumFields
   FindRadialDist
   FindSchmids
   FindShapes
   FindSizes
-  FindNeighbors
   FindSlicetoSliceRotations
   FindSlipTransmissionMetrics
+  GenerateEnsembleStatistics
 )
 
 
