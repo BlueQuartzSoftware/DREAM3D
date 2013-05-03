@@ -6,10 +6,11 @@ With the advent of 3D EBSD data collection systems the visualization of the coll
 1. [Convert the Orientation Data](ebsdtoh5ebsd.html) to an H5Ebsd based archive file.
 1. [Read H5Ebsd file](readh5ebsd.html).
 2. [Determine which voxels are considered _good_](multithresholdcells.html).
+3. [Find the Quaternions for each Cell](findcellquats.html).
 3. [Align the sections](alignSectionsmisorientation.html) using a Misorientation Alignment filter
 4. [Segment the grains](ebsdsegmentgrains.html) using a Misorientation Algorithm.
 5. [Generate the IPF](generateipfcolors.html) (Inverse Pole Figure) colors based on the Euler Angles.
-6. [Write out a DREAM3D](datacontainerwriter) data file (with optional Xdmf file).
+6. [Write out a DREAM3D](datacontainerwriter.html) data file (with optional Xdmf file).
 
 
 ![EBSD Reconstruction Pipeline](Images/ex_reconstruction.png)

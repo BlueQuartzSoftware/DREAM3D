@@ -1,23 +1,59 @@
-# DREAM3D Development Notes {#developmentnotes}
+DREAM3D Development Notes {#developmentnotes}
+=========
 
 ## Intro (or why this file)
   This is just a dumping ground for ideas that we are working on.
 
 ## Help Index Generation
 Be able to automatically generate a cross referenced Help/Filter index. The index would allow the user to look up what filters produce which arrays. Ideally we would add something to the macros used in the DataCheck() function that would automatically add those arrays to some global index.
-struct
-{
-Filter Name
-Filter Human Label
-type (Cell | Field | Ensemble )
-Default Name
-Num. Components
-Array Type (int | float | double | ...)
-Description
-Information Type
-}
 
-What about using the QAssistant APIs to allow the user to search through the documentation files? Doesn't QAssisitant index the files that you feed it?
+        struct CreatedArrayHelpIndexEntry
+        {
+        Filter Name
+        Filter Human Label
+        FIlter Group
+        Filter SubGroup
+        Array Default Name
+        Array Group (Cell | Field | Ensemble )
+        Array Type (int | float | double | ...)
+        Num. Components
+        Description
+        }
+
+This structure is implemented as a class in DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h
+
+
+What about using the QAssistant APIs to allow the user to search through the documentation files? Doesn't QAssistant index the files that you feed it?
+
+## Updating DREAM3D ##
+
+Create a user interface (see image below) based on a menu selection that displays a dialog that allows the user to check for an update to DREAM3D.
+
+![Example GUI](UpdateCheck.png)
+
+The update code should be threaded and uses the QNetwork framework. A file will need to be stored on the web server with the version information. Can this file be a .ini file so we can leverage QSettings to get the values from it? XML file but then we need to bring in the QtXML processing libraries. The user interface will have a button that opens the users web browser to the correct download location.
+
+
+## StatsGenerator Template File Selection ##
+
+StatsGenerator should open to a dialog that displays a list of *templates* that the user can select from to build a synthetic structure. A tree structure to group the templates on the left with a grid of icons to choose from for that group on the right. 
+
++ QListView has this ability to show Icons. 
++ We need to create some sort of Icon.
++ We need to create all the template files
+    - We need to also have the matching pipelines built for each file
++ The user can also select an empty statistics file and build up their own from that
+
+![Example Template Selection](StatsGeneratorPrebuiltSelection.png)
+
+
+## Export Binary File
+We should be able to export any of the arrays into a raw binary file for import into other analysis programs. The filter also may want to output a text file that describes the data in the file (Dims, type, endian ...)
+
+## Export Slice IPF Images ##
+
+A filter to generate images of the grains with IPF coloring for XY/YZ/XZ planes. The filter would require the Crystal Structure Ensemble data and the Euler Angles.
+
 
 ## H5EBSD & XDMF
 
@@ -30,9 +66,6 @@ Add user specified option to use the Normals for the fitting routine or NOT use 
 Figure out how to write an XDMF file that has a non-conformal mesh, ie, 2 triangles so the user can extract single grains. This can be solved with the use hyperslabs in the XDMF file. DREAM3D needs a class that can properly write those
 hyperslabs
 
-## Export Binary File
-We should be able to export any of the arrays into a raw binary file for import into other analysis programs. 
-  
 ## Parallelize Synthetic Generators
 Initial threading of PackPrimaryGrains was performed using the parallel\_for() construct from the Threading Building Blocks (TBB) package. We are achieving a decent speed up on multi-core hardware. We could probably realize more speed ups just using more efficient algorithms.
    
@@ -50,12 +83,13 @@ One idea was to further break apart the QFilterWidget and to have something like
 Be able to "right click" on a "Favorite" filter and Delete/Rename/export it
 
 
+## Image Processing Library Addition
+We need to probably include ITK, VTK, OpenCV or some other image processing library in DREAM3D if possible rather than writing each filter individually. Lets ride on the coat-tails of someone else.
+
 ## Image Filters
 Now that we can import an image we should create a filter that can export a volume as a stack of images and do the coloring based on one of the arrays in the Cell Data like grain Ids or IPF Colors.
 Add option to the Image Image to collapse from RGBA to just RGB. There is also the filter that converts color images into gray scale images.
 
-## Image Processing Library Addition
-We need to probably include ITK, VTK, OpenCV or some other image processing library in DREAM3D if possible rather than writing each filter individually. Lets ride on the coat-tails of someone else.
 
    
 ## Execute External Program Filter
