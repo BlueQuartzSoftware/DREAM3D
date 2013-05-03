@@ -137,6 +137,21 @@ float OrthoRhombicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,
   return _calcMisoQuat(OrthoQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
+void OrthoRhombicOps::getQuatSymOp(int i,float *q)
+{
+  q[0] = OrthoQuatSym[i][0];
+  q[1] = OrthoQuatSym[i][1];
+  q[2] = OrthoQuatSym[i][2];
+  q[3] = OrthoQuatSym[i][3];
+  q[4] = OrthoQuatSym[i][4];
+}
+
+void OrthoRhombicOps::getRodSymOp(int i,float *r)
+{
+  r[0] = OrthoRodSym[i][0];
+  r[1] = OrthoRodSym[i][1];
+  r[2] = OrthoRodSym[i][2];
+}
 
 void OrthoRhombicOps::getODFFZRod(float &r1,float &r2, float &r3)
 {

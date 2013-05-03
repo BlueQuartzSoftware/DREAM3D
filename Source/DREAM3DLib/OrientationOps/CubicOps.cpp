@@ -349,6 +349,22 @@ void CubicOps::getODFFZRod(float &r1,float &r2, float &r3)
   _calcRodNearestOrigin(CubicRodSym, numsym, r1, r2, r3);
 }
 
+void CubicOps::getQuatSymOp(int i,float *q)
+{
+  q[0] = CubicQuatSym[i][0];
+  q[1] = CubicQuatSym[i][1];
+  q[2] = CubicQuatSym[i][2];
+  q[3] = CubicQuatSym[i][3];
+  q[4] = CubicQuatSym[i][4];
+}
+
+void CubicOps::getRodSymOp(int i,float *r)
+{
+  r[0] = CubicRodSym[i][0];
+  r[1] = CubicRodSym[i][1];
+  r[2] = CubicRodSym[i][2];
+}
+
 void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
 	float w, n1, n2, n3;

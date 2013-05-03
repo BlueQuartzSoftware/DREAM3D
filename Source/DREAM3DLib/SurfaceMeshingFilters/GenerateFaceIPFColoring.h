@@ -61,10 +61,10 @@ class DREAM3DLib_EXPORT GenerateFaceIPFColoring : public SurfaceMeshFilter
 
     virtual ~GenerateFaceIPFColoring();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceIPFColorsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -124,8 +124,8 @@ class DREAM3DLib_EXPORT GenerateFaceIPFColoring : public SurfaceMeshFilter
   private:
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
-    float* m_FieldEulerAngles;
     uint8_t* m_SurfaceMeshFaceIPFColors;
+    float* m_FieldEulerAngles;
     int32_t* m_FieldPhases;
     unsigned int* m_CrystalStructures;
 

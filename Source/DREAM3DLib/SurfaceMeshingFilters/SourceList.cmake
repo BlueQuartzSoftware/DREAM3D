@@ -19,8 +19,8 @@ set(_PublicFilters
   QuickSurfaceMesh
   ReverseTriangleWinding
   SharedGrainFaceFilter
-  TriangleCentroidFilter
   TriangleAreaFilter
+  TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
   VerifyTriangleWinding

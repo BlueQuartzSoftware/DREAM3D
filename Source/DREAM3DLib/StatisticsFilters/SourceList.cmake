@@ -23,6 +23,7 @@ set(_PublicFilters
   FindBoundaryStrengths
   FindDeformationStatistics
   FindEuclideanDistMap
+  FindGBCD
   FindGrainReferenceMisorientations
   FindGrainReferenceCAxisMisorientations
   FindKernelAvgMisorientations

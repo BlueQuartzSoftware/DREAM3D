@@ -41,7 +41,6 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
-#include "DREAM3DLib/Common/MatrixMath.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -149,16 +148,16 @@ class CalculateFaceIPFColorsImpl
 // -----------------------------------------------------------------------------
 GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
 SurfaceMeshFilter(),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
 m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
 m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
 m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
+m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_SurfaceMeshFaceLabels(NULL),
 m_SurfaceMeshFaceNormals(NULL),
-m_FieldEulerAngles(NULL),
 m_SurfaceMeshFaceIPFColors(NULL),
+m_FieldEulerAngles(NULL),
 m_FieldPhases(NULL),
 m_CrystalStructures(NULL)
 
