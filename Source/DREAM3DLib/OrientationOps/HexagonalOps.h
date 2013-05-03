@@ -79,6 +79,8 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationMath
     int getMDFSize() { return 15552; }
 
     virtual float getMisoQuat( float q1[5],float q2[5],float &n1min,float &n2min,float &n3min);
+    virtual void getQuatSymOp(int i, float *q);
+    virtual void getRodSymOp(int i, float *r);
     virtual void getODFFZRod(float &r1,float &r2, float &r3);
     virtual void getMDFFZRod(float &r1,float &r2, float &r3);
     virtual void getNearestQuat(float *q1, float *q2);
