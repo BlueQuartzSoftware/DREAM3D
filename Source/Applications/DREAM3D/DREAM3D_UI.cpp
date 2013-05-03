@@ -44,6 +44,9 @@
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
+
+
+
 #include <QtGui/QApplication>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -66,6 +69,8 @@
 
 #include "DREAM3D/License/DREAM3DLicenseFiles.h"
 
+#include "DREAM3DUpdateCheck.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -77,7 +82,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_ActivePlugin(NULL),
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
-  m_PipelineBuilderWidget(NULL)
+  m_PipelineBuilderWidget(NULL),
+  m_UpdateCheckThread(NULL),
+  m_UpdateCheck(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   // Calls the Parent Class to do all the Widget Initialization that were created
@@ -141,7 +148,7 @@ void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
-  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "PipelineBuilderSettings.txt";
+  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "UntitledPipeline.txt";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
     proposedFile,
     tr("*.txt") );
@@ -188,16 +195,6 @@ void DREAM3D_UI::readSettings()
 #else
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
-//  bool ok = false;
-
-//  Qt::ToolButtonStyle tbstyle = static_cast<Qt::ToolButtonStyle>(prefs.value("PluginDisplay").toUInt(&ok));
-//  m_PluginToolBar->setToolButtonStyle(tbstyle);
-//
-//  // Read the preference for each plugin
-//  foreach (DREAM3DPluginInterface* plugin, m_LoadedPlugins) {
-//    plugin->readSettings(prefs);
-//  }
-
   // Have the PipelineBuilder Widget read its settings
   m_PipelineBuilderWidget->readSettings(prefs);
   readWindowSettings(prefs);
@@ -282,32 +279,6 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
-//  std::cout << "DREAM3D_UI::setupGui" << std::endl;
-#if 0
-  m_PluginActionGroup = new QActionGroup(this);
-  m_PluginToolBar = new QToolBar(this);
-  m_PluginToolBar->setObjectName(QString("PluginToolbar"));
-  m_PluginToolBar->setVisible(false);
-
-  // This should be a preference setting somewhere.
-  m_PluginToolBar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-  m_PluginToolBar->setWindowTitle(tr("Show Plugin Toolbar"));
-  addToolBar(m_PluginToolBar);
-
-  // Get the Action to Display/Hide the
-  QAction* showToolbarAction = m_PluginToolBar->toggleViewAction();
-  menuPlugins->addAction(showToolbarAction);
-
-  // Make these Menus Mutually Exclusive
-  m_PluginPrefsActionGroup = new QActionGroup(this);
-  m_PluginPrefsActionGroup->addAction(action_IconText);
-  m_PluginPrefsActionGroup->addAction(action_IconOnly);
-  m_PluginPrefsActionGroup->addAction(action_TextOnly);
-
-  action_ShowPluginToolbar->setChecked(m_PluginToolBar->isVisible());
-#endif
-
- // menubar->removeAction(menuPlugins->menuAction());
 
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
@@ -337,8 +308,24 @@ void DREAM3D_UI::setupGui()
 
   QKeySequence actionSaveKeySeq(Qt::CTRL + Qt::Key_S);
   actionSave_Pipeline_2->setShortcut(actionSaveKeySeq);
-}
 
+#if 0
+  m_UpdateCheckThread = new QThread(); // Create a new Thread Resource
+  m_UpdateCheck = new DREAM3DUpdateCheck(NULL);
+  m_UpdateCheck->moveToThread(m_UpdateCheckThread);
+    // When the thread starts its event loop, start the PipelineBuilder going
+  connect(m_UpdateCheckThread, SIGNAL(started()),
+          m_UpdateCheck, SLOT(checkVersion()));
+
+  // When the PipelineBuilder ends then tell the QThread to stop its event loop
+  connect(m_UpdateCheck, SIGNAL(finished() ),
+          m_UpdateCheckThread, SLOT(quit()) );
+
+  connect(m_UpdateCheck, SIGNAL(hasMessage(const QString&)),
+          this, SLOT(threadHasMessage(const QString)));
+  m_UpdateCheckThread->start();
+  #endif
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -504,7 +491,7 @@ void DREAM3D_UI::openRecentFile()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::threadHasMessage(QString message)
 {
- // std::cout << "DREAM3D_UI::threadHasMessage()" << message.toStdString() << std::endl;
+  std::cout << "DREAM3D_UI::threadHasMessage()" << message.toStdString() << std::endl;
   this->statusBar()->showMessage(message);
 }
 
