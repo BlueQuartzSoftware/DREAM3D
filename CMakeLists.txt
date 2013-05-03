@@ -236,8 +236,8 @@ if(DREAM3D_BUILD_QT_APPS)
    # note that it's Qt4, not QT4 or qt4
    FIND_PACKAGE( Qt4 REQUIRED )
    if(QT4_FOUND)
-       CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui")
-       CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui" ".")
+       CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
+       CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
    endif()
    # add some useful macros and variables
    # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
