@@ -24,6 +24,8 @@ constribute to DREAM.3D
 @subpage writingplugins Writing Plugins
  This section shows how to add a new plugin into DREAM3D.
 
+@subpage developmentnotes General ideas that need to be implemented
+
 @subpage todo "ToDo List"
 List of things that need to be done in the code
 

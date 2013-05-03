@@ -67,6 +67,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/DataContainerStrategies.md
   ${PROJECT_SOURCE_DIR}/WritingPlugin.md
   ${PROJECT_SOURCE_DIR}/CodeGuidelines.md
+  ${PROJECT_SOURCE_DIR}/DevelopmentNotes.md
 )
 
 set(LATEX_EPS_FILES
