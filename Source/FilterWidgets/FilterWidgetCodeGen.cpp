@@ -277,7 +277,8 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
       fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.c_str());
     }
-    else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
@@ -416,7 +417,8 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "#include \"ArraySelectionWidget.h\"\n");
     }
-    if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "#include \"ComparisonSelectionWidget.h\"\n");
     }
@@ -446,7 +448,8 @@ void createSourceFile( const std::string &group,
       fprintf(f, "    //Do we need to preset something from the filter maybe?\n");
       implementArrayNameSelectionWidget = true;
     }
-    else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "    //Do we need to preset something from the filter maybe?\n");
       implementComparisonSelectionWidget = true;
@@ -494,7 +497,8 @@ void createSourceFile( const std::string &group,
       fprintf(f, "  if (NULL != w) {\n");
       fprintf(f, "    w->getArraySelections(filter.get());\n  }\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "  ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "  if (NULL != w) {\n");
@@ -617,7 +621,8 @@ void createSourceFile( const std::string &group,
       fprintf(f, "  prefs.setValue(\"z\", static_cast<double>(v_%s.z));\n", prop.c_str());
       fprintf(f, "  prefs.endArray();\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
       fprintf(f, "  ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
@@ -754,7 +759,8 @@ void createSourceFile( const std::string &group,
 
       fprintf(f, "   prefs.endArray();\n");
     }
-    else if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "    if (NULL != w) {\n");
@@ -823,7 +829,9 @@ void createSourceFile( const std::string &group,
       std::string prop = opt->getPropertyName();
       std::string typ = opt->getValueType();
       std::string hl = opt->getHumanLabel();
-      if (opt->getWidgetType() == FilterParameter::ComparisonSelectionWidget ) {
+      if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+      {
         fprintf(f, "  ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
         fprintf(f, "  if (NULL != w) {\n    w->populateArrayNames(vdc, smdc, sdc);\n  }\n");

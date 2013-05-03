@@ -647,9 +647,9 @@ void QFilterWidget::setupGui()
     {
       setupFloatVec3Widget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::ComparisonSelectionWidget)
+    else if (wType >= FilterParameter::CellArrayComparisonSelectionWidget && wType <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      setupComparisonArraysWidget(frmLayout, optIndex, option, label);
+      setupComparisonArraysWidget(frmLayout, optIndex, option, label, wType);
     }
     ++optIndex;
   }
@@ -800,9 +800,35 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label )
+void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label,
+                                                FilterParameter::WidgetType arrayListType)
 {
   ComparisonSelectionWidget* w = new ComparisonSelectionWidget(this);
+  switch(arrayListType)
+  {
+    case FilterParameter::CellArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::CellListType);
+      break;
+    case FilterParameter::FieldArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::FieldListType);
+      break;
+    case FilterParameter::EnsembleArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::EnsembleListType);
+      break;
+    case FilterParameter::PointArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::PointListType);
+      break;
+    case FilterParameter::FaceArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::FaceListType);
+      break;
+    case FilterParameter::EdgeArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::EdgeListType);
+      break;
+    default:
+      break;
+  }
+
+
   w->setHumanLabel(label->text());
   w->setObjectName((QString::fromStdString(option->getPropertyName())));
   frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
