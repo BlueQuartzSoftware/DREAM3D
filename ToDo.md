@@ -5,6 +5,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
+
 
 ## Critical to Fix before Bad Things Happen ##
 + All the shape ops classes need to be fully reentrant for parallel applications
