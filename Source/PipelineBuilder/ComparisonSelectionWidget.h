@@ -78,6 +78,19 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
 
     virtual void setHumanLabel(QString title);
 
+    enum ArrayListType
+    {
+      CellListType,
+      FieldListType,
+      EnsembleListType,
+      PointListType,
+      FaceListType,
+      EdgeListType
+    };
+
+    DREAM3D_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
+
+
     /**
      * @brief populateArrayNames
      * @param vdc

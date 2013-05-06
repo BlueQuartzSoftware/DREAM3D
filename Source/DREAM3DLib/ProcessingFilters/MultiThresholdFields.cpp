@@ -79,7 +79,7 @@ void MultiThresholdFields::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("ComparisonInputs");
-    parameter->setWidgetType(FilterParameter::ComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
     parameter->setValueType("std::vector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }

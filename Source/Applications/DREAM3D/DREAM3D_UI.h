@@ -59,6 +59,9 @@
 class DREAM3DPluginInterface;
 class HelpDialog;
 class PipelineBuilderWidget;
+class DREAM3DUpdateCheck;
+
+
 
 /**
 * @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h
@@ -126,6 +129,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   private slots:
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
+
 
     // Our Signals that we can emit custom for this class
   signals:
@@ -206,6 +210,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     PipelineBuilderWidget*      m_PipelineBuilderWidget;
 
     QString                     m_OpenDialogLastDirectory;
+
+    QThread*                    m_UpdateCheckThread;
+    DREAM3DUpdateCheck*         m_UpdateCheck;
 
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented

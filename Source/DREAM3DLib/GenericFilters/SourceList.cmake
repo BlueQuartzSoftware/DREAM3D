@@ -18,20 +18,19 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 # List your public filters here
 
 set(_PublicFilters
-  FindGrainPhases
-  FindSurfaceCells
+  AdjustVolumeOriginResolution
+  CopyFieldArrayToCellArray
+  FindBoundingBoxGrains
   FindCellQuats
   FindGrainCentroids
+  FindGrainPhases
+  FindSurfaceCells
   FindSurfaceGrains
-  FindBoundingBoxGrains
-  CopyFieldArrayToCellArray
-  LinkFieldMapToCellArray
   GenerateIPFColors
-
+  LinkFieldMapToCellArray
   RemoveArrays
   RenameCellArray
   RenameFieldArray
-  AdjustVolumeOriginResolution
 )
 
 
