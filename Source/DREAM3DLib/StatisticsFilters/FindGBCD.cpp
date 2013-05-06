@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
 const static float m_pi = static_cast<float>(M_PI);
+const static float m_pi2 = static_cast<float>(2*M_PI);
 
 
 /**
@@ -61,6 +62,11 @@ class CalculateGBCDImpl
     double* m_Areas;
     int32_t* m_Phases;
     float* m_Quats;
+    float* m_GBCDarea;
+    float* m_GBCDcount;
+    float* m_GBCDdeltas;
+    int* m_GBCDsizes;
+    float* m_GBCDlimits;
     unsigned int* m_CrystalStructures;
     std::vector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
@@ -68,13 +74,15 @@ class CalculateGBCDImpl
     OrthoRhombicOps::Pointer m_OrthoOps;
 
   public:
-    CalculateGBCDImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles, int32_t* Labels, double* Normals, double* Areas, float* Quats, int32_t* Phases, unsigned int* CrystalStructures) :
+    CalculateGBCDImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles, int32_t* Labels, double* Normals, double* Areas, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, float* GBCDarea, float* GBCDcount, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Labels(Labels),
       m_Normals(Normals),
       m_Areas(Areas),
       m_Quats(Quats),
+      m_GBCDarea(GBCDarea),
+      m_GBCDcount(GBCDcount),
       m_Phases(Phases),
       m_CrystalStructures(CrystalStructures)
     {
@@ -103,7 +111,7 @@ class CalculateGBCDImpl
 		int grain1, grain2;
 		float q1[5], q2[5], misq[5], sym_q[5], s1misq[5], s2misq[5], euler_mis[3];
 		float sym1[5], sym2[5];
-		float xstl_norm0[3], xstl_norm1[3], xstl_norm_sc[2], xstl_norm_sc_inv[2];
+		float normal[3], xstl_norm0[3], xstl_norm1[3], xstl_norm_sc[2], xstl_norm_sc_inv[2];
 
 		for (int i = start;i < end;i++)
 		{
@@ -117,57 +125,58 @@ class CalculateGBCDImpl
 			}
 			//get the misorientation between grain1 and grain2
 			OrientationMath::multiplyQuaternions(q1, q2, misq);
-			trash = cquat_vector ( (float *) q1, (float *) &normals[i3], (float *) xstl_norm0, 1, 1);
+			OrientationMath::multiplyQuaternionVector(q1, normal, xstl_norm0);
 		
-			for (j=0; j< *nsym;j++)
+			int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
+			for (j=0; j< nsym;j++)
 			{
-				j4 = 4*j;
 				//calculate the symmetric misorienation
 				m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q);
 				OrientationMath::multiplyQuaternions(sym_q, misq, s1misq);
 			
 				//calculate the crystal normal and put it into normalized coordinates ->[theta, cos(phi) ]
-				trash = cquat_vector ( (float *)  &sym_q[j4], (float *) xstl_norm0, (float *) xstl_norm1, 1, 1);
+				OrientationMath::multiplyQuaternionVector(sym_q, xstl_norm0, xstl_norm1);
 				xstl_norm_sc[0] = atan2f(xstl_norm1[1], xstl_norm1[0]);
-				if (xstl_norm_sc[0] < 0) xstl_norm_sc[0] += PI2;
+				if (xstl_norm_sc[0] < 0) xstl_norm_sc[0] += m_pi2;
 				xstl_norm_sc[1] = xstl_norm1[2];
 			
 				if (inversion == 1){
-					xstl_norm_sc_inv[0] = xstl_norm_sc[0] + PI;
-					if (xstl_norm_sc_inv[0] > PI2) xstl_norm_sc[0] -= PI2;
+					xstl_norm_sc_inv[0] = xstl_norm_sc[0] + m_pi;
+					if (xstl_norm_sc_inv[0] > m_pi2) xstl_norm_sc[0] -= m_pi2;
 					xstl_norm_sc_inv[1] = -1.0*xstl_norm_sc[1];
 				}
 			
-				for (k=0; k < *nsym; k++){
-					k4 = 4*k;
-					sym2[0] = sym_q[k4];
-					for(m=1; m < 4; m++) sym2[m] = -1.*sym_q[k4+m]; //invert the symmetry operator
-					trash = cquat_multiply ( (float *) s1misq,(float *) sym2, (float *) s2misq, 1);
-					trash = cquat2eulerang ( (float *) s2misq, (float *) euler_mis, 1);
+				for (k=0; k < nsym; k++)
+				{
+					for(m=1; m < 4; m++)
+					{
+						sym2[m] = -1.*sym_q[m]; //invert the symmetry operator
+					}
+					OrientationMath::multiplyQuaternions(s1misq, sym2, s2misq);
+					OrientationMath::QuattoEuler(s2misq, euler_mis[0], euler_mis[1], euler_mis[2]);
 					euler_mis[1] = cosf(euler_mis[1]);
 				
 					//get the index that this point would be in the GBCD histogram
-					gbcd_index = GBCDIndex ( (float*) gbcddelta, (int*) gbcdsz, (float*) gbcdlimits,
-											(float*) euler_mis, (float*) xstl_norm_sc);
+					gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc);
 				
-					if (gbcd_index != -1) {
+					if (gbcd_index != -1)
+					{
 						// Add the points and up the count on the gbcd histograms.  Broke this out
 						// so that it could be protected in an openMP thread
-	//#pragma omp critical (add_gbcd)
 						{
-							gbcd_count[gbcd_index] += 1;
-							gbcd[gbcd_index] += m_Areas[i];
+							m_GBCDcount[gbcd_index] += 1;
+							m_GBCDarea[gbcd_index] += m_Areas[i];
 						}
 					}
 					//if inversion is on, do the same for that
-					if (inversion == 1){
-						gbcd_index = GBCDIndex ( (float*) gbcddelta, (int*) gbcdsz, (float*) gbcdlimits,
-												(float*) euler_mis, (float*) xstl_norm_sc_inv);
-						if (gbcd_index != -1 ) {
-	//#pragma omp critical (add_gbcd)
+					if (inversion == 1)
+					{
+						gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc_inv);
+						if (gbcd_index != -1 )
+						{
 							{
-								gbcd_count[gbcd_index] += 1;
-								gbcd[gbcd_index] += m_SurfaceMeshFaceAreas[i];
+								m_GBCDcount[gbcd_index] += 1;
+								m_GBCDarea[gbcd_index] += m_Areas[i];
 							}
 						}
                     
@@ -390,17 +399,23 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
+  float* m_GBCD;
+  float* m_GBCDcount;
+  float* m_GBCDdeltas;
+  int* m_GBCDsizes;
+  float* m_GBCDlimits;
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalFaces),
-                      CalculateGBCDImpl(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_SurfaceMeshFaceAreas, m_AvgQuats, m_FieldPhases, m_CrystalStructures), tbb::auto_partitioner());
+                      CalculateGBCDImpl(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_SurfaceMeshFaceAreas, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_GBCD, m_GBCDcount, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    CalculateGBCDImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_SurfaceMeshFaceAreas, m_AvgQuats, m_FieldPhases, m_CrystalStructures);
+    CalculateGBCDImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_SurfaceMeshFaceAreas, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_GBCD, m_GBCDcount, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
     serial.generate(0, totalFaces);
   }
 

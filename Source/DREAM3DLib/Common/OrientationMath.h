@@ -71,7 +71,11 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param n2
      * @param n3
      */
-    virtual float getMisoQuat(float q1[5], float q2[5], float &n1, float &n2, float &n3) = 0;
+    virtual int getODFSize() = 0;
+    virtual int getMDFSize() = 0;
+    virtual int getNumSymOps() = 0;
+	
+	virtual float getMisoQuat(float q1[5], float q2[5], float &n1, float &n2, float &n3) = 0;
     virtual void getQuatSymOp(int i, float *q) = 0;
     virtual void getRodSymOp(int i, float *r) = 0;
     virtual void getODFFZRod(float &r1, float &r2, float &r3) = 0;
@@ -101,6 +105,7 @@ class DREAM3DLib_EXPORT OrientationMath
     static void QuattoEuler(float *q, float &ea1, float &ea2, float &ea3);
     static void changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3);
     static void multiplyQuaternions(float inQuat[5], float multQuat[5], float outQuat[5]);
+    static void multiplyQuaternionVector(float inQuat[5], float inVec[3], float outVec[3]);
     static void normalizeQuat(float* qr);
     static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
     static void eulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
