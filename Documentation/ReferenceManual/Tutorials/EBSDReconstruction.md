@@ -4,12 +4,13 @@
 With the advent of 3D EBSD data collection systems the visualization of the collected data is typically the first order of business. Using the sample data set _Small IN100_ which is a Nickel based super alloy we can use DREAM3D to build a 3D reconstruction of the 2D slices. The order of operations for this type of work flow is the following:
 
 1. [Convert the Orientation Data](ebsdtoh5ebsd.html) to an H5Ebsd based archive file.
-1. [Read H5Ebsd file](readh5ebsd.html).
-2. [Determine which voxels are considered _good_](multithresholdcells.html).
-3. [Align the sections](alignSectionsmisorientation.html) using a Misorientation Alignment filter
-4. [Segment the grains](ebsdsegmentgrains.html) using a Misorientation Algorithm.
-5. [Generate the IPF](generateipfcolors.html) (Inverse Pole Figure) colors based on the Euler Angles.
-6. [Write out a DREAM3D](datacontainerwriter) data file (with optional Xdmf file).
+2. [Read H5Ebsd file](readh5ebsd.html).
+3. [Determine which voxels are considered good](multithresholdcells.html).
+4. [Find the Quaternions for each Cell](findcellquats.html).
+5. [Align the sections](alignSectionsmisorientation.html) using a Misorientation Alignment filter
+6. [Segment the grains](ebsdsegmentgrains.html) using a Misorientation Algorithm.
+7. [Generate the IPF](generateipfcolors.html) (Inverse Pole Figure) colors based on the Euler Angles.
+8. [Write out a DREAM3D](datacontainerwriter.html) data file (with optional Xdmf file).
 
 
 ![EBSD Reconstruction Pipeline](Images/ex_reconstruction.png)

@@ -87,7 +87,12 @@ class FilterParameter
       /* ****  AND THIS LINE ******** */
       ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
-      ComparisonSelectionWidget,
+      CellArrayComparisonSelectionWidget,
+      FieldArrayComparisonSelectionWidget,
+      EnsembleArrayComparisonSelectionWidget,
+      PointArrayComparisonSelectionWidget,
+      FaceArrayComparisonSelectionWidget,
+      EdgeArrayComparisonSelectionWidget,
       IntVec3Widget,
       FloatVec3Widget,
       CustomWidget

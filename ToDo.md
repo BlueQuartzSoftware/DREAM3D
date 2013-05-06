@@ -5,6 +5,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
+
 
 ## Critical to Fix before Bad Things Happen ##
 + All the shape ops classes need to be fully reentrant for parallel applications
@@ -137,6 +139,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ## Items Completed ##
 + Add filter to calculate triangle areas
 + Add filter to calculate minimum dihedral angle of triangles
++ ComparisonSelectionWidget ONLY works on Cell Arrays - Now works on Cell, Field, Ensemble, Point, face and Edge
 + Add info in the documentation files that state where a required array could be created from
 + Added a widget to draw attention to the 'Set Reference Frame' button which is yellow until they click the button.
 + Fixed slow calculation in StatsGenerator when initially calculating default statistics

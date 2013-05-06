@@ -44,6 +44,8 @@
 
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
+#define WRITE_FIELD_XDMF 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -573,6 +575,7 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
 
+#if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   std::vector<char> nameBuffer(nameSize, 0);
@@ -581,6 +584,7 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
   std::string hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
   std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+#endif
 
   int64_t volDims[3] = { 0,0,0 };
 
@@ -621,10 +625,11 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-
+#if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Field Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss.str());
+#endif
   }
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
@@ -647,13 +652,19 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
         H5Gclose(dcGid); // Close the Data Container Group
         return err;
       }
+#if WRITE_FIELD_XDMF
       array->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Field)");
+#endif
     }
   }
+
+
+#if WRITE_FIELD_XDMF
   if (names.size() > 0)
   {
     writeXdmfGridFooter("Field Data");
   }
+#endif
 
   // Write the NeighborLists onto their own grid
   // We need to determine how many total elements we are going to end up with and group the arrays by
@@ -675,9 +686,11 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
+    #if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss.str());
+    #endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);
@@ -691,10 +704,14 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
         H5Gclose(dcGid); // Close the Data Container Group
         return err;
       }
+#if WRITE_FIELD_XDMF
       (*iter)->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Neighbor Data)");
-
+#endif
     }
+#if WRITE_FIELD_XDMF
     writeXdmfGridFooter(ss.str());
+#endif
+
   }
 
   H5Gclose(fieldGroupId);
