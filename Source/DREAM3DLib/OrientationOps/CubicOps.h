@@ -60,8 +60,9 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationMath
     CubicOps();
     virtual ~CubicOps();
 
-    int getODFSize() { return 5832; }
-    int getMDFSize() { return 5832; }
+    virtual int getODFSize() { return 5832; }
+    virtual int getMDFSize() { return 5832; }
+    virtual int getNumSymOps() { return 24; }
 
     virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
     virtual void getQuatSymOp(int i, float *q);
