@@ -473,10 +473,6 @@ void PipelineBuilderWidget::setupGui()
   readFavoritePipelines();
 
   on_filterLibraryTree_itemClicked(library, 0);
-
-  m_PipelineViewWidget->setParent(m_PipelineViewScrollArea);
-
-
 }
 
 // -----------------------------------------------------------------------------
