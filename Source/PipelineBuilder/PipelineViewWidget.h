@@ -43,6 +43,8 @@
 #include <QtGui/QTextEdit>
 #include <QtGui/QTableWidget>
 
+#include <QtCore/QTimer>
+
 #include "PipelineBuilder/QFilterWidget.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
@@ -80,6 +82,7 @@ class PipelineViewWidget : public QFrame
     void setSelectedFilterWidget(QFilterWidget* w);
     void setFilterBeingDragged(QFilterWidget* w);
     void preflightPipeline();
+	void updateScrollBar();
 
     // Slots for the pipeline to communicate back to us
     void preflightErrorMessage(std::vector<PipelineMessage> messages);
@@ -96,7 +99,7 @@ class PipelineViewWidget : public QFrame
       void dragLeaveEvent(QDragLeaveEvent* event);
       void dragMoveEvent(QDragMoveEvent *event);
       void dropEvent(QDropEvent *event);
-      void mouseReleaseEvent ( QMouseEvent * event );
+      virtual void mouseReleaseEvent ( QMouseEvent * event );
 
   private:
     QFilterWidget*            m_SelectedFilterWidget;
@@ -109,6 +112,7 @@ class PipelineViewWidget : public QFrame
     std::vector<PipelineMessage>       errorStream;
     QPoint                    m_LastDragPoint;
     QScrollArea*              m_ScrollArea;
+	QTimer*					  m_ScrollTimer;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

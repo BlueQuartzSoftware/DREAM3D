@@ -362,6 +362,14 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::updateScrollBar()
+{
+	m_ScrollArea->verticalScrollBar()->setValue(m_ScrollArea->verticalScrollBar()->value() + 5);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
 {
   if(NULL != errorTableWidget)
@@ -488,6 +496,9 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
  void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
  {
+	 m_ScrollTimer = new QTimer(this);
+	connect(m_ScrollTimer, SIGNAL(timeout()), this, SLOT(updateScrollBar()));
+
   std::cout << "PipelineViewWidget::dragLeaveEvent: " << std::endl;
   if (NULL == m_ScrollArea)
   {
@@ -499,9 +510,8 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
   if ( m_LastDragPoint.y() >= rect.height() - 5 )
   {
     std::cout << " Left the bottom." << std::endl;
-    m_ScrollArea->verticalScrollBar()->setValue(m_ScrollArea->verticalScrollBar()->value() + 5);
+	m_ScrollTimer->start(10);
   }
-   //Figure out how to scroll
 
  }
 
