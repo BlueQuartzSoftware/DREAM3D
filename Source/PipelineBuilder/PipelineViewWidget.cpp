@@ -50,6 +50,8 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QScrollArea>
+#include <QtGui/QScrollBar>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -77,6 +79,7 @@ m_EmptyPipelineLabel(NULL),
 errorTableWidget(NULL)
 {
   setupGui();
+  m_LastDragPoint = QPoint(-1, -1);
 }
 
 // -----------------------------------------------------------------------------
@@ -93,6 +96,14 @@ PipelineViewWidget::~PipelineViewWidget()
 void PipelineViewWidget::setupGui()
 {
   newEmptyPipelineViewLayout();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setScrollArea(QScrollArea* sa)
+{
+  m_ScrollArea = sa;
 }
 
 // -----------------------------------------------------------------------------
@@ -451,7 +462,7 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
-//  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
  #if 0
 
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
@@ -475,9 +486,33 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+ void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
+ {
+  std::cout << "PipelineViewWidget::dragLeaveEvent: " << std::endl;
+  if (NULL == m_ScrollArea)
+  {
+    return;
+  }
+  QRect rect = m_ScrollArea->geometry();
+  std::cout << "W: " << rect.width() << "  H: " << rect.height() << std::endl;
+
+  if ( m_LastDragPoint.y() >= rect.height() - 5 )
+  {
+    std::cout << " Left the bottom." << std::endl;
+    m_ScrollArea->verticalScrollBar()->setValue(m_ScrollArea->verticalScrollBar()->value() + 5);
+  }
+   //Figure out how to scroll
+
+ }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
- // std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+  m_LastDragPoint = event->pos();
+
 //  QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
 //  if(w != NULL)
 //  {
@@ -603,3 +638,10 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
   event->acceptProposedAction();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::mouseReleaseEvent ( QMouseEvent * event )
+{
+  std::cout << "PipelineViewWidget::mouseReleaseEvent" << std::endl;
+}
