@@ -48,6 +48,7 @@
 
 #include <vector>
 
+class QScrollArea;
 
 /*
  *
@@ -72,6 +73,7 @@ class PipelineViewWidget : public QFrame
     void setErrorsTextArea(QTableWidget* t);
     void newEmptyPipelineViewLayout();
     void resetLayout();
+    void setScrollArea(QScrollArea* sa);
 
   public slots:
     void removeFilterWidget();
@@ -91,10 +93,10 @@ class PipelineViewWidget : public QFrame
   protected:
      void setupGui();
       void dragEnterEvent(QDragEnterEvent *event);
-     // void dragLeaveEvent(QDragLeaveEvent* event);
+      void dragLeaveEvent(QDragLeaveEvent* event);
       void dragMoveEvent(QDragMoveEvent *event);
       void dropEvent(QDropEvent *event);
-   //   void mousePressEvent(QMouseEvent *event);
+      void mouseReleaseEvent ( QMouseEvent * event );
 
   private:
     QFilterWidget*            m_SelectedFilterWidget;
@@ -105,6 +107,8 @@ class PipelineViewWidget : public QFrame
     QLabel*                   m_EmptyPipelineLabel;
     QTableWidget*                       errorTableWidget;
     std::vector<PipelineMessage>       errorStream;
+    QPoint                    m_LastDragPoint;
+    QScrollArea*              m_ScrollArea;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
