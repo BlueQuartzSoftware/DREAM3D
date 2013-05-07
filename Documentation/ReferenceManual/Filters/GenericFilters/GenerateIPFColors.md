@@ -8,7 +8,7 @@ Generic Filters (Misc)
 This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crystal Structures. The user can enter the Reference direction and is defaulted to [001].
 
 ![IPF Color Triangle](IPFFilterLegend.png)
-@image latex IPFFilterLegend.png
+
 
 ## Input Options ##
 
