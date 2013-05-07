@@ -64,7 +64,13 @@ class EbsdLib_EXPORT EbsdReader
 
     virtual ~EbsdReader();
 
+    /**
+     * @brief These get filled out if there are errors. Negative values are error codes
+     */
+    EBSD_INSTANCE_PROPERTY(int, ErrorCode)
+
     EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage)
+
 
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
@@ -157,8 +163,6 @@ class EbsdLib_EXPORT EbsdReader
     /** @brief 'free's the allocated memory and sets the pointer to NULL
     */
     virtual void deletePointers() = 0;
-
-
 
     /**
      * @brief Allocats a contiguous chunk of memory to store values from the .ang file

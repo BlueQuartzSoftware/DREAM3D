@@ -147,7 +147,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
       if (phases.size() == 0)
       {
-        return -1;
+        setErrorCondition(reader->getErrorCode());
+        addErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
+        return getErrorCondition();
       }
 
       DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, m_CrystalStructuresArrayName);

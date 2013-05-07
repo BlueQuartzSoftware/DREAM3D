@@ -61,6 +61,15 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 
     virtual ~H5EbsdVolumeInfo();
 
+
+    /**
+     * @brief These get filled out if there are errors. Negative values are error codes
+     */
+    EBSD_INSTANCE_PROPERTY(int, ErrorCode)
+
+    EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage)
+
+
     EBSD_INSTANCE_STRING_PROPERTY(FileName)
 
     /**
