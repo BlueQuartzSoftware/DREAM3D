@@ -43,9 +43,9 @@
   err = H5Lite::readScalarDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss <<  cname << " Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
+    ss <<  cname << ": The header value for '" << key << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
+    setErrorCode(-90000);\
+    setErrorMessage(ss.str());\
     err = H5Gclose(gid);\
     return -1; }\
   else {\
@@ -61,16 +61,16 @@
   err = H5Lite::readStringDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss << cname << " Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
+    ss <<  cname << ": The header value for '" << key << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
+    setErrorCode(-90000);\
+    setErrorMessage(ss.str());\
     err = H5Gclose(gid);\
     return -1; }\
-    else {\
+  else {\
       EbsdHeaderEntry::Pointer p = m_HeaderMap[key];\
       class* c = dynamic_cast<class*>(p.get());\
       c->setValue(t);\
-    }\
+  }\
 }
 
 
@@ -80,9 +80,9 @@
   err = H5Lite::readStringDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss <<  cname << " Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
+    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
+    setErrorCode(-90000);\
+    setErrorMessage(ss.str());\
     err = H5Gclose(pid); H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
     else {\
@@ -96,9 +96,9 @@
   err = H5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss <<  cname << " Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
+    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
+    setErrorCode(-90000);\
+    setErrorMessage(ss.str());\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\
@@ -112,9 +112,9 @@
   err = H5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss <<  cname << " Error: Could not read Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
+    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
+    setErrorCode(-90000);\
+    setErrorMessage(ss.str());\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\
@@ -128,9 +128,9 @@
   err = H5Lite::readVectorDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
-    ss <<  cname << " Error: Could not read Ang Header value "\
-    <<  " to the HDF5 file with data set name '" << fqKey << "'" << std::endl;\
-    std::cout << ss.str() << std::endl;\
+    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
+    setErrorCode(-90000);\
+    setErrorMessage(ss.str());\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\
