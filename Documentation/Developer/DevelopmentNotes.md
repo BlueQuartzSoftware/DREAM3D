@@ -29,7 +29,7 @@ What about using the QAssistant APIs to allow the user to search through the doc
 
 Create a user interface (see image below) based on a menu selection that displays a dialog that allows the user to check for an update to DREAM3D.
 
-![Example GUI](UpdateCheck.png)
+![Example GUI](Images/UpdateCheck.png)
 
 The update code should be threaded and uses the QNetwork framework. A file will need to be stored on the web server with the version information. Can this file be a .ini file so we can leverage QSettings to get the values from it? XML file but then we need to bring in the QtXML processing libraries. The user interface will have a button that opens the users web browser to the correct download location.
 
@@ -44,7 +44,7 @@ StatsGenerator should open to a dialog that displays a list of *templates* that 
     - We need to also have the matching pipelines built for each file
 + The user can also select an empty statistics file and build up their own from that
 
-![Example Template Selection](StatsGeneratorPrebuiltSelection.png)
+![Example Template Selection](Images/StatsGeneratorPrebuiltSelection.png)
 
 
 ## Export Binary File
