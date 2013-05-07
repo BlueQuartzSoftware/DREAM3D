@@ -78,6 +78,8 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5EbsdVolumeInfo::H5EbsdVolumeInfo() :
+m_ErrorCode(0),
+m_ErrorMessage(""),
   m_ValuesAreCached(false),
   m_FileVersion(0),
   m_XDim(0),
