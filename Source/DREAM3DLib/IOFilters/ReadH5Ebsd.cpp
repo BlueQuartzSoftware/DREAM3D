@@ -78,7 +78,7 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
   m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
   m_ZStartIndex(0),
@@ -313,10 +313,9 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   typedef DataArray<unsigned int> XTalStructArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
 
-//  addCreatedEnsembleData(m_MaterialNamesArrayName);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
-
+  ADD_HELP_INDEX_ENTRY(EnsembleData, MaterialName, XTalStructArrayType, 1);
 }
 
 // -----------------------------------------------------------------------------
