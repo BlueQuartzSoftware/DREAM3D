@@ -82,6 +82,7 @@ m_AutoScrollMargin(10)
 {
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
+  m_autoScrollTimer.setParent(this);
 }
 
 // -----------------------------------------------------------------------------
@@ -98,9 +99,7 @@ PipelineViewWidget::~PipelineViewWidget()
 void PipelineViewWidget::setupGui()
 {
   newEmptyPipelineViewLayout();
-
-	m_ScrollTimer = new QTimer(this);
-	connect(m_ScrollTimer, SIGNAL(timeout()), this, SLOT(updateScrollBar()));
+  connect(&m_autoScrollTimer, SIGNAL(timeout()), this, SLOT(doAutoScroll()));
 }
 
 // -----------------------------------------------------------------------------
@@ -367,14 +366,6 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::updateScrollBar()
-{
-	m_ScrollArea->verticalScrollBar()->setValue(m_ScrollArea->verticalScrollBar()->value() + 15);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
 {
   if(NULL != errorTableWidget)
@@ -475,7 +466,7 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
-  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+ // std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
  #if 0
 
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
@@ -499,31 +490,20 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
- void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
- {
-	// Stop auto scrolling if cursor leaves the window
-	stopAutoScroll();
-
-	std::cout << "DragLeaveEvent triggered!" << std::endl;
- }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
-  std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+ // std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   m_LastDragPoint = event->pos();
 
   // If cursor is within margin boundaries, start scrolling
   if ( shouldAutoScroll( event->pos() ) )
   {
-	  startAutoScroll();
+    startAutoScroll();
   }
   // Otherwise, stop scrolling
   else
   {
-	  stopAutoScroll();
+    stopAutoScroll();
   }
 
 //  QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
@@ -659,8 +639,8 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::stopAutoScroll()
 {
-	setAutoScroll(false);
-	doAutoScroll();
+  m_autoScrollTimer.stop();
+  m_autoScrollCount = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -668,8 +648,9 @@ void PipelineViewWidget::stopAutoScroll()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::startAutoScroll()
 {
-	setAutoScroll(true);
-	doAutoScroll();
+  int scrollInterval = 50;
+  m_autoScrollTimer.start(scrollInterval);
+  m_autoScrollCount = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -677,10 +658,41 @@ void PipelineViewWidget::startAutoScroll()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::doAutoScroll()
 {
-	if ( hasAutoScroll() )
-		getScrollTimer()->start(10);
-	else if ( getScrollTimer()->isActive() )
-		getScrollTimer()->stop();
+  // find how much we should scroll with
+  int verticalStep = m_ScrollArea->verticalScrollBar()->pageStep();
+  int horizontalStep = m_ScrollArea->horizontalScrollBar()->pageStep();
+  if (m_autoScrollCount < qMax(verticalStep, horizontalStep))
+    m_autoScrollCount = m_autoScrollCount + 10;
+
+  int margin = m_AutoScrollMargin;
+  int verticalValue = m_ScrollArea->verticalScrollBar()->value();
+  int horizontalValue = m_ScrollArea->horizontalScrollBar()->value();
+#if 0
+  QPoint pos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
+  QRect area = static_cast<QAbstractItemView*>(m_ScrollArea->cl)->d_func()->clipRect(); // access QWidget private by bending C++ rules
+  #else
+  QPoint pos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
+  QRect area = m_ScrollArea->geometry();
+#endif
+  // do the scrolling if we are in the scroll margins
+  int top = area.top();
+  if (pos.y() - area.top() < margin)
+    m_ScrollArea->verticalScrollBar()->setValue(verticalValue - m_autoScrollCount);
+  else if (area.bottom() - pos.y() < margin)
+    m_ScrollArea-> verticalScrollBar()->setValue(verticalValue + m_autoScrollCount);
+//  if (pos.x() - area.left() < margin)
+//    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue - d->m_autoScrollCount);
+//  else if (area.right() - pos.x() < margin)
+//    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue + d->m_autoScrollCount);
+  // if nothing changed, stop scrolling
+  bool verticalUnchanged = (verticalValue == m_ScrollArea->verticalScrollBar()->value());
+  bool horizontalUnchanged = (horizontalValue == m_ScrollArea->horizontalScrollBar()->value());
+  if (verticalUnchanged && horizontalUnchanged) {
+    stopAutoScroll();
+  } else {
+    m_ScrollArea->viewport()->update();
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -688,6 +700,16 @@ void PipelineViewWidget::doAutoScroll()
 // -----------------------------------------------------------------------------
 bool PipelineViewWidget::shouldAutoScroll(const QPoint &pos)
 {
-	QRect rect = m_ScrollArea->geometry();
-	return ( pos.y() >= rect.height() - getAutoScrollMargin() );
+  QRect rect = m_ScrollArea->geometry();
+  QPoint scpos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
+
+  if (scpos.y() <= getAutoScrollMargin())
+  {
+    return true;
+  }
+  else if (pos.y() >= rect.height() - getAutoScrollMargin())
+  {
+    return true;
+  }
+  return false;
 }

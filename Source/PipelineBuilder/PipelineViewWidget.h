@@ -71,18 +71,33 @@ class PipelineViewWidget : public QFrame
     QStringList getPipelineErrorList() {return m_PipelineErrorList;}
     QTableWidget* getTableWidget() {return errorTableWidget;}
 
-	void setAutoScroll(bool scroll) {m_AutoScroll = scroll;}
-	bool hasAutoScroll() {return m_AutoScroll;}
 
-	void setAutoScrollMargin(int margin) {m_AutoScrollMargin = margin;}
-	int getAutoScrollMargin() {return m_AutoScrollMargin;}
+    void setAutoScroll(bool scroll) {m_AutoScroll = scroll;}
+    bool hasAutoScroll() {return m_AutoScroll;}
 
-	QTimer* getScrollTimer() {return m_ScrollTimer;}
+    void setAutoScrollMargin(int margin) {m_AutoScrollMargin = margin;}
+    int getAutoScrollMargin() {return m_AutoScrollMargin;}
 
-	void stopAutoScroll();
-	void startAutoScroll();
-	void doAutoScroll();
-	bool shouldAutoScroll(const QPoint &pos);
+    /**
+     * @brief stopAutoScroll Stops the time so the Auto Scrolling will cease.
+     */
+    void stopAutoScroll();
+    /**
+     * @brief startAutoScroll Starts the QTimer in charge of auto scrolling the view
+     */
+    void startAutoScroll();
+
+
+
+    /**
+     * @brief shouldAutoScroll Figures out if the mouse position is in the margin area that would trigger an
+     * autoscroll
+     * @param pos
+     * @return
+     */
+    bool shouldAutoScroll(const QPoint &pos);
+
+
 
     void setErrorsTextArea(QTableWidget* t);
     void newEmptyPipelineViewLayout();
@@ -94,23 +109,26 @@ class PipelineViewWidget : public QFrame
     void setSelectedFilterWidget(QFilterWidget* w);
     void setFilterBeingDragged(QFilterWidget* w);
     void preflightPipeline();
-	void updateScrollBar();
 
     // Slots for the pipeline to communicate back to us
     void preflightErrorMessage(std::vector<PipelineMessage> messages);
 
+    /**
+     * @brief doAutoScroll This does the actual scrolling of the Widget
+     */
+    void doAutoScroll();
 
   signals:
-     void addPlaceHolderFilter(QPoint p);
-     void removePlaceHolderFilter();
-     void pipelineFileDropped(const QString& file);
+    void addPlaceHolderFilter(QPoint p);
+    void removePlaceHolderFilter();
+    void pipelineFileDropped(const QString& file);
 
   protected:
-     void setupGui();
-      void dragEnterEvent(QDragEnterEvent *event);
-      void dragLeaveEvent(QDragLeaveEvent* event);
-      void dragMoveEvent(QDragMoveEvent *event);
-      void dropEvent(QDropEvent *event);
+    void setupGui();
+    void dragEnterEvent(QDragEnterEvent *event);
+  //  void dragLeaveEvent(QDragLeaveEvent* event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dropEvent(QDropEvent *event);
 
   private:
     QFilterWidget*            m_SelectedFilterWidget;
@@ -123,9 +141,10 @@ class PipelineViewWidget : public QFrame
     std::vector<PipelineMessage>       errorStream;
     QPoint                    m_LastDragPoint;
     QScrollArea*              m_ScrollArea;
-	QTimer*					  m_ScrollTimer;
-	bool					  m_AutoScroll;
-	int						  m_AutoScrollMargin;
+    QTimer					  m_autoScrollTimer;
+    bool					  m_AutoScroll;
+    int						  m_AutoScrollMargin;
+    int             m_autoScrollCount;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
