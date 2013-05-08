@@ -48,7 +48,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add a 'Rename Favorite' menu
 + allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + allow user to right-click on a filter and display help in a separate window
-+ AutoScroll PipelineView when dragging a filter widget
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
 
@@ -150,6 +149,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
++ AutoScroll PipelineView when dragging a filter widget
 + Add filter to calculate triangle areas
 + Add filter to calculate minimum dihedral angle of triangles
 + ComparisonSelectionWidget ONLY works on Cell Arrays - Now works on Cell, Field, Ensemble, Point, face and Edge
