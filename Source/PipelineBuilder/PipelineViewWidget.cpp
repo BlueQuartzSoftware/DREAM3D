@@ -76,7 +76,9 @@ m_FilterWidgetLayout(NULL),
 m_FilterBeingDragged(NULL),
 m_DropIndex(-1),
 m_EmptyPipelineLabel(NULL),
-errorTableWidget(NULL)
+errorTableWidget(NULL),
+m_AutoScroll(false),
+m_AutoScrollMargin(10)
 {
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
@@ -96,6 +98,9 @@ PipelineViewWidget::~PipelineViewWidget()
 void PipelineViewWidget::setupGui()
 {
   newEmptyPipelineViewLayout();
+
+	m_ScrollTimer = new QTimer(this);
+	connect(m_ScrollTimer, SIGNAL(timeout()), this, SLOT(updateScrollBar()));
 }
 
 // -----------------------------------------------------------------------------
@@ -364,7 +369,7 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::updateScrollBar()
 {
-	m_ScrollArea->verticalScrollBar()->setValue(m_ScrollArea->verticalScrollBar()->value() + 5);
+	m_ScrollArea->verticalScrollBar()->setValue(m_ScrollArea->verticalScrollBar()->value() + 15);
 }
 
 // -----------------------------------------------------------------------------
@@ -496,23 +501,10 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
  void PipelineViewWidget::dragLeaveEvent(QDragLeaveEvent* event)
  {
-	 m_ScrollTimer = new QTimer(this);
-	connect(m_ScrollTimer, SIGNAL(timeout()), this, SLOT(updateScrollBar()));
+	// Stop auto scrolling if cursor leaves the window
+	stopAutoScroll();
 
-  std::cout << "PipelineViewWidget::dragLeaveEvent: " << std::endl;
-  if (NULL == m_ScrollArea)
-  {
-    return;
-  }
-  QRect rect = m_ScrollArea->geometry();
-  std::cout << "W: " << rect.width() << "  H: " << rect.height() << std::endl;
-
-  if ( m_LastDragPoint.y() >= rect.height() - 5 )
-  {
-    std::cout << " Left the bottom." << std::endl;
-	m_ScrollTimer->start(10);
-  }
-
+	std::cout << "DragLeaveEvent triggered!" << std::endl;
  }
 
 // -----------------------------------------------------------------------------
@@ -522,6 +514,17 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
   std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   m_LastDragPoint = event->pos();
+
+  // If cursor is within margin boundaries, start scrolling
+  if ( shouldAutoScroll( event->pos() ) )
+  {
+	  startAutoScroll();
+  }
+  // Otherwise, stop scrolling
+  else
+  {
+	  stopAutoScroll();
+  }
 
 //  QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
 //  if(w != NULL)
@@ -646,12 +649,45 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
     }
   }
   event->acceptProposedAction();
+
+  // Stop auto scrolling if widget is dropped
+  stopAutoScroll();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::mouseReleaseEvent ( QMouseEvent * event )
+void PipelineViewWidget::stopAutoScroll()
 {
-  std::cout << "PipelineViewWidget::mouseReleaseEvent" << std::endl;
+	setAutoScroll(false);
+	doAutoScroll();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::startAutoScroll()
+{
+	setAutoScroll(true);
+	doAutoScroll();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::doAutoScroll()
+{
+	if ( hasAutoScroll() )
+		getScrollTimer()->start(10);
+	else if ( getScrollTimer()->isActive() )
+		getScrollTimer()->stop();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PipelineViewWidget::shouldAutoScroll(const QPoint &pos)
+{
+	QRect rect = m_ScrollArea->geometry();
+	return ( pos.y() >= rect.height() - getAutoScrollMargin() );
 }

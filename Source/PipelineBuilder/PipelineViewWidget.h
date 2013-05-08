@@ -71,6 +71,18 @@ class PipelineViewWidget : public QFrame
     QStringList getPipelineErrorList() {return m_PipelineErrorList;}
     QTableWidget* getTableWidget() {return errorTableWidget;}
 
+	void setAutoScroll(bool scroll) {m_AutoScroll = scroll;}
+	bool hasAutoScroll() {return m_AutoScroll;}
+
+	void setAutoScrollMargin(int margin) {m_AutoScrollMargin = margin;}
+	int getAutoScrollMargin() {return m_AutoScrollMargin;}
+
+	QTimer* getScrollTimer() {return m_ScrollTimer;}
+
+	void stopAutoScroll();
+	void startAutoScroll();
+	void doAutoScroll();
+	bool shouldAutoScroll(const QPoint &pos);
 
     void setErrorsTextArea(QTableWidget* t);
     void newEmptyPipelineViewLayout();
@@ -99,7 +111,6 @@ class PipelineViewWidget : public QFrame
       void dragLeaveEvent(QDragLeaveEvent* event);
       void dragMoveEvent(QDragMoveEvent *event);
       void dropEvent(QDropEvent *event);
-      virtual void mouseReleaseEvent ( QMouseEvent * event );
 
   private:
     QFilterWidget*            m_SelectedFilterWidget;
@@ -113,6 +124,8 @@ class PipelineViewWidget : public QFrame
     QPoint                    m_LastDragPoint;
     QScrollArea*              m_ScrollArea;
 	QTimer*					  m_ScrollTimer;
+	bool					  m_AutoScroll;
+	int						  m_AutoScrollMargin;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
