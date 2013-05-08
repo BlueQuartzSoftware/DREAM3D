@@ -96,6 +96,8 @@ EbsdReader()
   setNumOddCols(-1);
   setNumEvenCols(-1);
   setNumRows(-1);
+  setXStep(0.0f);
+  setYStep(0.0f);
 }
 
 // -----------------------------------------------------------------------------
@@ -213,7 +215,7 @@ int AngReader::readHeaderOnly()
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-	int i = 0;
+    int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
     if (getHeaderIsComplete() == false) {
@@ -249,7 +251,7 @@ int AngReader::readFile()
     ::memset(buf, 0, kBufferSize);
     in.getline(buf, kBufferSize);
     parseHeaderLine(buf, kBufferSize);
-	int i = 0;
+    int i = 0;
     while (buf[i] != 0) { ++i; }
     buf[i] = 10; //Add back in the \n character
     if (getHeaderIsComplete() == false) {
@@ -284,6 +286,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   if (yCells < 1)
   {
+    setErrorCode(-200);
     setErrorMessage("NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file");
     return -200;
   }

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2013, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2013, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,82 +34,118 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
 #include <string.h>
+
+#include "MXA/Utilities/MXADir.h"
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/HKL/H5CtfImporter.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/TSL/H5AngImporter.h"
 
 #include "UnitTestSupport.hpp"
 #include "EbsdTestFileLocation.h"
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TestCtfReader()
+void RemoveTestFiles()
 {
-  CtfReader reader;
-  reader.setFileName(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile1);
- // reader.setFileName("/Users/Shared/Data/HKL_Data/Oxford_Standard_Ni0.ctf");
-  int err =  reader.readFile();
-  DREAM3D_REQUIRE(err >= 0);
-
-//  size_t nRows = reader.getNumberOfElements();
-
-#if 0
-  size_t x = reader.getXCells();
-  size_t y = reader.getYCells();
-  size_t z = reader.getZCells();
-  if (z < 0) { z = 1; }
-
-  float* xPtr = reader.getXPointer();
-
-  for (size_t k = 0; k < z; ++k)
-  {
-    for (size_t j = 0; j < y; ++j)
-    {
-      for (size_t i = 0; i < x; ++i)
-      {
-//        if ( *xPtr < 0.1)
-//        {
-//          std::cout << i << "," << j << "," << k << std::endl;
-//        }
-        ++xPtr;
-      }
-
-    }
- //   std::cout << "Z Slice Done" << std::endl;
-  }
+#if REMOVE_TEST_FILES
+  MXADir::remove(EbsdImportTest::H5EbsdOutputFile);
 #endif
-
-#if 1
-
-  float xstep = reader.getXStep();
-  DREAM3D_REQUIRE(xstep == 0.5f);
-  float ystep = reader.getYStep();
-  DREAM3D_REQUIRE(ystep == 0.5f);
-  DREAM3D_REQUIRE(reader.getNumPhases() == 1);
-  CtfPhase::Pointer phase = reader.getPhaseVector().at(0);
-  std::vector<float> dimensions = phase->getLatticeDimensions();
-  DREAM3D_REQUIRE(dimensions[0] >= 3.230f && dimensions[0] <= 3.232f)
-  DREAM3D_REQUIRE(dimensions[1] >= 3.230f && dimensions[1] <= 3.232f)
-#endif
-
-  return 1;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TestMissingHeaders()
+{
+
+  AngReader reader;
+  reader.setFileName(EbsdImportTest::MissingHeader1);
+  int err = reader.readHeaderOnly();
+  // It should read through this header just fine
+  DREAM3D_REQUIRE(err > 0)
+
+  int value = reader.getNumEvenCols();
+  DREAM3D_REQUIRE_EQUAL(value, -1)
+
+  value = reader.getNumOddCols();
+  DREAM3D_REQUIRE_EQUAL(value, -1)
+
+  value = reader.getNumRows();
+  DREAM3D_REQUIRE_EQUAL(value, -1)
+
+  float step = reader.getXStep();
+  DREAM3D_REQUIRE_EQUAL(step, 0.0f)
+
+  step = reader.getYStep();
+  DREAM3D_REQUIRE_EQUAL(step, 0.0f)
+
+  err = reader.readFile();
+  std::cout << reader.getErrorMessage() << std::endl;
+  DREAM3D_REQUIRED(err, ==, -200)
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestMissingGrid()
+{
+
+  AngReader reader;
+  reader.setFileName(EbsdImportTest::GridMissing);
+  int err = reader.readHeaderOnly();
+  // It should read through this header just fine
+  DREAM3D_REQUIRE(err > 0)
+
+
+
+  err = reader.readFile();
+  std::cout << reader.getErrorMessage() << std::endl;
+  DREAM3D_REQUIRED(err, ==, -300)
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestHexGrid()
+{
+
+  AngReader reader;
+  reader.setFileName(EbsdImportTest::HexHeader);
+  int err = reader.readHeaderOnly();
+  // It should read through this header just fine
+  DREAM3D_REQUIRE(err > 0)
+
+
+
+  err = reader.readFile();
+  std::cout << reader.getErrorMessage() << std::endl;
+  DREAM3D_REQUIRED(err, ==, -400)
+}
+
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( TestCtfReader() )
 
+  int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST( TestMissingHeaders() )
+  DREAM3D_REGISTER_TEST( TestHexGrid() )
+  DREAM3D_REGISTER_TEST( TestMissingGrid() )
+
+
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
   PRINT_TEST_SUMMARY();
   return err;
 }
+

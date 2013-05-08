@@ -150,11 +150,19 @@ target_link_libraries(DxIOTest DREAM3DLib)
 add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
 
 # --------------------------------------------------------------------------
-# Ebsd Data File Testing
+# CTF Data File Testing
 # --------------------------------------------------------------------------
 add_executable(CtfReaderTest ${DREAM3DTest_SOURCE_DIR}/CtfReaderTest.cpp)
 target_link_libraries(CtfReaderTest EbsdLib)
 add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
+
+# --------------------------------------------------------------------------
+# ANG Data File Testing
+# --------------------------------------------------------------------------
+add_executable(AngImportTest ${DREAM3DTest_SOURCE_DIR}/AngImportTest.cpp)
+target_link_libraries(AngImportTest MXA EbsdLib)
+add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
+
 
 #add_executable(EbsdImportTest ${DREAM3DTest_SOURCE_DIR}/EbsdImportTest.cpp
 #                              ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/EbsdImport/EbsdImport.cpp)
