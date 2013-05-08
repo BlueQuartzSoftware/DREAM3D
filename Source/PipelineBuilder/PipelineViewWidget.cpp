@@ -301,8 +301,6 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
-  //std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
-
   // clear all the error messages
   m_PipelineErrorList.clear();
 
@@ -404,7 +402,6 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
     }
-   // errorTableWidget->verticalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
   }
 }
 
@@ -437,7 +434,6 @@ void PipelineViewWidget::removeFilterWidget()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 {
-  //std::cout << "PipelineViewWidget::filterBeingDragged: " << w->getFilter()->getHumanLabel() << std::endl;
   m_FilterBeingDragged = w;
 }
 
@@ -446,7 +442,6 @@ void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 {
- // std::cout << "PipelineViewWidget::setSelectedFilterWidget: " << w->getFilter()->getHumanLabel() << std::endl;
 
   if(NULL != m_SelectedFilterWidget && w != m_SelectedFilterWidget)
   {
@@ -466,7 +461,6 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
- // std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
  #if 0
 
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
@@ -492,7 +486,6 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
- // std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   m_LastDragPoint = event->pos();
 
   // If cursor is within margin boundaries, start scrolling
@@ -505,27 +498,6 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
   {
     stopAutoScroll();
   }
-
-//  QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
-//  if(w != NULL)
-//  {
-//    std::cout << "PipelineViewWidget::dragMoveEvent: QFilterWidget Found: " << w->getFilter()->getNameOfClass() << std::endl;
-//  }
-//  QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
-//  if(l != NULL)
-//  {
-//    std::cout << "PipelineViewWidget::dragMoveEvent: Found the QVBoxLayout" << std::endl;
-//  }
-
-
-//  if (event->dropAction() == Qt::MoveAction )
-//  {
-//    std::cout << "  Dragging a current filter" << std::endl;
-//  }
-//  else if (event->dropAction() == Qt::CopyAction)
-//  {
-//    std::cout << "  Dragging a new filter into pipeline" << std::endl;
-//  }
 
   QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
   if(o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
@@ -581,7 +553,6 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent *event)
 {
-//  std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   if (event->mimeData()->hasUrls())
   {
     QList<QUrl> urlList;
@@ -598,7 +569,6 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
   }
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
-    //std::cout << "  m_FilterBeingDragged != NULL: " << m_FilterBeingDragged->getFilter()->getHumanLabel() << std::endl;
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
     preflightPipeline();
@@ -662,18 +632,15 @@ void PipelineViewWidget::doAutoScroll()
   int verticalStep = m_ScrollArea->verticalScrollBar()->pageStep();
   int horizontalStep = m_ScrollArea->horizontalScrollBar()->pageStep();
   if (m_autoScrollCount < qMax(verticalStep, horizontalStep))
-    m_autoScrollCount = m_autoScrollCount + 10;
+    m_autoScrollCount = m_autoScrollCount + 15;
 
   int margin = m_AutoScrollMargin;
   int verticalValue = m_ScrollArea->verticalScrollBar()->value();
   int horizontalValue = m_ScrollArea->horizontalScrollBar()->value();
-#if 0
-  QPoint pos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
-  QRect area = static_cast<QAbstractItemView*>(m_ScrollArea->cl)->d_func()->clipRect(); // access QWidget private by bending C++ rules
-  #else
+
   QPoint pos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
   QRect area = m_ScrollArea->geometry();
-#endif
+
   // do the scrolling if we are in the scroll margins
   int top = area.top();
   if (pos.y() - area.top() < margin)

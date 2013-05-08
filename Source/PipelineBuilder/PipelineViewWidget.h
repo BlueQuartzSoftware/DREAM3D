@@ -144,7 +144,7 @@ class PipelineViewWidget : public QFrame
     QTimer					  m_autoScrollTimer;
     bool					  m_AutoScroll;
     int						  m_AutoScrollMargin;
-    int             m_autoScrollCount;
+    int							m_autoScrollCount;
 
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
