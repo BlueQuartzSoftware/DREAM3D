@@ -113,6 +113,9 @@
               <property name="horizontalScrollBarPolicy">
                <enum>Qt::ScrollBarAsNeeded</enum>
               </property>
+              <property name="editTriggers">
+               <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+              </property>
               <property name="alternatingRowColors">
                <bool>true</bool>
               </property>
@@ -481,7 +484,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>304</width>
+         <width>305</width>
          <height>653</height>
         </rect>
        </property>

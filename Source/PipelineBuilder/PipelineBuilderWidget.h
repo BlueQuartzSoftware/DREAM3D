@@ -38,9 +38,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
 #include <QtGui/QDropEvent>
-
-
-
+#include <QInputDialog>
 
 #include "ui_PipelineBuilderWidget.h"
 
@@ -149,10 +147,12 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionClearPipeline_triggered();
     void actionAddFavorite_triggered();
     void actionRemoveFavorite_triggered();
+	void actionRenameFavorite_triggered();
 
     void on_m_GoBtn_clicked();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+	void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
@@ -199,8 +199,9 @@ signals:
     QAction*                    m_actionSavePipeline;
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
+	QAction*                    m_actionRenameFavorite;
 
-    //QMap<QString,QString>       m_favoritesMap;
+    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;
     //QMap<QString, QString>      m_prebuiltsMap;
     QTreeWidgetItem*            m_prebuilts;
