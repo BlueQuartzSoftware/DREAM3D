@@ -299,7 +299,7 @@ void AngPhase::printSelf(std::ostream &stream)
   stream << Ebsd::Ang::LatticeConstants;
   for (std::vector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
   {
-    std::cout << " " << *iter;
+    stream << " " << *iter;
   }
   stream << std::endl;
 
@@ -315,7 +315,7 @@ void AngPhase::printSelf(std::ostream &stream)
   stream << Ebsd::Ang::Categories;
   for (std::vector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
   {
-    std::cout << " " << *iter;
+    stream << " " << *iter;
   }
   stream << std::endl;
 
@@ -328,7 +328,21 @@ unsigned int AngPhase::determineCrystalStructure()
 {
   Ebsd::Ang::PhaseSymmetry symmetry = getSymmetry();
   unsigned int crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  if (symmetry == Ebsd::Ang::CubicSymmetry) crystal_structure = Ebsd::CrystalStructure::Cubic;
-  else if (symmetry == Ebsd::Ang::HexagonalSymmetry) crystal_structure = Ebsd::CrystalStructure::Hexagonal;
+
+  switch(symmetry)
+  {
+    case Ebsd::Ang::CubicSymmetry:
+      crystal_structure = Ebsd::CrystalStructure::Cubic;
+      break;
+    case Ebsd::Ang::HexagonalSymmetry:
+      crystal_structure = Ebsd::CrystalStructure::Hexagonal;
+      break;
+    case Ebsd::Ang::Trigonal:
+      crystal_structure = Ebsd::CrystalStructure::Trigonal;
+      break;
+    default:
+      crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
+
+  }
   return crystal_structure;
 }

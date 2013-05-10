@@ -103,6 +103,7 @@ namespace Ebsd {
 
 
    enum PhaseSymmetry {
+     Trigonal = 32,
      CubicSymmetry = 43,
      HexagonalSymmetry = 62,
      UnknownSymmetry = 999

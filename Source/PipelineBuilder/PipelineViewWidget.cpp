@@ -642,7 +642,6 @@ void PipelineViewWidget::doAutoScroll()
   QRect area = m_ScrollArea->geometry();
 
   // do the scrolling if we are in the scroll margins
-  int top = area.top();
   if (pos.y() - area.top() < margin)
     m_ScrollArea->verticalScrollBar()->setValue(verticalValue - m_autoScrollCount);
   else if (area.bottom() - pos.y() < margin)
