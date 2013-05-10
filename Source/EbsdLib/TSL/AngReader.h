@@ -145,7 +145,7 @@ private:
     AngPhase::Pointer   m_CurrentPhase;
 
 
-    int readData(std::ifstream &in, char* buf, size_t bufSize);
+    void readData(std::ifstream &in, char* buf, size_t bufSize);
 
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
