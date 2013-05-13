@@ -399,7 +399,13 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  float* m_GBCD;
+/*  FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
+  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
+    fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
+    fArray->SetNumberOfComponents(3);
+    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
+    iArray->SetNumberOfComponents(3);*/
+	float* m_GBCD;
   float* m_GBCDcount;
   float* m_GBCDdeltas;
   int* m_GBCDsizes;
