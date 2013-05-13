@@ -127,6 +127,15 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   connect(m_actionRemoveFavorite, SIGNAL(triggered()),
           this, SLOT( actionRemoveFavorite_triggered() ) );
 
+  m_actionRenameFavorite = new QAction(m_MenuPipeline);
+  m_actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
+  m_actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(m_actionRenameFavorite);
+  QKeySequence actionRenameFavKeySeq(Qt::CTRL + Qt::Key_R);
+  m_actionRenameFavorite->setShortcut(actionRenameFavKeySeq);
+  connect(m_actionRenameFavorite, SIGNAL(triggered()),
+          this, SLOT( actionRenameFavorite_triggered() ) );
+
   menuPipeline->addSeparator();
 
   m_actionClearPipeline = new QAction(m_MenuPipeline);
@@ -246,8 +255,9 @@ void PipelineBuilderWidget::readFavoritePipelines()
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
+	favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
+	m_favoritesMap[favoriteItem] = favFilePath;
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -395,6 +405,7 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
+	filterLibraryTree->setEditTriggers(QAbstractItemView::SelectedClicked);
   m_hasErrors = false;
   m_hasWarnings = false;
 
@@ -412,10 +423,11 @@ void PipelineBuilderWidget::setupGui()
   m_prebuilts->setIcon(0, QIcon(":/flag_blue_scroll.png"));
   m_prebuilts->setExpanded(true);
 
-
+  blockSignals(true);
   m_favorites = new QTreeWidgetItem(filterLibraryTree);
   m_favorites->setText(0, Detail::FavoritePipelines);
   m_favorites->setIcon(0, QIcon(":/flash.png"));
+  blockSignals(false);
 
   m_favorites->setExpanded(true);
 
@@ -447,7 +459,7 @@ void PipelineBuilderWidget::setupGui()
   library->setExpanded(true);
 
   errorTableWidget->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
-  errorTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Interactive);
+  errorTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Interactive); 
   errorTableWidget->horizontalHeader()->resizeSection(1, 250);
   errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
 
@@ -470,9 +482,13 @@ void PipelineBuilderWidget::setupGui()
 
   readPrebuiltPipelines();
 
+  filterLibraryTree->blockSignals(true);
   readFavoritePipelines();
+  filterLibraryTree->blockSignals(false);
 
   on_filterLibraryTree_itemClicked(library, 0);
+
+  m_PipelineViewWidget->setScrollArea(m_PipelineViewScrollArea);
 }
 
 // -----------------------------------------------------------------------------
@@ -524,6 +540,29 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
+{
+	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+	{
+		QString newFavoriteTitle = item->text(0);
+		QString favoritePath = m_favoritesMap[item];
+
+		// Access old settings and path
+		QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+
+		// Set the new name
+		favoritePrefs.beginGroup("favorite_config");
+		favoritePrefs.setValue("Name", newFavoriteTitle);
+		favoritePrefs.endGroup();
+
+		// Write settings
+		writeSettings(favoritePrefs, m_PipelineViewWidget);
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
   // Get the QFilterWidget Manager Instance
@@ -546,7 +585,6 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
     factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
     updateFilterGroupList(factories);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1154,7 +1192,6 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
     readFavoritePipelines();
   }
 
-
   // Tell everyone to save their preferences NOW instead of waiting until the app quits
   emit fireWriteSettings();
 }
@@ -1185,6 +1222,27 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered()
     // Write these changes out to the preferences file
     emit fireWriteSettings();
   }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionRenameFavorite_triggered()
+{
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+
+	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+	{
+		bool ok;
+		QString text = QInputDialog::getText(this, tr("Rename Favorite"),
+                                          tr("New Favorite Name:"), QLineEdit::Normal,
+										  tr(item->text(0).toStdString().c_str()), &ok);
+		if (ok && !text.isEmpty())
+			item->setText(0, text);
+
+		on_filterLibraryTree_itemChanged(item, 0);
+	}
 }
 
 

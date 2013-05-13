@@ -50,6 +50,8 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QScrollArea>
+#include <QtGui/QScrollBar>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -74,9 +76,13 @@ m_FilterWidgetLayout(NULL),
 m_FilterBeingDragged(NULL),
 m_DropIndex(-1),
 m_EmptyPipelineLabel(NULL),
-errorTableWidget(NULL)
+errorTableWidget(NULL),
+m_AutoScroll(false),
+m_AutoScrollMargin(10)
 {
   setupGui();
+  m_LastDragPoint = QPoint(-1, -1);
+  m_autoScrollTimer.setParent(this);
 }
 
 // -----------------------------------------------------------------------------
@@ -93,6 +99,15 @@ PipelineViewWidget::~PipelineViewWidget()
 void PipelineViewWidget::setupGui()
 {
   newEmptyPipelineViewLayout();
+  connect(&m_autoScrollTimer, SIGNAL(timeout()), this, SLOT(doAutoScroll()));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setScrollArea(QScrollArea* sa)
+{
+  m_ScrollArea = sa;
 }
 
 // -----------------------------------------------------------------------------
@@ -286,8 +301,6 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
-  //std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
-
   // clear all the error messages
   m_PipelineErrorList.clear();
 
@@ -389,7 +402,6 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
     }
-   // errorTableWidget->verticalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
   }
 }
 
@@ -422,7 +434,6 @@ void PipelineViewWidget::removeFilterWidget()
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 {
-  //std::cout << "PipelineViewWidget::filterBeingDragged: " << w->getFilter()->getHumanLabel() << std::endl;
   m_FilterBeingDragged = w;
 }
 
@@ -431,7 +442,6 @@ void PipelineViewWidget::setFilterBeingDragged(QFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 {
- // std::cout << "PipelineViewWidget::setSelectedFilterWidget: " << w->getFilter()->getHumanLabel() << std::endl;
 
   if(NULL != m_SelectedFilterWidget && w != m_SelectedFilterWidget)
   {
@@ -451,7 +461,6 @@ void PipelineViewWidget::setSelectedFilterWidget(QFilterWidget* w)
 void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 {
   event->acceptProposedAction();
-//  std::cout << "PipelineViewWidget::dragEnterEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
  #if 0
 
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
@@ -477,27 +486,18 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 {
- // std::cout << "PipelineViewWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
-//  QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
-//  if(w != NULL)
-//  {
-//    std::cout << "PipelineViewWidget::dragMoveEvent: QFilterWidget Found: " << w->getFilter()->getNameOfClass() << std::endl;
-//  }
-//  QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
-//  if(l != NULL)
-//  {
-//    std::cout << "PipelineViewWidget::dragMoveEvent: Found the QVBoxLayout" << std::endl;
-//  }
+  m_LastDragPoint = event->pos();
 
-
-//  if (event->dropAction() == Qt::MoveAction )
-//  {
-//    std::cout << "  Dragging a current filter" << std::endl;
-//  }
-//  else if (event->dropAction() == Qt::CopyAction)
-//  {
-//    std::cout << "  Dragging a new filter into pipeline" << std::endl;
-//  }
+  // If cursor is within margin boundaries, start scrolling
+  if ( shouldAutoScroll( event->pos() ) )
+  {
+    startAutoScroll();
+  }
+  // Otherwise, stop scrolling
+  else
+  {
+    stopAutoScroll();
+  }
 
   QObject* o = qobject_cast<QObject*>(childAt(event->pos()));
   if(o == NULL && event->dropAction() == Qt::MoveAction) // WE ONLY deal with this if the user is moving an existing pipeline filter
@@ -553,7 +553,6 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent *event)
 {
-//  std::cout << "PipelineViewWidget::dropEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
   if (event->mimeData()->hasUrls())
   {
     QList<QUrl> urlList;
@@ -570,7 +569,6 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
   }
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
-    //std::cout << "  m_FilterBeingDragged != NULL: " << m_FilterBeingDragged->getFilter()->getHumanLabel() << std::endl;
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
     preflightPipeline();
@@ -601,5 +599,83 @@ void PipelineViewWidget::dropEvent(QDropEvent *event)
     }
   }
   event->acceptProposedAction();
+
+  // Stop auto scrolling if widget is dropped
+  stopAutoScroll();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::stopAutoScroll()
+{
+  m_autoScrollTimer.stop();
+  m_autoScrollCount = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::startAutoScroll()
+{
+  int scrollInterval = 50;
+  m_autoScrollTimer.start(scrollInterval);
+  m_autoScrollCount = 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::doAutoScroll()
+{
+  // find how much we should scroll with
+  int verticalStep = m_ScrollArea->verticalScrollBar()->pageStep();
+  int horizontalStep = m_ScrollArea->horizontalScrollBar()->pageStep();
+  if (m_autoScrollCount < qMax(verticalStep, horizontalStep))
+    m_autoScrollCount = m_autoScrollCount + 15;
+
+  int margin = m_AutoScrollMargin;
+  int verticalValue = m_ScrollArea->verticalScrollBar()->value();
+  int horizontalValue = m_ScrollArea->horizontalScrollBar()->value();
+
+  QPoint pos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
+  QRect area = m_ScrollArea->geometry();
+
+  // do the scrolling if we are in the scroll margins
+  if (pos.y() - area.top() < margin)
+    m_ScrollArea->verticalScrollBar()->setValue(verticalValue - m_autoScrollCount);
+  else if (area.bottom() - pos.y() < margin)
+    m_ScrollArea-> verticalScrollBar()->setValue(verticalValue + m_autoScrollCount);
+//  if (pos.x() - area.left() < margin)
+//    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue - d->m_autoScrollCount);
+//  else if (area.right() - pos.x() < margin)
+//    m_ScrollArea->horizontalScrollBar()->setValue(horizontalValue + d->m_autoScrollCount);
+  // if nothing changed, stop scrolling
+  bool verticalUnchanged = (verticalValue == m_ScrollArea->verticalScrollBar()->value());
+  bool horizontalUnchanged = (horizontalValue == m_ScrollArea->horizontalScrollBar()->value());
+  if (verticalUnchanged && horizontalUnchanged) {
+    stopAutoScroll();
+  } else {
+    m_ScrollArea->viewport()->update();
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PipelineViewWidget::shouldAutoScroll(const QPoint &pos)
+{
+  QRect rect = m_ScrollArea->geometry();
+  QPoint scpos = m_ScrollArea->viewport()->mapFromGlobal(QCursor::pos());
+
+  if (scpos.y() <= getAutoScrollMargin())
+  {
+    return true;
+  }
+  else if (pos.y() >= rect.height() - getAutoScrollMargin())
+  {
+    return true;
+  }
+  return false;
+}

@@ -37,13 +37,8 @@
 
 #include <string.h>
 
-#include "UnitTestSupport.hpp"
-#include "EbsdTestFileLocation.h"
-
-
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
-
 
 #include "EbsdLib/HKL/CtfReader.h"
 #include "EbsdLib/HKL/H5CtfImporter.h"

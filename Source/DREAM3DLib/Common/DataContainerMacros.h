@@ -132,6 +132,23 @@
 }
 
 
+/**
+ *@brief
+ */
+#define ADD_HELP_INDEX_ENTRY(DType, Name, ArrayType, NumComp)\
+CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
+e->setFilterName(this->getNameOfClass());\
+e->setFilterHumanLabel(this->getHumanLabel());\
+e->setFilterGroup(this->getGroupName());\
+e->setFilterSubGroup(this->getSubGroupName());\
+e->setArrayDefaultName(m_##Name##ArrayName);\
+e->setArrayGroup(#DType);\
+e->setArrayNumComponents(NumComp);\
+e->setArrayType(#ArrayType);\
+addCreatedArrayHelpIndexEntry(e);
+
+
+
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
 PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, int numComp, AbstractFilter* obv)\

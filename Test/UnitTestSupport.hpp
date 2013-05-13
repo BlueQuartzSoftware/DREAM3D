@@ -189,6 +189,19 @@ void TestFailed(const std::string &test)
   }\
   }
 
+#define DREAM3D_REQUIRED(L, Q, R)\
+  { \
+  std::stringstream ss;\
+  bool b = (L Q R);\
+  if ( (b) == (false) ) \
+  {\
+    ss <<"Your test required the following\n            '";\
+    ss << #L << #Q << #R << "' but this condition was not met.\n";\
+    ss << "            " << #L << " = " << L << "\n";\
+    ss << "            " << #R << " = " << R << "\n";\
+    DREAM3D_TEST_THROW_EXCEPTION( ss.str() )\
+  }\
+  }
 
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \

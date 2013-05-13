@@ -244,8 +244,9 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     err = reader->readFile();
     if(err < 0)
     {
-      std::cout << "H5AngDataLoader Error: There was an issue loading the data from the hdf5 file." << std::endl;
-      return -1;
+      setErrorCode(reader->getErrorCode());
+      setErrorMessage(getErrorMessage());
+      return getErrorCode();
     }
     readerIndex = 0;
     xpointsslice = reader->getNumEvenCols();

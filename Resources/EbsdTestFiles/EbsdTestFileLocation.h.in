@@ -1,8 +1,10 @@
 #ifndef _EbsdTestFileLocation_h_
 #define _EbsdTestFileLocation_h_
+
 #include <string>
 
 #define REMOVE_TEST_FILES 1
+
 
 namespace EbsdImportTest {
   const std::string FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
@@ -10,6 +12,11 @@ namespace EbsdImportTest {
   const std::string TestFile2("Test_2.ang");
   const std::string TestFile3("Test_3.ang");
   const std::string H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/FromAng.h5ebsd");
+  const std::string MissingHeader1("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_1.ang");
+  const std::string GridMissing("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/GridMissing.ang");
+  const std::string MissingHeader3("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_3.ang");
+  const std::string HexHeader("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/HexHeader.ang");
+  const std::string ShortFile("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/ShortFile.ang");
 }
 
 namespace UnitTest
