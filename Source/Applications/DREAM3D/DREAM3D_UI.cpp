@@ -292,9 +292,8 @@ void DREAM3D_UI::setupGui()
  // Q_INIT_RESOURCE(Generated_FilterDocs);
 
   // Now create our central widget
-  m_PipelineBuilderWidget = new PipelineBuilderWidget(this);
+  m_PipelineBuilderWidget = new PipelineBuilderWidget(this->menuPipeline, this);
   m_PipelineBuilderWidget->setStatusBar(this->statusBar());
-  m_PipelineBuilderWidget->setPipelineMenu(this->menuPipeline);
   centerWidget->layout()->addWidget(m_PipelineBuilderWidget);
 
   connect(m_PipelineBuilderWidget, SIGNAL(fireWriteSettings()),
