@@ -81,7 +81,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
+PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent) :
   DREAM3DPluginFrame(parent),
   m_FilterPipeline(NULL),
   m_MenuPipeline(NULL),
@@ -90,7 +90,9 @@ PipelineBuilderWidget::PipelineBuilderWidget(QWidget *parent) :
   m_HelpDialog(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
+  setPipelineMenu(pipelineMenu);
   setupUi(this);
+  setupContextualMenus();
   setupGui();
   checkIOFiles();
 }
@@ -113,19 +115,10 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   m_actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
   m_actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionAddFavorite);
-  QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_F);
+  QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
   m_actionAddFavorite->setShortcut(actionAddFavKeySeq);
   connect(m_actionAddFavorite, SIGNAL(triggered()),
           this, SLOT( actionAddFavorite_triggered() ) );
-
-  m_actionRemoveFavorite = new QAction(m_MenuPipeline);
-  m_actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
-  m_actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionRemoveFavorite);
-  QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_F);
-  m_actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
-  connect(m_actionRemoveFavorite, SIGNAL(triggered()),
-          this, SLOT( actionRemoveFavorite_triggered() ) );
 
   m_actionRenameFavorite = new QAction(m_MenuPipeline);
   m_actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
@@ -138,14 +131,42 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 
   menuPipeline->addSeparator();
 
+    m_actionRemoveFavorite = new QAction(m_MenuPipeline);
+  m_actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
+  m_actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(m_actionRemoveFavorite);
+  QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::Key_Minus);
+  m_actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
+  connect(m_actionRemoveFavorite, SIGNAL(triggered()),
+          this, SLOT( actionRemoveFavorite_triggered() ) );
+
+  menuPipeline->addSeparator();
+
   m_actionClearPipeline = new QAction(m_MenuPipeline);
   m_actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
   m_actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionClearPipeline);
-  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_Delete);
+  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Delete);
   m_actionClearPipeline->setShortcut(actionClearKeySeq);
   connect(m_actionClearPipeline, SIGNAL(triggered()),
           this, SLOT( actionClearPipeline_triggered() ) );
+
+    // Add favorites actions to m_FavoritesActionList
+  m_FavoritesActionList.append(m_actionRemoveFavorite);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::setupContextualMenus()
+{
+	// Create action-favorites list and add to tree
+	m_FavoritesActionList << m_actionRemoveFavorite;
+	filterLibraryTree->setFavoritesActionList(m_FavoritesActionList);
+
+	// Create action-prebuilt list and add to tree
+
+	// Create action-library list and add to tree
 }
 
 // -----------------------------------------------------------------------------
@@ -251,7 +272,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     favPref.endGroup();
 
     // Add a tree widget item for this favorite
-    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites);
+	QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
