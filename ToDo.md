@@ -5,8 +5,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
 + Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
-+ Make reading of the "Categories" a non fatal error from the H5Ebsd file as TSL Combo Scans do not include this header.
++ Convert Hex to Square needs to create an output directory for the files as the default output files are not readily recognized by the Import Orientation data filter which is a break down of User interaction
 
 ## Critical to Fix before Bad Things Happen ##
 + All the shape ops classes need to be fully reentrant for parallel applications
@@ -48,7 +49,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add a 'Rename Favorite' menu
 + allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + allow user to right-click on a filter and display help in a separate window
-+ AutoScroll PipelineView when dragging a filter widget
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
 
@@ -120,9 +120,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ##  IO Filters ##
+
++ Add output directory to the HexToSquare Grid convertor filter
 + Add filter to generate IPF Images for each slice of data, or a user defined range of slices and plane by defining the normal to the plane (X, Y or Z)
 + Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
-+ Add filter to write out slices as images of any array
++ Add filter to write out slices as images
 + Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
 + Add filter to write out 2D slices as .ang, .ctf or .mic files
 + Add filter to dump ensemble stats/info
@@ -150,6 +152,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
+
++ Make reading of the "Categories" a non fatal error from the H5Ebsd file as TSL Combo Scans do not include this header.
++ AutoScroll PipelineView when dragging a filter widget
 + Add filter to calculate triangle areas
 + Add filter to calculate minimum dihedral angle of triangles
 + ComparisonSelectionWidget ONLY works on Cell Arrays - Now works on Cell, Field, Ensemble, Point, face and Edge

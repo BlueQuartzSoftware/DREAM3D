@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-	int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
+    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
 
   protected:
     FindGBCD();
@@ -127,9 +127,9 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-	double* m_SurfaceMeshFaceAreas;
+    double* m_SurfaceMeshFaceAreas;
+    int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
-	int32_t* m_SurfaceMeshFaceLabels;
     float* m_AvgQuats;
     int32_t* m_FieldPhases;
     unsigned int* m_CrystalStructures;

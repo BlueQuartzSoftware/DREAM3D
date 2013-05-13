@@ -146,7 +146,8 @@ int H5AngReader::readHeader(hid_t parId)
   hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    std::cout << "H5AngReader Error: Could not open 'Header' Group" << std::endl;
+    setErrorCode(-90008);
+    setErrorMessage("H5AngReader Error: Could not open 'Header' Group");
     return -1;
   }
 
@@ -166,10 +167,11 @@ int H5AngReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
 
-      hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
-    std::cout << "H5AngReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
+    setErrorCode(-90007);
+    setErrorMessage("H5AngReader Error: Could not open Header/Phases HDF Group.");
     H5Gclose(gid);
     return -1;
   }
@@ -178,7 +180,8 @@ int H5AngReader::readHeader(hid_t parId)
   err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0 || names.size() == 0)
   {
-    std::cout << "H5AngReader Error: There were no Phase groups present in the HDF5 file" << std::endl;
+    setErrorCode(-90009);
+    setErrorMessage("H5AngReader Error: There were no Phase groups present in the HDF5 file");
     H5Gclose(phasesGid);
     H5Gclose(gid);
     return -1;
@@ -204,14 +207,24 @@ int H5AngReader::readHeader(hid_t parId)
 
       err = readHKLFamilies(hklGid, m_CurrentPhase);
       err = H5Gclose(hklGid);
+      if (getErrorCode() < 0) { err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid); return -1; }
     }
-    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, std::vector<int>, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
+    /* The 'Categories' header may actually be missing from certain types of .ang files */
+    if (H5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
+    {
+      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, std::vector<int>, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
+    }
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
 
   std::string completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
+  if (err < 0)
+  {
+    setErrorCode(-90010);
+    setErrorMessage("The dataset 'Original Header' was missing from the HDF5 file.");
+  }
   setOriginalHeader(completeHeader);
   err = H5Gclose(phasesGid);
   err = H5Gclose(gid);
@@ -223,7 +236,7 @@ int H5AngReader::readHeader(hid_t parId)
 // -----------------------------------------------------------------------------
 int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 {
-  //  herr_t err = 0;
+  std::stringstream ss;
   hid_t dataset, memtype;
   herr_t status = 1;
   HKLFamily_t data;
@@ -245,7 +258,10 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
     status = H5Dread(dataset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, (void*)(&data));
     if (status < 0)
     {
-      std::cout << "H5AngReader Error: Could not read the HKLFamily data for family number " << i << std::endl;
+      setErrorCode(-90011);
+      ss.str("");
+      ss << "H5AngReader Error: Could not read the HKLFamily data for family number " << i;
+      setErrorMessage(ss.str());
       break;
     }
     status = H5Dclose(dataset); // Close the data set
@@ -263,8 +279,16 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
   type* _##name = allocateArray<type>(totalDataRows);\
   if (NULL != _##name) {\
-  ::memset(_##name, 0, numBytes);\
-  err = H5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
+    ::memset(_##name, 0, numBytes);\
+    err = H5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
+    if (err < 0) {\
+      setErrorCode(-90020);\
+      ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
+      "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+      setErrorMessage(ss.str());\
+      err = H5Gclose(gid);\
+      return -90020;\
+      }\
   }\
   set##name##Pointer(_##name);\
   }
@@ -309,11 +333,14 @@ int H5AngReader::readData(hid_t parId)
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0)
   {
-    std::cout << "Ang Files with Hex Grids Are NOT currently supported." << std::endl;
+    setErrorCode(-90400);
+    setErrorMessage("Ang Files with Hex Grids Are NOT currently supported. Please convert them to Square Grid files first");
     return -400;
   }
   else // Grid was not set
   {
+    setErrorCode(-90300);
+    setErrorMessage("The Grid Type was not set in the file.");
     return -300;
   }
 
@@ -321,12 +348,14 @@ int H5AngReader::readData(hid_t parId)
   hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    std::cout << "H5AngReader Error: Could not open 'Data' Group" << std::endl;
-    return -1;
+    setErrorMessage("H5AngReader Error: Could not open 'Data' Group");
+    setErrorCode(-90012);
+    return -90012;
   }
 
   setNumberOfElements(totalDataRows);
   size_t numBytes = totalDataRows * sizeof(float);
+  std::stringstream ss;
 
   ANG_READER_ALLOCATE_AND_READ(Phi1, float);
   ANG_READER_ALLOCATE_AND_READ(Phi, float);

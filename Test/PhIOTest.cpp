@@ -64,7 +64,7 @@ class GenerateGrainIds : public AbstractFilter
   //------ Created Cell Data
   DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    virtual ~GenerateGrainIds(){};
+    virtual ~GenerateGrainIds(){}
     virtual const std::string getGroupName()
     {
       return "UnitTest";

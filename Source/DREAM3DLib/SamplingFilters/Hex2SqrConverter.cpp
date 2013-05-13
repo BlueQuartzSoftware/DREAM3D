@@ -185,26 +185,32 @@ void Hex2SqrConverter::execute()
         int err = reader.readFile();
         if(err < 0)
         {
-            std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
+            addErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
+            setErrorCondition(reader.getErrorCode());
             return;
         }
         else if(reader.getGrid().find(Ebsd::Ang::SquareGrid) == 0)
         {
-            std::cout << "Ang File is already a square grid: " << ebsdFName << std::endl;
+            ss.str("");
+            ss << "Ang File is already a square grid: " << ebsdFName;
+            setErrorCondition(-55000);
+            addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
             return;
         }
         else
         {
             std::string origHeader = reader.getOriginalHeader();
+            if (origHeader.empty() == true)
+            {
+              ss.str();
+              ss << "Header could not be retrieved: " << ebsdFName;
+              setErrorCondition(-55001);
+              addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+            }
             char buf[kBufferSize];
             std::stringstream in(origHeader);
-            if (in == NULL)
-            {
-                std::cout << "Header could not be retrieved: " << ebsdFName << std::endl;
-                return;
-            }
 
-            std::string newEbsdFName = path + "/" + base + "_Sqr." + ext;
+            std::string newEbsdFName = path + "/Sqr_" + base + "." + ext;
             std::ofstream outFile;
             outFile.open(newEbsdFName.c_str());
 

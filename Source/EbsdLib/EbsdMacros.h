@@ -37,6 +37,13 @@
 #ifndef EBSDMACROS_H_
 #define EBSDMACROS_H_
 
+/* Define our buffer size for reading data */
+#define kBufferSize 1024
+
+/**
+ * @brief These macros are used to read header values from an HDF5 file, NOT From a .ang or .ctf file
+ */
+
 #define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key)\
 {\
   m_msgType t;\
@@ -44,7 +51,7 @@
   if (err < 0) {\
     std::ostringstream ss;\
     ss <<  cname << ": The header value for '" << key << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
-    setErrorCode(-90000);\
+    setErrorCode(-90001);\
     setErrorMessage(ss.str());\
     err = H5Gclose(gid);\
     return -1; }\
@@ -62,7 +69,7 @@
   if (err < 0) {\
     std::ostringstream ss;\
     ss <<  cname << ": The header value for '" << key << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
-    setErrorCode(-90000);\
+    setErrorCode(-90002);\
     setErrorMessage(ss.str());\
     err = H5Gclose(gid);\
     return -1; }\
@@ -81,7 +88,7 @@
   if (err < 0) {\
     std::ostringstream ss;\
     ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
-    setErrorCode(-90000);\
+    setErrorCode(-90003);\
     setErrorMessage(ss.str());\
     err = H5Gclose(pid); H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
@@ -97,7 +104,7 @@
   if (err < 0) {\
     std::ostringstream ss;\
     ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
-    setErrorCode(-90000);\
+    setErrorCode(-90004);\
     setErrorMessage(ss.str());\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
@@ -109,11 +116,12 @@
 #define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, m_msgType, fqKey, key, phase)\
 {\
   m_msgType t;\
+ /* if (H5Lite::datasetExists(pid, fqKey) == false) { return 0; }*/\
   err = H5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\
     ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
-    setErrorCode(-90000);\
+    setErrorCode(-90005);\
     setErrorMessage(ss.str());\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
@@ -129,7 +137,7 @@
   if (err < 0) {\
     std::ostringstream ss;\
     ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?" << std::endl;\
-    setErrorCode(-90000);\
+    setErrorCode(-90006);\
     setErrorMessage(ss.str());\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
@@ -138,14 +146,6 @@
   }\
 }
 
-
-
-//#define PI_OVER_2f       1.57079632679489661f
-//#define THREE_PI_OVER_2f 4.71238898038468985f
-//#define TWO_PIf          6.28318530717958647f
-//#define ONE_PIf          3.14159265358979323f
-
-#define kBufferSize 1024
 
 #define SHUFFLE_ARRAY(name, var, m_msgType)\
   { m_msgType* f = allocateArray<m_msgType>(totalDataRows);\
