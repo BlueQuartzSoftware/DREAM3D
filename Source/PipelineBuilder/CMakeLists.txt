@@ -58,7 +58,7 @@ set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
-	${PROJECT_SOURCE_DIR}/TreeWidgetBuilder.h
+	${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
 )
 
 set(PipelineBuilderLib_SRCS
@@ -70,7 +70,7 @@ set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
-	${PROJECT_SOURCE_DIR}/TreeWidgetBuilder.cpp
+	${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")

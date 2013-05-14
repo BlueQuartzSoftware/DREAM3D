@@ -162,7 +162,7 @@ void PipelineBuilderWidget::setupContextualMenus()
 {
 	// Create action-favorites list and add to tree
 	m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
-	filterLibraryTree->setFavoritesActionList(m_FavoritesActionList);
+	filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_FavoritesActionList);
 
 	// Create action-prebuilt list and add to tree
 
@@ -184,6 +184,7 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 {
   QSettings prefs(filePath, QSettings::IniFormat, this);
   readSettings(prefs);
+  
 }
 
 // -----------------------------------------------------------------------------
@@ -272,7 +273,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     favPref.endGroup();
 
     // Add a tree widget item for this favorite
-	QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
+	QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, PipelineTreeWidget::Favorite_Item_Type);
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
@@ -341,7 +342,7 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
       pbPref.endGroup();
       //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
       // Add tree widget for this Prebuilt Pipeline
-      QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(prebuiltDirItem);
+      QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(prebuiltDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
       prebuiltItem->setText(0, pbName);
       prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
       prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
