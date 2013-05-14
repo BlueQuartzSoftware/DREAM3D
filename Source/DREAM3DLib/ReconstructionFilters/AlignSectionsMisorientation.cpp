@@ -303,7 +303,10 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                       q2[3] = m_Quats[curposition * 5 + 3];
                       q2[4] = m_Quats[curposition * 5 + 4];
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
-                      if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+                      if(phase1 == phase2 && phase1 < m_OrientationOps.size())
+                      {
+                        w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+                      } 
                     }
                     if(w > m_MisorientationTolerance) disorientation++;
                   }

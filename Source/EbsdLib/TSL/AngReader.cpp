@@ -232,19 +232,25 @@ int AngReader::readHeaderOnly()
 // -----------------------------------------------------------------------------
 int AngReader::readFile()
 {
-  int err = 1;
+  setErrorCode(0);
+  setErrorMessage("");
   char buf[kBufferSize];
+  std::stringstream ss;
   std::ifstream in(getFileName().c_str());
   setHeaderIsComplete(false);
   if (!in.is_open())
   {
-    std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
+    ss.str("");
+    ss << "Ang file could not be opened: " << getFileName();
+    setErrorCode(-100);
+    setErrorMessage(ss.str());
     return -100;
   }
 
   std::string origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
+
 
   while (!in.eof() && false == getHeaderIsComplete())
   {
@@ -260,19 +266,29 @@ int AngReader::readFile()
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);
+  if (getErrorCode() < 0)
+  {
+    return getErrorCode();
+  }
+
 
   // We need to pass in the buffer because it has the first line of data
-  err = readData(in, buf, kBufferSize);
-  if (err < 0) { return err;}
+  readData(in, buf, kBufferSize);
+  if (getErrorCode() < 0)
+  {
+    return getErrorCode();
+  }
 
-  return err;
+  return getErrorCode();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
+void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 {
+  std::stringstream ss;
+
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
@@ -288,7 +304,7 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   {
     setErrorCode(-200);
     setErrorMessage("NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file");
-    return -200;
+    return;
   }
   else if (grid.find(Ebsd::Ang::SquareGrid) == 0)
   {
@@ -299,8 +315,9 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == false)
   {
+    setErrorCode(-400);
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported - Try converting them to Sqr Grid with the Hex2Sqr Converter filter.");
-    return -400;
+    return;
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == true)
   {
@@ -310,7 +327,8 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   else // Grid was not set
   {
    setErrorMessage("Ang file is missing the 'GRID' header entry.");
-    return -300;
+   setErrorCode(-300);
+   return;
   }
 
   initPointers(totalDataRows);
@@ -318,8 +336,11 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
       || NULL == m_Iq || NULL == m_SEMSignal || NULL == m_Ci
       || NULL == m_PhaseData || m_X == NULL || m_Y == NULL)
   {
-    std::cout << "Internal pointers were NULL at " __FILE__ << "(" << __LINE__ << ")" << std::endl;
-    return -1;
+    ss.str("");
+    ss << "Internal pointers were NULL at " __FILE__ << "(" << __LINE__ << ")" << std::endl;
+    setErrorMessage(ss.str());
+    setErrorCode(-500);
+    return;
   }
 
 
@@ -334,16 +355,6 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
       if (in.eof() == true) break;
   }
 
-
-  if (counter != totalDataRows && in.eof() == true)
-  {
-
-    std::cout << "Premature End Of File reached.\n"
-        << getFileName()
-        << "\nNumRows=" << yCells << " nEvexCells=" << nEvexCells
-        << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
-        << "\nTotal Data Points Read=" << counter << std::endl;
-  }
   if (getNumFields() < 10)
   {
     this->deallocateArrayData<float > (m_Fit);
@@ -353,7 +364,19 @@ int AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
     this->deallocateArrayData<float > (m_SEMSignal);
   }
 
-  return 0;
+  if (counter != totalDataRows && in.eof() == true)
+  {
+    ss.str("");
+
+    ss << "Premature End Of File reached.\n"
+        << getFileName()
+        << "\nNumRows=" << yCells << " nEvenCells=" << nEvexCells
+        << "\ncounter=" << counter << " totalDataRows=" << totalDataRows
+        << "\nTotal Data Points Read=" << counter << std::endl;
+    setErrorMessage(ss.str());
+    setErrorCode(-600);
+  }
+
 }
 
 // -----------------------------------------------------------------------------
