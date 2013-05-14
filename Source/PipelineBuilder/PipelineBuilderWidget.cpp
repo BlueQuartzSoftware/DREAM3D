@@ -161,7 +161,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 void PipelineBuilderWidget::setupContextualMenus()
 {
 	// Create action-favorites list and add to tree
-	m_FavoritesActionList << m_actionRemoveFavorite;
+	m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
 	filterLibraryTree->setFavoritesActionList(m_FavoritesActionList);
 
 	// Create action-prebuilt list and add to tree
