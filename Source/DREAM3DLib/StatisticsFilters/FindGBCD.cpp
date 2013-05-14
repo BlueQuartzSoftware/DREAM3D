@@ -405,11 +405,11 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  float* m_GBCD;
-  float* m_GBCDcount;
-  float* m_GBCDdeltas;
-  int* m_GBCDsizes;
-  float* m_GBCDlimits;
+  float* m_GBCD = NULL;
+  float* m_GBCDcount = NULL;
+  float* m_GBCDdeltas = NULL;
+  int* m_GBCDsizes = NULL;
+  float* m_GBCDlimits = NULL;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
