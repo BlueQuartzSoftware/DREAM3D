@@ -132,20 +132,20 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
 
-	/**
+  /**
      * @brief Reads favorite pipelines from the file system and loads them into the GUI
      */
     void readFavoritePipelines();
 
-	/**
+  /**
      * @brief Loads prebuilt pipelines into the GUI
      */
     void readPrebuiltPipelines();
 
-	/**
+  /**
      * @brief Getter for the filterLibraryTree private variable
      */
-	PipelineTreeWidget* getPipelineTreeWidget() {return filterLibraryTree;}
+  PipelineTreeWidget* getPipelineTreeWidget() {return filterLibraryTree;}
 
     void loadPipelineFileIntoPipelineView(QString path);
 
@@ -156,10 +156,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-	/**
+  /**
      * @brief Getter for the m_FavoritesActionList private variable
      */
-	QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
+  QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
 
     QUrl htmlHelpIndexFile();
 
@@ -225,9 +225,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QAction*                    m_actionRenameFavorite;
     QList<QAction*>				      m_FavoritesActionList;
 
-    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
+//    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;
-    //QMap<QString, QString>      m_prebuiltsMap;
     QTreeWidgetItem*            m_prebuilts;
     bool                        m_hasErrors;
     bool                        m_hasWarnings;

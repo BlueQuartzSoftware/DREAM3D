@@ -76,6 +76,7 @@ namespace Detail
   const QString Library("Filter Library");
   const QString PrebuiltPipelines("Prebuilt Pipelines");
   const QString FavoritePipelines("Favorite Pipelines");
+  const QString PipelineBuilderGroup("PipelineBuilder");
 }
 
 // -----------------------------------------------------------------------------
@@ -160,9 +161,9 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupContextualMenus()
 {
-	// Create action-favorites list and add to tree
-	m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
-	filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_FavoritesActionList);
+  // Create action-favorites list and add to tree
+  m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
+  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_FavoritesActionList);
 
   // Create action-prebuilt list and add to tree
 
@@ -184,7 +185,7 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 {
   QSettings prefs(filePath, QSettings::IniFormat, this);
   readSettings(prefs);
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -192,7 +193,7 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::readSettings(QSettings &prefs)
 {
-  prefs.beginGroup("PipelineBuilder");
+  prefs.beginGroup(Detail::PipelineBuilderGroup);
 
   //  bool ok = false;
   splitter_1->restoreState(prefs.value("splitter_1").toByteArray());
@@ -210,7 +211,7 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   // Clear Any Existing Pipeline
   m_PipelineViewWidget->clearWidgets();
 
-  prefs.beginGroup("PipelineBuilder");
+  prefs.beginGroup(Detail::PipelineBuilderGroup);
 
   bool ok = false;
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
@@ -270,13 +271,13 @@ void PipelineBuilderWidget::readFavoritePipelines()
     QSettings favPref(favFilePath, QSettings::IniFormat);
     QString favName;
     {
-      favPref.beginGroup("favorite_config");
+      favPref.beginGroup(Detail::PipelineBuilderGroup);
       favName = favPref.value("Name").toString();
       favPref.endGroup();
-      // This next code section is here to move from the old "favorite_config" to the newer "PipelineBuilder" ini group
+      // This next code section is here to move from the old "favorite_config" to the newer Detail::PipelineBuilderGroup ini group
       if (favName.isEmpty() == false)
       {
-        favPref.beginGroup("PipelineBuilder");
+        favPref.beginGroup(Detail::PipelineBuilderGroup);
         favPref.setValue("Name", favName);
         favPref.endGroup();
         favPref.remove("favorite_config"); // Now that we transfered the value, remove the old value
@@ -284,7 +285,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     }
 
     {
-      favPref.beginGroup("PipelineBuilder");
+      favPref.beginGroup(Detail::PipelineBuilderGroup);
       favName = favPref.value("Name").toString();
       favPref.endGroup();
     }
@@ -295,7 +296,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
     favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
-    m_favoritesMap[favoriteItem] = favFilePath;
+ //   m_favoritesMap[favoriteItem] = favFilePath;
   }
 }
 
@@ -354,7 +355,7 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
     {
       QString pbFilePath = pbinfo.absoluteFilePath();
       QSettings pbPref(pbFilePath, QSettings::IniFormat);
-      pbPref.beginGroup("PipelineBuilder");
+      pbPref.beginGroup(Detail::PipelineBuilderGroup);
       QString pbName = pbPref.value("Name").toString();
       pbPref.endGroup();
       //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
@@ -408,7 +409,7 @@ void PipelineBuilderWidget::savePipeline(QSettings &prefs) {
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
 {
-  prefs.beginGroup("PipelineBuilder");
+  prefs.beginGroup(Detail::PipelineBuilderGroup);
   qint32 count = m_PipelineViewWidget->filterCount();
   QFileInfo fi(prefs.fileName());
 
@@ -587,18 +588,41 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* i
   if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
   {
     QString newFavoriteTitle = item->text(0);
-    QString favoritePath = m_favoritesMap[item];
+#if 0
+      //Remove all spaces and illegal characters from favorite name
+  favoriteTitle = favoriteTitle.trimmed();
+  favoriteTitle = favoriteTitle.remove(" ");
+  favoriteTitle = favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
 
+what is newFavoriteTitle is empty?
+
+The item got changed but the "name" did not actually change
+
+The newFavoriteTitle already exists
+
+
+
+    QString favoritePath = m_favoritesMap[item];
+     {
     // Access old settings and path
     QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
 
     // Set the new name
-    favoritePrefs.beginGroup("favorite_config");
+    favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
     favoritePrefs.setValue("Name", newFavoriteTitle);
     favoritePrefs.endGroup();
+    }
 
-    // Write settings
-    writeSettings(favoritePrefs, m_PipelineViewWidget);
+    QFile f(favoritePath);
+    bool success = f.rename();
+    if (false == success)
+    {
+
+    }
+    filterLibraryTree->blockSignals(true);
+    item->setData(0, Qt::UserRole, QVariant(favFilePath));
+    filterLibraryTree->blockSignals(false);
+#endif
   }
 }
 
@@ -1211,7 +1235,7 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
       if(newParentPrefPathDir.mkpath(newParentPrefPath))
       {
         QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-        newPrefs.beginGroup("PipelineBuilder");
+        newPrefs.beginGroup(Detail::PipelineBuilderGroup);
         newPrefs.setValue("Name", favoriteTitle);
         newPrefs.endGroup();
         writeSettings(newPrefs, m_PipelineViewWidget);
@@ -1274,9 +1298,11 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
                                           tr("New Favorite Name:"), QLineEdit::Normal,
                       tr(item->text(0).toStdString().c_str()), &ok);
     if (ok && !text.isEmpty())
-      item->setText(0, text);
+    {
 
-    on_filterLibraryTree_itemChanged(item, 0);
+      item->setText(0, text);
+    }
+   // on_filterLibraryTree_itemChanged(item, 0);
   }
 }
 
@@ -1301,7 +1327,7 @@ QStringList PipelineBuilderWidget::generateFilterListFromPipelineFile(QString pa
   QStringList filterNames;
   QSettings prefs(path, QSettings::IniFormat);
 
-  prefs.beginGroup("PipelineBuilder");
+  prefs.beginGroup(Detail::PipelineBuilderGroup);
   bool ok = false;
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
   prefs.endGroup();
