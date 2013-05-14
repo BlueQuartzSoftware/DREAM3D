@@ -10,40 +10,43 @@
 #include <QtGui/QTreeWidgetItem>
 
 class PipelineBuilderWidget;
-
+class QAction;
+class QTreeWidgetItem;
 
 class TreeWidgetBuilder : public QTreeWidget
 {
     Q_OBJECT;
- 
-public:
-	enum ItemType
-	{
-		Default_Item_Type = 0,
-		Favorite_Item_Type = 1
-	};
+
+  public:
+    enum ItemType
+    {
+      Default_Item_Type = 0,
+      Favorite_Item_Type = 1
+    };
 
     TreeWidgetBuilder(QFrame* parent = 0) :
-		QTreeWidget(parent)
+      QTreeWidget(parent)
     {
-        setContextMenuPolicy(Qt::CustomContextMenu);
- 
-        connect(this,
-                SIGNAL(customContextMenuRequested(const QPoint&)),
-                SLOT(onCustomContextMenuRequested(const QPoint&)));
+      setContextMenuPolicy(Qt::CustomContextMenu);
+
+      connect(this,
+              SIGNAL(customContextMenuRequested(const QPoint&)),
+              SLOT(onCustomContextMenuRequested(const QPoint&)));
     }
 
-	void addActionList_Favorites(QList<QAction*> actionList);
+    void addActionListFavorites(QList<QAction*> actionList);
 
-	void setFavoritesActionList(QList<QAction*> list);
- 
-private slots:
+    void setFavoritesActionList(QList<QAction*> list);
+
+  private slots:
     void onCustomContextMenuRequested(const QPoint& pos);
     void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
 
-private:
-	QMenu								m_Menu;
-	QList<QAction*>						m_FavoritesActions;
+  private:
+    QMenu								m_Menu;
+    QList<QAction*>  		m_FavoritesActions;
+
+
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */
