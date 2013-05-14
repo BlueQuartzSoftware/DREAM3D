@@ -156,14 +156,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-<<<<<<< HEAD
 	/**
      * @brief Getter for the m_FavoritesActionList private variable
      */
 	QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
-=======
-    QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
->>>>>>> 823697c5049435e475718b992e76828dbd74b665
 
     QUrl htmlHelpIndexFile();
 
