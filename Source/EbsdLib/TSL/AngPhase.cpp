@@ -168,7 +168,7 @@ void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
   std::stringstream ss(data);
   unsigned int symm;
   ss >> symm;
-  m_Symmetry = static_cast<Ebsd::Ang::PhaseSymmetry>(symm);
+  m_Symmetry = symm;
 }
 
 // -----------------------------------------------------------------------------
@@ -326,18 +326,20 @@ void AngPhase::printSelf(std::ostream &stream)
 // -----------------------------------------------------------------------------
 unsigned int AngPhase::determineCrystalStructure()
 {
-  Ebsd::Ang::PhaseSymmetry symmetry = getSymmetry();
+  uint32_t symmetry = getSymmetry();
   unsigned int crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
 
   switch(symmetry)
   {
-    case Ebsd::Ang::CubicSymmetry:
+    case Ebsd::Ang::PhaseSymmetry::Cubic:
       crystal_structure = Ebsd::CrystalStructure::Cubic;
       break;
-    case Ebsd::Ang::HexagonalSymmetry:
+    case Ebsd::Ang::PhaseSymmetry::Hexagonal:
+    case Ebsd::Ang::PhaseSymmetry::DiHexagonal:
       crystal_structure = Ebsd::CrystalStructure::Hexagonal;
       break;
-    case Ebsd::Ang::Trigonal:
+    case Ebsd::Ang::PhaseSymmetry::Trigonal:
+    case Ebsd::Ang::PhaseSymmetry::DiTrigonal:
       crystal_structure = Ebsd::CrystalStructure::Trigonal;
       break;
     default:

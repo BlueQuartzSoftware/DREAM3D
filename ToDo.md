@@ -46,8 +46,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Joey K. Summer List ##
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
-+ Add a 'Rename Favorite' menu
-+ allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + allow user to right-click on a filter and display help in a separate window
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
@@ -153,6 +151,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Add a 'Rename Favorite' menu
++ Allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + Make reading of the "Categories" a non fatal error from the H5Ebsd file as TSL Combo Scans do not include this header.
 + AutoScroll PipelineView when dragging a filter widget
 + Add filter to calculate triangle areas
