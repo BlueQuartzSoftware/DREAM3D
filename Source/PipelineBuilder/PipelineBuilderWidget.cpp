@@ -273,11 +273,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     favPref.endGroup();
 
     // Add a tree widget item for this favorite
-<<<<<<< HEAD
 	QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, PipelineTreeWidget::Favorite_Item_Type);
-=======
-  QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
->>>>>>> 823697c5049435e475718b992e76828dbd74b665
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
