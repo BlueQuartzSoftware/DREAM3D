@@ -64,7 +64,7 @@ class HelpDialog;
  */
 class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBuilderWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent = 0);
@@ -80,7 +80,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
       */
     virtual void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
 
-     /**
+    /**
       * @brief Writes the preferences to the users pref file
       */
     virtual void writeSettings(QSettings &prefs);
@@ -106,10 +106,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     */
     virtual void setPipelineMenu(QMenu* menuBar);
 
-	/**
+    /**
     * @brief Creates and sets the right click actions for the TreeWidgetBuilder items
     */
-	void setupContextualMenus();
+    void setupContextualMenus();
 
     /**
     * @brief returns the menu bar
@@ -135,7 +135,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void readFavoritePipelines();
     void readPrebuiltPipelines();
 
-	TreeWidgetBuilder* getTreeWidgetBuilder() {return filterLibraryTree;}
+    TreeWidgetBuilder* getTreeWidgetBuilder() {return filterLibraryTree;}
 
     void loadPipelineFileIntoPipelineView(QString path);
 
@@ -146,9 +146,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-	QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
+    QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
 
     QUrl htmlHelpIndexFile();
+
   public slots:
     void openPipelineFile(const QString& filePath);
 
@@ -156,12 +157,12 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionClearPipeline_triggered();
     void actionAddFavorite_triggered();
     void actionRemoveFavorite_triggered();
-	void actionRenameFavorite_triggered();
+    void actionRenameFavorite_triggered();
 
     void on_m_GoBtn_clicked();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-	void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
@@ -175,7 +176,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void clearMessagesTable();
 
-   // void on_helpText_anchorClicked ( const QUrl & link );
+    // void on_helpText_anchorClicked ( const QUrl & link );
 
 #if 0
     void on_filterUp_clicked();
@@ -191,9 +192,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void pipelineComplete();
     virtual void pipelineProgress(int value);
 
-signals:
-  void fireWriteSettings();
-  void fireReadSettings();
+  signals:
+    void fireWriteSettings();
+    void fireReadSettings();
 
 
   private:
@@ -208,8 +209,8 @@ signals:
     QAction*                    m_actionSavePipeline;
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
-	QAction*                    m_actionRenameFavorite;
-	QList<QAction*>				m_FavoritesActionList;
+    QAction*                    m_actionRenameFavorite;
+    QList<QAction*>				      m_FavoritesActionList;
 
     QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;

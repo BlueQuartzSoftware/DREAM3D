@@ -160,13 +160,13 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupContextualMenus()
 {
-	// Create action-favorites list and add to tree
-	m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
-	filterLibraryTree->setFavoritesActionList(m_FavoritesActionList);
+  // Create action-favorites list and add to tree
+  m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
+  filterLibraryTree->setFavoritesActionList(m_FavoritesActionList);
 
-	// Create action-prebuilt list and add to tree
+  // Create action-prebuilt list and add to tree
 
-	// Create action-library list and add to tree
+  // Create action-library list and add to tree
 }
 
 // -----------------------------------------------------------------------------
@@ -272,12 +272,12 @@ void PipelineBuilderWidget::readFavoritePipelines()
     favPref.endGroup();
 
     // Add a tree widget item for this favorite
-	QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
+  QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
-	favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
-	m_favoritesMap[favoriteItem] = favFilePath;
+  favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
+  m_favoritesMap[favoriteItem] = favFilePath;
   }
 }
 
@@ -426,7 +426,7 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
-	filterLibraryTree->setEditTriggers(QAbstractItemView::SelectedClicked);
+  filterLibraryTree->setEditTriggers(QAbstractItemView::SelectedClicked);
   m_hasErrors = false;
   m_hasWarnings = false;
 
@@ -480,7 +480,7 @@ void PipelineBuilderWidget::setupGui()
   library->setExpanded(true);
 
   errorTableWidget->horizontalHeader()->setResizeMode(0, QHeaderView::ResizeToContents);
-  errorTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Interactive); 
+  errorTableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::Interactive);
   errorTableWidget->horizontalHeader()->resizeSection(1, 250);
   errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
 
@@ -563,22 +563,22 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
 {
-	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
-	{
-		QString newFavoriteTitle = item->text(0);
-		QString favoritePath = m_favoritesMap[item];
+  if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+  {
+    QString newFavoriteTitle = item->text(0);
+    QString favoritePath = m_favoritesMap[item];
 
-		// Access old settings and path
-		QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+    // Access old settings and path
+    QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
 
-		// Set the new name
-		favoritePrefs.beginGroup("favorite_config");
-		favoritePrefs.setValue("Name", newFavoriteTitle);
-		favoritePrefs.endGroup();
+    // Set the new name
+    favoritePrefs.beginGroup("favorite_config");
+    favoritePrefs.setValue("Name", newFavoriteTitle);
+    favoritePrefs.endGroup();
 
-		// Write settings
-		writeSettings(favoritePrefs, m_PipelineViewWidget);
-	}
+    // Write settings
+    writeSettings(favoritePrefs, m_PipelineViewWidget);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -918,17 +918,10 @@ void PipelineBuilderWidget::clearMessagesTable()
 }
 
 // -----------------------------------------------------------------------------
-//
+// This method MUST be implemented as it is a pure virtual in the super class
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::checkIOFiles()
 {
-#if 0
-  // Use this code as an example of using some macros to make the validation of
-  // input/output files easier
-  CHECK_QLABEL_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_, CrystallographicErrorFile)
-
-      CHECK_QCHECKBOX_OUTPUT_FILE_EXISTS(AIM::SyntheticBuilder, m_ , IPFVizFile)
-    #endif
 }
 
 // -----------------------------------------------------------------------------
@@ -1251,19 +1244,19 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionRenameFavorite_triggered()
 {
-	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
 
-	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
-	{
-		bool ok;
-		QString text = QInputDialog::getText(this, tr("Rename Favorite"),
+  if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+  {
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Rename Favorite"),
                                           tr("New Favorite Name:"), QLineEdit::Normal,
-										  tr(item->text(0).toStdString().c_str()), &ok);
-		if (ok && !text.isEmpty())
-			item->setText(0, text);
+                      tr(item->text(0).toStdString().c_str()), &ok);
+    if (ok && !text.isEmpty())
+      item->setText(0, text);
 
-		on_filterLibraryTree_itemChanged(item, 0);
-	}
+    on_filterLibraryTree_itemChanged(item, 0);
+  }
 }
 
 
