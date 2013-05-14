@@ -101,13 +101,47 @@ namespace Ebsd {
  {
    const std::string Manufacturer("TSL");
 
+/* These are courtesy of TSL */
+// LAUE Symmetry Identifiers
 
-   enum PhaseSymmetry {
-     Trigonal = 32,
-     CubicSymmetry = 43,
-     HexagonalSymmetry = 62,
-     UnknownSymmetry = 999
-   };
+#define OH  43        // cubic            Oh         a=b=c     a=b=g=90
+
+#define TH  23        // tetrahedral      Th         a=b=c     a=b=g=90
+#define D4H 42        // ditetragonal     D4h        a=b!=c    a=b=g=90
+#define C4H 4         // tetragonal       C4h        a=b!=c    a=b=g=90
+
+#define D2H 22        // orthrohombic     D2h        a!=b!=c   a=b=g=90
+
+#define C2H_c 2       // monoclinic       C2h        a!=b!=c   a=b=90!=g
+#define C2H_b 20      // monoclinic       C2h        a!=b!=c   a=g=90!=b
+#define C2H_a 21      // monoclinic       C2h        a!=b!=c   b=g=90!=a
+
+#define D6H 62        // dihexagonal      D6h        a=b!=c    a=b=90 g=120
+#define C6H 6         // hexagonal        C6h        a=b! =c   a=b=90 g=120
+
+#define D3D 32        // ditrigonal       D3d        a=b=c     a=b=g!=90
+#define C3I 3         // trigonal         C3i        a=b=c     a=b=g!=90
+
+#define CIs 1         // triclinic        Ci         a!=b!=c  a!=b!=g!=90
+
+   namespace PhaseSymmetry
+   {
+     const unsigned int Cubic = OH;
+     const unsigned int Tetrahedral = TH;
+     const unsigned int DiTetragonal = D4H;
+     const unsigned int Tetragonal = C4H;
+     const unsigned int Orthrohombic = D2H;
+     const unsigned int Monoclinic_c = C2H_c;
+     const unsigned int Monoclinic_b = C2H_b;
+     const unsigned int Monoclinic_a = C2H_a;
+     const unsigned int DiHexagonal = D6H;
+     const unsigned int Hexagonal = C6H;
+     const unsigned int DiTrigonal = D3D;
+     const unsigned int Trigonal = C3I;
+     const unsigned int Triclinic =CIs;
+     const unsigned int UnknownSymmetry = 999;
+   }
+
 
 
    const std::string FileExt("ang");
