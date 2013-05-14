@@ -144,6 +144,7 @@ namespace Ebsd
     const unsigned int Cubic = 1; //!< Cubic
     const unsigned int OrthoRhombic = 2; //!< OrthoRhombic
     const unsigned int AxisOrthoRhombic = 3; //!< AxisOrthoRhombic
+    const unsigned int Trigonal = 4; //!< Trigonal
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
   }
 

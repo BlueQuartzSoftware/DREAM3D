@@ -16,15 +16,15 @@ Launch DREAM3D and create the pipeline that is displayed in the following image.
 
 
 + Initialize Synthetic Volume
-  - 256 Voxels in X,Y & Z
-  - 0.15 micron resolution in X, Y & Z
+	- 256 Voxels in X,Y & Z
+	- 0.15 micron resolution in X, Y & Z
 + Pack Primary Phases
 + Find Number of Fields
 + Find Surface Grains
 + Match Crystallography
 + Generate IPF Colors (Optional)
-  - This filter is Optional
-  - It will generate actual colors corresponding to the standard IPF Color Triangle
+  	- This filter is Optional
+  	- It will generate actual colors corresponding to the standard IPF Color Triangle
 + Write DREAM3D Data File
 
 

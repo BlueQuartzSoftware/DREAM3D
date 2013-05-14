@@ -129,6 +129,18 @@ void TestHexGrid()
   DREAM3D_REQUIRED(err, ==, -400)
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestShortFile()
+{
+   AngReader reader;
+  reader.setFileName(EbsdImportTest::ShortFile);
+  int err = reader.readFile();
+  // It should read through this header just fine but die when reading the file because there is not enough data being read
+  std::cout << reader.getErrorMessage() << std::endl;
+  DREAM3D_REQUIRED(err, <, 0)
+}
 
 // -----------------------------------------------------------------------------
 //  Use test framework
@@ -141,7 +153,7 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( TestMissingHeaders() )
   DREAM3D_REGISTER_TEST( TestHexGrid() )
   DREAM3D_REGISTER_TEST( TestMissingGrid() )
-
+  DREAM3D_REGISTER_TEST( TestShortFile() )
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 
