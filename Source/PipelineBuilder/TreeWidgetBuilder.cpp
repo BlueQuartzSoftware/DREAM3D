@@ -35,6 +35,9 @@ void TreeWidgetBuilder::onCustomContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 void TreeWidgetBuilder::showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos) 
 {
+	// Clear menu's previous actions
+	m_Menu.clear();
+
 	int itemType = item->type();
 	switch (itemType) 
 	{
