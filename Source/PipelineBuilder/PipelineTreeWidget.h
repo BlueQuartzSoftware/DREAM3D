@@ -10,7 +10,8 @@
 #include <QtGui/QTreeWidgetItem>
 
 class PipelineBuilderWidget;
-
+class QAction;
+class QTreeWidgetItem;
 
 class PipelineTreeWidget : public QTreeWidget
 {
