@@ -1,8 +1,6 @@
-[prebuilt_config]
-Name=Single Phase Equiaxed
-
 [PipelineBuilder]
 Number_Filters=7
+Name=Single Phase Equiaxed
 
 [0]
 Filter_Name=InitializeSyntheticVolume
