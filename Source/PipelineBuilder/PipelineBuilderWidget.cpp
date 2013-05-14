@@ -267,17 +267,34 @@ void PipelineBuilderWidget::readFavoritePipelines()
   {
     QString favFilePath = fi.absoluteFilePath();
     QSettings favPref(favFilePath, QSettings::IniFormat);
-    favPref.beginGroup("favorite_config");
-    QString favName = favPref.value("Name").toString();
-    favPref.endGroup();
+    QString favName;
+    {
+      favPref.beginGroup("favorite_config");
+      favName = favPref.value("Name").toString();
+      favPref.endGroup();
+      // This next code section is here to move from the old "favorite_config" to the newer "PipelineBuilder" ini group
+      if (favName.isEmpty() == false)
+      {
+        favPref.beginGroup("PipelineBuilder");
+        favPref.setValue("Name", favName);
+        favPref.endGroup();
+        favPref.remove("favorite_config"); // Now that we transfered the value, remove the old value
+      }
+    }
+
+    {
+      favPref.beginGroup("PipelineBuilder");
+      favName = favPref.value("Name").toString();
+      favPref.endGroup();
+    }
 
     // Add a tree widget item for this favorite
-  QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
+    QTreeWidgetItem* favoriteItem = new QTreeWidgetItem(m_favorites, TreeWidgetBuilder::Favorite_Item_Type);
     favoriteItem->setText(0, favName);
     favoriteItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     favoriteItem->setData(0, Qt::UserRole, QVariant(favFilePath));
-  favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
-  m_favoritesMap[favoriteItem] = favFilePath;
+    favoriteItem->setFlags(favoriteItem->flags() | Qt::ItemIsEditable);
+    m_favoritesMap[favoriteItem] = favFilePath;
   }
 }
 
@@ -336,7 +353,7 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
     {
       QString pbFilePath = pbinfo.absoluteFilePath();
       QSettings pbPref(pbFilePath, QSettings::IniFormat);
-      pbPref.beginGroup("prebuilt_config");
+      pbPref.beginGroup("PipelineBuilder");
       QString pbName = pbPref.value("Name").toString();
       pbPref.endGroup();
       //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
@@ -392,7 +409,10 @@ void PipelineBuilderWidget::writeSettings(QSettings &prefs, PipelineViewWidget* 
 {
   prefs.beginGroup("PipelineBuilder");
   qint32 count = m_PipelineViewWidget->filterCount();
+  QFileInfo fi(prefs.fileName());
+
   prefs.setValue("Number_Filters", count);
+  prefs.setValue("Name", fi.baseName()); // Put a default value in here
   prefs.endGroup();
 
   for(qint32 i = 0; i < count; ++i)
@@ -1190,7 +1210,7 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
       if(newParentPrefPathDir.mkpath(newParentPrefPath))
       {
         QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-        newPrefs.beginGroup("favorite_config");
+        newPrefs.beginGroup("PipelineBuilder");
         newPrefs.setValue("Name", favoriteTitle);
         newPrefs.endGroup();
         writeSettings(newPrefs, m_PipelineViewWidget);
