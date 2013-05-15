@@ -145,6 +145,10 @@ namespace Ebsd
     const unsigned int OrthoRhombic = 2; //!< OrthoRhombic
     const unsigned int AxisOrthoRhombic = 3; //!< AxisOrthoRhombic
     const unsigned int Trigonal = 4; //!< Trigonal
+    const unsigned int Tetragonal = 5; //!< Tetragonal
+    const unsigned int Tetrahedral = 6; //!< Tetrahedral
+    const unsigned int Monoclinic = 7; //!< Monoclinic
+    const unsigned int Triclinic = 8; //!< TriClinic
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
   }
 

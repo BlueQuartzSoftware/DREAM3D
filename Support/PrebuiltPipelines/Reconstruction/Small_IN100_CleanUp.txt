@@ -1,9 +1,6 @@
-[prebuilt_config]
-Name=Small IN100 Cleanup
-
-
 [PipelineBuilder]
 Number_Filters=9
+Name=Small IN100 Cleanup
 
 [0]
 Filter_Name=ReadH5Ebsd
