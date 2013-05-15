@@ -596,38 +596,30 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* i
 	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
 	{
 		QString favoritePath = item->data(0, Qt::UserRole).toString();
-		QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
 		QString newFavoriteTitle = item->text(0);
 
-		/* Check to see if the title already exists.
-			If the title already exists, prompt the user to re-enter the title. */
-		checkFavoriteTitle(favoritePath, newFavoriteTitle, item);
+		// Check favorite title for illegal characters and duplicate favorite names
+		if ( checkFavoriteTitle(favoritePath, newFavoriteTitle, item) )
+		{
+			return;
+		}
 
-		#if 0
-			QFile f(favoritePath);
-			bool success = f.rename();
-			if (false == success)
-			{
+		// Create the new file path and write to it
+		QString newPath = writeNewFavoriteFilePath(item->text(0), favoritePath, item);
 
-			}
-
-			filterLibraryTree->blockSignals(true);
-			item->setData(0, Qt::UserRole, QVariant(favFilePath));
-			filterLibraryTree->blockSignals(false);
-		#endif
-
+		// Set Name in preferences group
+		QSettings newFavoritePrefs(newPath, QSettings::IniFormat);
+		newFavoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+		newFavoritePrefs.setValue("Name", item->text(0) );
+		newFavoritePrefs.endGroup();
 	}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+bool PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
-	bool hasErrors;
-	bool ok = false;
-	QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
-
 	// Put all children (favorites) in a list
 	QList<QTreeWidgetItem*> favoritesList;
 	int numOfChildren = item->parent()->childCount();
@@ -636,61 +628,108 @@ void PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString new
 		favoritesList.append( item->parent()->child(i) );
 	}
 
-	do
-	{ 
-		hasErrors = false;
-		for (int i=0; i<favoritesList.size(); i++)
-		{
-			QString displayText = "";
-			QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
-			currentItemPrefs.beginGroup(Detail::PipelineBuilderGroup);
-			// If the new title contains illegal characters or the new title matches one of the other favorite titles
-			if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_\\d ]")) || 
-				currentItemPrefs.value("Name").toString() == newFavoriteTitle)
-			{
-				hasErrors = true;
-
-				// Change the GUI back to the old name
-				favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
-				filterLibraryTree->blockSignals(true);
-				item->setText(0, favoritePrefs.value("Name").toString() );
-				filterLibraryTree->blockSignals(false);
-				favoritePrefs.endGroup();
-
-				// Add to displayText for each error/issue
-				if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_\\d ]")) )
-				{
-					displayText = "The title that was chosen has illegal characters.\n\n";
-				}
-				if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
-				{
-					QString test = currentItemPrefs.value("Name").toString();
-					displayText = displayText + "ERROR: A favorite that has this title already exists.\n\n";
-				}
-
-				displayText = displayText + "Names can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\nNew Favorite Name:";
-
-				// Display error message, and have the user enter a new title
-				newFavoriteTitle = QInputDialog::getText(this, tr("Rename Favorite"),
-					tr(displayText.toStdString().c_str()), QLineEdit::Normal,
-					tr(item->text(0).toStdString().c_str()), &ok);
-			}
-		}
-	} while (hasErrors);
-
-	// If user chose a valid, non-empty new name
-	if ( !newFavoriteTitle.isEmpty() )
+	// Check for illegal characters and duplicate favorite names
+	if ( hasIllegalFavoriteName(favoritePath, newFavoriteTitle, item) ||
+		hasDuplicateFavorites(favoritesList, favoritePath, newFavoriteTitle, item) )
 	{
-		if (ok)
-		{
-			filterLibraryTree->blockSignals(true);
-			item->setText(0, newFavoriteTitle);
-			filterLibraryTree->blockSignals(false);
-		}
-		favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
-		favoritePrefs.setValue("Name", item->text(0) );
-		favoritePrefs.endGroup();
+		return true;
 	}
+	else
+	{
+		return false;
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+{
+	QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+	QString displayText = "";
+
+	for (int i=0; i<favoritesList.size(); i++)
+	{
+		QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
+		currentItemPrefs.beginGroup(Detail::PipelineBuilderGroup);
+
+		// If the new title matches one of the other favorite titles
+		if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
+		{
+			displayText = "A favorite that has this title already exists in the Favorites list.\n\n";
+
+			// Change the GUI back to the old name
+			favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+			filterLibraryTree->blockSignals(true);
+			item->setText(0, favoritePrefs.value("Name").toString() );
+			filterLibraryTree->blockSignals(false);
+			favoritePrefs.endGroup();
+
+			// Display error message
+			QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
+				QMessageBox::Ok, QMessageBox::Ok);
+			
+			return true;
+		}
+	}
+
+	return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PipelineBuilderWidget::hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+{
+	QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+	QString displayText = "";
+
+	if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d]")) )
+	{
+		displayText = "The title that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
+		displayText = displayText + "\n\nNo spaces allowed";
+
+		// Change the GUI back to the old name
+		favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+		filterLibraryTree->blockSignals(true);
+		item->setText(0, favoritePrefs.value("Name").toString() );
+		filterLibraryTree->blockSignals(false);
+		favoritePrefs.endGroup();
+
+		// Display error message
+		QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
+			QMessageBox::Ok, QMessageBox::Ok);
+
+		return true;
+	}
+
+	return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PipelineBuilderWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item)
+{
+	QFileInfo original(favoritePath);
+	QString newPath = original.canonicalPath() + QDir::separator() + newFavoriteTitle;
+	if (!original.completeSuffix().isEmpty())
+		newPath += "." + original.completeSuffix();
+
+	newPath = QDir::toNativeSeparators(newPath);
+
+	QFile f(favoritePath);
+	bool success = f.rename(newPath);
+	if (false == success)
+	{
+		 std::cout << "Failed";
+	}
+
+	filterLibraryTree->blockSignals(true);
+	item->setData(0, Qt::UserRole, QVariant(newPath));
+	filterLibraryTree->blockSignals(false);
+
+	return newPath;
 }
 
 // -----------------------------------------------------------------------------
@@ -1362,14 +1401,7 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
 
   if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
   {
-    bool ok;
-    QString text = QInputDialog::getText(this, tr("Rename Favorite"),
-                                          tr("Names can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\nNew Favorite Name:"), QLineEdit::Normal,
-                      tr(item->text(0).toStdString().c_str()), &ok);
-    if (ok && !text.isEmpty())
-    {
-      item->setText(0, text);
-    }
+	filterLibraryTree->editItem(item, 0);
   }
 }
 
