@@ -64,10 +64,10 @@ class HelpDialog;
  */
 class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFrame, private Ui::PipelineBuilderWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    PipelineBuilderWidget(QWidget *parent = 0);
+    PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent = 0);
     virtual ~PipelineBuilderWidget();
 
     /**
@@ -80,7 +80,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
       */
     virtual void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
 
-     /**
+    /**
       * @brief Writes the preferences to the users pref file
       */
     virtual void writeSettings(QSettings &prefs);
@@ -107,6 +107,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void setPipelineMenu(QMenu* menuBar);
 
     /**
+    * @brief Creates and sets the right click actions for the TreeWidgetBuilder items
+    */
+    void setupContextualMenus();
+
+    /**
     * @brief returns the menu bar
     */
     virtual QMenu* getPipelineMenu();
@@ -127,8 +132,20 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     virtual void updateFilterGroupList(FilterWidgetManager::Collection &factories);
 
+  /**
+     * @brief Reads favorite pipelines from the file system and loads them into the GUI
+     */
     void readFavoritePipelines();
+
+  /**
+     * @brief Loads prebuilt pipelines into the GUI
+     */
     void readPrebuiltPipelines();
+
+  /**
+     * @brief Getter for the filterLibraryTree private variable
+     */
+  PipelineTreeWidget* getPipelineTreeWidget() {return filterLibraryTree;}
 
     void loadPipelineFileIntoPipelineView(QString path);
 
@@ -139,7 +156,13 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
+  /**
+     * @brief Getter for the m_FavoritesActionList private variable
+     */
+  QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
+
     QUrl htmlHelpIndexFile();
+
   public slots:
     void openPipelineFile(const QString& filePath);
 
@@ -147,12 +170,12 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionClearPipeline_triggered();
     void actionAddFavorite_triggered();
     void actionRemoveFavorite_triggered();
-	void actionRenameFavorite_triggered();
+    void actionRenameFavorite_triggered();
 
     void on_m_GoBtn_clicked();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-	void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem * current, QTreeWidgetItem * previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
@@ -166,7 +189,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void clearMessagesTable();
 
-   // void on_helpText_anchorClicked ( const QUrl & link );
+    // void on_helpText_anchorClicked ( const QUrl & link );
 
 #if 0
     void on_filterUp_clicked();
@@ -182,9 +205,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     virtual void pipelineComplete();
     virtual void pipelineProgress(int value);
 
-signals:
-  void fireWriteSettings();
-  void fireReadSettings();
+  signals:
+    void fireWriteSettings();
+    void fireReadSettings();
 
 
   private:
@@ -199,11 +222,11 @@ signals:
     QAction*                    m_actionSavePipeline;
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
-	QAction*                    m_actionRenameFavorite;
+    QAction*                    m_actionRenameFavorite;
+    QList<QAction*>				      m_FavoritesActionList;
 
-    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
+//    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;
-    //QMap<QString, QString>      m_prebuiltsMap;
     QTreeWidgetItem*            m_prebuilts;
     bool                        m_hasErrors;
     bool                        m_hasWarnings;

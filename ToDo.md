@@ -8,6 +8,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
 + Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
 + Convert Hex to Square needs to create an output directory for the files as the default output files are not readily recognized by the Import Orientation data filter which is a break down of User interaction
++ OrientationOps classes need a redesign so that we don't crash when we hit an unknown or new crystal structure.
 
 ## Critical to Fix before Bad Things Happen ##
 + All the shape ops classes need to be fully reentrant for parallel applications
@@ -46,8 +47,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Joey K. Summer List ##
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
-+ Add a 'Rename Favorite' menu
-+ allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + allow user to right-click on a filter and display help in a separate window
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
@@ -153,6 +152,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Add a 'Rename Favorite' menu
++ Allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + Make reading of the "Categories" a non fatal error from the H5Ebsd file as TSL Combo Scans do not include this header.
 + AutoScroll PipelineView when dragging a filter widget
 + Add filter to calculate triangle areas
