@@ -252,7 +252,7 @@ FindGBCD::FindGBCD() :
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_AvgQuatsArrayName(DREAM3D::FieldData::EulerAngles),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceAreas(NULL),
@@ -405,17 +405,31 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-/*  FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
-  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-    fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
-    fArray->SetNumberOfComponents(3);
-    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
-    iArray->SetNumberOfComponents(3);*/
-	float* m_GBCD;
-  float* m_GBCDcount;
-  float* m_GBCDdeltas;
-  int* m_GBCDsizes;
-  float* m_GBCDlimits;
+  FloatArrayType::Pointer gbcdArray = FloatArrayType::NullPointer();
+  FloatArrayType::Pointer gbcdCountArray = FloatArrayType::NullPointer();
+  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
+  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
+  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
+  gbcdArray = FloatArrayType::CreateArray(36*18*36*36*18*36, "GBCD");
+  gbcdArray->SetNumberOfComponents(1);
+  gbcdArray->initializeWithZeros();
+  gbcdCountArray = FloatArrayType::CreateArray(36*18*36*36*18*36, "GBCDCount");
+  gbcdCountArray->SetNumberOfComponents(1);
+  gbcdCountArray->initializeWithZeros();
+  gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
+  gbcdDeltasArray->SetNumberOfComponents(1);
+  gbcdDeltasArray->initializeWithZeros();
+  gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+  gbcdLimitsArray->SetNumberOfComponents(1);
+  gbcdLimitsArray->initializeWithZeros();
+  gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+  gbcdSizesArray->SetNumberOfComponents(1);
+  gbcdSizesArray->initializeWithZeros();
+  float* m_GBCD = gbcdArray->GetPointer(0);
+  float* m_GBCDcount = gbcdCountArray->GetPointer(0);
+  float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
+  int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
+  float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
