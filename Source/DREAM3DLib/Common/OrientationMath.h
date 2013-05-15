@@ -74,8 +74,8 @@ class DREAM3DLib_EXPORT OrientationMath
     virtual int getODFSize() = 0;
     virtual int getMDFSize() = 0;
     virtual int getNumSymOps() = 0;
-	
-	virtual float getMisoQuat(float q1[5], float q2[5], float &n1, float &n2, float &n3) = 0;
+
+    virtual float getMisoQuat(float q1[5], float q2[5], float &n1, float &n2, float &n3) = 0;
     virtual void getQuatSymOp(int i, float *q) = 0;
     virtual void getRodSymOp(int i, float *r) = 0;
     virtual void getODFFZRod(float &r1, float &r2, float &r3) = 0;
