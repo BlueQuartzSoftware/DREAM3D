@@ -159,7 +159,15 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
   /**
      * @brief Getter for the m_FavoritesActionList private variable
      */
-  QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
+  QList<QAction*> getFavoritesActionList() {return m_ActionList;}
+
+  /**
+     * @brief Checks the QString "newFavoriteTitle" for illegal characters 
+	 * and to see if the title chosen matches any favorite titles already in the list.
+	 * This function handles the setting of the favorite's GUI name and QSettings group name
+	 * stored in the preferences file.
+     */
+	void checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
     QUrl htmlHelpIndexFile();
 
@@ -223,9 +231,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
     QAction*                    m_actionRenameFavorite;
-    QList<QAction*>				      m_FavoritesActionList;
+    QList<QAction*>				m_ActionList;
 
-//    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;
     QTreeWidgetItem*            m_prebuilts;
     bool                        m_hasErrors;

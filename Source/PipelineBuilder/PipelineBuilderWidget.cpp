@@ -153,7 +153,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
           this, SLOT( actionClearPipeline_triggered() ) );
 
     // Add favorites actions to m_FavoritesActionList
-  m_FavoritesActionList.append(m_actionRemoveFavorite);
+  m_ActionList.append(m_actionRemoveFavorite);
 }
 
 // -----------------------------------------------------------------------------
@@ -161,13 +161,21 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupContextualMenus()
 {
-  // Create action-favorites list and add to tree
-  m_FavoritesActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
-  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_FavoritesActionList);
+  // Create favorites action list and add to tree
+  m_ActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
+  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_ActionList);
+  m_ActionList.clear();
 
-  // Create action-prebuilt list and add to tree
+  // Create prebuilt action list and add to tree
 
-  // Create action-library list and add to tree
+  // Create library action list and add to tree
+
+  // Create favorite-category action list and add to tree
+  m_ActionList << m_actionAddFavorite;
+  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Category_Item_Type, m_ActionList);
+  m_ActionList.clear();
+
+  // Create prebuilt-category action list and add to tree
 }
 
 // -----------------------------------------------------------------------------
@@ -461,13 +469,13 @@ void PipelineBuilderWidget::setupGui()
   library->setText(0, Detail::Library);
   library->setIcon(0, QIcon(":/cubes.png"));
 
-  m_prebuilts = new QTreeWidgetItem(filterLibraryTree);
+  m_prebuilts = new QTreeWidgetItem(filterLibraryTree, PipelineTreeWidget::Prebuilt_Category_Item_Type);
   m_prebuilts->setText(0, Detail::PrebuiltPipelines);
   m_prebuilts->setIcon(0, QIcon(":/flag_blue_scroll.png"));
   m_prebuilts->setExpanded(true);
 
   blockSignals(true);
-  m_favorites = new QTreeWidgetItem(filterLibraryTree);
+  m_favorites = new QTreeWidgetItem(filterLibraryTree, PipelineTreeWidget::Favorite_Category_Item_Type);
   m_favorites->setText(0, Detail::FavoritePipelines);
   m_favorites->setIcon(0, QIcon(":/flash.png"));
   blockSignals(false);
@@ -585,45 +593,104 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
 {
-  if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
-  {
-    QString newFavoriteTitle = item->text(0);
-#if 0
-      //Remove all spaces and illegal characters from favorite name
-  favoriteTitle = favoriteTitle.trimmed();
-  favoriteTitle = favoriteTitle.remove(" ");
-  favoriteTitle = favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
+	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+	{
+		QString favoritePath = item->data(0, Qt::UserRole).toString();
+		QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+		QString newFavoriteTitle = item->text(0);
 
-what is newFavoriteTitle is empty?
+		/* Check to see if the title already exists.
+			If the title already exists, prompt the user to re-enter the title. */
+		checkFavoriteTitle(favoritePath, newFavoriteTitle, item);
 
-The item got changed but the "name" did not actually change
+		#if 0
+			QFile f(favoritePath);
+			bool success = f.rename();
+			if (false == success)
+			{
 
-The newFavoriteTitle already exists
+			}
 
+			filterLibraryTree->blockSignals(true);
+			item->setData(0, Qt::UserRole, QVariant(favFilePath));
+			filterLibraryTree->blockSignals(false);
+		#endif
 
+	}
+}
 
-    QString favoritePath = m_favoritesMap[item];
-     {
-    // Access old settings and path
-    QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
+{
+	bool hasErrors;
+	bool ok = false;
+	QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
 
-    // Set the new name
-    favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
-    favoritePrefs.setValue("Name", newFavoriteTitle);
-    favoritePrefs.endGroup();
-    }
+	// Put all children (favorites) in a list
+	QList<QTreeWidgetItem*> favoritesList;
+	int numOfChildren = item->parent()->childCount();
+	for (int i=0; i<numOfChildren; i++)
+	{
+		favoritesList.append( item->parent()->child(i) );
+	}
 
-    QFile f(favoritePath);
-    bool success = f.rename();
-    if (false == success)
-    {
+	do
+	{ 
+		hasErrors = false;
+		for (int i=0; i<favoritesList.size(); i++)
+		{
+			QString displayText = "";
+			QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
+			currentItemPrefs.beginGroup(Detail::PipelineBuilderGroup);
+			// If the new title contains illegal characters or the new title matches one of the other favorite titles
+			if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_\\d ]")) || 
+				currentItemPrefs.value("Name").toString() == newFavoriteTitle)
+			{
+				hasErrors = true;
 
-    }
-    filterLibraryTree->blockSignals(true);
-    item->setData(0, Qt::UserRole, QVariant(favFilePath));
-    filterLibraryTree->blockSignals(false);
-#endif
-  }
+				// Change the GUI back to the old name
+				favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+				filterLibraryTree->blockSignals(true);
+				item->setText(0, favoritePrefs.value("Name").toString() );
+				filterLibraryTree->blockSignals(false);
+				favoritePrefs.endGroup();
+
+				// Add to displayText for each error/issue
+				if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_\\d ]")) )
+				{
+					displayText = "The title that was chosen has illegal characters.\n\n";
+				}
+				if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
+				{
+					QString test = currentItemPrefs.value("Name").toString();
+					displayText = displayText + "ERROR: A favorite that has this title already exists.\n\n";
+				}
+
+				displayText = displayText + "Names can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\nNew Favorite Name:";
+
+				// Display error message, and have the user enter a new title
+				newFavoriteTitle = QInputDialog::getText(this, tr("Rename Favorite"),
+					tr(displayText.toStdString().c_str()), QLineEdit::Normal,
+					tr(item->text(0).toStdString().c_str()), &ok);
+			}
+		}
+	} while (hasErrors);
+
+	// If user chose a valid, non-empty new name
+	if ( !newFavoriteTitle.isEmpty() )
+	{
+		if (ok)
+		{
+			filterLibraryTree->blockSignals(true);
+			item->setText(0, newFavoriteTitle);
+			filterLibraryTree->blockSignals(false);
+		}
+		favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+		favoritePrefs.setValue("Name", item->text(0) );
+		favoritePrefs.endGroup();
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -1248,7 +1315,9 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
     {
       delete items.at(i);
     }
+	filterLibraryTree->blockSignals(true);
     readFavoritePipelines();
+	filterLibraryTree->blockSignals(false);
   }
 
   // Tell everyone to save their preferences NOW instead of waiting until the app quits
@@ -1295,14 +1364,12 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
   {
     bool ok;
     QString text = QInputDialog::getText(this, tr("Rename Favorite"),
-                                          tr("New Favorite Name:"), QLineEdit::Normal,
+                                          tr("Names can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\nNew Favorite Name:"), QLineEdit::Normal,
                       tr(item->text(0).toStdString().c_str()), &ok);
     if (ok && !text.isEmpty())
     {
-
       item->setText(0, text);
     }
-   // on_filterLibraryTree_itemChanged(item, 0);
   }
 }
 
