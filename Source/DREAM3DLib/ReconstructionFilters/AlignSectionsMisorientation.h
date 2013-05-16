@@ -101,10 +101,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
     unsigned int* m_CrystalStructures;
 
-	OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

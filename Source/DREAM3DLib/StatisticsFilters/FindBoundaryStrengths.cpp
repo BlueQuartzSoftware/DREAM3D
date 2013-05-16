@@ -69,14 +69,7 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_SurfaceMeshF7s(NULL),
   m_SurfaceMeshmPrimes(NULL)
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
-
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
-
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+  m_OrientationOps = OrientationMath::getOrientationOpsVector();
 
   m_Loading.x = 1.0f;
   m_Loading.y = 1.0f;

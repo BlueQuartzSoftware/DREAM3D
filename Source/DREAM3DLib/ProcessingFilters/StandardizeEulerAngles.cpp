@@ -46,10 +46,6 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
 
 class StandardizeEulerAnglesImpl
 {
@@ -59,10 +55,7 @@ class StandardizeEulerAnglesImpl
     //    int64_t numCells;
     //    size_t numEnsembles;
 
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   public:
     StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs, int64_t numCells, size_t numEnsembles) :
@@ -72,12 +65,7 @@ class StandardizeEulerAnglesImpl
     //      numCells(numCells),
     //      numEnsembles(numEnsembles)
     {
-      m_HexOps = HexagonalOps::New();
-      m_OrientationOps.push_back(m_HexOps.get());
-      m_CubicOps = CubicOps::New();
-      m_OrientationOps.push_back(m_CubicOps.get());
-      m_OrthoOps = OrthoRhombicOps::New();
-      m_OrientationOps.push_back(m_OrthoOps.get());
+	  m_OrientationOps = OrientationMath::getOrientationOpsVector();
     }
     virtual ~StandardizeEulerAnglesImpl(){}
 
@@ -87,7 +75,7 @@ class StandardizeEulerAnglesImpl
       float q[5];
       int cellPhase = 0;
       unsigned int crystalStruct = 0;
-      OrientationMath* ormath = NULL;
+      OrientationMath::Pointer ormath;
       for (size_t i = start; i < end; i++)
       {
         ea1 = m_CellEulerAngles[3*i];

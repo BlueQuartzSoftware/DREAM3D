@@ -33,32 +33,26 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "HexagonalOps.h"
+#include "TrigonalOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-namespace HexagonalMath {
+namespace TrigonalMath {
   namespace Detail {
 
-    static const float HexDim1InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim3InitValue = powf((0.75f*((float(M_PI)/6.0f)-sinf((float(M_PI)/6.0f)))),(1.0f/3.0f));
-    static const float HexDim1StepValue = HexDim1InitValue/18.0f;
-    static const float HexDim2StepValue = HexDim2InitValue/18.0f;
-    static const float HexDim3StepValue = HexDim3InitValue/6.0f;
+    static const float TrigDim1InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
+    static const float TrigDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
+    static const float TrigDim3InitValue = powf((0.75f*((float(M_PI)/3.0f)-sinf((float(M_PI)/3.0f)))),(1.0f/3.0f));
+    static const float TrigDim1StepValue = TrigDim1InitValue/18.0f;
+    static const float TrigDim2StepValue = TrigDim2InitValue/18.0f;
+    static const float TrigDim3StepValue = TrigDim3InitValue/12.0f;
 
-    static const float HexRodSym[12][3] = {{0.0f, 0.0f, 0.0f},
-                      {0.0f, 0.0f, 0.57735f},
+    static const float TrigRodSym[6][3] = {{0.0f, 0.0f, 0.0f},
                       {0.0f, 0.0f, 1.73205f},
-                      {0.0f, 0.0f, 1000000000000.0f},
                       {0.0f, 0.0f, -1.73205f},
-                      {0.0f, 0.0f, -0.57735f},
-                      {1000000000000.0f, 0.0f, 0.0f},
                       {8660254000000.0f, 5000000000000.0f, 0.0f},
-                      {5000000000000.0f, 8660254000000.0f, 0.0f},
                       {0.0f, 1000000000000.0f, 0.0f},
-                      {-5000000000000.0f, 8660254000000.0f, 0.0f},
                       {-8660254000000.0f, 5000000000000.0f, 0.0f}};
   }
 }
@@ -73,30 +67,30 @@ const float threesixty_over_pi = 360.0f/m_pi;
 const float oneeighty_over_pi = 180.0f/m_pi;
 const float sqrt_two = powf(2.0f, 0.5f);
 
-using namespace HexagonalMath::Detail;
+using namespace TrigonalMath::Detail;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalOps::HexagonalOps()
+TrigonalOps::TrigonalOps()
 {
-    float junk1 =  HexDim1StepValue * 1.0f;
-    float junk2 = junk1/HexDim2StepValue;
-    float junk3 = junk2/HexDim3StepValue;
+    float junk1 =  TrigDim1StepValue * 1.0f;
+    float junk2 = junk1/TrigDim2StepValue;
+    float junk3 = junk2/TrigDim3StepValue;
     junk1 = junk3/junk2;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalOps::~HexagonalOps()
+TrigonalOps::~TrigonalOps()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
+float TrigonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {
@@ -146,43 +140,43 @@ float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
   return wmin;
 }
 
-float HexagonalOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
+float TrigonalOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
-  int numsym = 12;
+  int numsym = 6;
 
-  return _calcMisoQuat(HexQuatSym, numsym, q1, q2, n1, n2, n3);
+  return _calcMisoQuat(TrigQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void HexagonalOps::getQuatSymOp(int i,float *q)
+void TrigonalOps::getQuatSymOp(int i,float *q)
 {
-  q[0] = HexQuatSym[i][0];
-  q[1] = HexQuatSym[i][1];
-  q[2] = HexQuatSym[i][2];
-  q[3] = HexQuatSym[i][3];
-  q[4] = HexQuatSym[i][4];
+  q[0] = TrigQuatSym[i][0];
+  q[1] = TrigQuatSym[i][1];
+  q[2] = TrigQuatSym[i][2];
+  q[3] = TrigQuatSym[i][3];
+  q[4] = TrigQuatSym[i][4];
 }
 
-void HexagonalOps::getRodSymOp(int i,float *r)
+void TrigonalOps::getRodSymOp(int i,float *r)
 {
-  r[0] = HexRodSym[i][0];
-  r[1] = HexRodSym[i][1];
-  r[2] = HexRodSym[i][2];
+  r[0] = TrigRodSym[i][0];
+  r[1] = TrigRodSym[i][1];
+  r[2] = TrigRodSym[i][2];
 }
 
-void HexagonalOps::getODFFZRod(float &r1,float &r2, float &r3)
+void TrigonalOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
-  int numsym = 12;
+  int numsym = 6;
 
-  _calcRodNearestOrigin(HexRodSym, numsym, r1, r2, r3);
+  _calcRodNearestOrigin(TrigRodSym, numsym, r1, r2, r3);
 }
 
-void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void TrigonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
     float w, n1, n2, n3;
     float FZn1, FZn2, FZn3;
     float n1n2mag;
 
-    _calcRodNearestOrigin(HexRodSym, 12, r1, r2, r3);
+    _calcRodNearestOrigin(TrigRodSym, 12, r1, r2, r3);
     RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
     float denom = sqrt((n1*n1+n2*n2+n3*n3));
@@ -196,20 +190,20 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
     FZn1 = n1;
     FZn2 = n2;
     FZn3 = n3;
-    if(angle > 30.0f)
+    if(angle > 60.0f)
     {
         n1n2mag = sqrt(n1*n1+n2*n2);
-        if (int(angle/30)%2 == 0)
+        if (int(angle/60)%2 == 0)
         {
-            newangle = angle - (30.0f*int(angle/30.0f));
+            newangle = angle - (60.0f*int(angle/60.0f));
             newangle = newangle* pi_over_180;
             FZn1 = n1n2mag*cosf(newangle);
             FZn2 = n1n2mag*sinf(newangle);
         }
         else
         {
-            newangle = angle - (30.0f*int(angle/30.0f));
-            newangle = 30.0f - newangle;
+            newangle = angle - (60.0f*int(angle/60.0f));
+            newangle = 60.0f - newangle;
             newangle = newangle* pi_over_180;
             FZn1 = n1n2mag*cosf(newangle);
             FZn2 = n1n2mag*sinf(newangle);
@@ -218,21 +212,21 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
     axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
-void HexagonalOps::getNearestQuat( float *q1, float *q2)
+void TrigonalOps::getNearestQuat( float *q1, float *q2)
 {
-  int numsym = 12;
+  int numsym = 6;
 
-    _calcNearestQuat(HexQuatSym, numsym, q1, q2);
+    _calcNearestQuat(TrigQuatSym, numsym, q1, q2);
 }
 
-void HexagonalOps::getFZQuat(float *qr)
+void TrigonalOps::getFZQuat(float *qr)
 {
-  int numsym = 12;
+  int numsym = 6;
 
-    _calcQuatNearestOrigin(HexQuatSym, numsym, qr);
+    _calcQuatNearestOrigin(TrigQuatSym, numsym, qr);
 }
 
-int HexagonalOps::getMisoBin(float r1, float r2, float r3)
+int TrigonalOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -240,33 +234,33 @@ int HexagonalOps::getMisoBin(float r1, float r2, float r3)
 
   RodtoHomochoric(r1, r2, r3);
 
-  dim[0] = HexDim1InitValue;
-  dim[1] = HexDim2InitValue;
-  dim[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
+  dim[0] = TrigDim1InitValue;
+  dim[1] = TrigDim2InitValue;
+  dim[2] = TrigDim3InitValue;
+  step[0] = TrigDim1StepValue;
+  step[1] = TrigDim2StepValue;
+  step[2] = TrigDim3StepValue;
   bins[0] = 36.0f;
   bins[1] = 36.0f;
-  bins[2] = 12.0f;
+  bins[2] = 24.0f;
 
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
 
-void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void TrigonalOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
   float init[3];
   float step[3];
   float phi[3];
   float r1, r2, r3;
 
-  init[0] = HexDim1InitValue;
-  init[1] = HexDim2InitValue;
-  init[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
+  init[0] = TrigDim1InitValue;
+  init[1] = TrigDim2InitValue;
+  init[2] = TrigDim3InitValue;
+  step[0] = TrigDim1StepValue;
+  step[1] = TrigDim2StepValue;
+  step[2] = TrigDim3StepValue;
   phi[0] = static_cast<float>(choose % 36);
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
@@ -278,18 +272,18 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
 }
 
 
-void HexagonalOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
+void TrigonalOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
   float step[3];
   float phi[3];
 
-  init[0] = HexDim1InitValue;
-  init[1] = HexDim2InitValue;
-  init[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
+  init[0] = TrigDim1InitValue;
+  init[1] = TrigDim2InitValue;
+  init[2] = TrigDim3InitValue;
+  step[0] = TrigDim1StepValue;
+  step[1] = TrigDim2StepValue;
+  step[2] = TrigDim3StepValue;
   phi[0] = static_cast<float>(choose % 36);
   phi[1] = static_cast<float>((choose / 36) % 36);
   phi[2] = static_cast<float>(choose / (36 * 36));
@@ -299,7 +293,7 @@ void HexagonalOps::determineRodriguesVector( int choose, float &r1, float &r2, f
   getMDFFZRod(r1, r2, r3);
 }
 
-int HexagonalOps::getOdfBin(float r1, float r2, float r3)
+int TrigonalOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -307,21 +301,23 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
 
   RodtoHomochoric(r1, r2, r3);
 
-  dim[0] = HexDim1InitValue;
-  dim[1] = HexDim2InitValue;
-  dim[2] = HexDim3InitValue;
-  step[0] = HexDim1StepValue;
-  step[1] = HexDim2StepValue;
-  step[2] = HexDim3StepValue;
+  dim[0] = TrigDim1InitValue;
+  dim[1] = TrigDim2InitValue;
+  dim[2] = TrigDim3InitValue;
+  step[0] = TrigDim1StepValue;
+  step[1] = TrigDim2StepValue;
+  step[2] = TrigDim3StepValue;
   bins[0] = 36.0f;
   bins[1] = 36.0f;
-  bins[2] = 12.0f;
+  bins[2] = 24.0f;
 
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void TrigonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
+  BOOST_ASSERT(false);
+  #if 0
     float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
     float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
     float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
@@ -603,9 +599,10 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
     if(schmid22 > schmidfactor) schmidfactor = schmid22, slipsys = 22;
     if(schmid23 > schmidfactor) schmidfactor = schmid23, slipsys = 23;
     if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
+  #endif
 }
 
-void HexagonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
+void TrigonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -644,7 +641,7 @@ void HexagonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrim
   #endif
 }
 
-void HexagonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1)
+void TrigonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -716,7 +713,7 @@ void HexagonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, floa
 */
   #endif
 }
-void HexagonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt)
+void TrigonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -790,7 +787,7 @@ void HexagonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, f
   #endif
 }
 
-void HexagonalOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7)
+void TrigonalOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
   #if 0

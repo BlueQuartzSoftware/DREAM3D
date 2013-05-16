@@ -33,6 +33,8 @@
 #ifndef _OrientationMath_H_
 #define _OrientationMath_H_
 
+#include <vector>
+
 #include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -92,6 +94,7 @@ class DREAM3DLib_EXPORT OrientationMath
     virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt) = 0;
     virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7) = 0;
 
+	static std::vector<OrientationMath::Pointer> getOrientationOpsVector();
     static void axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);

@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     FindAvgCAxes();
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

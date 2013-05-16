@@ -101,10 +101,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     EBSDSegmentGrains();
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
     int32_t* m_GrainIds;
     float* m_Quats;

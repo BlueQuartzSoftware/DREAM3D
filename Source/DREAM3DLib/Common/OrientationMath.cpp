@@ -30,16 +30,12 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationMath.h"
-
-// Include this FIRST because there is a needed define for some compiles
-// to expose some of the constants needed below
-#include "DREAM3DLib/Common/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
 
 #include "MXA/Common/LogTime.h"
-
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-
 
   const static float m_pi = static_cast<float>(M_PI);
   const static float two_pi = 2.0f * m_pi;
@@ -295,6 +291,23 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], flo
   if(g1euler3bin < 0) g1euler3bin = 0;
   g1odfbin = static_cast<int>( (g1euler3bin*bins[0]*bins[1])+(g1euler2bin*bins[0])+(g1euler1bin) );
   return g1odfbin;
+}
+
+std::vector<OrientationMath::Pointer> OrientationMath::getOrientationOpsVector()
+{
+  std::vector<OrientationMath::Pointer> m_OrientationOps;
+  HexagonalOps::Pointer m_HexOps = HexagonalOps::New();
+  m_OrientationOps.push_back((m_HexOps));
+  CubicOps::Pointer m_CubicOps = CubicOps::New();
+  m_OrientationOps.push_back((m_CubicOps));
+  OrthoRhombicOps::Pointer m_OrthoOps = OrthoRhombicOps::New();
+  m_OrientationOps.push_back((m_OrthoOps));
+  OrthoRhombicOps::Pointer m_AxisOrthoOps = OrthoRhombicOps::New();
+  m_OrientationOps.push_back((m_AxisOrthoOps));
+  TrigonalOps::Pointer m_TrigOps = TrigonalOps::New();
+  m_OrientationOps.push_back((m_TrigOps));
+
+  return m_OrientationOps;
 }
 
 void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
