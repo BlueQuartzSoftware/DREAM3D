@@ -547,7 +547,6 @@ void PipelineBuilderWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
-#if 0
   // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories;
@@ -566,12 +565,16 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
   }
 
   QString itemText = parent->text(0);
+
+#if 0
   if (itemText.compare(Detail::Library) == 0)
   {
     factories = fm->getFactories();
     updateFilterGroupList(factories);
   }
-  else if (itemText.compare(Detail::PrebuiltPipelines) == 0)
+#endif
+
+  if (itemText.compare(Detail::PrebuiltPipelines) == 0)
   {
     //QString prebuiltName = item->text(0);
     QString prebuiltPath = item->data(0, Qt::UserRole).toString();
@@ -585,7 +588,6 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
     QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
     populateFilterList(filterList);
   }
-#endif
 }
 
 // -----------------------------------------------------------------------------
