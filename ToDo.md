@@ -50,6 +50,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + allow user to right-click on a filter and display help in a separate window
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
++ Right-click on filter in filter list and display the help for that filter
++ Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
 
 
 ## Statistics/Analysis/Other Algorithms ##
