@@ -65,6 +65,16 @@ void PipelineTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoint& gl
 		if ( !m_DefaultActions.isEmpty() )
 			addActionList(m_DefaultActions);
 		break;
+
+	case Favorite_Category_Item_Type:
+		if ( !m_FavoriteCategoryActions.isEmpty() )
+			addActionList(m_FavoriteCategoryActions);
+		break;
+
+	case Prebuilt_Category_Item_Type:
+		if ( !m_PrebuiltCategoryActions.isEmpty() )
+			addActionList(m_PrebuiltCategoryActions);
+		break;
 	}
  
 	m_Menu.exec(globalPos);
@@ -84,6 +94,14 @@ void PipelineTreeWidget::setActionList(ItemType type, QList<QAction*> list)
 
 	case Default_Item_Type:
 		m_DefaultActions = list;
+		break;
+
+	case Favorite_Category_Item_Type:
+		m_FavoriteCategoryActions = list;
+		break;
+
+	case Prebuilt_Category_Item_Type:
+		m_PrebuiltCategoryActions = list;
 		break;
 	}
 }

@@ -22,7 +22,9 @@ public:
 	{
 		Default_Item_Type = 0,
 		Favorite_Item_Type = 1,
-		Prebuilt_Item_Type = 2
+		Prebuilt_Item_Type = 2,
+		Favorite_Category_Item_Type = 3,
+		Prebuilt_Category_Item_Type = 4
 	};
 
     PipelineTreeWidget(QFrame* parent = 0);
@@ -47,6 +49,8 @@ private:
 	QList<QAction*>						m_FavoritesActions;
 	QList<QAction*>						m_PrebuiltActions;
 	QList<QAction*>						m_DefaultActions;
+	QList<QAction*>						m_FavoriteCategoryActions;
+	QList<QAction*>						m_PrebuiltCategoryActions;
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */
