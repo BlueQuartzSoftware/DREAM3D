@@ -119,10 +119,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
   int numParents;
 
     unsigned long long int Seed;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

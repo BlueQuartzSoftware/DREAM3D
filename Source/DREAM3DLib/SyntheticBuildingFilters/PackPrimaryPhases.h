@@ -185,7 +185,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
-    std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;

@@ -454,7 +454,7 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
     // Write the Rodrigues Coloring Cell Data
     float r1, r2, r3;
 
-    std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

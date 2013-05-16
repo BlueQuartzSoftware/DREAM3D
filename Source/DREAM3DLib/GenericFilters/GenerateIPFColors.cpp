@@ -184,6 +184,11 @@ void GenerateIPFColors::execute()
         EbsdColoring::GenerateHexIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
       }
+	  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal)
+      {
+        EbsdColoring::GenerateTrigIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
+      }
     }
   }
 

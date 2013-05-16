@@ -56,14 +56,7 @@ m_GoodVoxels(NULL),
 m_Quats(NULL),
 m_CrystalStructures(NULL)
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
-
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
-
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
+  m_OrientationOps = OrientationMath::getOrientationOpsVector();
 
   setupFilterParameters();
 }

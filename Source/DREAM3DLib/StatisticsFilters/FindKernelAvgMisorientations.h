@@ -46,9 +46,6 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 /**
@@ -97,10 +94,7 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
     FindKernelAvgMisorientations();
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;

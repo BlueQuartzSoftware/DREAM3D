@@ -15,11 +15,13 @@ set(DREAM3DLib_OrientationOps_HDRS
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.h
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TrigonalOps.h
 )
 set(DREAM3DLib_OrientationOps_SRCS
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.cpp
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TrigonalOps.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/OrientationOps" "${DREAM3DLib_OrientationOps_HDRS}" "${DREAM3DLib_OrientationOps_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

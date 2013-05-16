@@ -68,7 +68,7 @@ class CalculateGBCDImpl
     int* m_GBCDsizes;
     float* m_GBCDlimits;
     unsigned int* m_CrystalStructures;
-    std::vector<OrientationMath*> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
@@ -92,14 +92,7 @@ class CalculateGBCDImpl
       m_GBCDlimits(GBCDlimits),
       m_CrystalStructures(CrystalStructures)
     {
-      m_HexOps = HexagonalOps::New();
-      m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
-
-      m_CubicOps = CubicOps::New();
-      m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
-
-      m_OrthoOps = OrthoRhombicOps::New();
-      m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
+	  m_OrientationOps = OrientationMath::getOrientationOpsVector();
     }
     virtual ~CalculateGBCDImpl(){}
 
@@ -405,7 +398,6 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-<<<<<<< HEAD
   FloatArrayType::Pointer gbcdArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdCountArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
@@ -431,13 +423,7 @@ void FindGBCD::execute()
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
   int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
-=======
-  float* m_GBCD = NULL;
-  float* m_GBCDcount = NULL;
-  float* m_GBCDdeltas = NULL;
-  int* m_GBCDsizes = NULL;
-  float* m_GBCDlimits = NULL;
->>>>>>> c89d7fc69eb7a3413fc19dd13ac5cc3648c5e9d4
+
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)

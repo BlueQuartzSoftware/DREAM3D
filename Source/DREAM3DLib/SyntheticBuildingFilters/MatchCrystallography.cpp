@@ -87,12 +87,7 @@ m_CrystalStructures(NULL),
 m_PhaseTypes(NULL),
 m_NumFields(NULL)
 {
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(m_HexOps.get());
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(m_CubicOps.get());
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(m_OrthoOps.get());
+  m_OrientationOps = OrientationMath::getOrientationOpsVector();
   setupFilterParameters();
 }
 

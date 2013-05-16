@@ -87,10 +87,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     float* m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationMath*> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -101,14 +101,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
 
-  m_HexOps = HexagonalOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
-
-  m_CubicOps = CubicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_CubicOps.get()));
-
-  m_OrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_OrthoOps.get()));
+  m_OrientationOps = OrientationMath::getOrientationOpsVector();
 }
 
 // -----------------------------------------------------------------------------
