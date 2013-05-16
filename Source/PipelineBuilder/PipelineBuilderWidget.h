@@ -159,7 +159,34 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
   /**
      * @brief Getter for the m_FavoritesActionList private variable
      */
-  QList<QAction*> getFavoritesActionList() {return m_FavoritesActionList;}
+  QList<QAction*> getFavoritesActionList() {return m_ActionList;}
+
+  /**
+     * @brief Checks the QString "newFavoriteTitle" for illegal characters 
+	 * and to see if the title chosen matches any favorite titles already in the list.
+	 * This function returns true if there are illegal characters or duplicates, and
+	 * returns false otherwise.
+     */
+	bool checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
+
+	/**
+     * @brief Helper function of the checkFavoriteTitle method that checks the new favorite
+	 * name specified by the user against the other existing favorite names and detects if
+	 * the new name already exists in the existing favorites list.
+     */
+	bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
+
+	/**
+     * @brief Helper function of the checkFavoriteTitle method that checks the new favorite
+	 * name specified by the user for illegal characters.
+     */
+	bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
+
+	/**
+     * @brief Creates the new favorite file path according to the new favorite name and writes
+	 * to that path.  This function returns the new path.
+     */
+	QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
     QUrl htmlHelpIndexFile();
 
@@ -223,9 +250,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
     QAction*                    m_actionRenameFavorite;
-    QList<QAction*>				      m_FavoritesActionList;
+    QList<QAction*>				m_ActionList;
 
-//    QMap<QTreeWidgetItem*,QString>       m_favoritesMap;
     QTreeWidgetItem*            m_favorites;
     QTreeWidgetItem*            m_prebuilts;
     bool                        m_hasErrors;
