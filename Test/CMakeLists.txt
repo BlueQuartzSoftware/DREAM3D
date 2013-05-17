@@ -239,6 +239,10 @@ target_link_libraries(RNGTest DREAM3DLib)
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
 target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
 
+# --------
+add_executable(OrientationMathTest ${DREAM3DTest_SOURCE_DIR}/OrientationMathTest.cpp)
+target_link_libraries(OrientationMathTest EbsdLib MXA DREAM3DLib)
+add_test(OrientationMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OrientationMathTest)
 
 # --------
 add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
