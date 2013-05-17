@@ -51,9 +51,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
@@ -454,18 +451,8 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
     // Write the Rodrigues Coloring Cell Data
     float r1, r2, r3;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
-    m_HexOps = HexagonalOps::New();
-    m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_HexOps.get()));
+	std::vector<OrientationMath::Pointer> m_OrientationOps = OrientationMath::getOrientationOpsVector();
 
-    m_CubicOps = CubicOps::New();
-    m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_CubicOps.get()));
-
-    m_OrthoOps = OrthoRhombicOps::New();
-    m_OrientationOps.push_back(dynamic_cast<OrientationMath*>(m_OrthoOps.get()));
     for (size_t i = 0; i < total; i++)
     {
       phase = phases[i];

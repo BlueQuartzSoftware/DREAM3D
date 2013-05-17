@@ -669,6 +669,15 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end() )
+  {
+    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
+    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
+    iArray->SetNumberOfComponents(1);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(DREAM3D::CellData::Phases, iArray);
+  }
+
   if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end() )
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
@@ -677,12 +686,15 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
     fArray->SetNumberOfComponents(3);
     float* cellEulerAngles = fArray->GetPointer(0);
+    int* cellPhases = iArray->GetPointer(0);
 
+	float adjustment = (30.0*m_pi/180.0);
     for (int64_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
+	  if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Trigonal) cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + adjustment;
     }
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }
@@ -703,15 +715,6 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
-  }
-
-  if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end() )
-  {
-    phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
-    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
-    iArray->SetNumberOfComponents(1);
-    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    m->addCellData(DREAM3D::CellData::Phases, iArray);
   }
 
   if (m_SelectedVoxelCellArrays.find(Ebsd::Ang::SEMSignal) != m_SelectedVoxelCellArrays.end() )
