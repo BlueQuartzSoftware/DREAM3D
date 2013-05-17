@@ -90,7 +90,7 @@ TrigonalOps::~TrigonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float TrigonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
+float TrigonalOps::_calcMisoQuat(const float quatsym[6][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {
@@ -102,11 +102,12 @@ float TrigonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
   float qr[5];
   float qc[5];
 // float temp;
-
-  qr[1] = -q1[1] * q2[4] + q1[4] * q2[1] - q1[2] * q2[3] + q1[3] * q2[2];
-  qr[2] = -q1[2] * q2[4] + q1[4] * q2[2] - q1[3] * q2[1] + q1[1] * q2[3];
-  qr[3] = -q1[3] * q2[4] + q1[4] * q2[3] - q1[1] * q2[2] + q1[2] * q2[1];
-  qr[4] = -q1[4] * q2[4] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
+  
+  for(int m=1; m < 4; m++)
+  {
+    q1[m] *= -1.0; //inverse q1
+  }
+  MULT_QUAT(q1, q2, qr)
   for (int i = 0; i < numsym; i++)
   {
     //  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
