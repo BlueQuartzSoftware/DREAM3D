@@ -187,15 +187,20 @@ void OpenCloseCoordinationNumber::execute()
   int kstride, jstride;
   int grainname, grain;
   int coordination = 0;
+  int current = 0;
+  int most = 0;
+
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+
+  std::vector<int > n(numgrains + 1,0);
 
   std::vector<int > coordinationNumber(totalPoints,0);
-  std::vector<int > n(numgrains + 1,0);
   bool keepgoing = true;
   int counter = 1;
   while (counter > 0 && keepgoing == true)
   {
-  counter = 0;
-  if(m_Loop == false) keepgoing = false;
+    counter = 0;
+    if(m_Loop == false) keepgoing = false;
 
     for (int k = 0; k < dims[2]; k++)
     {
@@ -207,9 +212,11 @@ void OpenCloseCoordinationNumber::execute()
         {
           point = kstride+jstride+i;
           grainname = m_GrainIds[point];
-      coordination = 0;
-      for (int l = 0; l < 6; l++)
-      {
+		  coordination = 0;
+		  current = 0;
+		  most = 0;
+		  for (int l = 0; l < 6; l++)
+          {
             good = 1;
             neighpoint = static_cast<int>( point + neighpoints[l] );
             if (l == 0 && k == 0) good = 0;
@@ -221,17 +228,49 @@ void OpenCloseCoordinationNumber::execute()
             if (good == 1)
             {
               grain = m_GrainIds[neighpoint];
-          if((grainname > 0 && grain == 0) || (grainname == 0 && grain > 0))
-          {
-          coordination = coordination + 1;
-          m_Neighbors[point] = neighpoint;
+              if((grainname > 0 && grain == 0) || (grainname == 0 && grain > 0))
+              {
+                coordination = coordination + 1;
+				n[grain]++;
+				current = n[grain];
+				if (current > most)
+				{
+					most = current;
+					m_Neighbors[point] = neighpoint;
+				}
+              }
+            }
           }
-        }
+          coordinationNumber[point] = coordination;
+	      int neighbor = m_Neighbors[point];
+	      if (coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
+	      {
+	          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+	          {
+	            std::string name = *iter;
+	            IDataArray::Pointer p = m->getCellData(*iter);
+	            p->CopyTuple(neighbor, point);
+	          }
+		  }
+		  for (int l = 0; l < 6; l++)
+		  {
+            good = 1;
+            neighpoint = static_cast<int>( point + neighpoints[l] );
+            if (l == 0 && k == 0) good = 0;
+            if (l == 5 && k == (dims[2] - 1)) good = 0;
+            if (l == 1 && j == 0) good = 0;
+            if (l == 4 && j == (dims[1] - 1)) good = 0;
+            if (l == 2 && i == 0) good = 0;
+            if (l == 3 && i == (dims[0] - 1)) good = 0;
+            if (good == 1)
+		    {
+			  grain = m_GrainIds[neighpoint];
+			  if(grain > 0) n[grain] = 0;
+		    }
+		  }
+		}
       }
-      coordinationNumber[point] = coordination;
     }
-    }
-  }
     for (int k = 0; k < dims[2]; k++)
     {
       kstride = static_cast<int>( dims[0]*dims[1]*k );
@@ -241,25 +280,11 @@ void OpenCloseCoordinationNumber::execute()
         for (int i = 0; i < dims[0]; i++)
         {
           point = kstride+jstride+i;
-      if(coordinationNumber[point] >= m_CoordinationNumber)
-      {
-        counter++;
-      }
-    }
-    }
-  }
-    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-    for (int j = 0; j < totalPoints; j++)
-    {
-      int neighbor = m_Neighbors[j];
-      if (coordinationNumber[j] >= m_CoordinationNumber && coordinationNumber[j] > 0)
-      {
-            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-            {
-              std::string name = *iter;
-              IDataArray::Pointer p = m->getCellData(*iter);
-              p->CopyTuple(neighbor, j);
-            }
+          if(coordinationNumber[point] >= m_CoordinationNumber)
+          {
+            counter++;
+          }
+        }
       }
     }
   }
