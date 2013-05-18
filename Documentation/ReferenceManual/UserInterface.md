@@ -23,7 +23,29 @@ DREAM3D provides several _Prebuilt Pipelines_ that can aid the new user in getti
 ### Favorite Pipelines ##
 After the user builds a pipeline that they may want to save for later the user can use the _Pipeline_ menu and select the "Add Favorite" menu to save that specific pipeline configuration. If at a future point in time the user wants to remove the favorite from the _Favorites_ list they user can select from the "Add Favorite" menu and choose *Remove Favorite* to remove it from the list.
 
+--------------
+
 ![Pipeline Menu](Images/PipelineMenu.png)
+
+--------------
+
+ Additional shortcuts are available by _right clicking_ on the *Favorite Pipelines* tree item which will display a contextual menu to create a new favorite pipeline entry. 
+
+--------------
+
+![Favorite Pipeline Contextual Menu](Images/FavoritesContextualMenu.png)
+
+--------------
+
+The user can also rename a _Favorite Pipeline_ entry by right clicking on the entry item and selecting the desired action. The only valid characters that can be used are AlphaNumeric, the underscore (_) and the dash (-).
+
+--------------
+
+![Renaming/Removing a Favorite](Images/FavoritesContextualMenu-2.png)
+
+--------------
+
+The user should also note that simply selecting a _Favorite Pipeline_ from the list will display the filters in order of operation in the *Filter List* area.
 
 ## Filter List
   **Area 2**: This section lists the filters that are associated with a specific group that is selected in the _Filter Library_ area. If the _Filter Library_ is itself selected then all filters will be shown in this list. The user typically will select a filter from this list and drag it over to the pipeline area.
