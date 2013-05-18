@@ -5,12 +5,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
-+ Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
-+ Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
-+ Convert Hex to Square needs to create an output directory for the files as the default output files are not readily recognized by the Import Orientation data filter which is a break down of User interaction
 + OrientationOps classes need a redesign so that we don't crash when we hit an unknown or new crystal structure.
 
-## Critical to Fix before Bad Things Happen ##
+### Critical to Fix Before Bad Things Happen ###
+
 + All the shape ops classes need to be fully reentrant for parallel applications
 
 ### Groeber Documentation
@@ -45,7 +43,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
 
 
-## Joey K. Summer List ##
+### Joey K. Summer List ###
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + allow user to right-click on a filter and display help in a separate window
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
@@ -154,6 +152,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.
++ Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
++ Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
 + Add a 'Rename Favorite' menu
 + Allow user to right-click on a favorite and "delete, rename, ..." the favorite
 + Make reading of the "Categories" a non fatal error from the H5Ebsd file as TSL Combo Scans do not include this header.
