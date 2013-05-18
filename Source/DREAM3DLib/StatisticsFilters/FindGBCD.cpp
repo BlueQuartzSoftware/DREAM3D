@@ -58,7 +58,7 @@ class CalculateGBCDImpl
     DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
     DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
     int32_t* m_Labels;
-    double* m_Normals;
+    //double* m_Normals;
     double* m_Areas;
     int32_t* m_Phases;
     float* m_Quats;
@@ -81,7 +81,7 @@ class CalculateGBCDImpl
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Labels(Labels),
-      m_Normals(Normals),
+    //  m_Normals(Normals),
       m_Areas(Areas),
       m_Phases(Phases),
       m_Quats(Quats),
@@ -92,7 +92,7 @@ class CalculateGBCDImpl
       m_GBCDlimits(GBCDlimits),
       m_CrystalStructures(CrystalStructures)
     {
-	  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+    m_OrientationOps = OrientationMath::getOrientationOpsVector();
     }
     virtual ~CalculateGBCDImpl(){}
 
