@@ -77,6 +77,7 @@ namespace Detail
   const QString PrebuiltPipelines("Prebuilt Pipelines");
   const QString FavoritePipelines("Favorite Pipelines");
   const QString PipelineBuilderGroup("PipelineBuilder");
+  const QString FavoriteConfig("favorite_config");
 }
 
 // -----------------------------------------------------------------------------
@@ -279,7 +280,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
     QSettings favPref(favFilePath, QSettings::IniFormat);
     QString favName;
     {
-      favPref.beginGroup(Detail::PipelineBuilderGroup);
+      favPref.beginGroup(Detail::FavoriteConfig);
       favName = favPref.value("Name").toString();
       favPref.endGroup();
       // This next code section is here to move from the old "favorite_config" to the newer Detail::PipelineBuilderGroup ini group
@@ -595,26 +596,26 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
 {
-	if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
-	{
-		QString favoritePath = item->data(0, Qt::UserRole).toString();
-		QString newFavoriteTitle = item->text(0);
+  if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
+  {
+    QString favoritePath = item->data(0, Qt::UserRole).toString();
+    QString newFavoriteTitle = item->text(0);
 
-		// Check favorite title for illegal characters and duplicate favorite names
-		if ( checkFavoriteTitle(favoritePath, newFavoriteTitle, item) )
-		{
-			return;
-		}
+    // Check favorite title for illegal characters and duplicate favorite names
+    if ( checkFavoriteTitle(favoritePath, newFavoriteTitle, item) )
+    {
+      return;
+    }
 
-		// Create the new file path and write to it
-		QString newPath = writeNewFavoriteFilePath(item->text(0), favoritePath, item);
+    // Create the new file path and write to it
+    QString newPath = writeNewFavoriteFilePath(item->text(0), favoritePath, item);
 
-		// Set Name in preferences group
-		QSettings newFavoritePrefs(newPath, QSettings::IniFormat);
-		newFavoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
-		newFavoritePrefs.setValue("Name", item->text(0) );
-		newFavoritePrefs.endGroup();
-	}
+    // Set Name in preferences group
+    QSettings newFavoritePrefs(newPath, QSettings::IniFormat);
+    newFavoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+    newFavoritePrefs.setValue("Name", item->text(0) );
+    newFavoritePrefs.endGroup();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -622,24 +623,24 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* i
 // -----------------------------------------------------------------------------
 bool PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
-	// Put all children (favorites) in a list
-	QList<QTreeWidgetItem*> favoritesList;
-	int numOfChildren = item->parent()->childCount();
-	for (int i=0; i<numOfChildren; i++)
-	{
-		favoritesList.append( item->parent()->child(i) );
-	}
+  // Put all children (favorites) in a list
+  QList<QTreeWidgetItem*> favoritesList;
+  int numOfChildren = item->parent()->childCount();
+  for (int i=0; i<numOfChildren; i++)
+  {
+    favoritesList.append( item->parent()->child(i) );
+  }
 
-	// Check for illegal characters and duplicate favorite names
-	if ( hasIllegalFavoriteName(favoritePath, newFavoriteTitle, item) ||
-		hasDuplicateFavorites(favoritesList, favoritePath, newFavoriteTitle, item) )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+  // Check for illegal characters and duplicate favorite names
+  if ( hasIllegalFavoriteName(favoritePath, newFavoriteTitle, item) ||
+    hasDuplicateFavorites(favoritesList, favoritePath, newFavoriteTitle, item) )
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -647,35 +648,35 @@ bool PipelineBuilderWidget::checkFavoriteTitle(QString favoritePath, QString new
 // -----------------------------------------------------------------------------
 bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
-	QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
-	QString displayText = "";
+  QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+  QString displayText = "";
 
-	for (int i=0; i<favoritesList.size(); i++)
-	{
-		QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
-		currentItemPrefs.beginGroup(Detail::PipelineBuilderGroup);
+  for (int i=0; i<favoritesList.size(); i++)
+  {
+    QSettings currentItemPrefs(favoritesList[i]->data(0, Qt::UserRole).toString(), QSettings::IniFormat);
+    currentItemPrefs.beginGroup(Detail::PipelineBuilderGroup);
 
-		// If the new title matches one of the other favorite titles
-		if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
-		{
-			displayText = "A favorite that has this title already exists in the Favorites list.\n\n";
+    // If the new title matches one of the other favorite titles
+    if (currentItemPrefs.value("Name").toString() == newFavoriteTitle)
+    {
+      displayText = "A favorite that has this title already exists in the Favorites list.\n\n";
 
-			// Change the GUI back to the old name
-			favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
-			filterLibraryTree->blockSignals(true);
-			item->setText(0, favoritePrefs.value("Name").toString() );
-			filterLibraryTree->blockSignals(false);
-			favoritePrefs.endGroup();
+      // Change the GUI back to the old name
+      favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+      filterLibraryTree->blockSignals(true);
+      item->setText(0, favoritePrefs.value("Name").toString() );
+      filterLibraryTree->blockSignals(false);
+      favoritePrefs.endGroup();
 
-			// Display error message
-			QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
-				QMessageBox::Ok, QMessageBox::Ok);
-			
-			return true;
-		}
-	}
+      // Display error message
+      QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
+        QMessageBox::Ok, QMessageBox::Ok);
 
-	return false;
+      return true;
+    }
+  }
+
+  return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -683,29 +684,29 @@ bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favori
 // -----------------------------------------------------------------------------
 bool PipelineBuilderWidget::hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item)
 {
-	QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
-	QString displayText = "";
+  QSettings favoritePrefs(favoritePath, QSettings::IniFormat);
+  QString displayText = "";
 
-	if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d]")) )
-	{
-		displayText = "The title that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
-		displayText = displayText + "\n\nNo spaces allowed";
+  if ( newFavoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d]")) )
+  {
+    displayText = "The title that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
+    displayText = displayText + "\n\nNo spaces allowed";
 
-		// Change the GUI back to the old name
-		favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
-		filterLibraryTree->blockSignals(true);
-		item->setText(0, favoritePrefs.value("Name").toString() );
-		filterLibraryTree->blockSignals(false);
-		favoritePrefs.endGroup();
+    // Change the GUI back to the old name
+    favoritePrefs.beginGroup(Detail::PipelineBuilderGroup);
+    filterLibraryTree->blockSignals(true);
+    item->setText(0, favoritePrefs.value("Name").toString() );
+    filterLibraryTree->blockSignals(false);
+    favoritePrefs.endGroup();
 
-		// Display error message
-		QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
-			QMessageBox::Ok, QMessageBox::Ok);
+    // Display error message
+    QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
+      QMessageBox::Ok, QMessageBox::Ok);
 
-		return true;
-	}
+    return true;
+  }
 
-	return false;
+  return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -713,25 +714,25 @@ bool PipelineBuilderWidget::hasIllegalFavoriteName(QString favoritePath, QString
 // -----------------------------------------------------------------------------
 QString PipelineBuilderWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item)
 {
-	QFileInfo original(favoritePath);
-	QString newPath = original.canonicalPath() + QDir::separator() + newFavoriteTitle;
-	if (!original.completeSuffix().isEmpty())
-		newPath += "." + original.completeSuffix();
+  QFileInfo original(favoritePath);
+  QString newPath = original.canonicalPath() + QDir::separator() + newFavoriteTitle;
+  if (!original.completeSuffix().isEmpty())
+    newPath += "." + original.completeSuffix();
 
-	newPath = QDir::toNativeSeparators(newPath);
+  newPath = QDir::toNativeSeparators(newPath);
 
-	QFile f(favoritePath);
-	bool success = f.rename(newPath);
-	if (false == success)
-	{
-		 std::cout << "Failed";
-	}
+  QFile f(favoritePath);
+  bool success = f.rename(newPath);
+  if (false == success)
+  {
+     std::cout << "Failed";
+  }
 
-	filterLibraryTree->blockSignals(true);
-	item->setData(0, Qt::UserRole, QVariant(newPath));
-	filterLibraryTree->blockSignals(false);
+  filterLibraryTree->blockSignals(true);
+  item->setData(0, Qt::UserRole, QVariant(newPath));
+  filterLibraryTree->blockSignals(false);
 
-	return newPath;
+  return newPath;
 }
 
 // -----------------------------------------------------------------------------
@@ -1356,9 +1357,9 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
     {
       delete items.at(i);
     }
-	filterLibraryTree->blockSignals(true);
+  filterLibraryTree->blockSignals(true);
     readFavoritePipelines();
-	filterLibraryTree->blockSignals(false);
+  filterLibraryTree->blockSignals(false);
   }
 
   // Tell everyone to save their preferences NOW instead of waiting until the app quits
@@ -1403,7 +1404,7 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
 
   if (NULL != item->parent() && item->parent()->text(0).compare(Detail::FavoritePipelines) == 0)
   {
-	filterLibraryTree->editItem(item, 0);
+  filterLibraryTree->editItem(item, 0);
   }
 }
 
