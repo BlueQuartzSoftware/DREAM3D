@@ -14,6 +14,7 @@ The following is a partial listing of a 3D EBSD reconstruction pipeline saved as
 
 	[PipelineBuilder]
 	Number_Filters=15
+	Name=Reconstruction
 	
 	[0]
 	Filter_Name=ReadH5Ebsd
