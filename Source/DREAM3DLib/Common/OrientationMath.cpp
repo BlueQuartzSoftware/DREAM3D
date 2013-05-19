@@ -581,7 +581,7 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
 
 void OrientationMath::multiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
 {
-  int i,j;
+  int j;
     double vtemp[3], temp[3], r[3], w, temp2[3];
   /*
    A function that multiplies a quaterion by a vector (or many quaterions, many vectors)

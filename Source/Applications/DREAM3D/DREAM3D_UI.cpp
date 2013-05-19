@@ -137,9 +137,9 @@ void DREAM3D_UI::on_actionExit_triggered()
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
-  QString file = QFileDialog::getOpenFileName(m_PipelineBuilderWidget, tr("Select Settings File"),
+  QString file = QFileDialog::getOpenFileName(m_PipelineBuilderWidget, tr("Select Pipeline File"),
     m_PipelineBuilderWidget->getLastDirectory(),
-    tr("Settings File (*.txt)") );
+    tr("Pipeline File (*.txt *.ini)") );
   if ( true == file.isEmpty() ) { return; }
   m_PipelineBuilderWidget->openPipelineFile(file);
 }
@@ -148,10 +148,10 @@ void DREAM3D_UI::on_actionOpen_Pipeline_2_triggered() {
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
-  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "UntitledPipeline.txt";
-  QString filePath = QFileDialog::getSaveFileName(this, tr("Save PipelineBuilder Settings"),
+  QString proposedFile = m_PipelineBuilderWidget->getLastDirectory() + QDir::separator() + "Untitled.txt";
+  QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
     proposedFile,
-    tr("*.txt") );
+    tr("Pipeline File (*.txt *.ini)") );
   if ( true == filePath.isEmpty() ) { return; }
 
   //If the filePath already exists - delete it so that we get a clean write to the file
