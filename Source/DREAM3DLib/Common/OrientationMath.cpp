@@ -34,6 +34,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 
 #include "MXA/Common/LogTime.h"
 
@@ -306,6 +307,8 @@ std::vector<OrientationMath::Pointer> OrientationMath::getOrientationOpsVector()
   m_OrientationOps.push_back((m_AxisOrthoOps));
   TrigonalOps::Pointer m_TrigOps = TrigonalOps::New();
   m_OrientationOps.push_back((m_TrigOps));
+  TetragonalOps::Pointer m_TetraOps = TetragonalOps::New();
+  m_OrientationOps.push_back((m_TetraOps));
 
   return m_OrientationOps;
 }
