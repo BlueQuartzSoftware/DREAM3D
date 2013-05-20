@@ -24,6 +24,7 @@ set(_PublicFilters
   ClearData
   PerPhaseMinSize
   FillBadData
+  BadDataNeighborOrientationCheck
   OpenCloseBadData
   OpenCloseCoordinationNumber
   ConvertEulerAngles
