@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationMath
     virtual ~TetragonalOps();
 
     //FIXME: These need actual values assigned to them.
-    virtual int getODFSize() { return 46656; }
-    virtual int getMDFSize() { return 46656; }
+    virtual int getODFSize() { return 23328; }
+    virtual int getMDFSize() { return 23328; }
     virtual int getNumSymOps() { return 8; }
 
     virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationMath
     virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7);
 
   protected:
-    float _calcMisoQuat(const float quatsym[24][5], int numsym,
+    float _calcMisoQuat(const float quatsym[8][5], int numsym,
                   float q1[5], float q2[5],
                   float &n1, float &n2, float &n3);
 

@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationMath
     virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7);
 
   protected:
-    float _calcMisoQuat(const float quatsym[24][5], int numsym,
+    float _calcMisoQuat(const float quatsym[6][5], int numsym,
                   float q1[5], float q2[5],
                   float &n1, float &n2, float &n3);
 

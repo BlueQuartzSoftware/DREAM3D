@@ -96,7 +96,7 @@ HexagonalOps::~HexagonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float HexagonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
+float HexagonalOps::_calcMisoQuat(const float quatsym[12][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {

@@ -48,23 +48,31 @@ const float threesixty_over_pi = 360.0f/m_pi;
 const float oneeighty_over_pi = 180.0f/m_pi;
 const float sqrt_two = powf(2.0f, 0.5f);
 
-static const float TetraDim1InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
-static const float TetraDim2InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
+static const float TetraDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+static const float TetraDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
 static const float TetraDim3InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
 static const float TetraDim1StepValue = TetraDim1InitValue/18.0f;
 static const float TetraDim2StepValue = TetraDim2InitValue/18.0f;
-static const float TetraDim3StepValue = TetraDim3InitValue/18.0f;
+static const float TetraDim3StepValue = TetraDim3InitValue/9.0f;
 
 
-static const float TetraQuatSym[4][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
+static const float TetraQuatSym[8][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
                    {0.000000000f,1.000000000f,0.000000000f,0.000000000f,0.000000000f},
                    {0.000000000f,0.000000000f,1.000000000f,0.000000000f,0.000000000f},
-                   {0.000000000f,0.000000000f,0.000000000f,1.000000000f,0.000000000}};
+                   {0.000000000f,0.000000000f,0.000000000f,1.000000000f,0.000000000f},
+				   {0.000000000f,0.000000000f,0.000000000f,0.707106781f,-0.707106781f},
+                   {0.000000000f,0.000000000f,0.000000000f,0.707106781f,0.707106781f},
+                   {0.000000000f,0.707106781f,0.707106781f,0.000000000f,0.000000000f},
+				   {0.000000000f,-0.707106781f,0.707106781f,0.000000000f,0.000000000f}};
 
-static const float TetraRodSym[4][3] = {{0.0f,0.0f,0.0f},
+static const float TetraRodSym[8][3] = {{0.0f,0.0f,0.0f},
                   {10000000000.0f,0.0f,0.0f},
                   {0.0f,10000000000.0f,0.0f},
-                  {0.0f,0.0f,10000000000.0}};
+                  {0.0f,0.0f,10000000000.0f},
+                  {0.0f,0.0f,-1.0f},
+                  {0.0f,0.0f,1.0f},
+                  {10000000000.0f,10000000000.0f,0.0},
+                  {-10000000000.0f,10000000000.0f,0.0}};
 
 
 
@@ -80,7 +88,7 @@ TetragonalOps::~TetragonalOps()
   // TODO Auto-generated destructor stub
 }
 
-float TetragonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
+float TetragonalOps::_calcMisoQuat(const float quatsym[8][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {
@@ -133,7 +141,7 @@ float TetragonalOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
 
 float TetragonalOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
 {
-  int numsym = 4;
+  int numsym = 8;
 
   return _calcMisoQuat(TetraQuatSym, numsym, q1, q2, n1, n2, n3);
 }
@@ -156,7 +164,7 @@ void TetragonalOps::getRodSymOp(int i,float *r)
 
 void TetragonalOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
-  int  numsym = 4;
+  int  numsym = 8;
 
   _calcRodNearestOrigin(TetraRodSym, numsym, r1, r2, r3);
 }
@@ -178,14 +186,14 @@ void TetragonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
 void TetragonalOps::getNearestQuat( float *q1, float *q2)
 {
-  int numsym = 4;
+  int numsym = 8;
 
   _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
 }
 
 void TetragonalOps::getFZQuat(float *qr)
 {
-  int numsym = 4;
+  int numsym = 8;
 
     _calcQuatNearestOrigin(TetraQuatSym, numsym, qr);
 
@@ -207,7 +215,7 @@ int TetragonalOps::getMisoBin(float r1, float r2, float r3)
   step[2] = TetraDim3StepValue;
   bins[0] = 36.0;
   bins[1] = 36.0;
-  bins[2] = 36.0;
+  bins[2] = 18.0;
 
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
@@ -273,7 +281,7 @@ int TetragonalOps::getOdfBin(float r1, float r2, float r3)
   step[2] = TetraDim3StepValue;
   bins[0] = 36.0f;
   bins[1] = 36.0f;
-  bins[2] = 36.0f;
+  bins[2] = 18.0f;
 
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }

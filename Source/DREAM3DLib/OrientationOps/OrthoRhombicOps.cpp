@@ -80,7 +80,7 @@ OrthoRhombicOps::~OrthoRhombicOps()
   // TODO Auto-generated destructor stub
 }
 
-float OrthoRhombicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
+float OrthoRhombicOps::_calcMisoQuat(const float quatsym[4][5], int numsym,
                                       float q1[5], float q2[5],
                                       float &n1, float &n2, float &n3)
 {
