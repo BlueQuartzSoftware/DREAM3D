@@ -48,8 +48,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
-+ Right-click on filter in filter list and display the help for that filter
-+ Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
++ Right-click on filter in the **Filter List** and display the help for that filter
++ Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
 + Import/Export Favorites to/from pipeline files.
 + Import Pipeline from a .dream3d file
 
@@ -154,6 +154,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
 + HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.
 + Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
 + Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
