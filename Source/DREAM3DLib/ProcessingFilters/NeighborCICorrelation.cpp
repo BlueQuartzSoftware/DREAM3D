@@ -78,7 +78,7 @@ void NeighborCICorrelation::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("Minconfidence");
+    option->setPropertyName("MinConfidence");
     option->setHumanLabel("Minimum Confidence Index");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
@@ -112,7 +112,7 @@ void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fiel
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -301, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -301, float, FloatArrayType, voxels, 1)
 }
 
 
@@ -187,12 +187,11 @@ void NeighborCICorrelation::execute()
 	  count = 0;
 	  for (int64_t i = 0; i < totalPoints; i++)
 	  {
-			count = 0;
-			column = i % dims[0];
-			row = (i / dims[0]) % dims[1];
-			plane = i / (dims[0] * dims[1]);
 			if(m_ConfidenceIndex[i] < m_MinConfidence)
 			{
+				column = i % dims[0];
+				row = (i / dims[0]) % dims[1];
+				plane = i / (dims[0] * dims[1]);
 				count++;
 				best = m_ConfidenceIndex[i];
 				for (DimType j = 0; j < 6; j++)
