@@ -43,6 +43,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -108,6 +109,8 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                               bool stackLowToHigh, QString filename);
+
+    QUrl htmlHelpIndexFile();
 
   protected slots:
     /* OIM Data Import Slots */

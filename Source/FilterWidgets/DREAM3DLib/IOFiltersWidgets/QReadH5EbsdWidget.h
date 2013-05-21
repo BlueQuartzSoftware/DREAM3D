@@ -32,6 +32,8 @@
 #define QReadH5Ebsd_H_
 
 #include <QtCore/QObject>
+#include <QtCore/QUrl>
+
 #include <QtGui/QFileDialog>
 
 
@@ -81,6 +83,8 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+    virtual QUrl htmlHelpIndexFile();
 
 
   public slots:

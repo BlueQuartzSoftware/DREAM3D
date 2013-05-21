@@ -36,6 +36,8 @@
 
 #include "QGenerateEnsembleStatisticsWidget.h"
 
+#include <QtCore/QDir>
+
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DistributionTypeWidget.h"
 
@@ -107,7 +109,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
 
     int count = phaseTypeTableWidget->rowCount();
     std::vector<unsigned int> phaseTypes;
-	phaseTypes.push_back(DREAM3D::PhaseType::UnknownPhaseType);
+  phaseTypes.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     for(int r = 0; r < count; ++r)
     {
       QWidget* w = phaseTypeTableWidget->cellWidget(r, 0);
@@ -175,7 +177,7 @@ void QGenerateEnsembleStatisticsWidget::readOptions(QSettings &prefs)
   bool ok;
   qint32 i;
 
-	// Read the values back from the prefs and set them into the DistributionTypeWidgets
+  // Read the values back from the prefs and set them into the DistributionTypeWidgets
   READ_CHECKBOX_SETTING(prefs, calc, SizeDistribution, false)
   READ_COMBO_BOX(prefs, m_, SizeDistributionFitType)
 
@@ -338,4 +340,38 @@ void QGenerateEnsembleStatisticsWidget::on_removePhaseType_clicked()
   emit parametersChanged();
 }
 
+
+
+// -----------------------------------------------------------------------------
+QUrl QGenerateEnsembleStatisticsWidget::htmlHelpIndexFile()
+{
+  QString lowerFilter = QString("GenerateEnsembleStatistics").toLower();
+  QString appPath = qApp->applicationDirPath();
+  QDir helpDir = QDir(appPath);
+  QString s("file://");
+#if defined(Q_OS_WIN)
+  s = s + "/"; /* Need the third slash on windows because file paths start with a drive letter */
+#elif defined(Q_OS_MAC)
+  if (helpDir.dirName() == "MacOS")
+  {
+    helpDir.cdUp();
+    helpDir.cdUp();
+    helpDir.cdUp();
+  }
+#else
+  /* We are on Linux - I think */
+  helpDir.cdUp();
+#endif
+#if defined(Q_OS_WIN)
+  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html");
+  if (fi.exists() == false)
+  {
+    /* The help file does not exist at the default location because we are probably running from visual studio.*/
+    /* Try up one more directory */
+    helpDir.cdUp();
+  }
+#endif
+  s = s + helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html";
+  return QUrl(s);
+}
 
