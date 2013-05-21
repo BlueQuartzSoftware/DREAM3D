@@ -207,16 +207,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     void setHasPreflightWarnings(bool hasWarnings);
 
-<<<<<<< HEAD
 	protected slots:
 		void onCustomContextMenuRequested(const QPoint& pos);
 		void actionWidgetHelp_triggered();
 		void actionRemoveFilter_triggered();
-=======
-  protected slots:
-    void onCustomContextMenuRequested(const QPoint& pos);
-    void actionWidgetHelp_triggered();
->>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 
   signals:
     void widgetSelected(QFilterWidget* w);
@@ -249,14 +243,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool										m_HasPreflightErrors;
     bool										m_HasPreflightWarnings;
     static QString								m_OpenDialogLastDirectory;
-<<<<<<< HEAD
 	QMenu										m_FilterMenu;
 	QAction*									m_actionFilterHelp;
 	QAction*									m_actionRemoveFilter;
-=======
-  QMenu										m_FilterMenu;
-  QAction*									m_actionWidgetHelp;
->>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 
 
 
