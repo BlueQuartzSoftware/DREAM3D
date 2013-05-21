@@ -140,7 +140,7 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos) 
 {
-	m_FilterMenu.exec(pos);
+	m_FilterMenu.exec( mapToGlobal(pos) );
 }
 
 // -----------------------------------------------------------------------------
@@ -148,12 +148,19 @@ void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos)
 // -----------------------------------------------------------------------------
 void QFilterWidget::initFilterMenu() 
 {
-	m_actionWidgetHelp = new QAction(this);
-	m_actionWidgetHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
-	m_actionWidgetHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
-	connect(m_actionWidgetHelp, SIGNAL(triggered()),
+	m_actionRemoveFilter = new QAction(this);
+	m_actionRemoveFilter->setObjectName(QString::fromUtf8("actionRemoveFilter"));
+	m_actionRemoveFilter->setText(QApplication::translate("QFilterWidget", "Remove Filter", 0, QApplication::UnicodeUTF8));
+	connect(m_actionRemoveFilter, SIGNAL(triggered()),
+		this, SLOT( actionRemoveFilter_triggered() ) );
+	m_FilterMenu.addAction(m_actionRemoveFilter);
+
+	m_actionFilterHelp = new QAction(this);
+	m_actionFilterHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
+	m_actionFilterHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
+	connect(m_actionFilterHelp, SIGNAL(triggered()),
 		this, SLOT( actionWidgetHelp_triggered() ) );
-	m_FilterMenu.addAction(m_actionWidgetHelp);
+	m_FilterMenu.addAction(m_actionFilterHelp);
 }
 
 // -----------------------------------------------------------------------------
@@ -162,6 +169,14 @@ void QFilterWidget::initFilterMenu()
 void QFilterWidget::actionWidgetHelp_triggered()
 {
 	
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::actionRemoveFilter_triggered()
+{
+
 }
 
 // -----------------------------------------------------------------------------
