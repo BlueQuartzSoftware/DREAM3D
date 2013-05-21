@@ -50,6 +50,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
 + Right-click on filter in the **Filter List** and display the help for that filter
 + Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
++ Add the "Show User Manual" to the "Help" menu.
 + Import/Export Favorites to/from pipeline files.
 + Import Pipeline from a .dream3d file
 
