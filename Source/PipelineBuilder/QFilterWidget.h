@@ -192,8 +192,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void updateWidgetStyle();
 
     /**
-      * @brief Slot for a QTime to call to update the border of the wiget in a
-      * pulsing fashing
+      * @brief Slot for a QTime to call to update the border of the widget in a
+      * pulsing fashion
       */
     void setHasPreflightErrors(bool hasErrors);
 
@@ -202,6 +202,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 	protected slots:
 		void onCustomContextMenuRequested(const QPoint& pos);
 		void actionWidgetHelp_triggered();
+		void actionRemoveFilter_triggered();
 
   signals:
     void widgetSelected(QFilterWidget* w);
@@ -235,7 +236,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool										m_HasPreflightWarnings;
     static QString								m_OpenDialogLastDirectory;
 	QMenu										m_FilterMenu;
-	QAction*									m_actionWidgetHelp;
+	QAction*									m_actionFilterHelp;
+	QAction*									m_actionRemoveFilter;
 
 
 
