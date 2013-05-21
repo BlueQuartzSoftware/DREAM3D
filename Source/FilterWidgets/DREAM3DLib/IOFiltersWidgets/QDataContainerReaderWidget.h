@@ -37,6 +37,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 
 #include "PipelineBuilder/QFilterWidget.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -81,6 +82,8 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
 
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+    virtual QUrl htmlHelpIndexFile();
 
   public slots:
     void setInputFile(const QString &v);

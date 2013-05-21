@@ -124,8 +124,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this,
-	  SIGNAL(customContextMenuRequested(const QPoint&)),
-	  SLOT(onCustomContextMenuRequested(const QPoint&)));
+    SIGNAL(customContextMenuRequested(const QPoint&)),
+    SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -138,22 +138,30 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos) 
+QUrl QFilterWidget::htmlHelpIndexFile()
 {
-	m_FilterMenu.exec(pos);
+  return QUrl();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::initFilterMenu() 
+void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos)
 {
-	m_actionWidgetHelp = new QAction(this);
-	m_actionWidgetHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
-	m_actionWidgetHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
-	connect(m_actionWidgetHelp, SIGNAL(triggered()),
-		this, SLOT( actionWidgetHelp_triggered() ) );
-	m_FilterMenu.addAction(m_actionWidgetHelp);
+  m_FilterMenu.exec(pos);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::initFilterMenu()
+{
+  m_actionWidgetHelp = new QAction(this);
+  m_actionWidgetHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
+  m_actionWidgetHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
+  connect(m_actionWidgetHelp, SIGNAL(triggered()),
+    this, SLOT( actionWidgetHelp_triggered() ) );
+  m_FilterMenu.addAction(m_actionWidgetHelp);
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +169,7 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-	
+
 }
 
 // -----------------------------------------------------------------------------
