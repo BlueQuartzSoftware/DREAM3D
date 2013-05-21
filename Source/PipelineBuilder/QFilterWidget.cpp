@@ -97,7 +97,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
-  m_HasPreflightWarnings(false)
+  m_HasPreflightWarnings(false),
+  m_FilterMenu(this)
 {
   qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
   qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
@@ -110,12 +111,21 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
     m_OpenDialogLastDirectory = QDir::homePath();
   }
 
+  // Initialize right-click menu
+  initFilterMenu();
+
   m_DeleteRect.setX(PADDING + BORDER);
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
   m_DeleteRect.setHeight(IMAGE_HEIGHT);
   m_timer = new QTimer(this);
   connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+	  SIGNAL(customContextMenuRequested(const QPoint&)),
+	  SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -123,6 +133,35 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 QFilterWidget::~QFilterWidget()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos) 
+{
+	m_FilterMenu.exec(pos);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::initFilterMenu() 
+{
+	m_actionWidgetHelp = new QAction(this);
+	m_actionWidgetHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
+	m_actionWidgetHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
+	connect(m_actionWidgetHelp, SIGNAL(triggered()),
+		this, SLOT( actionWidgetHelp_triggered() ) );
+	m_FilterMenu.addAction(m_actionWidgetHelp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::actionWidgetHelp_triggered()
+{
+	
 }
 
 // -----------------------------------------------------------------------------
