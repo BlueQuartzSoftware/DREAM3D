@@ -67,22 +67,22 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
 
     virtual ~BadDataNeighborOrientationCheck();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-	DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
+    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
+    DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const std::string getHumanLabel() { return "Bad Data Orientation Correlation"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
     virtual void execute();
@@ -95,8 +95,8 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
   private:
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
-    bool* m_GoodVoxels;
     float* m_Quats;
+    bool* m_GoodVoxels;
     int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
