@@ -38,6 +38,8 @@
 
 
 #include <QtCore/QObject>
+#include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include <QtGui/QWidget>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -71,6 +73,8 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
 
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+
+    virtual QUrl htmlHelpIndexFile();
 
 
   protected:

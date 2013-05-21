@@ -40,6 +40,8 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
+#include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include <QtGui/QFileDialog>
 
 
@@ -78,6 +80,8 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     void setShapeTypes(DataArray<unsigned int>::Pointer array);
 
     virtual QString getFilterGroup();
+
+    virtual QUrl htmlHelpIndexFile();
 
   protected slots:
     // Auto Hookup Slots
