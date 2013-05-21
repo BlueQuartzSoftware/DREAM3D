@@ -58,6 +58,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QDesktopServices>
+#include <QtGui/QMessageBox>
 
 
 #include "QtSupport/QR3DFileCompleter.h"
@@ -140,11 +142,7 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 QUrl QFilterWidget::htmlHelpIndexFile()
 {
-<<<<<<< HEAD
-	m_FilterMenu.exec( mapToGlobal(pos) );
-=======
   return QUrl();
->>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 }
 
 // -----------------------------------------------------------------------------
@@ -152,7 +150,14 @@ QUrl QFilterWidget::htmlHelpIndexFile()
 // -----------------------------------------------------------------------------
 void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos)
 {
-<<<<<<< HEAD
+  m_FilterMenu.exec( mapToGlobal(pos) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::initFilterMenu()
+{
 	m_actionRemoveFilter = new QAction(this);
 	m_actionRemoveFilter->setObjectName(QString::fromUtf8("actionRemoveFilter"));
 	m_actionRemoveFilter->setText(QApplication::translate("QFilterWidget", "Remove Filter", 0, QApplication::UnicodeUTF8));
@@ -166,22 +171,6 @@ void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos)
 	connect(m_actionFilterHelp, SIGNAL(triggered()),
 		this, SLOT( actionWidgetHelp_triggered() ) );
 	m_FilterMenu.addAction(m_actionFilterHelp);
-=======
-  m_FilterMenu.exec(pos);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QFilterWidget::initFilterMenu()
-{
-  m_actionWidgetHelp = new QAction(this);
-  m_actionWidgetHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
-  m_actionWidgetHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
-  connect(m_actionWidgetHelp, SIGNAL(triggered()),
-    this, SLOT( actionWidgetHelp_triggered() ) );
-  m_FilterMenu.addAction(m_actionWidgetHelp);
->>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 }
 
 // -----------------------------------------------------------------------------
@@ -189,7 +178,15 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-
+	QUrl filterHelpURL = htmlHelpIndexFile();
+	QString filterHelpPath = filterHelpURL.path();
+	bool didOpen = QDesktopServices::openUrl(filterHelpURL);
+	if(false == didOpen)
+	{
+		QMessageBox::critical(this, tr("Error Opening Help File"),
+			QString::fromAscii("DREAM3D could not open the help file path ") + filterHelpPath,
+			QMessageBox::Ok, QMessageBox::Ok);
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +194,25 @@ void QFilterWidget::actionWidgetHelp_triggered()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionRemoveFilter_triggered()
 {
+	#if 0
+QObject* whoSent = sender();
+	if (whoSent)
+	{
+		QWidget* w = qobject_cast<QWidget*>(whoSent);
 
+		m_FilterWidgetLayout->removeWidget(w);
+		if (m_SelectedFilterWidget == w)
+		{
+			m_SelectedFilterWidget = NULL;
+		}
+		if (w) {
+			w->deleteLater();
+		}
+	}
+	preflightPipeline();
+
+	resetLayout();
+#endif
 }
 
 // -----------------------------------------------------------------------------
