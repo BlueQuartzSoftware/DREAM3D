@@ -47,6 +47,16 @@ The user can also rename a _Favorite Pipeline_ entry by right clicking on the en
 
 The user should also note that simply selecting a _Favorite Pipeline_ from the list will display the filters in order of operation in the *Filter List* area.
 
+### Getting Help for a Filter ###
+The user can _Right Click_ in the title area of the filter to display a menu where the user can select the "Show Filter Help" menu selection. The user's default web browser will be opened to the page containing the documentation for the current filter.
+
+
+--------------
+
+![Getting Help for a filter](Images/FilterContextMenu.png)
+
+--------------
+
 ## Filter List
   **Area 2**: This section lists the filters that are associated with a specific group that is selected in the _Filter Library_ area. If the _Filter Library_ is itself selected then all filters will be shown in this list. The user typically will select a filter from this list and drag it over to the pipeline area.
 

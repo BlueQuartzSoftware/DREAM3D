@@ -561,7 +561,6 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* i
     parent = parent->parent();
   }
   if (parent == NULL) {
-    std::cout << "Tree Item Selected was at the top of the tree." << std::endl;
     return;
   }
 
@@ -778,7 +777,6 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
     parent = parent->parent();
   }
   if (parent == NULL) {
-    std::cout << "Tree Item Selected was at the top of the tree." << std::endl;
     return;
   }
 
