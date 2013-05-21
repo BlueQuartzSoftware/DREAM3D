@@ -13,6 +13,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 + Missing Documentation File for IOFilters/ImportImageStack
++ incorrect Documentation for Neighbor CI Correlation
++ incorrect Documentation for Neighbor Orientation Correlation
 
 ### Documentation ###
 
@@ -55,6 +57,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Statistics/Analysis/Other Algorithms ##
++ Add filter to do TSL Neighbor Orientation Correlation
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -153,7 +156,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
-
++ Add TSL Neighbor CI correlation clean up filter
 + HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.
 + Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
 + Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
