@@ -197,25 +197,7 @@ void QFilterWidget::actionWidgetHelp_triggered()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionRemoveFilter_triggered()
 {
-  #if 0
-QObject* whoSent = sender();
-  if (whoSent)
-  {
-    QWidget* w = qobject_cast<QWidget*>(whoSent);
-
-    m_FilterWidgetLayout->removeWidget(w);
-    if (m_SelectedFilterWidget == w)
-    {
-      m_SelectedFilterWidget = NULL;
-    }
-    if (w) {
-      w->deleteLater();
-    }
-  }
-  preflightPipeline();
-
-  resetLayout();
-#endif
+  emit clicked(true);
 }
 
 // -----------------------------------------------------------------------------
