@@ -38,6 +38,8 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
+
 #include <QtGui/QGroupBox>
 #include <QtGui/QMenu>
 
@@ -114,7 +116,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual QString getBorderColorStyle();
     virtual bool isSelected();
 
-    virtual void emitParametersChanged(); 
+    virtual void emitParametersChanged();
 
    // virtual QFilterWidget* createDeepCopy();
 
@@ -146,6 +148,12 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                             SolidMeshDataContainer::Pointer sdc,
                                             QString propertyName);
 
+    /**
+     * @brief htmlHelpIndexFile Returns the path to the HTML help file for a filter. Each filter should reimplement
+     * this function;
+     * @return
+     */
+    virtual QUrl htmlHelpIndexFile();
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -174,10 +182,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void setIsSelected(bool b);
 
-	 /**
+   /**
       *@brief This function initializes the right-click menu for each filter
       */
-	void initFilterMenu();
+  void initFilterMenu();
 
     /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
@@ -199,10 +207,16 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     void setHasPreflightWarnings(bool hasWarnings);
 
+<<<<<<< HEAD
 	protected slots:
 		void onCustomContextMenuRequested(const QPoint& pos);
 		void actionWidgetHelp_triggered();
 		void actionRemoveFilter_triggered();
+=======
+  protected slots:
+    void onCustomContextMenuRequested(const QPoint& pos);
+    void actionWidgetHelp_triggered();
+>>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 
   signals:
     void widgetSelected(QFilterWidget* w);
@@ -235,9 +249,14 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool										m_HasPreflightErrors;
     bool										m_HasPreflightWarnings;
     static QString								m_OpenDialogLastDirectory;
+<<<<<<< HEAD
 	QMenu										m_FilterMenu;
 	QAction*									m_actionFilterHelp;
 	QAction*									m_actionRemoveFilter;
+=======
+  QMenu										m_FilterMenu;
+  QAction*									m_actionWidgetHelp;
+>>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 
 
 

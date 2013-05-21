@@ -124,8 +124,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this,
-	  SIGNAL(customContextMenuRequested(const QPoint&)),
-	  SLOT(onCustomContextMenuRequested(const QPoint&)));
+    SIGNAL(customContextMenuRequested(const QPoint&)),
+    SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -138,16 +138,21 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos) 
+QUrl QFilterWidget::htmlHelpIndexFile()
 {
+<<<<<<< HEAD
 	m_FilterMenu.exec( mapToGlobal(pos) );
+=======
+  return QUrl();
+>>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::initFilterMenu() 
+void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos)
 {
+<<<<<<< HEAD
 	m_actionRemoveFilter = new QAction(this);
 	m_actionRemoveFilter->setObjectName(QString::fromUtf8("actionRemoveFilter"));
 	m_actionRemoveFilter->setText(QApplication::translate("QFilterWidget", "Remove Filter", 0, QApplication::UnicodeUTF8));
@@ -161,6 +166,22 @@ void QFilterWidget::initFilterMenu()
 	connect(m_actionFilterHelp, SIGNAL(triggered()),
 		this, SLOT( actionWidgetHelp_triggered() ) );
 	m_FilterMenu.addAction(m_actionFilterHelp);
+=======
+  m_FilterMenu.exec(pos);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::initFilterMenu()
+{
+  m_actionWidgetHelp = new QAction(this);
+  m_actionWidgetHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
+  m_actionWidgetHelp->setText(QApplication::translate("QFilterWidget", "Help", 0, QApplication::UnicodeUTF8));
+  connect(m_actionWidgetHelp, SIGNAL(triggered()),
+    this, SLOT( actionWidgetHelp_triggered() ) );
+  m_FilterMenu.addAction(m_actionWidgetHelp);
+>>>>>>> b4e351181fdd216deba396e5e97f97905226c94c
 }
 
 // -----------------------------------------------------------------------------
@@ -168,7 +189,7 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-	
+
 }
 
 // -----------------------------------------------------------------------------
