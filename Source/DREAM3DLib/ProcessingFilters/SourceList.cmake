@@ -24,6 +24,8 @@ set(_PublicFilters
   ClearData
   PerPhaseMinSize
   FillBadData
+  NeighborCICorrelation
+  NeighborOrientationCorrelation
   BadDataNeighborOrientationCheck
   OpenCloseBadData
   OpenCloseCoordinationNumber
