@@ -38,7 +38,10 @@
 
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
+
 #include <QtGui/QGroupBox>
+#include <QtGui/QMenu>
 
 
 
@@ -145,6 +148,12 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                             SolidMeshDataContainer::Pointer sdc,
                                             QString propertyName);
 
+    /**
+     * @brief htmlHelpIndexFile Returns the path to the HTML help file for a filter. Each filter should reimplement
+     * this function;
+     * @return
+     */
+    virtual QUrl htmlHelpIndexFile();
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -173,6 +182,11 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void setIsSelected(bool b);
 
+   /**
+      *@brief This function initializes the right-click menu for each filter
+      */
+  void initFilterMenu();
+
     /**
       * @brief Sets the style of the Widget to indicate a selected or non-selected
       * state
@@ -186,12 +200,17 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void updateWidgetStyle();
 
     /**
-      * @brief Slot for a QTime to call to update the border of the wiget in a
-      * pulsing fashing
+      * @brief Slot for a QTime to call to update the border of the widget in a
+      * pulsing fashion
       */
     void setHasPreflightErrors(bool hasErrors);
 
     void setHasPreflightWarnings(bool hasWarnings);
+
+	protected slots:
+		void onCustomContextMenuRequested(const QPoint& pos);
+		void actionWidgetHelp_triggered();
+		void actionRemoveFilter_triggered();
 
   signals:
     void widgetSelected(QFilterWidget* w);
@@ -214,16 +233,20 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                      FilterParameter::WidgetType arrayListType);
 
   private:
-    QRect      m_DeleteRect;
-    QPoint     dragStartPosition;
-    QTimer*    m_timer;
-    unsigned char  m_CurrentBorderColorFactor;
-    unsigned char        m_BorderIncrement;
-    QString    m_BorderColorStyle;
-    bool       m_IsSelected;
-    bool       m_HasPreflightErrors;
-    bool       m_HasPreflightWarnings;
-    static QString m_OpenDialogLastDirectory;
+    QRect										m_DeleteRect;
+    QPoint										dragStartPosition;
+    QTimer*										m_timer;
+    unsigned char								m_CurrentBorderColorFactor;
+    unsigned char								m_BorderIncrement;
+    QString										m_BorderColorStyle;
+    bool										m_IsSelected;
+    bool										m_HasPreflightErrors;
+    bool										m_HasPreflightWarnings;
+    static QString								m_OpenDialogLastDirectory;
+	QMenu										m_FilterMenu;
+	QAction*									m_actionFilterHelp;
+	QAction*									m_actionRemoveFilter;
+
 
 
 

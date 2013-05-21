@@ -43,6 +43,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QSettings>
+#include <QtCore/QUrl>
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -108,6 +109,8 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                                    QString filename);
+
+    virtual QUrl htmlHelpIndexFile();
 
   protected slots:
     /* OIM Data Import Slots */

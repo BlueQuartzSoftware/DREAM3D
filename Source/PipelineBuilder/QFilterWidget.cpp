@@ -58,6 +58,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QFileDialog>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QDesktopServices>
+#include <QtGui/QMessageBox>
 
 
 #include "QtSupport/QR3DFileCompleter.h"
@@ -97,7 +99,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
-  m_HasPreflightWarnings(false)
+  m_HasPreflightWarnings(false),
+  m_FilterMenu(this)
 {
   qRegisterMetaType<IntVec3Widget_t>("IntVec3Widget_t");
   qRegisterMetaTypeStreamOperators<IntVec3Widget_t>("IntVec3Widget_t");
@@ -110,12 +113,21 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
     m_OpenDialogLastDirectory = QDir::homePath();
   }
 
+  // Initialize right-click menu
+  initFilterMenu();
+
   m_DeleteRect.setX(PADDING + BORDER);
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
   m_DeleteRect.setHeight(IMAGE_HEIGHT);
   m_timer = new QTimer(this);
   connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+    SIGNAL(customContextMenuRequested(const QPoint&)),
+    SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -123,6 +135,69 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 QFilterWidget::~QFilterWidget()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QUrl QFilterWidget::htmlHelpIndexFile()
+{
+  return QUrl();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::onCustomContextMenuRequested(const QPoint& pos)
+{
+  m_FilterMenu.exec( mapToGlobal(pos) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::initFilterMenu()
+{
+  m_actionFilterHelp = new QAction(this);
+  m_actionFilterHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
+  m_actionFilterHelp->setText(QApplication::translate("QFilterWidget", "Show Filter Help", 0, QApplication::UnicodeUTF8));
+  connect(m_actionFilterHelp, SIGNAL(triggered()),
+    this, SLOT( actionWidgetHelp_triggered() ) );
+  m_FilterMenu.addAction(m_actionFilterHelp);
+
+  m_FilterMenu.addSeparator();
+
+  m_actionRemoveFilter = new QAction(this);
+  m_actionRemoveFilter->setObjectName(QString::fromUtf8("actionRemoveFilter"));
+  m_actionRemoveFilter->setText(QApplication::translate("QFilterWidget", "Remove Filter", 0, QApplication::UnicodeUTF8));
+  connect(m_actionRemoveFilter, SIGNAL(triggered()),
+    this, SLOT( actionRemoveFilter_triggered() ) );
+  m_FilterMenu.addAction(m_actionRemoveFilter);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::actionWidgetHelp_triggered()
+{
+  QUrl filterHelpURL = htmlHelpIndexFile();
+  QString filterHelpPath = filterHelpURL.path();
+  bool didOpen = QDesktopServices::openUrl(filterHelpURL);
+  if(false == didOpen)
+  {
+    QMessageBox::critical(this, tr("Error Opening Help File"),
+      QString::fromAscii("DREAM3D could not open the help file path ") + filterHelpPath,
+      QMessageBox::Ok, QMessageBox::Ok);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::actionRemoveFilter_triggered()
+{
+  emit clicked(true);
 }
 
 // -----------------------------------------------------------------------------
