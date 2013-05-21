@@ -45,14 +45,17 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
-+ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
-+ Error messages that can contain HTTP hyperlinks that would take the user to what ever is suggested in the error message like a specific filter
 + Right-click on filter in the **Filter List** and display the help for that filter
 + Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
 + Add the "Show User Manual" to the "Help" menu.
-+ Import/Export Favorites to/from pipeline files.
++ Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Import Pipeline from a .dream3d file
+    - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
++ Design protocol to check for updated Version of DREAM3D.
++ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
++ Import/Export Favorites to/from pipeline files.
++ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
++ Error messages returned from Pipeline should be hyperlinked to the filter docs
 
 
 ## Statistics/Analysis/Other Algorithms ##
@@ -98,14 +101,12 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
 + On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
-+ Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
 + Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 + Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 + Filter that can execute any program on the users computer
 + Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
-+ Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
 + Look into creating multiple maps at each level (i.e. parent and grain filed maps)
 + Create filter to generate surface mesh from volume mesh
 + Design protocol to learn user's 'ontology'
