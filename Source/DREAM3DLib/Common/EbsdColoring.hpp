@@ -499,7 +499,7 @@ class EbsdColoring
         d[1] = p[1];
         d[2] = 0;
         MatrixMath::normalize3x1(d);
-        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (60.0 * EbsdColor::Detail::DegToRads))
+        if (atan2(d[1], d[0]) >= (-90.0 * EbsdColor::Detail::DegToRads) && atan2(d[1], d[0]) < (-30.0 * EbsdColor::Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
           if (theta > 1) theta = 1;
@@ -508,7 +508,7 @@ class EbsdColoring
 
           theta = (EbsdColor::Detail::RadToDegs) * acos(theta);
           _rgb[0] = (90.0f - theta) / 90.0f;
-          phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
+          phi_local = (d[0] * 0) + (d[1] * -1) + (d[2] * 0);
           if (phi_local > 1) phi_local = 1;
 
           if (phi_local < -1) phi_local = -1;
