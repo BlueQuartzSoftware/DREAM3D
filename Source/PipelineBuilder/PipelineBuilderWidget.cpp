@@ -63,6 +63,7 @@
 
 
 #include "QtSupport/HelpDialog.h"
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -1015,15 +1016,10 @@ void PipelineBuilderWidget::actionFilterListHelp_triggered()
 	FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
 	IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString().toStdString());
 	if (NULL == wf) { return;}
+
 	QUrl filterURL = wf->getFilterHelpURL();
-	QString filterHelpPath = filterURL.path();
-	bool didOpen = QDesktopServices::openUrl(filterURL);
-	if(false == didOpen)
-	{
-		QMessageBox::critical(this, tr("Error Opening Help File"),
-			QString::fromAscii("DREAM3D could not open the help file path ") + filterHelpPath,
-			QMessageBox::Ok, QMessageBox::Ok);
-	}
+
+	DREAM3DHelpUrlGenerator::openURL(filterURL, this);
 }
 
 // -----------------------------------------------------------------------------
@@ -1031,39 +1027,7 @@ void PipelineBuilderWidget::actionFilterListHelp_triggered()
 // -----------------------------------------------------------------------------
 QUrl PipelineBuilderWidget::htmlHelpIndexFile()
 {
-  QString appPath = qApp->applicationDirPath();
-
-  QDir helpDir = QDir(appPath);
-  QString s("file://");
-
-#if defined(Q_OS_WIN)
-  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-#elif defined(Q_OS_MAC)
-  if (helpDir.dirName() == "MacOS")
-  {
-    helpDir.cdUp();
-    helpDir.cdUp();
-    helpDir.cdUp();
-  }
-#else
-  // We are on Linux - I think
-  helpDir.cdUp();
-#endif
-
-
-
-#if defined(Q_OS_WIN)
-  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/index.html");
-  if (fi.exists() == false)
-  {
-    // The help file does not exist at the default location because we are probably running from visual studio.
-    // Try up one more directory
-    helpDir.cdUp();
-  }
-#endif
-
-  s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
-  return QUrl(s);
+  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") );
 }
 
 
@@ -1074,14 +1038,7 @@ void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
   // m_HelpDialog->setContentFile(htmlHelpIndexFile());
   QUrl url = htmlHelpIndexFile();
-  bool didOpen = QDesktopServices::openUrl(url);
-  if(false == didOpen)
-  {
-    //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
-    displayDialogBox(QString::fromStdString("Error Opening Help File"),
-                     QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
-                     QMessageBox::Critical);
-  }
+  DREAM3DHelpUrlGenerator::openURL(url, this);
 }
 
 // -----------------------------------------------------------------------------

@@ -43,8 +43,6 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QMenu>
 
-
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "PipelineBuilderDLLExport.h"

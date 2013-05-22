@@ -28,6 +28,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
     ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.cpp
+	${QtSupport_SOURCE_DIR}/DREAM3DHelpUrlGenerator.cpp
 )
 
 set(QtSupport_HDRS
@@ -43,6 +44,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.h
     ${QtSupport_SOURCE_DIR}/HelpDialog.h
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.h
+	${QtSupport_SOURCE_DIR}/DREAM3DHelpUrlGenerator.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 

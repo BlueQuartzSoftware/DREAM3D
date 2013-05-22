@@ -64,6 +64,7 @@
 
 #include "QtSupport/QR3DFileCompleter.h"
 #include "QtSupport/QFSDropLineEdit.h"
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 
 #include "ArraySelectionWidget.h"
@@ -182,14 +183,7 @@ void QFilterWidget::initFilterMenu()
 void QFilterWidget::actionWidgetHelp_triggered()
 {
   QUrl filterHelpURL = htmlHelpIndexFile();
-  QString filterHelpPath = filterHelpURL.path();
-  bool didOpen = QDesktopServices::openUrl(filterHelpURL);
-  if(false == didOpen)
-  {
-    QMessageBox::critical(this, tr("Error Opening Help File"),
-      QString::fromAscii("DREAM3D could not open the help file path ") + filterHelpPath,
-      QMessageBox::Ok, QMessageBox::Ok);
-  }
+  DREAM3DHelpUrlGenerator::openURL(filterHelpURL, this);
 }
 
 // -----------------------------------------------------------------------------
