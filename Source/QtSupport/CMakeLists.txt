@@ -28,6 +28,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.cpp
     ${QtSupport_SOURCE_DIR}/HelpDialog.cpp
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.cpp
+    ${QtSupport_SOURCE_DIR}/DREAM3DUpdateCheckDialog.cpp
 )
 
 set(QtSupport_HDRS
@@ -36,13 +37,14 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/ApplicationAboutBoxDialog.h
     ${QtSupport_SOURCE_DIR}/ColorComboPicker.h
     ${QtSupport_SOURCE_DIR}/QR3DFileCompleter.h
-    ${QtSupport_SOURCE_DIR}/QRecentFileList.h  
+    ${QtSupport_SOURCE_DIR}/QRecentFileList.h
     ${QtSupport_SOURCE_DIR}/QFSDropLineEdit.h
     ${QtSupport_SOURCE_DIR}/QDroppableScrollArea.h
     ${QtSupport_SOURCE_DIR}/QFilterListWidget.h
     ${QtSupport_SOURCE_DIR}/QCheckboxDialog.h
     ${QtSupport_SOURCE_DIR}/HelpDialog.h
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.h
+    ${QtSupport_SOURCE_DIR}/DREAM3DUpdateCheckDialog.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 
@@ -53,6 +55,7 @@ SET(DREAM3D_QT_UI_FILES
   ${QtSupport_SOURCE_DIR}/UI_Files/ApplicationAboutBoxDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/HelpDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/DistributionTypeWidget.ui
+  ${QtSupport_SOURCE_DIR}/UI_Files/DREAM3DUpdateCheckDialog.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupport/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 
@@ -60,7 +63,7 @@ cmp_IDE_SOURCE_PROPERTIES( "QtSupport/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 #SET(QtSupport_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
 # --------------------------------------------------------------------
-# Run on the files   
+# Run on the files
 #QT4_ADD_RESOURCES( QtSupport_Generated_RC_SRCS ${QCrossCorrelation_RCS} )
 
 # --------------------------------------------------------------------
@@ -75,8 +78,8 @@ QT4_WRAP_CPP( QtSupport_Generated_MOC_SRCS ${QtSupport_HDRS} )
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_SOURCE_PROPERTIES( "Generated" "${QtSupport_Generated_UI_HDRS}" "${QtSupport_Generated_MOC_SRCS};${QtSupport_Generated_RC_SRCS}" "0")
 
-set(Project_SRCS ${Project_SRCS} 
-        ${QtSupport_SRCS} 
+set(Project_SRCS ${Project_SRCS}
+        ${QtSupport_SRCS}
         ${QtSupport_HDRS}
         ${QtSupport_Generated_UI_HDRS}
         ${QtSupport_Generated_MOC_SRCS}
@@ -88,13 +91,13 @@ include_directories(${QtSupport_BINARY_DIR}/..)
 add_definitions(-DQT_CORE_LIB)
 
 if(UNIX AND NOT APPLE)
-set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC) 
+set_source_files_properties(${Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
 add_library(QtSupport STATIC ${Project_SRCS})
-target_link_libraries(QtSupport 
-                    ${QT_QTCORE_LIBRARY} 
-                    ${QT_QTGUI_LIBRARY} 
+target_link_libraries(QtSupport
+                    ${QT_QTCORE_LIBRARY}
+                    ${QT_QTGUI_LIBRARY}
                     )
 
 LibraryProperties( QtSupport ${EXE_DEBUG_EXTENSION})

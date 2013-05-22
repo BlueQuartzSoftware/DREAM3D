@@ -14,6 +14,8 @@ cmake_minimum_required(VERSION 2.8.9)
 #  Qt 4 Section
 # ------------------------------------------------------------------------------
 if(QT4_FOUND)
+    set(QT_USE_QTSVG "TRUE")
+    set(QT_USE_QTSCRIPT "TRUE")
     include( ${QT_USE_FILE} )
     CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtSvg;QtScript")
     CMP_QT_LIBRARIES_INSTALL_RULES( "QtSvg;QtScript" "./")
@@ -240,7 +242,7 @@ BuildQtAppBundle(
     VERSION_MINOR ${DREAM3D_VER_MINOR}
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    LINK_LIBRARIES MXA H5Support EbsdLib DREAM3DLib ${QT_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}  ${QT_QTSVG_LIBRARY} QtSupport ${QWT_LIBRARY}
+    LINK_LIBRARIES MXA H5Support EbsdLib DREAM3DLib ${QT_LIBRARIES} QtSupport ${QWT_LIBRARY}
     LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #    QT_PLUGINS    ${QT_PLUGINS}
 #    OTHER_PLUGINS ${OTHER_PLUGINS}
