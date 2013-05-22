@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef BadDataNeighborOrientationCheck_H_
-#define BadDataNeighborOrientationCheck_H_
+#ifndef NeighborCICorrelation_H_
+#define NeighborCICorrelation_H_
 
 #include <vector>
 #include <string>
@@ -52,59 +52,52 @@
 
 
 /**
- * @class BadDataNeighborOrientationCheck BadDataNeighborOrientationCheck.h DREAM3DLib/ReconstructionFilters/BadDataNeighborOrientationCheck.h
+ * @class NeighborCICorrelation NeighborCICorrelation.h DREAM3DLib/ReconstructionFilters/NeighborCICorrelation.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
+class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(BadDataNeighborOrientationCheck)
-    DREAM3D_STATIC_NEW_MACRO(BadDataNeighborOrientationCheck)
-    DREAM3D_TYPE_MACRO_SUPER(BadDataNeighborOrientationCheck, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(NeighborCICorrelation)
+    DREAM3D_STATIC_NEW_MACRO(NeighborCICorrelation)
+    DREAM3D_TYPE_MACRO_SUPER(NeighborCICorrelation, AbstractFilter)
 
-    virtual ~BadDataNeighborOrientationCheck();
+    virtual ~NeighborCICorrelation();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Required Ensemble Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
-    DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
+	DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
+	DREAM3D_INSTANCE_PROPERTY(bool, Loop)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Neighbor Orientation Comparison (Bad Data)"; }
+    virtual const std::string getHumanLabel() { return "Neighbor CI Correlation"; }
 
     virtual void setupFilterParameters();
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
 
     virtual void execute();
     virtual void preflight();
 
   protected:
-    BadDataNeighborOrientationCheck();
+    NeighborCICorrelation();
 
 
   private:
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
-    float* m_Quats;
-    bool* m_GoodVoxels;
-    int32_t* m_CellPhases;
-    unsigned int* m_CrystalStructures;
+    float* m_ConfidenceIndex;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&); // Copy Constructor Not Implemented
-    void operator=(const BadDataNeighborOrientationCheck&); // Operator '=' Not Implemented
+    NeighborCICorrelation(const NeighborCICorrelation&); // Copy Constructor Not Implemented
+    void operator=(const NeighborCICorrelation&); // Operator '=' Not Implemented
 };
 
-#endif /* BadDataNeighborOrientationCheck_H_ */
+#endif /* NeighborCICorrelation_H_ */
