@@ -80,7 +80,7 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPat
             set(FiltWidgSourceFile ${${WidgetLib}_BINARY_DIR}/${FilterLib}/${filterGroup}Widgets/Q${filterName}Widget.cpp)
             file(APPEND ${FilterWidget_GEN_HDRS_File} "${FiltWidgHeaderFile};")
             file(APPEND ${FilterWidget_GEN_SRCS_File} "${FiltWidgSourceFile};")
-            if( NOT EXISTS ${FiltWidgHeaderFile})
+            if( NOT EXISTS ${FiltWidgHeaderFile} OR NOT EXISTS ${FiltWidgSourceFile})
                 set(GENERATED_MOC_SOURCE_FILE "moc_Q${name}Widget.cpp")
                 configure_file(${FilterWidgetsLib_SOURCE_DIR}/QFilterWidget_Template.h.in
                                ${FiltWidgHeaderFile})
