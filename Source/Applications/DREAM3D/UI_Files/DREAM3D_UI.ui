@@ -70,6 +70,7 @@
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionLicense_Information"/>
+    <addaction name="action_CheckForUpdates"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPipeline"/>
@@ -163,55 +164,12 @@
     <string>Save Pipeline</string>
    </property>
   </action>
+  <action name="action_CheckForUpdates">
+   <property name="text">
+    <string>Check for Updates</string>
+   </property>
+  </action>
  </widget>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
