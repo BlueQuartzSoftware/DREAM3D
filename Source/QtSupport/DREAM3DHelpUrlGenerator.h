@@ -35,59 +35,28 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _TREEWIDGETBUILDER_H_
-#define _TREEWIDGETBUILDER_H_
+#ifndef _DREAM3DHelpUrlGenerator_H
+#define _DREAM3DHelpUrlGenerator_H
 
-#include <QApplication>
+#include <QtCore/QUrl>
+#include <QtCore/QString>
 
+#include <QtGui/QApplication>
 
-#include <QtGui/QMenu>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTreeWidgetItem>
-
-class PipelineBuilderWidget;
-class QAction;
-class QTreeWidgetItem;
-
-class PipelineTreeWidget : public QTreeWidget
+class DREAM3DHelpUrlGenerator
 {
-    Q_OBJECT;
- 
+
 public:
-	enum ItemType
-	{
-		Default_Item_Type = 0,
-		Favorite_Item_Type = 1,
-		Prebuilt_Item_Type = 2,
-		Favorite_Category_Item_Type = 3,
-		Prebuilt_Category_Item_Type = 4
-	};
+	DREAM3DHelpUrlGenerator();
+	virtual ~DREAM3DHelpUrlGenerator();
 
-    PipelineTreeWidget(QFrame* parent = 0);
-
-
-	/**
-     * @brief Adds the actions in the actionList parameter to the right-click menu
-     */
-	void addActionList(QList<QAction*> actionList);
-
-	/**
-     * @brief Setter for the different action lists
-     */
-	void setActionList(ItemType type, QList<QAction*> list);
- 
-private slots:
-    void onCustomContextMenuRequested(const QPoint& pos);
-    void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
+	static QUrl generateHTMLUrl(QString helpName);
+	static void openURL(QUrl URL, QWidget* parent);
 
 private:
-	QMenu								m_Menu;
-	QList<QAction*>						m_FavoritesActions;
-	QList<QAction*>						m_PrebuiltActions;
-	QList<QAction*>						m_DefaultActions;
-	QList<QAction*>						m_FavoriteCategoryActions;
-	QList<QAction*>						m_PrebuiltCategoryActions;
+
+	DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
+	void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
 };
 
-#endif /* _TREEWIDGETBUILDER_H_ */
+#endif /* _DREAM3DHelpUrlGenerator_H */

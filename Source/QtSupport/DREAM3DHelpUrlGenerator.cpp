@@ -35,110 +35,84 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "PipelineTreeWidget.h"
+#include <QtCore/QDir>
 
-#include "PipelineBuilderWidget.h"
+#include <QtGui/QDesktopServices>
+#include <QtGui/QMessageBox>
 
-PipelineTreeWidget::PipelineTreeWidget(QFrame* parent) :
-QTreeWidget(parent)
+#include "DREAM3DHelpUrlGenerator.h"
+
+namespace Detail
 {
-	setContextMenuPolicy(Qt::CustomContextMenu);
-
-	connect(this,
-		SIGNAL(customContextMenuRequested(const QPoint&)),
-		SLOT(onCustomContextMenuRequested(const QPoint&)));
+	QString Dream3DHelpPath = "/Help/DREAM3D/";
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineTreeWidget::addActionList(QList<QAction*> actionList)
+DREAM3DHelpUrlGenerator::DREAM3DHelpUrlGenerator()
 {
-	for (int i=0; i<actionList.size(); i++)
-	{
-		m_Menu.addAction(actionList[i]);
-	}
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineTreeWidget::onCustomContextMenuRequested(const QPoint& pos) 
+DREAM3DHelpUrlGenerator::~DREAM3DHelpUrlGenerator()
 {
-	printf("hi\n");
-	QTreeWidgetItem* item = itemAt(pos);
- 
-	if (item) 
-	{
-		// Note: We must map the point to global from the viewport to
-		// account for the header.
-		showContextMenu( item, viewport()->mapToGlobal(pos) );
-	}
-}
 
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos) 
+QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 {
-	// Clear menu's previous actions
-	m_Menu.clear();
+	QString appPath = qApp->applicationDirPath();
 
-	int itemType = item->type();
-	switch (itemType) 
+	QDir helpDir = QDir(appPath);
+	QString s("file://");
+
+#if defined(Q_OS_WIN)
+	s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+#elif defined(Q_OS_MAC)
+	if (helpDir.dirName() == "MacOS")
 	{
-	case Favorite_Item_Type:
-		if ( !m_FavoritesActions.isEmpty() )
-			addActionList(m_FavoritesActions);
-		break;
-
-	case Prebuilt_Item_Type:
-		if ( !m_PrebuiltActions.isEmpty() )
-			addActionList(m_PrebuiltActions);
-		break;
- 
-	case Default_Item_Type:
-		if ( !m_DefaultActions.isEmpty() )
-			addActionList(m_DefaultActions);
-		break;
-
-	case Favorite_Category_Item_Type:
-		if ( !m_FavoriteCategoryActions.isEmpty() )
-			addActionList(m_FavoriteCategoryActions);
-		break;
-
-	case Prebuilt_Category_Item_Type:
-		if ( !m_PrebuiltCategoryActions.isEmpty() )
-			addActionList(m_PrebuiltCategoryActions);
-		break;
+		helpDir.cdUp();
+		helpDir.cdUp();
+		helpDir.cdUp();
 	}
- 
-	m_Menu.exec(globalPos);
+#else
+	// We are on Linux - I think
+	helpDir.cdUp();
+#endif
+
+
+
+#if defined(Q_OS_WIN)
+	QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
+	if (fi.exists() == false)
+	{
+		// The help file does not exist at the default location because we are probably running from visual studio.
+		// Try up one more directory
+		helpDir.cdUp();
+	}
+#endif
+
+	s = s + helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html";
+	return QUrl(s);
 }
 
-void PipelineTreeWidget::setActionList(ItemType type, QList<QAction*> list)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DHelpUrlGenerator::openURL(QUrl URL, QWidget* parent)
 {
-	switch (type) 
+	bool didOpen = QDesktopServices::openUrl(URL);
+	if(false == didOpen)
 	{
-	case Favorite_Item_Type:
-		m_FavoritesActions = list;
-		break;
-
-	case Prebuilt_Item_Type:
-		m_PrebuiltActions = list;
-		break;
-
-	case Default_Item_Type:
-		m_DefaultActions = list;
-		break;
-
-	case Favorite_Category_Item_Type:
-		m_FavoriteCategoryActions = list;
-		break;
-
-	case Prebuilt_Category_Item_Type:
-		m_PrebuiltCategoryActions = list;
-		break;
+		QMessageBox::critical(parent, "Error Opening Help File",
+			QString::fromAscii("DREAM3D could not open the help file path ") + URL.path(),
+			QMessageBox::Ok, QMessageBox::Ok);
 	}
 }
