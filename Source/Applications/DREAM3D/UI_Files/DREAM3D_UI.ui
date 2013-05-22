@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -70,6 +70,7 @@
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionLicense_Information"/>
+    <addaction name="actionShow_User_Manual"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPipeline"/>
@@ -161,6 +162,11 @@
   <action name="actionSave_Pipeline_2">
    <property name="text">
     <string>Save Pipeline</string>
+   </property>
+  </action>
+  <action name="actionShow_User_Manual">
+   <property name="text">
+    <string>Show User Manual</string>
    </property>
   </action>
  </widget>

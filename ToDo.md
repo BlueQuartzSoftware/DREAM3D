@@ -47,7 +47,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ Add the "Show User Manual" to the "Help" menu.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
@@ -155,6 +154,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Add the "Show User Manual" to the "Help" menu.
 + Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
 + Add a cleanup filter that considers the orientation of neighboring voxels when assigning bad voxels
 + Add TSL Neighbor CI correlation clean up filter
