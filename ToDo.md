@@ -45,7 +45,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ Right-click on filter in the **Filter List** and display the help for that filter
 + Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
 + Add the "Show User Manual" to the "Help" menu.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
@@ -156,6 +155,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Right-click on filter in the **Filter List** and display the help for that filter
 + Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
 + HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.
 + Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
