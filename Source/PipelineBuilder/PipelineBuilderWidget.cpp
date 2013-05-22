@@ -97,6 +97,15 @@ PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *paren
   setupContextualMenus();
   setupGui();
   checkIOFiles();
+
+  // Initialize filterList right-click menu
+  initFilterListMenu();
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+	  SIGNAL(customContextMenuRequested(const QPoint&)),
+	  SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -104,6 +113,28 @@ PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *paren
 // -----------------------------------------------------------------------------
 PipelineBuilderWidget::~PipelineBuilderWidget()
 {
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::onCustomContextMenuRequested(const QPoint& pos)
+{
+	filterListPosition = filterList->mapFrom(this, pos);
+	m_FilterMenu.exec( mapToGlobal(pos) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::initFilterListMenu()
+{
+	m_actionFilterHelp = new QAction(this);
+	m_actionFilterHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
+	m_actionFilterHelp->setText(QApplication::translate("QFilterWidget", "Show Filter Help", 0, QApplication::UnicodeUTF8));
+	connect(m_actionFilterHelp, SIGNAL(triggered()),
+		this, SLOT( actionFilterListHelp_triggered() ) );
+	m_FilterMenu.addAction(m_actionFilterHelp);
 }
 
 // -----------------------------------------------------------------------------
@@ -973,6 +1004,26 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
   m_PipelineViewWidget->preflightPipeline();
 
   //  m_QDroppableScrollArea->verticalScrollBar()->setValue(m_QDroppableScrollArea->verticalScrollBar()->maximum());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionFilterListHelp_triggered()
+{
+	QListWidgetItem* listItem = filterList->itemAt(filterListPosition);
+	FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
+	IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString().toStdString());
+	if (NULL == wf) { return;}
+	QUrl filterURL = wf->getFilterHelpURL();
+	QString filterHelpPath = filterURL.path();
+	bool didOpen = QDesktopServices::openUrl(filterURL);
+	if(false == didOpen)
+	{
+		QMessageBox::critical(this, tr("Error Opening Help File"),
+			QString::fromAscii("DREAM3D could not open the help file path ") + filterHelpPath,
+			QMessageBox::Ok, QMessageBox::Ok);
+	}
 }
 
 // -----------------------------------------------------------------------------
