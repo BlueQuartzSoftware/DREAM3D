@@ -688,13 +688,11 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     float* cellEulerAngles = fArray->GetPointer(0);
     int* cellPhases = iArray->GetPointer(0);
 
-	float adjustment = (30.0*m_pi/180.0);
     for (int64_t i = 0; i < totalPoints; i++)
     {
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
-	  if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Trigonal) cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + adjustment;
     }
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }
