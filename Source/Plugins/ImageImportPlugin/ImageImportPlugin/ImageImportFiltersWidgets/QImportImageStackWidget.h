@@ -40,10 +40,11 @@
 #include <string>
 #include <vector>
 
+#include <QtCore/QObject>
+#include <QtCore/QSettings>
+#include <QtCore/QUrl>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QSettings>
-
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
@@ -103,6 +104,9 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
 
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                                    bool stackLowToHigh, QString filename);
+
+
+    virtual QUrl htmlHelpIndexFile();
 
   protected slots:
     /* OIM Data Import Slots */
