@@ -40,6 +40,7 @@
 
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DistributionTypeWidget.h"
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/PhaseType.h"
 
@@ -346,32 +347,6 @@ void QGenerateEnsembleStatisticsWidget::on_removePhaseType_clicked()
 QUrl QGenerateEnsembleStatisticsWidget::htmlHelpIndexFile()
 {
   QString lowerFilter = QString("GenerateEnsembleStatistics").toLower();
-  QString appPath = qApp->applicationDirPath();
-  QDir helpDir = QDir(appPath);
-  QString s("file://");
-#if defined(Q_OS_WIN)
-  s = s + "/"; /* Need the third slash on windows because file paths start with a drive letter */
-#elif defined(Q_OS_MAC)
-  if (helpDir.dirName() == "MacOS")
-  {
-    helpDir.cdUp();
-    helpDir.cdUp();
-    helpDir.cdUp();
-  }
-#else
-  /* We are on Linux - I think */
-  helpDir.cdUp();
-#endif
-#if defined(Q_OS_WIN)
-  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html");
-  if (fi.exists() == false)
-  {
-    /* The help file does not exist at the default location because we are probably running from visual studio.*/
-    /* Try up one more directory */
-    helpDir.cdUp();
-  }
-#endif
-  s = s + helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html";
-  return QUrl(s);
+  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
 }
 
