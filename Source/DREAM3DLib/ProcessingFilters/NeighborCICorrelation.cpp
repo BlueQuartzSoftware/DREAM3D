@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "BadDataNeighborOrientationCheck.h"
+#include "NeighborCICorrelation.h"
 
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -52,18 +52,12 @@ const static float m_pi = static_cast<float>(M_PI);
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BadDataNeighborOrientationCheck::BadDataNeighborOrientationCheck() :
+NeighborCICorrelation::NeighborCICorrelation() :
 AbstractFilter(),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_MisorientationTolerance(5.0f),
-m_NumberOfNeighbors(6),
-m_Quats(NULL),
-m_GoodVoxels(NULL),
-m_CellPhases(NULL),
-m_CrystalStructures(NULL)
+m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
+m_MinConfidence(0.1),
+m_Loop(false),
+m_ConfidenceIndex(NULL)
 {
   m_OrientationOps = OrientationMath::getOrientationOpsVector();
   setupFilterParameters();
@@ -72,65 +66,60 @@ m_CrystalStructures(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck()
+NeighborCICorrelation::~NeighborCICorrelation()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::setupFilterParameters()
+void NeighborCICorrelation::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("MisorientationTolerance");
-    option->setHumanLabel("Misorientation Tolerance");
+    option->setPropertyName("MinConfidence");
+    option->setHumanLabel("Minimum Confidence Index");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-  option->setUnits("Degrees");
+  option->setUnits("");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Required Number of Neighbors");
-    option->setPropertyName("NumberOfNeighbors");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-  option->setUnits("");
+    option->setHumanLabel("Loop Until Gone");
+    option->setPropertyName("Loop");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
     parameters.push_back(option);
   }
 
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
-  writer->writeValue("NumberofNeighbors", getNumberOfNeighbors() );
+  writer->writeValue("MinConfidence", getMinConfidence() );
+  writer->writeValue("Loop", getLoop() );
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -301, float, FloatArrayType, voxels, 1)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::preflight()
+void NeighborCICorrelation::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -138,7 +127,7 @@ void BadDataNeighborOrientationCheck::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::execute()
+void NeighborCICorrelation::execute()
 {
   setErrorCondition(0);
  // int err = 0;
@@ -159,8 +148,6 @@ void BadDataNeighborOrientationCheck::execute()
   }
   setErrorCondition(0);
 
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0;
-
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -174,13 +161,11 @@ void BadDataNeighborOrientationCheck::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  size_t count = 1;
   int good = 1;
   int neighbor;
-  //float x, y, z;
   DimType column, row, plane;
- // int neighpoint;
-//  size_t numgrains = m->getNumFieldTuples();
+  int neighpoint;
+  size_t numgrains = m->getNumFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -190,117 +175,61 @@ void BadDataNeighborOrientationCheck::execute()
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
-  float w = 10000.0;
-  float q1[5];
-  float q2[5];
-  float n1, n2, n3;
-  unsigned int phase1, phase2;
+  std::vector<int> bestNeighbor(totalPoints,-1);
 
-  std::vector<int> neighborCount(totalPoints,0);
-  std::vector<int> badVoxelList;
+  int count = 0;
+  float best;
 
-  for (int64_t i = 0; i < totalPoints; i++)
+  bool keepGoing = true;
+  while(keepGoing == true)
   {
-	  if(m_GoodVoxels[i] == false)
+	  keepGoing = false;
+	  count = 0;
+	  for (int64_t i = 0; i < totalPoints; i++)
 	  {
-		badVoxelList.push_back(i);
-		count = 0;
-		column = i % dims[0];
-		row = (i / dims[0]) % dims[1];
-		plane = i / (dims[0] * dims[1]);
-		for (DimType j = 0; j < 6; j++)
-		{
-		  good = 1;
-		  neighbor = i + neighpoints[j];
-		  if (j == 0 && plane == 0) good = 0;
-		  if (j == 5 && plane == (dims[2] - 1)) good = 0;
-		  if (j == 1 && row == 0) good = 0;
-		  if (j == 4 && row == (dims[1] - 1)) good = 0;
-		  if (j == 2 && column == 0) good = 0;
-		  if (j == 3 && column == (dims[0] - 1)) good = 0;
-		  if (good == 1 && m_GoodVoxels[neighbor] == true)
-		  {
-			phase1 = m_CrystalStructures[m_CellPhases[i]];
-			q1[0] = 1;
-			q1[1] = m_Quats[i * 5 + 1];
-			q1[2] = m_Quats[i * 5 + 2];
-			q1[3] = m_Quats[i* 5 + 3];
-			q1[4] = m_Quats[i * 5 + 4];
-
-			phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-			q2[0] = 1;
-			q2[1] = m_Quats[neighbor*5 + 1];
-			q2[2] = m_Quats[neighbor*5 + 2];
-			q2[3] = m_Quats[neighbor*5 + 3];
-			q2[4] = m_Quats[neighbor*5 + 4];
-
-			if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-			if (w < m_MisorientationTolerance)
+			if(m_ConfidenceIndex[i] < m_MinConfidence)
 			{
-			  neighborCount[i]++;
+				column = i % dims[0];
+				row = (i / dims[0]) % dims[1];
+				plane = i / (dims[0] * dims[1]);
+				count++;
+				best = m_ConfidenceIndex[i];
+				for (DimType j = 0; j < 6; j++)
+				{
+					good = 1;
+					neighbor = i + neighpoints[j];
+					if (j == 0 && plane == 0) good = 0;
+					if (j == 5 && plane == (dims[2] - 1)) good = 0;
+					if (j == 1 && row == 0) good = 0;
+					if (j == 4 && row == (dims[1] - 1)) good = 0;
+					if (j == 2 && column == 0) good = 0;
+					if (j == 3 && column == (dims[0] - 1)) good = 0;
+					if (good == 1)
+					{
+						if(m_ConfidenceIndex[neighbor] >= m_MinConfidence && m_ConfidenceIndex[neighbor] > best)
+						{
+							best = m_ConfidenceIndex[neighbor];
+							bestNeighbor[i] = neighbor;
+						}
+					}
+				}
 			}
-		  }
-		}
 	  }
-  }
-
-  int currentLevel = 6;
-  int counter;
-  int index;
-  while(currentLevel > m_NumberOfNeighbors)
-  {
-    counter = 1;
-    while(counter > 0)
-    {
-      counter = 0;
-      for (size_t i = 0; i < badVoxelList.size(); i++)
+      std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+      for (int j = 0; j < totalPoints; j++)
       {
-      index = badVoxelList[i];
-      if(neighborCount[index] >= currentLevel)
-      {
-        m_GoodVoxels[index] = true;
-        counter++;
-        badVoxelList.erase(badVoxelList.begin()+i);
-        column = index % dims[0];
-        row = (index / dims[0]) % dims[1];
-        plane = index / (dims[0] * dims[1]);
-        for (DimType j = 0; j < 6; j++)
+        neighbor = bestNeighbor[j];
+        if (neighbor != -1)
         {
-          good = 1;
-          neighbor = index + neighpoints[j];
-          if (j == 0 && plane == 0) good = 0;
-          if (j == 5 && plane == (dims[2] - 1)) good = 0;
-          if (j == 1 && row == 0) good = 0;
-          if (j == 4 && row == (dims[1] - 1)) good = 0;
-          if (j == 2 && column == 0) good = 0;
-          if (j == 3 && column == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_GoodVoxels[neighbor] == false)
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            phase1 = m_CrystalStructures[m_CellPhases[index]];
-            q1[0] = 1;
-            q1[1] = m_Quats[index * 5 + 1];
-            q1[2] = m_Quats[index * 5 + 2];
-            q1[3] = m_Quats[index* 5 + 3];
-            q1[4] = m_Quats[index * 5 + 4];
-
-            phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-            q2[0] = 1;
-            q2[1] = m_Quats[neighbor*5 + 1];
-            q2[2] = m_Quats[neighbor*5 + 2];
-            q2[3] = m_Quats[neighbor*5 + 3];
-            q2[4] = m_Quats[neighbor*5 + 4];
-
-            if (m_CellPhases[index] == m_CellPhases[neighbor] && m_CellPhases[index] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            if (w < m_MisorientationTolerance)
-            {
-              neighborCount[neighbor]++;
-            }
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
           }
         }
       }
-      }
-    }
-    currentLevel = currentLevel-1;
+	  if(m_Loop == true && count > 0) keepGoing = true;
   }
 
 // If there is an error set this to something negative and also set a message

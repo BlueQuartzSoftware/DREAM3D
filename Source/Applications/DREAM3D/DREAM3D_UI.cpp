@@ -68,6 +68,7 @@
 #include "QtSupport/DREAM3DPluginInterface.h"
 #include "QtSupport/HelpDialog.h"
 #include "QtSupport/DREAM3DUpdateCheckDialog.h"
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "PipelineBuilder/PipelineBuilderWidget.h"
 
@@ -749,4 +750,12 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
   version.append(DREAM3DLib::Version::PackageComplete().c_str());
   about.setApplicationInfo(an, version);
   about.exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_User_Manual_triggered()
+{
+	DREAM3DHelpUrlGenerator::openURL( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") , this);
 }

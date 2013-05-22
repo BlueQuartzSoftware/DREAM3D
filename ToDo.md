@@ -13,6 +13,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 + Missing Documentation File for IOFilters/ImportImageStack
++ incorrect Documentation for Neighbor CI Correlation
++ incorrect Documentation for Neighbor Orientation Correlation
 
 ### Documentation ###
 
@@ -45,8 +47,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
-+ Add the "Show User Manual" to the "Help" menu.
 + Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
@@ -72,7 +72,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Look into using 2-pt statistics to advance the packing algorithms in the synthetic builder
 + Add a filter to calculate Kearn's number
 + Look into matching the Kearn's number when matching cystallography in the synthetic builder
-+ Add a cleanup filter that considers the orientation (nearest) or kikuchi pattern of neighboring voxels when assigning bad voxels
 + Add GBCD calculation filters from G. Rohrer
 + Add a filter to calculate 'clustering' statistics on 'marked' features
 + Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
@@ -155,6 +154,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Add the "Show User Manual" to the "Help" menu.
++ Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
++ Add a cleanup filter that considers the orientation of neighboring voxels when assigning bad voxels
++ Add TSL Neighbor CI correlation clean up filter
++ Add TSL Neighbor Orientation correlation clean up filter
 + Right-click on filter in the **Filter List** and display the help for that filter
 + Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
 + HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.

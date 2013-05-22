@@ -90,6 +90,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
+	void on_actionShow_User_Manual_triggered();
 
     /**
      * @brief Reads the Preferences from the users pref file

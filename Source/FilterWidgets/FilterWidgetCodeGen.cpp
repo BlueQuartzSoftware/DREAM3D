@@ -413,6 +413,7 @@ void createSourceFile( const std::string &group,
   fprintf(f, "#include <QtGui/QLineEdit>\n");
   fprintf(f, "#include <QtGui/QCheckBox>\n");
   fprintf(f, "#include <QtGui/QComboBox>\n\n");
+  fprintf(f, "#include \"QtSupport/DREAM3DHelpUrlGenerator.h\"\n\n");
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
@@ -848,33 +849,7 @@ void createSourceFile( const std::string &group,
   std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "QUrl Q%sWidget::htmlHelpIndexFile()\n{\n", filter.c_str());
-  fprintf(f, "  QString appPath = qApp->applicationDirPath();\n");
-  fprintf(f, "  QDir helpDir = QDir(appPath);\n");
-  fprintf(f, "  QString s(\"file://\");\n");
-  fprintf(f, "#if defined(Q_OS_WIN)\n");
-  fprintf(f, "  s = s + \"/\"; /* Need the third slash on windows because file paths start with a drive letter */\n");
-  fprintf(f, "#elif defined(Q_OS_MAC)\n");
-  fprintf(f, "  if (helpDir.dirName() == \"MacOS\")\n");
-  fprintf(f, "  {\n");
-  fprintf(f, "    helpDir.cdUp();\n");
-  fprintf(f, "    helpDir.cdUp();\n");
-  fprintf(f, "    helpDir.cdUp();\n");
-  fprintf(f, "  }\n");
-  fprintf(f, "#else\n");
-  fprintf(f, "  /* We are on Linux - I think */\n");
-  fprintf(f, "  helpDir.cdUp();\n");
-  fprintf(f, "#endif\n");
-  fprintf(f, "#if defined(Q_OS_WIN)\n");
-  fprintf(f, "  QFileInfo fi( helpDir.absolutePath() + \"/Help/DREAM3D/%s.html\");\n", lower.c_str());
-  fprintf(f, "  if (fi.exists() == false)\n");
-  fprintf(f, "  {\n");
-  fprintf(f, "    /* The help file does not exist at the default location because we are probably running from visual studio.*/\n");
-  fprintf(f, "    /* Try up one more directory */\n");
-  fprintf(f, "    helpDir.cdUp();\n");
-  fprintf(f, "  }\n");
-  fprintf(f, "#endif\n");
-  fprintf(f, "  s = s + helpDir.absolutePath() + \"/Help/DREAM3D/%s.html\";\n", lower.c_str());
-  fprintf(f, "  return QUrl(s);\n");
+  fprintf(f, "\treturn ( DREAM3DHelpUrlGenerator::generateHTMLUrl(\"%s\") );\n", lower.c_str());
   fprintf(f, "}\n");
 
 
