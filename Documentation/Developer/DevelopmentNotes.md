@@ -31,8 +31,38 @@ Create a user interface (see image below) based on a menu selection that display
 
 ![Example GUI](Images/UpdateCheck.png)
 
-The update code should be threaded and uses the QNetwork framework. A file will need to be stored on the web server with the version information. Can this file be a .ini file so we can leverage QSettings to get the values from it? XML file but then we need to bring in the QtXML processing libraries. The user interface will have a button that opens the users web browser to the correct download location.
+The update code should be threaded and uses the QNetwork framework. A file will need to be stored on the web server with the version information. Can this file be a .ini file so we can leverage QSettings to get the values from it?
 
++ Possibly use QDialog as the Base class then design the GUI using QDesigner.
+
++ May need to add a file to the web site with the bug fixes/enhancements to the new version so the user can decide if they want to update.
++ Add CMake code to generate this _version.ini_ file during the cmake process.
+    - The file can be uploaded later to the web server via ssh (only Jackson will have access which can be bad)
++ Add a Menu Item under the _Help_ menu called "Check for Updates"
++ The user interface will have a button that opens the users web browser to the correct download location.
++ The CMake Files will need to be updated to link against the QtNetwork library
++ Need to save the last date checked into the preferences file so a comparison can be made as to when the last time a check was made (Assuming an automatic check)
++ Will need to add a new section to the general preferences file that stores the users preference as to when an update should be checked (Manually, Weekly, Monthly).
+    - QSettings::startGroup("Version Check");
+    - Setting to store when to do the check (Every Startup, Weekly, Monthly, Manually). This should default to Monthly. Have an enumeration for this value.
+    - Setting for the web site to check as this may change in the future - This will NOT be exposed to the user.
+    - Setting that stores the last date/time the check was performed
++ **Easy Download**  Have a link to the latest download and open the user's web browser to the site. This is the easiest way to do this.
+
+-------------------
+
+![Example Showing Update Needed](Images/VersionUpdate_1.png)
+
+
+-------------------
+
+![Example Showing NO Update Needed](Images/VersionUpdate_2.png)
+
+-------------------
+
+![Example Showing NO Update Needed with Preference Setting ](Images/VersionUpdate_3.png)
+
+-------------------
 
 ## StatsGenerator Template File Selection ##
 
