@@ -639,3 +639,38 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
 //  this->m_ZStartIndex->setRange(minSlice, maxSlice);
 //  this->m_ZEndIndex->setRange(minSlice, maxSlice);
 }
+
+
+// -----------------------------------------------------------------------------
+QUrl QImportImageStackWidget::htmlHelpIndexFile()
+{
+  QString lowerFilter = QString("ImportImageStack").toLower();
+  QString appPath = qApp->applicationDirPath();
+  QDir helpDir = QDir(appPath);
+  QString s("file://");
+#if defined(Q_OS_WIN)
+  s = s + "/"; /* Need the third slash on windows because file paths start with a drive letter */
+#elif defined(Q_OS_MAC)
+  if (helpDir.dirName() == "MacOS")
+  {
+    helpDir.cdUp();
+    helpDir.cdUp();
+    helpDir.cdUp();
+  }
+#else
+  /* We are on Linux - I think */
+  helpDir.cdUp();
+#endif
+#if defined(Q_OS_WIN)
+  QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html");
+  if (fi.exists() == false)
+  {
+    /* The help file does not exist at the default location because we are probably running from visual studio.*/
+    /* Try up one more directory */
+    helpDir.cdUp();
+  }
+#endif
+  s = s + helpDir.absolutePath() + "/Help/DREAM3D/" + lowerFilter + ".html";
+  return QUrl(s);
+}
+
