@@ -59,6 +59,7 @@ class IFilterWidgetFactory
     virtual std::string getFilterGroup() { BOOST_ASSERT(false); return ""; }
     virtual std::string getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
     virtual std::string getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
+	virtual QUrl getFilterHelpURL() { BOOST_ASSERT(false); return QUrl(""); } 
     virtual AbstractFilter::Pointer getFilterInstance() { BOOST_ASSERT(false); return AbstractFilter::NullPointer(); }
 
   protected:
