@@ -60,7 +60,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Statistics/Analysis/Other Algorithms ##
-+ Add filter to do TSL Neighbor Orientation Correlation
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -75,7 +74,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Look into using 2-pt statistics to advance the packing algorithms in the synthetic builder
 + Add a filter to calculate Kearn's number
 + Look into matching the Kearn's number when matching cystallography in the synthetic builder
-+ Add a cleanup filter that considers the orientation (nearest) or kikuchi pattern of neighboring voxels when assigning bad voxels
 + Add GBCD calculation filters from G. Rohrer
 + Add a filter to calculate 'clustering' statistics on 'marked' features
 + Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
@@ -157,7 +155,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
++ Add a cleanup filter that considers the orientation of neighboring voxels when assigning bad voxels
 + Add TSL Neighbor CI correlation clean up filter
++ Add TSL Neighbor Orientation correlation clean up filter
 + Right-click on filter in the **Filter List** and display the help for that filter
 + Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
 + HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.

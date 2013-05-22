@@ -283,8 +283,8 @@ void NeighborOrientationCorrelation::execute()
 								if (m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 								if (w < m_MisorientationTolerance)
 								{
-									neighborSimCount[neighbor]++;
-									neighborSimCount[neighbor2]++;
+									neighborSimCount[j]++;
+									neighborSimCount[k]++;
 								}
 							}
 						}
@@ -303,12 +303,12 @@ void NeighborOrientationCorrelation::execute()
 					if (j == 3 && column == (dims[0] - 1)) good = 0;
 					if (good == 1)
 					{
-						if(neighborSimCount[neighbor] > best)
+						if(neighborSimCount[j] > best)
 						{
-							best = neighborSimCount[neighbor];
+							best = neighborSimCount[j];
 							bestNeighbor[i] = neighbor;
 						}
-						neighborSimCount[neighbor] = 0;
+						neighborSimCount[j] = 0;
 					}
 				}
 			}
