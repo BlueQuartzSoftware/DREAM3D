@@ -188,7 +188,15 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
 	QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
+	/**
+     * @brief Returns the URL of the help index
+     */
     QUrl htmlHelpIndexFile();
+
+	/**
+     * @brief Initializes the right-click menu for each filter in filterList
+     */
+	void initFilterListMenu();
 
   public slots:
     void openPipelineFile(const QString& filePath);
@@ -198,6 +206,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionAddFavorite_triggered();
     void actionRemoveFavorite_triggered();
     void actionRenameFavorite_triggered();
+	void actionFilterListHelp_triggered();
 
     void on_m_GoBtn_clicked();
 
@@ -213,6 +222,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
+
+	void onCustomContextMenuRequested(const QPoint& pos);
 
     void clearMessagesTable();
 
@@ -257,6 +268,10 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     bool                        m_hasErrors;
     bool                        m_hasWarnings;
     HelpDialog*                 m_HelpDialog;
+
+	QMenu						m_FilterMenu;
+	QAction*					m_actionFilterHelp;
+	QPoint						filterListPosition;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented
