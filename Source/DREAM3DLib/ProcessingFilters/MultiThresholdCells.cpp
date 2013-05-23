@@ -67,11 +67,15 @@ void MultiThresholdCells::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
     parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameter::StringWidget);
+    parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
+    parameter->setEditable(true);
+    std::vector<std::string> choices;
+    choices.push_back(DREAM3D::CellData::GoodVoxels);
+    parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
 
