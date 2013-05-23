@@ -110,7 +110,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                               bool stackLowToHigh, QString filename);
 
-    QUrl htmlHelpIndexFile();
+    virtual void openHtmlHelpFile();
 
   protected slots:
     /* OIM Data Import Slots */

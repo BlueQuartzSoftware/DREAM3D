@@ -758,5 +758,5 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 {
-  DREAM3DHelpUrlGenerator::openURL( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") , this);
+	DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
 }
