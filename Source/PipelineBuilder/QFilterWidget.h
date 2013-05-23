@@ -147,11 +147,11 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                             QString propertyName);
 
     /**
-     * @brief htmlHelpIndexFile Returns the path to the HTML help file for a filter. Each filter should reimplement
+     * @brief openHtmlHelpFile Creates and opens the path to the HTML help file for a filter. Each filter should reimplement
      * this function;
      * @return
      */
-    virtual QUrl htmlHelpIndexFile();
+    virtual void openHtmlHelpFile();
 
   signals:
     void dragStarted(QFilterWidget* widget);
@@ -168,6 +168,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void selectOutputPath();
     virtual void updateComboBoxValue(int v);
     virtual void updateArrayNameComboBoxValue(int v);
+    virtual void updateArrayNameComboBoxValue(const QString &text);
     virtual void updateQSpinBoxValue(int v);
     virtual void updateQDoubleSpinBoxValue(double v);
     virtual void updateQCheckBoxValue(int v);
@@ -205,10 +206,10 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     void setHasPreflightWarnings(bool hasWarnings);
 
-	protected slots:
-		void onCustomContextMenuRequested(const QPoint& pos);
-		void actionWidgetHelp_triggered();
-		void actionRemoveFilter_triggered();
+  protected slots:
+    void onCustomContextMenuRequested(const QPoint& pos);
+    void actionWidgetHelp_triggered();
+    void actionRemoveFilter_triggered();
 
   signals:
     void widgetSelected(QFilterWidget* w);
@@ -241,9 +242,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     bool										m_HasPreflightErrors;
     bool										m_HasPreflightWarnings;
     static QString								m_OpenDialogLastDirectory;
-	QMenu										m_FilterMenu;
-	QAction*									m_actionFilterHelp;
-	QAction*									m_actionRemoveFilter;
+  QMenu										m_FilterMenu;
+  QAction*									m_actionFilterHelp;
+  QAction*									m_actionRemoveFilter;
 
 
 

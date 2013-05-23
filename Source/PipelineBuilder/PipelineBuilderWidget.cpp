@@ -105,11 +105,7 @@ PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *paren
   // Initialize filterList right-click menu
   initFilterListMenu();
 
-  setContextMenuPolicy(Qt::CustomContextMenu);
 
-  connect(this,
-          SIGNAL(customContextMenuRequested(const QPoint&)),
-          SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -123,10 +119,14 @@ PipelineBuilderWidget::~PipelineBuilderWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::onCustomContextMenuRequested(const QPoint& pos)
+void PipelineBuilderWidget::onFilterListCustomContextMenuRequested(const QPoint& pos)
 {
-  filterListPosition = filterList->mapFrom(this, pos);
-  m_FilterMenu.exec( mapToGlobal(pos) );
+  filterListPosition = pos;
+  QListWidgetItem* item = filterList->itemAt(pos);
+  if(NULL != item)
+  {
+    m_FilterMenu.exec( filterList->mapToGlobal(pos) );
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -582,6 +582,11 @@ void PipelineBuilderWidget::setupGui()
 
   connect(m_PipelineViewWidget, SIGNAL(preflightHasMessage(PipelineMessage)),
           this, SLOT(addMessage(PipelineMessage)) );
+
+    //
+  filterList->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
+          this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -992,19 +997,6 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
 
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void PipelineBuilderWidget::on_helpText_anchorClicked ( const QUrl & link )
-//{
-//  QUrl u(link);
-//  u.setScheme("qrc");
-//  helpText->blockSignals(true);
-//  helpText->setSource(u);
-//  helpText->blockSignals(false);
-//}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1012,8 +1004,6 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 {
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
   m_PipelineViewWidget->preflightPipeline();
-
-  //  m_QDroppableScrollArea->verticalScrollBar()->setValue(m_QDroppableScrollArea->verticalScrollBar()->maximum());
 }
 
 // -----------------------------------------------------------------------------
@@ -1022,32 +1012,21 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 void PipelineBuilderWidget::actionFilterListHelp_triggered()
 {
   QListWidgetItem* listItem = filterList->itemAt(filterListPosition);
+  if (NULL == listItem) { return; }
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
+
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString().toStdString());
   if (NULL == wf) { return;}
 
-  QUrl filterURL = wf->getFilterHelpURL();
-
-  DREAM3DHelpUrlGenerator::openURL(filterURL, this);
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( listItem->data(Qt::UserRole).toString().toLower(), this );
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QUrl PipelineBuilderWidget::htmlHelpIndexFile()
-{
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") );
-}
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-  // m_HelpDialog->setContentFile(htmlHelpIndexFile());
-  QUrl url = htmlHelpIndexFile();
-  DREAM3DHelpUrlGenerator::openURL(url, this);
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
 }
 
 // -----------------------------------------------------------------------------

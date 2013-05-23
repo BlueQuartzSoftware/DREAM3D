@@ -190,11 +190,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
 
     /**
-     * @brief Returns the URL of the help index
-     */
-    QUrl htmlHelpIndexFile();
-
-    /**
      * @brief Initializes the right-click menu for each filter in filterList
      */
     void initFilterListMenu();
@@ -224,7 +219,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
 
-    void onCustomContextMenuRequested(const QPoint& pos);
+    void onFilterListCustomContextMenuRequested(const QPoint& pos);
 
     void clearMessagesTable();
 

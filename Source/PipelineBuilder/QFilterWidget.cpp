@@ -141,9 +141,9 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QUrl QFilterWidget::htmlHelpIndexFile()
+void QFilterWidget::openHtmlHelpFile()
 {
-  return QUrl();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -182,8 +182,7 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-  QUrl filterHelpURL = htmlHelpIndexFile();
-  DREAM3DHelpUrlGenerator::openURL(filterHelpURL, this);
+	openHtmlHelpFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -523,9 +522,6 @@ void QFilterWidget::setupGui()
                         this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
                         this, theSlot.toAscii());
-      //      connect(fp, SIGNAL(textChanged(const QString &)),
-      //              this, SLOT(updateLineEdit(const QString &)));
-
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select...");
@@ -672,6 +668,7 @@ void QFilterWidget::setupGui()
       if (NULL == choiceFilterParameter) { return; }
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QComboBox* cb = new QComboBox(this);
+      cb->setEditable(choiceFilterParameter->getEditable());
       cb->setObjectName(QString::fromStdString(option->getPropertyName()));
       std::vector<std::string> choices = choiceFilterParameter->getChoices();
       for(unsigned int i = 0; i < choices.size(); ++i)
@@ -679,7 +676,17 @@ void QFilterWidget::setupGui()
         cb->addItem(QString::fromStdString(choices[i]));
       }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
-      connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
+      if (choiceFilterParameter->getValueType().compare("string") == 0
+          && choiceFilterParameter->getEditable() == true)
+      {
+        connect(cb, SIGNAL( editTextChanged ( const QString&  )), this, SLOT(updateArrayNameComboBoxValue(const QString&)));
+        connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
+      }
+      else
+      {
+        connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
+      }
+
       QVariant v = property(option->getPropertyName().c_str());
       quint32 uintValue = v.toUInt(&ok);
       if (uintValue >= static_cast<quint32>(cb->count())  )
@@ -1318,6 +1325,26 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
   {
     bool ok = false;
     QString text = cb->itemText(v);
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), text);
+    if (true == ok) { }
+    else
+    {
+      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
+{
+  QObject* whoSent = sender();
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
+  if(cb)
+  {
+    bool ok = false;
     ok = setProperty(whoSent->objectName().toStdString().c_str(), text);
     if (true == ok) { }
     else

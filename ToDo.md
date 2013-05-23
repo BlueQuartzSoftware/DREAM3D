@@ -47,16 +47,21 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ Create a Parameter Type that suggests Internal Array names but allows the user to type their own array name
++ Create a "TestFilter" that has one of every FilterParameter Type
+    - Create a new file in DREAM3DLib/GenericFilters/TestFilter.h & cpp
+    - Update the SourceList.cmake but make the filter "Private" by adding the filter to the \_PrivateFilters cmake variable.
+    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
+    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
++ Design protocol to check for updated Version of DREAM3D.
+    - Initial Skeleton Code Already Done.
+    - See DevelopmentNotes.md
++ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
++ Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
++ Append a favorite to a pipeline that is already built up in the PipelineView widget
++ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
++ Error messages returned from Pipeline should be hyperlinked to the filter docs. See DevelopmentNotes.md for more explanation
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
-+ Design protocol to check for updated Version of DREAM3D.
-    - Initial Skeleton Code Already Done
-+ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
-+ Import/Export Favorites to/from pipeline files.
-+ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
-+ Error messages returned from Pipeline should be hyperlinked to the filter docs
-
 
 ## Statistics/Analysis/Other Algorithms ##
 + Add filter to calculate histograms of user selected arrays (cell or field)
@@ -103,9 +108,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
 + Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
+    + Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
 + Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 + Filter that can execute any program on the users computer
-+ Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
 + Look into creating multiple maps at each level (i.e. parent and grain filed maps)
 + Create filter to generate surface mesh from volume mesh
 + Design protocol to learn user's 'ontology'

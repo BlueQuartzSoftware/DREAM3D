@@ -74,7 +74,7 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
-    virtual QUrl htmlHelpIndexFile();
+    virtual void openHtmlHelpFile();
 
 
   protected:

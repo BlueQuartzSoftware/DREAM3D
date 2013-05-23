@@ -163,6 +163,7 @@ class ChoiceFilterParameter : public FilterParameter
     virtual ~ChoiceFilterParameter(){}
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
   protected:
     ChoiceFilterParameter() {}
