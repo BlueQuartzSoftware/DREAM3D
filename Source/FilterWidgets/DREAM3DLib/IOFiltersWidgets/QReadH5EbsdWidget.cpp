@@ -429,4 +429,3 @@ void QReadH5EbsdWidget::openHtmlHelpFile()
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
-
