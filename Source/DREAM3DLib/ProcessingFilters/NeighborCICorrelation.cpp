@@ -164,8 +164,8 @@ void NeighborCICorrelation::execute()
   int good = 1;
   int neighbor;
   DimType column, row, plane;
-  int neighpoint;
-  size_t numgrains = m->getNumFieldTuples();
+  //int neighpoint;
+ // size_t numgrains = m->getNumFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -183,38 +183,38 @@ void NeighborCICorrelation::execute()
   bool keepGoing = true;
   while(keepGoing == true)
   {
-	  keepGoing = false;
-	  count = 0;
-	  for (int64_t i = 0; i < totalPoints; i++)
-	  {
-			if(m_ConfidenceIndex[i] < m_MinConfidence)
-			{
-				column = i % dims[0];
-				row = (i / dims[0]) % dims[1];
-				plane = i / (dims[0] * dims[1]);
-				count++;
-				best = m_ConfidenceIndex[i];
-				for (DimType j = 0; j < 6; j++)
-				{
-					good = 1;
-					neighbor = i + neighpoints[j];
-					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (dims[2] - 1)) good = 0;
-					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (dims[1] - 1)) good = 0;
-					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1)
-					{
-						if(m_ConfidenceIndex[neighbor] >= m_MinConfidence && m_ConfidenceIndex[neighbor] > best)
-						{
-							best = m_ConfidenceIndex[neighbor];
-							bestNeighbor[i] = neighbor;
-						}
-					}
-				}
-			}
-	  }
+    keepGoing = false;
+    count = 0;
+    for (int64_t i = 0; i < totalPoints; i++)
+    {
+      if(m_ConfidenceIndex[i] < m_MinConfidence)
+      {
+        column = i % dims[0];
+        row = (i / dims[0]) % dims[1];
+        plane = i / (dims[0] * dims[1]);
+        count++;
+        best = m_ConfidenceIndex[i];
+        for (DimType j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighbor = i + neighpoints[j];
+          if (j == 0 && plane == 0) good = 0;
+          if (j == 5 && plane == (dims[2] - 1)) good = 0;
+          if (j == 1 && row == 0) good = 0;
+          if (j == 4 && row == (dims[1] - 1)) good = 0;
+          if (j == 2 && column == 0) good = 0;
+          if (j == 3 && column == (dims[0] - 1)) good = 0;
+          if (good == 1)
+          {
+            if(m_ConfidenceIndex[neighbor] >= m_MinConfidence && m_ConfidenceIndex[neighbor] > best)
+            {
+              best = m_ConfidenceIndex[neighbor];
+              bestNeighbor[i] = neighbor;
+            }
+          }
+        }
+      }
+    }
       std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
       for (int j = 0; j < totalPoints; j++)
       {
@@ -229,7 +229,7 @@ void NeighborCICorrelation::execute()
           }
         }
       }
-	  if(m_Loop == true && count > 0) keepGoing = true;
+    if(m_Loop == true && count > 0) keepGoing = true;
   }
 
 // If there is an error set this to something negative and also set a message

@@ -686,7 +686,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
     fArray->SetNumberOfComponents(3);
     float* cellEulerAngles = fArray->GetPointer(0);
-    int* cellPhases = iArray->GetPointer(0);
+    //int* cellPhases = iArray->GetPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
     {
