@@ -362,6 +362,7 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
   DREAM3DUpdateCheckDialog d;
   d.setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
   d.setUpdateWebSite(Detail::UpdateWebSite);
+  d.setApplicationName("DREAM3D");
 
   // Read from the QSettings Pref file the information that we need
   #if defined (Q_OS_MAC)
@@ -757,5 +758,5 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 {
-	DREAM3DHelpUrlGenerator::openURL( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") , this);
+  DREAM3DHelpUrlGenerator::openURL( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") , this);
 }

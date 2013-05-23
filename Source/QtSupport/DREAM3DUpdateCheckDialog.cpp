@@ -53,9 +53,9 @@
 //
 // -----------------------------------------------------------------------------
 DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
-QDialog(parent),
-nam(NULL),
-m_UpdateCheckThread(NULL)
+  QDialog(parent),
+  nam(NULL),
+  m_UpdateCheckThread(NULL)
 {
 
   setupUi(this);
@@ -77,7 +77,13 @@ DREAM3DUpdateCheckDialog::~DREAM3DUpdateCheckDialog()
 void DREAM3DUpdateCheckDialog::setCurrentVersion(QString version)
 {
   m_CurrentVersion = version;
-  currentVersion->setText(m_CurrentVersion);
+  QStringList appVersionParts = m_CurrentVersion.split(QString("."));
+
+  {
+    QString vStr(appVersionParts.at(0));
+    vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
+    currentVersion->setText(vStr);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -86,6 +92,14 @@ void DREAM3DUpdateCheckDialog::setCurrentVersion(QString version)
 void DREAM3DUpdateCheckDialog::setLastCheckDateTime(QDateTime lastDateTime)
 {
   m_LastCheckDateTime = lastDateTime;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::setApplicationName(QString name)
+{
+  m_AppName = name;
 }
 
 // -----------------------------------------------------------------------------
@@ -160,7 +174,7 @@ void DREAM3DUpdateCheckDialog::checkVersion()
   m_UpdateCheckThread = new QThread(); // Create a new Thread Resource
   m_UpdateCheck = new DREAM3DUpdateCheck(NULL);
   m_UpdateCheck->moveToThread(m_UpdateCheckThread);
-    // When the thread starts its event loop, start the PipelineBuilder going
+  // When the thread starts its event loop, start the PipelineBuilder going
   connect(m_UpdateCheckThread, SIGNAL(started()),
           m_UpdateCheck, SLOT(checkVersion()));
 
@@ -182,73 +196,78 @@ void DREAM3DUpdateCheckDialog::checkVersion()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::networkReplied(QNetworkReply* reply)
 {
-    // Reading attributes of the reply
-    // e.g. the HTTP status code
-    QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-    // Or the target URL if it was a redirect:
-    QVariant redirectionTargetUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-    // see CS001432 on how to handle this
+  // Reading attributes of the reply
+  // e.g. the HTTP status code
+  QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
+  // Or the target URL if it was a redirect:
+  QVariant redirectionTargetUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+  // see CS001432 on how to handle this
 
-    // no error received?
-    if (reply->error() == QNetworkReply::NoError)
+  // no error received?
+  if (reply->error() == QNetworkReply::NoError)
+  {
+    // read data from QNetworkReply here
+
+    // Example 2: Reading bytes form the reply
+    QString message;
+
+
+    QByteArray bytes = reply->readAll();  // bytes
+    QString serverVersion(bytes); // string
+    serverVersion = serverVersion.trimmed();
+
+    latestVersion->setText(serverVersion);
+
+    QString appVersion = m_CurrentVersion;
+
+    bool ok = false;
+    QStringList serverVersionParts = serverVersion.split(QString("."));
+    QStringList appVersionParts = appVersion.split(QString("."));
+
     {
-        // read data from QNetworkReply here
-
-        // Example 2: Reading bytes form the reply
-        QString message;
-
-
-        QByteArray bytes = reply->readAll();  // bytes
-        QString serverVersion(bytes); // string
-        serverVersion = serverVersion.trimmed();
-
-        latestVersion->setText(serverVersion);
-
-        QString appVersion = m_CurrentVersion;
-
-        bool ok = false;
-        QStringList serverVersionParts = serverVersion.split(QString("."));
-        QStringList appVersionParts = appVersion.split(QString("."));
-
-        int serverMajor = serverVersionParts.at(0).toInt(&ok);
-        int appMajor = appVersionParts.at(0).toInt(&ok);
-
-        int serverMinor = serverVersionParts.at(1).toInt(&ok);
-        int appMinor = appVersionParts.at(1).toInt(&ok);
-
-        int serverPatch = serverVersionParts.at(2).toInt(&ok);
-        int appPatch = appVersionParts.at(2).toInt(&ok);
-
-        if (serverMajor > appMajor )
-        {
-          message.append("<qt>There is a DREAM3D Update available. Please go to the <a href=\"http://dream3d.bluequartz.net/downloads\">website</a> to download the latest version</qt>");
-        }
-        else if (serverMinor > appMinor)
-        {
-          message.append("<qt>There is a DREAM3D Update available. Please go to the <a href=\"http://dream3d.bluequartz.net/downloads\">website</a> to download the latest version</qt>");
-        }
-        else if (serverPatch > appPatch)
-        {
-          message.append("<qt>There is a DREAM3D Update available. Please go to the <a href=\"http://dream3d.bluequartz.net/downloads\">website</a> to download the latest version</qt>");
-        }
-        else
-        {
-          message.append("DREAM3D is up to date.");
-        }
-        feedbackText->setText(message);
+      QString vStr(appVersionParts.at(0));
+      vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
+      currentVersion->setText(vStr);
+      m_CurrentVersion = vStr;
     }
-    // Some http error received
+
+    {
+      QString vStr(serverVersionParts.at(0));
+      vStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
+      latestVersion->setText(vStr);
+    }
+
+    int serverMajor = serverVersionParts.at(0).toInt(&ok);
+    int appMajor = appVersionParts.at(0).toInt(&ok);
+
+    int serverMinor = serverVersionParts.at(1).toInt(&ok);
+    int appMinor = appVersionParts.at(1).toInt(&ok);
+
+    int serverPatch = serverVersionParts.at(2).toInt(&ok);
+    int appPatch = appVersionParts.at(2).toInt(&ok);
+
+    if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+    {
+      message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+    }
     else
     {
-        // handle errors here
+      message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
     }
+    feedbackText->setText(message);
+  }
+  // Some http error received
+  else
+  {
+    // handle errors here
+  }
 
-    // We receive ownership of the reply object
-    // and therefore need to handle deletion.
-    reply->deleteLater();
-    emit finished();
+  // We receive ownership of the reply object
+  // and therefore need to handle deletion.
+  reply->deleteLater();
+  emit finished();
 
-    std::cout << "DREAM3DUpdateCheckDialog::networkReplied  complete" << std::endl;
+  std::cout << "DREAM3DUpdateCheckDialog::networkReplied  complete" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
