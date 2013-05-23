@@ -373,6 +373,9 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
 
     for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {
+      emit preflightHasMessage(errorStream.at(i));
+
+    #if 0
       errorTableWidget->insertRow(rc);
 
       QString filterName = QString::fromStdString(errorStream.at(i).getFilterName());
@@ -401,6 +404,7 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
       errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
       errorTableWidget->setItem(rc, 1, errorDescriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, errorCodeWidgetItem);
+      #endif
     }
   }
 }
