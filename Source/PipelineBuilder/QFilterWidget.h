@@ -151,7 +151,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      * this function;
      * @return
      */
-    virtual QUrl htmlHelpIndexFile();
+    virtual void openHtmlHelpIndexFile();
 
   signals:
     void dragStarted(QFilterWidget* widget);

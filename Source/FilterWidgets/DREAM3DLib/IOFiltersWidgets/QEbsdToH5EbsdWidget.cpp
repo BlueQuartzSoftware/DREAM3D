@@ -756,10 +756,10 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
 }
 
 // -----------------------------------------------------------------------------
-QUrl QEbsdToH5EbsdWidget::htmlHelpIndexFile()
+void QEbsdToH5EbsdWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("EbsdToH5Ebsd").toLower();
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
 

@@ -228,7 +228,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   fprintf(f, "    QFilterWidget* createDeepCopy();\n\n");
   fprintf(f, "    QString getFilterGroup();\n\n");
   fprintf(f, "    QString getFilterSubGroup();\n\n");
-  fprintf(f, "    virtual QUrl htmlHelpIndexFile();\n\n");
+  fprintf(f, "    virtual void openHtmlHelpIndexFile();\n\n");
 
   bool implementArrayNameComboBoxUpdated = false;
 
@@ -848,8 +848,8 @@ void createSourceFile( const std::string &group,
   std::string lower = filter;
   std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "QUrl Q%sWidget::htmlHelpIndexFile()\n{\n", filter.c_str());
-  fprintf(f, "\treturn ( DREAM3DHelpUrlGenerator::generateHTMLUrl(\"%s\") );\n", lower.c_str());
+  fprintf(f, "void Q%sWidget::openHtmlHelpIndexFile()\n{\n", filter.c_str());
+  fprintf(f, "\tDREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(\"%s\", this);\n", lower.c_str());
   fprintf(f, "}\n");
 
 

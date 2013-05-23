@@ -106,7 +106,7 @@ QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DHelpUrlGenerator::openURL(QUrl URL, QWidget* parent)
+void DREAM3DHelpUrlGenerator::openHTMLUrl(QUrl URL, QWidget* parent)
 {
 	bool didOpen = QDesktopServices::openUrl(URL);
 	if(false == didOpen)
@@ -115,4 +115,13 @@ void DREAM3DHelpUrlGenerator::openURL(QUrl URL, QWidget* parent)
 			QString::fromAscii("DREAM3D could not open the help file path ") + URL.path(),
 			QMessageBox::Ok, QMessageBox::Ok);
 	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(QString helpName, QWidget* parent)
+{
+	QUrl URL = generateHTMLUrl(helpName);
+	openHTMLUrl(URL, parent);
 }
