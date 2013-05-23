@@ -72,6 +72,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void setLastCheckDateTime(QDateTime lastDateTime);
     void setWhenToCheck(UpdateType whenToCheck);
     void setUpdateWebSite(QString url);
+    void setApplicationName(QString name);
 
     void setupGui();
 
@@ -92,7 +93,8 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     QDateTime  m_LastCheckDateTime;
     int        m_WhenToCheck;
     QString    m_UpdateWebSite;
-    QThread*    m_UpdateCheckThread;
+    QString    m_AppName;
+    QThread*   m_UpdateCheckThread;
 
     DREAM3DUpdateCheckDialog(const DREAM3DUpdateCheckDialog&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DUpdateCheckDialog&); // Operator '=' Not Implemented
