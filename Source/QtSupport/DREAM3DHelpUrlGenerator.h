@@ -47,8 +47,8 @@ class DREAM3DHelpUrlGenerator
 {
 
 public:
-	DREAM3DHelpUrlGenerator();
-	virtual ~DREAM3DHelpUrlGenerator();
+  DREAM3DHelpUrlGenerator();
+  virtual ~DREAM3DHelpUrlGenerator();
 
 	/**
      * @brief Generates a help URL from the given lowercase name.
@@ -69,8 +69,8 @@ public:
 
 private:
 
-	DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
-	void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
+  DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
+  void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DHelpUrlGenerator_H */

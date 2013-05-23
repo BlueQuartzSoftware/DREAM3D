@@ -33,28 +33,55 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DREAM3DUpdateCheck_H_
-#define _DREAM3DUpdateCheck_H_
+#ifndef _DREAM3DUpdateCheckDialog_H_
+#define _DREAM3DUpdateCheckDialog_H_
+
+#include <QtCore/QString>
+#include <QtCore/QDateTime>
+
+#include <QtGui/QWidget>
+#include <QtGui/QDialog>
 
 
-#include <QtCore/QObject>
+#include "ui_DREAM3DUpdateCheckDialog.h"
+
+
 
 class QNetworkAccessManager;
 class QNetworkReply;
 
 
-class DREAM3DUpdateCheck : public QObject
+class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    DREAM3DUpdateCheck(QObject* parent = 0);
-    virtual ~DREAM3DUpdateCheck();
+    DREAM3DUpdateCheckDialog(QWidget *parent = 0);
+    virtual ~DREAM3DUpdateCheckDialog();
+
+    enum UpdateType
+    {
+      UpdateCheckDaily,
+      UpdateCheckWeekly,
+      UpdateCheckMonthly,
+      UpdateCheckManual
+    };
 
 
-    public slots:
-      void checkVersion();
-     void networkReplied(QNetworkReply* reply);
+    void setCurrentVersion(QString version);
+    void setLastCheckDateTime(QDateTime lastDateTime);
+    void setWhenToCheck(UpdateType whenToCheck);
+    void setUpdateWebSite(QString url);
+    void setApplicationName(QString name);
+
+    void setupGui();
+
+  public slots:
+    void checkVersion();
+    void networkReplied(QNetworkReply* reply);
+
+    void on_checkNowBtn_clicked();
+    void on_websiteBtn_clicked();
 
   signals:
     void finished();
@@ -62,12 +89,18 @@ class DREAM3DUpdateCheck : public QObject
 
   private:
     QNetworkAccessManager* nam;
+    QString    m_CurrentVersion;
+    QDateTime  m_LastCheckDateTime;
+    int        m_WhenToCheck;
+    QString    m_UpdateWebSite;
+    QString    m_AppName;
+    QThread*   m_UpdateCheckThread;
 
-    DREAM3DUpdateCheck(const DREAM3DUpdateCheck&); // Copy Constructor Not Implemented
-    void operator=(const DREAM3DUpdateCheck&); // Operator '=' Not Implemented
+    DREAM3DUpdateCheckDialog(const DREAM3DUpdateCheckDialog&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DUpdateCheckDialog&); // Operator '=' Not Implemented
 
 };
 
 
 
-#endif /* _DREAM3DUpdateCheck_H_ */
+#endif /* _DREAM3DUpdateCheckDialog_H_ */

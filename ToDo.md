@@ -51,6 +51,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
 + Design protocol to check for updated Version of DREAM3D.
+    - Initial Skeleton Code Already Done
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Import/Export Favorites to/from pipeline files.
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
