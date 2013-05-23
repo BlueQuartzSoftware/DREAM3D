@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -70,7 +70,10 @@
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
     <addaction name="actionLicense_Information"/>
+    <addaction name="separator"/>
     <addaction name="actionShow_User_Manual"/>
+    <addaction name="separator"/>
+    <addaction name="action_CheckForUpdates"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPipeline"/>
@@ -164,60 +167,17 @@
     <string>Save Pipeline</string>
    </property>
   </action>
+  <action name="action_CheckForUpdates">
+   <property name="text">
+    <string>Check for Updates</string>
+   </property>
+  </action>
   <action name="actionShow_User_Manual">
    <property name="text">
     <string>Show User Manual</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
-  <include location="../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

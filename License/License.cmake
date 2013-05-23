@@ -3,11 +3,11 @@
 #message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
 #message(STATUS "PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 # --------------------------------------------------------------------
-# create Resource files for the various license files that are used and 
+# create Resource files for the various license files that are used and
 # also create a header file that lists all the License Files
-set(LICENSE_FILES 
+set(LICENSE_FILES
                    ${DREAM3DProj_SOURCE_DIR}/License.txt.in
-                   ${DREAM3DProj_SOURCE_DIR}/ReadMe.txt.in
+                #   ${DREAM3DProj_SOURCE_DIR}/ReadMe.txt.in
                    ${DREAM3DProj_SOURCE_DIR}/License/Boost.license
                    ${DREAM3DProj_SOURCE_DIR}/License/MXA.license
                    ${DREAM3DProj_SOURCE_DIR}/License/Qt.license
@@ -29,15 +29,15 @@ foreach(lf ${LICENSE_FILES})
 #    message(STATUS "cmp_text_file_name: ${cmp_text_file_name}")
 #    message(STATUS "lf_fn: ${lf_fn}")
     configure_file("${lf}" ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.license   COPYONLY )
-        
+
     # create the Qt Resource File
     set(CMP_RESOURCE_FILE_NAME ${lf_fn}.license)
-    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/QtResourceFile.qrc.in 
+    configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/QtResourceFile.qrc.in
                    ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.qrc)
-                   
+
     set(QRC_LICENSE_FILES ${QRC_LICENSE_FILES} ${PROJECT_BINARY_DIR}/DREAM3D/License/${lf_fn}.qrc)
     file(APPEND ${LICENSE_HEADER_FILE} " << \":/${lf_fn}.license\"")
-    
+
 endforeach(lf ${LICENSE_FILES})
 cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "")
 

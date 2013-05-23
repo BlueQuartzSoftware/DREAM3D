@@ -47,16 +47,16 @@ class DREAM3DHelpUrlGenerator
 {
 
 public:
-	DREAM3DHelpUrlGenerator();
-	virtual ~DREAM3DHelpUrlGenerator();
+  DREAM3DHelpUrlGenerator();
+  virtual ~DREAM3DHelpUrlGenerator();
 
-	static QUrl generateHTMLUrl(QString helpName);
-	static void openURL(QUrl URL, QWidget* parent);
+  static QUrl generateHTMLUrl(QString helpName);
+  static void openURL(QUrl URL, QWidget* parent);
 
 private:
 
-	DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
-	void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
+  DREAM3DHelpUrlGenerator(const DREAM3DHelpUrlGenerator&); // Copy Constructor Not Implemented
+  void operator=(const DREAM3DHelpUrlGenerator&); // Operator '=' Not Implemented
 };
 
 #endif /* _DREAM3DHelpUrlGenerator_H */

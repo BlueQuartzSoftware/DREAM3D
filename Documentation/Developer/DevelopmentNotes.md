@@ -31,8 +31,19 @@ Create a user interface (see image below) based on a menu selection that display
 
 ![Example GUI](Images/UpdateCheck.png)
 
-The update code should be threaded and uses the QNetwork framework. A file will need to be stored on the web server with the version information. Can this file be a .ini file so we can leverage QSettings to get the values from it? XML file but then we need to bring in the QtXML processing libraries. The user interface will have a button that opens the users web browser to the correct download location.
+Initial implementation in _QtSupport/DREAM3DUpdateCheckDialog_
 
+**Items to Complete**
++ Do we need to add a _close_ button to the UI?
++ The "How Often" Radio button needs to store the users selection and get this information back to the DREAM3D_UI class so it can be stored.
++ When reading the preferences on startup the code needs to be written to figure out if an update check needs to be run.
++ When quitting or closing the DREAM3DUpdateCheckDialog the settings from the dialog need to be saved back to the users preferences file
++ The code that does the actual update check (network code) may need to be extracted from the Dialog so it can be used without the dialog or just implement enough of an API in the DREAM3DUpdateCheckDialog class so that you can run the update check and get an answer without actually showing the dialog
+    - What to do if there is an update? Pop up the dialog?
+
+
+
+-------------------
 
 ## StatsGenerator Template File Selection ##
 

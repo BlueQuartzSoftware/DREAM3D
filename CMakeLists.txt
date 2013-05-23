@@ -239,6 +239,12 @@ if(DREAM3D_BUILD_QT_APPS)
        CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
        CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
    endif()
+
+   set(QT_USE_QTCORE "TRUE")
+   set(QT_USE_QTGUI "TRUE")
+   set(QT_USE_QTNETWORK "TRUE")
+
+
    # add some useful macros and variables
    # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
    # contains a path to CMake script)
