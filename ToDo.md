@@ -55,13 +55,17 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Design protocol to check for updated Version of DREAM3D.
     - Initial Skeleton Code Already Done.
     - See DevelopmentNotes.md
++ Error messages returned from Pipeline should be hyperlinked to the filter docs. See DevelopmentNotes.md for more explanation
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
+    - Use QDesktopServices::openUrl(PATH_TO_FOLDER) and Qt will figure out the proper thing to do
 + Append a favorite to a pipeline that is already built up in the PipelineView widget
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
-+ Error messages returned from Pipeline should be hyperlinked to the filter docs. See DevelopmentNotes.md for more explanation
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
+
+
+
 
 ## Statistics/Analysis/Other Algorithms ##
 + Add filter to calculate histograms of user selected arrays (cell or field)
