@@ -117,7 +117,6 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * @param ensembles The number of ensembles
     */
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
     unsigned int* m_CrystalStructures;

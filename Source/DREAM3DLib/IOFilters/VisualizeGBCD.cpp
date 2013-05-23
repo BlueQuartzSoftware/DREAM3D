@@ -50,7 +50,7 @@ const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2*M_PI);
 
 
-/ -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 VisualizeGBCD::VisualizeGBCD() :
@@ -126,32 +126,11 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-{
-  setErrorCondition(0);
-  std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
-  {
-    addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", -383);
-    setErrorCondition(-383);
-  }
-  else
-  {
-    typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VisualizeGBCD::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheckSurfaceMesh(true, 1, 1, 1);
-  dataCheckVoxel(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -184,13 +163,13 @@ void VisualizeGBCD::execute()
   bool doParallel = true;
 #endif
 
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
+
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  size_t totalFaces = trianglesPtr->GetNumberOfTuples();
+
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, totalFaces, 0);
-
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
-
-  dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
   FloatArrayType::Pointer gbcdArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdCountArray = FloatArrayType::NullPointer();
