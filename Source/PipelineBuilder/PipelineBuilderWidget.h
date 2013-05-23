@@ -224,7 +224,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
 
-    void onCustomContextMenuRequested(const QPoint& pos);
+    void onFilterListCustomContextMenuRequested(const QPoint& pos);
 
     void clearMessagesTable();
 
