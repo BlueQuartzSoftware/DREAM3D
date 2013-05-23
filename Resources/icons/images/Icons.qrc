@@ -1,6 +1,7 @@
  <!DOCTYPE RCC>
  <RCC version="1.0">
  <qresource>
+  <file>DREAM3D.png</file>
   <file>nav_left_green.png</file>
   <file>nav_right_green.png</file>
   <file>nav_refresh_yellow.png</file>

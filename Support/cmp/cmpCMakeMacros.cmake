@@ -269,13 +269,13 @@ function(BuildQtAppBundle)
             set(lib_suffix "_debug")
         endif()
 
-	    set(LINUX_INSTALL_LIBS_CMAKE_SCRIPT
+      set(LINUX_INSTALL_LIBS_CMAKE_SCRIPT
                 "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_CompleteBundle.cmake")
         set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
                 "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_InstallLibraries.sh")
 
-	    CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
-			"${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
+      CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
+      "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
         set(PROJECT_INSTALL_DIR ${linux_app_name}.app)
         CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/InstallLibraries.sh.in"
                 "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
@@ -660,7 +660,7 @@ endmacro()
 #
 #
 macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
-   # message(STATUS "CMP_COPY_QT4_RUNTIME_LIBRARIES")
+   # message(STATUS "CMP_QT_LIBRARIES_INSTALL_RULES")
     if(MSVC)
         if(DEFINED QT_QMAKE_EXECUTABLE)
             set(TYPE "d")
