@@ -168,9 +168,6 @@ class SGBetaItemDelegate : public QStyledItemDelegate
 
   private:
     QModelIndex m_Index;
-  //  QWidget* m_Widget;
-  //  QAbstractItemModel* m_Model;
-
 };
 
 #endif /* SGBETAITEMDELEGATE_H_ */

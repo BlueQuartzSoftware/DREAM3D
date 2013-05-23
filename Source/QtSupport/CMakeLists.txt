@@ -30,6 +30,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DUpdateCheckDialog.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DHelpUrlGenerator.cpp
+    ${QtSupport_SOURCE_DIR}/HtmlItemDelegate.cpp
 )
 
 set(QtSupport_HDRS
@@ -47,6 +48,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/DistributionTypeWidget.h
     ${QtSupport_SOURCE_DIR}/DREAM3DUpdateCheckDialog.h
     ${QtSupport_SOURCE_DIR}/DREAM3DHelpUrlGenerator.h
+    ${QtSupport_SOURCE_DIR}/HtmlItemDelegate.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 
