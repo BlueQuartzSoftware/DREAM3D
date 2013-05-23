@@ -997,19 +997,6 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
 
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void PipelineBuilderWidget::on_helpText_anchorClicked ( const QUrl & link )
-//{
-//  QUrl u(link);
-//  u.setScheme("qrc");
-//  helpText->blockSignals(true);
-//  helpText->setSource(u);
-//  helpText->blockSignals(false);
-//}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1017,8 +1004,6 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 {
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
   m_PipelineViewWidget->preflightPipeline();
-
-  //  m_QDroppableScrollArea->verticalScrollBar()->setValue(m_QDroppableScrollArea->verticalScrollBar()->maximum());
 }
 
 // -----------------------------------------------------------------------------
@@ -1035,26 +1020,15 @@ void PipelineBuilderWidget::actionFilterListHelp_triggered()
 
   QUrl filterURL = wf->getFilterHelpURL();
 
-  DREAM3DHelpUrlGenerator::openURL(filterURL, this);
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( listItem->data(Qt::UserRole).toString().toLower(), this );
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QUrl PipelineBuilderWidget::htmlHelpIndexFile()
-{
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") );
-}
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-  // m_HelpDialog->setContentFile(htmlHelpIndexFile());
-  QUrl url = htmlHelpIndexFile();
-  DREAM3DHelpUrlGenerator::openURL(url, this);
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
 }
 
 // -----------------------------------------------------------------------------

@@ -141,9 +141,9 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QUrl QFilterWidget::htmlHelpIndexFile()
+void QFilterWidget::openHtmlHelpIndexFile()
 {
-  return QUrl();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -182,8 +182,7 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-  QUrl filterHelpURL = htmlHelpIndexFile();
-  DREAM3DHelpUrlGenerator::openURL(filterHelpURL, this);
+	openHtmlHelpIndexFile();
 }
 
 // -----------------------------------------------------------------------------

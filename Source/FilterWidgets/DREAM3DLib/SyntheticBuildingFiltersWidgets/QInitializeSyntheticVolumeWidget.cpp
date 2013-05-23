@@ -568,9 +568,9 @@ void QInitializeSyntheticVolumeWidget::writeOptions(QSettings &prefs)
 }
 
 // -----------------------------------------------------------------------------
-QUrl QInitializeSyntheticVolumeWidget::htmlHelpIndexFile()
+void QInitializeSyntheticVolumeWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("InitializeSyntheticVolume").toLower();
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
