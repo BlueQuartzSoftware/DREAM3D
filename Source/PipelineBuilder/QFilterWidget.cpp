@@ -141,7 +141,7 @@ QFilterWidget::~QFilterWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::openHtmlHelpIndexFile()
+void QFilterWidget::openHtmlHelpFile()
 {
 
 }
@@ -182,7 +182,7 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-	openHtmlHelpIndexFile();
+	openHtmlHelpFile();
 }
 
 // -----------------------------------------------------------------------------
