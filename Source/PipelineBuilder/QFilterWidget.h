@@ -147,11 +147,11 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                             QString propertyName);
 
     /**
-     * @brief htmlHelpIndexFile Returns the path to the HTML help file for a filter. Each filter should reimplement
+     * @brief openHtmlHelpFile Creates and opens the path to the HTML help file for a filter. Each filter should reimplement
      * this function;
      * @return
      */
-    virtual void openHtmlHelpIndexFile();
+    virtual void openHtmlHelpFile();
 
   signals:
     void dragStarted(QFilterWidget* widget);
