@@ -110,7 +110,7 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
     std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                                    QString filename);
 
-    virtual QUrl htmlHelpIndexFile();
+    virtual void openHtmlHelpFile();
 
   protected slots:
     /* OIM Data Import Slots */

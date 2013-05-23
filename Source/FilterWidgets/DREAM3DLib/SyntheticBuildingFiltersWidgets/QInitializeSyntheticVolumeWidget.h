@@ -81,7 +81,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
 
     virtual QString getFilterGroup();
 
-    virtual QUrl htmlHelpIndexFile();
+    virtual void openHtmlHelpFile();
 
   protected slots:
     // Auto Hookup Slots

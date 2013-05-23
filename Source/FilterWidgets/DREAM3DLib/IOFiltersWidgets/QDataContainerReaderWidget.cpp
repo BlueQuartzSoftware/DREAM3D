@@ -359,9 +359,8 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
 
 
 // -----------------------------------------------------------------------------
-QUrl QDataContainerReaderWidget::htmlHelpIndexFile()
+void QDataContainerReaderWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("DataContainerReader").toLower();
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
-

@@ -1013,32 +1013,16 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 void PipelineBuilderWidget::actionFilterListHelp_triggered()
 {
 	QListWidgetItem* listItem = filterList->itemAt(filterListPosition);
-	FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-	IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString().toStdString());
-	if (NULL == wf) { return;}
 
-	QUrl filterURL = wf->getFilterHelpURL();
-
-	DREAM3DHelpUrlGenerator::openURL(filterURL, this);
+	DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( listItem->data(Qt::UserRole).toString().toLower(), this );
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QUrl PipelineBuilderWidget::htmlHelpIndexFile()
-{
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl("index") );
-}
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_toggleDocs_clicked()
 {
-  // m_HelpDialog->setContentFile(htmlHelpIndexFile());
-  QUrl url = htmlHelpIndexFile();
-  DREAM3DHelpUrlGenerator::openURL(url, this);
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
 }
 
 // -----------------------------------------------------------------------------
