@@ -1,4 +1,4 @@
-Bad Data Orientation Correlation {#baddataneighbororientationcheck}
+Bad Data Orientation Correlation {#neighborcicorrelation}
 ======
 
 ## Group (Subgroup) ##
