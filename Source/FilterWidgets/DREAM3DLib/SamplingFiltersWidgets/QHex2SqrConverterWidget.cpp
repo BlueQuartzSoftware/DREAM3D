@@ -548,10 +548,10 @@ void QHex2SqrConverterWidget::m_findEbsdMaxSliceAndPrefix()
 
 
 // -----------------------------------------------------------------------------
-QUrl QHex2SqrConverterWidget::htmlHelpIndexFile()
+void QHex2SqrConverterWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("Hex2SqrConverter").toLower();
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
 

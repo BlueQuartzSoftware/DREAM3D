@@ -369,7 +369,7 @@ void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> erro
   if(NULL != errorTableWidget)
   {
 
-    int rc = errorTableWidget->rowCount();
+   // int rc = errorTableWidget->rowCount();
 
     for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {

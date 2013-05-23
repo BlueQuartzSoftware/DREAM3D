@@ -423,10 +423,9 @@ void QReadH5EbsdWidget::resetGuiFileInfoWidgets()
 }
 
 // -----------------------------------------------------------------------------
-QUrl QReadH5EbsdWidget::htmlHelpIndexFile()
+void QReadH5EbsdWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("ReadH5Ebsd").toLower();
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
-
 

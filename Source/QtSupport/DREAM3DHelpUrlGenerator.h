@@ -50,8 +50,22 @@ public:
   DREAM3DHelpUrlGenerator();
   virtual ~DREAM3DHelpUrlGenerator();
 
-  static QUrl generateHTMLUrl(QString helpName);
-  static void openURL(QUrl URL, QWidget* parent);
+	/**
+     * @brief Generates a help URL from the given lowercase name.
+     */
+	static QUrl generateHTMLUrl(QString helpName);
+
+	/**
+     * @brief Opens the URL specified in a web browser.  The variable "parent" is needed
+	 * to pop-up a dialog box if the opening process fails.
+     */
+	static void openHTMLUrl(QUrl URL, QWidget* parent);
+
+	/**
+     * @brief This function both generates a URL and opens it in a browser.  It is simply
+	 * a combination of the two previous functions, for convenience.
+     */
+	static void generateAndOpenHTMLUrl(QString helpName, QWidget* parent);
 
 private:
 

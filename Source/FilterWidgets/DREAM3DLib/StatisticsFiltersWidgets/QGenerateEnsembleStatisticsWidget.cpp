@@ -344,9 +344,9 @@ void QGenerateEnsembleStatisticsWidget::on_removePhaseType_clicked()
 
 
 // -----------------------------------------------------------------------------
-QUrl QGenerateEnsembleStatisticsWidget::htmlHelpIndexFile()
+void QGenerateEnsembleStatisticsWidget::openHtmlHelpFile()
 {
   QString lowerFilter = QString("GenerateEnsembleStatistics").toLower();
-  return ( DREAM3DHelpUrlGenerator::generateHTMLUrl(lowerFilter) );
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
