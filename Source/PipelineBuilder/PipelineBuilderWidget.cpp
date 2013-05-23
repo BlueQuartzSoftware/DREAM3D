@@ -1018,8 +1018,6 @@ void PipelineBuilderWidget::actionFilterListHelp_triggered()
   IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString().toStdString());
   if (NULL == wf) { return;}
 
-  QUrl filterURL = wf->getFilterHelpURL();
-
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( listItem->data(Qt::UserRole).toString().toLower(), this );
 }
 
