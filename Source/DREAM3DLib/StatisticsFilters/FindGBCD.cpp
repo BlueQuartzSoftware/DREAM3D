@@ -116,73 +116,76 @@ class CalculateGBCDImpl
       {
         grain1 = m_Labels[2*i];
         grain2 = m_Labels[2*i+1];
-        for(m=1; m < 4; m++)
-        {
-          q1[m] = m_Quats[5*grain1+m];
-          q2[m] = m_Quats[5*grain2+m];
-          q2[m] *= -1.0; //inverse q2
-        }
-        //get the misorientation between grain1 and grain2
-        OrientationMath::multiplyQuaternions(q1, q2, misq);
-        OrientationMath::multiplyQuaternionVector(q1, normal, xstl_norm0);
+		if(m_Phases[grain1] == m_Phases[grain2])
+		{
+			for(m=1; m < 4; m++)
+			{
+			  q1[m] = m_Quats[5*grain1+m];
+			  q2[m] = m_Quats[5*grain2+m];
+			  q2[m] *= -1.0; //inverse q2
+			}
+			//get the misorientation between grain1 and grain2
+			OrientationMath::multiplyQuaternions(q1, q2, misq);
+			OrientationMath::multiplyQuaternionVector(q1, normal, xstl_norm0);
 
-        int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
-        for (j=0; j< nsym;j++)
-        {
-          //calculate the symmetric misorienation
-          m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q);
-          OrientationMath::multiplyQuaternions(sym_q, misq, s1misq);
+			int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
+			for (j=0; j< nsym;j++)
+			{
+			  //calculate the symmetric misorienation
+			  m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q);
+			  OrientationMath::multiplyQuaternions(sym_q, misq, s1misq);
 
-          //calculate the crystal normal and put it into normalized coordinates ->[theta, cos(phi) ]
-          OrientationMath::multiplyQuaternionVector(sym_q, xstl_norm0, xstl_norm1);
-          xstl_norm_sc[0] = atan2f(xstl_norm1[1], xstl_norm1[0]);
-          if (xstl_norm_sc[0] < 0) xstl_norm_sc[0] += m_pi2;
-          xstl_norm_sc[1] = xstl_norm1[2];
+			  //calculate the crystal normal and put it into normalized coordinates ->[theta, cos(phi) ]
+			  OrientationMath::multiplyQuaternionVector(sym_q, xstl_norm0, xstl_norm1);
+			  xstl_norm_sc[0] = atan2f(xstl_norm1[1], xstl_norm1[0]);
+			  if (xstl_norm_sc[0] < 0) xstl_norm_sc[0] += m_pi2;
+			  xstl_norm_sc[1] = xstl_norm1[2];
 
-          if (inversion == 1){
-            xstl_norm_sc_inv[0] = xstl_norm_sc[0] + m_pi;
-            if (xstl_norm_sc_inv[0] > m_pi2) xstl_norm_sc[0] -= m_pi2;
-            xstl_norm_sc_inv[1] = -1.0*xstl_norm_sc[1];
-          }
+			  if (inversion == 1){
+				xstl_norm_sc_inv[0] = xstl_norm_sc[0] + m_pi;
+				if (xstl_norm_sc_inv[0] > m_pi2) xstl_norm_sc[0] -= m_pi2;
+				xstl_norm_sc_inv[1] = -1.0*xstl_norm_sc[1];
+			  }
 
-          for (k=0; k < nsym; k++)
-          {
-            for(m=1; m < 4; m++)
-            {
-              sym2[m] = -1.*sym_q[m]; //invert the symmetry operator
-            }
-            OrientationMath::multiplyQuaternions(s1misq, sym2, s2misq);
-            OrientationMath::QuattoEuler(s2misq, euler_mis[0], euler_mis[1], euler_mis[2]);
-            euler_mis[1] = cosf(euler_mis[1]);
+			  for (k=0; k < nsym; k++)
+			  {
+				for(m=1; m < 4; m++)
+				{
+				  sym2[m] = -1.*sym_q[m]; //invert the symmetry operator
+				}
+				OrientationMath::multiplyQuaternions(s1misq, sym2, s2misq);
+				OrientationMath::QuattoEuler(s2misq, euler_mis[0], euler_mis[1], euler_mis[2]);
+				euler_mis[1] = cosf(euler_mis[1]);
 
-            //get the index that this point would be in the GBCD histogram
-            gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc);
+				//get the index that this point would be in the GBCD histogram
+				gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc);
 
-            if (gbcd_index != -1)
-            {
-              // Add the points and up the count on the gbcd histograms.  Broke this out
-              // so that it could be protected in an openMP thread
-              {
-                m_GBCDcount[gbcd_index] += 1;
-                m_GBCDarea[gbcd_index] += m_Areas[i];
-              }
-            }
-            //if inversion is on, do the same for that
-            if (inversion == 1)
-            {
-              gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc_inv);
-              if (gbcd_index != -1 )
-              {
-                {
-                  m_GBCDcount[gbcd_index] += 1;
-                  m_GBCDarea[gbcd_index] += m_Areas[i];
-                }
-              }
+				if (gbcd_index != -1)
+				{
+				  // Add the points and up the count on the gbcd histograms.  Broke this out
+				  // so that it could be protected in an openMP thread
+				  {
+					m_GBCDcount[gbcd_index] += 1;
+					m_GBCDarea[gbcd_index] += m_Areas[i];
+				  }
+				}
+				//if inversion is on, do the same for that
+				if (inversion == 1)
+				{
+				  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc_inv);
+				  if (gbcd_index != -1 )
+				  {
+					{
+					  m_GBCDcount[gbcd_index] += 1;
+					  m_GBCDarea[gbcd_index] += m_Areas[i];
+					}
+				  }
 
-            }
+				}
 
-          }
-        }
+			  }
+			}
+		}
       }
     }
 
