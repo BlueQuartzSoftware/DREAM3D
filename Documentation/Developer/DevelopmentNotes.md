@@ -72,6 +72,7 @@ StatsGenerator should open to a dialog that displays a list of *templates* that 
 ## Export Binary File
 We should be able to export any of the arrays into a raw binary file for import into other analysis programs. The filter also may want to output a text file that describes the data in the file (Dims, type, endian ...)
 
+-------------------
 ## Export Slice IPF Images ##
 
 A filter to generate images of the grains with IPF coloring for XY/YZ/XZ planes. The filter would require the Crystal Structure Ensemble data and the Euler Angles.
