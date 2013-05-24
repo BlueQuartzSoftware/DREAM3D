@@ -273,10 +273,10 @@ void BadDataNeighborOrientationCheck::execute()
 			  {
 				phase1 = m_CrystalStructures[m_CellPhases[i]];
 				q1[0] = 1;
-				q1[1] = m_Quats[index * 5 + 1];
-				q1[2] = m_Quats[index * 5 + 2];
-				q1[3] = m_Quats[index* 5 + 3];
-				q1[4] = m_Quats[index * 5 + 4];
+				q1[1] = m_Quats[i * 5 + 1];
+				q1[2] = m_Quats[i * 5 + 2];
+				q1[3] = m_Quats[i* 5 + 3];
+				q1[4] = m_Quats[i * 5 + 4];
 
 				phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
 				q2[0] = 1;
@@ -294,8 +294,8 @@ void BadDataNeighborOrientationCheck::execute()
 			}
 		  }
 	  }
-      currentLevel = currentLevel-1;
     }
+    currentLevel = currentLevel-1;
   }
 
 // If there is an error set this to something negative and also set a message
