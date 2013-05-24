@@ -382,9 +382,12 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief Removes Tuples from the Array
+     * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
+     * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
+     * indices that are larger than the size of the original (before erasing operations) then an error code (-100) is
+     * returned from the program.
      * @param idxs The indices to remove
-     * @return
+     * @return error code.
      */
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
@@ -395,6 +398,19 @@ class DataArray : public IDataArray
       if(idxs.size() == 0)
       {
         return 0;
+      }
+
+      if (idxs.size() >= GetNumberOfTuples() )
+      {
+        Resize(0);
+        return 0;
+      }
+
+      // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
+      // off the end of the array and return an error code.
+      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      {
+        if (idxs[i] > this->MaxId) { return -100; }
       }
 
       // Calculate the new size of the array to copy into

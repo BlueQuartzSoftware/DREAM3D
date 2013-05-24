@@ -154,6 +154,27 @@ size_t StatsDataArray::GetTypeSize()
 int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
 {
   int err = 0;
+
+  // If nothing is to be erased just return
+  if(idxs.size() == 0)
+  {
+    return 0;
+  }
+
+  if (idxs.size() >= GetNumberOfTuples() )
+  {
+    Resize(0);
+    return 0;
+  }
+
+  // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
+  // off the end of the array and return an error code.
+  for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+  {
+    if (idxs[i] >= m_StatsDataArray.size()) { return -100; }
+  }
+
+
   std::vector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
   size_t idxsIndex = 0;
   size_t rIdx = 0;
