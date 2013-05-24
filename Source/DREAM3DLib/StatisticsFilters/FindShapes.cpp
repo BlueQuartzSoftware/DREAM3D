@@ -69,8 +69,8 @@ m_AspectRatios(NULL)
   grainmoments = NULL;
   graineigenvals = NULL;
 
-  INIT_DataArray(m_GrainMoments,double);
-  INIT_DataArray(m_GrainEigenVals,float);
+  INIT_DataArray(m_GrainMoments, double);
+  INIT_DataArray(m_GrainEigenVals, double);
 
   setupFilterParameters();
 }
@@ -169,8 +169,9 @@ void FindShapes::find_moments()
   float u101 = 0;
   float xx, yy, zz, xy, xz, yz;
   size_t numgrains = m->getNumFieldTuples();
-
-  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  m_GrainMoments->SetNumberOfComponents(6);
+  m_GrainMoments->Resize(numgrains);
+  grainmoments = m_GrainMoments->GetPointer(0);
 
   float xPoints = m->getXPoints();
   float yPoints = m->getYPoints();
@@ -297,8 +298,9 @@ void FindShapes::find_moments2D()
   //int64_t totalPoints = m->getTotalPoints();
   float xx, yy, xy;
   size_t numgrains = m->getNumFieldTuples();
-  grainmoments = m_GrainMoments->WritePointer(0, numgrains*6);
   m_GrainMoments->SetNumberOfComponents(6);
+  m_GrainMoments->Resize(numgrains);
+  grainmoments = m_GrainMoments->GetPointer(0);
 
   int xPoints, yPoints;
   float xRes, yRes;
@@ -388,8 +390,15 @@ void FindShapes::find_axes()
 
   size_t numgrains = m->getNumFieldTuples();
 
-  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
-  graineigenvals = m_GrainEigenVals->WritePointer(0, numgrains * 3);
+  m_GrainMoments->SetNumberOfComponents(6);
+  m_GrainMoments->Resize(numgrains);
+  grainmoments = m_GrainMoments->GetPointer(0);
+
+  m_GrainEigenVals->SetNumberOfComponents(3);
+  m_GrainEigenVals->Resize(numgrains);
+  graineigenvals = m_GrainEigenVals->GetPointer(0);
+
+
   for (size_t i = 1; i < numgrains; i++)
   {
     Ixx = grainmoments[i*6+0];
@@ -470,7 +479,11 @@ void FindShapes::find_axes2D()
 
   size_t numgrains = m->getNumFieldTuples();
 
-  grainmoments = m_GrainMoments->WritePointer(0, numgrains * 6);
+  m_GrainMoments->SetNumberOfComponents(6);
+  m_GrainMoments->Resize(numgrains);
+  grainmoments = m_GrainMoments->GetPointer(0);
+
+
   for (size_t i = 1; i < numgrains; i++)
   {
     Ixx = grainmoments[i*6+0];
