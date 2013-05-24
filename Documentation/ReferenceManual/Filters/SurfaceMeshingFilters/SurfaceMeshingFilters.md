@@ -1,5 +1,3 @@
-Surface Meshing Filters {#surfacemeshingfilters}
-========
 
 ## Surface Mesh Definitions
 Creating a surface mesh in DREAM3D can be accomplished in several ways. There are a pair of filters [Multi-Material Marching Cubes (Slice at a Time)](#m3cslicebyslice) and [Quick Surface Mesh](#quicksurfacemesh) that will generate a triangular based mesh of the primary **Field** for you. The terminology of the underlying data structures is something that the user should understand so that they can be well informed. We start out by defining a triangle **T**  which we will call a  **Face**. Each Triangle has 3 **Vertex** (V0, V1, V2) which are  referred to as a **Point**, **Vertex** and/or **Node** interchangeably within DREAM3D.
@@ -41,28 +39,4 @@ In the filter documentation the following terminology will be used:
 ## Edge Data
  Update with algorithm to generate Unique Edge Ids
 
-## Filter List
-[Generate Surface Mesh Connectivity](GenerateSurfaceMeshConnectivity.html "alt")
-@subpage generatesurfacemeshconnectivity
-
-@subpage generatetriangleipfcoloring
-
-@subpage grainfacecurvaturefilter
-
-@subpage laplaciansmoothing
-
-@subpage m3cslicebyslice
-
-@subpage movingfiniteelementsmoothing
-
-@subpage quicksurfacemesh
-
-@subpage reversetrianglewinding
-
-@subpage sharedgrainfacefilter
-
-@subpage trianglecentroidfilter
-
-@subpage trianglenormalfilter
-
-@subpage verifytrianglewinding
+## Filter List ##
