@@ -209,10 +209,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual size_t GetTypeSize();
 
+
     /**
-     * @brief Erases tuples based on a list of specific Tuple indices
-     * @param idxs The indices to erase
-     * @return
+     * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
+     * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
+     * indices that are larger than the size of the original (before erasing operations) then an error code (-100) is
+     * returned from the program.
+     * @param idxs The indices to remove
+     * @return error code.
      */
     virtual int EraseTuples(std::vector<size_t> &idxs);
 

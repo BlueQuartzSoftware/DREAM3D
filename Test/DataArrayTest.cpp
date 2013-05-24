@@ -262,6 +262,33 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 0), 5);
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 5);
   }
+
+    // Test Dropping of indices larger than the number of tuples
+  {
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test6");
+    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    for(size_t i = 0; i < NUM_TUPLES_2; ++i)
+    {
+      array->SetComponent(i, 0, static_cast<T>(i));
+      array->SetComponent(i, 1, static_cast<T>(i));
+    }
+
+    std::vector<size_t> eraseElements;
+    eraseElements.push_back(10);
+    int err = array->EraseTuples(eraseElements);
+    DREAM3D_REQUIRE_EQUAL(err , -100)
+
+    eraseElements.clear();
+    err = array->EraseTuples(eraseElements);
+    DREAM3D_REQUIRE_EQUAL(err , 0)
+
+    eraseElements.resize(20);
+    err = array->EraseTuples(eraseElements);
+    DREAM3D_REQUIRE_EQUAL(err , 0)
+    size_t nTuples = array->GetNumberOfTuples();
+    DREAM3D_REQUIRE_EQUAL(nTuples, 0)
+  }
+
 }
 
 // -----------------------------------------------------------------------------
