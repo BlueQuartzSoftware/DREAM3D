@@ -391,6 +391,8 @@ void PluginMaker::on_generateButton_clicked()
   QString pluginName = m_PluginName->text();
   QString pluginDir = m_OutputDir->text();
 
+  pluginName = cleanName(pluginName);
+
   if (pluginName == "") {
     statusbar->showMessage("Generation Failed --- Please provide a plugin name");
     QMessageBox::critical(this, tr("PluginMaker"), tr("The file generation was unsuccessful.\n"
@@ -424,9 +426,6 @@ void PluginMaker::on_generateButton_clicked()
     out << text;
   }
 
-  // WE need to generate the QRC file here because we possibly have
-  // more than a single filter
-  // text = generateQrcContents();
 
   pathTemplate = "@PluginName@/Documentation/";
   parentPath = m_OutputDir->text() + QDir::separator()
@@ -435,14 +434,6 @@ void PluginMaker::on_generateButton_clicked()
 
   QDir dir2(parentPath);
   dir2.mkpath(parentPath);
-
-//  parentPath = parentPath + QDir::separator() + "PluginDocumentation.qrc";
-//  //Write to file
-//  QFile f2(parentPath);
-//  if ( f2.open(QIODevice::WriteOnly | QIODevice::Text) ) {
-//    QTextStream out(&f2);
-//    out << text;
-//  }
 
   statusbar->showMessage("Generation Completed");
 }
@@ -830,6 +821,7 @@ void PluginMaker::readWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 QString PluginMaker::generateCmakeContents() {
   QString pluginName = m_PluginName->text();
+  pluginName = cleanName(pluginName);
 
   QString cmakeHdrCode("${@PluginName@Plugin_SOURCE_DIR}/@PluginName@Filters/");
   cmakeHdrCode.replace("@PluginName@", pluginName);
@@ -860,6 +852,7 @@ QString PluginMaker::generateCmakeContents() {
       privateFilterList.append("  ").append(className).append("\n");
     }
     pluginName = m_PluginName->text();
+    pluginName = cleanName(pluginName);
   }
 
   QString text = "";
