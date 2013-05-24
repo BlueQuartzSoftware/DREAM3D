@@ -438,7 +438,9 @@ void AlignSectionsMutualInformation::form_grains_sections()
   size_t size = 0;
   size_t initialVoxelsListSize = 1000;
 
-  graincounts = m_GrainCounts->WritePointer(0, dims[2]);
+  m_GrainCounts->SetNumberOfComponents(1);
+  m_GrainCounts->Resize(dims[2]);
+  graincounts = m_GrainCounts->GetPointer(0);
 
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4];

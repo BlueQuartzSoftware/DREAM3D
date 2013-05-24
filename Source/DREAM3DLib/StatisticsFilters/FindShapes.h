@@ -64,22 +64,22 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
 
     virtual ~FindShapes();
 
-	  //------ Required Cell Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	  //------ Required Field Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
-	  //------ Created Field Data
-	  DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
-	  DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AspectRatiosArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AxisEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AxisLengthsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Omega3sArrayName)
 
-    DECLARE_WRAPPED_ARRAY(grainmoments, m_GrainMoments, double) // N x 6 Array
-    DECLARE_WRAPPED_ARRAY(graineigenvals, m_GrainEigenVals, float) // N x 3 Array
+    DREAM3D_DECLARE_ARRAY(double, grainmoments, GrainMoments) // N x 6 Array
+    DREAM3D_DECLARE_ARRAY(double, graineigenvals, GrainEigenVals) // N x 3 Array
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Shapes"; }
 
 
@@ -88,9 +88,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
      */
 
     virtual void setupFilterParameters();
-	  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-	  virtual void execute();
+    virtual void execute();
     virtual void preflight();
 
 

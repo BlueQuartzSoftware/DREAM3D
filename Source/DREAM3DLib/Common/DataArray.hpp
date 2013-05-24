@@ -63,12 +63,14 @@
 #define RESIZE_ARRAY(sharedArray, pointer, size)\
   pointer = sharedArray->WritePointer(0, size);
 
-#define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, m_msgType)\
-  DataArray<m_msgType>::Pointer priVar;\
-  m_msgType* pubVar;
+#define DECLARE_WRAPPED_ARRAY(pubVar, priVar, Type)\
+  DataArray<Type>::Pointer priVar;\
+  Type* pubVar;
 
-#define INIT_DataArray(var, m_msgType)\
-  var = DataArray<m_msgType>::CreateArray(0, #var);
+#define INIT_DataArray(var, Type)\
+  var = DataArray<Type>::CreateArray(0, #var);
+
+
 
 /**
  * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp
@@ -313,7 +315,7 @@ class DataArray : public IDataArray
       this->Size = newSize;
       return 1;
     }
-
+#if 0
     /**
     * @brief Get the address of a particular data index. Make sure data is allocated
     * for the number of items requested. Set MaxId according to the number of
@@ -344,6 +346,7 @@ class DataArray : public IDataArray
 
       return this->Array + id;
     }
+#endif
 
     /**
      * @brief Initializes this class to zero bytes freeing any data that it currently owns
