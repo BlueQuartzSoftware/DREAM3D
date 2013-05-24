@@ -843,8 +843,8 @@ QString PluginMaker::generateCmakeContents() {
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
     bool isPublic = m_FilterBundles[i].isPublic();
 
-    std::cout << cppGen->getFileName().toStdString() << std::endl;
-    std::cout << hGen->getFileName().toStdString() << std::endl;
+    //std::cout << cppGen->getFileName().toStdString() << std::endl;
+    //std::cout << hGen->getFileName().toStdString() << std::endl;
 
     //  hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
     //  srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");
