@@ -15,6 +15,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Missing Documentation File for IOFilters/ImportImageStack
 + incorrect Documentation for Neighbor CI Correlation
 + incorrect Documentation for Neighbor Orientation Correlation
++ incorrect Documentation for Find Twin Boundary Info
 
 ### Documentation ###
 
@@ -68,6 +69,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Statistics/Analysis/Other Algorithms ##
++ Add filter to calculate info for twin boundaries for UCSB guys
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics

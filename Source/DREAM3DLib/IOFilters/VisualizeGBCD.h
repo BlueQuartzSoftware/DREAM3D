@@ -64,6 +64,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     virtual ~VisualizeGBCD();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
@@ -73,14 +74,14 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Find GBCD"; }
+    virtual const std::string getHumanLabel() { return "Visualize GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -119,7 +120,10 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    unsigned int* m_CrystalStructures;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
+
+	unsigned int* m_CrystalStructures;
+    float* m_GBCD;
 
     VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
