@@ -125,7 +125,7 @@ class StructArray : public IDataArray
     virtual std::string getFullNameOfClass()
     {
       std::string theType = getTypeAsString();
-      theType = "StrucArray<" + theType + ">";
+      theType = "StructArray<" + theType + ">";
       return theType;
     }
 
@@ -201,38 +201,6 @@ class StructArray : public IDataArray
       return 1;
     }
 
-
-    /**
-    * @brief Get the address of a particular data index. Make sure data is allocated
-    * for the number of items requested. Set MaxId according to the number of
-    * data values requested. For example if you want to ensure that you have enough
-    * memory allocated to write to the 1000 element then you would have code such
-    * as:
-    * @code
-    *  int* ptr = array->WritePointer(0, 1000);
-    * @endcode
-    * @param id The offset of the data index
-    * @param number The number of elements to ensure memory allocation
-    * @return
-    */
-    T* WritePointer(size_t id, size_t number)
-    {
-      size_t newSize=id+number;
-      if ( newSize > this->Size )
-      {
-        if (this->ResizeAndExtend(newSize)==0)
-        {
-          return 0;
-        }
-      }
-      if ( (--newSize) > this->MaxId )
-      {
-        this->MaxId = newSize-1;
-      }
-
-      return this->Array + id;
-    }
-
     /**
      * @brief Initializes this class to zero bytes freeing any data that it currently owns
      */
@@ -270,9 +238,12 @@ class StructArray : public IDataArray
     }
 
     /**
-     * @brief Removes Tuples from the Array
+     * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
+     * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
+     * indices that are larger than the size of the original (before erasing operations) then an error code (-100) is
+     * returned from the program.
      * @param idxs The indices to remove
-     * @return
+     * @return error code.
      */
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
@@ -283,6 +254,19 @@ class StructArray : public IDataArray
       if(idxs.size() == 0)
       {
         return 0;
+      }
+
+      if (idxs.size() >= GetNumberOfTuples() )
+      {
+        Resize(0);
+        return 0;
+      }
+
+      // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
+      // off the end of the array and return an error code.
+      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      {
+        if (idxs[i] > this->MaxId) { return -100; }
       }
 
       // Calculate the new size of the array to copy into
@@ -381,6 +365,7 @@ class StructArray : public IDataArray
       if (currentPos >= max
           || newPos >= max )
       {return -1;}
+      if (currentPos == newPos) { return 0; }
       T* src = this->Array + (currentPos);
       T* dest = this->Array + (newPos);
       size_t bytes = sizeof(T);
@@ -409,6 +394,10 @@ class StructArray : public IDataArray
       return (this->MaxId + 1);
     }
 
+    /**
+     * @brief GetSize
+     * @return
+     */
     virtual size_t GetSize()
     {
       return Size;
@@ -422,6 +411,10 @@ class StructArray : public IDataArray
 
     }
 
+    /**
+     * @brief GetNumberOfComponents
+     * @return
+     */
     int GetNumberOfComponents()
     {
       return 1;
@@ -493,11 +486,22 @@ class StructArray : public IDataArray
       }
     }
 
+    /**
+     * @brief Resize
+     * @param numTuples
+     * @return
+     */
     virtual int32_t Resize(size_t numTuples)
     {
       return RawResize(numTuples );
     }
 
+    /**
+     * @brief printTuple
+     * @param out
+     * @param i
+     * @param delimiter
+     */
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
@@ -507,6 +511,13 @@ class StructArray : public IDataArray
       //          out << Array[i + j];
       //        }
     }
+
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
@@ -581,6 +592,7 @@ class StructArray : public IDataArray
       MaxId = (Size > 0) ? Size - 1: Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
+
     /**
      * @brief deallocates the memory block
      */

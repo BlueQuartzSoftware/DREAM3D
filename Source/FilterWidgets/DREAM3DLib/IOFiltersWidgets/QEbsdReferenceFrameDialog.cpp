@@ -228,7 +228,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 //    convertDegToRads = true;
     arrayNames[0] = Ebsd::Mic::Euler1;
     arrayNames[1] = Ebsd::Mic::Euler2;
-	arrayNames[2] = Ebsd::Mic::Euler3;
+  arrayNames[2] = Ebsd::Mic::Euler3;
     ebsdReader.reset(static_cast<EbsdReader*>(reader));
   }
   if (NULL == ebsdReader.get())
@@ -254,7 +254,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   uint32_t total = width *height;
   DataArray<uint32_t>::Pointer rgbArray = DataArray<uint32_t>::CreateArray(total, "rgbArray");
   rgbArray->SetNumberOfComponents(1);
-  rgbArray->WritePointer(0, total);
+  rgbArray->Resize(total);
   // Splat 0xFF across all the data
   ::memset(rgbArray->GetPointer(0), 255, total*sizeof(uint32_t));
 

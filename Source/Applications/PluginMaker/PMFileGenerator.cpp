@@ -149,7 +149,7 @@ void PMFileGenerator::generateOutput()
       QString className = fi.baseName();
       text.replace("@ClassName@", className);
       text.replace("@MD_FILE_NAME@", m_FileName);
-//      text.replace("@ClassNameLowerCase@", classNameLowerCase);
+      text.replace("@ClassNameLowerCase@", className.toLower());
       text.replace("@FilterGroup@", pluginName);
       text.replace("@FilterSubgroup@", pluginName);
 

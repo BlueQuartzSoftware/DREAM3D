@@ -371,6 +371,20 @@ static Pointer New args \
     virtual DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
     virtual DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+#define DREAM3D_DECLARE_ARRAY(Type, ptr, prpty )\
+  private:\
+  DataArray<Type>::Pointer m_##prpty;\
+  Type* ptr;\
+  public:\
+  DREAM3D_SET_PROPERTY(DataArray<Type>::Pointer, prpty)\
+  DREAM3D_GET_PROPERTY(DataArray<Type>::Pointer, prpty)
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

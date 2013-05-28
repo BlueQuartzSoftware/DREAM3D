@@ -43,21 +43,11 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
-
-#define     DREAM3D_DECLARE_ARRAY(m_msgType, ptr, prpty )\
-    private:\
-      DataArray<m_msgType>::Pointer m_##prpty;\
-      m_msgType* ptr;\
-  public:\
-    public:\
-    DREAM3D_SET_PROPERTY(DataArray<m_msgType>::Pointer, prpty)\
-    DREAM3D_GET_PROPERTY(DataArray<m_msgType>::Pointer, prpty)
 
 
 /**
@@ -88,24 +78,24 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
     virtual void setupFilterParameters();
-	  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	  virtual void execute();
+    virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
 
   protected:
     AlignSectionsMutualInformation();
 
-	void form_grains_sections();
+    void form_grains_sections();
 
   private:
     int32_t* m_GrainIds;
@@ -115,7 +105,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     unsigned int* m_CrystalStructures;
 
-	std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

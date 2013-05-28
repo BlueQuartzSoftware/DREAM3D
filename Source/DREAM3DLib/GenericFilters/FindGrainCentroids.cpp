@@ -122,15 +122,18 @@ void FindGrainCentroids::execute()
 
   notifyStatusMessage("Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindGrainCentroids::find_centroids()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-//  int64_t totalPoints = m->getTotalPoints();
   float x, y, z;
-//  int col, row, plane;
-//  float allvol = 0.0;
   size_t numgrains = m->getNumFieldTuples();
-  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
+  m_GrainCenters->SetNumberOfComponents(5);
+  m_GrainCenters->Resize(numgrains);
+  graincenters = m_GrainCenters->GetPointer(0);
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
@@ -183,7 +186,9 @@ void FindGrainCentroids::find_centroids2D()
   float x, y;
  // int col, row;
   size_t numgrains = m->getNumFieldTuples();
-  graincenters = m_GrainCenters->WritePointer(0, numgrains * 5);
+  m_GrainCenters->SetNumberOfComponents(5);
+  m_GrainCenters->Resize(numgrains);
+  graincenters = m_GrainCenters->GetPointer(0);
 
   int xPoints, yPoints;
   float xRes, yRes;
