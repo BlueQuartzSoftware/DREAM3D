@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FindGBCD_H_
-#define _FindGBCD_H_
+#ifndef _VisualizeGBCD_H_
+#define _VisualizeGBCD_H_
 
 #include <string>
 
@@ -48,26 +48,21 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
- * @class FindGBCD FindGBCD.h DREAM3DLib/SurfaceMeshFilters/FindGBCD.h
+ * @class VisualizeGBCD VisualizeGBCD.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCD.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
  * @author Michael A. Jackson (BlueQuartz Software)
  * @date Dec 12, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
+class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGBCD)
-    DREAM3D_STATIC_NEW_MACRO(FindGBCD)
-    DREAM3D_TYPE_MACRO_SUPER(FindGBCD, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(VisualizeGBCD)
+    DREAM3D_STATIC_NEW_MACRO(VisualizeGBCD)
+    DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCD, SurfaceMeshFilter)
 
-    virtual ~FindGBCD();
+    virtual ~VisualizeGBCD();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
 
@@ -79,14 +74,14 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Find GBCD"; }
+    virtual const std::string getHumanLabel() { return "Visualize GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -111,10 +106,8 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
-
   protected:
-    FindGBCD();
+    VisualizeGBCD();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -125,19 +118,15 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * @param ensembles The number of ensembles
     */
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    double* m_SurfaceMeshFaceAreas;
-    int32_t* m_SurfaceMeshFaceLabels;
-    double* m_SurfaceMeshFaceNormals;
-    float* m_AvgQuats;
-    int32_t* m_FieldPhases;
-    unsigned int* m_CrystalStructures;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
+
+	unsigned int* m_CrystalStructures;
     float* m_GBCD;
 
-    FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
-    void operator=(const FindGBCD&); // Operator '=' Not Implemented
+    VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
+    void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
 };
 
-#endif /* _FindGBCD_H_ */
+#endif /* _VisualizeGBCD_H_ */

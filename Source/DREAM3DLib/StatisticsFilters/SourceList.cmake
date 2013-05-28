@@ -37,6 +37,7 @@ set(_PublicFilters
   FindSizes
   FindSlicetoSliceRotations
   FindSlipTransmissionMetrics
+  FindTwinBoundaryInfo
   GenerateEnsembleStatistics
 )
 
