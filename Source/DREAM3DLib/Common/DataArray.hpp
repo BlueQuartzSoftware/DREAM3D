@@ -63,12 +63,14 @@
 #define RESIZE_ARRAY(sharedArray, pointer, size)\
   pointer = sharedArray->WritePointer(0, size);
 
-#define     DECLARE_WRAPPED_ARRAY(pubVar, priVar, m_msgType)\
-  DataArray<m_msgType>::Pointer priVar;\
-  m_msgType* pubVar;
+#define DECLARE_WRAPPED_ARRAY(pubVar, priVar, Type)\
+  DataArray<Type>::Pointer priVar;\
+  Type* pubVar;
 
-#define INIT_DataArray(var, m_msgType)\
-  var = DataArray<m_msgType>::CreateArray(0, #var);
+#define INIT_DataArray(var, Type)\
+  var = DataArray<Type>::CreateArray(0, #var);
+
+
 
 /**
  * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp
@@ -313,7 +315,7 @@ class DataArray : public IDataArray
       this->Size = newSize;
       return 1;
     }
-
+#if 0
     /**
     * @brief Get the address of a particular data index. Make sure data is allocated
     * for the number of items requested. Set MaxId according to the number of
@@ -344,6 +346,7 @@ class DataArray : public IDataArray
 
       return this->Array + id;
     }
+#endif
 
     /**
      * @brief Initializes this class to zero bytes freeing any data that it currently owns
@@ -382,9 +385,12 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief Removes Tuples from the Array
+     * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
+     * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
+     * indices that are larger than the size of the original (before erasing operations) then an error code (-100) is
+     * returned from the program.
      * @param idxs The indices to remove
-     * @return
+     * @return error code.
      */
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
@@ -395,6 +401,19 @@ class DataArray : public IDataArray
       if(idxs.size() == 0)
       {
         return 0;
+      }
+
+      if (idxs.size() >= GetNumberOfTuples() )
+      {
+        Resize(0);
+        return 0;
+      }
+
+      // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
+      // off the end of the array and return an error code.
+      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      {
+        if (idxs[i] > this->MaxId) { return -100; }
       }
 
       // Calculate the new size of the array to copy into

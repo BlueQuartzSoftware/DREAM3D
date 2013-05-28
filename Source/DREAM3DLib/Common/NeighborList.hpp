@@ -112,9 +112,37 @@ class NeighborList : public IDataArray
 
     void* GetVoidPointer(size_t i) { return NULL; }
 
+    /**
+     * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
+     * vector is greater than or Equal to the number of Tuples then the Array is Resized to Zero. If there are
+     * indices that are larger than the size of the original (before erasing operations) then an error code (-100) is
+     * returned from the program.
+     * @param idxs The indices to remove
+     * @return error code.
+     */
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
       int err = 0;
+            // If nothing is to be erased just return
+      if(idxs.size() == 0)
+      {
+        return 0;
+      }
+
+      if (idxs.size() >= GetNumberOfTuples() )
+      {
+        Resize(0);
+        return 0;
+      }
+
+      // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
+      // off the end of the array and return an error code.
+      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      {
+        if (idxs[i] >= _data.size()) { return -100; }
+      }
+
+
       std::vector<SharedVectorType> replacement(_data.size() - idxs.size());
       size_t idxsIndex = 0;
       size_t rIdx = 0;

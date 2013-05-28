@@ -231,6 +231,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   fprintf(f, "    virtual void openHtmlHelpFile();\n\n");
 
   bool implementArrayNameComboBoxUpdated = false;
+  bool implementPreflightAboutToExecute = true;
 
   // Loop on all the filter options
   for(size_t i = 0; i < options.size(); ++i)
@@ -263,11 +264,12 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
       fprintf(f, "  public:\n");
       fprintf(f, "    %s  get%s();\n\n", cType.c_str(), prop.c_str());
     }
-    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
+    else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
       fprintf(f, "\n\n");
+      implementPreflightAboutToExecute = false;
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
     {
@@ -280,11 +282,13 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.c_str());
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget
+             && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
       fprintf(f, "\n\n");
+      implementPreflightAboutToExecute = false;
     }
     else
     {
@@ -497,16 +501,16 @@ void createSourceFile( const std::string &group,
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      fprintf(f, "  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
-      fprintf(f, "  if (NULL != w) {\n");
-      fprintf(f, "    w->getArraySelections(filter.get());\n  }\n");
+      fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->getArraySelections(filter.get());\n    }\n  }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "  ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
-      fprintf(f, "  if (NULL != w) {\n");
-      fprintf(f, "    w->setComparisonsIntoFilter<%s>(filter.get());\n  }\n", filter.c_str());
+      fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
     }
     else
     {
@@ -594,10 +598,10 @@ void createSourceFile( const std::string &group,
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
       fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
-      fprintf(f, "  if (NULL != w) {\n");
-      fprintf(f, "    w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
-      fprintf(f, "  }\n");
+      fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "    }\n  }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
     {
@@ -629,10 +633,10 @@ void createSourceFile( const std::string &group,
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
-      fprintf(f, "  if (NULL != w) {\n");
-      fprintf(f, "    w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
-      fprintf(f, "  }\n");
+      fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "    }\n  }\n");
     }
     else
     {
@@ -803,7 +807,7 @@ void createSourceFile( const std::string &group,
     fprintf(f, "}\n");
   }
 
-  if (implementArrayNameSelectionWidget == true)
+  if (implementArrayNameSelectionWidget == true || implementComparisonSelectionWidget == true)
   {
 
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
@@ -815,34 +819,22 @@ void createSourceFile( const std::string &group,
       std::string typ = opt->getValueType();
       std::string hl = opt->getHumanLabel();
       if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
-        fprintf(f, "  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
+        fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "  if (NULL != w) {\n    w->populateArrayNames(vdc, smdc, sdc);\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vdc, smdc, sdc);\n    }\n  }\n");
       }
-    }
-    fprintf(f, "}\n");
-  }
-
-  if (implementComparisonSelectionWidget == true)
-  {
-    fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)\n{\n", filter.c_str());
-    for (size_t i = 0; i < options.size(); ++i)
-    {
-      FilterParameter::Pointer opt = options[i];
-      std::string prop = opt->getPropertyName();
-      std::string typ = opt->getValueType();
-      std::string hl = opt->getHumanLabel();
       if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
       {
-        fprintf(f, "  ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
+        fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "  if (NULL != w) {\n    w->populateArrayNames(vdc, smdc, sdc);\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vdc, smdc, sdc);\n    }\n  }\n");
       }
     }
     fprintf(f, "}\n");
   }
+
+
 
   /* Implement the htmlHelpIndexFile() method */
   std::string lower = filter;
