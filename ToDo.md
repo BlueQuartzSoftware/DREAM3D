@@ -5,6 +5,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
+
 + OrientationOps classes need a redesign so that we don't crash when we hit an unknown or new crystal structure.
 
 ### Critical to Fix Before Bad Things Happen ###
@@ -39,7 +41,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### Developer Centric ###
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
-
++ Create a "TestFilter" that has one of every FilterParameter Type
+    - Create a new file in DREAM3DLib/GenericFilters/TestFilter.h & cpp
+    - Update the SourceList.cmake but make the filter "Private" by adding the filter to the \_PrivateFilters cmake variable.
+    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
+    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
+    
+    
 ### Ideas/Wish List ###
 + Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
@@ -48,11 +56,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ Create a "TestFilter" that has one of every FilterParameter Type
-    - Create a new file in DREAM3DLib/GenericFilters/TestFilter.h & cpp
-    - Update the SourceList.cmake but make the filter "Private" by adding the filter to the \_PrivateFilters cmake variable.
-    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
-    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 + Design protocol to check for updated Version of DREAM3D.
     - Initial Skeleton Code Already Done.
     - See DevelopmentNotes.md
@@ -166,6 +169,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ FilterParameter: EditibleChoice Widget NOT firing updates to force the Preflight to run
 + Add the "Show User Manual" to the "Help" menu.
 + Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
 + Add a cleanup filter that considers the orientation of neighboring voxels when assigning bad voxels
@@ -173,7 +177,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add TSL Neighbor Orientation correlation clean up filter
 + Right-click on filter in the **Filter List** and display the help for that filter
 + Right click on FilterWidget title area and have context menu (Show Help, Remove, etc)
-+ HexToSquare Convertor changed to put the "Sqr_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.
++ HexToSquare Convertor changed to put the "Sqr\_" as a prefix on the new files instead of a suffix which allows the files to be more easily recognized by the "ImportOrientationData" filter.
 + Fix EBSDLib to understand more Crystal Symmetries in TSL .ang files.
 + Synthetic Microstructure generation tutorial needs to be updated with the additional filters that are required for Match Crystallography to work properly.
 + Add a 'Rename Favorite' menu
