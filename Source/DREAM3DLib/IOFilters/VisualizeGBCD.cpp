@@ -56,8 +56,11 @@ const static float m_pi2 = static_cast<float>(2*M_PI);
 VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL)
+  m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_CrystalStructures(NULL),
+  m_GBCD(NULL)
 {
+    m_OrientationOps = OrientationMath::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -117,7 +120,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     }
     else
     {
-
+		GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -388, float, FloatArrayType, ensembles, (36*18*36*36*18))
 	}
 
   }
@@ -169,118 +172,128 @@ void VisualizeGBCD::execute()
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheckSurfaceMesh(false, 0, totalFaces, 0);
+  dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumEnsembleTuples());
 
-  FloatArrayType::Pointer gbcdArray = FloatArrayType::NullPointer();
-  FloatArrayType::Pointer gbcdCountArray = FloatArrayType::NullPointer();
-  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
-  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
-  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
-  gbcdArray = FloatArrayType::CreateArray(36*18*36*36*18*36, "GBCD");
-  gbcdArray->SetNumberOfComponents(1);
-  gbcdArray->initializeWithZeros();
-  gbcdCountArray = FloatArrayType::CreateArray(36*18*36*36*18*36, "GBCDCount");
-  gbcdCountArray->SetNumberOfComponents(1);
-  gbcdCountArray->initializeWithZeros();
-  gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
-  gbcdDeltasArray->SetNumberOfComponents(1);
-  gbcdDeltasArray->initializeWithZeros();
-  gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
-  gbcdLimitsArray->SetNumberOfComponents(1);
-  gbcdLimitsArray->initializeWithZeros();
-  gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
-  gbcdSizesArray->SetNumberOfComponents(1);
-  gbcdSizesArray->initializeWithZeros();
-  float* m_GBCD = gbcdArray->GetPointer(0);
-  float* m_GBCDcount = gbcdCountArray->GetPointer(0);
-  float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
-  int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
-  float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
-
-//  FUNCTION Gbcdplot, mis_angle, mis_vect, gbcd, tol=tol,symmetry=symmetry, inversion=inversion, mngbcd = mngbcd, mxgbcd = mxgbcd, $
-//    no_smooth=no_smooth
+//  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
+//  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
+//  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
+//  gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
+//  gbcdDeltasArray->SetNumberOfComponents(1);
+//  gbcdDeltasArray->initializeWithZeros();
+//  gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+//  gbcdLimitsArray->SetNumberOfComponents(1);
+//  gbcdLimitsArray->initializeWithZeros();
+//  gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+//  gbcdSizesArray->SetNumberOfComponents(1);
+//  gbcdSizesArray->initializeWithZeros();
+//  float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
+//  int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
+//  float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
+//
+//  m_GBCDlimits[0] = 0.0;
+//  m_GBCDlimits[1] = cosf(1.0*m_pi);
+//  m_GBCDlimits[2] = 0.0;
+//  m_GBCDlimits[3] = 0.0;
+//  m_GBCDlimits[4] = cosf(1.0*m_pi);
+//  m_GBCDlimits[5] = 2.0*m_pi;
+//  m_GBCDlimits[6] = cosf(0.0);
+//  m_GBCDlimits[7] = 2.0*m_pi;
+//  m_GBCDlimits[8] = 2.0*m_pi;
+//  m_GBCDlimits[9] = cosf(0.0);
+//
+//  float binsize = 10.0*m_pi/180.0;
+//  float binsize2 = binsize*(2.0/m_pi);
+//  m_GBCDdeltas[0] = binsize;
+//  m_GBCDdeltas[1] = binsize2;
+//  m_GBCDdeltas[2] = binsize;
+//  m_GBCDdeltas[3] = binsize;
+//  m_GBCDdeltas[4] = binsize2;
+//
+//  m_GBCDsizes[0] = int((m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
+//  m_GBCDsizes[1] = int((m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
+//  m_GBCDsizes[2] = int((m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
+//  m_GBCDsizes[3] = int((m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
+//  m_GBCDsizes[4] = int((m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
 //    
-//  IF N_elements(symmetry) EQ 0 THEN symmetry = [ [1.,0,0,0] ]
-//  IF ~Keyword_set(inversion) THEN inversion = 0 ELSE inversion = 1
-//  IF N_elements(mnGBCD) NE 5 THEN mnGBCD = [0., 0.,0.,0.,0.] ELSE mnGBCD=mnGBCD
-//  IF N_elements(mxGBCD) NE 5 THEN mxGBCD = [2.,1.,2.,2.,1.]*!pi ELSE mxGBCD=mxGBCD
-//  IF N_elements(tol) EQ 0 THEN tol = 5.0
-//  
-//  
-//  minGBCD = mnGBCD
-//  minGBCD[[1,4]] = Cos(mxGBCD[[1,4]])
-//  maxGBCD = mxGBCD
-//  maxGBCD[[1,4]] = Cos(mnGBCD[[1,4]])
-//  
-//  szgbcd = Size(gbcd)
-//  delta = (maxgbcd-mingbcd)/szgbcd[1:5]
-//  
-//  xyz_temp_ph = Fltarr(3, szgbcd[4]*szgbcd[5])+1.0
+//  int inversion = 1;
+//  float tol = 5.0;
+//      
+//  FloatArrayType::Pointer xyz_temp_ph = FloatArrayType::NullPointer();
+//  xyz_temp_ph = FloatArrayType::CreateArray((3*m_GBCDsizes[3]*m_GBCDsizes[4]),"xyz");
 //  
 //  xyz_temp_ph[1:2,*] = Array_indices(Reform(gbcd[0,0,0,*,*]), Findgen(szgbcd[4],szgbcd[5]))
 //  xyz_temp_ph[1,*] *= delta[3]
-//  ;xyz_temp_ph[1,*] += (minGBCD[3]+delta[3]/2.)
+//
 //  xyz_temp_ph[1,*] += (minGBCD[3])
 //  xyz_temp_ph[2,*] *= delta[4]
-//  ;xyz_temp_ph[2,*] += (minGBCD[4]+delta[4]/2.)
+//
 //  xyz_temp_ph[2,*] += (minGBCD[4])
 //  xyz_temp_ph[2,*] = Acos(xyz_temp_ph[2,*])
 //  
 //  Sphere2cart, xyz_temp_ph, xyz_temp
 //  xyz_temp1 = Fltarr(4, szgbcd[4]*szgbcd[5])
 //  xyz_temp1[0:2,*] = xyz_temp
-//  ;stereoplot2, xyz_temp, psym=4
 //  
+//  float mis_quat[5];
+//  float mis_quat1[5];
+//  float mis_quat2[5];
+//  float miseuler[3];
+//  float miseuler1[3];
+//
 //  misvect = mis_vect/Sqrt(Total(mis_vect^2.))
 //  misvect *= mis_angle/!radeg
 //  
 //  miseuler = Rotmat2eulerang(Misvect2rotmat2(misvect))
 //  mis_quat = Eulerang2quat(miseuler)
-//  
-//  n_sym = N_elements(symmetry[0,*])
-//  
+//    
 //  nchunk = szgbcd[4]*szgbcd[5]
 //  xyz = Fltarr(4,nchunk*n_sym*n_sym*2)
 //  counter = 0l
-//  FOR q=0,1 DO BEGIN
-//    IF q EQ 1 THEN mis_quat = Quat_inverse(mis_quat)
-//    
-//    FOR i=0l, n_sym-1 DO BEGIN
+//  for(int q=0,q<2,q++)
+//  {
+//    if(q == 1)
+//	{ 
+//		mis_quat = OrientationMath::invertQuaternion(mis_quat);
+//	}
+//	n_sym = m_OrientationOps[1]->getNumSymmetryOps();
+//    for(int i=0, i<n_sym, i++)
+//	{
 //      mis_quat1 = Quat_multiply(symmetry[*,i], mis_quat)
-//      FOR j=0l, n_sym-1 DO BEGIN
+//      for(int j=0, j<n_sym, j++)
+//	  {
 //        mis_quat2 = Quat_multiply(mis_quat1, Quat_inverse(symmetry[*,j]))
 //        mis_euler1 = Quat2eulerang(mis_quat2)
 //        
 //        mis_euler1[1] = Cos(mis_euler1[1])
 //        
-//        ;location = Long((mis_euler1-mingbcd)/delta[0:3])
 //        location = Long((mis_euler1-mingbcd[0:2])/delta[0:2])
-//        ;make sure that euler angles are within the GBCD space
-//        IF (Min(location) GE 0.) AND ( Min(location LT szGBCD[1:3]) GT 0) THEN BEGIN
+//        //make sure that euler angles are within the GBCD space
+//        if(Min(location) >= 0 && Min(location < szGBCD[1:3]) > 0)
+//		{
 //          interface_D = gbcd[location[0], location[1], location[2], *,*]
 //          ;stop
 //          
 //          xyz_temp1[3,*] =  Reform(interface_D, szgbcd[4]*szgbcd[5])
 //          
 //          trash = Quat_vector(Quat_inverse(symmetry[*,i]),xyz_temp )
-//          ;IF q EQ 1 THEN trash = Quat_vector(Quat_inverse(mis_quat), trash)
-//          IF q EQ 1 THEN trash = -1.*Quat_vector(Quat_inverse(mis_quat), trash)
+//          if(q == 1)
+//		  {
+//			  trash = -1.*Quat_vector(Quat_inverse(mis_quat), trash)
+//		  }
 //          xyz_temp1[0:2,*] = trash
 //          xyz[*,counter*nchunk:(counter+1)*nchunk -1] = xyz_temp1
 //          counter += 1l
 //          
-//        ENDIF
-//      ENDFOR
-//    ENDFOR
-//  ENDFOR
+//		}
+//	  }
+//	}
+//  }
 //  
 //  xyz = xyz[*,0:nchunk*counter-1]
 //  temp = xyz
 //  poles_raw = xyz
 //  intensity = xyz[3,*]
 //  xyz = xyz[0:2,*]
-//  ;intensity = [[xyz[3,*]],[xyz[3,*]]]
-//  ;xyz = [[xyz[0:2,*]], [-1.*xyz[0:2,*]]]
 //  xyz_ph = Cv_coord(from_rect=xyz, /to_sphere)
 //  
 //  Grid_input, xyz_ph[0,*], xyz_ph[1,*], intensity, Xyz, f1, /sphere, duplicates='Avg', Epsilon=tol/!radeg

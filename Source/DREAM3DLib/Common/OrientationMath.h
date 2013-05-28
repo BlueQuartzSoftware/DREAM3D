@@ -48,7 +48,8 @@
     out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
     out[2] = q2[2] * q1[4] - q2[3] * q1[1] + q2[4] * q1[2] + q2[1] * q1[3];\
     out[3] = q2[3] * q1[4] + q2[2] * q1[1] - q2[1] * q1[2] + q2[4] * q1[3];\
-    out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
+    out[4] = -q2[4] * q1[4] + q2[1] * q1[1] + q2[2] * q1[2] + q2[3] * q1[3];\
+
 
 
 /*
@@ -109,6 +110,7 @@ class DREAM3DLib_EXPORT OrientationMath
     static void QuattoRod(float *q, float &r1, float &r2, float &r3);
     static void QuattoEuler(float *q, float &ea1, float &ea2, float &ea3);
     static void changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3);
+	static void invertQuaternion(float *q);
     static void multiplyQuaternions(float inQuat[5], float multQuat[5], float outQuat[5]);
     static void multiplyQuaternionVector(float inQuat[5], float inVec[3], float outVec[3]);
     static void normalizeQuat(float* qr);
