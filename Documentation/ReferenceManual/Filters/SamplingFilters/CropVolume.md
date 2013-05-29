@@ -16,6 +16,11 @@ Zmax = 99
 
 Note: the input parameters are inclusive and begin at *0*, so in the above example *0-99* covers the entire range of **Cells** in a given dimension.
 
+See also the tutorial page [here](tutorialcroppingdata.html).
+
+It is possible with this filter to fully remove grains from the voxel volume resulting in consistency errors if more filters process the data in the pipeline. If the user selects to _Renumber Grains_ then the **GrainIds** array will be adjusted so that all grains are continuously numbered starting from 1. The user should decide if they would like their grain ids renumbered or left alone (in the case where the cropped output is being compared to some larger volume).
+
+Normally this filter will leave the origin of the volume set at (0, 0, 0) which means output files like the XDMF file will have the same (0,0,0) origin. When viewing both the original larger volume and the new cropped volume simultaneously the cropped volume and the original volume will have the same origin which makes the cropped volume look like it was shifted in space. In order to keep the cropped volume at the same absolute position in space the user should turn **ON** the _Update Origin_ check box.
 
 ## Parameters ##
 
@@ -27,6 +32,8 @@ Note: the input parameters are inclusive and begin at *0*, so in the above examp
 | X Max | Integer |
 | Y Max | Integer |
 | Z Max | Integer |
+| Renumber Grains | Boolean |
+| Update Origin | Boolean |
 
 ## Required DataContainers ##
 Voxel
