@@ -27,6 +27,7 @@ set(_PublicFilters
   FindSurfaceCells
   FindSurfaceGrains
   GenerateIPFColors
+  GenerateEulerColors
   LinkFieldMapToCellArray
   RemoveArrays
   RenameCellArray
