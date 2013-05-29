@@ -13,8 +13,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 + Missing Documentation File for IOFilters/ImportImageStack
-+ incorrect Documentation for Neighbor CI Correlation
-+ incorrect Documentation for Neighbor Orientation Correlation
 + incorrect Documentation for Find Twin Boundary Info
 
 ### Documentation ###
@@ -165,7 +163,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
-
++ incorrect Documentation for Neighbor CI Correlation
++ incorrect Documentation for Neighbor Orientation Correlation
 + Add the "Show User Manual" to the "Help" menu.
 + Create Helper Class in QtSupport that generates the proper URL to open an html file in the users browser since this code is reused all over the place.
 + Add a cleanup filter that considers the orientation of neighboring voxels when assigning bad voxels
