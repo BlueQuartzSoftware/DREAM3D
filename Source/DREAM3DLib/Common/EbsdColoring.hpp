@@ -340,7 +340,7 @@ class EbsdColoring
       {
         //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
         //        OrientationMath::multiplyQuaternions(q1, q2, qc);
-        MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
+        MULT_QUAT( HexagonalMath::Detail::HexQuatSym[j], q1, qc);
 
         OrientationMath::QuattoMat(qc, g);
 
@@ -377,6 +377,7 @@ class EbsdColoring
           phi_local = (EbsdColor::Detail::RadToDegs) * acos(phi_local);
           _rgb[1] = (1 - _rgb[0]) * ((30.0f - phi_local) / 30.0f);
           _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+          break;
         }
       }
 
@@ -479,7 +480,7 @@ class EbsdColoring
       {
         //        q2 =  const_TrigagonalMath::Detail::TrigQuatSym[j];
         //        OrientationMath::multiplyQuaternions(q1, q2, qc);
-        MULT_QUAT(q1, TrigonalMath::Detail::TrigQuatSym[j], qc);
+        MULT_QUAT( TrigonalMath::Detail::TrigQuatSym[j], q1, qc);
 
         OrientationMath::QuattoMat(qc, g);
 
