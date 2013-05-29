@@ -5,14 +5,16 @@ Bad Data Orientation Correlation {#neighborcicorrelation}
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter compares the orientations of "*bad*" **Cells** with their neighbor **Cells**.  If the misorientation is below a user defined tolerance for a user defined number of neighbors, then the "*bad*" **Cell** will be changed to a "*good*" **Cell**.
+This Filter first identifies all **Cells** that have a *confidence index* below the minimum set by the user.  Then, for each of those **Cells**, their neighboring **Cells** are checked to identify the neighbor **Cell** with the highest *confidence index*.  If the neighbor with the highest *confidence index* is above the minimum set by the user, then the data from that **Cell** will be copied to the **Cell** with the *confidence index* below the minimum.  If none of the neighbor **Cells** are above the minimum value, then no data will be copied to the **Cell** on that iteration.  
+The filter will complete only one iteration by default, but can be set to *Loop Until Gone* (which will result in all **Cells** below the user defined minimum being replaced by neighboring **Cells** above the minimum). 
+
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Misorientation Tolerance (Degrees) | Float |
-| Required Number of Neighbors | Integer |
+| Minimum Confidence Index | Float |
+| Loop Until Gone | Boolean |
 
 ## Required DataContainers ##
 Voxel
@@ -21,8 +23,7 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data
 |------|--------------|-------------|---------|-----|
-| Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
-| Cell | GoodVoxels | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
+| Cell | Confidence Index | Scalar value defining the confidence in the orientation of the **Cell** (TSL data) |  | ReadH5ebsd |
 
 ## Created Arrays ##
 None
