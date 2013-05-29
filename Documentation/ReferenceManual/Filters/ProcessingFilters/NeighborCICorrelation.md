@@ -21,7 +21,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | Confidence Index | Scalar value defining the confidence in the orientation of the **Cell** (TSL data) |  | ReadH5ebsd |
 

@@ -28,7 +28,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Ensemble | ShapeTypes | Enumeration (int) specifying the shape class of the **Fields** of each **Ensemble** (Ellipsoid=0, SuperEllipsoid=1, CubeOctahedron=2, Cylinder=3) | | Values are obtained from user input on GUI |
 | Ensemble | PhaseTypes | Enumeration (int) specifying the type of phase of each Ensemble/phase (Primary=0, Precipitate=1, Transformation=2, Matrix=3, Boundary=4) |  | Intialize Synthetic Volume (SyntheticBuilding), Generate Ensemble Statistics (Statistics) |

@@ -17,7 +17,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | ImageData | This is either a 3 or 4 component array of RGB or RGBa values |  | Import Images (3D Stack) (ImageImport) |
 

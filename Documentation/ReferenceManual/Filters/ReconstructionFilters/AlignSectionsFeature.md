@@ -33,7 +33,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | GoodVoxels | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
 

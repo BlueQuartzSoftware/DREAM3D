@@ -27,7 +27,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Field | Centroids | X, Y, Z coordinates (floats) of **Field** center of mass | Filter will calculate **Field** centroids if not previously calculated | Find Field Centroids (Generic) |
 | Field | SurfaceFields | Boolean flag of 1 if **Field** touches an outer surface or of 0 if it does not | Filter will determine if **Fields** intersect an outer surface if not already determined | Field Surface Fields (Generic) |

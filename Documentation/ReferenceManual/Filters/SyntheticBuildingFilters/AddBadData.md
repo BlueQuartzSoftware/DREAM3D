@@ -22,7 +22,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | GBEuclideanDistances |  |  | Find Euclidean Distance Map (Statistics) |
 
