@@ -174,10 +174,10 @@ class CalculateGBCDImpl
 				  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc_inv);
 				  if (gbcd_index != -1 )
 				  {
-					{
-					  m_GBCDcount[gbcd_index] += 1;
-					  m_GBCDarea[gbcd_index] += m_Areas[i];
-					}
+  					{
+  					  m_GBCDcount[gbcd_index] += 1;
+  					  m_GBCDarea[gbcd_index] += m_Areas[i];
+  					}
 				  }
 
 				}

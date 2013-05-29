@@ -5,7 +5,11 @@ Bad Data Orientation Correlation {#baddataneighbororientationcheck}
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter compares the orientations of "*bad*" **Cells** with their neighbor **Cells**.  If the misorientation is below a user defined tolerance for a user defined number of neighbors, then the "*bad*" **Cell** will be changed to a "*good*" **Cell**.
+This Filter compares the orientations of "*bad*" **Cells** with their neighbor **Cells**.  If the misorientation is below a user defined tolerance for a user defined number of neighbor **Cells** , then the "*bad*" **Cell** will be changed to a "*good*" **Cell**.
+
+*Note:* only the flag defining the **Cell** as "good" or "bad" is changed, not the data at **Cell**.
+
+*Note:* the filter will iteratively reduce the required number of neighbors from 6 until it reaches the user defined number. So, if the user selects a required number of neighbors of 4, then the filter will run with a required number of neighbors of 6, then 5, then 4 before finishing.  
 
 ## Parameters ##
 
@@ -23,6 +27,8 @@ Voxel
 |------|--------------|-------------|---------|-----|
 | Cell | Quats | Five (5) values (floats) that specify the orientation of the **Cell** in quaternion representation | Filter will calculate the quaternion for each **Cell** if it is not already calculated. | Find Cell Quaternions (Generic) |
 | Cell | GoodVoxels | Boolean values used to define "regions" to be aligned | Values are not required to be based on "good" or "bad" data, rather must only correspond to some identified "regions"  | Single Threshold (Cell Data) (Processing), Multi Threshold (Cell Data) (Processing) |
+| Cell | CellPhases | Phase Id (int) specifying the phase of the **Cell** | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Arrays ##
 None
