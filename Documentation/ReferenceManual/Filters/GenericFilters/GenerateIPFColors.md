@@ -9,6 +9,7 @@ This filter will generate Inverse Pole Figure colors for Cubic or Hexagonal Crys
 
 ![IPF Color Triangle](IPFFilterLegend.png)
 
+![Example Data Set](IPFColor_1.png)
 
 ## Input Options ##
 
@@ -24,7 +25,7 @@ Voxel
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | CellEulerAngles | | These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
 | Cell | CellPhases | | These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
