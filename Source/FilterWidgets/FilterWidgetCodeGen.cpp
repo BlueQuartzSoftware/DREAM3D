@@ -570,7 +570,7 @@ void createSourceFile( const std::string &group,
     {
       // If we fall in here then the methods should have been generated in the header file
       //    fprintf(f, "Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      //     fprintf(f, "FILTER_PROPERTY_WRAPPER(%s, %s, m_Filter);\n", typ.c_str(), prop.c_str());
+      //    fprintf(f, "FILTER_PROPERTY_WRAPPER(%s, %s, m_Filter);\n", typ.c_str(), prop.c_str());
     }
   }
 
@@ -693,10 +693,26 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (cb) {\n");
-      fprintf(f, "     bool ok = false;\n");
-      fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
-      fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
-      fprintf(f, "     }\n");
+      if (opt->getValueType().compare("string") == 0)
+      {
+        fprintf(f, "    QString str_%s = p_%s.toString();\n", prop.c_str(), prop.c_str());
+        fprintf(f, "    int index = cb->findText(str_%s);\n", prop.c_str() );
+        fprintf(f, "    if (index != -1) {\n");
+        fprintf(f, "      cb->setCurrentIndex(index);\n");
+        fprintf(f, "    }\n");
+        fprintf(f, "    else {\n");
+        fprintf(f, "      cb->addItem(str_%s);\n", prop.c_str() );
+        fprintf(f, "      cb->setCurrentIndex(cb->count() -1 );\n");
+        fprintf(f, "    }\n");
+        //fprintf(f, "    }\n");
+      }
+      else
+      {
+        fprintf(f, "     bool ok = false;\n");
+        fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
+        fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
+        fprintf(f, "     }\n");
+      }
       fprintf(f, "   }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget

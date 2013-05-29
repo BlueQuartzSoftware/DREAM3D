@@ -831,7 +831,7 @@ QString PluginMaker::generateCmakeContents() {
   QString hdrContents;
   for (int i = 0; i < m_FilterBundles.count(); ++i)
   {
-    PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
+   // PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
     bool isPublic = m_FilterBundles[i].isPublic();
 
