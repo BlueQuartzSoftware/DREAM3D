@@ -377,6 +377,7 @@ class EbsdColoring
           phi_local = (EbsdColor::Detail::RadToDegs) * acos(phi_local);
           _rgb[1] = (1 - _rgb[0]) * ((30.0f - phi_local) / 30.0f);
           _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+          break;
         }
       }
 

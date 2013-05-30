@@ -48,18 +48,19 @@
 //
 // -----------------------------------------------------------------------------
 CropVolume::CropVolume() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_XMin(0),
-m_YMin(0),
-m_ZMin(0),
-m_XMax(0),
-m_YMax(0),
-m_ZMax(0),
-m_RenumberGrains(true),
-m_GrainIds(NULL),
-m_Active(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_XMin(0),
+  m_YMin(0),
+  m_ZMin(0),
+  m_XMax(0),
+  m_YMax(0),
+  m_ZMax(0),
+  m_RenumberGrains(true),
+  m_UpdateOrigin(true),
+  m_GrainIds(NULL),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -79,62 +80,70 @@ void CropVolume::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Min");
+    option->setHumanLabel("X Min (Voxels)");
     option->setPropertyName("XMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Column");
+    option->setUnits("Column");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Min");
+    option->setHumanLabel("Y Min (Voxels)");
     option->setPropertyName("YMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Row");
+    option->setUnits("Row");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Min");
+    option->setHumanLabel("Z Min (Voxels)");
     option->setPropertyName("ZMin");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Plane");
+    option->setUnits("Plane");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("X Max");
+    option->setHumanLabel("X Max (Voxels)");
     option->setPropertyName("XMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Column");
+    option->setUnits("Column");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Y Max");
+    option->setHumanLabel("Y Max (Voxels)");
     option->setPropertyName("YMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Row");
+    option->setUnits("Row");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Z Max");
+    option->setHumanLabel("Z Max (Voxels)");
     option->setPropertyName("ZMax");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("Plane");
+    option->setUnits("Plane");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Renumber Grains");
     option->setPropertyName("RenumberGrains");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Update Origin");
+    option->setPropertyName("UpdateOrigin");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -170,7 +179,7 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   if (m_RenumberGrains == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+        CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   }
 }
 
@@ -232,11 +241,11 @@ void CropVolume::preflight()
     ss <<"Z Min (" << getZMin() << ") less than 0";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
-  }  
+  }
   if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
   {
     ss.str("");
-	ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints())-1;
+    ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints())-1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
@@ -302,21 +311,21 @@ void CropVolume::execute()
   if (dims[0] <= m_XMax)
   {
     ss << "A Maximum value of " << m_XMax << " has been entered for the Max X which is larger than the input volume X Dimension of " << dims[0]
-      << " This may lead to junk data being filled into the extra space.";
+       << " This may lead to junk data being filled into the extra space.";
     notifyWarningMessage(ss.str(), -950);
   }
   if (dims[1] <= m_YMax)
   {
     ss.str("");
     ss << "A Maximum value of " << m_YMax << " has been entered for the Max Y which is larger than the input volume Y Dimension of " << dims[1]
-      << " This may lead to junk data being filled into the extra space.";
+       << " This may lead to junk data being filled into the extra space.";
     notifyWarningMessage(ss.str(), -950);
   }
   if (dims[2] <= m_ZMax)
   {
     ss.str("");
     ss << "A Maximum value of " << m_ZMax << " has been entered for the Max Z which is larger than the input volume Z Dimension of " << dims[2]
-      << " This may lead to junk data being filled into the extra space.";
+       << " This may lead to junk data being filled into the extra space.";
     notifyWarningMessage(ss.str(), -950);
   }
 
@@ -355,6 +364,7 @@ void CropVolume::execute()
   int64_t totalPoints = m->getTotalPoints();
   totalPoints = static_cast<int64_t>( m_XP * m_YP * m_ZP );
 
+
   // Resize all the other Voxel Arrays
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
@@ -370,9 +380,9 @@ void CropVolume::execute()
     size_t totalFields = m->getNumFieldTuples();
     if (0 == totalFields)
     {
-        notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
-        notifyStatusMessage("Completed");
-        return;
+      notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
+      notifyStatusMessage("Completed");
+      return;
     }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
@@ -397,7 +407,21 @@ void CropVolume::execute()
     addErrorMessages(renum->getPipelineMessages());
   }
 
+  if(m_UpdateOrigin == true)
+  {
+    float resolution[3] = {0.0f, 0.0f, 0.0f};
+    m->getResolution(resolution);
 
- notifyStatusMessage("Completed");
+    float origin[3] = {0.0f, 0.0f, 0.0f};
+    m->getOrigin(origin);
+    origin[0] = m_XMin * resolution[0];
+    origin[1] = m_YMin * resolution[1];
+    origin[2] = m_ZMin * resolution[2];
+
+    m->setOrigin(origin);
+  }
+
+
+  notifyStatusMessage("Completed");
 }
 

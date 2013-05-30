@@ -344,6 +344,24 @@ void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, floa
   r3 = n3 * const1;
 }
 
+void OrientationMath::axisAngletoQuat(float w, float n1, float n2, float n3, float *q)
+{
+  float denom;
+
+  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+  denom = sqrt(denom);
+  n1 = n1 / denom;
+  n2 = n2 / denom;
+  n3 = n3 / denom;
+  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+  float const1 = cosf(w/2.0f);
+  float const2 = sinf(w/2.0f);
+  q[1] = n1 * const2;
+  q[2] = n2 * const2;
+  q[3] = n3 * const2;
+  q[4] = const1;
+}
+
 void OrientationMath::axisAngletoMat(float w, float n1, float n2, float n3, float g[3][3])
 {
   float c, s, t, denom;
@@ -422,6 +440,13 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   n2 = r2 / rmag;
   n3 = r3 / rmag;
   if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+  if(w > m_pi)
+  {
+	w = (2*m_pi)-w;
+	n1 = -n1;
+	n2 = -n2;
+	n3 = -n3;
+  }
 }
 
 void OrientationMath::QuattoAxisAngle(float *q, float &w, float &n1, float &n2, float &n3)
@@ -431,6 +456,13 @@ void OrientationMath::QuattoAxisAngle(float *q, float &w, float &n1, float &n2, 
   n2 = q[2] / sqrt(1-(q[4]*q[4]));
   n3 = q[3] / sqrt(1-(q[4]*q[4]));
   if(q[4] == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+  if(w > m_pi)
+  {
+	w = (2*m_pi)-w;
+	n1 = -n1;
+	n2 = -n2;
+	n3 = -n3;
+  }
 }
 
 void OrientationMath::QuattoMat(float *q, float g[3][3])
@@ -485,14 +517,18 @@ void OrientationMath::QuattoRod(float *q, float &r1, float &r2, float &r3)
 void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
 {
   float diff, sum, tmp;
-    diff=atan2(q[2],q[1]);
-    sum=atan2(q[3],q[4]);
+    diff=atan2(-q[2],-q[1]);
+    sum=atan2(-q[3],-q[4]);
     ea1=(diff+sum);
     ea3=(sum-diff);
     tmp=(q[3]*q[3])+(q[4]*q[4]);
     tmp = sqrt(tmp);
     if(tmp > 1.0f) tmp=1.0f;
     ea2=2*acos(tmp);
+	ea1=ea1+two_pi;
+	ea3=ea3+two_pi;
+	ea1 = fmodf(ea1,two_pi);
+	ea3 = fmodf(ea3,two_pi);
 }
 void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
 {
@@ -518,6 +554,14 @@ void OrientationMath::normalizeQuat(float* qr)
   qr[4] = static_cast<float>( qr[4]/norm );
 }
 
+void OrientationMath::invertQuaternion(float* q)
+{
+  q[0] = q[0];
+  q[1] = -q[1];
+  q[2] = -q[2];
+  q[3] = -q[3];
+  q[4] = q[4];
+}
 void OrientationMath::eulertoMat(float ea1, float ea2, float ea3, float g[3][3])
 {
       // Calcuate all the values once
