@@ -161,13 +161,19 @@ mark_as_advanced(TBB_INCLUDE_DIR)
 
 
 #-- Look for libraries
-# GvdB: $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
+# $ENV{TBB_ARCH_PLATFORM} is set by the build script tbbvars[.bat|.sh|.csh]
+# Look for the environment variable first and TBB_ARCH_PLATFORM CMake variable are NOT set.
+# then use the environment varible
+if(NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "" AND ${TBB_ARCH_PLATFORM} STREQUAL "")
+	set(TBB_ARCH_PLATFORM $ENV{TBB_ARCH_PLATFORM} )
+endif()
 
-# if(NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
-    set(_TBB_LIBRARY_DIR
-         ${_TBB_INSTALL_DIR}/lib/$ENV{TBB_ARCH_PLATFORM}
-         ${_TBB_INSTALL_DIR}/$ENV{TBB_ARCH_PLATFORM}/lib
-        )
+set(_TBB_LIBRARY_DIR
+	 ${_TBB_INSTALL_DIR}/lib/${TBB_ARCH_PLATFORM}
+	 ${_TBB_INSTALL_DIR}/${TBB_ARCH_PLATFORM}/lib
+	)
+
+		
 #else (NOT $ENV{TBB_ARCH_PLATFORM} STREQUAL "")
     # HH: deprecated
 #    message(STATUS "[Warning] FindTBB.cmake: The use of TBB_ARCHITECTURE and TBB_COMPILER is deprecated and may not be supported in future versions. Please set $ENV{TBB_ARCH_PLATFORM} (using tbbvars.[bat|csh|sh]).")
@@ -176,15 +182,6 @@ mark_as_advanced(TBB_INCLUDE_DIR)
 
 #message(STATUS "_TBB_LIB_NAME: ${_TBB_LIB_NAME}")
 #message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
-
-if(TBB_DEBUG)
-message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
-message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
-message(STATUS "TBB_ARCH_PLATFORM: $ENV{TBB_ARCH_PLATFORM}")
-message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
-message(STATUS "TBB_LIBRARY: ${TBB_LIBRARY}")
-endif()
-
 
 
 find_library(TBB_LIBRARY_RELEASE
@@ -206,6 +203,26 @@ find_library(TBB_MALLOC_LIBRARY_DEBUG
 		${_TBB_LIBRARY_DIR} 
 		NO_DEFAULT_PATH)
 
+# Set the binary directory where the Windows DLL files are located.
+set(TBB_BIN_DIR ${TBB_INSTALL_DIR}/bin/${TBB_ARCH_PLATFORM} )
+set(TBB_MALLOC_BIN_DIR ${TBB_INSTALL_DIR}/bin/${TBB_ARCH_PLATFORM} )
+
+if(TBB_DEBUG)
+message(STATUS "TBB_INSTALL_DIR: ${TBB_INSTALL_DIR}")
+message(STATUS "TBB_ARCH_PLATFORM: ${TBB_ARCH_PLATFORM}")
+message(STATUS "TBB_ARCH_TYPE: ${TBB_ARCH_TYPE}")
+message(STATUS "TBB_BIN_DIR: ${TBB_BIN_DIR}")
+message(STATUS "TBB_INCLUDE_DIR: ${TBB_INCLUDE_DIR}")
+message(STATUS "_TBB_LIBRARY_DIR: ${_TBB_LIBRARY_DIR}")
+message(STATUS "TBB_LIBRARY: ${TBB_LIBRARY}")
+message(STATUS "TBB_LIBRARY_RELEASE: ${TBB_LIBRARY_RELEASE}")
+message(STATUS "TBB_MALLOC_LIBRARY_RELEASE: ${TBB_MALLOC_LIBRARY_RELEASE}")
+message(STATUS "TBB_LIBRARY_DEBUG: ${TBB_LIBRARY_DEBUG}")
+message(STATUS "TBB_MALLOC_LIBRARY_DEBUG: ${TBB_MALLOC_LIBRARY_DEBUG}")
+endif()
+
+
+
 # include the macro to adjust libraries
 INCLUDE (${CMP_MODULES_SOURCE_DIR}/cmpAdjustLibVars.cmake)
 cmp_ADJUST_LIB_VARS(TBB)
@@ -219,6 +236,7 @@ message(STATUS "TBB_LIBRARY_RELEASE: ${TBB_LIBRARY_RELEASE}")
 message(STATUS "TBB_MALLOC_LIBRARY: ${TBB_MALLOC_LIBRARY}")
 message(STATUS "TBB_MALLOC_LIBRARY_DEBUG: ${TBB_MALLOC_LIBRARY_DEBUG}")
 message(STATUS "TBB_MALLOC_LIBRARY_RELEASE: ${TBB_MALLOC_LIBRARY_RELEASE}")
+
 endif()
 
 
