@@ -246,7 +246,7 @@ void FindTwinBoundaryInfo::execute()
 		  if (phase1 == phase2)
 		  {
 			OrientationMath::invertQuaternion(q2);
-			OrientationMath::multiplyQuaternions(q2, q1, misq);
+			OrientationMath::multiplyQuaternions(q1, q2, misq);
 			int nsym = m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getNumSymOps();
 			for (int k=0; k< nsym;k++)
 			{

@@ -344,6 +344,24 @@ void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, floa
   r3 = n3 * const1;
 }
 
+void OrientationMath::axisAngletoQuat(float w, float n1, float n2, float n3, float *q)
+{
+  float denom;
+
+  denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
+  denom = sqrt(denom);
+  n1 = n1 / denom;
+  n2 = n2 / denom;
+  n3 = n3 / denom;
+  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+  float const1 = cosf(w/2.0f);
+  float const2 = sinf(w/2.0f);
+  q[1] = n1 * const2;
+  q[2] = n2 * const2;
+  q[3] = n3 * const2;
+  q[4] = const1;
+}
+
 void OrientationMath::axisAngletoMat(float w, float n1, float n2, float n3, float g[3][3])
 {
   float c, s, t, denom;
