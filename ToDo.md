@@ -35,7 +35,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### User Centric
 
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
-
++ ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 ### Developer Centric ###
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
@@ -44,8 +44,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
     - Update the SourceList.cmake but make the filter "Private" by adding the filter to the \_PrivateFilters cmake variable.
     - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
     - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
-    
-    
+
+
 ### Ideas/Wish List ###
 + Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
