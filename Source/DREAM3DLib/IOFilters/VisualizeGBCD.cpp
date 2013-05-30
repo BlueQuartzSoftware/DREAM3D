@@ -255,7 +255,9 @@ void VisualizeGBCD::execute()
   float mis_quat1[5];
   float mis_quat2[5];
   float mis_euler1[3];
-  float sym_q[5];
+  float sym_q1[5], sym_q2[5];
+  float vec[3];
+  float trash[3];
 
   float mis_angle = 60;
   float misvect[3] = {1,1,1};
@@ -280,14 +282,14 @@ void VisualizeGBCD::execute()
 	  }
     for(int i=0; i<n_sym; i++)
 	  {
-      m_OrientationOps[1]->getQuatSymOp(i, sym_q);
-      OrientationMath::multiplyQuaternions(sym_q, mis_quat, mis_quat1);
+      m_OrientationOps[1]->getQuatSymOp(i, sym_q1);
       for(int j=0; j<n_sym; j++)
 	    {
-        m_OrientationOps[1]->getQuatSymOp(j, sym_q);
-        OrientationMath::invertQuaternion(sym_q);
-        OrientationMath::multiplyQuaternions(mis_quat1, sym_q, mis_quat2);
-        OrientationMath::QuattoEuler(mis_quat2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        m_OrientationOps[1]->getQuatSymOp(j, sym_q2);
+        OrientationMath::invertQuaternion(sym_q2);
+        OrientationMath::multiplyQuaternions(mis_quat, sym_q2, mis_quat2);
+        OrientationMath::multiplyQuaternions(sym_q1, mis_quat2, mis_quat1);
+        OrientationMath::QuattoEuler(mis_quat1, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
         
         mis_euler1[1] = cosf(mis_euler1[1]);
         
@@ -295,33 +297,46 @@ void VisualizeGBCD::execute()
         int location2 = int((mis_euler1[1]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
         int location3 = int((mis_euler1[2]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
         //make sure that euler angles are within the GBCD space
-        if(Min(location) >= 0 && Min(location < szGBCD[1:3]) > 0)
+        if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < m_GBCDsizes[0] && location2 < m_GBCDsizes[1] && location3 < m_GBCDsizes[2])
 		    {
-          interface_D = gbcd[location[0], location[1], location[2], *,*]
-          
-          xyz_temp1[3,*] =  Reform(interface_D, szgbcd[4]*szgbcd[5])
-          
-          trash = Quat_vector(Quat_inverse(symmetry[*,i]),xyz_temp )
-          if(q == 1)
-		      {
-			      trash = -1.*Quat_vector(Quat_inverse(mis_quat), trash)
-		      }
-          xyz_temp1[0:2,*] = trash
-          xyz[*,counter*nchunk:(counter+1)*nchunk -1] = xyz_temp1
-          counter += 1l
-          
-		    }
+          int shift = (location1)+(location2*m_GBCDsizes[0])+(location3*m_GBCDsizes[0]*m_GBCDsizes[1]);
+          for(int k=0;k<m_GBCDsizes[4];k++)
+          {
+            for(int l=0;l<m_GBCDsizes[3];l++)
+            {
+              xyz_temp[4*(l+(m_GBCDsizes[3]*k))+3] = m_GBCD[shift+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
+            }
+          }
+          m_OrientationOps[1]->getQuatSymOp(i, sym_q1);
+          OrientationMath::invertQuaternion(sym_q1);
+          for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
+          {
+             vec[0] = xyz_temp[4*k];
+             vec[1] = xyz_temp[4*k+1];
+             vec[2] = xyz_temp[4*k+2];
+             OrientationMath::multiplyQuaternionVector(sym_q1, vec, trash);
+             if(q == 1)
+             {
+                OrientationMath::invertQuaternion(mis_quat);
+                OrientationMath::multiplyQuaternionVector(mis_quat, trash, trash);
+                trash[0] = -trash[0];
+                trash[1] = -trash[1];
+                trash[2] = -trash[2];
+             }
+             xyz_temp[4*k] = trash[0];
+             xyz_temp[4*k+1] = trash[1];
+             xyz_temp[4*k+2] = trash[2];
+             xyz[4*(counter*nchunk+k)] = xyz_temp[4*k];
+             xyz[4*(counter*nchunk+k)+1] = xyz_temp[4*k+1];
+             xyz[4*(counter*nchunk+k)+2] = xyz_temp[4*k+2];
+             xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
+             counter += 1;
+          }
+	      }
 	    }
-	}
+    }
+  }
   
-  xyz = xyz[*,0:nchunk*counter-1]
-  temp = xyz
-  poles_raw = xyz
-  intensity = xyz[3,*]
-  xyz = xyz[0:2,*]
-
-  [xyz, Transpose(intensity)]
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

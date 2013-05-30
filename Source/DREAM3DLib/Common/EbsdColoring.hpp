@@ -340,7 +340,7 @@ class EbsdColoring
       {
         //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
         //        OrientationMath::multiplyQuaternions(q1, q2, qc);
-        MULT_QUAT( HexagonalMath::Detail::HexQuatSym[j], q1, qc);
+        MULT_QUAT(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
 
         OrientationMath::QuattoMat(qc, g);
 
@@ -480,7 +480,7 @@ class EbsdColoring
       {
         //        q2 =  const_TrigagonalMath::Detail::TrigQuatSym[j];
         //        OrientationMath::multiplyQuaternions(q1, q2, qc);
-        MULT_QUAT( TrigonalMath::Detail::TrigQuatSym[j], q1, qc);
+        MULT_QUAT(q1, TrigonalMath::Detail::TrigQuatSym[j], qc);
 
         OrientationMath::QuattoMat(qc, g);
 
