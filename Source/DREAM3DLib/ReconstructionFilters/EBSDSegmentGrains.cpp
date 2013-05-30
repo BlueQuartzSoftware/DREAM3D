@@ -193,10 +193,17 @@ void EBSDSegmentGrains::execute()
 
   SegmentGrains::execute();
 
+  size_t totalFields = m->getNumFieldTuples();
+  if (totalFields < 2)
+  {
+    setErrorCondition(-87000);
+    notifyErrorMessage("The number of Fields was 0 or 1 which means no fields were detected. Is a threshold value set to high?", getErrorCondition());
+    return;
+  }
   if (true == m_RandomizeGrainIds)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFields = m->getNumFieldTuples();
+
 
     // Generate all the numbers up front
     const int rangeMin = 1;

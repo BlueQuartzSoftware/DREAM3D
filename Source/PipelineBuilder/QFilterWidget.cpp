@@ -571,7 +571,7 @@ void QFilterWidget::setupGui()
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
-      QLineEdit* fp = new QLineEdit(this);
+      QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
@@ -596,7 +596,7 @@ void QFilterWidget::setupGui()
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
-      QLineEdit* fp = new QLineEdit(this);
+      QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
