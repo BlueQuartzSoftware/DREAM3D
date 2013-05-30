@@ -727,8 +727,9 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           STRING(TOUPPER ${BTYPE} TYPE)
           get_filename_component(lib_path ${${upperlib}_LIBRARY_${TYPE}} PATH)
           get_filename_component(lib_name ${${upperlib}_LIBRARY_${TYPE}} NAME_WE)
-       #   message(STATUS "lib_path: ${lib_path}")
-       #   message(STATUS "lib_name: ${lib_name}")
+          #message(STATUS "lib_path: ${lib_path}")
+          #message(STATUS "lib_name: ${lib_name}")
+		  #message(STATUS "${upperlib}_BIN_DIR: ${${upperlib}_BIN_DIR}")
 
           find_file(${upperlib}_LIBRARY_DLL_${TYPE}
                         NAMES ${lib_name}.dll
