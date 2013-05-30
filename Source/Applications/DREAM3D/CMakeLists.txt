@@ -156,6 +156,7 @@ add_custom_target(PrebuiltPipelinesCopy ALL
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines/
             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/PrebuiltPipelines/
             COMMENT "Copying Prebuilt Pipelines into Binary Directory")
+set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
@@ -176,6 +177,7 @@ add_custom_target(DataFolderCopy ALL
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/Data/
             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Data/
             COMMENT "Copying Data Folder into Binary Directory")
+set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
 #-------------------------------------------------------------------------------
 # Make Sure the DataFolderCopy target is run before the DREAM3D target is built
