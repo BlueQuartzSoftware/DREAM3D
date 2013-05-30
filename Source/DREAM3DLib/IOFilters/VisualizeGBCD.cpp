@@ -218,59 +218,82 @@ void VisualizeGBCD::execute()
   int inversion = 1;
   float tol = 5.0;
       
-  FloatArrayType::Pointer xyz_temp_ph = FloatArrayType::NullPointer();
-  xyz_temp_ph = FloatArrayType::CreateArray((3*m_GBCDsizes[3]*m_GBCDsizes[4]),"xyz");
-  
-  xyz_temp_ph[1:2,*] = Array_indices(Reform(gbcd[0,0,0,*,*]), Findgen(szgbcd[4],szgbcd[5]))
-  xyz_temp_ph[1,*] *= delta[3]
+  FloatArrayType::Pointer xyz_temp_phArray = FloatArrayType::NullPointer();
+  xyz_temp_phArray = FloatArrayType::CreateArray((m_GBCDsizes[3]*m_GBCDsizes[4]), 3, "xyz");
+  xyz_temp_phArray->initializeWithValues(1.0f);
+  float* xyz_temp_ph = xyz_temp_phArray->GetPointer(0);
 
-  xyz_temp_ph[1,*] += (minGBCD[3])
-  xyz_temp_ph[2,*] *= delta[4]
+  int count = 0;
+  for(int j=0;j<m_GBCDsizes[4];j++)
+  {
+    for(int i=0;i<m_GBCDsizes[3];i++)
+    {
+      xyz_temp_ph[3*count+1] = i;
+      xyz_temp_ph[3*count+2] = j;
+      xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] * m_GBCDdeltas[3];
+      xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] + m_GBCDlimits[3];
+      xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] * m_GBCDdeltas[4];
+      xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] + m_GBCDlimits[4];
+      xyz_temp_ph[3*count+2] = acosf(xyz_temp_ph[3*count+2]);
+      count++;
+    }
+  }
 
-  xyz_temp_ph[2,*] += (minGBCD[4])
-  xyz_temp_ph[2,*] = Acos(xyz_temp_ph[2,*])
-  
-  Sphere2cart, xyz_temp_ph, xyz_temp
-  xyz_temp1 = Fltarr(4, szgbcd[4]*szgbcd[5])
-  xyz_temp1[0:2,*] = xyz_temp
+  FloatArrayType::Pointer xyz_tempArray = FloatArrayType::NullPointer();
+  xyz_tempArray = FloatArrayType::CreateArray((m_GBCDsizes[3]*m_GBCDsizes[4]), 4, "xyz");
+  xyz_tempArray->initializeWithValues(0.0f);
+  float* xyz_temp = xyz_tempArray->GetPointer(0);
+
+  for(int i=0;i<(m_GBCDsizes[3]*m_GBCDsizes[4]);i++)
+  {
+    xyz_temp[4*i] = sinf(xyz_temp_ph[3*i+2])*cosf(xyz_temp_ph[3*i+1]);
+    xyz_temp[4*i+1] = sinf(xyz_temp_ph[3*i+2])*sinf(xyz_temp_ph[3*i+1]);
+    xyz_temp[4*i+2] = cosf(xyz_temp_ph[3*i+2]);
+  }
   
   float mis_quat[5];
   float mis_quat1[5];
   float mis_quat2[5];
-  float mis_euler[3];
   float mis_euler1[3];
   float sym_q[5];
 
-  misvect = mis_vect/Sqrt(Total(mis_vect^2.))
-  misvect *= mis_angle/!radeg
+  float mis_angle = 60;
+  float misvect[3] = {1,1,1};
+
+  mis_angle = mis_angle * m_pi/180.0f;
   
-  miseuler = Rotmat2eulerang(Misvect2rotmat2(misvect))
-  mis_quat = Eulerang2quat(miseuler)
+  OrientationMath::axisAngletoQuat(mis_angle, misvect[0], misvect[1], misvect[2], mis_quat);
     
-  nchunk = szgbcd[4]*szgbcd[5]
-  xyz = Fltarr(4,nchunk*n_sym*n_sym*2)
-  counter = 0l
-  for(int q=0,q<2,q++)
+  int n_sym = m_OrientationOps[1]->getNumSymOps();
+
+  int nchunk = m_GBCDsizes[3]*m_GBCDsizes[4];
+  FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
+  xyzArray = FloatArrayType::CreateArray((nchunk*2*n_sym*n_sym), 4, "xyz");
+  xyzArray->initializeWithValues(0.0f);
+  float* xyz = xyzArray->GetPointer(0);
+  int counter = 0;
+  for(int q=0;q<2;q++)
   {
     if(q == 1)
-	{ 
-		mis_quat = OrientationMath::invertQuaternion(mis_quat);
-	}
-	n_sym = m_OrientationOps[1]->getNumSymmetryOps();
-  for(int i=0, i<n_sym, i++)
-	{
-      m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(i, sym_q);
-      OrientationMath::multiplyQuaternions(sym_q, mis_quat, mis_quat1)
-      for(int j=0, j<n_sym, j++)
+	  { 
+		  OrientationMath::invertQuaternion(mis_quat);
+	  }
+    for(int i=0; i<n_sym; i++)
+	  {
+      m_OrientationOps[1]->getQuatSymOp(i, sym_q);
+      OrientationMath::multiplyQuaternions(sym_q, mis_quat, mis_quat1);
+      for(int j=0; j<n_sym; j++)
 	    {
-        m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q);
-        OrientationMath::invertQuaternion(sym_q)
-        OrientationMath::multiplyQuaternions(mis_quat1, sym_q, mis_quat2)
+        m_OrientationOps[1]->getQuatSymOp(j, sym_q);
+        OrientationMath::invertQuaternion(sym_q);
+        OrientationMath::multiplyQuaternions(mis_quat1, sym_q, mis_quat2);
         OrientationMath::QuattoEuler(mis_quat2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
         
-        mis_euler1[1] = Cos(mis_euler1[1])
+        mis_euler1[1] = cosf(mis_euler1[1]);
         
-        location = Long((mis_euler1-mingbcd[0:2])/delta[0:2])
+        int location1 = int((mis_euler1[0]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
+        int location2 = int((mis_euler1[1]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
+        int location3 = int((mis_euler1[2]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
         //make sure that euler angles are within the GBCD space
         if(Min(location) >= 0 && Min(location < szGBCD[1:3]) > 0)
 		    {
@@ -296,10 +319,7 @@ void VisualizeGBCD::execute()
   poles_raw = xyz
   intensity = xyz[3,*]
   xyz = xyz[0:2,*]
-  xyz_ph = Cv_coord(from_rect=xyz, /to_sphere)
-  
-  Grid_input, xyz_ph[0,*], xyz_ph[1,*], intensity, Xyz, f1, /sphere, duplicates='Avg', Epsilon=tol/!radeg
-  intensity = f1
+
   [xyz, Transpose(intensity)]
 
   /* Let the GUI know we are done with this filter */
