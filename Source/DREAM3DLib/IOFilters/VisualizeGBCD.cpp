@@ -330,8 +330,8 @@ void VisualizeGBCD::execute()
              xyz[4*(counter*nchunk+k)+1] = xyz_temp[4*k+1];
              xyz[4*(counter*nchunk+k)+2] = xyz_temp[4*k+2];
              xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
-             counter += 1;
           }
+          counter += 1;
 	      }
 	    }
     }
