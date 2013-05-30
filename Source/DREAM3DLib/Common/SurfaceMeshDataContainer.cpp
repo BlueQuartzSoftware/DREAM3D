@@ -73,6 +73,8 @@ SurfaceMeshDataContainer::~SurfaceMeshDataContainer()
 DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, VertexData)
 DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, EdgeData)
+DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, FieldData)
+DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, EnsembleData)
 
 // -----------------------------------------------------------------------------
 //
@@ -396,4 +398,183 @@ int SurfaceMeshDataContainer::getNumEdgeArrays()
   return static_cast<int>(m_EdgeData.size());
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceMeshDataContainer::getFieldData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(name);
+  if ( it == m_FieldData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Field array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_FieldData[name] = data;
+  m_NumFieldTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceMeshDataContainer::removeFieldData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(name);
+  if ( it == m_FieldData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_FieldData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::clearFieldData()
+{
+  m_FieldData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> SurfaceMeshDataContainer::getFieldArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainer::getNumFieldArrays()
+{
+  return static_cast<int>(m_FieldData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::resizeFieldDataArrays(size_t size)
+{
+ // int success = 0;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  {
+    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    IDataArray::Pointer d = (*iter).second;
+    d->Resize(size);
+  }
+  m_NumFieldTuples = size;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceMeshDataContainer::getEnsembleData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EnsembleData.find(name);
+  if ( it == m_EnsembleData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return (*it).second;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
+    std::cout << "Key name: " << name << std::endl;
+    std::cout << "Array Name:" << data->GetName() << std::endl;
+    data->SetName(name);
+  }
+  m_EnsembleData[name] = data;
+  m_NumEnsembleTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceMeshDataContainer::removeEnsembleData(const std::string &name)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EnsembleData.find(name);
+  if ( it == m_EnsembleData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = (*it).second;
+  m_EnsembleData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::clearEnsembleData()
+{
+  m_EnsembleData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::list<std::string> SurfaceMeshDataContainer::getEnsembleArrayNameList()
+{
+  std::list<std::string> keys;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  {
+    keys.push_back( (*iter).first);
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainer::getNumEnsembleArrays()
+{
+  return static_cast<int>(m_EnsembleData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshDataContainer::resizeEnsembleDataArrays(size_t size)
+{
+ // int success = 0;
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  {
+    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    IDataArray::Pointer d = (*iter).second;
+    d->Resize(size);
+  }
+  m_NumEnsembleTuples = size;
+}
 

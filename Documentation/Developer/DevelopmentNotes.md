@@ -26,6 +26,14 @@ This structure is implemented as a class in DREAM3DLib/Common/CreatedArrayHelpIn
 What about using the QAssistant APIs to allow the user to search through the documentation files? Doesn't QAssistant index the files that you feed it?
 
 -------------------
+## Create ParaView State Files ##
+ParaView has a "State File" which is an XML file that ParaView dumps its state into. The user would like to be able to have DREAM3D generate a custom state file that is taylored to their output.
+
+One possible Idea is to have the user create the state file from ParaView and then put in specific "replaceable" tags that DREAM3D will look for an replace with user settable values. For example say they want to replace the input file with a file that DREAM3D is producing. The user could generate a state file using ParaView, open the state file with a text editor and replace all the places where the file is referenced with _@XDMF\_FILE\_PATH@_. In the user interface for the filter the user would add a replacement pair and tell DREAM3D to look for _XDMF\_FILE\_PATH_ and replace it with the path to the XDMF file.
+
+We could also produce a "Basic" ParaView state file that has the correct options selected in ParaView to make the initial visualization how we usually look at it: Surface, INterpolate Scalars OFF, Map Scalars OFF.
+
+-------------------
 ## Version Check Protocol (Started) ##
 
 Create a user interface (see image below) based on a menu selection that displays a dialog that allows the user to check for an update to DREAM3D.

@@ -197,14 +197,11 @@ void BadDataNeighborOrientationCheck::execute()
   unsigned int phase1, phase2;
 
   std::vector<int> neighborCount(totalPoints,0);
-  std::vector<int> badVoxelList;
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
 	  if(m_GoodVoxels[i] == false)
 	  {
-		badVoxelList.push_back(i);
-		count = 0;
 		column = i % dims[0];
 		row = (i / dims[0]) % dims[1];
 		plane = i / (dims[0] * dims[1]);
@@ -253,52 +250,50 @@ void BadDataNeighborOrientationCheck::execute()
     while(counter > 0)
     {
       counter = 0;
-      for (size_t i = 0; i < badVoxelList.size(); i++)
+      for (size_t i = 0; i < totalPoints; i++)
       {
-      index = badVoxelList[i];
-      if(neighborCount[index] >= currentLevel)
-      {
-        m_GoodVoxels[index] = true;
-        counter++;
-        badVoxelList.erase(badVoxelList.begin()+i);
-        column = index % dims[0];
-        row = (index / dims[0]) % dims[1];
-        plane = index / (dims[0] * dims[1]);
-        for (DimType j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighbor = index + neighpoints[j];
-          if (j == 0 && plane == 0) good = 0;
-          if (j == 5 && plane == (dims[2] - 1)) good = 0;
-          if (j == 1 && row == 0) good = 0;
-          if (j == 4 && row == (dims[1] - 1)) good = 0;
-          if (j == 2 && column == 0) good = 0;
-          if (j == 3 && column == (dims[0] - 1)) good = 0;
-          if (good == 1 && m_GoodVoxels[neighbor] == false)
-          {
-            phase1 = m_CrystalStructures[m_CellPhases[index]];
-            q1[0] = 1;
-            q1[1] = m_Quats[index * 5 + 1];
-            q1[2] = m_Quats[index * 5 + 2];
-            q1[3] = m_Quats[index* 5 + 3];
-            q1[4] = m_Quats[index * 5 + 4];
+		  if(neighborCount[i] >= currentLevel && m_GoodVoxels[i] == false)
+		  {
+			m_GoodVoxels[i] = true;
+			counter++;
+			column = i % dims[0];
+			row = (i / dims[0]) % dims[1];
+			plane = i / (dims[0] * dims[1]);
+			for (DimType j = 0; j < 6; j++)
+			{
+			  good = 1;
+			  neighbor = i + neighpoints[j];
+			  if (j == 0 && plane == 0) good = 0;
+			  if (j == 5 && plane == (dims[2] - 1)) good = 0;
+			  if (j == 1 && row == 0) good = 0;
+			  if (j == 4 && row == (dims[1] - 1)) good = 0;
+			  if (j == 2 && column == 0) good = 0;
+			  if (j == 3 && column == (dims[0] - 1)) good = 0;
+			  if (good == 1 && m_GoodVoxels[neighbor] == false)
+			  {
+				phase1 = m_CrystalStructures[m_CellPhases[i]];
+				q1[0] = 1;
+				q1[1] = m_Quats[i * 5 + 1];
+				q1[2] = m_Quats[i * 5 + 2];
+				q1[3] = m_Quats[i* 5 + 3];
+				q1[4] = m_Quats[i * 5 + 4];
 
-            phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-            q2[0] = 1;
-            q2[1] = m_Quats[neighbor*5 + 1];
-            q2[2] = m_Quats[neighbor*5 + 2];
-            q2[3] = m_Quats[neighbor*5 + 3];
-            q2[4] = m_Quats[neighbor*5 + 4];
+				phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
+				q2[0] = 1;
+				q2[1] = m_Quats[neighbor*5 + 1];
+				q2[2] = m_Quats[neighbor*5 + 2];
+				q2[3] = m_Quats[neighbor*5 + 3];
+				q2[4] = m_Quats[neighbor*5 + 4];
 
-            if (m_CellPhases[index] == m_CellPhases[neighbor] && m_CellPhases[index] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-            if (w < m_MisorientationTolerance)
-            {
-              neighborCount[neighbor]++;
-            }
-          }
-        }
-      }
-      }
+				if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+				if (w < m_MisorientationTolerance)
+				{
+				  neighborCount[neighbor]++;
+				}
+			  }
+			}
+		  }
+	  }
     }
     currentLevel = currentLevel-1;
   }

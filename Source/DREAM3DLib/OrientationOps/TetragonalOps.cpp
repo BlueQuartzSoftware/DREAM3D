@@ -101,14 +101,10 @@ float TetragonalOps::_calcMisoQuat(const float quatsym[8][5], int numsym,
   float qc[5];
 // float temp;
 
-  for(int m=1; m < 4; m++)
-  {
-    q1[m] *= -1.0; //inverse q1
-  }
+  OrientationMath::invertQuaternion(q1);
   MULT_QUAT(q1, q2, qr)
   for (int i = 0; i < numsym; i++)
   {
-  //  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
     MULT_QUAT(qr, quatsym[i], qc)
     if (qc[4] < -1) {
       qc[4] = -1;

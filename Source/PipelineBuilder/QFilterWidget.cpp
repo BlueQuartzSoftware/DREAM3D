@@ -182,7 +182,7 @@ void QFilterWidget::initFilterMenu()
 // -----------------------------------------------------------------------------
 void QFilterWidget::actionWidgetHelp_triggered()
 {
-	openHtmlHelpFile();
+  openHtmlHelpFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -571,7 +571,7 @@ void QFilterWidget::setupGui()
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
-      QLineEdit* fp = new QLineEdit(this);
+      QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
@@ -596,7 +596,7 @@ void QFilterWidget::setupGui()
       QGridLayout* gridLayout = new QGridLayout();
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
-      QLineEdit* fp = new QLineEdit(this);
+      QFSDropLineEdit* fp = new QFSDropLineEdit(this);
       fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
@@ -671,33 +671,49 @@ void QFilterWidget::setupGui()
       cb->setEditable(choiceFilterParameter->getEditable());
       cb->setObjectName(QString::fromStdString(option->getPropertyName()));
       std::vector<std::string> choices = choiceFilterParameter->getChoices();
+      QVariant v = property(option->getPropertyName().c_str());
+      int selectedIndex = -1;
       for(unsigned int i = 0; i < choices.size(); ++i)
       {
-        cb->addItem(QString::fromStdString(choices[i]));
+        QString choice = QString::fromStdString(choices[i]);
+        cb->addItem(choice);
+        QString strChoice = v.toString();
+
+        if ( strChoice.compare(choice) == 0)
+        {
+          selectedIndex = i;
+        }
       }
+      if (selectedIndex < 0) { selectedIndex = 0; }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
+
       if (choiceFilterParameter->getValueType().compare("string") == 0
           && choiceFilterParameter->getEditable() == true)
       {
         connect(cb, SIGNAL( editTextChanged ( const QString&  )), this, SLOT(updateArrayNameComboBoxValue(const QString&)));
         connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
+
+        cb->setCurrentIndex(selectedIndex);
+        bool success = setProperty(option->getPropertyName().c_str(), cb->currentText());
+        if (success == false)
+        {
+          BOOST_ASSERT(false);
+        }
       }
       else
       {
         connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateComboBoxValue(int)));
+        quint32 uintValue = v.toUInt(&ok);
+        if (uintValue >= static_cast<quint32>(cb->count())  )
+        {
+          // What ever the default from the class was it does not work with the combo box
+          // so set the combo box to the zeroth value and set the same value back
+          // to the filter
+          uintValue = 0;
+        }
+        cb->setCurrentIndex(uintValue);
+        setProperty(option->getPropertyName().c_str(), uintValue);
       }
-
-      QVariant v = property(option->getPropertyName().c_str());
-      quint32 uintValue = v.toUInt(&ok);
-      if (uintValue >= static_cast<quint32>(cb->count())  )
-      {
-        // What ever the default from the class was it does not work with the combo box
-        // so set the combo box to the zeroth value and set the same value back
-        // to the filter
-        uintValue = 0;
-      }
-      cb->setCurrentIndex(uintValue);
-      setProperty(option->getPropertyName().c_str(), uintValue);
     }
     else if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
     {
@@ -1319,7 +1335,7 @@ void QFilterWidget::updateComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  // std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -1340,7 +1356,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  //std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {

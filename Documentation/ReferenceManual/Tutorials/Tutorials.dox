@@ -13,4 +13,8 @@ This tutorial shows the user how to create a pipeline that will generate a singl
 
 @subpage tutorialsurfacemeshingtutorial
 This tutorial serves as an introduction to creating a triangle based surface mesh from a 3D voxel volume. Background information on the terminology used in the filters is also presented.
+
+@subpage tutorialcroppingdata
+This tutorial shows how to use ParaView to crop volumes of data using the "Crop Volume" filter.
+
 */

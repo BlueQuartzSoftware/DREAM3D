@@ -40,6 +40,7 @@ set(_PublicFilters
   SurfaceMeshToStl
   SurfaceMeshToVtk
   SurfaceMeshToNonconformalVtk
+  VisualizeGBCD
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
   RawBinaryReader
