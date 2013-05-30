@@ -105,7 +105,7 @@ class CalculateGBCDImpl
       int gbcd_index;
       int inversion = 1;
       int grain1, grain2;
-      float q1[5], q2[5], misq[5], sym_q[5], s1misq[5], s2misq[5], euler_mis[3];
+      float q1[5], q2[5], misq[5], sym_q1[5], sym_q2[5], s1misq[5], s2misq[5], euler_mis[3];
       float /*sym1[5],*/ sym2[5];
       float normal[3], xstl_norm0[3], xstl_norm1[3], xstl_norm_sc[2], xstl_norm_sc_inv[2];
 
@@ -125,7 +125,7 @@ class CalculateGBCDImpl
 			}
 
 			//get the misorientation between grain1 and grain2
-			OrientationMath::invertQuaternion(q2);
+			OrientationMath::invertQuaternion(q1);
 			OrientationMath::multiplyQuaternions(q1, q2, misq);
 			OrientationMath::multiplyQuaternionVector(q1, normal, xstl_norm0);
 
@@ -133,11 +133,10 @@ class CalculateGBCDImpl
 			for (j=0; j< nsym;j++)
 			{
 			  //calculate the symmetric misorienation
-			  m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q);
-			  OrientationMath::multiplyQuaternions(sym_q, misq, s1misq);
+			  m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q1);
 
 			  //calculate the crystal normal and put it into normalized coordinates ->[theta, cos(phi) ]
-			  OrientationMath::multiplyQuaternionVector(sym_q, xstl_norm0, xstl_norm1);
+			  OrientationMath::multiplyQuaternionVector(sym_q1, xstl_norm0, xstl_norm1);
 			  xstl_norm_sc[0] = atan2f(xstl_norm1[1], xstl_norm1[0]);
 			  if (xstl_norm_sc[0] < 0) xstl_norm_sc[0] += m_pi2;
 			  xstl_norm_sc[1] = xstl_norm1[2];
@@ -150,10 +149,11 @@ class CalculateGBCDImpl
 
 			  for (k=0; k < nsym; k++)
 			  {
-			    m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(k, sym_q);
-				OrientationMath::invertQuaternion(sym_q);
-				OrientationMath::multiplyQuaternions(s1misq, sym_q, s2misq);
-				OrientationMath::QuattoEuler(s2misq, euler_mis[0], euler_mis[1], euler_mis[2]);
+			    m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(k, sym_q2);
+				OrientationMath::invertQuaternion(sym_q2);
+        OrientationMath::multiplyQuaternions(misq, sym_q2, s2misq);
+        OrientationMath::multiplyQuaternions(sym_q1, s2misq, s1misq);
+				OrientationMath::QuattoEuler(s1misq, euler_mis[0], euler_mis[1], euler_mis[2]);
 				euler_mis[1] = cosf(euler_mis[1]);
 
 				//get the index that this point would be in the GBCD histogram

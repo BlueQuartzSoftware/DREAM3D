@@ -187,7 +187,7 @@ void FindTwinBoundaryInfo::execute()
   float w;
   float q1[5];
   float q2[5];
-  float misq[5], sym_q[5], s1misq[5], s2misq[5];
+  float misq[5], sym_q1[5], sym_q2[5], s1misq[5], s2misq[5];
 
   float angtol = m_AngleTolerance;
   float axistol = static_cast<float>( m_AxisTolerance*M_PI/180.0f );
@@ -227,6 +227,7 @@ void FindTwinBoundaryInfo::execute()
 
     MatrixMath::multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
+    OrientationMath::invertQuaternion(q1);
 	  for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
@@ -245,20 +246,19 @@ void FindTwinBoundaryInfo::execute()
 		  phase2 = m_CrystalStructures[m_FieldPhases[nname]];
 		  if (phase1 == phase2)
 		  {
-			OrientationMath::invertQuaternion(q2);
 			OrientationMath::multiplyQuaternions(q1, q2, misq);
 			int nsym = m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getNumSymOps();
 			for (int k=0; k< nsym;k++)
 			{
 			  //calculate the symmetric misorienation
-			  m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getQuatSymOp(k, sym_q);
-			  OrientationMath::multiplyQuaternions(sym_q, misq, s1misq);
+			  m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getQuatSymOp(k, sym_q1);
 			  for (int l=0; l < nsym; l++)
 			  {
-			    m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getQuatSymOp(l, sym_q);
-				  OrientationMath::invertQuaternion(sym_q);
-				  OrientationMath::multiplyQuaternions(s1misq, sym_q, s2misq);
-				  OrientationMath::QuattoAxisAngle(s2misq, w, n1, n2, n3);
+			    m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getQuatSymOp(l, sym_q2);
+				  OrientationMath::invertQuaternion(sym_q2);
+				  OrientationMath::multiplyQuaternions(misq, sym_q2, s2misq);
+          OrientationMath::multiplyQuaternions(sym_q1, s2misq, s1misq);
+          OrientationMath::QuattoAxisAngle(s1misq, w, n1, n2, n3);
 				  w = w*180.0/m_pi;
 	        axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
 	        angdiff60 = fabs(w-60.0f);
