@@ -5,15 +5,19 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ Update Documentation for find twin boundary info
++ Update Documentation for Visualize GBCD
 + Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
 
-+ OrientationOps classes need a redesign so that we don't crash when we hit an unknown or new crystal structure.
+
 
 ### Critical to Fix Before Bad Things Happen ###
 
++ OrientationOps classes need a redesign so that we don't crash when we hit an unknown or new crystal structure.
 + All the shape ops classes need to be fully reentrant for parallel applications
 
 ### Groeber Documentation
+
 + Missing Documentation File for IOFilters/ImportImageStack
 + incorrect Documentation for Find Twin Boundary Info
 
@@ -36,7 +40,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 + ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
+
+
 ### Developer Centric ###
+
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
 + Create a "TestFilter" that has one of every FilterParameter Type
@@ -47,6 +54,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### Ideas/Wish List ###
+
 + Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
@@ -55,6 +63,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### Joey K. Summer List ###
 
 + Design protocol to check for updated Version of DREAM3D.
+    - This work is moved to the "CheckVersion" Git branch
     - Initial Skeleton Code Already Done.
     - See DevelopmentNotes.md
 + Error messages returned from Pipeline should be hyperlinked to the filter docs. See DevelopmentNotes.md for more explanation
