@@ -178,6 +178,14 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     {
       ss << "H5CtfImporter Error: The Ctf file could not be opened.";
     }
+    else if (reader.getXStep() == 0.0f)
+    {
+      ss << "X Step value equals 0.0. This is bad. Please check the validity of the CTF file.";
+    }
+    else if(reader.getYStep() == 0.0f)
+    {
+      ss << "Y Step value equals 0.0. This is bad. Please check the validity of the CTF file.";
+    }
     else
     {
       ss << reader.getErrorMessage();
@@ -185,6 +193,8 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     setPipelineMessage(ss.str());
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
+
+
     return -1;
   }
 
