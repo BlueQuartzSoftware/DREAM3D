@@ -45,10 +45,12 @@
 GenerateIPFColors::GenerateIPFColors() :
   AbstractFilter(),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
   m_CellPhases(NULL),
+  m_GoodVoxels(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
   m_CellIPFColors(NULL)
@@ -112,8 +114,9 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, 
     return;
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
@@ -172,7 +175,7 @@ void GenerateIPFColors::execute()
     m_CellIPFColors[index + 1] = 0;
     m_CellIPFColors[index + 2] = 0;
 
-    if(phase > 0)
+    if(m_GoodVoxels[i] != false)
     {
       if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic)
       {
