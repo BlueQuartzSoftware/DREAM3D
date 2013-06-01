@@ -13,7 +13,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Critical to Fix Before Bad Things Happen ###
 
-+ OrientationOps classes need a redesign so that we don't crash when we hit an unknown or new crystal structure.
++ OrientationOps classes need a redesign so that we don't crash when we hit an unknown crystal structure.
 + All the shape ops classes need to be fully reentrant for parallel applications
 
 ### Groeber Documentation
@@ -38,6 +38,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### User Centric
 
++ Disable the **Go** button if there are preflight errors on the DREAM3D Interface
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 + ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 
@@ -67,6 +68,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
     - Initial Skeleton Code Already Done.
     - See DevelopmentNotes.md
 + Error messages returned from Pipeline should be hyperlinked to the filter docs. See DevelopmentNotes.md for more explanation
+    - Lines 556 & 557 of PipelineBuilderWidget have been commented out until this feature is fully implemented
+    - Those lines just painted a hyperlink style but did not allow the user to actually click on the link
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
     - Use QDesktopServices::openUrl(PATH_TO_FOLDER) and Qt will figure out the proper thing to do
