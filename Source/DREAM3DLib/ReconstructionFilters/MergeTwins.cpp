@@ -158,7 +158,6 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-
       ss << "NeighborLists Array Not Initialized Correctly" << std::endl;
       setErrorCondition(-304);
       addErrorMessage(getHumanLabel(), ss.str(), -304);
@@ -301,22 +300,22 @@ void MergeTwins::merge_twins()
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
-			q1[0] = 1;
+      q1[0] = 1;
             q1[1] = m_AvgQuats[5*firstgrain+1];
             q1[2] = m_AvgQuats[5*firstgrain+2];
             q1[3] = m_AvgQuats[5*firstgrain+3];
             q1[4] = m_AvgQuats[5*firstgrain+4];
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-			q2[0] = 1;
+      q2[0] = 1;
             q2[1] = m_AvgQuats[5*neigh+1];
             q2[2] = m_AvgQuats[5*neigh+2];
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-			if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic)
-			{
-				w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-				w = w * (180.0f/m_pi);
+      if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic)
+      {
+        w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+        w = w * (180.0f/m_pi);
                 float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
                 float angdiff60 = fabs(w-60.0f);
                 if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
@@ -324,7 +323,7 @@ void MergeTwins::merge_twins()
                 {
                   parentnumbers[neigh] = parentcount;
                   twinlist.push_back(neigh);
-			    }
+          }
             }
           }
         }

@@ -170,9 +170,18 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
   protected slots:
     void arrayListUpdated(QListWidgetItem* item);
 
+    void on_vertexArraysCB_stateChanged(int state);
+    void on_faceArraysCB_stateChanged(int state);
+    void on_edgeArraysCB_stateChanged(int state);
+
+    void on_voxelCellCB_stateChanged(int state);
+    void on_voxelFieldCB_stateChanged(int state);
+    void on_voxelEnsembleCB_stateChanged(int state);
+
+
   protected:
 
-
+    void toggleListSelections(QListWidget* w, int state);
 
     virtual void populateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
     virtual void populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);

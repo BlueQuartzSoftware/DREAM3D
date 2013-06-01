@@ -247,12 +247,12 @@ class EbsdColoring
       red = red / max;
       green = green / max;
       blue = blue / max;
-
+#if 0
       // Add in some correction factors
       red = (0.85f * red) + 0.15f;
       green = (0.85f * green) + 0.15f;
       blue = (0.85f * blue) + 0.15f;
-
+#endif
       // Multiply by 255 to get an R/G/B value
       red = red * 255.0f;
       green = green * 255.0f;

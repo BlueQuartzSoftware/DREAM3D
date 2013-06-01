@@ -133,7 +133,8 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
   if(m_SelectedCellArrayName.empty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
+    ss << "An array from the Voxel Data Container must be selected.";
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 }
 

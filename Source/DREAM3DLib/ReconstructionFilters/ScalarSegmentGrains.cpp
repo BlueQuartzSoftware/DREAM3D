@@ -146,7 +146,7 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
   if(m_ScalarArrayName.empty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -186,11 +186,11 @@ bool compareData(IDataArray::Pointer inputData, int referencepoint, int neighbor
 
   if(sPtr[referencepoint] >= sPtr[neighborpoint])
   {
-	if ((sPtr[referencepoint]-sPtr[neighborpoint]) <= tol) group = true;
+  if ((sPtr[referencepoint]-sPtr[neighborpoint]) <= tol) group = true;
   }
   else
   {
-	if ((sPtr[neighborpoint]-sPtr[referencepoint]) <= tol) group = true;
+  if ((sPtr[neighborpoint]-sPtr[referencepoint]) <= tol) group = true;
   }
   return group;
 }

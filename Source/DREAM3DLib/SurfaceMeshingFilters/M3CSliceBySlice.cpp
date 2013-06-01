@@ -383,10 +383,10 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if (NULL == sm)
+  if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else {
     DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);

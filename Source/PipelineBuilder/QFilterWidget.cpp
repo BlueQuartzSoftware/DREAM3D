@@ -1650,7 +1650,7 @@ void QFilterWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, Surf
 // -----------------------------------------------------------------------------
 void QFilterWidget::updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName)
 {
-  if (arrayNames.size() == 0) { return; }
+  //if (arrayNames.size() == 0) { return; }
   QComboBox* cb = qFindChild<QComboBox*>(this, propertyName);
   if (NULL == cb) { return; }
   QString selectedName = cb->currentText();

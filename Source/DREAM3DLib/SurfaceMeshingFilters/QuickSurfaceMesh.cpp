@@ -74,23 +74,23 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+      SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
   else
   {
     DREAM3D::SurfaceMesh::VertListPointer_t vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
     DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
+    DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+    DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
 
     sm->setVertices(vertices);
     sm->setFaces(triangles);
-  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
-  sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
+    sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
+    sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
   }
 }
 

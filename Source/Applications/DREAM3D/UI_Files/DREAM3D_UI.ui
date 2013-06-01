@@ -73,7 +73,6 @@
     <addaction name="separator"/>
     <addaction name="actionShow_User_Manual"/>
     <addaction name="separator"/>
-    <addaction name="action_CheckForUpdates"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPipeline"/>

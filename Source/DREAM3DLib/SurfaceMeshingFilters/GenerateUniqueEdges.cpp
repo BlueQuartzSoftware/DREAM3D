@@ -98,23 +98,23 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else
   {
-      // We MUST have Nodes
+    // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
+      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
     }
 
     // We do not know the size of the array so we can not use the macro so we just manually call

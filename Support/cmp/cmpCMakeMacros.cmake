@@ -312,10 +312,10 @@ endfunction()
 function(BuildToolBundle)
     set(options )
     set(oneValueArgs TARGET DEBUG_EXTENSION VERSION_MAJOR VERSION_MINOR VERSION_PATCH
-                     BINARY_DIR COMPONENT INSTALL_DEST )
+                     BINARY_DIR COMPONENT INSTALL_DEST SOLUTION_FOLDER)
     set(multiValueArgs SOURCES LINK_LIBRARIES LIB_SEARCH_DIRS)
     cmake_parse_arguments(QAB "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-
+	
     # Default GUI type is blank
     set(GUI_TYPE "")
 
@@ -337,6 +337,11 @@ function(BuildToolBundle)
                 DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
                 RELEASE_OUTPUT_NAME ${QAB_TARGET}
     )
+	if (NOT "${QAB_SOLUTION_FOLDER}" STREQUAL "")
+		SET_TARGET_PROPERTIES(${QAB_TARGET}
+                PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
+	
+	endif()
 
 #-- Create an Install Rule for the main app bundle target
     INSTALL(TARGETS ${QAB_TARGET}
@@ -616,23 +621,26 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
 
                 if( ${CMAKE_BUILD_TOOL} STREQUAL "nmake")
-                  if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-                    set(TYPE "")
-                  endif()
-                  add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+					if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+						set(TYPE "")
+					endif()
+					add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
                               COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+					set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
                 else()
-                  add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+					add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/
                               COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
-               #   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
-                  add_custom_target(ZZ_${qtlib}-Release-Copy ALL
+					set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+				#   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+					add_custom_target(ZZ_${qtlib}-Release-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}4.dll
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
                               COMMENT "Copying ${qtlib}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/")
+					set_target_properties(ZZ_${qtlib}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
                 endif()
             ENDFOREACH(qtlib)
         endif(DEFINED QT_QMAKE_EXECUTABLE)
@@ -650,7 +658,7 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
                             COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/")
-
+				set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
             ENDFOREACH(qtlib)
         endif(DEFINED QT_QMAKE_EXECUTABLE)
     endif()
@@ -727,8 +735,9 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           STRING(TOUPPER ${BTYPE} TYPE)
           get_filename_component(lib_path ${${upperlib}_LIBRARY_${TYPE}} PATH)
           get_filename_component(lib_name ${${upperlib}_LIBRARY_${TYPE}} NAME_WE)
-       #   message(STATUS "lib_path: ${lib_path}")
-       #   message(STATUS "lib_name: ${lib_name}")
+          #message(STATUS "lib_path: ${lib_path}")
+          #message(STATUS "lib_name: ${lib_name}")
+		  #message(STATUS "${upperlib}_BIN_DIR: ${${upperlib}_BIN_DIR}")
 
           find_file(${upperlib}_LIBRARY_DLL_${TYPE}
                         NAMES ${lib_name}.dll
@@ -748,11 +757,11 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           if(${CMAKE_BUILD_TOOL} STREQUAL "nmake")
             set(BTYPE ".")
           endif()
-          ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL
+			ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL
                       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/
                       COMMENT "  Copy: ${${upperlib}_LIBRARY_DLL_${TYPE}}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/")
-
+			set_target_properties(ZZ_${upperlib}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
         ENDFOREACH(BTYPE ${TYPES})
       ENDif(${upperlib}_IS_SHARED)
     ENDFOREACH(lib ${_libraryList})

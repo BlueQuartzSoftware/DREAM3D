@@ -119,6 +119,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   {
       ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
+       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
@@ -129,6 +130,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   {
       ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
+       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
@@ -139,6 +141,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   {
       ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
+       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
@@ -149,6 +152,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   {
       ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
       setErrorCondition(-308);
+       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
