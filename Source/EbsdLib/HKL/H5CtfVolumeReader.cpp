@@ -304,7 +304,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
          * of phase is also one (1). However, if there are "zero solutions" in the data
          * then those points are assigned a phase of zero.  Since those points can be identified
          * by other methods, the phase of these points should be changed to one since in the rest
-         * of the reconstruction code we follow theconvention that the lowest value is One (1)
+         * of the reconstruction code we follow the convention that the lowest value is One (1)
          * even if there is only a single phase. The next if statement converts all zeros to ones
          * if there is a single phase in the OIM data.
          */
@@ -313,7 +313,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
           m_Phase[index] = 1;
         }
 
-    ++readerIndex;
+        ++readerIndex;
       }
     }
   }
