@@ -13,10 +13,6 @@ project(DREAM3DTest)
 
 set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
 
-# --------
-add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
-
-
 # --------------------------------------------------------------------------
 macro (ConvertPathToHeaderCompatible INPUT)
     if(WIN32)
@@ -72,6 +68,7 @@ endmacro()
 # --------------------------------------------------------------------------
 add_executable(FilterPipelineTest FilterPipelineTest.cpp )
 target_link_libraries(FilterPipelineTest DREAM3DLib)
+set_target_properties(FilterPipelineTest PROPERTIES FOLDER Test)
 add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest)
 
 # --------------------------------------------------------------------------
@@ -79,6 +76,7 @@ add_test(FilterPipelineTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterPipelineTest
 # --------------------------------------------------------------------------
 add_executable(ManagedPointerArrayTest ManagedPointerArrayTest.cpp )
 target_link_libraries(ManagedPointerArrayTest DREAM3DLib)
+set_target_properties(ManagedPointerArrayTest PROPERTIES FOLDER Test)
 add_test(ManagedPointerArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ManagedPointerArrayTest)
 
 
@@ -88,6 +86,7 @@ add_test(ManagedPointerArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ManagedPointe
 # --------------------------------------------------------------------------
 add_executable(MXAFileSystemPathTest MXAFileSystemPathTest.cpp )
 target_link_libraries(MXAFileSystemPathTest MXA)
+set_target_properties(MXAFileSystemPathTest PROPERTIES FOLDER Test)
 add_test(MXAFileSystemPathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MXAFileSystemPathTest)
 
 
@@ -110,6 +109,7 @@ add_test(ErrorMessageTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ErrorMessageTest)
 # --------------------------------------------------------------------------
 add_executable(DataContainerTest DataContainerTest.cpp )
 target_link_libraries(DataContainerTest DREAM3DLib)
+set_target_properties(DataContainerTest PROPERTIES FOLDER Test)
 add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
 
 # --------------------------------------------------------------------------
@@ -117,10 +117,12 @@ add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
 # --------------------------------------------------------------------------
 add_executable(H5LiteTest ${DREAM3DTest_SOURCE_DIR}/H5LiteTest.cpp)
 target_link_libraries(H5LiteTest H5Support MXA)
+set_target_properties(H5LiteTest PROPERTIES FOLDER Test)
 add_test(H5LiteTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5LiteTest)
 
 add_executable(H5UtilitiesTest ${DREAM3DTest_SOURCE_DIR}/H5UtilitiesTest.cpp)
 target_link_libraries(H5UtilitiesTest H5Support MXA)
+set_target_properties(H5UtilitiesTest PROPERTIES FOLDER Test)
 add_test(H5UtilitiesTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/H5UtilitiesTest)
 
 if(0)
@@ -128,6 +130,7 @@ if(0)
 # sets that are larger than 4GB in size
 add_executable(BigHDF5DatasetTest ${DREAM3DTest_SOURCE_DIR}/BigHDF5DatasetTest.cpp)
 target_link_libraries(BigHDF5DatasetTest H5Support MXA)
+set_target_properties(BigHDF5DatasetTest PROPERTIES FOLDER Test)
 add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest)
 endif()
 
@@ -136,6 +139,7 @@ endif()
 # --------------------------------------------------------------------------
 add_executable(DataArrayTest ${DREAM3DTest_SOURCE_DIR}/DataArrayTest.cpp)
 target_link_libraries(DataArrayTest DREAM3DLib)
+set_target_properties(DataArrayTest PROPERTIES FOLDER Test)
 add_test(DataArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataArrayTest)
 
 # --------------------------------------------------------------------------
@@ -143,10 +147,12 @@ add_test(DataArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataArrayTest)
 # --------------------------------------------------------------------------
 add_executable(PhIOTest ${DREAM3DTest_SOURCE_DIR}/PhIOTest.cpp)
 target_link_libraries(PhIOTest DREAM3DLib)
+set_target_properties(PhIOTest PROPERTIES FOLDER Test)
 add_test(PhIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PhIOTest)
 
 add_executable(DxIOTest ${DREAM3DTest_SOURCE_DIR}/DxIOTest.cpp)
 target_link_libraries(DxIOTest DREAM3DLib)
+set_target_properties(DxIOTest PROPERTIES FOLDER Test)
 add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
 
 # --------------------------------------------------------------------------
@@ -154,6 +160,7 @@ add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
 # --------------------------------------------------------------------------
 add_executable(CtfReaderTest ${DREAM3DTest_SOURCE_DIR}/CtfReaderTest.cpp)
 target_link_libraries(CtfReaderTest EbsdLib)
+set_target_properties(CtfReaderTest PROPERTIES FOLDER Test)
 add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 
 # --------------------------------------------------------------------------
@@ -161,6 +168,7 @@ add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 # --------------------------------------------------------------------------
 add_executable(AngImportTest ${DREAM3DTest_SOURCE_DIR}/AngImportTest.cpp)
 target_link_libraries(AngImportTest MXA EbsdLib)
+set_target_properties(AngImportTest PROPERTIES FOLDER Test)
 add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
 
 
@@ -181,6 +189,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
     target_link_libraries(FindNeighborsTest DREAM3DLib)
+  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------
@@ -188,6 +197,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
     target_link_libraries(SyntheticBuilderTest DREAM3DLib)
+  set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
     add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
 endif()
 
@@ -202,18 +212,20 @@ endif()
 # --------
 add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
                                 ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
-
+set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
 # --------
 add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
+set_target_properties(ODFTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(VoxelTest ${DREAM3DTest_SOURCE_DIR}/VoxelTest.cpp)
-#target_link_libraries(VoxelTest DREAM3DLib)
+set_target_properties(VoxelTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
+set_target_properties(TextureTest PROPERTIES FOLDER Test)
 
 # --------
 #add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
@@ -226,32 +238,39 @@ target_link_libraries(TextureTest DREAM3DLib)
 # --------
 add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
 target_link_libraries(SurfaceMeshTest DREAM3DLib)
+set_target_properties(SurfaceMeshTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)
 target_link_libraries(StatsGenTest DREAM3DLib)
+set_target_properties(StatsGenTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(RNGTest ${DREAM3DTest_SOURCE_DIR}/RNGTest.cpp)
 target_link_libraries(RNGTest DREAM3DLib)
+set_target_properties(RNGTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(ResFixer ${DREAM3DTest_SOURCE_DIR}/ResFixer.cpp)
 target_link_libraries(ResFixer EbsdLib MXA DREAM3DLib)
+set_target_properties(ResFixer PROPERTIES FOLDER Test)
 
 # --------
 add_executable(OrientationMathTest ${DREAM3DTest_SOURCE_DIR}/OrientationMathTest.cpp)
 target_link_libraries(OrientationMathTest EbsdLib MXA DREAM3DLib)
+set_target_properties(OrientationMathTest PROPERTIES FOLDER Test)
 add_test(OrientationMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/OrientationMathTest)
 
 # --------
 add_executable(StructArrayTest ${DREAM3DTest_SOURCE_DIR}/StructArrayTest.cpp)
 target_link_libraries(StructArrayTest EbsdLib MXA DREAM3DLib)
+set_target_properties(StructArrayTest PROPERTIES FOLDER Test)
 add_test(StructArrayTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StructArrayTest)
 
 # --------
 add_executable(RawBinaryReaderTest ${DREAM3DTest_SOURCE_DIR}/RawBinaryReaderTest.cpp)
 target_link_libraries(RawBinaryReaderTest EbsdLib MXA DREAM3DLib)
+set_target_properties(RawBinaryReaderTest PROPERTIES FOLDER Test)
 add_test(RawBinaryReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RawBinaryReaderTest)
 
 # --------------------------------------------------------------------------
@@ -259,12 +278,13 @@ add_test(RawBinaryReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RawBinaryReaderTe
 # --------------------------------------------------------------------------
 add_executable(SyntheticTest SyntheticTest.cpp )
 target_link_libraries(SyntheticTest DREAM3DLib)
+set_target_properties(SyntheticTest PROPERTIES FOLDER Test)
 add_test(SyntheticTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticTest)
 
-# --------
-if(0)
-include_directories(${VXL_CORE_INCLUDE_DIR} ${VXL_VCL_INCLUDE_DIR} )
-add_executable(VXLTest ${DREAM3DTest_SOURCE_DIR}/VXLTest.cpp)
-target_link_libraries(VXLTest ${VXL_LIBRARIES})
-endif()
+# --------------------------------------------------------------------------
+# Data Fusion Test
+# --------------------------------------------------------------------------
+add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
+set_target_properties(UMich PROPERTIES FOLDER Test)
+
 

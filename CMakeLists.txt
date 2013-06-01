@@ -34,7 +34,10 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
+  
+#Enable use of Solution Folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+#set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 set(PROJECT_RESOURCES_DIR ${DREAM3DProj_SOURCE_DIR}/Resources)
 set(EXE_DEBUG_EXTENSION "_debug")

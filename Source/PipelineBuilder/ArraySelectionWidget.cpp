@@ -190,6 +190,97 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
   listWidget->blockSignals(false);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_vertexArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    vertexArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshVertexArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_faceArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    faceArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshFaceArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_edgeArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    edgeArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshEdgeArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_voxelCellCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    voxelCellCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(voxelCellArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_voxelFieldCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    voxelFieldCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(voxelFieldArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_voxelEnsembleCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    voxelEnsembleCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(voxelEnsembleArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::toggleListSelections(QListWidget* w, int state)
+{
+
+  w->blockSignals(true);
+  int count = w->count();
+  for(int i = 0; i < count; ++i)
+  {
+      w->item(i)->setCheckState(static_cast<Qt::CheckState>(state));
+  }
+  w->blockSignals(false);
+  // Emit this signal so the preflight runs which will update all the guis after this one
+  emit arrayListsChanged();
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

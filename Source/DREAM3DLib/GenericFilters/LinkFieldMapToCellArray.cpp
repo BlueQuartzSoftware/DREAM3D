@@ -97,7 +97,6 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     ss << "Selected array '" << m_SelectedCellDataArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
     setErrorCondition(-11001);
     addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
-    notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
 
@@ -114,7 +113,6 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     ss << "Selected array '" << m_SelectedCellDataArrayName << "' is not an Integer array. Is this the array you want to use?";
     setErrorCondition(-11001);
     addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
-    notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
 
