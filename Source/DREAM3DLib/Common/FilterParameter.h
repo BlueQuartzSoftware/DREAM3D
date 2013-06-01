@@ -166,7 +166,8 @@ class ChoiceFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
   protected:
-    ChoiceFilterParameter() {}
+    ChoiceFilterParameter() :
+    m_Editable(false) {}
 
   private:
     ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
