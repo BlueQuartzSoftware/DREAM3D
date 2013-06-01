@@ -552,8 +552,10 @@ void PipelineBuilderWidget::setupGui()
   errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
+#if 0
   m_HtmlItemDelegate = new HtmlItemDelegate(this);
   errorTableWidget->setItemDelegateForColumn(0, m_HtmlItemDelegate);
+#endif
 
   m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
 
@@ -583,7 +585,7 @@ void PipelineBuilderWidget::setupGui()
   connect(m_PipelineViewWidget, SIGNAL(preflightHasMessage(PipelineMessage)),
           this, SLOT(addMessage(PipelineMessage)) );
 
-    //
+  //
   filterList->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
           this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
