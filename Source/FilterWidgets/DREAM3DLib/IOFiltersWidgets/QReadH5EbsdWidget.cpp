@@ -208,9 +208,9 @@ void QReadH5EbsdWidget::readOptions(QSettings &prefs)
   }
 
   READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
-      READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
+  READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
 
-      QVariant UseTrans = prefs.value("UseTransformations");
+  QVariant UseTrans = prefs.value("UseTransformations");
   m_UseTransformations->setChecked(UseTrans.toBool());
 
   arraySelectionWidget->readOptions(prefs, "ArraySelections");
