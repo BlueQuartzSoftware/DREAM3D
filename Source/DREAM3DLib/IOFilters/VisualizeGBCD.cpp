@@ -277,14 +277,14 @@ void VisualizeGBCD::execute()
   for(int q=0;q<2;q++)
   {
     if(q == 1)
-	  { 
-		  OrientationMath::invertQuaternion(mis_quat);
-	  }
+	{ 
+		OrientationMath::invertQuaternion(mis_quat);
+	}
     for(int i=0; i<n_sym; i++)
-	  {
+	{
       m_OrientationOps[1]->getQuatSymOp(i, sym_q1);
       for(int j=0; j<n_sym; j++)
-	    {
+	  {
         m_OrientationOps[1]->getQuatSymOp(j, sym_q2);
         OrientationMath::invertQuaternion(sym_q2);
         OrientationMath::multiplyQuaternions(mis_quat, sym_q2, mis_quat2);
@@ -298,7 +298,7 @@ void VisualizeGBCD::execute()
         int location3 = int((mis_euler1[2]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
         //make sure that euler angles are within the GBCD space
         if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < m_GBCDsizes[0] && location2 < m_GBCDsizes[1] && location3 < m_GBCDsizes[2])
-		    {
+		{
           int shift = (location1)+(location2*m_GBCDsizes[0])+(location3*m_GBCDsizes[0]*m_GBCDsizes[1]);
           for(int k=0;k<m_GBCDsizes[4];k++)
           {
@@ -307,7 +307,6 @@ void VisualizeGBCD::execute()
               xyz_temp[4*(l+(m_GBCDsizes[3]*k))+3] = m_GBCD[shift+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
             }
           }
-          m_OrientationOps[1]->getQuatSymOp(i, sym_q1);
           OrientationMath::invertQuaternion(sym_q1);
           for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
           {
@@ -323,20 +322,52 @@ void VisualizeGBCD::execute()
                 trash[1] = -trash[1];
                 trash[2] = -trash[2];
              }
-             xyz_temp[4*k] = trash[0];
-             xyz_temp[4*k+1] = trash[1];
-             xyz_temp[4*k+2] = trash[2];
-             xyz[4*(counter*nchunk+k)] = xyz_temp[4*k];
-             xyz[4*(counter*nchunk+k)+1] = xyz_temp[4*k+1];
-             xyz[4*(counter*nchunk+k)+2] = xyz_temp[4*k+2];
+             //xyz_temp[4*k] = trash[0];
+             //xyz_temp[4*k+1] = trash[1];
+             //xyz_temp[4*k+2] = trash[2];
+             xyz[4*(counter*nchunk+k)] = trash[0];
+             xyz[4*(counter*nchunk+k)+1] = trash[1];
+             xyz[4*(counter*nchunk+k)+2] = trash[2];
+             //xyz[4*(counter*nchunk+k)] = xyz_temp[4*k];
+             //xyz[4*(counter*nchunk+k)+1] = xyz_temp[4*k+1];
+             //xyz[4*(counter*nchunk+k)+2] = xyz_temp[4*k+2];
              xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
           }
           counter += 1;
-	      }
 	    }
+	  }
     }
   }
   
+  std::ofstream outFile;
+  std::string filename = "testGBCDViz.vtk";
+  outFile.open(filename.c_str());
+  outFile << "# vtk DataFile Version 2.0" << std::endl;
+  outFile << "DREAM3D Generated Data Set: Deformation Statistics" << std::endl;
+  outFile << "ASCII" << std::endl;
+  outFile << "DATASET UNSTRUCTURED_GRID" << std::endl;
+  outFile << "POINTS " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << " float" << std::endl;
+  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
+  {
+	  outFile << xyz[4*k] << " " << xyz[4*k+1] << " " << xyz[4*k+2] << std::endl;
+	  //if(xyz[4*k+2] >= 0)
+	  //{
+		 // outFile << xyz[4*k]*(xyz[4*k+2]/(xyz[4*k+2]+1)) << " " << xyz[4*k+1]*(xyz[4*k+2]/(xyz[4*k+2]+1)) << " " << 0 << std::endl;
+	  //}
+	  //else if(xyz[4*k+2] < 0)
+	  //{
+		 // outFile << xyz[4*k]*(xyz[4*k+2]/(xyz[4*k+2]-1)) << " " << xyz[4*k+1]*(xyz[4*k+2]/(xyz[4*k+2]-1)) << " " << 0 << std::endl;
+	  //}
+  }
+  outFile << std::endl;
+  outFile << "POINT_DATA " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << std::endl;
+  outFile << "SCALARS Intensity float" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
+  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
+  {
+	  outFile << xyz[4*k+3] << std::endl;
+  }
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
