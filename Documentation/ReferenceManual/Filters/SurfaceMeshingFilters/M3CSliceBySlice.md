@@ -5,7 +5,7 @@ Multi-Material Marching Cubes (Slice at a Time) {#m3cslicebyslice}
 SurfaceMesh
 
 ## Description ##
-This filter creates a surface mesh using a MultiMaterial Marching Cubes (M3C) algorithm originally developed at Carnegie-Mellon University by Dr. Sukbin Lee in the Materials Engineering department based on the Wu/Sullivan algorithm. Heavy modifications were performed by M. Groeber and M. Jackson for the DREAM3D project.
+This filter creates a surface mesh using a MultiMaterial Marching Cubes (M3C) algorithm as implemented at Carnegie-Mellon University by Dr. Sukbin Lee in the Materials Engineering department. The implementation is based on the Wu/Sullivan algorithm\*\*. Heavy modifications were performed by M. Groeber and M. Jackson for the DREAM3D project. The user is urged to read the original article by Wu/Sullivan in order to gain an understanding of how the algorithm works.
 
 This version of the code meshes by looking at 2 slices of **Cells** at a time. The temporary data is then serialized out to disk and is then gathered into the complete shared vertex list and triangle list at the conclusion of the filter. The ramifications of this means that the working amount of RAM during the main part of the algorithm is much lower than the _Volume at a Time_ version of the M3C algorithm but does involve potentially a large amount of disk activity. At the conclusion of the filter the entire mesh is then read into memory which means that the user's computer must still have enough RAM to hold the final mesh in memory.
  
@@ -61,4 +61,11 @@ SurfaceMesh - This will create the Topology (Vertices and Triangles) of the surf
 **License:**  See the License.txt file that came with DREAM3D.
 
 
+\*\*
+## Bibliography ##
+Ziji Wu, John M. Sullivan Jr, 2003, "Multiple material marching cubes algorithm". International Journal for Numerical Methods in Engineering. 07/2003; 58(2):189 - 207. DOI:10.1002/nme.775 pp.189 - 207
+
+**ABSTRACT**
+
+_The accurate reconstruction of three-dimensional (3D) boundary surfaces from two-dimensional (2D) medical images is a crucial procedure in most applications of computational biomedical engineering. This paper addresses an innovative system that efficiently reconstructs accurate, multiple-material, 3D surface meshes from 2D medical images. It is based on an enhanced marching cubes algorithm, the multi-material marching cubes algorithm (M3C), which extracts boundary surfaces between different materials within one sweep of the image stack in an integrated manner. The continuity and integrity of the surfaces are ensured with this robust algorithm. Surface adjustment algorithms were also revised to adapt to the multiple-material nature of the system. Copyright © 2003 John Wiley & Sons, Ltd._
 
