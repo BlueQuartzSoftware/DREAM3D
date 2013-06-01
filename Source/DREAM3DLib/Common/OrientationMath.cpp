@@ -628,35 +628,39 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
 
 void OrientationMath::multiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
 {
-  int j;
-    double vtemp[3], temp[3], r[3], w, temp2[3];
-  /*
-   A function that multiplies a quaterion by a vector (or many quaterions, many vectors)
-   openmp is used to multi-thread the operation
-   */
-    w    = inQuat[4];
-  r[0] = inQuat[1];
-  r[1] = inQuat[2];
-  r[2] = inQuat[3];
+  float g[3][3];
+  OrientationMath::QuattoMat(inQuat, g);
+  MatrixMath::multiply3x3with3x1(g, inVec, outVec);
 
-  for (j=0; j<3; j++)
-  {
-    vtemp[j] = inVec[j];
-  }
+  //int j;
+  //  double vtemp[3], temp[3], r[3], w, temp2[3];
+  ///*
+  // A function that multiplies a quaterion by a vector (or many quaterions, many vectors)
+  // openmp is used to multi-thread the operation
+  // */
+  //  w    = inQuat[4];
+  //r[0] = inQuat[1];
+  //r[1] = inQuat[2];
+  //r[2] = inQuat[3];
 
-  MatrixMath::crossProduct(r, vtemp, temp);
+  //for (j=0; j<3; j++)
+  //{
+  //  vtemp[j] = inVec[j];
+  //}
 
-  for (j=0; j<3; j++)
-  {
-    temp[j] += w * vtemp[j];
-  }
+  //MatrixMath::crossProduct(r, vtemp, temp);
 
-  MatrixMath::crossProduct(r, temp, temp2);
+  //for (j=0; j<3; j++)
+  //{
+  //  temp[j] += w * vtemp[j];
+  //}
 
-  for (j=0; j<3; j++)
-  {
-    outVec[j] = 2.0*temp2[j]+vtemp[j];
-  }
+  //MatrixMath::crossProduct(r, temp, temp2);
+
+  //for (j=0; j<3; j++)
+  //{
+  //  outVec[j] = 2.0*temp2[j]+vtemp[j];
+  //}
 }
 
 float OrientationMath::matrixMisorientation(float g1[3][3], float g2[3][3])
