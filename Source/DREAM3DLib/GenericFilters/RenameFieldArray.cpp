@@ -102,7 +102,7 @@ void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, s
   if(m_SelectedFieldArrayName.empty() == true)
   {
     setErrorCondition(-11000);
-    notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());
+     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
 }
 

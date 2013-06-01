@@ -98,13 +98,6 @@ void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
   setErrorCondition(0);
   std::stringstream ss;
-//  DataContainer* m = getVoxelDataContainer();
-
-//  for (std::vector<std::string>::iterator iter = m_EbsdFileList.begin(); iter != m_EbsdFileList.end(); ++iter )
-//  {
-//    std::cout << (*iter) << std::endl;
-//  }
-
 
   if (m_EbsdFileList.size() == 0)
   {
