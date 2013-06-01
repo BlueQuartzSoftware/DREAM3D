@@ -61,7 +61,10 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     virtual ~GenerateIPFColors();
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     //------ Created Cell Data
@@ -77,7 +80,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -123,6 +126,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 
   private:
     int32_t* m_CellPhases;
+    bool* m_GoodVoxels;
     float* m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
     uint8_t* m_CellIPFColors;
