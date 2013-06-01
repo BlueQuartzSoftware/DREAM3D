@@ -130,7 +130,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
          || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
   if(m_NeighborhoodDistribution == true)
   {

@@ -113,8 +113,8 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     ss.str("");
     ss << "No files have been selected for import. Have you set the input directory?";
-    addErrorMessage(getHumanLabel(), ss.str(), -11);
-    setErrorCondition(-1);
+    setErrorCondition(-11);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {

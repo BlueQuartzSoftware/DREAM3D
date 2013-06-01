@@ -110,15 +110,15 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
-      if (getOutputFile().empty() == true)
+  if (getOutputFile().empty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);

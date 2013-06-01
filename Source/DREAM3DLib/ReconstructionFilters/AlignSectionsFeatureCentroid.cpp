@@ -127,6 +127,7 @@ void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
+     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)

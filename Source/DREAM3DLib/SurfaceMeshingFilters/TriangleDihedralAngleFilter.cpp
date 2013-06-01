@@ -70,37 +70,37 @@ class CalculateDihedralAnglesImpl
       DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
-	  float radToDeg = 180.0/m_pi;
+    float radToDeg = 180.0/m_pi;
 
-	  float ABx, ABy, ABz, ACx, ACy, ACz, BCx, BCy, BCz;
-	  float magAB, magAC, magBC;
-	  float dihedralAngle1, dihedralAngle2, dihedralAngle3, minDihedralAngle;
+    float ABx, ABy, ABz, ACx, ACy, ACz, BCx, BCy, BCz;
+    float magAB, magAC, magBC;
+    float dihedralAngle1, dihedralAngle2, dihedralAngle3, minDihedralAngle;
       for (size_t i = start; i < end; i++)
       {
-		minDihedralAngle = 180.0;
-		
-		ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
-		ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
-		ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
-		magAB = sqrt(ABx*ABx+ABy*ABy+ABz*ABz);
-		
-		ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-		ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-		ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
-		magAC = sqrt(ACx*ACx+ACy*ACy+ACz*ACz);
-		
-		BCx = nodes[triangles[i].verts[1]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-		BCy = nodes[triangles[i].verts[1]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-		BCz = nodes[triangles[i].verts[1]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
-		magBC = sqrt(BCx*BCx+BCy*BCy+BCz*BCz);
+    minDihedralAngle = 180.0;
 
-		dihedralAngle1 = radToDeg*acos(((ABx*ACx)+(ABy*ACy)+(ABz*ACz))/(magAB*magAC));
-		// 180 - angle because AB points out of vertex and BC points into vertex, so angle is actually angle outside of triangle
-		dihedralAngle2 = 180.0 - (radToDeg*acos(((ABx*BCx)+(ABy*BCy)+(ABz*BCz))/(magAB*magBC)));
-		dihedralAngle3 = radToDeg*acos(((BCx*ACx)+(BCy*ACy)+(BCz*ACz))/(magBC*magAC));
-		minDihedralAngle = dihedralAngle1;
-		if(dihedralAngle2 < minDihedralAngle) minDihedralAngle = dihedralAngle2;
-		if(dihedralAngle3 < minDihedralAngle) minDihedralAngle = dihedralAngle3;
+    ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
+    ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
+    ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
+    magAB = sqrt(ABx*ABx+ABy*ABy+ABz*ABz);
+
+    ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
+    ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
+    ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+    magAC = sqrt(ACx*ACx+ACy*ACy+ACz*ACz);
+
+    BCx = nodes[triangles[i].verts[1]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
+    BCy = nodes[triangles[i].verts[1]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
+    BCz = nodes[triangles[i].verts[1]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+    magBC = sqrt(BCx*BCx+BCy*BCy+BCz*BCz);
+
+    dihedralAngle1 = radToDeg*acos(((ABx*ACx)+(ABy*ACy)+(ABz*ACz))/(magAB*magAC));
+    // 180 - angle because AB points out of vertex and BC points into vertex, so angle is actually angle outside of triangle
+    dihedralAngle2 = 180.0 - (radToDeg*acos(((ABx*BCx)+(ABy*BCy)+(ABz*BCz))/(magAB*magBC)));
+    dihedralAngle3 = radToDeg*acos(((BCx*ACx)+(BCy*ACy)+(BCz*ACz))/(magBC*magAC));
+    minDihedralAngle = dihedralAngle1;
+    if(dihedralAngle2 < minDihedralAngle) minDihedralAngle = dihedralAngle2;
+    if(dihedralAngle3 < minDihedralAngle) minDihedralAngle = dihedralAngle3;
         m_DihedralAngles[i]  = minDihedralAngle;
 
       }
@@ -164,23 +164,23 @@ void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else
   {
     // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
+      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
     }
     else
     {
