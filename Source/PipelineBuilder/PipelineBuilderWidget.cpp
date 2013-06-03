@@ -167,6 +167,15 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   connect(m_actionRenameFavorite, SIGNAL(triggered()),
           this, SLOT( actionRenameFavorite_triggered() ) );
 
+  m_actionAppendFavorite = new QAction(m_MenuPipeline);
+  m_actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
+  m_actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(m_actionAppendFavorite);
+  QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
+  m_actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
+  connect(m_actionAppendFavorite, SIGNAL(triggered()),
+	  this, SLOT( actionAppendFavorite_triggered() ) );
+
   menuPipeline->addSeparator();
 
   m_actionRemoveFavorite = new QAction(m_MenuPipeline);
@@ -199,7 +208,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 void PipelineBuilderWidget::setupContextualMenus()
 {
   // Create favorites action list and add to tree
-  m_ActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
+  m_ActionList << m_actionAppendFavorite << m_actionRenameFavorite << m_actionRemoveFavorite;
   filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_ActionList);
   m_ActionList.clear();
 
@@ -283,6 +292,40 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   }
   // One last preflight to get the changes introduced by the last filter
   m_PipelineViewWidget->preflightPipeline();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::readSettingsWithoutClearingPipeline(QSettings &prefs, PipelineViewWidget* viewWidget)
+{
+	prefs.beginGroup(Detail::PipelineBuilderGroup);
+
+	bool ok = false;
+	int filterCount = prefs.value("Number_Filters").toInt(&ok);
+	prefs.endGroup();
+
+	if (false == ok) {filterCount = 0;}
+	for (int i = 0; i < filterCount; ++i)
+	{
+		QString gName = QString::number(i);
+
+		prefs.beginGroup(gName);
+
+		QString filterName = prefs.value("Filter_Name", "").toString();
+
+		QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+
+		if(w) {
+			m_PipelineViewWidget->preflightPipeline();
+			w->blockSignals(true);
+			w->readOptions(prefs);
+			w->blockSignals(false);
+		}
+		prefs.endGroup();
+	}
+	// One last preflight to get the changes introduced by the last filter
+	m_PipelineViewWidget->preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
@@ -1401,6 +1444,24 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionAppendFavorite_triggered()
+{
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+	QTreeWidgetItem* parent = item->parent();
+
+
+	QString pipelinePath = item->data(0, Qt::UserRole).toString();
+	if (pipelinePath.isEmpty() == false)
+	{
+		QFileInfo fi(pipelinePath);
+		if (fi.exists() == false) { return; }
+		QSettings prefs(pipelinePath, QSettings::IniFormat);
+		readSettingsWithoutClearingPipeline(prefs, m_PipelineViewWidget);
+	}
+}
 
 // -----------------------------------------------------------------------------
 //
