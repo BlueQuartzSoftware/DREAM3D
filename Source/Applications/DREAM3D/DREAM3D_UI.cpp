@@ -209,7 +209,7 @@ void DREAM3D_UI::readSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
   // Have the PipelineBuilder Widget read its settings
-  m_PipelineBuilderWidget->readSettings(prefs);
+  m_PipelineBuilderWidget->readSettings(prefs, true);
   readWindowSettings(prefs);
 
   readVersionCheckSettings(prefs);
