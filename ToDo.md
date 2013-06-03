@@ -64,6 +64,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
++ When removing a Favorite, present a standard dialog to make sure this is what they wanted to do.
++ Using the keyboard to select a favorite (using arrow keys) will NOT update the list of filters for that pipeline
 + Design protocol to check for updated Version of DREAM3D.
     - This work is moved to the "CheckVersion" Git branch
     - Initial Skeleton Code Already Done.
