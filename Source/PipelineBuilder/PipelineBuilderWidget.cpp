@@ -198,6 +198,21 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   connect(m_actionClearPipeline, SIGNAL(triggered()),
           this, SLOT( actionClearPipeline_triggered() ) );
 
+
+  m_actionShowInFileSystem = new QAction(this);
+  m_actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
+  // Handle the naming based on what OS we are currently running...
+	#if defined(Q_OS_WIN)
+		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+	#elif defined(Q_OS_MAC)
+		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+	#else
+		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+	#endif
+
+  connect(m_actionShowInFileSystem, SIGNAL(triggered()),
+	  this, SLOT( actionShowInFileSystem_triggered() ) );
+
   // Add favorites actions to m_FavoritesActionList
   m_ActionList.append(m_actionRemoveFavorite);
 }
@@ -208,11 +223,14 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 void PipelineBuilderWidget::setupContextualMenus()
 {
   // Create favorites action list and add to tree
-  m_ActionList << m_actionAppendFavorite << m_actionRenameFavorite << m_actionRemoveFavorite;
+  m_ActionList << m_actionAppendFavorite << m_actionRenameFavorite << m_actionRemoveFavorite << m_actionShowInFileSystem;
   filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_ActionList);
   m_ActionList.clear();
 
   // Create prebuilt action list and add to tree
+  m_ActionList << m_actionShowInFileSystem;
+  filterLibraryTree->setActionList(PipelineTreeWidget::Prebuilt_Item_Type, m_ActionList);
+  m_ActionList.clear();
 
   // Create library action list and add to tree
 
@@ -238,14 +256,14 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 {
   QSettings prefs(filePath, QSettings::IniFormat, this);
-  readSettings(prefs);
+  readSettings(prefs, true);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs)
+void PipelineBuilderWidget::readSettings(QSettings &prefs, bool shouldClear)
 {
   prefs.beginGroup(Detail::PipelineBuilderGroup);
 
@@ -254,16 +272,19 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
   splitter_2->restoreState(prefs.value("splitter_2").toByteArray());
   prefs.endGroup();
 
-  readSettings(prefs, m_PipelineViewWidget);
+  readSettings(prefs, m_PipelineViewWidget, shouldClear);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
+void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear)
 {
   // Clear Any Existing Pipeline
-  m_PipelineViewWidget->clearWidgets();
+	if (shouldClear)
+	{
+		m_PipelineViewWidget->clearWidgets();
+	}
 
   prefs.beginGroup(Detail::PipelineBuilderGroup);
 
@@ -292,40 +313,6 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* v
   }
   // One last preflight to get the changes introduced by the last filter
   m_PipelineViewWidget->preflightPipeline();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettingsWithoutClearingPipeline(QSettings &prefs, PipelineViewWidget* viewWidget)
-{
-	prefs.beginGroup(Detail::PipelineBuilderGroup);
-
-	bool ok = false;
-	int filterCount = prefs.value("Number_Filters").toInt(&ok);
-	prefs.endGroup();
-
-	if (false == ok) {filterCount = 0;}
-	for (int i = 0; i < filterCount; ++i)
-	{
-		QString gName = QString::number(i);
-
-		prefs.beginGroup(gName);
-
-		QString filterName = prefs.value("Filter_Name", "").toString();
-
-		QFilterWidget* w = viewWidget->addFilter(filterName); // This will set the variable m_SelectedFilterWidget
-
-		if(w) {
-			m_PipelineViewWidget->preflightPipeline();
-			w->blockSignals(true);
-			w->readOptions(prefs);
-			w->blockSignals(false);
-		}
-		prefs.endGroup();
-	}
-	// One last preflight to get the changes introduced by the last filter
-	m_PipelineViewWidget->preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
@@ -1450,8 +1437,6 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
 void PipelineBuilderWidget::actionAppendFavorite_triggered()
 {
 	QTreeWidgetItem* item = filterLibraryTree->currentItem();
-	QTreeWidgetItem* parent = item->parent();
-
 
 	QString pipelinePath = item->data(0, Qt::UserRole).toString();
 	if (pipelinePath.isEmpty() == false)
@@ -1459,8 +1444,22 @@ void PipelineBuilderWidget::actionAppendFavorite_triggered()
 		QFileInfo fi(pipelinePath);
 		if (fi.exists() == false) { return; }
 		QSettings prefs(pipelinePath, QSettings::IniFormat);
-		readSettingsWithoutClearingPipeline(prefs, m_PipelineViewWidget);
+		readSettings(prefs, m_PipelineViewWidget, false);
 	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionShowInFileSystem_triggered()
+{
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+	QString pipelinePath = item->data(0, Qt::UserRole).toString();
+
+	QFileInfo pipelinePathInfo(pipelinePath);
+	QString pipelinePathDir = pipelinePathInfo.path();
+
+	QDesktopServices::openUrl(pipelinePathDir);
 }
 
 // -----------------------------------------------------------------------------
@@ -1471,7 +1470,7 @@ void PipelineBuilderWidget::loadPipelineFileIntoPipelineView(QString path)
   QFileInfo fi(path);
   if (fi.exists() == false) { return; }
   QSettings prefs(path, QSettings::IniFormat);
-  readSettings(prefs, m_PipelineViewWidget);
+  readSettings(prefs, m_PipelineViewWidget, true);
 }
 
 // -----------------------------------------------------------------------------
