@@ -837,6 +837,11 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
     factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
     updateFilterGroupList(factories);
   }
+  else
+  {
+	  // Update filter list with preview of current item
+	on_filterLibraryTree_itemClicked(item, 0);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1394,9 +1399,16 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
-  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0)
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+	QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+
+	QMessageBox msgBox;
+	msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
+	msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+	msgBox.setDefaultButton(QMessageBox::Yes);
+	int ret = msgBox.exec();
+
+  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 && ret == QMessageBox::Yes)
   {
     // QString favoriteName = item->text(0);
     QString filePath = item->data(0, Qt::UserRole).toString();
