@@ -74,7 +74,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 + Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
     - Use QDesktopServices::openUrl(PATH_TO_FOLDER) and Qt will figure out the proper thing to do
-+ Append a favorite to a pipeline that is already built up in the PipelineView widget
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
@@ -180,6 +179,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Append a favorite to a pipeline that is already built up in the PipelineView widget
 + incorrect Documentation for Neighbor CI Correlation
 + incorrect Documentation for Neighbor Orientation Correlation
 + FilterParameter: EditibleChoice Widget NOT firing updates to force the Preflight to run
