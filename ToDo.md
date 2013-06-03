@@ -47,9 +47,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
-+ Create a "TestFilter" that has one of every FilterParameter Type
-    - Create a new file in DREAM3DLib/GenericFilters/TestFilter.h & cpp
-    - Update the SourceList.cmake but make the filter "Private" by adding the filter to the \_PrivateFilters cmake variable.
++ Create a "ExamplePlugin" that has one of every FilterParameter Type
+    - Create a new Plugin called "ExamplePlugin"
+    - Jackson has most of the code done.
+    - break up codes into a few filters
     - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
     - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
