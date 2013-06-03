@@ -106,8 +106,9 @@ class CalculateGBCDImpl
       int inversion = 1;
       int grain1, grain2;
       float q1[5], q2[5], misq[5], sym_q1[5], sym_q2[5], s1misq[5], s2misq[5], euler_mis[3];
-      float /*sym1[5],*/ sym2[5];
-      float normal[3], xstl_norm0[3], xstl_norm1[3], xstl_norm_sc[2], xstl_norm_sc_inv[2];
+      float normal[3], normalinv[3];
+	  float xstl1_norm0[3], xstl1_norm1[3], xstl1_norm_sc[2], xstl1_norm_sc_inv[2];
+	  float xstl2_norm0[3], xstl2_norm1[3], xstl2_norm_sc[2], xstl2_norm_sc_inv[2];
 
       for (size_t i = start; i < end; i++)
       {
@@ -116,6 +117,9 @@ class CalculateGBCDImpl
 		normal[0] = m_Normals[3*i];
 		normal[1] = m_Normals[3*i+1];
 		normal[2] = m_Normals[3*i+2];
+		normalinv[0] = -m_Normals[3*i];
+		normalinv[1] = -m_Normals[3*i+1];
+		normalinv[2] = -m_Normals[3*i+2];
 		if(m_Phases[grain1] == m_Phases[grain2])
 		{
 			for(m=1; m < 5; m++)
@@ -124,41 +128,61 @@ class CalculateGBCDImpl
 			  q2[m] = m_Quats[5*grain2+m];
 			}
 
+			//get the crystal directions along the triangle normals
+			OrientationMath::multiplyQuaternionVector(q1, normal, xstl1_norm0);
+			OrientationMath::multiplyQuaternionVector(q2, normalinv, xstl2_norm0);
 			//get the misorientation between grain1 and grain2
 			OrientationMath::invertQuaternion(q1);
 			OrientationMath::multiplyQuaternions(q1, q2, misq);
-			OrientationMath::multiplyQuaternionVector(q1, normal, xstl_norm0);
 
 			int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
 			for (j=0; j< nsym;j++)
 			{
-			  //calculate the symmetric misorienation
+			  //find symmetric crystal directions
 			  m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q1);
-
-			  //calculate the crystal normal and put it into normalized coordinates ->[theta, cos(phi) ]
-			  OrientationMath::multiplyQuaternionVector(sym_q1, xstl_norm0, xstl_norm1);
-			  xstl_norm_sc[0] = atan2f(xstl_norm1[1], xstl_norm1[0]);
-			  if (xstl_norm_sc[0] < 0) xstl_norm_sc[0] += m_pi2;
-			  xstl_norm_sc[1] = xstl_norm1[2];
+			  OrientationMath::multiplyQuaternionVector(sym_q1, xstl1_norm0, xstl1_norm1);
+			  OrientationMath::multiplyQuaternionVector(sym_q1, xstl2_norm0, xstl2_norm1);
+			  //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
+			  xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
+			  if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += m_pi2;
+			  xstl1_norm_sc[1] = xstl1_norm1[2];
+			  xstl2_norm_sc[0] = atan2f(xstl2_norm1[1], xstl2_norm1[0]);
+			  if (xstl2_norm_sc[0] < 0) xstl2_norm_sc[0] += m_pi2;
+			  xstl2_norm_sc[1] = xstl2_norm1[2];
 
 			  if (inversion == 1){
-				xstl_norm_sc_inv[0] = xstl_norm_sc[0] + m_pi;
-				if (xstl_norm_sc_inv[0] > m_pi2) xstl_norm_sc_inv[0] -= m_pi2;
-				xstl_norm_sc_inv[1] = -1.0*xstl_norm_sc[1];
+				xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + m_pi;
+				if (xstl1_norm_sc_inv[0] > m_pi2) xstl1_norm_sc_inv[0] -= m_pi2;
+				xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
+			  }
+			  if (inversion == 1){
+				xstl2_norm_sc_inv[0] = xstl2_norm_sc[0] + m_pi;
+				if (xstl2_norm_sc_inv[0] > m_pi2) xstl2_norm_sc_inv[0] -= m_pi2;
+				xstl2_norm_sc_inv[1] = -1.0*xstl2_norm_sc[1];
 			  }
 
 			  for (k=0; k < nsym; k++)
 			  {
+			    //calculate the symmetric misorienation
 			    m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(k, sym_q2);
 				OrientationMath::invertQuaternion(sym_q2);
-        OrientationMath::multiplyQuaternions(misq, sym_q2, s2misq);
-        OrientationMath::multiplyQuaternions(sym_q1, s2misq, s1misq);
+		        OrientationMath::multiplyQuaternions(misq, sym_q2, s2misq);
+				OrientationMath::multiplyQuaternions(sym_q1, s2misq, s1misq);
 				OrientationMath::QuattoEuler(s1misq, euler_mis[0], euler_mis[1], euler_mis[2]);
 				euler_mis[1] = cosf(euler_mis[1]);
 
-				//get the index that this point would be in the GBCD histogram
-				gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc);
-
+				//get the indexes that this point would be in the GBCD histogram
+				gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
+				if (gbcd_index != -1)
+				{
+				  // Add the points and up the count on the gbcd histograms.  Broke this out
+				  // so that it could be protected in an openMP thread
+				  {
+					m_GBCDcount[gbcd_index] += 1;
+					m_GBCDarea[gbcd_index] += m_Areas[i];
+				  }
+				}
+				gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl2_norm_sc);
 				if (gbcd_index != -1)
 				{
 				  // Add the points and up the count on the gbcd histograms.  Broke this out
@@ -171,7 +195,15 @@ class CalculateGBCDImpl
 				//if inversion is on, do the same for that
 				if (inversion == 1)
 				{
-				  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl_norm_sc_inv);
+				  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc_inv);
+				  if (gbcd_index != -1 )
+				  {
+  					{
+  					  m_GBCDcount[gbcd_index] += 1;
+  					  m_GBCDarea[gbcd_index] += m_Areas[i];
+  					}
+				  }
+				  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl2_norm_sc_inv);
 				  if (gbcd_index != -1 )
 				  {
   					{
@@ -321,7 +353,7 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, (36*18*36*36*18))
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, (40*20*40*40*20))
     }
 
   }
@@ -408,7 +440,7 @@ void FindGBCD::execute()
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
-  gbcdCountArray = FloatArrayType::CreateArray(36*18*36*36*18*36, "GBCDCount");
+  gbcdCountArray = FloatArrayType::CreateArray(40*20*40*40*20, "GBCDCount");
   gbcdCountArray->SetNumberOfComponents(1);
   gbcdCountArray->initializeWithZeros();
   gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
@@ -436,7 +468,7 @@ void FindGBCD::execute()
   m_GBCDlimits[8] = 2.0*m_pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = 10.0*m_pi/180.0;
+  float binsize = 9.0*m_pi/180.0;
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;

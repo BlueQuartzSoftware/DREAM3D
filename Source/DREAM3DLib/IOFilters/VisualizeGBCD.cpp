@@ -120,7 +120,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     }
     else
     {
-		GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -388, float, FloatArrayType, ensembles, (36*18*36*36*18))
+		GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -388, float, FloatArrayType, ensembles, (40*20*40*40*20))
 	}
 
   }
@@ -201,7 +201,7 @@ void VisualizeGBCD::execute()
   m_GBCDlimits[8] = 2.0*m_pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = 10.0*m_pi/180.0;
+  float binsize = 9.0*m_pi/180.0;
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
@@ -223,6 +223,7 @@ void VisualizeGBCD::execute()
   xyz_temp_phArray->initializeWithValues(1.0f);
   float* xyz_temp_ph = xyz_temp_phArray->GetPointer(0);
 
+  //determine phi, theta for each bin
   int count = 0;
   for(int j=0;j<m_GBCDsizes[4];j++)
   {
@@ -231,19 +232,21 @@ void VisualizeGBCD::execute()
       xyz_temp_ph[3*count+1] = i;
       xyz_temp_ph[3*count+2] = j;
       xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] * m_GBCDdeltas[3];
-      xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] + m_GBCDlimits[3];
+      xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] + m_GBCDlimits[3] + (m_GBCDdeltas[3]/2.0);
       xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] * m_GBCDdeltas[4];
-      xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] + m_GBCDlimits[4];
+      xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] + m_GBCDlimits[4] + (m_GBCDdeltas[4]/2.0);
       xyz_temp_ph[3*count+2] = acosf(xyz_temp_ph[3*count+2]);
       count++;
     }
   }
 
+  //set up temp array for x,y,z,intensity for numPhiBins*numThetaBins times 1152 symmetric misorientations
   FloatArrayType::Pointer xyz_tempArray = FloatArrayType::NullPointer();
-  xyz_tempArray = FloatArrayType::CreateArray((m_GBCDsizes[3]*m_GBCDsizes[4]), 4, "xyz");
+  xyz_tempArray = FloatArrayType::CreateArray((m_GBCDsizes[3]*m_GBCDsizes[4]), 4, "xyztemp");
   xyz_tempArray->initializeWithValues(0.0f);
   float* xyz_temp = xyz_tempArray->GetPointer(0);
 
+  //determine cartesian coordinates for phi,theta values at each bin
   for(int i=0;i<(m_GBCDsizes[3]*m_GBCDsizes[4]);i++)
   {
     xyz_temp[4*i] = sinf(xyz_temp_ph[3*i+2])*cosf(xyz_temp_ph[3*i+1]);
@@ -255,7 +258,7 @@ void VisualizeGBCD::execute()
   float mis_quat1[5];
   float mis_quat2[5];
   float mis_euler1[3];
-  float sym_q1[5], sym_q2[5];
+  float sym_q1[5], sym_q1_inv[5], sym_q2[5];
   float vec[3];
   float trash[3];
 
@@ -263,43 +266,63 @@ void VisualizeGBCD::execute()
   float misvect[3] = {1,1,1};
 
   mis_angle = mis_angle * m_pi/180.0f;
-  
+
+  //convert axis angle to quaternion representation of misorientation
   OrientationMath::axisAngletoQuat(mis_angle, misvect[0], misvect[1], misvect[2], mis_quat);
     
+  //get number of symmetry operators
   int n_sym = m_OrientationOps[1]->getNumSymOps();
 
+  //set up array for x,y,z,intensity for numPhiBins*numThetaBins times 1152 symmetric misorientations
   int nchunk = m_GBCDsizes[3]*m_GBCDsizes[4];
   FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
   xyzArray = FloatArrayType::CreateArray((nchunk*2*n_sym*n_sym), 4, "xyz");
   xyzArray->initializeWithValues(0.0f);
   float* xyz = xyzArray->GetPointer(0);
   int counter = 0;
+
+  std::ofstream oFile;
+  std::string fname = "test.txt";
+  oFile.open(fname.c_str());
+
   for(int q=0;q<2;q++)
   {
     if(q == 1)
 	{ 
+		//invert misorientation for switching symmetry
 		OrientationMath::invertQuaternion(mis_quat);
 	}
     for(int i=0; i<n_sym; i++)
 	{
+	  //get symmetry operator1
       m_OrientationOps[1]->getQuatSymOp(i, sym_q1);
+	  //get inverse of symmetry operator1
+      m_OrientationOps[1]->getQuatSymOp(i, sym_q1_inv);
+	  OrientationMath::invertQuaternion(sym_q1_inv);
       for(int j=0; j<n_sym; j++)
 	  {
+		//get symmetry operator2
         m_OrientationOps[1]->getQuatSymOp(j, sym_q2);
+		//calculate symmetric misorientation
         OrientationMath::invertQuaternion(sym_q2);
         OrientationMath::multiplyQuaternions(mis_quat, sym_q2, mis_quat2);
         OrientationMath::multiplyQuaternions(sym_q1, mis_quat2, mis_quat1);
-        OrientationMath::QuattoEuler(mis_quat1, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+		//convert to euler angle
+		OrientationMath::QuattoEuler(mis_quat1, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
         
         mis_euler1[1] = cosf(mis_euler1[1]);
         
+		//find bins in GBCD
         int location1 = int((mis_euler1[0]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
         int location2 = int((mis_euler1[1]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
         int location3 = int((mis_euler1[2]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
         //make sure that euler angles are within the GBCD space
         if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < m_GBCDsizes[0] && location2 < m_GBCDsizes[1] && location3 < m_GBCDsizes[2])
 		{
+		  //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
           int shift = (location1)+(location2*m_GBCDsizes[0])+(location3*m_GBCDsizes[0]*m_GBCDsizes[1]);
+
+		  //copy intensity for each phi,theta bin in 4th slot of temp cartesian x,y,z,value array
           for(int k=0;k<m_GBCDsizes[4];k++)
           {
             for(int l=0;l<m_GBCDsizes[3];l++)
@@ -307,34 +330,34 @@ void VisualizeGBCD::execute()
               xyz_temp[4*(l+(m_GBCDsizes[3]*k))+3] = m_GBCD[shift+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
             }
           }
-          OrientationMath::invertQuaternion(sym_q1);
-          for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
-          {
-             vec[0] = xyz_temp[4*k];
-             vec[1] = xyz_temp[4*k+1];
-             vec[2] = xyz_temp[4*k+2];
-             OrientationMath::multiplyQuaternionVector(sym_q1, vec, trash);
-             if(q == 1)
-             {
-                OrientationMath::invertQuaternion(mis_quat);
-                OrientationMath::multiplyQuaternionVector(mis_quat, trash, trash);
-                trash[0] = -trash[0];
-                trash[1] = -trash[1];
-                trash[2] = -trash[2];
-             }
-             //xyz_temp[4*k] = trash[0];
-             //xyz_temp[4*k+1] = trash[1];
-             //xyz_temp[4*k+2] = trash[2];
-             xyz[4*(counter*nchunk+k)] = trash[0];
-             xyz[4*(counter*nchunk+k)+1] = trash[1];
-             xyz[4*(counter*nchunk+k)+2] = trash[2];
-             //xyz[4*(counter*nchunk+k)] = xyz_temp[4*k];
-             //xyz[4*(counter*nchunk+k)+1] = xyz_temp[4*k+1];
-             //xyz[4*(counter*nchunk+k)+2] = xyz_temp[4*k+2];
-             xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
-          }
-          counter += 1;
-	    }
+		  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
+		  {
+			//create vector using x,y,z for each phi,theta bin
+			vec[0] = xyz_temp[4*k];
+			vec[1] = xyz_temp[4*k+1];
+			vec[2] = xyz_temp[4*k+2];
+			//find symmetric poles using inverted symmetry operator
+			OrientationMath::multiplyQuaternionVector(sym_q1_inv, vec, trash);
+			oFile << vec[0] << " " << vec[1] << " " << vec[2] << " " << trash[0] << " " << trash[1] << " " << trash[2] << " " << std::endl;
+			//if(q == 1)
+			//{
+			////invert misorientation (this second time, so it changes it back...is this right?)
+			//OrientationMath::invertQuaternion(mis_quat);
+			////find symmetric poles using inverted symmetry operator
+			//OrientationMath::multiplyQuaternionVector(mis_quat, trash, trash);
+			////take negative of vector
+			//trash[0] = -trash[0];
+			//trash[1] = -trash[1];
+			//trash[2] = -trash[2];
+			//}
+			//store symmetric vectors and copied intensity in final x,y,z,value array
+			xyz[4*(counter*nchunk+k)] = trash[0];
+			xyz[4*(counter*nchunk+k)+1] = trash[1];
+			xyz[4*(counter*nchunk+k)+2] = trash[2];
+			xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
+		  }
+		  counter += 1;
+		}
 	  }
     }
   }
@@ -349,18 +372,31 @@ void VisualizeGBCD::execute()
   outFile << "POINTS " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << " float" << std::endl;
   for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
   {
-	  outFile << xyz[4*k] << " " << xyz[4*k+1] << " " << xyz[4*k+2] << std::endl;
-	  //if(xyz[4*k+2] >= 0)
-	  //{
-		 // outFile << xyz[4*k]*(xyz[4*k+2]/(xyz[4*k+2]+1)) << " " << xyz[4*k+1]*(xyz[4*k+2]/(xyz[4*k+2]+1)) << " " << 0 << std::endl;
-	  //}
-	  //else if(xyz[4*k+2] < 0)
-	  //{
-		 // outFile << xyz[4*k]*(xyz[4*k+2]/(xyz[4*k+2]-1)) << " " << xyz[4*k+1]*(xyz[4*k+2]/(xyz[4*k+2]-1)) << " " << 0 << std::endl;
-	  //}
+	  if(xyz[4*k+2] >= 0)
+	  {
+		  outFile << xyz[4*k]*(1-(xyz[4*k+2]/(xyz[4*k+2]+1))) << " " << xyz[4*k+1]*(1-(xyz[4*k+2]/(xyz[4*k+2]+1))) << " " << 0 << std::endl;
+	  }
+	  else if(xyz[4*k+2] < 0)
+	  {
+		  outFile << xyz[4*k]*(1-(xyz[4*k+2]/(xyz[4*k+2]-1))) << " " << xyz[4*k+1]*(1-(xyz[4*k+2]/(xyz[4*k+2]-1))) << " " << 0 << std::endl;
+	  }
+  }
+  outFile << "CELLS " << m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << " " << 2*m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << std::endl;
+//  Store the Grain Ids so we don't have to re-read the triangles file again
+  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
+  {
+	  outFile << "1 " << k << std::endl;
+  }
+
+  // Write the CELL_TYPES into the file
+  outFile << std::endl;
+  outFile << "CELL_TYPES " << m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << std::endl;
+  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
+  {
+	  outFile << "1" << std::endl;
   }
   outFile << std::endl;
-  outFile << "POINT_DATA " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << std::endl;
+  outFile << "CELL_DATA " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << std::endl;
   outFile << "SCALARS Intensity float" << std::endl;
   outFile << "LOOKUP_TABLE default" << std::endl;
   for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
