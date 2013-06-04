@@ -582,10 +582,8 @@ void PipelineBuilderWidget::setupGui()
   errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
-#if 0
   m_HtmlItemDelegate = new HtmlItemDelegate(this);
   errorTableWidget->setItemDelegateForColumn(0, m_HtmlItemDelegate);
-#endif
 
   m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
 
@@ -1041,6 +1039,14 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 {
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
   m_PipelineViewWidget->preflightPipeline();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
+{
+	std::cout << item->text().toStdString().c_str() << std::endl;
 }
 
 // -----------------------------------------------------------------------------

@@ -218,6 +218,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_filterSearch_textChanged (const QString& text);
 
+	void on_errorTableWidget_itemClicked(QTableWidgetItem* item);
+
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
 
