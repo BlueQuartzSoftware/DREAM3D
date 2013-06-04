@@ -12,6 +12,13 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+/*
+ * Look at Generic/RemoveArrays class for code on how to write the values to the .dream3d file.
+ */
+
 
 /**
  * @class ArraySelectionExample ArraySelectionExample.h ExamplePlugin/Code/ExamplePluginFilters/ArraySelectionExample.h

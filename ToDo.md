@@ -47,12 +47,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
-+ Create a "ExamplePlugin" that has one of every FilterParameter Type
-    - Create a new Plugin called "ExamplePlugin"
-    - Jackson has most of the code done.
-    - break up codes into a few filters
-    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
-    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
 
 ### Ideas/Wish List ###
@@ -79,8 +73,12 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
-
-
++ Create a "ExamplePlugin" that has one of every FilterParameter Type
+    - Create a new Plugin called "ExamplePlugin"
+    - Jackson has most of the code done.
+    - break up codes into a few filters
+    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
+    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
 
 ## Statistics/Analysis/Other Algorithms ##
