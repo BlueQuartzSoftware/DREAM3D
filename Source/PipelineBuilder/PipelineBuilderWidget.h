@@ -74,17 +74,12 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readSettings(QSettings &prefs);
+    virtual void readSettings(QSettings &prefs, bool shouldClear);
 
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget);
-
-	/**
-      * @brief Reads the Preferences from the users pref file without clearing the current pipeline
-      */
-	virtual void readSettingsWithoutClearingPipeline(QSettings &prefs, PipelineViewWidget* viewWidget);
+    virtual void readSettings(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear);
 
     /**
       * @brief Writes the preferences to the users pref file
@@ -208,6 +203,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionRemoveFavorite_triggered();
     void actionRenameFavorite_triggered();
 	void actionAppendFavorite_triggered();
+	void actionShowInFileSystem_triggered();
     void actionFilterListHelp_triggered();
 
     void on_m_GoBtn_clicked();
@@ -256,6 +252,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QAction*                    m_actionRemoveFavorite;
     QAction*                    m_actionRenameFavorite;
 	QAction*					m_actionAppendFavorite;
+	QAction*					m_actionShowInFileSystem;
     QList<QAction*>				m_ActionList;
 
     QTreeWidgetItem*            m_favorites;
