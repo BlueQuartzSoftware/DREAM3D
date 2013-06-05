@@ -47,11 +47,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
-+ Create a "TestFilter" that has one of every FilterParameter Type
-    - Create a new file in DREAM3DLib/GenericFilters/TestFilter.h & cpp
-    - Update the SourceList.cmake but make the filter "Private" by adding the filter to the \_PrivateFilters cmake variable.
-    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
-    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
 
 ### Ideas/Wish List ###
@@ -71,14 +66,16 @@ This is the list of things to do. It is written with the Markdown style so it ca
     - Lines 556 & 557 of PipelineBuilderWidget have been commented out until this feature is fully implemented
     - Those lines just painted a hyperlink style but did not allow the user to actually click on the link
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
-+ Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
-    - Use QDesktopServices::openUrl(PATH_TO_FOLDER) and Qt will figure out the proper thing to do
-+ Append a favorite to a pipeline that is already built up in the PipelineView widget
+
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
-
-
++ Create a "ExamplePlugin" that has one of every FilterParameter Type
+    - Create a new Plugin called "ExamplePlugin"
+    - Jackson has most of the code done.
+    - break up codes into a few filters
+    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
+    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
 
 ## Statistics/Analysis/Other Algorithms ##
@@ -179,6 +176,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ When removing a Favorite, present a standard dialog to make sure this is what they wanted to do.
++ Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
++ Append a favorite to a pipeline that is already built up in the PipelineView widget
 + incorrect Documentation for Neighbor CI Correlation
 + incorrect Documentation for Neighbor Orientation Correlation
 + FilterParameter: EditibleChoice Widget NOT firing updates to force the Preflight to run

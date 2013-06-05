@@ -727,6 +727,38 @@ void QFilterWidget::setupGui()
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
+
+
+    /* Change to SurfaceMesh
+        else if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
+    {
+      setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
+    {
+      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
+    {
+      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+
+    Change to SolidMesh
+
+        else if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
+    {
+      setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
+    {
+      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
+    {
+      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    */
+
     else if (wType == FilterParameter::ArraySelectionWidget)
     {
       setupArraySelectionWidget(frmLayout, optIndex, option, label);
