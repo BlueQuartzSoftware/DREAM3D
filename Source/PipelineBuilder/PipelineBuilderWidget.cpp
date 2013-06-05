@@ -167,6 +167,15 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   connect(m_actionRenameFavorite, SIGNAL(triggered()),
           this, SLOT( actionRenameFavorite_triggered() ) );
 
+  m_actionAppendFavorite = new QAction(m_MenuPipeline);
+  m_actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
+  m_actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(m_actionAppendFavorite);
+  QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
+  m_actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
+  connect(m_actionAppendFavorite, SIGNAL(triggered()),
+	  this, SLOT( actionAppendFavorite_triggered() ) );
+
   menuPipeline->addSeparator();
 
   m_actionRemoveFavorite = new QAction(m_MenuPipeline);
@@ -189,6 +198,21 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   connect(m_actionClearPipeline, SIGNAL(triggered()),
           this, SLOT( actionClearPipeline_triggered() ) );
 
+
+  m_actionShowInFileSystem = new QAction(this);
+  m_actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
+  // Handle the naming based on what OS we are currently running...
+	#if defined(Q_OS_WIN)
+		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+	#elif defined(Q_OS_MAC)
+		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+	#else
+		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+	#endif
+
+  connect(m_actionShowInFileSystem, SIGNAL(triggered()),
+	  this, SLOT( actionShowInFileSystem_triggered() ) );
+
   // Add favorites actions to m_FavoritesActionList
   m_ActionList.append(m_actionRemoveFavorite);
 }
@@ -199,11 +223,14 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 void PipelineBuilderWidget::setupContextualMenus()
 {
   // Create favorites action list and add to tree
-  m_ActionList << m_actionRenameFavorite << m_actionRemoveFavorite;
+  m_ActionList << m_actionAppendFavorite << m_actionRenameFavorite << m_actionRemoveFavorite << m_actionShowInFileSystem;
   filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_ActionList);
   m_ActionList.clear();
 
   // Create prebuilt action list and add to tree
+  m_ActionList << m_actionShowInFileSystem;
+  filterLibraryTree->setActionList(PipelineTreeWidget::Prebuilt_Item_Type, m_ActionList);
+  m_ActionList.clear();
 
   // Create library action list and add to tree
 
@@ -229,14 +256,14 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 {
   QSettings prefs(filePath, QSettings::IniFormat, this);
-  readSettings(prefs);
+  readSettings(prefs, true);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs)
+void PipelineBuilderWidget::readSettings(QSettings &prefs, bool shouldClear)
 {
   prefs.beginGroup(Detail::PipelineBuilderGroup);
 
@@ -245,16 +272,19 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs)
   splitter_2->restoreState(prefs.value("splitter_2").toByteArray());
   prefs.endGroup();
 
-  readSettings(prefs, m_PipelineViewWidget);
+  readSettings(prefs, m_PipelineViewWidget, shouldClear);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget)
+void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear)
 {
   // Clear Any Existing Pipeline
-  m_PipelineViewWidget->clearWidgets();
+	if (shouldClear)
+	{
+		m_PipelineViewWidget->clearWidgets();
+	}
 
   prefs.beginGroup(Detail::PipelineBuilderGroup);
 
@@ -806,6 +836,11 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   {
     factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
     updateFilterGroupList(factories);
+  }
+  else
+  {
+	  // Update filter list with preview of current item
+	on_filterLibraryTree_itemClicked(item, 0);
   }
 }
 
@@ -1364,9 +1399,16 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 {
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
-  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0)
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+	QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+
+	QMessageBox msgBox;
+	msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
+	msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+	msgBox.setDefaultButton(QMessageBox::Yes);
+	int ret = msgBox.exec();
+
+  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 && ret == QMessageBox::Yes)
   {
     // QString favoriteName = item->text(0);
     QString filePath = item->data(0, Qt::UserRole).toString();
@@ -1401,6 +1443,36 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionAppendFavorite_triggered()
+{
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+
+	QString pipelinePath = item->data(0, Qt::UserRole).toString();
+	if (pipelinePath.isEmpty() == false)
+	{
+		QFileInfo fi(pipelinePath);
+		if (fi.exists() == false) { return; }
+		QSettings prefs(pipelinePath, QSettings::IniFormat);
+		readSettings(prefs, m_PipelineViewWidget, false);
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionShowInFileSystem_triggered()
+{
+	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+	QString pipelinePath = item->data(0, Qt::UserRole).toString();
+
+	QFileInfo pipelinePathInfo(pipelinePath);
+	QString pipelinePathDir = pipelinePathInfo.path();
+
+	QDesktopServices::openUrl(pipelinePathDir);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1410,7 +1482,7 @@ void PipelineBuilderWidget::loadPipelineFileIntoPipelineView(QString path)
   QFileInfo fi(path);
   if (fi.exists() == false) { return; }
   QSettings prefs(path, QSettings::IniFormat);
-  readSettings(prefs, m_PipelineViewWidget);
+  readSettings(prefs, m_PipelineViewWidget, true);
 }
 
 // -----------------------------------------------------------------------------
