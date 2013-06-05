@@ -255,6 +255,7 @@ void VisualizeGBCD::execute()
   }
   
   float mis_quat[5];
+  float mis_quat_orig[5];
   float mis_quat1[5];
   float mis_quat2[5];
   float mis_euler1[3];
@@ -281,15 +282,16 @@ void VisualizeGBCD::execute()
   float* xyz = xyzArray->GetPointer(0);
   int counter = 0;
 
-  std::ofstream oFile;
-  std::string fname = "test.txt";
-  oFile.open(fname.c_str());
-
-  for(int q=0;q<2;q++)
+  for(int q=0;q<1;q++)
   {
     if(q == 1)
 	{ 
-		//invert misorientation for switching symmetry
+		//copy misorientation before taking inverse
+		for(int i=0;i<5;i++)
+		{
+			mis_quat_orig[i] = mis_quat[i];
+		}
+		//take inverse of misorientation, but leave in misorientation variable to use for switching symmetry
 		OrientationMath::invertQuaternion(mis_quat);
 	}
     for(int i=0; i<n_sym; i++)
@@ -299,16 +301,16 @@ void VisualizeGBCD::execute()
 	  //get inverse of symmetry operator1
       m_OrientationOps[1]->getQuatSymOp(i, sym_q1_inv);
 	  OrientationMath::invertQuaternion(sym_q1_inv);
+      OrientationMath::multiplyQuaternions(sym_q1, mis_quat, mis_quat1);
       for(int j=0; j<n_sym; j++)
 	  {
 		//get symmetry operator2
         m_OrientationOps[1]->getQuatSymOp(j, sym_q2);
 		//calculate symmetric misorientation
         OrientationMath::invertQuaternion(sym_q2);
-        OrientationMath::multiplyQuaternions(mis_quat, sym_q2, mis_quat2);
-        OrientationMath::multiplyQuaternions(sym_q1, mis_quat2, mis_quat1);
+        OrientationMath::multiplyQuaternions(mis_quat1, sym_q2, mis_quat2);
 		//convert to euler angle
-		OrientationMath::QuattoEuler(mis_quat1, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+		OrientationMath::QuattoEuler(mis_quat2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
         
         mis_euler1[1] = cosf(mis_euler1[1]);
         
@@ -338,18 +340,15 @@ void VisualizeGBCD::execute()
 			vec[2] = xyz_temp[4*k+2];
 			//find symmetric poles using inverted symmetry operator
 			OrientationMath::multiplyQuaternionVector(sym_q1_inv, vec, trash);
-			oFile << vec[0] << " " << vec[1] << " " << vec[2] << " " << trash[0] << " " << trash[1] << " " << trash[2] << " " << std::endl;
-			//if(q == 1)
-			//{
-			////invert misorientation (this second time, so it changes it back...is this right?)
-			//OrientationMath::invertQuaternion(mis_quat);
-			////find symmetric poles using inverted symmetry operator
-			//OrientationMath::multiplyQuaternionVector(mis_quat, trash, trash);
-			////take negative of vector
-			//trash[0] = -trash[0];
-			//trash[1] = -trash[1];
-			//trash[2] = -trash[2];
-			//}
+			if(q == 1)
+			{
+				//rotate symmetric pole by original misorientation
+				OrientationMath::multiplyQuaternionVector(mis_quat_orig, trash, trash);
+				//take negative of vector
+				trash[0] = -trash[0];
+				trash[1] = -trash[1];
+				trash[2] = -trash[2];
+			}
 			//store symmetric vectors and copied intensity in final x,y,z,value array
 			xyz[4*(counter*nchunk+k)] = trash[0];
 			xyz[4*(counter*nchunk+k)+1] = trash[1];
@@ -361,7 +360,9 @@ void VisualizeGBCD::execute()
 	  }
     }
   }
-  
+
+  float x, y, z;
+
   std::ofstream outFile;
   std::string filename = "testGBCDViz.vtk";
   outFile.open(filename.c_str());
@@ -372,14 +373,20 @@ void VisualizeGBCD::execute()
   outFile << "POINTS " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << " float" << std::endl;
   for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
   {
-	  if(xyz[4*k+2] >= 0)
-	  {
-		  outFile << xyz[4*k]*(1-(xyz[4*k+2]/(xyz[4*k+2]+1))) << " " << xyz[4*k+1]*(1-(xyz[4*k+2]/(xyz[4*k+2]+1))) << " " << 0 << std::endl;
-	  }
-	  else if(xyz[4*k+2] < 0)
-	  {
-		  outFile << xyz[4*k]*(1-(xyz[4*k+2]/(xyz[4*k+2]-1))) << " " << xyz[4*k+1]*(1-(xyz[4*k+2]/(xyz[4*k+2]-1))) << " " << 0 << std::endl;
-	  }
+	x = xyz[4*k+0];
+	y = xyz[4*k+1];
+	z = xyz[4*k+2];
+	if(z >= 0)
+	{
+	  outFile << x*(1-(z/(z+1))) << " " << y*(1-(z/(z+1))) << " " << 0 << std::endl;
+	}
+	else
+	{
+	  x = -x;
+	  y = -y;
+	  z = -z;
+	  outFile << x*(1-(z/(z+1))) << " " << y*(1-(z/(z+1))) << " " << 0 << std::endl;
+	}
   }
   outFile << "CELLS " << m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << " " << 2*m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << std::endl;
 //  Store the Grain Ids so we don't have to re-read the triangles file again
