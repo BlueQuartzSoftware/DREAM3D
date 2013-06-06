@@ -96,8 +96,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
   m_PipelineBuilderWidget(NULL),
-  m_UpdateCheckThread(NULL),
-  m_UpdateCheck(NULL)
+  m_UpdateCheckThread(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   // Calls the Parent Class to do all the Widget Initialization that were created
@@ -124,7 +123,6 @@ DREAM3D_UI::~DREAM3D_UI()
     delete m_WorkerThread;
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -359,10 +357,20 @@ void DREAM3D_UI::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_action_CheckForUpdates_triggered()
 {
-  DREAM3DUpdateCheckDialog d;
-  d.setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
-  d.setUpdateWebSite(Detail::UpdateWebSite);
-  d.setApplicationName("DREAM3D");
+  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+
+  // If the UpdatePreferences.ini file exists, read the values in
+  QString prefPath = d->createUpdatePreferencesPath();
+  QDir prefPathDir(prefPath);
+  if ( prefPathDir.exists(prefPath) )
+  {
+	  QSettings updatePrefs(prefPath);
+	  d->readUpdatePreferences(updatePrefs);
+  }
+
+  d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+  d->setUpdateWebSite(Detail::UpdateWebSite);
+  d->setApplicationName("DREAM3D");
 
   // Read from the QSettings Pref file the information that we need
   #if defined (Q_OS_MAC)
@@ -372,17 +380,17 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
 #endif
   prefs.beginGroup(Detail::VersionCheckGroupName);
   QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
-  d.setLastCheckDateTime(dateTime);
+  d->setLastCheckDateTime(dateTime);
 
   DREAM3DUpdateCheckDialog::UpdateType whenToCheck = static_cast<DREAM3DUpdateCheckDialog::UpdateType>(prefs.value(Detail::WhenToCheck, DREAM3DUpdateCheckDialog::UpdateCheckManual).toUInt());
-  d.setWhenToCheck(whenToCheck);
+  d->setWhenToCheck(whenToCheck);
   prefs.endGroup();
 
+  connect(d, SIGNAL( toggled(bool) ),
+	  this, SLOT( updateCheckBtnToggled(bool) ) );
+
   // Now display the dialog box
-  d.exec();
-
-  // Now pull any new values from the dialog and push back into the prefs
-
+  d->exec();
 }
 
 // -----------------------------------------------------------------------------
@@ -761,4 +769,24 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 {
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::updateCheckBtnToggled(bool boolValue)
+{
+	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( sender() );
+	// Now pull any new values from the dialog and push back into the prefs
+	if ( d->getAutomaticallyBtn()->isChecked() )
+	{
+		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+	}
+	else if ( d->getManuallyBtn()->isChecked() )
+	{
+		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
+	}
+	QString updatePrefPath = d->createUpdatePreferencesPath();
+	QSettings updatePrefs(updatePrefPath);
+	d->writeUpdatePreferences(updatePrefs);
 }

@@ -38,6 +38,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
+#include <QtCore/QSettings>
 
 #include <QtGui/QWidget>
 #include <QtGui/QDialog>
@@ -67,12 +68,23 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
       UpdateCheckManual
     };
 
+	int getWhenToCheck();
+	
+	QString getUpdatePreferencesPath();
+
+	QRadioButton* getAutomaticallyBtn();
+	QRadioButton* getManuallyBtn();
 
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
     void setWhenToCheck(UpdateType whenToCheck);
     void setUpdateWebSite(QString url);
     void setApplicationName(QString name);
+
+	void readUpdatePreferences(QSettings &prefs);
+	void writeUpdatePreferences(QSettings &prefs);
+
+	QString createUpdatePreferencesPath();
 
     void setupGui();
 
@@ -88,13 +100,14 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void hasMessage(const QString& message);
 
   private:
-    QNetworkAccessManager* nam;
-    QString    m_CurrentVersion;
-    QDateTime  m_LastCheckDateTime;
-    int        m_WhenToCheck;
-    QString    m_UpdateWebSite;
-    QString    m_AppName;
-    QThread*   m_UpdateCheckThread;
+    QNetworkAccessManager*		nam;
+    QString						m_CurrentVersion;
+    QDateTime					m_LastCheckDateTime;
+    int							m_WhenToCheck;
+	QString						m_UpdatePreferencesPath;
+    QString						m_UpdateWebSite;
+    QString						m_AppName;
+    QThread*					m_UpdateCheckThread;
 
     DREAM3DUpdateCheckDialog(const DREAM3DUpdateCheckDialog&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DUpdateCheckDialog&); // Operator '=' Not Implemented

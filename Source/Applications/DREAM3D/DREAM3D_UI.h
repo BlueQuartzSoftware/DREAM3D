@@ -59,7 +59,6 @@
 class DREAM3DPluginInterface;
 class HelpDialog;
 class PipelineBuilderWidget;
-class DREAM3DUpdateCheck;
 
 
 
@@ -113,6 +112,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @param file The newly added file.
      */
     void updateRecentFileList(const QString &file);
+
+	void updateCheckBtnToggled(bool);
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -213,8 +214,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QString                     m_OpenDialogLastDirectory;
 
     QThread*                    m_UpdateCheckThread;
-    DREAM3DUpdateCheck*         m_UpdateCheck;
-
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented

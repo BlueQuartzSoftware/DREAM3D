@@ -41,6 +41,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QtCore/QDir>
 
 #include <QtGui/QDesktopServices>
 
@@ -48,6 +49,11 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 
+
+namespace Detail
+{
+	const QString UpdatePreferencesGroup("Update Preferences");
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -61,6 +67,65 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   setupUi(this);
 
   setupGui();
+
+  m_UpdatePreferencesPath = createUpdatePreferencesPath();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QRadioButton* DREAM3DUpdateCheckDialog::getAutomaticallyBtn()
+{
+	return automatically;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QRadioButton* DREAM3DUpdateCheckDialog::getManuallyBtn()
+{
+	return manually;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::createUpdatePreferencesPath()
+{
+#if defined (Q_OS_MAC)
+	QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+	QString extension = ".ini";
+#else
+	QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+	QString extension = ".ini";
+#endif
+
+	QString prefFile = prefs.fileName();
+	QFileInfo prefFileInfo = QFileInfo(prefFile);
+	QString parentPath = prefFileInfo.path();
+	QDir parentPathDir = QDir(parentPath);
+
+	if(parentPathDir.mkpath(parentPath))
+	{
+		QString newParentPrefPath = parentPath + "/DREAM3D_Update_Preferences";
+		QString newPrefPath = newParentPrefPath + "/UpdatePreferences" + extension;
+
+		newPrefPath = QDir::toNativeSeparators(newPrefPath);
+		return newPrefPath;
+	}
+	else
+	{
+		// This lets us know if there was an error creating the parent path
+		return "";
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getUpdatePreferencesPath()
+{
+	return m_UpdatePreferencesPath;
 }
 
 // -----------------------------------------------------------------------------
@@ -100,6 +165,14 @@ void DREAM3DUpdateCheckDialog::setLastCheckDateTime(QDateTime lastDateTime)
 void DREAM3DUpdateCheckDialog::setApplicationName(QString name)
 {
   m_AppName = name;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DREAM3DUpdateCheckDialog::getWhenToCheck()
+{
+	return m_WhenToCheck;
 }
 
 // -----------------------------------------------------------------------------
@@ -277,4 +350,26 @@ void DREAM3DUpdateCheckDialog::on_websiteBtn_clicked()
 {
   QUrl url("http://dream3d.bluequartz.net/downloads");
   QDesktopServices::openUrl(url);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
+{
+	prefs.beginGroup(Detail::UpdatePreferencesGroup);
+	bool ok = false;
+	m_WhenToCheck = prefs.value("Frequency").toInt(&ok);
+	prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
+{
+	prefs.beginGroup(Detail::UpdatePreferencesGroup);
+	bool ok = false;
+	prefs.setValue( "Frequency", m_WhenToCheck );
+	prefs.endGroup();
 }
