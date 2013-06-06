@@ -109,13 +109,13 @@ float HexagonalOps::_calcMisoQuat(const float quatsym[12][5], int numsym,
   float qc[5];
    float q2inv[5];
 
-
    for(int i=0;i<5;i++)
    {
 	   q2inv[i] = q2[i];
    }
    OrientationMath::invertQuaternion(q2inv);
-  MULT_QUAT(q1, q2inv, qr)
+
+   OrientationMath::multiplyQuaternions(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
     MULT_QUAT(qr, quatsym[i], qc)
