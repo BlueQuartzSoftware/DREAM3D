@@ -312,7 +312,7 @@ void MergeTwins::merge_twins()
             q2[3] = m_AvgQuats[5*neigh+3];
             q2[4] = m_AvgQuats[5*neigh+4];
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-      if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Cubic)
+      if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         w = w * (180.0f/m_pi);

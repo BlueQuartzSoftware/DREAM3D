@@ -175,7 +175,7 @@ void StatsGeneratorUI::setupGui()
   PrimaryPhaseWidget* ppw = new PrimaryPhaseWidget;
   ppw->setPhaseIndex(1);
   ppw->setPhaseType(DREAM3D::PhaseType::PrimaryPhase);
-  ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic);
+  ppw->setCrystalStructure(Ebsd::CrystalStructure::Cubic_High);
   ppw->setPhaseFraction(1.0);
   ppw->setTotalPhaseFraction(1.0);
   phaseTabs->addTab(ppw, "Primary Phase");

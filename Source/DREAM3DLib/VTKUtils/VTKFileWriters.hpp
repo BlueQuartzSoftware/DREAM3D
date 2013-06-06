@@ -366,13 +366,13 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         rgba[index + 2] = 0;
         if(phase > 0)
         {
-          if(crystruct[phase] == Ebsd::CrystalStructure::Cubic)
+          if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
           {
             EbsdColoring::GenerateCubicIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
                                           RefDirection[0], RefDirection[1], RefDirection[2],
                                           &rgba[index], hkl);
           }
-          else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)
+          else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
           {
             EbsdColoring::GenerateHexIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
           }
@@ -451,7 +451,7 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
     // Write the Rodrigues Coloring Cell Data
     float r1, r2, r3;
 
-	std::vector<OrientationMath::Pointer> m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  std::vector<OrientationMath::Pointer> m_OrientationOps = OrientationMath::getOrientationOpsVector();
 
     for (size_t i = 0; i < total; i++)
     {
@@ -466,14 +466,14 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
       }
       if(phase > 0)
       {
-        if(crystruct[phase] == Ebsd::CrystalStructure::Cubic)
+        if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
         {
           OrientationMath::eulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
           m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
           EbsdColoring::GenerateCubicRodriguesColor(r1, r2, r3, &rgba[index]);
           //            EbsdColoring::GenerateRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
         }
-        else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)
+        else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
         {
           OrientationMath::eulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
           m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);

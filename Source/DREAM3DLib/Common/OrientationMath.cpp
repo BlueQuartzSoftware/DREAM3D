@@ -299,16 +299,30 @@ std::vector<OrientationMath::Pointer> OrientationMath::getOrientationOpsVector()
   std::vector<OrientationMath::Pointer> m_OrientationOps;
   HexagonalOps::Pointer m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back((m_HexOps));
+
   CubicOps::Pointer m_CubicOps = CubicOps::New();
   m_OrientationOps.push_back((m_CubicOps));
-  OrthoRhombicOps::Pointer m_OrthoOps = OrthoRhombicOps::New();
+
+  m_OrientationOps.push_back(OrientationMath::NullPointer()); // Hex Low
+  m_OrientationOps.push_back(OrientationMath::NullPointer()); // Cubic Low
+  m_OrientationOps.push_back(OrientationMath::NullPointer()); // Triclinic
+  m_OrientationOps.push_back(OrientationMath::NullPointer()); // Monoclinic
+
+  OrthoRhombicOps::Pointer m_OrthoOps = OrthoRhombicOps::New(); // OrthoRhombic
   m_OrientationOps.push_back((m_OrthoOps));
+
+
+  m_OrientationOps.push_back(OrientationMath::NullPointer()); // Tetragonal-low
+  TetragonalOps::Pointer m_TetraOps = TetragonalOps::New(); // Tetragonal-high
+  m_OrientationOps.push_back((m_TetraOps));
+
+  m_OrientationOps.push_back(OrientationMath::NullPointer()); // Trigonal-low
+  TrigonalOps::Pointer m_TrigOps = TrigonalOps::New(); // Trigonal-High
+  m_OrientationOps.push_back((m_TrigOps));
+
+
   OrthoRhombicOps::Pointer m_AxisOrthoOps = OrthoRhombicOps::New();
   m_OrientationOps.push_back((m_AxisOrthoOps));
-  TrigonalOps::Pointer m_TrigOps = TrigonalOps::New();
-  m_OrientationOps.push_back((m_TrigOps));
-  TetragonalOps::Pointer m_TetraOps = TetragonalOps::New();
-  m_OrientationOps.push_back((m_TetraOps));
 
   return m_OrientationOps;
 }
@@ -442,10 +456,10 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   if(w > m_pi)
   {
-	w = (2*m_pi)-w;
-	n1 = -n1;
-	n2 = -n2;
-	n3 = -n3;
+  w = (2*m_pi)-w;
+  n1 = -n1;
+  n2 = -n2;
+  n3 = -n3;
   }
 }
 
@@ -458,10 +472,10 @@ void OrientationMath::QuattoAxisAngle(float *q, float &w, float &n1, float &n2, 
   if(q[4] == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   if(w > m_pi)
   {
-	w = (2*m_pi)-w;
-	n1 = -n1;
-	n2 = -n2;
-	n3 = -n3;
+  w = (2*m_pi)-w;
+  n1 = -n1;
+  n2 = -n2;
+  n3 = -n3;
   }
 }
 
@@ -525,10 +539,10 @@ void OrientationMath::QuattoEuler(float *q, float &ea1, float &ea2, float &ea3)
     tmp = sqrt(tmp);
     if(tmp > 1.0f) tmp=1.0f;
     ea2=2*acos(tmp);
-	ea1=ea1+two_pi;
-	ea3=ea3+two_pi;
-	ea1 = fmodf(ea1,two_pi);
-	ea3 = fmodf(ea3,two_pi);
+  ea1=ea1+two_pi;
+  ea3=ea3+two_pi;
+  ea1 = fmodf(ea1,two_pi);
+  ea3 = fmodf(ea3,two_pi);
 }
 void OrientationMath::eulertoQuat(float* q, float e1, float e2, float e3)
 {

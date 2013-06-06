@@ -134,12 +134,12 @@ void MicPhase::parseZandCoordinates(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 unsigned int MicPhase::determineCrystalStructure()
 {
-	unsigned int crystal_structure;
-	if(m_Symmetry.compare(Ebsd::Mic::Cubic) == 0) crystal_structure = Ebsd::CrystalStructure::Cubic;
-	else if(m_Symmetry.compare(Ebsd::Mic::Hexagonal) == 0) crystal_structure = Ebsd::CrystalStructure::Hexagonal;
-	else if(m_Symmetry.compare(Ebsd::Mic::Orthorhombic) == 0) crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
-	else if(m_Symmetry.compare(Ebsd::Mic::Tetragonal) == 0) crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
-	else crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  unsigned int crystal_structure;
+  if(m_Symmetry.compare(Ebsd::Mic::Cubic) == 0) crystal_structure = Ebsd::CrystalStructure::Cubic_High;
+  else if(m_Symmetry.compare(Ebsd::Mic::Hexagonal) == 0) crystal_structure = Ebsd::CrystalStructure::Hexagonal_High;
+  else if(m_Symmetry.compare(Ebsd::Mic::OrthoRhombic) == 0) crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
+  else if(m_Symmetry.compare(Ebsd::Mic::Tetragonal) == 0) crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
+  else crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
 
   return crystal_structure;
 }
@@ -148,8 +148,8 @@ unsigned int MicPhase::determineCrystalStructure()
 // -----------------------------------------------------------------------------
 std::string MicPhase::getMaterialName()
 {
-	std::string name = "Nickel";
-	m_PhaseName = name;
+  std::string name = "Nickel";
+  m_PhaseName = name;
 
   return m_PhaseName;
 }
