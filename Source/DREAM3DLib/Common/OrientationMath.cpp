@@ -90,14 +90,14 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
     float n3min = 0.0f;
 	float qr[5];
   float qc[5];
-   float q1inv[5];
+   float q2inv[5];
 
    for(int i=0;i<5;i++)
    {
-	   q1inv[i] = q1[i];
+	   q2inv[i] = q2[i];
    }
-   OrientationMath::invertQuaternion(q1inv);
-   OrientationMath::multiplyQuaternions(q2, q1inv, qr);
+   OrientationMath::invertQuaternion(q2inv);
+   OrientationMath::multiplyQuaternions(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
   //  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
