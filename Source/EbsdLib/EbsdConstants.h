@@ -140,16 +140,38 @@ namespace Ebsd
    */
   namespace CrystalStructure
   {
-    const unsigned int Hexagonal = 0; //!< Hexagonal
-    const unsigned int Cubic = 1; //!< Cubic
-    const unsigned int OrthoRhombic = 2; //!< OrthoRhombic
-    const unsigned int AxisOrthoRhombic = 3; //!< AxisOrthoRhombic
-    const unsigned int Trigonal = 4; //!< Trigonal
-    const unsigned int Tetragonal = 5; //!< Tetragonal
-    const unsigned int Tetrahedral = 6; //!< Tetrahedral
-    const unsigned int Monoclinic = 7; //!< Monoclinic
-    const unsigned int Triclinic = 8; //!< TriClinic
+
+    const unsigned int Triclinic = 4; //!< TriClinic -1
+    const unsigned int Monoclinic = 5; //!< Monoclinic 2/m
+    const unsigned int OrthoRhombic = 6; //!< OrthoRhombic mmm
+    const unsigned int Tetragonal_Low = 7; //!< Tetragonal-Low 4/m
+    const unsigned int Tetragonal_High = 8; //!< Tetragonal-High 4/mmm
+    const unsigned int Trigonal_Low = 9; //!< Trigonal-Low -3
+    const unsigned int Trigonal_High = 10; //!< Trignal-High -3m
+
+    const unsigned int Hexagonal_Low = 2; //!< Hexagonal-Low 6/m
+    const unsigned int Hexagonal_High = 0; //!< Hexagonal-High 6/mmm
+    const unsigned int Cubic_Low = 3; //!< Cubic Cubic-Low m3 (Tetrahedral)
+    const unsigned int Cubic_High = 1; //!< Cubic Cubic-High m3m
+
+    const unsigned int AxisOrthoRhombic = 11; //!< AxisOrthoRhombic
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
+
+   class Check
+   {
+    public:
+      static bool IsCubic(unsigned int xtal)
+      {
+        if (xtal == Cubic_High) return true;
+        return false;
+      }
+
+      static bool IsHexagonal(unsigned int xtal)
+      {
+        if (xtal == Hexagonal_High) return true;
+        return false;
+      }
+   };
   }
 
   namespace BravaisLattice

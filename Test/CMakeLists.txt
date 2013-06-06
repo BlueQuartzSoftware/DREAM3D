@@ -113,6 +113,16 @@ set_target_properties(DataContainerTest PROPERTIES FOLDER Test)
 add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
 
 # --------------------------------------------------------------------------
+# EBSD Tests
+# --------------------------------------------------------------------------
+add_executable(EbsdTests EbsdTests.cpp )
+target_link_libraries(EbsdTests DREAM3DLib)
+set_target_properties(EbsdTests PROPERTIES FOLDER Test)
+add_test(EbsdTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdTests)
+
+
+
+# --------------------------------------------------------------------------
 # H5Support Library Testing
 # --------------------------------------------------------------------------
 add_executable(H5LiteTest ${DREAM3DTest_SOURCE_DIR}/H5LiteTest.cpp)

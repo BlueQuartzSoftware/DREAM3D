@@ -332,16 +332,40 @@ unsigned int AngPhase::determineCrystalStructure()
   switch(symmetry)
   {
     case Ebsd::Ang::PhaseSymmetry::Cubic:
-      crystal_structure = Ebsd::CrystalStructure::Cubic;
+      crystal_structure = Ebsd::CrystalStructure::Cubic_High;
+      break;
+    case Ebsd::Ang::PhaseSymmetry::Tetrahedral:
+      crystal_structure = Ebsd::CrystalStructure::Cubic_Low;
+      break;
+    case Ebsd::Ang::PhaseSymmetry::DiTetragonal:
+      crystal_structure = Ebsd::CrystalStructure::Tetragonal_High;
+      break;
+    case Ebsd::Ang::PhaseSymmetry::Tetragonal:
+      crystal_structure = Ebsd::CrystalStructure::Tetragonal_Low;
+      break;
+    case Ebsd::Ang::PhaseSymmetry::Orthorhombic:
+      crystal_structure = Ebsd::CrystalStructure::OrthoRhombic;
+      break;
+    case Ebsd::Ang::PhaseSymmetry::Monoclinic_c:
+    case Ebsd::Ang::PhaseSymmetry::Monoclinic_b:
+    case Ebsd::Ang::PhaseSymmetry::Monoclinic_a:
+      crystal_structure = Ebsd::CrystalStructure::Monoclinic;
+      break;
+
+    case Ebsd::Ang::PhaseSymmetry::DiHexagonal:
+      crystal_structure = Ebsd::CrystalStructure::Hexagonal_High;
       break;
     case Ebsd::Ang::PhaseSymmetry::Hexagonal:
-    case Ebsd::Ang::PhaseSymmetry::DiHexagonal:
-      crystal_structure = Ebsd::CrystalStructure::Hexagonal;
+      crystal_structure = Ebsd::CrystalStructure::Hexagonal_Low;
+      break;
+    case Ebsd::Ang::PhaseSymmetry::DiTrigonal:
+      crystal_structure = Ebsd::CrystalStructure::Trigonal_High;
       break;
     case Ebsd::Ang::PhaseSymmetry::Trigonal:
-    case Ebsd::Ang::PhaseSymmetry::DiTrigonal:
-      crystal_structure = Ebsd::CrystalStructure::Trigonal;
+      crystal_structure = Ebsd::CrystalStructure::Trigonal_Low;
       break;
+
+
     default:
       crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
 
