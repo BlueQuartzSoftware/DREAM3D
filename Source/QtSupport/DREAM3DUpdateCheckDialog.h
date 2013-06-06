@@ -74,10 +74,11 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
 
 	QRadioButton* getAutomaticallyBtn();
 	QRadioButton* getManuallyBtn();
+	QComboBox* getHowOftenComboBox();
 
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
-    void setWhenToCheck(UpdateType whenToCheck);
+    void setWhenToCheck(int whenToCheck);
     void setUpdateWebSite(QString url);
     void setApplicationName(QString name);
 

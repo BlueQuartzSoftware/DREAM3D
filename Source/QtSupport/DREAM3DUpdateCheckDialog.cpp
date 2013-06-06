@@ -90,6 +90,14 @@ QRadioButton* DREAM3DUpdateCheckDialog::getManuallyBtn()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QComboBox* DREAM3DUpdateCheckDialog::getHowOftenComboBox()
+{
+	return howOften;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString DREAM3DUpdateCheckDialog::createUpdatePreferencesPath()
 {
 #if defined (Q_OS_MAC)
@@ -103,11 +111,11 @@ QString DREAM3DUpdateCheckDialog::createUpdatePreferencesPath()
 	QString prefFile = prefs.fileName();
 	QFileInfo prefFileInfo = QFileInfo(prefFile);
 	QString parentPath = prefFileInfo.path();
-	QDir parentPathDir = QDir(parentPath);
+	QString newParentPrefPath = parentPath + "/DREAM3D_Update_Preferences";
+	QDir parentPathDir = QDir(newParentPrefPath);
 
-	if(parentPathDir.mkpath(parentPath))
+	if(parentPathDir.mkpath(newParentPrefPath))
 	{
-		QString newParentPrefPath = parentPath + "/DREAM3D_Update_Preferences";
 		QString newPrefPath = newParentPrefPath + "/UpdatePreferences" + extension;
 
 		newPrefPath = QDir::toNativeSeparators(newPrefPath);
@@ -178,7 +186,7 @@ int DREAM3DUpdateCheckDialog::getWhenToCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::setWhenToCheck(UpdateType whenToCheck)
+void DREAM3DUpdateCheckDialog::setWhenToCheck(int whenToCheck)
 
 {
   m_WhenToCheck = whenToCheck;
@@ -359,7 +367,7 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
 {
 	prefs.beginGroup(Detail::UpdatePreferencesGroup);
 	bool ok = false;
-	m_WhenToCheck = prefs.value("Frequency").toInt(&ok);
+	m_WhenToCheck = static_cast<UpdateType>( prefs.value("Frequency").toInt(&ok) );
 	prefs.endGroup();
 }
 
