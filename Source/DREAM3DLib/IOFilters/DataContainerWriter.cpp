@@ -124,7 +124,7 @@ void DataContainerWriter::setupFilterParameters()
     option->setPropertyName("WriteXdmfFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    option->setUnits("XML Wrapper");
+    option->setUnits("ParaView Compatible File");
     parameters.push_back(option);
   }
 

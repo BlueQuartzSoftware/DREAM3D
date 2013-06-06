@@ -413,7 +413,7 @@ class DataArray : public IDataArray
       // off the end of the array and return an error code.
       for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
-        if (idxs[i] > this->MaxId) { return -100; }
+        if (idxs[i] * this->NumberOfComponents > this->MaxId) { return -100; }
       }
 
       // Calculate the new size of the array to copy into

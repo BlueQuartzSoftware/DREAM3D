@@ -159,7 +159,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
         in >> xpoints >> ypoints >> zpoints;
         size_t dims[3] = {xpoints, ypoints, zpoints};
         m->setDimensions(dims);
-		m->setOrigin(0,0,0);
+    m->setOrigin(0,0,0);
       }
       if (RES == word)
       {
@@ -167,7 +167,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
         float res[3] = {resx, resy, resz};
         m->setResolution(res);
       }
-	}
+  }
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
@@ -178,7 +178,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
 }
 
 void YSChoiAbaqusReader::preflight()
@@ -208,7 +208,7 @@ void YSChoiAbaqusReader::execute()
         in >> xpoints >> ypoints >> zpoints;
         size_t dims[3] = {xpoints, ypoints, zpoints};
         m->setDimensions(dims);
-		m->setOrigin(0,0,0);
+    m->setOrigin(0,0,0);
         totalpoints = xpoints * ypoints * zpoints;
         mat = new float **[totalpoints];
       }

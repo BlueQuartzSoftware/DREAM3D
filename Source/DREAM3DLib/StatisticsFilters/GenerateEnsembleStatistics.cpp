@@ -659,7 +659,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
   for(unsigned long long i=1;i<numensembles;i++)
   {
     totalvol[i] = 0;
-    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
+    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal_High)
     {
       dims = 36 * 36 * 12;
       eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
@@ -668,7 +668,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
         eulerodf[i]->SetValue(j, 0.0);
       }
     }
-    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
+    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic_High)
     {
       dims = 18 * 18 * 18;
       eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
@@ -760,12 +760,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   for(size_t i=1;i<numensembles;++i)
   {
     totalSurfaceArea[i] = 0;
-    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
+    if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[i]) )
     {
       numbins = 36 * 36 * 12;
       misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
-    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
+    else if (Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[i]) )
     {
       numbins = 18 * 18 * 18;
       misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);

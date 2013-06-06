@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,55 +34,61 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "TexturePreset.h"
+
+
+
+#include "EbsdLib/EbsdConstants.h"
+
+#include "UnitTestSupport.hpp"
+#include "TestFileLocations.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TexturePreset::TexturePreset()
+void TestCrystalStructureTest()
 {
+
+  uint32_t chigh = Ebsd::CrystalStructure::Cubic_High;
+  uint32_t clow = Ebsd::CrystalStructure::Cubic_Low;
+
+  uint32_t hhigh = Ebsd::CrystalStructure::Hexagonal_High;
+  uint32_t hlow = Ebsd::CrystalStructure::Hexagonal_Low;
+
+  bool b = Ebsd::CrystalStructure::Check::IsCubic(chigh);
+  DREAM3D_REQUIRE_EQUAL(b, true)
+
+  b = Ebsd::CrystalStructure::Check::IsCubic(clow);
+  DREAM3D_REQUIRE_EQUAL(b, false)
+
+  b = Ebsd::CrystalStructure::Check::IsCubic(hlow);
+  DREAM3D_REQUIRE_EQUAL(b, false)
+
+   b = Ebsd::CrystalStructure::Check::IsHexagonal(hhigh);
+  DREAM3D_REQUIRE_EQUAL(b, true)
+
+  b = Ebsd::CrystalStructure::Check::IsHexagonal(hlow);
+  DREAM3D_REQUIRE_EQUAL(b, false)
+
+  b = Ebsd::CrystalStructure::Check::IsHexagonal(clow);
+  DREAM3D_REQUIRE_EQUAL(b, false)
+
 }
 
+
+
+
 // -----------------------------------------------------------------------------
-//
+//  Use test framework
 // -----------------------------------------------------------------------------
-TexturePreset::~TexturePreset()
-{
+int main(int argc, char **argv) {
+  int err = EXIT_SUCCESS;
+
+  DREAM3D_REGISTER_TEST( TestCrystalStructureTest() )
+
+  PRINT_TEST_SUMMARY();
+  return err;
 }
 
-#define ADD_NEW_TEXTURE(name, xtal, e1, e2, e3)\
-    textures.push_back(TexturePreset::New(xtal, name, e1, e2, e3));
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
-{
-  std::vector<TexturePreset::Pointer> textures;
-  ADD_NEW_TEXTURE( "Brass", Ebsd::CrystalStructure::Cubic_High, 35.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "S",  Ebsd::CrystalStructure::Cubic_High, 59.0, 37.0, 63.0)
-  ADD_NEW_TEXTURE( "Copper", Ebsd::CrystalStructure::Cubic_High, 90.0, 35.0, 45.0)
-  ADD_NEW_TEXTURE( "S1", Ebsd::CrystalStructure::Cubic_High, 55.0, 30.0, 65.0)
-  ADD_NEW_TEXTURE( "S2",  Ebsd::CrystalStructure::Cubic_High, 45.0, 35.0, 65.0)
-  ADD_NEW_TEXTURE( "Goss",  Ebsd::CrystalStructure::Cubic_High, 0.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "Cube",  Ebsd::CrystalStructure::Cubic_High, 0.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(rd1)", Ebsd::CrystalStructure::Cubic_High, 0.0, 20.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(rd2)", Ebsd::CrystalStructure::Cubic_High, 0.0, 35.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(nd1)", Ebsd::CrystalStructure::Cubic_High, 20.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "RC(nd2)", Ebsd::CrystalStructure::Cubic_High, 35.0, 0.0, 0.0)
-  ADD_NEW_TEXTURE( "P", Ebsd::CrystalStructure::Cubic_High, 70.0, 45.0, 0.0)
-  ADD_NEW_TEXTURE( "Q", Ebsd::CrystalStructure::Cubic_High, 55.0, 20.0, 0.0)
-  ADD_NEW_TEXTURE( "R", Ebsd::CrystalStructure::Cubic_High, 55.0, 75.0, 25.0)
-  return textures;
-}
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<TexturePreset::Pointer> HexTexturePresets::getTextures()
-{
-  std::vector<TexturePreset::Pointer> textures;
-//  ADD_NEW_TEXTURE( "Brass", Ebsd::CrystalStructure::Hexagonal, 35.0, 45.0, 0.0)
 
-  return textures;
-}
