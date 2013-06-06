@@ -386,7 +386,10 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
   d->setWhenToCheck(whenToCheck);
   prefs.endGroup();
 
-  connect(d, SIGNAL( toggled(bool) ),
+  connect(d->getAutomaticallyBtn(), SIGNAL( toggled(bool) ),
+	  this, SLOT( updateCheckBtnToggled(bool) ) );
+
+  connect(d->getManuallyBtn(), SIGNAL( toggled(bool) ),
 	  this, SLOT( updateCheckBtnToggled(bool) ) );
 
   // Now display the dialog box
@@ -776,17 +779,34 @@ void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateCheckBtnToggled(bool boolValue)
 {
-	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( sender() );
+	QRadioButton* btn = static_cast<QRadioButton*>( sender() );
+	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( btn->parent() );
 	// Now pull any new values from the dialog and push back into the prefs
-	if ( d->getAutomaticallyBtn()->isChecked() )
+	if ( btn->isChecked() )
 	{
-		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+		if (btn->text() == "Automatically")
+		{
+			QComboBox* howOftenBox = d->getHowOftenComboBox();
+			QString howOftenBoxText = howOftenBox->currentText();
+			if (howOftenBoxText == "Daily")
+			{
+				d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+			}
+			else if (howOftenBoxText == "Weekly")
+			{
+				d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+			}
+			else if (howOftenBoxText == "Monthly")
+			{
+				d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+			}
+		}
+		else if (btn->text() == "Manually")
+		{
+			d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
+		}
+		QString updatePrefPath = d->createUpdatePreferencesPath();
+		QSettings updatePrefs(updatePrefPath);
+		d->writeUpdatePreferences(updatePrefs);
 	}
-	else if ( d->getManuallyBtn()->isChecked() )
-	{
-		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
-	}
-	QString updatePrefPath = d->createUpdatePreferencesPath();
-	QSettings updatePrefs(updatePrefPath);
-	d->writeUpdatePreferences(updatePrefs);
 }
