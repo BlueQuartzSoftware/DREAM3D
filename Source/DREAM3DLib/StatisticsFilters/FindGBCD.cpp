@@ -144,7 +144,7 @@ class CalculateGBCDImpl
 				OrientationMath::multiplyQuaternionVector(q1, normal, xstl1_norm0);
 				//get the misorientation between grain1 and grain2
 				OrientationMath::invertQuaternion(q2);
-				OrientationMath::multiplyQuaternions(q1, q2, misq);
+				OrientationMath::multiplyQuaternions(q2, q1, misq);
 
 				int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
 				for (j=0; j< nsym;j++)
