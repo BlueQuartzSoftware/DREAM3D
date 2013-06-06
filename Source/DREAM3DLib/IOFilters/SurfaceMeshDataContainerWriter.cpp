@@ -44,6 +44,9 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "DREAM3DLib/Common/NeighborList.hpp"
+
+#define WRITE_FIELD_XDMF 0
 
 class H5GroupAutoCloser
 {
@@ -229,6 +232,21 @@ void SurfaceMeshDataContainerWriter::execute()
   err = writeEdgeAttributeData(dcGid);
   if (err < 0)
   {
+    return;
+  }
+
+
+  err = writeFieldData(dcGid);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
+  err = writeEnsembleData(dcGid);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
@@ -796,4 +814,211 @@ int SurfaceMeshDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
   return err;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainerWriter::writeFieldData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+
+#if WRITE_FIELD_XDMF
+// Get the name of the .dream3d file that we are writing to:
+  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  std::vector<char> nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+
+  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+#endif
+
+  int64_t volDims[3] = { 0,0,0 };
+
+
+  // Write the Field Data
+  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    return err;
+  }
+  err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  if(err < 0)
+  {
+    return err;
+  }
+
+  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-65);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+
+  size_t total = 0;
+  typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
+  VectorOfIDataArrays_t neighborListArrays;
+
+  NameListType names = m->getFieldArrayNameList();
+  if (names.size() > 0)
+  {
+    IDataArray::Pointer array = m->getFieldData(names.front());
+    total = array->GetSize();
+    volDims[0] = total;
+    volDims[1] = 1;
+    volDims[2] = 1;
+#if WRITE_FIELD_XDMF
+    ss.str("");
+    ss << "Field Data (" << total << ")";
+    writeFieldXdmfGridHeader(total, ss.str());
+#endif
+  }
+  // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    IDataArray::Pointer array = m->getFieldData(*iter);
+    if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
+    {
+      neighborListArrays.push_back(array.get());
+    }
+    else if (NULL != array.get())
+    {
+      err = array->writeH5Data(fieldGroupId);
+      if(err < 0)
+      {
+        ss.str("");
+        ss << "Error writing field array '" << *iter << "' to the HDF5 File";
+        addErrorMessage(getHumanLabel(), ss.str(), err);
+        setErrorCondition(err);
+        H5Gclose(fieldGroupId); // Close the Cell Group
+        H5Gclose(dcGid); // Close the Data Container Group
+        return err;
+      }
+#if WRITE_FIELD_XDMF
+      array->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Field)");
+#endif
+    }
+  }
+
+
+#if WRITE_FIELD_XDMF
+  if (names.size() > 0)
+  {
+    writeXdmfGridFooter("Field Data");
+  }
+#endif
+
+  // Write the NeighborLists onto their own grid
+  // We need to determine how many total elements we are going to end up with and group the arrays by
+  // those totals so we can minimize the number of grids
+  typedef std::map<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
+  SizeToIDataArrays_t sizeToDataArrays;
+
+  for(VectorOfIDataArrays_t::iterator iter = neighborListArrays.begin(); iter < neighborListArrays.end(); ++iter)
+  {
+    IDataArray* array = (*iter);
+    sizeToDataArrays[array->GetSize()].push_back(array);
+  }
+
+  // Now loop over each pair in the map creating a section in the XDMF and also writing the data to the HDF5 file
+  for(SizeToIDataArrays_t::iterator pair = sizeToDataArrays.begin(); pair != sizeToDataArrays.end(); ++pair)
+  {
+    total = (*pair).first;
+    VectorOfIDataArrays_t& arrays = (*pair).second;
+    volDims[0] = total;
+    volDims[1] = 1;
+    volDims[2] = 1;
+    #if WRITE_FIELD_XDMF
+    ss.str("");
+    ss << "Neighbor Data (" << total << ")";
+    writeFieldXdmfGridHeader(total, ss.str());
+    #endif
+    for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
+    {
+      err = (*iter)->writeH5Data(fieldGroupId);
+      if(err < 0)
+      {
+        ss.str("");
+        ss << "Error writing field array '" << *iter << "' to the HDF5 File";
+        addErrorMessage(getHumanLabel(), ss.str(), err);
+        setErrorCondition(err);
+        H5Gclose(fieldGroupId); // Close the Cell Group
+        H5Gclose(dcGid); // Close the Data Container Group
+        return err;
+      }
+#if WRITE_FIELD_XDMF
+      (*iter)->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Neighbor Data)");
+#endif
+    }
+#if WRITE_FIELD_XDMF
+    writeXdmfGridFooter(ss.str());
+#endif
+
+  }
+
+  H5Gclose(fieldGroupId);
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainerWriter::writeEnsembleData(hid_t dcGid)
+{
+  std::stringstream ss;
+  int err = 0;
+  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+
+  // Write the Ensemble data
+  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-66);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+
+  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+  if(err < 0)
+  {
+    ss.str("");
+    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    setErrorCondition(-67);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
+    H5Gclose(dcGid); // Close the Data Container Group
+    return err;
+  }
+  NameListType names = m->getEnsembleArrayNameList();
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    IDataArray::Pointer array = m->getEnsembleData(*iter);
+    err = array->writeH5Data(ensembleGid);
+    if(err < 0)
+    {
+      ss.str("");
+      ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
+      addErrorMessage(getHumanLabel(), ss.str(), err);
+      setErrorCondition(err);
+      H5Gclose(ensembleGid); // Close the Cell Group
+      H5Gclose(dcGid); // Close the Data Container Group
+      return err;
+    }
+  }
+
+  H5Gclose(ensembleGid);
+
+  return err;
+}
 
