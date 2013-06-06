@@ -63,8 +63,11 @@ CtfPhase::~CtfPhase()
 // -----------------------------------------------------------------------------
 void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
 {
-  m_LatticeDimensions = tokenize<float>(tokens[0], ';');
-  m_LatticeAngles = tokenize<float>(tokens[1], ';');
+  m_LatticeConstants = tokenize<float>(tokens[0], ';');
+  std::vector<float> angles = tokenize<float>(tokens[1], ';');
+  m_LatticeConstants.push_back(angles[0]);
+  m_LatticeConstants.push_back(angles[1]);
+  m_LatticeConstants.push_back(angles[2]);
   m_PhaseName = tokens[2];
   unsigned int sym = 999;
   stringToNum<unsigned int>(sym, tokens[3]);
@@ -87,8 +90,8 @@ void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
 // -----------------------------------------------------------------------------
 void CtfPhase::printSelf(std::ostream &stream)
 {
-  stream << Ebsd::Ctf::LatticeDimensions << " " << m_LatticeDimensions[0] << ", " << m_LatticeDimensions[1] << ", " << m_LatticeDimensions[2] << std::endl;
-  stream << Ebsd::Ctf::LatticeAngles << " " << m_LatticeAngles[0] << ", " << m_LatticeAngles[1] << ", " << m_LatticeAngles[2] << std::endl;
+  stream << Ebsd::Ctf::LatticeConstants << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
+  << m_LatticeConstants[3] << ", " << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] << std::endl;
   stream << Ebsd::Ctf::PhaseName << " " << m_PhaseName << std::endl;
   stream << Ebsd::Ctf::LaueGroup << " " << m_LaueGroup << std::endl;
   stream << Ebsd::Ctf::SpaceGroup << " " << m_SpaceGroup << std::endl;

@@ -88,15 +88,15 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
     float n1min = 0.0f;
     float n2min = 0.0f;
     float n3min = 0.0f;
-	float q2inv[5];
-	float qr[5];
+  float q2inv[5];
+  float qr[5];
   float qc[5];
 //  float temp;
 
 
    for(int i=0;i<5;i++)
    {
-	   q2inv[i] = q2[i];
+     q2inv[i] = q2[i];
    }
    OrientationMath::invertQuaternion(q2inv);
    OrientationMath::multiplyQuaternions(q1, q2inv, qr);
@@ -301,10 +301,10 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], flo
 std::vector<OrientationMath::Pointer> OrientationMath::getOrientationOpsVector()
 {
   std::vector<OrientationMath::Pointer> m_OrientationOps;
-  HexagonalOps::Pointer m_HexOps = HexagonalOps::New();
+  HexagonalOps::Pointer m_HexOps = HexagonalOps::New(); // Hex High
   m_OrientationOps.push_back((m_HexOps));
 
-  CubicOps::Pointer m_CubicOps = CubicOps::New();
+  CubicOps::Pointer m_CubicOps = CubicOps::New(); // Cubic High
   m_OrientationOps.push_back((m_CubicOps));
 
   m_OrientationOps.push_back(OrientationMath::NullPointer()); // Hex Low

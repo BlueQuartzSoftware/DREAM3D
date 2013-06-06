@@ -142,8 +142,7 @@ namespace Ctf
   const std::string NumPhases("Phases");
 
   // These are phase related
-  DECLARE_STRING_CONST(LatticeDimensions)
-  DECLARE_STRING_CONST(LatticeAngles)
+  DECLARE_STRING_CONST(LatticeConstants)
   DECLARE_STRING_CONST(PhaseName)
   DECLARE_STRING_CONST(LaueGroup)
   DECLARE_STRING_CONST(SpaceGroup)
