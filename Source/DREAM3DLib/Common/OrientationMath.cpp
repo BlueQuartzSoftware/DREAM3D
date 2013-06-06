@@ -88,14 +88,18 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
     float n1min = 0.0f;
     float n2min = 0.0f;
     float n3min = 0.0f;
-  float qr[5];
+	float q2inv[5];
+	float qr[5];
   float qc[5];
 //  float temp;
 
-  qr[1] = -q1[1] * q2[4] + q1[4] * q2[1] - q1[2] * q2[3] + q1[3] * q2[2];
-  qr[2] = -q1[2] * q2[4] + q1[4] * q2[2] - q1[3] * q2[1] + q1[1] * q2[3];
-  qr[3] = -q1[3] * q2[4] + q1[4] * q2[3] - q1[1] * q2[2] + q1[2] * q2[1];
-  qr[4] = -q1[4] * q2[4] - q1[1] * q2[1] - q1[2] * q2[2] - q1[3] * q2[3];
+
+   for(int i=0;i<5;i++)
+   {
+	   q2inv[i] = q2[i];
+   }
+   OrientationMath::invertQuaternion(q2inv);
+   OrientationMath::multiplyQuaternions(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
   //  OrientationMath::multiplyQuaternions(qr, quatsym[i], qc);
@@ -642,35 +646,39 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
 
 void OrientationMath::multiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
 {
-  int j;
-    double vtemp[3], temp[3], r[3], w, temp2[3];
-  /*
-   A function that multiplies a quaterion by a vector (or many quaterions, many vectors)
-   openmp is used to multi-thread the operation
-   */
-    w    = inQuat[4];
-  r[0] = inQuat[1];
-  r[1] = inQuat[2];
-  r[2] = inQuat[3];
+  float g[3][3];
+  OrientationMath::QuattoMat(inQuat, g);
+  MatrixMath::multiply3x3with3x1(g, inVec, outVec);
 
-  for (j=0; j<3; j++)
-  {
-    vtemp[j] = inVec[j];
-  }
+  //int j;
+  //  double vtemp[3], temp[3], r[3], w, temp2[3];
+  ///*
+  // A function that multiplies a quaterion by a vector (or many quaterions, many vectors)
+  // openmp is used to multi-thread the operation
+  // */
+  //  w    = inQuat[4];
+  //r[0] = inQuat[1];
+  //r[1] = inQuat[2];
+  //r[2] = inQuat[3];
 
-  MatrixMath::crossProduct(r, vtemp, temp);
+  //for (j=0; j<3; j++)
+  //{
+  //  vtemp[j] = inVec[j];
+  //}
 
-  for (j=0; j<3; j++)
-  {
-    temp[j] += w * vtemp[j];
-  }
+  //MatrixMath::crossProduct(r, vtemp, temp);
 
-  MatrixMath::crossProduct(r, temp, temp2);
+  //for (j=0; j<3; j++)
+  //{
+  //  temp[j] += w * vtemp[j];
+  //}
 
-  for (j=0; j<3; j++)
-  {
-    outVec[j] = 2.0*temp2[j]+vtemp[j];
-  }
+  //MatrixMath::crossProduct(r, temp, temp2);
+
+  //for (j=0; j<3; j++)
+  //{
+  //  outVec[j] = 2.0*temp2[j]+vtemp[j];
+  //}
 }
 
 float OrientationMath::matrixMisorientation(float g1[3][3], float g2[3][3])
