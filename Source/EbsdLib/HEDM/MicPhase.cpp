@@ -143,16 +143,10 @@ void MicPhase::parseLatticeConstants(char* value, size_t start, size_t length)
   std::string data;
   parseString(value, start, length, data);
   std::vector<float> constants = tokenize<float>(data, ',');
-  std::cout << "size: " << constants.size() << std::endl;
-  std::cout << "data: " << data << std::endl;
   m_LatticeConstants.resize(6);
   m_LatticeConstants[0] = constants[0];
   m_LatticeConstants[1] = constants[1];
   m_LatticeConstants[2] = constants[2];
-
-  std::cout << m_LatticeConstants[0] << ", " << m_LatticeConstants[2] <<  "," << m_LatticeConstants[2] << std::endl;
-
-  //m_LatticeConstants = data;
 }
 // -----------------------------------------------------------------------------
 //
@@ -161,12 +155,10 @@ void MicPhase::parseLatticeAngles(char* value, size_t start, size_t length)
 {
   std::string data;
   parseString(value, start, length, data);
-  std::cout << "data: " << data << std::endl;
   std::vector<float> constants = tokenize<float>(data, ',');
     m_LatticeConstants[3] = constants[0];
   m_LatticeConstants[4] = constants[1];
   m_LatticeConstants[5] = constants[2];
-std::cout << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] <<  "," << m_LatticeConstants[6] << std::endl;
 }
 // -----------------------------------------------------------------------------
 //
