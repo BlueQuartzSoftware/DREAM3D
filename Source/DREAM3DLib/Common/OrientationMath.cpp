@@ -299,10 +299,10 @@ int OrientationMath::_calcODFBin(float dim[3], float bins[3], float step[3], flo
 std::vector<OrientationMath::Pointer> OrientationMath::getOrientationOpsVector()
 {
   std::vector<OrientationMath::Pointer> m_OrientationOps;
-  HexagonalOps::Pointer m_HexOps = HexagonalOps::New();
+  HexagonalOps::Pointer m_HexOps = HexagonalOps::New(); // Hex High
   m_OrientationOps.push_back((m_HexOps));
 
-  CubicOps::Pointer m_CubicOps = CubicOps::New();
+  CubicOps::Pointer m_CubicOps = CubicOps::New(); // Cubic High
   m_OrientationOps.push_back((m_CubicOps));
 
   m_OrientationOps.push_back(OrientationMath::NullPointer()); // Hex Low
