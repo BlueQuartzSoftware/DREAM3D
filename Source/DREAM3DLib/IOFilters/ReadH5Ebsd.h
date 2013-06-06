@@ -175,7 +175,12 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         materialNames->SetValue(phaseID, phases[i]->getMaterialName());
         std::vector<float> lc = phases[i]->getLatticeConstants();
 
-      //  latticeConstants->SetValue(phaseID, phases[i]->getLatticeConstants());
+        latticeConstants->SetComponent(phaseID, 0, lc[0]);
+        latticeConstants->SetComponent(phaseID, 1, lc[1]);
+        latticeConstants->SetComponent(phaseID, 2, lc[2]);
+        latticeConstants->SetComponent(phaseID, 3, lc[3]);
+        latticeConstants->SetComponent(phaseID, 4, lc[4]);
+        latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
       getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);

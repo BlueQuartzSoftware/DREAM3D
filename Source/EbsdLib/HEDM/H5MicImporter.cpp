@@ -168,30 +168,9 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   // Check for errors
   if (err < 0)
   {
-    std::ostringstream ss;
-    if (err == -400) {
-      ss << "H5MicImporter Error: HexGrid Files are not currently supported.";
-    }
-    else if (err == -300)
-    {
-      ss << "H5MicImporter Error: Grid was NOT set in the header.";
-    }
-    else if (err == -200)
-    {
-      ss << "H5MicImporter Error: There was no data in the file.";
-    }
-    else if (err == -100)
-    {
-      ss << "H5MicImporter Error: The Mic file could not be opened.";
-    }
-    else
-    {
-      ss << "H5MicImporter Error: Unknown error.";
-    }
-    setPipelineMessage(ss.str());
-
-    setErrorCondition(err);
-    progressMessage(ss.str(), 100);
+    setPipelineMessage(reader.getErrorMessage());
+    setErrorCondition(reader.getErrorCode());
+    progressMessage(reader.getErrorMessage(), reader.getErrorCode());
     return -1;
   }
 
