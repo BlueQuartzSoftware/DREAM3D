@@ -87,7 +87,7 @@ void TestMissingHeaders()
 
   err = reader.readFile();
   std::cout << reader.getErrorMessage() << std::endl;
-  DREAM3D_REQUIRED(err, ==, -200)
+  DREAM3D_REQUIRED(err, ==, -1)
 }
 
 
