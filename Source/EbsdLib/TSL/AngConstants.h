@@ -130,7 +130,7 @@ namespace Ebsd {
      const unsigned int Tetrahedral = TH;
      const unsigned int DiTetragonal = D4H;
      const unsigned int Tetragonal = C4H;
-     const unsigned int Orthrohombic = D2H;
+     const unsigned int Orthorhombic = D2H;
      const unsigned int Monoclinic_c = C2H_c;
      const unsigned int Monoclinic_b = C2H_b;
      const unsigned int Monoclinic_a = C2H_a;

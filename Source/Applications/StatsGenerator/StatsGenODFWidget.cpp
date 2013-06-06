@@ -74,7 +74,7 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
   m_EnableAxisDecorations(false),
   m_Initializing(true),
   m_PhaseIndex(-1),
-  m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_ODFTableModel(NULL),
   m_MDFWidget(NULL),
   m_PoleFigureFuture(NULL)
@@ -185,11 +185,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
     e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
-  if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
+  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
-  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
@@ -566,7 +566,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   StatsGen sg;
   int size = 5000;
 
-  if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
+  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
     static const size_t odfsize = 5832;
     // float totalweight = 0;
@@ -574,7 +574,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
     err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
-  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     static const size_t odfsize = 15552;
     // float totalweight = 0;
@@ -596,12 +596,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
   switch(this->m_CrystalStructure)
   {
-    case Ebsd::CrystalStructure::Cubic:
+    case Ebsd::CrystalStructure::Cubic_High:
       data.push_back(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
       data.push_back(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
       data.push_back(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
       break;
-    case Ebsd::CrystalStructure::Hexagonal:
+    case Ebsd::CrystalStructure::Hexagonal_High:
       data.push_back(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
       data.push_back(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
       data.push_back(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));

@@ -46,9 +46,13 @@
 GenerateEulerColors::GenerateEulerColors() :
   AbstractFilter(),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CellEulerColorsArrayName(DREAM3D::CellData::EulerColor),
+  m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
-  m_CellEulerColors(NULL)
+  m_CellEulerColors(NULL),
+  m_CrystalStructures(NULL)
 {
   setupFilterParameters();
 }
@@ -95,7 +99,11 @@ void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields
     return;
   }
 
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
@@ -137,41 +145,39 @@ void GenerateEulerColors::execute()
 
   size_t index = 0;
 
-
-  #if 0
- float minEuler[3] = { std::numeric_limits<float >::max(), std::numeric_limits<float >::max(), std::numeric_limits<float >::max() };
- float maxEuler[3] = { std::numeric_limits<float >::min(), std::numeric_limits<float >::min(), std::numeric_limits<float >::min() };
-
-  for (int i = 0; i < totalPoints; ++i)
-  {
-    index = i * 3;
-    if (m_CellEulerAngles[index] < minEuler[0]) { minEuler[0] = m_CellEulerAngles[index]; }
-    if (m_CellEulerAngles[index] > maxEuler[0]) { maxEuler[0] = m_CellEulerAngles[index]; }
-
-    if (m_CellEulerAngles[index + 1] < minEuler[1]) { minEuler[1] = m_CellEulerAngles[index + 1]; }
-    if (m_CellEulerAngles[index + 1] > maxEuler[1]) { maxEuler[1] = m_CellEulerAngles[index + 1]; }
-
-    if (m_CellEulerAngles[index + 2] < minEuler[2]) { minEuler[2] = m_CellEulerAngles[index + 2]; }
-    if (m_CellEulerAngles[index + 2] > maxEuler[2]) { maxEuler[2] = m_CellEulerAngles[index + 2]; }
-  }
-  #else
-   float minEuler[3] = { 0.0f, 0.0f, 0.0f };
-   float maxEuler[3] = { 2.0*M_PI, M_PI, 2.0*M_PI };
-
-  #endif
-
-
-  float delta[3] = { maxEuler[0] - minEuler[0], maxEuler[1] - minEuler[1], maxEuler[2] - minEuler[2]};
-
-
+  int phase;
+  float twoPi = 2.0f * M_PI;
+  float halfPi = 0.5f * M_PI;
+  float thirdPi = 0.333 * M_PI;
+  float twoThirdPi = 0.6666 * M_PI;
 
   // Write the Euler Coloring Cell Data
   for (int i = 0; i < totalPoints; ++i)
   {
+    phase = m_CellPhases[i];
     index = i * 3;
-    m_CellEulerColors[index] =    static_cast<unsigned char>((m_CellEulerAngles[index] - minEuler[0])/(delta[0]) * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>((m_CellEulerAngles[index + 1] - minEuler[1])/(delta[1]) * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>((m_CellEulerAngles[index + 2] - minEuler[2])/(delta[2]) * 255.0f);
+
+  if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
+  {
+    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/halfPi * 255.0f);
+  }
+  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
+  {
+    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/thirdPi * 255.0f);
+  }
+  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
+  {
+    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/twoThirdPi * 255.0f);
+  }
+
+
+
   }
 
   /* Let the GUI know we are done with this filter */
