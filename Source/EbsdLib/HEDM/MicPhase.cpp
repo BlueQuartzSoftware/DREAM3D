@@ -93,6 +93,48 @@ void MicPhase::parseString(char* value, size_t start, size_t length, std::string
   std::string data2(&(value[start]), len - start);
   data = data2;
 }
+
+/**
+     * @brief Converts a string to a number
+     */
+template<typename T>
+bool stringToNum(T &t, const std::string &s)
+{
+  // Filter the line to convert European comma style decimals to US/UK style points
+  std::vector<char> cLine(s.size()+1);
+  ::memcpy( &(cLine.front()), s.c_str(), s.size() + 1);
+  for (size_t c = 0; c < cLine.size(); ++c)
+  {
+    if (cLine[c] == ',') { cLine[c] = '.';}
+  }
+  std::istringstream iss(std::string( &(cLine.front()) ) );
+  return !(iss >> t).fail();
+}
+
+/**
+* @brief Parses a header line into string "tokens"
+*/
+template<typename T>
+std::vector<T> tokenize(const std::string &values, char delimiter)
+{
+  std::vector<T> output;
+  std::string::size_type start = 0;
+  std::string::size_type pos = 0;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    pos = values.find(delimiter, start);
+    T value = 0;
+    stringToNum(value, values.substr(start, pos-start));
+    output.push_back(value);
+    if (pos != std::string::npos)
+    {
+      start = pos + 1;
+    }
+  }
+  return output;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -100,7 +142,17 @@ void MicPhase::parseLatticeConstants(char* value, size_t start, size_t length)
 {
   std::string data;
   parseString(value, start, length, data);
-  m_LatticeConstants = data;
+  std::vector<float> constants = tokenize<float>(data, ',');
+  std::cout << "size: " << constants.size() << std::endl;
+  std::cout << "data: " << data << std::endl;
+  m_LatticeConstants.resize(6);
+  m_LatticeConstants[0] = constants[0];
+  m_LatticeConstants[1] = constants[1];
+  m_LatticeConstants[2] = constants[2];
+
+  std::cout << m_LatticeConstants[0] << ", " << m_LatticeConstants[2] <<  "," << m_LatticeConstants[2] << std::endl;
+
+  //m_LatticeConstants = data;
 }
 // -----------------------------------------------------------------------------
 //
@@ -109,7 +161,12 @@ void MicPhase::parseLatticeAngles(char* value, size_t start, size_t length)
 {
   std::string data;
   parseString(value, start, length, data);
-  m_LatticeAngles = data;
+  std::cout << "data: " << data << std::endl;
+  std::vector<float> constants = tokenize<float>(data, ',');
+    m_LatticeConstants[3] = constants[0];
+  m_LatticeConstants[4] = constants[1];
+  m_LatticeConstants[5] = constants[2];
+std::cout << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] <<  "," << m_LatticeConstants[6] << std::endl;
 }
 // -----------------------------------------------------------------------------
 //

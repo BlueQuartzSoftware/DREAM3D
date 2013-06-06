@@ -410,16 +410,16 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
 {
   int err = 0;
   // int retErr = 0;
-  //  int32_t rank = 1;
-  //  hsize_t dims[1] = { 0 };
+  int32_t rank = 1;
+  hsize_t dims[1] = { 0 };
   std::vector<MicPhase::Pointer> phases = reader.getPhaseVector();
   for (std::vector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     MicPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
     WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Mic::Phase)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeConstants, Ebsd::Mic::LatticeConstants)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeAngles, Ebsd::Mic::LatticeAngles)
+    WRITE_PHASE_DATA_ARRAY((*phase), float, pid, LatticeConstants, Ebsd::Mic::LatticeConstants)
+  //  WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeAngles, Ebsd::Mic::LatticeAngles)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, BasisAtoms, Ebsd::Mic::BasisAtoms)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Symmetry, Ebsd::Mic::Symmetry)
 
