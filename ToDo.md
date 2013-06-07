@@ -8,7 +8,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Update Documentation for find twin boundary info
 + Update Documentation for Visualize GBCD
 + Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
-+ When writing a pipeline file where one already exists we need to explicitly remove the file first
+
 
 
 
