@@ -13,6 +13,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Surface
 set(_PublicFilters
   GenerateSurfaceMeshConnectivity
   GenerateFaceIPFColoring
+  GenerateFaceMisorientationColoring
   LaplacianSmoothing
   M3CSliceBySlice
   MovingFiniteElementSmoothing

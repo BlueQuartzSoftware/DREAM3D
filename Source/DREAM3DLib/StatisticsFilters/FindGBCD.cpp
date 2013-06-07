@@ -59,11 +59,9 @@ class CalculateGBCDImpl
     DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
     int32_t* m_Labels;
     double* m_Normals;
-    double* m_Areas;
     int32_t* m_Phases;
     float* m_Quats;
-    float* m_GBCDarea;
-    float* m_GBCDcount;
+    int32_t* m_Bins;
     float* m_GBCDdeltas;
     int* m_GBCDsizes;
     float* m_GBCDlimits;
@@ -71,19 +69,15 @@ class CalculateGBCDImpl
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   public:
-    CalculateGBCDImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles,
-                      int32_t* Labels, double* Normals, double* Areas, float* Quats,
-                      int32_t* Phases, unsigned int* CrystalStructures, float* GBCDarea,
-                      float* GBCDcount, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
+    CalculateGBCDImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles, int32_t* Labels, double* Normals, 
+						float* Quats, int32_t* Phases, unsigned int* CrystalStructures, int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Labels(Labels),
       m_Normals(Normals),
-      m_Areas(Areas),
       m_Phases(Phases),
       m_Quats(Quats),
-      m_GBCDarea(GBCDarea),
-      m_GBCDcount(GBCDcount),
+      m_Bins(Bins),
       m_GBCDdeltas(GBCDdeltas),
       m_GBCDsizes(GBCDsizes),
       m_GBCDlimits(GBCDlimits),
@@ -107,7 +101,7 @@ class CalculateGBCDImpl
       int k;//, k4;
       int m;
 	  int temp;
-      int gbcd_index;
+      int32_t gbcd_index;
       int inversion = 1;
       int grain1, grain2;
       float q1[5], q2[5], misq[5], sym_q1[5], sym_q2[5], s1misq[5], s2misq[5], euler_mis[3];
@@ -180,8 +174,7 @@ class CalculateGBCDImpl
 					  // Add the points and up the count on the gbcd histograms.  Broke this out
 					  // so that it could be protected in an openMP thread
 					  {
-						m_GBCDcount[gbcd_index] += 1;
-						m_GBCDarea[gbcd_index] += m_Areas[i];
+  						  m_Bins[i] = gbcd_index;
 					  }
 					}
 					//if inversion is on, do the same for that
@@ -191,8 +184,7 @@ class CalculateGBCDImpl
 					  if (gbcd_index != -1 )
 					  {
   						{
-  						  m_GBCDcount[gbcd_index] += 1;
-  						  m_GBCDarea[gbcd_index] += m_Areas[i];
+  						  m_Bins[i] = gbcd_index;
   						}
 					  }
 					}
@@ -210,9 +202,9 @@ class CalculateGBCDImpl
     }
 #endif
 
-    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc) const
+    int32_t GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc) const
     {
-      int gbcd_index;
+      int32_t gbcd_index;
       int i, index[5];
       int n1, n1n2, n1n2n3, n1n2n3n4;
       int flag_good = 1;
@@ -419,13 +411,10 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  FloatArrayType::Pointer gbcdCountArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
-  gbcdCountArray = FloatArrayType::CreateArray(40*20*40*40*20, "GBCDCount");
-  gbcdCountArray->SetNumberOfComponents(1);
-  gbcdCountArray->initializeWithZeros();
+  Int32ArrayType::Pointer gbcdBinsArray = Int32ArrayType::NullPointer();
   gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->SetNumberOfComponents(1);
   gbcdDeltasArray->initializeWithZeros();
@@ -435,10 +424,13 @@ void FindGBCD::execute()
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
-  float* m_GBCDcount = gbcdCountArray->GetPointer(0);
+  gbcdBinsArray = Int32ArrayType::CreateArray(totalFaces, "GBCDBins");
+  gbcdBinsArray->SetNumberOfComponents(1);
+  gbcdBinsArray->initializeWithZeros();
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
   int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
+  int* m_Bins = gbcdBinsArray->GetPointer(0);
 
   m_GBCDlimits[0] = 0.0;
   m_GBCDlimits[1] = cosf(1.0*m_pi);
@@ -469,14 +461,28 @@ void FindGBCD::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalFaces),
-                      CalculateGBCDImpl(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_SurfaceMeshFaceAreas, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_GBCD, m_GBCDcount, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+                      CalculateGBCDImpl(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    CalculateGBCDImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_SurfaceMeshFaceAreas, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_GBCD, m_GBCDcount, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+    CalculateGBCDImpl serial(nodesPtr, trianglesPtr, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
     serial.generate(0, totalFaces);
+  }
+
+  float totalFaceArea = 0.0;
+  for(int i=0;i<totalFaces;i++)
+  {
+	  m_GBCD[m_Bins[i]] += m_SurfaceMeshFaceAreas[i];
+	  totalFaceArea += m_SurfaceMeshFaceAreas[i];
+  }
+
+  int totalBins = m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4];
+  float MRDfactor = float(totalBins)/totalFaceArea;
+  for(int i=0;i<totalBins;i++)
+  {
+//	  m_GBCD[i] *= MRDfactor;
   }
 
   /* Let the GUI know we are done with this filter */
