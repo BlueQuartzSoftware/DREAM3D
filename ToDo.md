@@ -7,9 +7,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Update Documentation for find twin boundary info
 + Update Documentation for Visualize GBCD
-+ Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
 + When writing a pipeline file where one already exists we need to explicitly remove the file first
-
++ Fix GBCD Generation or make private on next release
++ Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 
 
 ### Critical to Fix Before Bad Things Happen ###
@@ -19,11 +19,15 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 
++ Update the documentation for the Neighbor Cleanup Filters.
++ Update the documentation for the disorientation coloring
 + Missing Documentation File for IOFilters/ImportImageStack
 + incorrect Documentation for Find Twin Boundary Info
 
 ### Documentation ###
 
++ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter. Have it pop open the Web browser to the proper file.
++ Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
 + Tutorial::Visualization Techniques for Docs/Website
@@ -55,6 +59,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
++ Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
 
 
 ### Joey K. Summer List ###
@@ -118,6 +123,15 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Still to Do ##
 
++ Add option to each filter to pause the pipeline. See DevelopmentNotes.md
++ Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
++ Create filter to dump IPF Color Maps for XY, YZ, XZ planes to a folder.
++ Fix parent IDs not being initialized in merge twins, beta grains, etc.
++ Pole Figure smoothing function in Visualize GBCD
++ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
++ Disregard option in Segment Grains (more local merge twin filter)
++ more general grouping filter. Be able to specify orientations to group by and other stuff.
++ Option to use local orientation to use the Surface Mesh Face IPF coloring rather than use the average for the grain
 + Add "Tool" example program that shows writing a command line pipeline program
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
@@ -146,7 +160,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ##  IO Filters ##
 
 + Add output directory to the HexToSquare Grid convertor filter
-+ Add filter to generate IPF Images for each slice of data, or a user defined range of slices and plane by defining the normal to the plane (X, Y or Z)
 + Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 + Add filter to write out slices as images
 + Add ability to store EBSPs and EDS spectra in h5ebsd file and data container
@@ -162,6 +175,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ##  Surface Meshing ##
 + Add mesh decimation filter (surface or volume)
++ Add Marching TetraHedra surface Meshing Filter
 
 
 ##  MFE Smoothing ##
@@ -306,6 +320,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Modify FindMDF filter to only calculate the MDF, not the actual misorientations
 + Add filter to calculate ensemble stats (fit distributions to arrays)
 + Fix calculation+storage of real stats for reading into synthetic builder
++ Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
 
 
 ##  No Longer Wanted ##
