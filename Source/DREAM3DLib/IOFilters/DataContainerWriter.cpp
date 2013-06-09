@@ -61,7 +61,7 @@ DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
   m_WritePipeline(true),
   m_WriteVoxelData(true),
-  m_WriteSurfaceMeshData(false),
+  m_WriteSurfaceMeshData(true),
   m_WriteSolidMeshData(false),
   m_WriteXdmfFile(true),
   m_FileId(-1)
