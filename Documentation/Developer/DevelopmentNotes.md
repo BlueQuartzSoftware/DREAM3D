@@ -31,7 +31,20 @@ ParaView has a "State File" which is an XML file that ParaView dumps its state i
 
 One possible Idea is to have the user create the state file from ParaView and then put in specific "replaceable" tags that DREAM3D will look for an replace with user settable values. For example say they want to replace the input file with a file that DREAM3D is producing. The user could generate a state file using ParaView, open the state file with a text editor and replace all the places where the file is referenced with _@XDMF\_FILE\_PATH@_. In the user interface for the filter the user would add a replacement pair and tell DREAM3D to look for _XDMF\_FILE\_PATH_ and replace it with the path to the XDMF file.
 
-We could also produce a "Basic" ParaView state file that has the correct options selected in ParaView to make the initial visualization how we usually look at it: Surface, INterpolate Scalars OFF, Map Scalars OFF.
+We could also produce a "Basic" ParaView state file that has the correct options selected in ParaView to make the initial visualization how we usually look at it: Surface, Interpolate Scalars OFF, Map Scalars OFF.
+
+
+-------------------
+## Parsing the QUBE XML/Binary File ##
+
+get an example file from Perter K. at MPIE so DREAM3D can parse those files. We will need an XML Parser, maybe directly compile Expat into DREAM3D (**CHECK LICENSE**) (Check for newer versions of Expat). Or have the QUBE filters as a plugin then use the QtXML library to do the parsing. That might be easier in the long run.
+
+
+-------------------
+## Allow Pausing of Pipeline ##
+
+Allow pausing of the Pipeline as maybe a button in each filter where the user can check the box and have the pipeline Pause until the user clicks the button again. This is an introductory step possible remote interactivity with ParaView or something else (QUBE). This should be able to done with a signal/slot where the thread goes to sleep and is woken back up by a signal from the button.
+
 
 -------------------
 ## Version Check Protocol (Started) ##

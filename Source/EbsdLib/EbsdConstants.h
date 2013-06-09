@@ -154,7 +154,6 @@ namespace Ebsd
     const unsigned int Cubic_Low = 3; //!< Cubic Cubic-Low m3 (Tetrahedral)
     const unsigned int Cubic_High = 1; //!< Cubic Cubic-High m3m
 
-    const unsigned int AxisOrthoRhombic = 11; //!< AxisOrthoRhombic
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
 
    class Check
