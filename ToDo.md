@@ -7,10 +7,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Update Documentation for find twin boundary info
 + Update Documentation for Visualize GBCD
-+ When writing a pipeline file where one already exists we need to explicitly remove the file first
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
-
 
 ### Critical to Fix Before Bad Things Happen ###
 
