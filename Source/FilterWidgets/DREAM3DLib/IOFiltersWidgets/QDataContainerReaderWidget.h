@@ -68,16 +68,16 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     QString  getInputFile();
 
     Q_PROPERTY(bool ReadVoxelData READ getReadVoxelData WRITE setReadVoxelData)
-    void setReadVoxelData(bool value) { this->m_ReadVoxelData->setChecked(value); emit parametersChanged();}
-    bool getReadVoxelData() { return this->m_ReadVoxelData->isChecked(); }
+    void setReadVoxelData(bool value) { this->ReadVoxelData->setChecked(value); emit parametersChanged();}
+    bool getReadVoxelData() { return this->ReadVoxelData->isChecked(); }
 
     Q_PROPERTY(bool ReadSurfaceMeshData READ getReadSurfaceMeshData WRITE setReadSurfaceMeshData)
-    void setReadSurfaceMeshData(bool value) { this->m_ReadSurfaceMeshData->setChecked(value); emit parametersChanged();}
-    bool getReadSurfaceMeshData() { return this->m_ReadSurfaceMeshData->isChecked(); }
+    void setReadSurfaceMeshData(bool value) { this->ReadSurfaceMeshData->setChecked(value); emit parametersChanged();}
+    bool getReadSurfaceMeshData() { return this->ReadSurfaceMeshData->isChecked(); }
 
     Q_PROPERTY(bool ReadSolidMeshData READ getReadSolidMeshData WRITE setReadSolidMeshData)
-    void setReadSolidMeshData(bool value) { this->m_ReadSolidMeshData->setChecked(value); emit parametersChanged();}
-    bool getReadSolidMeshData() { return this->m_ReadSolidMeshData->isChecked(); }
+    void setReadSolidMeshData(bool value) { this->ReadSolidMeshData->setChecked(value); emit parametersChanged();}
+    bool getReadSolidMeshData() { return this->ReadSolidMeshData->isChecked(); }
 
 
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
@@ -91,11 +91,11 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
 
 
   protected slots:
-    void on_m_InputFileBtn_clicked();
-    void on_m_InputFile_textChanged(const QString & text);
-    void on_m_ReadVoxelData_stateChanged(int state);
-    void on_m_ReadSurfaceMeshData_stateChanged(int state);
-    void on_m_ReadSolidMeshData_stateChanged(int state);
+    void on_InputFileBtn_clicked();
+    void on_InputFile_textChanged(const QString & text);
+    void on_ReadVoxelData_stateChanged(int state);
+    void on_ReadSurfaceMeshData_stateChanged(int state);
+    void on_ReadSolidMeshData_stateChanged(int state);
 
   protected:
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
