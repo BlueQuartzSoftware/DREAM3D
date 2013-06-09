@@ -275,7 +275,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_UnknownShapeOps = ShapeOps::New();
   m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrthoOps = OrthoRhombicOps::New();
 
   m_HalfPackingRes[0] = m_HalfPackingRes[1] = m_HalfPackingRes[2] = 1.0f;
   m_OneOverHalfPackingRes[0] = m_OneOverHalfPackingRes[1] = m_OneOverHalfPackingRes[2] = 1.0f;
@@ -577,7 +577,7 @@ void PackPrimaryPhases::execute()
       iter++;
       Seed++;
       phase = primaryphases[j];
-      generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
+      generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase]);
       currentsizedisterror = check_sizedisterror(&field);
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
@@ -627,7 +627,7 @@ void PackPrimaryPhases::execute()
         iter++;
         Seed++;
         phase = primaryphases[j];
-        generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase], m_OrthoOps);
+        generate_grain(phase, static_cast<int>(Seed), &field, m_ShapeTypes[phase]);
         currentsizedisterror = check_sizedisterror(&field);
         change = (currentsizedisterror) - (oldsizedisterror);
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
@@ -1156,7 +1156,7 @@ void PackPrimaryPhases::initialize_packinggrid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
+void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsigned int shapeclass)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
@@ -1216,7 +1216,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
     totaldensity = totaldensity + axisodf->GetValue(bin);
     bin++;
   }
-  OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
+  m_OrthoOps->determineEulerAngles(bin, phi1, PHI, phi2);
   VectorOfFloatArray omega3 = pp->getGrainSize_Omegas();
   float mf = omega3[0]->GetValue(diameter);
   float s = omega3[1]->GetValue(diameter);
