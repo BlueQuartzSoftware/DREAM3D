@@ -52,7 +52,7 @@
 
 namespace Detail
 {
-	const QString UpdatePreferencesGroup("Update Preferences");
+	const QString UpdatePreferencesGroup("UpdatePreferences");
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,29 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
 
   setupGui();
 
+  // If the UpdatePreferences.ini file exists, read the values in
   m_UpdatePreferencesPath = createUpdatePreferencesPath();
+  QSettings updatePrefs(m_UpdatePreferencesPath, QSettings::IniFormat);
+  QDir prefPathDir(m_UpdatePreferencesPath);
+  if ( prefPathDir.exists(m_UpdatePreferencesPath) )
+  {
+	  readUpdatePreferences(updatePrefs);
+  }
+
+  // If file doesn't exist yet, write the default preferences for the first time
+  else
+  {
+	  m_WhenToCheck = UpdateCheckManual;
+      writeUpdatePreferences(updatePrefs);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DUpdateCheckDialog::~DREAM3DUpdateCheckDialog()
+{
+
 }
 
 // -----------------------------------------------------------------------------
@@ -134,14 +156,6 @@ QString DREAM3DUpdateCheckDialog::createUpdatePreferencesPath()
 QString DREAM3DUpdateCheckDialog::getUpdatePreferencesPath()
 {
 	return m_UpdatePreferencesPath;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DREAM3DUpdateCheckDialog::~DREAM3DUpdateCheckDialog()
-{
-
 }
 
 // -----------------------------------------------------------------------------
@@ -365,10 +379,43 @@ void DREAM3DUpdateCheckDialog::on_websiteBtn_clicked()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
 {
+	// Read in value from preferences file
 	prefs.beginGroup(Detail::UpdatePreferencesGroup);
 	bool ok = false;
 	m_WhenToCheck = static_cast<UpdateType>( prefs.value("Frequency").toInt(&ok) );
 	prefs.endGroup();
+
+	// Set QRadioButtons and QComboBox according to value
+	QRadioButton* automaticallyBtn = getAutomaticallyBtn();
+	QRadioButton* manuallyBtn = getManuallyBtn();
+	QComboBox* howOftenBox = getHowOftenComboBox();
+	if (m_WhenToCheck == UpdateType::UpdateCheckManual)
+	{
+		manuallyBtn->blockSignals(true);
+		manuallyBtn->setChecked(true);
+		howOftenBox->setEnabled(false);
+		manuallyBtn->blockSignals(false);
+	}
+	else
+	{
+		automaticallyBtn->blockSignals(true);
+		howOftenBox->blockSignals(true);
+		automaticallyBtn->setChecked(true);
+		if (m_WhenToCheck == UpdateType::UpdateCheckDaily)
+		{
+			howOftenBox->setCurrentIndex(UpdateType::UpdateCheckDaily);
+		}
+		else if (m_WhenToCheck == UpdateType::UpdateCheckWeekly)
+		{
+			howOftenBox->setCurrentIndex(UpdateType::UpdateCheckWeekly);
+		}
+		else
+		{
+			howOftenBox->setCurrentIndex(UpdateType::UpdateCheckMonthly);
+		}
+		automaticallyBtn->blockSignals(false);
+		howOftenBox->blockSignals(false);
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -377,7 +424,7 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
 void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
 {
 	prefs.beginGroup(Detail::UpdatePreferencesGroup);
-	bool ok = false;
+	QString fileName = prefs.fileName();
 	prefs.setValue( "Frequency", m_WhenToCheck );
 	prefs.endGroup();
 }

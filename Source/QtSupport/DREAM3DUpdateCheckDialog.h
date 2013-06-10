@@ -65,7 +65,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
       UpdateCheckDaily,
       UpdateCheckWeekly,
       UpdateCheckMonthly,
-      UpdateCheckManual
+	  UpdateCheckManual
     };
 
 	int getWhenToCheck();
