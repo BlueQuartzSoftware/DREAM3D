@@ -359,15 +359,6 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 
-  // If the UpdatePreferences.ini file exists, read the values in
-  QString prefPath = d->createUpdatePreferencesPath();
-  QDir prefPathDir(prefPath);
-  if ( prefPathDir.exists(prefPath) )
-  {
-	  QSettings updatePrefs(prefPath);
-	  d->readUpdatePreferences(updatePrefs);
-  }
-
   d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
   d->setUpdateWebSite(Detail::UpdateWebSite);
   d->setApplicationName("DREAM3D");
@@ -381,19 +372,45 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
   prefs.beginGroup(Detail::VersionCheckGroupName);
   QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
   d->setLastCheckDateTime(dateTime);
-
-  DREAM3DUpdateCheckDialog::UpdateType whenToCheck = static_cast<DREAM3DUpdateCheckDialog::UpdateType>(prefs.value(Detail::WhenToCheck, DREAM3DUpdateCheckDialog::UpdateCheckManual).toUInt());
-  d->setWhenToCheck(whenToCheck);
   prefs.endGroup();
 
   connect(d->getAutomaticallyBtn(), SIGNAL( toggled(bool) ),
-	  this, SLOT( updateCheckBtnToggled(bool) ) );
+	  this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
 
   connect(d->getManuallyBtn(), SIGNAL( toggled(bool) ),
-	  this, SLOT( updateCheckBtnToggled(bool) ) );
+	  this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
+
+  connect(d->getHowOftenComboBox(), SIGNAL( currentIndexChanged(int) ),
+	  this, SLOT( on_actionHowOftenComboBox_Changed(int) ) );
 
   // Now display the dialog box
   d->exec();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionHowOftenComboBox_Changed(int index)
+{
+	QComboBox* box = static_cast<QComboBox*>( sender() );
+	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( box->parent() );
+
+	if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
+	{
+		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+	}
+	else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
+	{
+		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+	}
+	else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
+	{
+		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+	}
+
+	QString updatePrefPath = d->createUpdatePreferencesPath();
+	QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
+	d->writeUpdatePreferences(updatePrefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -777,7 +794,7 @@ void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::updateCheckBtnToggled(bool boolValue)
+void DREAM3D_UI::on_actionUpdateCheckBtn_toggled(bool boolValue)
 {
 	QRadioButton* btn = static_cast<QRadioButton*>( sender() );
 	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( btn->parent() );
@@ -806,7 +823,25 @@ void DREAM3D_UI::updateCheckBtnToggled(bool boolValue)
 			d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
 		}
 		QString updatePrefPath = d->createUpdatePreferencesPath();
-		QSettings updatePrefs(updatePrefPath);
+		QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
 		d->writeUpdatePreferences(updatePrefs);
 	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::updateExistsAtStartup()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::checkForUpdateAtStartup()
+{
+	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+	connect(this, SIGNAL( checkUpdateAtStartup() ), d, SLOT( d->on_checkNowBtn_clicked() ) );
+	emit checkUpdateAtStartup();
 }

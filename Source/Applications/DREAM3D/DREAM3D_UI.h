@@ -86,6 +86,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionOpen_Pipeline_2_triggered();
     void on_actionSave_Pipeline_2_triggered();
     void on_action_CheckForUpdates_triggered();
+	void on_actionHowOftenComboBox_Changed(int index);
+	void on_actionUpdateCheckBtn_toggled(bool);
 
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
@@ -113,7 +115,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void updateRecentFileList(const QString &file);
 
-	void updateCheckBtnToggled(bool);
+	void updateExistsAtStartup();
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -132,6 +134,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     // Our Signals that we can emit custom for this class
   signals:
     void parentResized();
+	void checkUpdateAtStartup();
 
     /**
      * @brief A signal that is emitted when we want to cancel a process
@@ -179,6 +182,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void readVersionCheckSettings(QSettings &prefs);
     void writeVersionCheckSettings(QSettings &prefs);
+
+	void checkForUpdateAtStartup();
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
