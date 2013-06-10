@@ -878,7 +878,7 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
 DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, DREAM3D::SurfaceMesh::Float_t xRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t x = xRes * float(index % xDim) + m_OriginX;
+  DREAM3D::SurfaceMesh::Float_t x = xRes * float(index % xDim) + (xRes/2.0) + m_OriginX;
   return x;
 }
 
@@ -888,7 +888,7 @@ DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, 
 DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t yRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t y = yRes * float((index / xDim) % yDim) + m_OriginY;
+  DREAM3D::SurfaceMesh::Float_t y = yRes * float((index / xDim) % yDim) + (yRes/2.0) + m_OriginY;
   return y;
 }
 
@@ -898,7 +898,7 @@ DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, 
 DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t zRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t z = zRes * float(index / (xDim * yDim)) + m_OriginZ;
+  DREAM3D::SurfaceMesh::Float_t z = zRes * float(index / (xDim * yDim)) + (zRes/2.0) + m_OriginZ;
   return z;
 }
 
