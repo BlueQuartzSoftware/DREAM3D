@@ -8,6 +8,7 @@ Synthetic Builder Filters (Packing)
 If there are precipitate phases in the Statistics file, then this filter will place precipitate **Fields** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics.  The user can specify if they want *periodic boundary conditions* and whether they would like to write out the goal attributes of the generated **Fields**. 
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Periodic Boundary | Boolean (On or Off) |

@@ -43,6 +43,7 @@ and the user wanted a uniform resolution of *3*, then the following mapping woud
 Note: there is no interpolation of the data and the nearest "old slice" is copied to a given "new slice".
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Current Z Positions File | Input File |

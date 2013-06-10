@@ -5,7 +5,7 @@ Merge Twins {#mergetwins}
 Reconstruction Filters (Grouping)
 
 ## Description ##
-This Filter groups neighboring **Fields** that are in a twin relationship with each other (currently only fcc Σ3 twins).  The algorithm for grouping the **Fields** is analogous to the algorithm for segmenting the **Fields** - only the average orientation of the **Fields** are used instead of the orientations of the individual **Cells**.  The user can specify a tolerance on both the *axis* and the *angle* that defines the twin relationship (i.e. a tolerance of 1 degree for both tolerances would allow the neighboring **Fields** to be grouped if their misorientation was between 59-61 degrees about an axis within 1 degree of <111>, since the Σ3 twin relationship is 60 degrees about <111>).
+This Filter groups neighboring **Fields** that are in a twin relationship with each other (currently only fcc Sigma 3 twins).  The algorithm for grouping the **Fields** is analogous to the algorithm for segmenting the **Fields** - only the average orientation of the **Fields** are used instead of the orientations of the individual **Cells**.  The user can specify a tolerance on both the *axis* and the *angle* that defines the twin relationship (i.e. a tolerance of 1 degree for both tolerances would allow the neighboring **Fields** to be grouped if their misorientation was between 59-61 degrees about an axis within 1 degree of <111>, since the Sigma 3 twin relationship is 60 degrees about <111>).
 
 
 ## Parameters ##

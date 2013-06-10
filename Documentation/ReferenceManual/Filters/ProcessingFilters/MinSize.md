@@ -2,13 +2,12 @@ Minimum Size Filter (All Phases) {#minsize}
 ======
 
 ## Group (Subgroup) ##
+
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter removes **Fields** that have a total number of **Cells** below the minimum threshold defined by the user. Entering a number larger than the largest **Field** generates an _error_ (since all **Fields** would be removed). 
-*The number of **Cells** in the largest **Field** is determined during the running of this filter. Hence, a choice of threshold should be carefully be choosen
-if it is not known how many **Cells** are in the largest **Fields**.
-After removing all the small **Fields**, the remaining **Fields** are isotropically coarsened to fill the gaps left by the small **Fields**.
+
+This filter removes **Fields** that have a total number of **Cells** below the minimum threshold defined by the user. Entering a number larger than the largest **Field** generates an _error_ (since all **Fields** would be removed). The number of **Cells** in the largest **Field** is determined during the running of this filter. Hence, a choice of threshold should be carefully be chosen if it is not known how many **Cells** are in the largest **Fields**. After removing all the small **Fields**, the remaining **Fields** are isotropically coarsened to fill the gaps left by the small **Fields**.
 
 ## Parameters ##
 
@@ -17,6 +16,7 @@ After removing all the small **Fields**, the remaining **Fields** are isotropica
 | Minimum Allowed **Field** Size | Integer | Number of **Cells** that must be present in the **Field** for it to remain in the sample |
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Arrays ##
