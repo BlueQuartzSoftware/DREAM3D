@@ -7,6 +7,7 @@ DREAM3D allows the user to _Export_ and _Import_ pipelines via the **File** menu
 -------
 
 ![Figure 1: File Menu](Images/ImportExport-1.png)
+@image latex Images/ImportExport-1.png " " width=2in
 
 -------
 
@@ -65,6 +66,7 @@ If the user creates a pipeline that they intend to use several times then they m
 --------------
 
 ![Pipeline Menu](Images/PipelineMenu.png)
+@image latex Images/PipelineMenu.png " " width=3in
 
 --------------
 
@@ -73,6 +75,8 @@ If the user creates a pipeline that they intend to use several times then they m
 As a convenience for those situations where the user has created a large pipeline and they would like to delete every filter from the pipeline the **Pipeline Menu** also has a menu item to remove every filter from a pipeline and an associated keyboard short cut.
 
 
+@htmlonly
 |   | Navigation |    |
 |----|---------|------|
 | [Back](creatingpipeline.html) | [Top](usermanual.html) | [Next Section](statsgenerator.html) |
+@endhtmlonly

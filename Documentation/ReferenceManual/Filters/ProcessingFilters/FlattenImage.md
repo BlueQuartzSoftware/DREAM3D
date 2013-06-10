@@ -8,6 +8,7 @@ Processing Filters (Image)
 This filter allows the user to selected a "flattening" method for turning an array of RGB or RGBa values to grayscale values.
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Flattening Method | Choices |

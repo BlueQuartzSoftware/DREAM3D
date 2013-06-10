@@ -14,6 +14,7 @@ With the advent of 3D EBSD data collection systems the visualization of the coll
 
 
 ![EBSD Reconstruction Pipeline](Images/ex_reconstruction.png)
+@image latex Images/ex_reconstruction.png " " width=6in
 
 
 After running the pipeline [ParaView](http://www.paraview.org) can be used to display the generated Xdmf file. There are a few options within ParaView that need to be set in order to show the encoded IPF colors otherwise ParaView will create a random color table for the visualization.
@@ -25,4 +26,6 @@ After running the pipeline [ParaView](http://www.paraview.org) can be used to di
 
 After all of these options are set the visualized volume will display with the encoded IPF Colors. The user is free to use what ever coloring scheme they would like for example coloring by the phase or Grain Id will also show grain boundaries.
 
-![3D Reconstruction of EBSD Orientation Data ](Images/ex_reconstruction_3.png)
+![3D Reconstruction of EBSD Orientation Data](Images/ex_reconstruction_3.png)
+@image latex Images/ex_reconstruction_3.png "3D Reconstruction of EBSD Orientation Data" width=6in
+
