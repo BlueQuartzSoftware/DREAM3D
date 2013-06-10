@@ -1,8 +1,6 @@
-[prebuilt_config]
-Name=Small IN100 Reconstruction
-
 [PipelineBuilder]
 Number_Filters=8
+Name=Small IN100 Reconstruction
 
 [0]
 Filter_Name=ReadH5Ebsd
