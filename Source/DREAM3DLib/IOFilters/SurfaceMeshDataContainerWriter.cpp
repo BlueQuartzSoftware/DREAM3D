@@ -760,7 +760,7 @@ int SurfaceMeshDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
 int SurfaceMeshDataContainerWriter::writeEdges(hid_t dcGid)
 {
   herr_t err = 0;
-  notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
+ // notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
   return err;
 }
 
