@@ -44,7 +44,7 @@ ReferenceDir\3\z=1
 
 [7]
 Filter_Name=DataContainerWriter
-OutputFile=/tmp/CubicSinglePhase.dream3d
+OutputFile=
 WriteVoxelData=true
 WriteSurfaceMeshData=true
 WriteXdmfFile=true
