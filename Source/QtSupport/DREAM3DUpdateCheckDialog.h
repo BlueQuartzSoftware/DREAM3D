@@ -65,16 +65,16 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
       UpdateCheckDaily,
       UpdateCheckWeekly,
       UpdateCheckMonthly,
-	  UpdateCheckManual
+      UpdateCheckManual
     };
 
-	int getWhenToCheck();
-	
-	QString getUpdatePreferencesPath();
+  int getWhenToCheck();
 
-	QRadioButton* getAutomaticallyBtn();
-	QRadioButton* getManuallyBtn();
-	QComboBox* getHowOftenComboBox();
+  QString getUpdatePreferencesPath();
+
+  QRadioButton* getAutomaticallyBtn();
+  QRadioButton* getManuallyBtn();
+  QComboBox* getHowOftenComboBox();
 
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
@@ -82,10 +82,10 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void setUpdateWebSite(QString url);
     void setApplicationName(QString name);
 
-	void readUpdatePreferences(QSettings &prefs);
-	void writeUpdatePreferences(QSettings &prefs);
+  void readUpdatePreferences(QSettings &prefs);
+  void writeUpdatePreferences(QSettings &prefs);
 
-	QString createUpdatePreferencesPath();
+  QString createUpdatePreferencesPath();
 
     void setupGui();
 
@@ -105,7 +105,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     QString						m_CurrentVersion;
     QDateTime					m_LastCheckDateTime;
     int							m_WhenToCheck;
-	QString						m_UpdatePreferencesPath;
+  QString						m_UpdatePreferencesPath;
     QString						m_UpdateWebSite;
     QString						m_AppName;
     QThread*					m_UpdateCheckThread;
