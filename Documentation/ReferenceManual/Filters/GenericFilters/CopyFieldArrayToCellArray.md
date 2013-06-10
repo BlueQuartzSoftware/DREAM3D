@@ -2,17 +2,21 @@ Copy Field Array To Cell Array {#copyfieldarraytocellarray}
 ==============================
 
 ## Group (Subgroup) ##
+
 Generic Filters (Memory/Management)
 
 ## Description ##
+
 This filter copies the values associated with a **Field** to all the **Cells** that belong to that **Field**.  Visualization files write only the **Cell** attributes, so if the user wants to display a spatial map of a **Field** level attribute, this filter will transfer that information down to the **Cell** level. One issue to consider is the memory required when expanding from the number of **Fields** to the number of **Cells**.
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Field Array Name | String |
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Arrays ##
@@ -27,10 +31,6 @@ Voxel
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Cell | *User Chosen* | | Array will have same name as its **Field** counterpart |
-
-
-
-
 
 ## Authors ##
 

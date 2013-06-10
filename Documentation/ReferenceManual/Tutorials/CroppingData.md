@@ -6,6 +6,7 @@ Cropping data in DREAM3D can help reduce the time to process data by removing da
 -----
 
 ![Region of interest for Cropping](CroppingImages/Annotated_Small.png)
+@image latex CroppingImages/Annotated_Small.png " " width=3in
 
 -----
 
@@ -14,10 +15,11 @@ Cropping data in DREAM3D can help reduce the time to process data by removing da
 -------
 
 ![ParaView Data Properties](CroppingImages/ParaView_DataExtents.png)
+@image latex CroppingImages/ParaView_DataExtents.png " " width=2in
 
 ------
 
- The general formula to figure this out is the following.
+The general formula to figure this out is the following.
 
     Micron * Resolution(Voxel/Micron) = Voxel
 
@@ -36,10 +38,12 @@ _We subtract 1 from the max Z value because the internal arrays are Zero Based._
 Entering these values into the "Crop Volume" filter gives us the following:
 
 ![The Crop Data Filter](CroppingImages/CropData_Filter.png)
+@image latex CroppingImages/CropData_Filter.png " " width=5in
 
 
 After the filter executes the data from the volume of interest is cropped out.
 
 
 ![Data Volume after cropping](CroppingImages/Cropped_Data.png)
+@image latex CroppingImages/Cropped_Data.png " " width=3in
 

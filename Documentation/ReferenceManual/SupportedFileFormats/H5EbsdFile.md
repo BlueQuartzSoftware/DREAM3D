@@ -9,7 +9,7 @@ The EBSD Data from multiple vendors is stored in a data file using the HDF5 file
 DREAM.3D's origin follows the sample coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display. Sample Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
 
 ![TSL Coordintate System (Spatial)](Images/CoordinateSystem1.png)
-@image latex Images/CoordinateSystem1.png width=3in
+@image latex Images/CoordinateSystem1.png " " width=3in
 
 Commercial EBSD acquisition systems do not typically follow this convention and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data in which case the DREAM.3D environment does not have any way of determining if those transformations have already occured. During the import process the user is asked a few questions regarding the orientation of their EBSD data in relation to the sample coordinate system. Currently there are 3 items that must be answered otherwise undefined behavior may occur during any of the analysis algorithms.
 

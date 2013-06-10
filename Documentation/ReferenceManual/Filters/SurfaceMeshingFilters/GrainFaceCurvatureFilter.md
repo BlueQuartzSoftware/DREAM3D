@@ -20,6 +20,7 @@ Jack Goldfeather, Victoria Interrante "A Novel Cubic-Order Algorithm for Approxi
 _ACM Transactions on Graphics_ 2004, 23(1), pp. 45-63.
 
 ![Sample Output from filter](GrainFaceCurvatureFilter.png)
+@image latex GrainFaceCurvatureFilter.png " " width=6in
 
 
 ## Parameters ##
