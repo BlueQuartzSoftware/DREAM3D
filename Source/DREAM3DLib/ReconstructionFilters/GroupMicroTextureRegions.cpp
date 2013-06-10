@@ -220,6 +220,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   int parentcount = 0;
   parentnumbers.resize(numgrains, -1);
 
+  parentnumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
