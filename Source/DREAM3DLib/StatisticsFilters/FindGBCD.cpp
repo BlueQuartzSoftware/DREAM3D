@@ -135,11 +135,12 @@ class CalculateGBCDImpl
               q2[m] = m_Quats[5*grain2+m];
             }
 
+
+            //get the crystal directions along the triangle normals
+            OrientationMath::multiplyQuaternionVector(q1, normal, xstl1_norm0);
             //get the misorientation between grain1 and grain2
             OrientationMath::invertQuaternion(q2);
             OrientationMath::multiplyQuaternions(q2, q1, misq);
-            //get the crystal directions along the triangle normals
-            OrientationMath::multiplyQuaternionVector(q1, normal, xstl1_norm0);
             int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
             for (j=0; j< nsym;j++)
             {
