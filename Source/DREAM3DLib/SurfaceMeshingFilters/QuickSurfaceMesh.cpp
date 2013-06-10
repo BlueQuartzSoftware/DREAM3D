@@ -41,6 +41,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
+#define QSM_GETCOORD(index, res, coord, origin)\
+  coord = float((float(index)*float(res)) + float(origin));\
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -473,24 +476,24 @@ void QuickSurfaceMesh::execute()
 		  if(i == 0)
 		  {
 			  nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+        QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			  nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			  QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			  QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			  QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			  QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
 			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -518,24 +521,24 @@ void QuickSurfaceMesh::execute()
 		  if(j == 0)
 		  {
 			  nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			  nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			  vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			  nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			  QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			  nodeId4 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			  vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId4]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			  QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
 			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
@@ -563,24 +566,24 @@ void QuickSurfaceMesh::execute()
 		  if(k == 0)
 		  {
 			  nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId1]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			  nodeId2 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			  vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			  QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			  nodeId3 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			  vertex[m_NodeIds[nodeId3]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId3]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			  QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			  nodeId4 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			  vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			  vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			  vertex[m_NodeIds[nodeId4]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			  QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			  QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			  QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			  triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
 			  triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -608,24 +611,24 @@ void QuickSurfaceMesh::execute()
 		  if(i == (xP-1))
 		  {
 			nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
 			triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -653,24 +656,24 @@ void QuickSurfaceMesh::execute()
 		  else if(m_GrainIds[point] != m_GrainIds[neigh1])
 		  {
 			nodeId1 = (k*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId2]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId3]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId4]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
 			triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -698,24 +701,24 @@ void QuickSurfaceMesh::execute()
 		  if(j == (yP-1))
 		  {
 			nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			triangle[triangleCount].verts[0] = m_NodeIds[nodeId3];
 			triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -743,24 +746,24 @@ void QuickSurfaceMesh::execute()
 		  else if(m_GrainIds[point] != m_GrainIds[neigh2])
 		  {
 			nodeId1 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId1]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId1]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			nodeId2 = (k*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId2]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId2]].pos[2] = (k*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			QSM_GETCOORD(k, zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
 			triangle[triangleCount].verts[1] = m_NodeIds[nodeId2];
@@ -788,24 +791,24 @@ void QuickSurfaceMesh::execute()
 		  if(k == (zP-1))
 		  {
 			nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			triangle[triangleCount].verts[0] = m_NodeIds[nodeId2];
 			triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
@@ -833,24 +836,24 @@ void QuickSurfaceMesh::execute()
 		  else if(m_GrainIds[point] != m_GrainIds[neigh3])
 		  {
 			nodeId1 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId1]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId1]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId1]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId1]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId1]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId1]].pos[2], m_OriginZ);
 
 			nodeId2 = ((k+1)*(xP+1)*(yP+1)) + (j*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId2]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId2]].pos[1] = (j*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId2]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId2]].pos[0], m_OriginX);
+			QSM_GETCOORD(j, yRes, vertex[m_NodeIds[nodeId2]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId2]].pos[2], m_OriginZ);
 
 			nodeId3 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + (i+1);
-			vertex[m_NodeIds[nodeId3]].pos[0] = ((i+1)*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId3]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId3]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD((i+1), xRes, vertex[m_NodeIds[nodeId3]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId3]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId3]].pos[2], m_OriginZ);
 
 			nodeId4 = ((k+1)*(xP+1)*(yP+1)) + ((j+1)*(xP+1)) + i;
-			vertex[m_NodeIds[nodeId4]].pos[0] = (i*xRes) - (xRes/k_Two) + m_OriginX;
-			vertex[m_NodeIds[nodeId4]].pos[1] = ((j+1)*yRes) - (yRes/k_Two) + m_OriginY;
-			vertex[m_NodeIds[nodeId4]].pos[2] = ((k+1)*zRes) - (zRes/k_Two) + m_OriginZ;
+			QSM_GETCOORD(i, xRes, vertex[m_NodeIds[nodeId4]].pos[0], m_OriginX);
+			QSM_GETCOORD((j+1), yRes, vertex[m_NodeIds[nodeId4]].pos[1], m_OriginY);
+			QSM_GETCOORD((k+1), zRes, vertex[m_NodeIds[nodeId4]].pos[2], m_OriginZ);
 
 			triangle[triangleCount].verts[0] = m_NodeIds[nodeId1];
 			triangle[triangleCount].verts[1] = m_NodeIds[nodeId3];
