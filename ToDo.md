@@ -5,8 +5,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
-+ Update Documentation for find twin boundary info
-+ Update Documentation for Visualize GBCD
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 
@@ -17,10 +15,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 
-+ Update the documentation for the Neighbor Cleanup Filters.
 + Update the documentation for the disorientation coloring
 + Missing Documentation File for IOFilters/ImportImageStack
 + incorrect Documentation for Find Twin Boundary Info
++ Update Documentation for Visualize GBCD
 
 ### Documentation ###
 
@@ -188,7 +186,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
-
++ Update the documentation for the Neighbor Cleanup Filters.
 + When removing a Favorite, present a standard dialog to make sure this is what they wanted to do.
 + Show Favorites or Prebuilt Pipelines in the OS X Finder or Windows Explorer
 + Append a favorite to a pipeline that is already built up in the PipelineView widget
