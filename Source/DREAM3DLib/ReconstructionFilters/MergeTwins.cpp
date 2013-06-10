@@ -281,6 +281,7 @@ void MergeTwins::merge_twins()
   int parentcount = 0;
   parentnumbers.resize(numgrains, -1);
 
+  parentnumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
   if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
@@ -335,7 +336,7 @@ void MergeTwins::merge_twins()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-  m_CellParentIds[k] = parentnumbers[grainname];
+    m_CellParentIds[k] = parentnumbers[grainname];
   }
   numParents = parentcount+1;
 }
