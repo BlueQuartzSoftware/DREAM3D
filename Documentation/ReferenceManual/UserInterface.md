@@ -11,6 +11,7 @@ DREAM3D has 4 main areas of its user interface:
 ------
 
 ![Overview of DREAM3D user interface](Images/OverView-1.png)
+@image latex Images/OverView-1.png " " width=6in
 
 ------
 
@@ -26,6 +27,7 @@ After the user builds a pipeline that they may want to save for later the user c
 --------------
 
 ![Pipeline Menu](Images/PipelineMenu.png)
+@image latex Images/PipelineMenu.png " " width=2in
 
 --------------
 
@@ -34,6 +36,7 @@ After the user builds a pipeline that they may want to save for later the user c
 --------------
 
 ![Favorite Pipeline Contextual Menu](Images/FavoritesContextualMenu.png)
+@image latex Images/FavoritesContextualMenu.png " " width=2in
 
 --------------
 
@@ -42,6 +45,7 @@ The user can also rename a _Favorite Pipeline_ entry by right clicking on the en
 --------------
 
 ![Renaming/Removing a Favorite](Images/FavoritesContextualMenu-2.png)
+@image latex Images/FavoritesContextualMenu-2.png " " width=2in
 
 --------------
 
@@ -54,6 +58,7 @@ The user can _Right Click_ in the title area of the filter to display a menu whe
 --------------
 
 ![Getting Help for a filter](Images/FilterContextMenu.png)
+@image latex Images/FilterContextMenu.png " " width=4in
 
 --------------
 
@@ -65,14 +70,17 @@ The user can _Right Click_ in the title area of the filter to display a menu whe
  **Area 3**: This area displays any errors and/or warnings associated with the filter if it is actively being used in a pipeline. The display of the errors can be toggled on and off by pressing the appropriate buttons. Also clicking the **?** icon will display all of the help (including filter reference, tutorials and user manual) in the users default web browser.
 
 ![Errors and Warnings Tab](Images/OverView-2.png)
+@image latex Images/OverView-1.png " " width=6in
 
 
 ## Pipeline Area
   **Area 4**:This area is where the user will construct their pipeline by either double clicking on a filter in the filter list area or dragging a filter from the filter list and dropping the filter into the pipeline area. Filters in this section can be rearranged by simply dragging the filter into a new location. As the user updates the pipeline a process called the **Preflight** will be executed to make sure that the pipeline will have all the necessary data available during the actual execution of the processing pipeline.
 
 ![Pipeline area populated with filters](Images/OverView-3.png)
+@image latex Images/OverView-1.png " " width=6in
 
-
+@htmlonly
 |   | Navigation |    |
 |----|---------|------|
 | [Back](supportedfileformats.html) | [Top](usermanual.html) | [Next Section](creatingpipeline.html) |
+@endhtmlonly

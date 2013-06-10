@@ -9,8 +9,8 @@ This filter calculates the Schmid Factor of each **Field** given its average ori
 The Schmid Factor is the combination of the component of the axial force F that lies parallel to the slip direction and the component 
 that lies perpendicular to the slip plane.  The equation for the Schmid Factor is given as:
 
-Schmid Factor = (cos φ cos λ)
-*The angle φ is the angle between the tensile axis and the slip plane normal, and λ is the angle between the tensile axis and the slip direction in the slip plane.*
+Schmid Factor = (cos &phi; cos &lambda;)
+*The angle &phi; is the angle between the tensile axis and the slip plane normal, and &lambda; is the angle between the tensile axis and the slip direction in the slip plane.*
  
 The filter determines the Schmid Factor for each **Field** by using the above equation for all possible slip systems (given the **Field**'s crystal structure).  The largest 
 Schmid Factor from all of the slip systems is stored for the **Field**.

@@ -86,7 +86,11 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
 endforeach()
 file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
-set(DOCUMENTATION_SOURCE_FILES "${DOCUMENTATION_SOURCE_FILES}" "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md" ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox)
+set(DOCUMENTATION_SOURCE_FILES 
+		"${DOCUMENTATION_SOURCE_FILES}" 
+		"${DREAM3DProj_BINARY_DIR}/createdarrayindex.md" 
+	${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
+)
 
 
 
@@ -116,7 +120,7 @@ if(DOX_GENERATE_LATEX)
                      GENERATE_RTF "NO"
                      TEMPLATE_DIR "${DOCUMENTATION_RESOURCES_DIR}"
                      IMAGE_DIR "${DOXYGEN_IMAGE_DIRS}"
-                     OUTPUT_DIR "${DREAM3DProj_BINARY_DIR}/Documentation/${PROJECT_NAME}"
+                     OUTPUT_DIR "${PROJECT_BINARY_DIR}_LATEX"
                      OUTPUT_SUB_DIR "latex")
 endif()
 

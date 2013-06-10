@@ -8,6 +8,7 @@ Generic Filters (Spatial)
 This filter changes the origin  of the volume ***without*** "resampling" the data.
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | X Origin | Float |

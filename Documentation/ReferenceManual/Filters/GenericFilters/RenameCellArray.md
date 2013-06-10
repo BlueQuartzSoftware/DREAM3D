@@ -8,6 +8,7 @@ Generic Filters (Memory/Management)
 This filter renames a user chosen **Cell** array to a user defined new name.
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Cell Array Name | String |

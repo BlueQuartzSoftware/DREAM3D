@@ -15,6 +15,7 @@ After running this filter visualizing the grains should result in something like
 ------------
 
 ![Example Output Data Generated with this filter.](GenerateFaceIPFColoring.png)
+@image latex GenerateFaceIPFColoring.png " " width=6in
 
 ------------
 
