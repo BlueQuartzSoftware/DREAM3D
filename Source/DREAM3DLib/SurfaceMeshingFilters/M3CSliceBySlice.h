@@ -391,6 +391,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     int32_t* m_GrainIds;
     int numgrains;
 
+    float m_OriginX, m_OriginY, m_OriginZ;
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     M3CSliceBySlice(const M3CSliceBySlice&); // Copy Constructor Not Implemented

@@ -10,7 +10,9 @@ This filter generates all the unique **Field** id to **Field** id values. For ex
 
 ## Parameters ##
 
+
 ## Required DataContainers ##
+
 SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face list
 
 ## Required Arrays ##
@@ -20,7 +22,7 @@ None
 
 | Type | Default Name | Comment |
 |------|--------------|---------|
-| Face | SurfaceMeshGrainFaceId | The length of the array is the number of triangles. |
+| Face | SurfaceMeshGrainFaceId | The length of the array is the number of triangles for that unique face id value |
 
 ## Authors ##
 

@@ -271,6 +271,10 @@ int AngReader::readFile()
     return getErrorCode();
   }
 
+  if (getXStep() == 0.0 || getYStep() == 0.0f )
+  {
+    return -1;
+  }
 
   // We need to pass in the buffer because it has the first line of data
   readData(in, buf, kBufferSize);
@@ -316,7 +320,7 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == false)
   {
     setErrorCode(-400);
-    setErrorMessage("Ang Files with Hex Grids Are NOT currently supported - Try converting them to Sqr Grid with the Hex2Sqr Converter filter.");
+    setErrorMessage("Ang Files with Hex Grids Are NOT currently supported - Try converting them to Square Grid with the Hex2Sqr Converter filter.");
     return;
   }
   else if (grid.find(Ebsd::Ang::HexGrid) == 0 && m_ReadHexGrid == true)

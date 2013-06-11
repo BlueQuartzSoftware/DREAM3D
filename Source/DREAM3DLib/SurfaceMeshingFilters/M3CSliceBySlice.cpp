@@ -383,10 +383,10 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  if (NULL == sm)
+  if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else {
     DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
@@ -436,6 +436,7 @@ void M3CSliceBySlice::execute()
   int err = 0;
   std::stringstream ss;
 
+  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 
   std::string nodesFile = MXADir::tempPath() + Detail::NodesFile;
   SMTempFile::Pointer nodesTempFile = SMTempFile::New();
@@ -877,7 +878,7 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
 DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, DREAM3D::SurfaceMesh::Float_t xRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t x = xRes * float(index % xDim);
+  DREAM3D::SurfaceMesh::Float_t x = xRes * float(index % xDim) + m_OriginX - (xRes/2.0);
   return x;
 }
 
@@ -887,7 +888,7 @@ DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, 
 DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t yRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t y = yRes * float((index / xDim) % yDim);
+  DREAM3D::SurfaceMesh::Float_t y = yRes * float((index / xDim) % yDim) + m_OriginY - (yRes/2.0);
   return y;
 }
 
@@ -897,7 +898,7 @@ DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, 
 DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t zRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t z = zRes * float(index / (xDim * yDim));
+  DREAM3D::SurfaceMesh::Float_t z = zRes * float(index / (xDim * yDim)) + m_OriginZ - (zRes/2.0);
   return z;
 }
 

@@ -5,7 +5,40 @@ Laplacian Smoothing Filter {#laplaciansmoothing}
 SurfaceMesh
 
 ## Description ##
-This filter implements a simple Laplcian based smoothing filter. In the Laplacian algorithm the &lambda; term has a range of 0 &le; &lambda; &le; 1 and defines a relative distance that a node can move relative to the positions of the nodes neighbors. A &lambda; = 0 value will effectively stop those node types from any movement during the algorithm thus by allowing the user to set this value for specific types of nodes the user can arrest the shrinkage of the surface mesh during the smoothing process.
+This filter implements a simple Laplcian based smoothing filter. Alexander Belyaev [2] has a concise explanation of the Laplacian Smoothing as follows:
+
+---------------------------
+
+Let us consider a triangulated surface and for any vertex P let us define the so-called umbrella-operator
+
+![Laplacian Smoothing Figure 1](Laplacian_Fig1.png)
+@image latex Laplacian_Fig1.png " " width=6in
+
+
+where summation is taken over all neighbors of P and wi are positive
+weights. See Fig. 1 for the geometric idea behind the umbrella-operator.
+
+![](Laplacian_Fig2.png)
+@image latex Laplacian_Fig2.png " " width=3in
+
+The weights, can be defined, for example, as the inverse distances between P and its neighbors. The simplest umbrella-operator is obtained if *w* i = 1 and the umbrella-operator has the form
+
+![](Laplacian_Eq1.png)
+@image latex Laplacian_Eq1.png " " width=3in
+
+where n is the number of neighbors. The local update rule
+
+![](Laplacian_Eq2.png)
+@image latex Laplacian_Eq2.png " " width=3in
+
+
+applied to every point of the triangulated surface is called Laplacian smoothing of the surface. Typically the factor &lambda; is a small positive number, and the process (2) is executed repeatedly. The Laplacian smoothing algorithm reduces the high frequency surface information and tends to flatten the surface. See Fig. 2 where Laplacian smoothing is applied to a triangulated model of a Noh mask.
+
+   If &lambda; is too small, one needs more iterations for smoothing and the smoothing process becomes time-consuming. If &lambda; is not small enough, the smoothing process becomes unstable. 
+
+---------------------------
+
+ In the Laplacian algorithm the &lambda; term has a range of 0 &le; &lambda; &le; 1 and defines a relative distance that a node can move relative to the positions of the nodes neighbors. A &lambda; = 0 value will effectively stop those node types from any movement during the algorithm thus by allowing the user to set this value for specific types of nodes the user can arrest the shrinkage of the surface mesh during the smoothing process.
 
 Currently if you lock the __Default Lambda__ value to Zero (0) the Triple Lines and Quad points will not be able to move because none of their neighbors can move. The user may want to consider allowing a small value of &lambda; for the default nodes which will allow some movement of the triple lines and/or Quad Points. This filter will create additional internal arrays in order to facilitate the calculations. These arrays are
 
@@ -47,9 +80,9 @@ SurfaceMesh - Valid Surface Mesh containing the shared vertex array and face lis
 
 ## Required Arrays ##
 
-| Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| Vertex | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) |  | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
+| Type | Default Name | Description | Filters Known to Create Data |
+|------|--------------|-------------|------------------------------|
+| Vertex | SurfaceMeshNodeType | The array that describes the type of node. (See table in description above) | Quick Surface Mesh (SurfaceMeshing), M3C Surface Meshing (Slice at a Time) |
 
 ## Created Arrays ##
 None
@@ -64,5 +97,12 @@ None
 
 **License:**  See the License.txt file that came with DREAM3D.
 
+
+## Bibliography ##
+
+
+[1] _Field, D. A. (1988), Laplacian smoothing and Delaunay triangulations. Commun. appl. numer. methods, 4: 709–712. doi: 10.1002/cnm.1630040603_
+
+[2] _Alexander Belyaev. "Mesh Smoothing and Enhancing. Curvature Estimation",_
 
 

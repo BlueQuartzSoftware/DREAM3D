@@ -168,30 +168,9 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   // Check for errors
   if (err < 0)
   {
-    std::ostringstream ss;
-    if (err == -400) {
-      ss << "H5MicImporter Error: HexGrid Files are not currently supported.";
-    }
-    else if (err == -300)
-    {
-      ss << "H5MicImporter Error: Grid was NOT set in the header.";
-    }
-    else if (err == -200)
-    {
-      ss << "H5MicImporter Error: There was no data in the file.";
-    }
-    else if (err == -100)
-    {
-      ss << "H5MicImporter Error: The Mic file could not be opened.";
-    }
-    else
-    {
-      ss << "H5MicImporter Error: Unknown error.";
-    }
-    setPipelineMessage(ss.str());
-
-    setErrorCondition(err);
-    progressMessage(ss.str(), 100);
+    setPipelineMessage(reader.getErrorMessage());
+    setErrorCondition(reader.getErrorCode());
+    progressMessage(reader.getErrorMessage(), reader.getErrorCode());
     return -1;
   }
 
@@ -410,16 +389,16 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
 {
   int err = 0;
   // int retErr = 0;
-  //  int32_t rank = 1;
-  //  hsize_t dims[1] = { 0 };
+  int32_t rank = 1;
+  hsize_t dims[1] = { 0 };
   std::vector<MicPhase::Pointer> phases = reader.getPhaseVector();
   for (std::vector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     MicPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
     WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Mic::Phase)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeConstants, Ebsd::Mic::LatticeConstants)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeAngles, Ebsd::Mic::LatticeAngles)
+    WRITE_PHASE_DATA_ARRAY((*phase), float, pid, LatticeConstants, Ebsd::Mic::LatticeConstants)
+  //  WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeAngles, Ebsd::Mic::LatticeAngles)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, BasisAtoms, Ebsd::Mic::BasisAtoms)
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Symmetry, Ebsd::Mic::Symmetry)
 

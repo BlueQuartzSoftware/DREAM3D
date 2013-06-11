@@ -78,6 +78,7 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_InputFile(""),
   m_RefFrameZDir(Ebsd::UnknownRefFrameZDirection),
@@ -312,9 +313,11 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
+
   ADD_HELP_INDEX_ENTRY(EnsembleData, MaterialName, XTalStructArrayType, 1);
 }
 
@@ -451,6 +454,7 @@ void ReadH5Ebsd::execute()
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, m->getNumEnsembleTuples(), 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, -305, float, FloatArrayType, m->getNumEnsembleTuples(), 6)
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
@@ -771,7 +775,8 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i] = f1[i];
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
-      if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal) cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);
+      if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High)
+      {cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);}
     }
     m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
   }

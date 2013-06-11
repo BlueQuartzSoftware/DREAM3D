@@ -61,7 +61,7 @@ DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
   m_WritePipeline(true),
   m_WriteVoxelData(true),
-  m_WriteSurfaceMeshData(false),
+  m_WriteSurfaceMeshData(true),
   m_WriteSolidMeshData(false),
   m_WriteXdmfFile(true),
   m_FileId(-1)
@@ -124,7 +124,7 @@ void DataContainerWriter::setupFilterParameters()
     option->setPropertyName("WriteXdmfFile");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
-    option->setUnits("XML Wrapper");
+    option->setUnits("ParaView Compatible File");
     parameters.push_back(option);
   }
 

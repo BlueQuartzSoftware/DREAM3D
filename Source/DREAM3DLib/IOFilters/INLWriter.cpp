@@ -250,13 +250,13 @@ int INLWriter::writeFile()
   {
     symmetry = m_CrystalStructures[i];
     fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).c_str());
-    if(symmetry == Ebsd::CrystalStructure::Cubic)
+    if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
     }
-    else if(symmetry == Ebsd::CrystalStructure::Hexagonal)
+    else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
     {
-     symmetry = Ebsd::Ang::PhaseSymmetry::Hexagonal;
+     symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
     }
     else
     {
@@ -312,16 +312,16 @@ int INLWriter::writeFile()
         symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {
-          if(symmetry == Ebsd::CrystalStructure::Cubic)
+          if(symmetry == Ebsd::CrystalStructure::Cubic_High)
           {
             EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
             symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
 
           }
-          else if(symmetry == Ebsd::CrystalStructure::Hexagonal)
+          else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
           {
             EbsdColoring::GenerateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
-            symmetry = Ebsd::Ang::PhaseSymmetry::Hexagonal;
+            symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
           }
           else
           {

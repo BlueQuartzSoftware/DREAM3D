@@ -170,17 +170,26 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
   protected slots:
     void arrayListUpdated(QListWidgetItem* item);
 
+    void on_vertexArraysCB_stateChanged(int state);
+    void on_faceArraysCB_stateChanged(int state);
+    void on_edgeArraysCB_stateChanged(int state);
+
+    void on_voxelCellCB_stateChanged(int state);
+    void on_voxelFieldCB_stateChanged(int state);
+    void on_voxelEnsembleCB_stateChanged(int state);
+
+
   protected:
 
-
+    void toggleListSelections(QListWidget* w, int state);
 
     virtual void populateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
     virtual void populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
     virtual void populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
 
-    virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames);
+    virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox *cb = NULL);
     virtual void populateArrayList(QListWidget* listWidget,
-                                    std::list<std::string> &arrayNames);
+                                    std::list<std::string> &arrayNames, QCheckBox *cb = NULL);
 
     /**
      * @brief Returns the list of selected Array Names

@@ -99,6 +99,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
+     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
@@ -184,7 +185,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-	  misorients[a].resize(dims[1], 0.0);
+    misorients[a].resize(dims[1], 0.0);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
@@ -226,12 +227,12 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
                   refposition = static_cast<int>( ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
                   curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift) );
                   if(m_GoodVoxels[refposition] != m_GoodVoxels[curposition]) disorientation++;
-	              count++;
+                count++;
                 }
                 else
                 {
 
-				}
+        }
               }
             }
             disorientation = disorientation/count;

@@ -220,6 +220,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   int parentcount = 0;
   parentnumbers.resize(numgrains, -1);
 
+  parentnumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
     if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
@@ -255,7 +256,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-            if (phase1 == phase2 && phase1 == Ebsd::CrystalStructure::Hexagonal)
+            if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
             {
               q2[0] = 1;
               q2[1] = m_AvgQuats[5*neigh+1];

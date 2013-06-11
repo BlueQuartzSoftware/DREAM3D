@@ -259,10 +259,10 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, 0, voxels, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

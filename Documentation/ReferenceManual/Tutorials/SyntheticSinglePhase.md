@@ -6,6 +6,7 @@ Launch DREAM3D and create the pipeline that is displayed in the following image.
 -------------------
 
 ![DREAM3D Gui showing complete pipeline](Images/synth-1.png)
+@image latex Images/synth-1.png "DREAM3D Gui showing complete pipeline" width=6in
 
 -------------------
 
@@ -31,6 +32,7 @@ Launch DREAM3D and create the pipeline that is displayed in the following image.
 -------------------
 
 ![IPF Triangle for Cubic](Images/IPFFilterLegend.png)
+@image latex Images/IPFFilterLegend.png " " width=1.75in
 
 -------------------
 
@@ -43,10 +45,12 @@ From ParaView open the .xdmf file and select the "Grain Ids" and "IPFColors" dat
 -------------------
 
 ![Generated Synthetic Microstructure](Images/synth-2.png)
+@image latex Images/synth-2.png " " width=3in
 
 -------------------
 
-![3D Reconstruction of EBSD Orientation Data ](Images/ex_reconstruction_3.png)
+![ParaView OverView](Images/ex_reconstruction_3.png)
+@image latex Images/ex_reconstruction_3.png "ParaView OverView" width=6in
 
 -------------------
 

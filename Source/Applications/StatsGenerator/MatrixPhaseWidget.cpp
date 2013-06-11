@@ -101,7 +101,7 @@ m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
 m_PhaseFraction(1.0),
 m_TotalPhaseFraction(1.0),
 m_PhaseIndex(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic),
+m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
 m_grid(NULL)
 {
   setupUi(this);
@@ -165,11 +165,11 @@ QString MatrixPhaseWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
+  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
     s.append("Cubic");
   }
-  else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     s.append("Hexagonal");
   }

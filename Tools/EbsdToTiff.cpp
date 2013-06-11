@@ -159,7 +159,9 @@ void grayScaleEulers(float* euler, int width, int height, const std::string & im
   float delta = maxEuler - minEuler;
 
   DataArray<uint8_t>::Pointer rgbArray = DataArray<uint8_t>::CreateArray(total, 3, "Tiff Data");
+
   rgbArray->SetNumberOfComponents(3);
+
   // Splat 0xFF across all the data
   ::memset(rgbArray->GetPointer(0), 255, total*3);
   uint8_t* rgb = rgbArray->GetPointer(0);
@@ -235,7 +237,9 @@ int main(int argc, char **argv)
   int height = ebsdReader->getYDimension();
   int total = width *height;
   DataArray<uint8_t>::Pointer rgbArray = DataArray<uint8_t>::CreateArray(total, 3, "Tiff Data");
+
   rgbArray->SetNumberOfComponents(3);
+
   // Splat 0xFF across all the data
   ::memset(rgbArray->GetPointer(0), 255, total*3);
     float* e0 = NULL;

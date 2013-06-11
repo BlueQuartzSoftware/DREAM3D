@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _AdjustVolumeOriginResolution_H_
-#define _AdjustVolumeOriginResolution_H_
+#ifndef _ScaleVolume_H_
+#define _ScaleVolume_H_
 
 #include <string>
 #include <set>
@@ -47,23 +47,25 @@
 
 
 /**
- * @class AdjustVolumeOriginResolution AdjustVolumeOriginResolution.h /FilterCategoryFilters/AdjustVolumeOriginResolution.h
+ * @class ScaleVolume ScaleVolume.h /FilterCategoryFilters/ScaleVolume.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AdjustVolumeOriginResolution : public AbstractFilter
+class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AdjustVolumeOriginResolution)
-    DREAM3D_STATIC_NEW_MACRO(AdjustVolumeOriginResolution)
-    DREAM3D_TYPE_MACRO_SUPER(AdjustVolumeOriginResolution, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ScaleVolume)
+    DREAM3D_STATIC_NEW_MACRO(ScaleVolume)
+    DREAM3D_TYPE_MACRO_SUPER(ScaleVolume, AbstractFilter)
 
-    virtual ~AdjustVolumeOriginResolution();
+    virtual ~ScaleVolume();
 
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToVoxelVolume)
+    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSurfaceMesh)
+    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSolidMesh)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ScaleFactor)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -77,7 +79,7 @@ class DREAM3DLib_EXPORT AdjustVolumeOriginResolution : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Adjust Resolution and/or Origin of Volume"; }
+    virtual const std::string getHumanLabel() { return "Change Scaling of Volume"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -103,7 +105,7 @@ class DREAM3DLib_EXPORT AdjustVolumeOriginResolution : public AbstractFilter
     virtual void preflight();
 
   protected:
-    AdjustVolumeOriginResolution();
+    ScaleVolume();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -115,10 +117,20 @@ class DREAM3DLib_EXPORT AdjustVolumeOriginResolution : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    /**
+     * @brief updateSurfaceMesh This method does the actual updating of the meesh coordinates
+     */
+    void updateSurfaceMesh();
+
+    /**
+     * @brief updatesSolidMesh This method updates the solid mesh vertex points
+     */
+    void updatesSolidMesh();
+
   private:
 
-    AdjustVolumeOriginResolution(const AdjustVolumeOriginResolution&); // Copy Constructor Not Implemented
-    void operator=(const AdjustVolumeOriginResolution&); // Operator '=' Not Implemented
+    ScaleVolume(const ScaleVolume&); // Copy Constructor Not Implemented
+    void operator=(const ScaleVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* _AdjustVolumeOriginResolution_H_ */
+#endif /* _ScaleVolume_H_ */

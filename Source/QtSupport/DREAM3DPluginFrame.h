@@ -72,7 +72,7 @@ class DREAM3DPluginFrame : public QFrame
     /**
       * @brief Reads the Preferences from the users pref file
       */
-    virtual void readSettings(QSettings &prefs) = 0;
+    virtual void readSettings(QSettings &prefs, bool shouldClear) = 0;
 
      /**
       * @brief Writes the preferences to the users pref file

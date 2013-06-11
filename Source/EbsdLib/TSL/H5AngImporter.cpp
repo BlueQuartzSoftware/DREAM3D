@@ -184,6 +184,14 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     {
       ss << "H5AngImporter Error: The Ang file could not be opened.";
     }
+    else if (reader.getXStep() == 0.0f)
+    {
+      ss << "H5AngImporter Error: X Step value equals 0.0. This is bad. Please check the validity of the ANG file.";
+    }
+    else if(reader.getYStep() == 0.0f)
+    {
+      ss << "H5AngImporter Error: Y Step value equals 0.0. This is bad. Please check the validity of the ANG file.";
+    }
     else
     {
       ss << "H5AngImporter Error: Unknown error.";

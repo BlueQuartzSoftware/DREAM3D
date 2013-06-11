@@ -5,6 +5,7 @@ Surface Meshing Tutorial {#tutorialsurfacemeshingtutorial}
 Creating a surface mesh in DREAM3D can be accomplished in several ways. There are a pair of filters [Multi-Material Marching Cubes (Slice at a Time)](#m3cslicebyslice) and [Quick Surface Mesh](#quicksurfacemesh) that will generate a triangular based mesh of the primary **Field** for you. The terminology of the underlying data structures is something that the user should understand so that they can be well informed. We start out by defining a triangle **T**  which we will call a  **Face**. Each Triangle has 3 **Vertex** (V0, V1, V2) which are  referred to as a **Point**, **Vertex** and/or **Node** interchangeably within DREAM3D.
 
 ![Triangle/Face](Images/TriangleSmall.png)
+@image latex Images/TriangleSmall.png " " width=1.75in
 
 These data structures are declared in DREAM3D in the following code:
 
@@ -46,6 +47,8 @@ In the filter documentation the following terminology will be used:
 For this tutorial we are going to be using a pre-made DREAM3D data file. The file is simply a Single Phase Synthetic Structure that was quickly generated using the Synthetic Microstructure Creation abilities of DREAM3D. There are other options that exist to create a surface mesh. One can read in a Ph or Dx file, use the Raw Binary Reader to read in the Raw Grain Ids from a binary file or have an already existing set of Grain Ids from a DREAM3D pipeline that segmented the grains for you.
 
 ![Surface Meshing Pipeline](Images/SurfaceMeshingPipeline.png)
+@image latex Images/SurfaceMeshingPipeline.png " " width=4.5in
+
 
 Start by adding the "Read DREAM3D Data File" filter. Select the file that you just downloaded an then only check the "GrainIds" data under the "Cell Data" section. This will ensure that this is the only data that is loaded from the file. Since creating the mesh can take large amounts of memory we only want to load the data necessary. 
 
