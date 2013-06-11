@@ -14,7 +14,7 @@ Images that are imported into DREAM3D should probably be segmented using a prepr
 The regions of the image that represent a phase or grain each have a unique identifier such as a gray scale value or unique RGB value.
 
 ![Type 1 Image](Type1.png "Type 1 Image")
-
+@image latex Type1.png "Type 1 Image" width=5in
 -----
 
 ## Type 2 Image ##
@@ -22,6 +22,7 @@ The regions of the image that represent a phase or grain each have a unique iden
 There are regions that represent grains where each region has a unique identifier but there are multiple regions with the same identifier.
 
 ![Type 2 Image](Type2.png "Type 2 Image")
+@image latex Type2.png "Type 2 Image" width=5in
 
 -----
 
@@ -30,6 +31,7 @@ There are regions that represent grains where each region has a unique identifie
 Each Grain is traced out via a another pixel identifier so that grain boundaries are "black" and each grain is "white".
 
 ![Type 3 Image](Type3.png "Type 3 Image")
+@image latex Type3.png "Type 3 Image" width=5in
 
 -----
 
@@ -38,15 +40,20 @@ When importing color images they will be imported as RGBA, or color with Alpha v
 
 
 ## Parameters ##
+
+
 | Name             | Type |
 |------------------|------|
 | Field Array Name | String |
 
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Arrays ##
+
+
 None
 
 
