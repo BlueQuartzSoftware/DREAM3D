@@ -59,8 +59,9 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_YRes(0.15f),
   m_ZRes(0.15f),
   m_GrainIds(NULL),
-  m_GoodVoxels(NULL),
-  m_CellPhases(NULL)
+  m_CellPhases(NULL),
+  m_GoodVoxels(NULL)
+
 {
   setupFilterParameters();
 }
