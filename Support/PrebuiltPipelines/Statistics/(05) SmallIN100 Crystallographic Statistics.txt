@@ -4,7 +4,7 @@ Name=(05) SmallIN100 Crystallographic Statistics
 
 [0]
 Filter_Name=DataContainerReader
-InputFile=Data\\Output\\SmallIN100Cleaned.dream3d
+InputFile=Data/Output/SmallIN100Cleaned.dream3d
 ReadVoxelData=true
 ReadSurfaceMeshData=false
 ReadSolidMeshData=false
@@ -81,7 +81,7 @@ KernelSize\3\z=1
 
 [6]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\SmallIN100Cleaned.dream3d
+OutputFile=Data/Output/SmallIN100Cleaned.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true

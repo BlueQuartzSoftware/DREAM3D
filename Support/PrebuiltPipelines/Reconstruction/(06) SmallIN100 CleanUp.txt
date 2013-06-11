@@ -4,7 +4,7 @@ Name=(06) SmallIN100 CleanUp
 
 [0]
 Filter_Name=DataContainerReader
-InputFile=Data\\Output\\SmallIN100.dream3d
+InputFile=Data/Output/SmallIN100.dream3d
 ReadVoxelData=true
 ReadSurfaceMeshData=false
 ReadSolidMeshData=false
@@ -47,7 +47,7 @@ ReferenceDir\3\z=1
 
 [4]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\SmallIN100Cleaned.dream3d
+OutputFile=Data/Output/SmallIN100Cleaned.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true
