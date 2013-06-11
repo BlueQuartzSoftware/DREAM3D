@@ -4,7 +4,7 @@ Name=(05) Composite
 
 [0]
 Filter_Name=InitializeSyntheticVolume
-InputFile=Data\\Composite.dream3d
+InputFile=Data/Composite.dream3d
 XResolution=0.5
 YResolution=0.5
 ZResolution=0.5
@@ -29,7 +29,7 @@ CsvOutputFile=
 
 [4]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\CompositeOut.dream3d
+OutputFile=Data/Output/CompositeOut.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true
