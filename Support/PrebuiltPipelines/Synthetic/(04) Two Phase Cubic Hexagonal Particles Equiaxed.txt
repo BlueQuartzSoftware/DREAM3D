@@ -1,5 +1,5 @@
 [PipelineBuilder]
-Number_Filters=8
+Number_Filters=9
 Name=(04) Two Phase Cubic Hexagonal Particles Equiaxed
 
 [0]
@@ -28,20 +28,23 @@ WriteGoalAttributes=false
 CsvOutputFile=
 
 [4]
-Filter_Name=FindNumFields
+Filter_Name=FindNeighbors
 
 [5]
+Filter_Name=FindNumFields
+
+[6]
 Filter_Name=MatchCrystallography
 MaxIterations=100000
 
-[6]
+[7]
 Filter_Name=GenerateIPFColors
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[7]
+[8]
 Filter_Name=DataContainerWriter
 OutputFile=Data/Output/TwoPhaseCubicHexParticlesEquiaxedOut.dream3d
 WriteVoxelData=true
