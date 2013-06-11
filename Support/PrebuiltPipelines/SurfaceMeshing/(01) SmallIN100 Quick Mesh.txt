@@ -4,7 +4,7 @@ Name=(01) SmallIN100 Quick Mesh
 
 [0]
 Filter_Name=DataContainerReader
-InputFile=Data\\Output\\SmallIN100Cleaned.dream3d
+InputFile=Data/Output/SmallIN100Cleaned.dream3d
 ReadVoxelData=true
 ReadSurfaceMeshData=false
 ReadSolidMeshData=false
@@ -45,7 +45,7 @@ Filter_Name=QuickSurfaceMesh
 
 [3]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\SmallIN100Mesh.dream3d
+OutputFile=Data/Output/SmallIN100Mesh.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=true
 WriteXdmfFile=true
