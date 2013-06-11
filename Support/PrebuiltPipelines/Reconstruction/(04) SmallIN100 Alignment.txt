@@ -1,10 +1,10 @@
 [PipelineBuilder]
-Number_Filters=9
-Name=Small IN100 Cleanup
+Number_Filters=6
+Name=(04) SmallIN100 Alignment
 
 [0]
 Filter_Name=ReadH5Ebsd
-InputFile=/Users/Shared/Data/Ang_Data/Small_IN100_Output/Small_IN100.h5ebsd
+InputFile=Data\\Output\\SmallIN100.h5ebsd
 ZStartIndex=1
 ZEndIndex=117
 UseTransformations=true
@@ -14,8 +14,9 @@ ArraySelections_VoxelCell\2\VoxelCell=EulerAngles
 ArraySelections_VoxelCell\3\VoxelCell=Image Quality
 ArraySelections_VoxelCell\4\VoxelCell=Phases
 ArraySelections_VoxelField\size=0
-ArraySelections_VoxelEnsemble\size=1
+ArraySelections_VoxelEnsemble\size=2
 ArraySelections_VoxelEnsemble\1\VoxelEnsemble=CrystalStructures
+ArraySelections_VoxelEnsemble\2\VoxelEnsemble=MaterialName
 ArraySelections_SurfaceMeshPoint\size=0
 ArraySelections_SurfaceMeshFace\size=0
 ArraySelections_SurfaceMeshEdge\size=0
@@ -35,37 +36,22 @@ ComparisonInputs\2\CompOperator=1
 ComparisonInputs\2\CompValue=0.100000001490116
 
 [2]
-Filter_Name=IdentifySample
-
-[3]
-Filter_Name=AlignSectionsFeatureCentroid
-UseReferenceSlice=true
-ReferenceSlice=0
-
-[4]
 Filter_Name=FindCellQuats
 
-[5]
-Filter_Name=EBSDSegmentGrains
+[3]
+Filter_Name=AlignSectionsMisorientation
 MisorientationTolerance=5
 
-[6]
-Filter_Name=CropVolume
-XMin=15
-YMin=30
-ZMin=0
-XMax=170
-YMax=170
-ZMax=116
-RenumberGrains=true
+[4]
+Filter_Name=GenerateIPFColors
+ReferenceDir\size=3
+ReferenceDir\1\x=0
+ReferenceDir\2\y=0
+ReferenceDir\3\z=1
 
-[7]
-Filter_Name=MinSize
-MinAllowedGrainSize=50
-
-[8]
+[5]
 Filter_Name=DataContainerWriter
-OutputFile=
+OutputFile=Data\\Output\\SmallIN100.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true
