@@ -59,6 +59,7 @@
 class DREAM3DPluginInterface;
 class HelpDialog;
 class PipelineBuilderWidget;
+class DREAM3DUpdateCheckDialog;
 
 
 
@@ -86,12 +87,12 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionOpen_Pipeline_2_triggered();
     void on_actionSave_Pipeline_2_triggered();
     void on_action_CheckForUpdates_triggered();
-	void on_actionHowOftenComboBox_Changed(int index);
-	void on_actionUpdateCheckBtn_toggled(bool);
+  void on_actionHowOftenComboBox_Changed(int index);
+  void on_actionUpdateCheckBtn_toggled(bool);
 
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
-	void on_actionShow_User_Manual_triggered();
+  void on_actionShow_User_Manual_triggered();
 
     /**
      * @brief Reads the Preferences from the users pref file
@@ -115,8 +116,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void updateRecentFileList(const QString &file);
 
-	void updateExistsAtStartup();
-
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
      */
@@ -126,6 +125,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void displayHelp(QString helpFile);
 
+    void displayUpdateDialog();
+
+
+
   private slots:
     // slots for our worker thread to communicate
     void threadHasMessage(QString message);
@@ -134,7 +137,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     // Our Signals that we can emit custom for this class
   signals:
     void parentResized();
-	void checkUpdateAtStartup();
 
     /**
      * @brief A signal that is emitted when we want to cancel a process
@@ -183,7 +185,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void readVersionCheckSettings(QSettings &prefs);
     void writeVersionCheckSettings(QSettings &prefs);
 
-	void checkForUpdateAtStartup();
+    void checkForUpdateAtStartup();
+
+    void checkForUpdateAtStartup(DREAM3DUpdateCheckDialog* d);
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items

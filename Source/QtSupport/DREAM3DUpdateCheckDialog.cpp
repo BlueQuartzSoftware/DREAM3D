@@ -315,9 +315,19 @@ void DREAM3DUpdateCheckDialog::networkReplied(QNetworkReply* reply)
 
     QString appVersion = m_CurrentVersion;
 
-    bool ok = false;
     QStringList serverVersionParts = serverVersion.split(QString("."));
     QStringList appVersionParts = appVersion.split(QString("."));
+
+    emit updateFound();
+    if ( isUpdateAvailable(serverVersionParts, appVersionParts) )
+    {
+      message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+    }
+    else
+    {
+      message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
+    }
+    feedbackText->setText(message);
 
     {
       QString vStr(appVersionParts.at(0));
@@ -331,25 +341,6 @@ void DREAM3DUpdateCheckDialog::networkReplied(QNetworkReply* reply)
       vStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
       latestVersion->setText(vStr);
     }
-
-    int serverMajor = serverVersionParts.at(0).toInt(&ok);
-    int appMajor = appVersionParts.at(0).toInt(&ok);
-
-    int serverMinor = serverVersionParts.at(1).toInt(&ok);
-    int appMinor = appVersionParts.at(1).toInt(&ok);
-
-    int serverPatch = serverVersionParts.at(2).toInt(&ok);
-    int appPatch = appVersionParts.at(2).toInt(&ok);
-
-    if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
-    {
-      message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
-    }
-    else
-    {
-      message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
-    }
-    feedbackText->setText(message);
   }
   // Some http error received
   else
@@ -378,8 +369,7 @@ void DREAM3DUpdateCheckDialog::on_websiteBtn_clicked()
 //
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
-{
-  // Read in value from preferences file
+{  // Read in value from preferences file
   prefs.beginGroup(Detail::UpdatePreferencesGroup);
   bool ok = false;
   m_WhenToCheck = static_cast<UpdateType>( prefs.value("Frequency").toInt(&ok) );
@@ -427,4 +417,29 @@ void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
   QString fileName = prefs.fileName();
   prefs.setValue( "Frequency", m_WhenToCheck );
   prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DREAM3DUpdateCheckDialog::isUpdateAvailable(QStringList serverVersionParts, QStringList appVersionParts)
+{
+    bool ok = false;
+    int serverMajor = serverVersionParts.at(0).toInt(&ok);
+    int appMajor = appVersionParts.at(0).toInt(&ok);
+
+    int serverMinor = serverVersionParts.at(1).toInt(&ok);
+    int appMinor = appVersionParts.at(1).toInt(&ok);
+
+    int serverPatch = serverVersionParts.at(2).toInt(&ok);
+    int appPatch = appVersionParts.at(2).toInt(&ok);
+
+    if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
 }

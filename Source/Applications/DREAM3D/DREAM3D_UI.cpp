@@ -112,6 +112,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Create thread and check for updates
+  checkForUpdateAtStartup();
 }
 
 // -----------------------------------------------------------------------------
@@ -333,6 +336,8 @@ void DREAM3D_UI::setupGui()
           this, SLOT(writeSettings()) );
   connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
           this, SLOT(readSettings() ) );
+  connect(this, SIGNAL(updateFound()),
+          this->parent(), SLOT(displayUpdateDialog() ) );
 
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
@@ -375,13 +380,13 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
   prefs.endGroup();
 
   connect(d->getAutomaticallyBtn(), SIGNAL( toggled(bool) ),
-	  this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
+    this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
 
   connect(d->getManuallyBtn(), SIGNAL( toggled(bool) ),
-	  this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
+    this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
 
   connect(d->getHowOftenComboBox(), SIGNAL( currentIndexChanged(int) ),
-	  this, SLOT( on_actionHowOftenComboBox_Changed(int) ) );
+    this, SLOT( on_actionHowOftenComboBox_Changed(int) ) );
 
   // Now display the dialog box
   d->exec();
@@ -392,25 +397,25 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionHowOftenComboBox_Changed(int index)
 {
-	QComboBox* box = static_cast<QComboBox*>( sender() );
-	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( box->parent() );
+  QComboBox* box = static_cast<QComboBox*>( sender() );
+  DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( box->parent() );
 
-	if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
-	{
-		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
-	}
-	else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
-	{
-		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
-	}
-	else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
-	{
-		d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
-	}
+  if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
+  {
+    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+  }
+  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
+  {
+    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+  }
+  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
+  {
+    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+  }
 
-	QString updatePrefPath = d->createUpdatePreferencesPath();
-	QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
-	d->writeUpdatePreferences(updatePrefs);
+  QString updatePrefPath = d->createUpdatePreferencesPath();
+  QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
+  d->writeUpdatePreferences(updatePrefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -796,44 +801,36 @@ void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionUpdateCheckBtn_toggled(bool boolValue)
 {
-	QRadioButton* btn = static_cast<QRadioButton*>( sender() );
-	DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( btn->parent() );
-	// Now pull any new values from the dialog and push back into the prefs
-	if ( btn->isChecked() )
-	{
-		if (btn->text() == "Automatically")
-		{
-			QComboBox* howOftenBox = d->getHowOftenComboBox();
-			QString howOftenBoxText = howOftenBox->currentText();
-			if (howOftenBoxText == "Daily")
-			{
-				d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
-			}
-			else if (howOftenBoxText == "Weekly")
-			{
-				d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
-			}
-			else if (howOftenBoxText == "Monthly")
-			{
-				d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
-			}
-		}
-		else if (btn->text() == "Manually")
-		{
-			d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
-		}
-		QString updatePrefPath = d->createUpdatePreferencesPath();
-		QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
-		d->writeUpdatePreferences(updatePrefs);
-	}
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::updateExistsAtStartup()
-{
-
+  QRadioButton* btn = static_cast<QRadioButton*>( sender() );
+  DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( btn->parent() );
+  // Now pull any new values from the dialog and push back into the prefs
+  if ( btn->isChecked() )
+  {
+    if (btn->text() == "Automatically")
+    {
+      QComboBox* howOftenBox = d->getHowOftenComboBox();
+      QString howOftenBoxText = howOftenBox->currentText();
+      if (howOftenBoxText == "Daily")
+      {
+        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+      }
+      else if (howOftenBoxText == "Weekly")
+      {
+        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+      }
+      else if (howOftenBoxText == "Monthly")
+      {
+        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+      }
+    }
+    else if (btn->text() == "Manually")
+    {
+      d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
+    }
+    QString updatePrefPath = d->createUpdatePreferencesPath();
+    QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
+    d->writeUpdatePreferences(updatePrefs);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -841,7 +838,20 @@ void DREAM3D_UI::updateExistsAtStartup()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::checkForUpdateAtStartup()
 {
-	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-	connect(this, SIGNAL( checkUpdateAtStartup() ), d, SLOT( d->on_checkNowBtn_clicked() ) );
-	emit checkUpdateAtStartup();
+    m_UpdateCheckThread = new QThread(); // Create a new Thread Resource
+  DREAM3DUpdateCheckDialog* m_UpdateCheck = new DREAM3DUpdateCheckDialog(this);
+  m_UpdateCheck->moveToThread(m_UpdateCheckThread);
+  m_UpdateCheckThread->start();
+  if ( m_UpdateCheck->getAutomaticallyBtn()->isChecked() )
+  {
+    m_UpdateCheck->on_checkNowBtn_clicked();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::displayUpdateDialog()
+{
+  std::cout << "Testing" << std::endl;
 }
