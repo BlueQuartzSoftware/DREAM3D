@@ -1,10 +1,10 @@
 [PipelineBuilder]
 Number_Filters=7
-Name=(01) Single Hexagonal Phase Equiaxed
+Name=(02) Single Hexagonal Phase Equiaxed
 
 [0]
 Filter_Name=InitializeSyntheticVolume
-InputFile=Data/HexagonalSingleEquiaxed.dream3d
+InputFile=Data\\HexagonalSingleEquiaxed.dream3d
 XResolution=0.5
 YResolution=0.5
 ZResolution=0.5
@@ -37,7 +37,7 @@ ReferenceDir\3\z=1
 
 [6]
 Filter_Name=DataContainerWriter
-OutputFile=
+OutputFile=Data\\Output\\HexagonalSingleEquiaxedOut.dream3d
 WriteVoxelData=true
-WriteSurfaceMeshData=true
+WriteSurfaceMeshData=false
 WriteXdmfFile=true
