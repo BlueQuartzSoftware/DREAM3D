@@ -111,7 +111,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_UnknownShapeOps = ShapeOps::New();
   m_ShapeOps[DREAM3D::ShapeType::UnknownShapeType] = m_UnknownShapeOps.get();
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrthoOps = OrthoRhombicOps::New();
 
   setupFilterParameters();
 }
