@@ -1,13 +1,13 @@
 [PipelineBuilder]
-Number_Filters=8
-Name=Single Phase Equiaxed
+Number_Filters=7
+Name=(01) Single Cubic Phase Equiaxed
 
 [0]
 Filter_Name=InitializeSyntheticVolume
 InputFile=Data/CubicSingleEquiaxed.dream3d
-XResolution=0.15
-YResolution=0.15
-ZResolution=0.15
+XResolution=0.5
+YResolution=0.5
+ZResolution=0.5
 XPoints=128
 YPoints=128
 ZPoints=128
@@ -26,23 +26,16 @@ Filter_Name=FindNumFields
 
 [4]
 Filter_Name=MatchCrystallography
-MaxIterations=1
+MaxIterations=100000
 
 [5]
-Filter_Name=SingleThresholdCells
-SelectedCellArrayName=Phases
-ComparisonOperator=1
-ComparisonValue=0
-OutputArrayName=GoodVoxels
-
-[6]
 Filter_Name=GenerateIPFColors
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[7]
+[6]
 Filter_Name=DataContainerWriter
 OutputFile=
 WriteVoxelData=true

@@ -21,9 +21,7 @@ set(_PublicFilters
   FindAvgCAxes
   FindAvgOrientations
   FindBoundaryStrengths
-  FindDeformationStatistics
   FindEuclideanDistMap
-
   FindGrainReferenceCAxisMisorientations
   FindGrainReferenceMisorientations
   FindKernelAvgMisorientations
@@ -31,11 +29,9 @@ set(_PublicFilters
   FindNeighborhoods
   FindNeighbors
   FindNumFields
-  FindRadialDist
   FindSchmids
   FindShapes
   FindSizes
-  FindSlicetoSliceRotations
   FindSlipTransmissionMetrics
 
   GenerateEnsembleStatistics
@@ -58,6 +54,9 @@ endforeach()
 set(_PrivateFilters
   FindGBCD
   FindTwinBoundaryInfo
+  FindDeformationStatistics
+  FindRadialDist
+  FindSlicetoSliceRotations
 )
 
 #-----------------
