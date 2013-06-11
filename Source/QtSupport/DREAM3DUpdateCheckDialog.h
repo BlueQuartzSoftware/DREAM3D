@@ -76,6 +76,8 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
   QRadioButton* getManuallyBtn();
   QComboBox* getHowOftenComboBox();
 
+  bool isUpdateAvailable(QStringList serverVersionParts, QStringList appVersionParts);
+
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
     void setWhenToCheck(int whenToCheck);
@@ -99,6 +101,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
   signals:
     void finished();
     void hasMessage(const QString& message);
+    void updateFound();
 
   private:
     QNetworkAccessManager*		nam;
