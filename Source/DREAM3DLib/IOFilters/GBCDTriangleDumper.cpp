@@ -225,7 +225,7 @@ void GBCDTriangleDumper::execute()
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
 
-  float radToDeg = M_PI/180.0;
+  float radToDeg = 180.0/M_PI;
 
   int gid0 = 0; // Grain id 0
   int gid1 = 0; // Grain id 1
