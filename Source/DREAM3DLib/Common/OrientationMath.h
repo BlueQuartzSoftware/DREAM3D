@@ -51,7 +51,6 @@
     out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
 
 
-
 /*
  * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
  * @brief This class performs Crystallographic Misorientation Calculations

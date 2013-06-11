@@ -630,6 +630,8 @@ void FindShapes::find_axiseulers()
     n3y = n3y / norm3;
     n3z = n3z / norm3;
 
+	if(n1z > 1.0) n1z = 1.0;
+	if(n1z < -1.0) n1z = -1.0;
     ea2 = acos(n1z);
     if (ea2 == 0.0)
     {

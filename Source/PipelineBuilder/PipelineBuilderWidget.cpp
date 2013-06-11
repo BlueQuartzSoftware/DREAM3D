@@ -174,7 +174,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
   m_actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
   connect(m_actionAppendFavorite, SIGNAL(triggered()),
-	  this, SLOT( actionAppendFavorite_triggered() ) );
+    this, SLOT( actionAppendFavorite_triggered() ) );
 
   menuPipeline->addSeparator();
 
@@ -202,16 +202,16 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   m_actionShowInFileSystem = new QAction(this);
   m_actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
   // Handle the naming based on what OS we are currently running...
-	#if defined(Q_OS_WIN)
-		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
-	#elif defined(Q_OS_MAC)
-		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
-	#else
-		m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
-	#endif
+  #if defined(Q_OS_WIN)
+    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+  #elif defined(Q_OS_MAC)
+    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+  #else
+    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+  #endif
 
   connect(m_actionShowInFileSystem, SIGNAL(triggered()),
-	  this, SLOT( actionShowInFileSystem_triggered() ) );
+    this, SLOT( actionShowInFileSystem_triggered() ) );
 
   // Add favorites actions to m_FavoritesActionList
   m_ActionList.append(m_actionRemoveFavorite);
@@ -281,10 +281,10 @@ void PipelineBuilderWidget::readSettings(QSettings &prefs, bool shouldClear)
 void PipelineBuilderWidget::readSettings(QSettings &prefs, PipelineViewWidget* viewWidget, bool shouldClear)
 {
   // Clear Any Existing Pipeline
-	if (shouldClear)
-	{
-		m_PipelineViewWidget->clearWidgets();
-	}
+  if (shouldClear)
+  {
+    m_PipelineViewWidget->clearWidgets();
+  }
 
   prefs.beginGroup(Detail::PipelineBuilderGroup);
 
@@ -837,8 +837,8 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   }
   else
   {
-	  // Update filter list with preview of current item
-	on_filterLibraryTree_itemClicked(item, 0);
+    // Update filter list with preview of current item
+  on_filterLibraryTree_itemClicked(item, 0);
   }
 }
 
@@ -1405,14 +1405,14 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 {
-	QTreeWidgetItem* item = filterLibraryTree->currentItem();
-	QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
-	QMessageBox msgBox;
-	msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
-	msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
-	msgBox.setDefaultButton(QMessageBox::Yes);
-	int ret = msgBox.exec();
+  QMessageBox msgBox;
+  msgBox.setText("Are you sure that you want to remove \"" + item->text(0) + "\"?");
+  msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  msgBox.setDefaultButton(QMessageBox::Yes);
+  int ret = msgBox.exec();
 
   if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 && ret == QMessageBox::Yes)
   {
@@ -1454,16 +1454,16 @@ void PipelineBuilderWidget::actionRenameFavorite_triggered()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionAppendFavorite_triggered()
 {
-	QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
 
-	QString pipelinePath = item->data(0, Qt::UserRole).toString();
-	if (pipelinePath.isEmpty() == false)
-	{
-		QFileInfo fi(pipelinePath);
-		if (fi.exists() == false) { return; }
-		QSettings prefs(pipelinePath, QSettings::IniFormat);
-		readSettings(prefs, m_PipelineViewWidget, false);
-	}
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if (pipelinePath.isEmpty() == false)
+  {
+    QFileInfo fi(pipelinePath);
+    if (fi.exists() == false) { return; }
+    QSettings prefs(pipelinePath, QSettings::IniFormat);
+    readSettings(prefs, m_PipelineViewWidget, false);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1471,13 +1471,23 @@ void PipelineBuilderWidget::actionAppendFavorite_triggered()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionShowInFileSystem_triggered()
 {
-	QTreeWidgetItem* item = filterLibraryTree->currentItem();
-	QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
 
-	QFileInfo pipelinePathInfo(pipelinePath);
-	QString pipelinePathDir = pipelinePathInfo.path();
+  QFileInfo pipelinePathInfo(pipelinePath);
+  QString pipelinePathDir = pipelinePathInfo.path();
 
-	QDesktopServices::openUrl(pipelinePathDir);
+  QString s("file://");
+  #if defined(Q_OS_WIN)
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+#elif defined(Q_OS_MAC)
+
+#else
+  // We are on Linux - I think
+
+#endif
+  s = s + pipelinePathDir;
+  QDesktopServices::openUrl(s);
 }
 
 // -----------------------------------------------------------------------------

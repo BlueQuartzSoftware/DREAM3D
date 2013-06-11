@@ -121,9 +121,9 @@ void QDataContainerReaderWidget::setupGui()
 
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
-  m_InputFile->setCompleter(com);
+  InputFile->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputFile_textChanged(const QString &)));
+                    this, SLOT(on_InputFile_textChanged(const QString &)));
 
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));
@@ -142,7 +142,7 @@ void QDataContainerReaderWidget::arraySelectionWidgetChanged()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_m_ReadVoxelData_stateChanged(int state)
+void QDataContainerReaderWidget::on_ReadVoxelData_stateChanged(int state)
 {
   emit parametersChanged();
 }
@@ -150,7 +150,7 @@ void QDataContainerReaderWidget::on_m_ReadVoxelData_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_m_ReadSurfaceMeshData_stateChanged(int state)
+void QDataContainerReaderWidget::on_ReadSurfaceMeshData_stateChanged(int state)
 {
   emit parametersChanged();
 }
@@ -158,7 +158,7 @@ void QDataContainerReaderWidget::on_m_ReadSurfaceMeshData_stateChanged(int state
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_m_ReadSolidMeshData_stateChanged(int state)
+void QDataContainerReaderWidget::on_ReadSolidMeshData_stateChanged(int state)
 {
   emit parametersChanged();
 }
@@ -169,7 +169,7 @@ void QDataContainerReaderWidget::on_m_ReadSolidMeshData_stateChanged(int state)
 void QDataContainerReaderWidget::setInputFile(const QString &v)
 {
   QString natPath = QDir::toNativeSeparators(v);
-  m_InputFile->setText(natPath);
+  InputFile->setText(natPath);
   emit parametersChanged();
 }
 
@@ -178,7 +178,7 @@ void QDataContainerReaderWidget::setInputFile(const QString &v)
 // -----------------------------------------------------------------------------
 QString  QDataContainerReaderWidget::getInputFile()
 {
-  return m_InputFile->text();
+  return InputFile->text();
 }
 
 // -----------------------------------------------------------------------------
@@ -214,7 +214,9 @@ void QDataContainerReaderWidget::readOptions(QSettings &prefs)
   {
     QVariant p_ReadSurfaceMeshData = prefs.value("ReadSurfaceMeshData");
     QCheckBox* le = findChild<QCheckBox*>("ReadSurfaceMeshData");
-    if (le) { le->setChecked(p_ReadSurfaceMeshData.toBool()); }
+    if (le) {
+     le->setChecked(p_ReadSurfaceMeshData.toBool());
+    }
   }
   {
     QVariant p_ReadSolidMeshData = prefs.value("ReadSolidMeshData");
@@ -228,7 +230,7 @@ void QDataContainerReaderWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_m_InputFileBtn_clicked()
+void QDataContainerReaderWidget::on_InputFileBtn_clicked()
 {
   QObject* whoSent = sender();
   // for QButtons we prepended "btn_" to the end of the property name so strip that off
@@ -257,12 +259,12 @@ void QDataContainerReaderWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_m_InputFile_textChanged(const QString & text)
+void QDataContainerReaderWidget::on_InputFile_textChanged(const QString & text)
 {
-  if (verifyPathExists(m_InputFile->text(), m_InputFile) )
+  if (verifyPathExists(InputFile->text(), InputFile) )
   {
-    setInputFile(m_InputFile->text());
-    setOpenDialogLastDirectory(m_InputFile->text());
+    setInputFile(InputFile->text());
+    setOpenDialogLastDirectory(InputFile->text());
   }
 
 }
@@ -319,11 +321,11 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
   m_YOrigin->setText(QString::number(origin[1]));
   m_ZOrigin->setText(QString::number(origin[2]));
 
-  if (m_ReadVoxelData->isChecked() == true)
+  if (ReadVoxelData->isChecked() == true)
   {
 
     hid_t fileId = -1;
-    fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true);
+    fileId = H5Utilities::openFile(InputFile->text().toStdString(), true);
     if (fileId < 0) {
       return;
     }

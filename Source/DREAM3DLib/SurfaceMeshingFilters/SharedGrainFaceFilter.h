@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT SharedGrainFaceFilter : public SurfaceMeshFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Shared Grain Face Filter"; }
+    virtual const std::string getHumanLabel() { return "Generate Triangle Face Ids"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

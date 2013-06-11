@@ -165,16 +165,20 @@ float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
                                       float &n1, float &n2, float &n3)
 {
   float wmin=9999999.0f; //,na,nb,nc;
+   float q2inv[5];
    float qc[5];
    float qco[5];
    int type = 1;
    float sin_wmin_over_2 = 0.0;
  //  float _1, _2,  _6;
 
+   for(int i=0;i<5;i++)
+   {
+	   q2inv[i] = q2[i];
+   }
+   OrientationMath::invertQuaternion(q2inv);
 
-
-   OrientationMath::invertQuaternion(q1);
-   OrientationMath::multiplyQuaternions(q1, q2, qc);
+   OrientationMath::multiplyQuaternions(q2inv, q1, qc);
    qc[1]=fabs(qc[1]);
    qc[2]=fabs(qc[2]);
    qc[3]=fabs(qc[3]);

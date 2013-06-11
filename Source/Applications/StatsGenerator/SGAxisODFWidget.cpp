@@ -77,7 +77,7 @@ QWidget(parent),
 m_EnableAxisDecorations(false),
 m_Initializing(true),
 m_PhaseIndex(-1),
-m_CrystalStructure(Ebsd::CrystalStructure::AxisOrthoRhombic),
+m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic),
 m_ODFTableModel(NULL),
 m_MDFWidget(NULL),
 m_PoleFigureFuture(NULL)

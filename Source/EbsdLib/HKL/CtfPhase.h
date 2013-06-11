@@ -69,8 +69,7 @@ class EbsdLib_EXPORT CtfPhase
 
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeDimensions) // 1x3 array
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeAngles) // 1x3 array
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants) // 1x6 array
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName)
     EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::LaueGroupTable, LaueGroup) // <== Laue Group
 

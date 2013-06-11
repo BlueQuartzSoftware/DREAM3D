@@ -177,17 +177,17 @@ void GenerateIPFColors::execute()
 
     if(m_GoodVoxels[i] != false)
     {
-      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic)
+      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
       {
         EbsdColoring::GenerateCubicIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, hkl);
       }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal)
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
       {
         EbsdColoring::GenerateHexIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
       }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal)
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
       {
         EbsdColoring::GenerateTrigIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);

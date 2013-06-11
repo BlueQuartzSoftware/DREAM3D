@@ -1,18 +1,16 @@
-Adjust Voxel Origin & Resolution {#adjustvolumeoriginresolution}
+Adjust Voxel Origin  {#adjustvolumeorigin}
 ==============================
 
 ## Group (Subgroup) ##
 Generic Filters (Spatial)
 
 ## Description ##
-This filter changes the resolution and/or origin of the volume ***without*** "resampling" the data.  This filter effectively scales and/or translates the volume.
+This filter changes the origin  of the volume ***without*** "resampling" the data.
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
-| X Res | Float |
-| Y Res | Float |
-| Z Res | Float |
 | X Origin | Float |
 | Y Origin | Float |
 | Z Origin | Float |
@@ -32,7 +30,7 @@ None
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2013 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 

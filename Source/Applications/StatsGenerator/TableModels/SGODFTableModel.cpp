@@ -48,7 +48,7 @@
 SGODFTableModel::SGODFTableModel(QObject* parent) :
 QAbstractTableModel(parent),
 m_RowCount(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic)
+m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
 {
   m_ColumnCount = ColumnCount;
 }

@@ -84,47 +84,47 @@ class CalculateFaceIPFColorsImpl
       uint8_t hkl[3] = { 0, 0, 0 };
       for (size_t i = start; i < end; i++)
       {
-      grain1 = m_Labels[2*i];
-      grain2 = m_Labels[2*i+1];
-      if(grain1 > 0) phase1 = m_Phases[grain1];
-      else phase1 = 0;
-      if(grain2 > 0) phase2 = m_Phases[grain2];
-      else phase2 = 0;
-      if(phase1 > 0)
-      {
-      if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic)
-      {
-        EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), hkl);
+        grain1 = m_Labels[2*i];
+        grain2 = m_Labels[2*i+1];
+        if(grain1 > 0) phase1 = m_Phases[grain1];
+        else phase1 = 0;
+        if(grain2 > 0) phase2 = m_Phases[grain2];
+        else phase2 = 0;
+        if(phase1 > 0)
+        {
+          if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
+          {
+            EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), hkl);
+          }
+          else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
+          {
+            EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i));
+          }
+        }
+        else
+        {
+          m_Colors[6*i+0] = 0;
+          m_Colors[6*i+1] = 0;
+          m_Colors[6*i+2] = 0;
+        }
+        if(phase2 > 0)
+        {
+          if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic_High)
+          {
+            EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), hkl);
+          }
+          else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal_High)
+          {
+            EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3));
+          }
+        }
+        else
+        {
+          m_Colors[6*i+3] = 0;
+          m_Colors[6*i+4] = 0;
+          m_Colors[6*i+5] = 0;
+        }
       }
-      else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal)
-      {
-        EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i));
-      }
-      }
-      else
-      {
-      m_Colors[6*i+0] = 0;
-      m_Colors[6*i+1] = 0;
-      m_Colors[6*i+2] = 0;
-      }
-      if(phase2 > 0)
-      {
-      if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic)
-      {
-        EbsdColoring::GenerateCubicIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), hkl);
-      }
-      else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal)
-      {
-        EbsdColoring::GenerateHexIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3));
-      }
-      }
-      else
-      {
-      m_Colors[6*i+3] = 0;
-      m_Colors[6*i+4] = 0;
-      m_Colors[6*i+5] = 0;
-      }
-    }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -147,19 +147,19 @@ class CalculateFaceIPFColorsImpl
 //
 // -----------------------------------------------------------------------------
 GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
-SurfaceMeshFilter(),
-m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_SurfaceMeshFaceLabels(NULL),
-m_SurfaceMeshFaceNormals(NULL),
-m_SurfaceMeshFaceIPFColors(NULL),
-m_FieldEulerAngles(NULL),
-m_FieldPhases(NULL),
-m_CrystalStructures(NULL)
+  SurfaceMeshFilter(),
+  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshFaceNormals(NULL),
+  m_SurfaceMeshFaceIPFColors(NULL),
+  m_FieldEulerAngles(NULL),
+  m_FieldPhases(NULL),
+  m_CrystalStructures(NULL)
 
 {
   setupFilterParameters();
@@ -206,7 +206,7 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
   }
   else
   {
-  // We MUST have Nodes
+    // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
       addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
@@ -222,8 +222,8 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
     else
     {
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, ss, uint8_t, UInt8ArrayType, 0, fields, 6)
+          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, ss, uint8_t, UInt8ArrayType, 0, fields, 6)
     }
   }
 }
@@ -243,10 +243,10 @@ void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size
   }
   else
   {
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+        typedef DataArray<unsigned int> XTalStructArrayType;
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 

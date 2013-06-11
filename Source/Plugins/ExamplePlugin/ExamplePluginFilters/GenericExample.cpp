@@ -161,7 +161,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Point Array Name");
     option->setPropertyName("SurfaceMeshPointArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshVertexArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -171,7 +171,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Face Array Name");
     option->setPropertyName("SurfaceMeshFaceArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshFaceArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);
@@ -181,7 +181,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Edge Array Name");
     option->setPropertyName("SurfaceMeshEdgeArrayName");
-    option->setWidgetType(FilterParameter::SolidMeshEdgeArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     options.push_back(option);

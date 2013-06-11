@@ -8,6 +8,7 @@ Synthetic Builder Filters (Crystallography)
 This Filter iteratively either swaps out the orientation of a **Field** (selected at random) for a new orientation (sampled from the goal Orientation Distribution Function) or switches the orientations of two **Fields** (selected at random).  The switch or swap is accepted if it lowers the error of the current ODF and Misorientation Distribution Function from the goal.  This is done for a user defined number of iterations.  
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Maximum Number of Iterations (Swaps) | Integer |

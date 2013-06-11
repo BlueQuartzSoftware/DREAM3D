@@ -265,8 +265,7 @@ void __TestEraseElements()
 
     // Test Dropping of indices larger than the number of tuples
   {
-    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test6");
-    array->SetNumberOfComponents(NUM_COMPONENTS_2);
+    typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, NUM_COMPONENTS_2, "Test6");
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
       array->SetComponent(i, 0, static_cast<T>(i));
