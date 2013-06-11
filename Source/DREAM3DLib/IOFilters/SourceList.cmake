@@ -40,12 +40,10 @@ set(_PublicFilters
   SurfaceMeshToStl
   SurfaceMeshToVtk
   SurfaceMeshToNonconformalVtk
-  VisualizeGBCD
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
   RawBinaryReader
   VtkGrainIdReader
-  # This is a reader to read some Data from Jack Goldfeather to validate the Curvature Calculation codes
   SolidMeshToVtk
   SPParksWriter
 )
@@ -75,6 +73,8 @@ set(_PrivateFilters
 
   SolidMeshDataContainerWriter
   SolidMeshDataContainerReader
+
+  VisualizeGBCD
 )
 
 #-----------------

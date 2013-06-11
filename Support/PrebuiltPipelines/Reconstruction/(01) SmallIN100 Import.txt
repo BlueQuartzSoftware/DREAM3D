@@ -1,0 +1,15 @@
+[PipelineBuilder]
+Number_Filters=1
+Name=(01) SmallIN100 Import
+
+[0]
+Filter_Name=EbsdToH5Ebsd
+InputDir=Data\\SmallIN100
+FilePrefix=
+FileSuffix=
+FileExt=ang
+ZStartIndex=1
+ZEndIndex=117
+zSpacing=0.25
+TotalDigits=1
+OutputFile=Data\\Output\\SmallIN100.h5ebsd
