@@ -4,7 +4,7 @@ Name=(04) Two Phase Cubic Hexagonal Particles Equiaxed
 
 [0]
 Filter_Name=InitializeSyntheticVolume
-InputFile=Data\\TwoPhaseCubicHexParticlesEquiaxed.dream3d
+InputFile=Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
 XResolution=1
 YResolution=1
 ZResolution=1
@@ -43,7 +43,7 @@ ReferenceDir\3\z=1
 
 [7]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\TwoPhaseCubicHexParticlesEquiaxedOut.dream3d
+OutputFile=Data/Output/TwoPhaseCubicHexParticlesEquiaxedOut.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true

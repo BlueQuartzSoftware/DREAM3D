@@ -4,7 +4,7 @@ Name=(05) SmallIN100 Alignment 2
 
 [0]
 Filter_Name=ReadH5Ebsd
-InputFile=Data\\Output\\SmallIN100.h5ebsd
+InputFile=Data/Output/SmallIN100.h5ebsd
 ZStartIndex=1
 ZEndIndex=117
 UseTransformations=true
@@ -59,7 +59,7 @@ ReferenceDir\3\z=1
 
 [7]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\SmallIN100.dream3d
+OutputFile=Data/Output/SmallIN100.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true

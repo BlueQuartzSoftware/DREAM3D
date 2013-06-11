@@ -4,7 +4,7 @@ Name=(01) Single Cubic Phase Equiaxed
 
 [0]
 Filter_Name=InitializeSyntheticVolume
-InputFile=Data\\CubicSingleEquiaxed.dream3d
+InputFile=Data/CubicSingleEquiaxed.dream3d
 XResolution=0.5
 YResolution=0.5
 ZResolution=0.5
@@ -37,7 +37,7 @@ ReferenceDir\3\z=1
 
 [6]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\CubicSingleEquiaxedOut.dream3d
+OutputFile=Data/Output/CubicSingleEquiaxedOut.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true

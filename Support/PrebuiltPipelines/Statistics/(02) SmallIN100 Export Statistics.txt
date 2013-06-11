@@ -4,7 +4,7 @@ Name=(02) SmallIN100 Export Statistics
 
 [0]
 Filter_Name=DataContainerReader
-InputFile=Data\\Output\\SmallIN100Cleaned.dream3d
+InputFile=Data/Output/SmallIN100Cleaned.dream3d
 ReadVoxelData=true
 ReadSurfaceMeshData=false
 ReadSolidMeshData=false
@@ -50,5 +50,5 @@ ArraySelections_SolidMeshEnsemble\size=0
 
 [1]
 Filter_Name=FieldDataCSVWriter
-FieldDataFile=Data\\Output\\SmallIN100Cleaned.csv
+FieldDataFile=Data/Output/SmallIN100Cleaned.csv
 WriteNeighborListData=true
