@@ -17,8 +17,11 @@ This filter will generate Inverse Pole Figure colors for Cubic, Hexagonal or Tri
     - This means that when the user runs some sort of threshold filter the _GoodVoxels_ will be those voxels that have an Error = 0
 
 ![IPF Color Triangle](IPFFilterLegend.png)
+@image latex IPFFilterLegend.png " " width=2.5in
 
 ![Example Data Set](IPFColor_1.png)
+@image latex IPFColor_1.png " " width=5in
+
 
 ## Input Options ##
 
@@ -30,6 +33,7 @@ This filter will generate Inverse Pole Figure colors for Cubic, Hexagonal or Tri
 
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Arrays ##

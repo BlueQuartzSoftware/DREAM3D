@@ -68,8 +68,12 @@
 QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   QFilterWidget(parent),
   m_SampleTransformationAngle(0.0),
-  m_EulerTransformationAngle(0.0)
-  {
+  m_EulerTransformationAngle(0.0),
+  m_TSLchecked(false),
+  m_HKLchecked(false),
+  m_HEDMchecked(false),
+  m_NoTranschecked(true)
+{
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
   m_SampleTransformationAxis[1] = 0.0;
@@ -113,6 +117,10 @@ QString QEbsdToH5EbsdWidget::getFilterGroup()
 AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
 {
   bool ok = false;
+    // First make sure we have good transformation angles and axis
+  setTransformationAngleAxis();
+
+  // Now create the filter and start pushing values into the filter
   EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
   filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
@@ -241,7 +249,6 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   QString val;
   bool ok;
   qint32 i;
-  //double d;
 
   // Run the input dir FIRST as the side effect of running this will be resetting much of the user
   // interface widgets to their default values. We then get the values from the prefs object
@@ -256,6 +263,15 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
   READ_STRING_SETTING(prefs, m_, FileExt, "ang");
   READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
+  READ_CHECKBOX_SETTING(prefs, m_, StackLowToHigh, true)
+  READ_CHECKBOX_SETTING(prefs, m_, StackHighToLow, false)
+
+  READ_BOOL_SETTING(prefs, m_, TSLchecked, false)
+  READ_BOOL_SETTING(prefs, m_, HKLchecked, false)
+  READ_BOOL_SETTING(prefs, m_, HEDMchecked, false)
+  READ_BOOL_SETTING(prefs, m_, NoTranschecked, true)
+
+  setTransformationAngleAxis();
 }
 
 // -----------------------------------------------------------------------------
@@ -265,14 +281,21 @@ void QEbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
 {
   prefs.setValue("Filter_Name", "EbsdToH5Ebsd");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
-      WRITE_STRING_SETTING(prefs, m_, FilePrefix)
-      WRITE_STRING_SETTING(prefs, m_, FileSuffix)
-      WRITE_STRING_SETTING(prefs, m_, FileExt)
-      WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
-      WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
-      WRITE_STRING_SETTING(prefs, m_, zSpacing)
-      WRITE_STRING_SETTING(prefs, m_, TotalDigits)
-      WRITE_STRING_SETTING(prefs, m_, OutputFile)
+  WRITE_STRING_SETTING(prefs, m_, FilePrefix)
+  WRITE_STRING_SETTING(prefs, m_, FileSuffix)
+  WRITE_STRING_SETTING(prefs, m_, FileExt)
+  WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
+  WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
+  WRITE_STRING_SETTING(prefs, m_, zSpacing)
+  WRITE_STRING_SETTING(prefs, m_, TotalDigits)
+  WRITE_STRING_SETTING(prefs, m_, OutputFile)
+  WRITE_CHECKBOX_SETTING(prefs, m_, StackHighToLow)
+  WRITE_CHECKBOX_SETTING(prefs, m_, StackLowToHigh)
+
+  WRITE_BOOL_SETTING(prefs, m_, TSLchecked, m_TSLchecked)
+  WRITE_BOOL_SETTING(prefs, m_, HKLchecked, m_HKLchecked)
+  WRITE_BOOL_SETTING(prefs, m_, HEDMchecked, m_HEDMchecked)
+  WRITE_BOOL_SETTING(prefs, m_, NoTranschecked, m_NoTranschecked)
 }
 
 // -----------------------------------------------------------------------------
@@ -570,83 +593,65 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   int ret = d.exec();
   if (ret == QDialog::Accepted)
   {
-
-    Ebsd::EbsdToSampleCoordinateMapping mapping = d.getSelectedOrigin();
-  m_TSLchecked = d.getTSLchecked();
-  m_HKLchecked = d.getHKLchecked();
-  m_HEDMchecked = d.getHEDMchecked();
-  m_NoTranschecked = d.getNoTranschecked();
-    m_SampleTransformationAxis.resize(3);
-    m_EulerTransformationAxis.resize(3);
-    if (mapping == Ebsd::TSLdefault)
-    {
-      m_SampleTransformationAngle = 180.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 1.0;
-      m_SampleTransformationAxis[2] = 0.0;
-      m_EulerTransformationAngle = 270.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
-    else if (mapping == Ebsd::HKLdefault)
-    {
-      m_SampleTransformationAngle = 180.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 1.0;
-      m_SampleTransformationAxis[2] = 0.0;
-      m_EulerTransformationAngle = 0.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
-    else if (mapping == Ebsd::HEDMdefault)
-    {
-      m_SampleTransformationAngle = 0.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 0.0;
-      m_SampleTransformationAxis[2] = 1.0;
-      m_EulerTransformationAngle = 0.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
-    else if (mapping == Ebsd::UnknownCoordinateMapping)
-    {
-      m_SampleTransformationAngle = 0.0;
-      m_SampleTransformationAxis[0] = 0.0;
-      m_SampleTransformationAxis[1] = 0.0;
-      m_SampleTransformationAxis[2] = 1.0;
-      m_EulerTransformationAngle = 0.0;
-      m_EulerTransformationAxis[0] = 0.0;
-      m_EulerTransformationAxis[1] = 0.0;
-      m_EulerTransformationAxis[2] = 1.0;
-    }
+    m_TSLchecked = d.getTSLchecked();
+    m_HKLchecked = d.getHKLchecked();
+    m_HEDMchecked = d.getHEDMchecked();
+    m_NoTranschecked = d.getNoTranschecked();
+    setTransformationAngleAxis();
   }
-
-#if 0
-  QVector<QString> options;
-  options.push_back("Rotate 2D Scan(s) So Origin of Sample is in Lower Left \n (This Accounts for Samples Being Upside-down with Long WD at the Top of the Scan)");
-  options.push_back("Set 0,0 position of Sample RF at Lower Left \n (This Reorders the Data Array to Remove Computer Graphics Convention of Placing the 0 position of an Array in the Upper Left)");
-  options.push_back("Align Euler RF to Sample RF \n (This Accounts for Disjoined RFs in Commercial EBSD Data Collection Codes)");
-
-  QCheckboxDialog d(options, this);
-  d.setWindowTitle(QString("Advanced Reference Frame Options"));
-
-  d.setValue("Rotate Slice", m_RotateSlice);
-  d.setValue("Reorder Array", m_ReorderArray);
-  d.setValue("Align Eulers", m_AlignEulers);
-
-  int ret = d.exec();
-  if (ret == QDialog::Accepted)
-  {
-    m_RotateSlice = d.getValue("Rotate Slice");
-    m_ReorderArray = d.getValue("Reorder Array");
-    m_AlignEulers = d.getValue("Align Eulers");
-  }
-#endif
-
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdToH5EbsdWidget::setTransformationAngleAxis()
+{
+  if (m_TSLchecked == true)
+  {
+    m_SampleTransformationAngle = 180.0;
+    m_SampleTransformationAxis[0] = 0.0;
+    m_SampleTransformationAxis[1] = 1.0;
+    m_SampleTransformationAxis[2] = 0.0;
+    m_EulerTransformationAngle = 270.0;
+    m_EulerTransformationAxis[0] = 0.0;
+    m_EulerTransformationAxis[1] = 0.0;
+    m_EulerTransformationAxis[2] = 1.0;
+  }
+  else if (m_HKLchecked == true)
+  {
+    m_SampleTransformationAngle = 180.0;
+    m_SampleTransformationAxis[0] = 0.0;
+    m_SampleTransformationAxis[1] = 1.0;
+    m_SampleTransformationAxis[2] = 0.0;
+    m_EulerTransformationAngle = 0.0;
+    m_EulerTransformationAxis[0] = 0.0;
+    m_EulerTransformationAxis[1] = 0.0;
+    m_EulerTransformationAxis[2] = 1.0;
+  }
+  else if (m_HEDMchecked == true)
+  {
+    m_SampleTransformationAngle = 0.0;
+    m_SampleTransformationAxis[0] = 0.0;
+    m_SampleTransformationAxis[1] = 0.0;
+    m_SampleTransformationAxis[2] = 1.0;
+    m_EulerTransformationAngle = 0.0;
+    m_EulerTransformationAxis[0] = 0.0;
+    m_EulerTransformationAxis[1] = 0.0;
+    m_EulerTransformationAxis[2] = 1.0;
+  }
+  else if (m_NoTranschecked == true)
+  {
+    m_SampleTransformationAngle = 0.0;
+    m_SampleTransformationAxis[0] = 0.0;
+    m_SampleTransformationAxis[1] = 0.0;
+    m_SampleTransformationAxis[2] = 1.0;
+    m_EulerTransformationAngle = 0.0;
+    m_EulerTransformationAxis[0] = 0.0;
+    m_EulerTransformationAxis[1] = 0.0;
+    m_EulerTransformationAxis[2] = 1.0;
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //

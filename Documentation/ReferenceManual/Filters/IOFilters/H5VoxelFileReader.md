@@ -9,6 +9,7 @@ I/O Filters (Input)
 This filter reads a legacy DREAM.3D file that holds the *Euler Angles*, *Phases* and *GrainIds* of each **Cell**.  The *Crystal Structures* are also read from the file.  While reading the file, the **Field** map is sized to the largest *GrainId* observed.
 
 ## Parameters ##
+
 | Name | Type |
 |------|------|
 | Input File | File Path |

@@ -450,8 +450,7 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     CtfPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
 
-    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeDimensions, Ebsd::Ctf::LatticeDimensions);
-    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeAngles, Ebsd::Ctf::LatticeAngles);
+    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, Ebsd::Ctf::LatticeConstants);
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Ctf::PhaseName)
     WRITE_PHASE_HEADER_DATA((*phase), int, LaueGroup, Ebsd::Ctf::LaueGroup)
 

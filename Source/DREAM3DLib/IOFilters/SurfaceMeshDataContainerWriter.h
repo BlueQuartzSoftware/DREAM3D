@@ -130,6 +130,8 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     int writeVertexAttributeData(hid_t dcGid);
     int writeFaceAttributeData(hid_t dcGid);
     int writeEdgeAttributeData(hid_t dcGid);
+    int writeFieldData(hid_t dcGid);
+    int writeEnsembleData(hid_t dcGid);
 
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();

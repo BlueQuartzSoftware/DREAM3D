@@ -85,11 +85,11 @@ class SGODFItemDelegate : public QStyledItemDelegate
       QLineEdit* editor;
       QDoubleValidator* validator;
       unsigned int sigma_top = 1;
-      if (m_CrystalStructure == Ebsd::CrystalStructure::Cubic)
+      if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure) )
       {
         sigma_top = 18;
       }
-      else if (m_CrystalStructure == Ebsd::CrystalStructure::Hexagonal)
+      else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure) )
       {
         sigma_top = 36;
       }

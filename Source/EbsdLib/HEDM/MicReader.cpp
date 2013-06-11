@@ -287,12 +287,15 @@ int MicReader::readHeaderOnly()
 // -----------------------------------------------------------------------------
 int MicReader::readFile()
 {
+  std::stringstream ss;
   int err = 1;
   char buf[kBufferSize];
   std::ifstream in(getFileName().c_str());
   if (!in.is_open())
   {
-    std::cout << "Mic file could not be opened: " << getFileName() << std::endl;
+    ss << "Mic file could not be opened: " << getFileName();
+    setErrorMessage(ss.str());
+    setErrorCode(-100);
     return -100;
   }
 
@@ -308,7 +311,10 @@ int MicReader::readFile()
   std::ifstream inHeader(name.c_str());
   if (!inHeader.is_open())
   {
-    std::cout << "matching config file could not be opened: " << name << std::endl;
+    ss.str("");
+    ss << "matching config file could not be opened: " << name;
+    setErrorMessage(ss.str());
+    setErrorCode(-101);
     return -101;
   }
 
@@ -335,7 +341,10 @@ int MicReader::readFile()
   std::ifstream inHeader2(name.c_str());
   if (!inHeader2.is_open())
   {
-    std::cout << "Matching .dat file could not be opened: " << name << std::endl;
+    ss.str("");
+    ss << "Matching .dat file could not be opened: " << name << std::endl;
+    setErrorMessage(ss.str());
+    setErrorCode(-102);
     return -102;
   }
 
@@ -369,7 +378,14 @@ int MicReader::readFile()
 
   // We need to pass in the buffer because it has the first line of data
   err = readData(in, buf, kBufferSize);
-  if (err < 0) { return err;}
+  if (err < 0) {
+      ss.str("");
+    ss << "Error Reading the HEDM Data File." << std::endl;
+    setErrorMessage(ss.str());
+    setErrorCode(-103);
+    return -103;
+
+  }
 
   return err;
 }

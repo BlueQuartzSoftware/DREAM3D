@@ -84,6 +84,9 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
 
+
+    DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
+    DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
     /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
@@ -111,6 +114,13 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
                                               bool stackLowToHigh, QString filename);
 
     virtual void openHtmlHelpFile();
+  protected:
+    /**
+     * @brief setTransformationAngleAxis Uses the booleans that represent which manufacturer of the
+     * EBSD data to set a specific sample and crystalographic transformation axis and angle.
+     */
+    void setTransformationAngleAxis();
+
 
   protected slots:
     /* OIM Data Import Slots */
@@ -142,8 +152,6 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     bool m_HKLchecked;
     bool m_HEDMchecked;
     bool m_NoTranschecked;
-    float m_SampleTransformationAngle;
-    float m_EulerTransformationAngle;
     std::vector<float> m_SampleTransformationAxis;
     std::vector<float> m_EulerTransformationAxis;
 
