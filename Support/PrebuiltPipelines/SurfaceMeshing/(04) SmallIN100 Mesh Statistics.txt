@@ -4,7 +4,7 @@ Name=(04) SmallIN100 Mesh Statistics
 
 [0]
 Filter_Name=DataContainerReader
-InputFile=Data\\Output\\SmallIN100Mesh.dream3d
+InputFile=Data/Output/SmallIN100Mesh.dream3d
 ReadVoxelData=true
 ReadSurfaceMeshData=true
 ReadSolidMeshData=false
@@ -48,7 +48,7 @@ Filter_Name=GenerateFaceMisorientationColoring
 
 [6]
 Filter_Name=DataContainerWriter
-OutputFile=Data\\Output\\SmallIN100Mesh.dream3d
+OutputFile=Data/Output/SmallIN100Mesh.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=true
 WriteXdmfFile=true
