@@ -33,6 +33,7 @@ set(_PublicFilters
   FindShapes
   FindSizes
   FindSlipTransmissionMetrics
+  FindGBCD
 
   GenerateEnsembleStatistics
 )
