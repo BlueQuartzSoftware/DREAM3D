@@ -1,4 +1,4 @@
-Generate Face IPF Coloring {#generatefaceipfcoloring}
+Generate Face IPF Coloring {#generatefacemisorientationcoloring}
 ======================
 
 ## Group (Subgroup) ##

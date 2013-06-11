@@ -21,9 +21,7 @@ set(_PublicFilters
   FindAvgCAxes
   FindAvgOrientations
   FindBoundaryStrengths
-  FindDeformationStatistics
   FindEuclideanDistMap
-  FindGBCD
   FindGrainReferenceCAxisMisorientations
   FindGrainReferenceMisorientations
   FindKernelAvgMisorientations
@@ -31,13 +29,11 @@ set(_PublicFilters
   FindNeighborhoods
   FindNeighbors
   FindNumFields
-  FindRadialDist
   FindSchmids
   FindShapes
   FindSizes
-  FindSlicetoSliceRotations
   FindSlipTransmissionMetrics
-  FindTwinBoundaryInfo
+
   GenerateEnsembleStatistics
 )
 
@@ -56,7 +52,11 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-
+  FindGBCD
+  FindTwinBoundaryInfo
+  FindDeformationStatistics
+  FindRadialDist
+  FindSlicetoSliceRotations
 )
 
 #-----------------

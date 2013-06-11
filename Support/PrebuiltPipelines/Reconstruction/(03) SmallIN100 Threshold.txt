@@ -1,15 +1,13 @@
-[prebuilt_config]
-Name=Small IN100 Reconstruction
-
 [PipelineBuilder]
-Number_Filters=8
+Number_Filters=3
+Name=(03) SmallIN100 Threshold
 
 [0]
 Filter_Name=ReadH5Ebsd
-InputFile=/Users/Shared/Data/Ang_Data/Small_IN100_Output/Small_IN100.h5ebsd
+InputFile=Data\\Output\\SmallIN100.h5ebsd
 ZStartIndex=1
 ZEndIndex=117
-UseTransformations=false
+UseTransformations=true
 ArraySelections_VoxelCell\size=4
 ArraySelections_VoxelCell\1\VoxelCell=Confidence Index
 ArraySelections_VoxelCell\2\VoxelCell=EulerAngles
@@ -38,30 +36,8 @@ ComparisonInputs\2\CompOperator=1
 ComparisonInputs\2\CompValue=0.100000001490116
 
 [2]
-Filter_Name=IdentifySample
-
-[3]
-Filter_Name=AlignSectionsFeatureCentroid
-UseReferenceSlice=true
-ReferenceSlice=0
-
-[4]
-Filter_Name=FindCellQuats
-
-[5]
-Filter_Name=EBSDSegmentGrains
-MisorientationTolerance=5
-
-[6]
-Filter_Name=GenerateIPFColors
-ReferenceDir\size=3
-ReferenceDir\1\x=0
-ReferenceDir\2\y=0
-ReferenceDir\3\z=1
-
-[7]
 Filter_Name=DataContainerWriter
-OutputFile=
+OutputFile=Data\\Output\\SmallIN100.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true
