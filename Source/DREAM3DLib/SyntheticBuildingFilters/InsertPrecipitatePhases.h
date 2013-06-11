@@ -106,7 +106,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterParameters();
@@ -140,7 +140,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     void assign_voxels();
     void assign_gaps();
     void cleanup_grains();
-	void write_goal_attributes();
+    void write_goal_attributes();
 
     float find_xcoord(long long int index);
     float find_ycoord(long long int index);
@@ -190,10 +190,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     int32_t* m_NumFields;
     StatsDataArray* m_StatsDataArray;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
 
     std::vector<std::vector<int> > columnlist;
     std::vector<std::vector<int> > rowlist;
