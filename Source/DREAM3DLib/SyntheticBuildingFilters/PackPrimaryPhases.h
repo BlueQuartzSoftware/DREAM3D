@@ -49,10 +49,7 @@
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 typedef struct {
@@ -128,7 +125,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     void initialize_packinggrid();
 
-    void generate_grain(int phase, int Seed, Field* grain, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+    void generate_grain(int phase, int Seed, Field* grain, unsigned int shapeclass);
 
     void transfer_attributes(int gnum, Field* field);
     void insert_grain(size_t grainNum);
@@ -139,11 +136,11 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     void determine_neighbors(size_t grainNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-	float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
+  float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_grains();
-	void write_goal_attributes();
+  void write_goal_attributes();
 
     void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
@@ -185,10 +182,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     ShapeOps::Pointer m_EllipsoidOps;
     ShapeOps::Pointer m_SuperEllipsoidOps;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
 
     std::vector<std::vector<int> > columnlist;
     std::vector<std::vector<int> > rowlist;

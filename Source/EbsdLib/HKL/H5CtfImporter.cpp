@@ -178,6 +178,14 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     {
       ss << "H5CtfImporter Error: The Ctf file could not be opened.";
     }
+    else if (reader.getXStep() == 0.0f)
+    {
+      ss << "H5CtfImporter Error: X Step value equals 0.0. This is bad. Please check the validity of the CTF file.";
+    }
+    else if(reader.getYStep() == 0.0f)
+    {
+      ss << "H5CtfImporter Error: Y Step value equals 0.0. This is bad. Please check the validity of the CTF file.";
+    }
     else
     {
       ss << reader.getErrorMessage();
@@ -185,6 +193,8 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
     setPipelineMessage(ss.str());
     setErrorCondition(err);
     progressMessage(ss.str(), 100);
+
+
     return -1;
   }
 
@@ -440,8 +450,7 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     CtfPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
 
-    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeDimensions, Ebsd::Ctf::LatticeDimensions);
-    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeAngles, Ebsd::Ctf::LatticeAngles);
+    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, Ebsd::Ctf::LatticeConstants);
     WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Ctf::PhaseName)
     WRITE_PHASE_HEADER_DATA((*phase), int, LaueGroup, Ebsd::Ctf::LaueGroup)
 

@@ -180,6 +180,7 @@ namespace DREAM3D
     const std::string Statistics("Statistics");
     const std::string PhaseName("PhaseName");
     const std::string MaterialName("MaterialName");
+    const std::string LatticeConstants("LatticeConstants");
   const std::string GBCD("GBCD");
   }
 
@@ -196,6 +197,7 @@ namespace DREAM3D
   {
     const std::string SurfaceMeshFaces("SurfaceMeshFaces");
     const std::string SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
+    const std::string SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
     const std::string SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
     const std::string SurfaceMeshF1s("SurfaceMeshF1s");
     const std::string SurfaceMeshF1spts("SurfaceMeshF1spts");

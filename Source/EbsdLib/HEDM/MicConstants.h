@@ -67,7 +67,7 @@ namespace Ebsd {
 
   DECLARE_STRING_CONST(Cubic)
   DECLARE_STRING_CONST(Hexagonal)
-  DECLARE_STRING_CONST(Orthorhombic)
+  DECLARE_STRING_CONST(OrthoRhombic)
   DECLARE_STRING_CONST(Tetragonal)
 
    const std::string FileExt("mic");

@@ -44,8 +44,8 @@
 //
 // -----------------------------------------------------------------------------
 CtfPhase::CtfPhase() :
-m_PhaseIndex(-1),
-m_PhaseName("-1")
+  m_PhaseIndex(-1),
+  m_PhaseName("-1")
 {
 
 }
@@ -63,8 +63,11 @@ CtfPhase::~CtfPhase()
 // -----------------------------------------------------------------------------
 void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
 {
-  m_LatticeDimensions = tokenize<float>(tokens[0], ';');
-  m_LatticeAngles = tokenize<float>(tokens[1], ';');
+  m_LatticeConstants = tokenize<float>(tokens[0], ';');
+  std::vector<float> angles = tokenize<float>(tokens[1], ';');
+  m_LatticeConstants.push_back(angles[0]);
+  m_LatticeConstants.push_back(angles[1]);
+  m_LatticeConstants.push_back(angles[2]);
   m_PhaseName = tokens[2];
   unsigned int sym = 999;
   stringToNum<unsigned int>(sym, tokens[3]);
@@ -87,8 +90,8 @@ void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
 // -----------------------------------------------------------------------------
 void CtfPhase::printSelf(std::ostream &stream)
 {
-  stream << Ebsd::Ctf::LatticeDimensions << " " << m_LatticeDimensions[0] << ", " << m_LatticeDimensions[1] << ", " << m_LatticeDimensions[2] << std::endl;
-  stream << Ebsd::Ctf::LatticeAngles << " " << m_LatticeAngles[0] << ", " << m_LatticeAngles[1] << ", " << m_LatticeAngles[2] << std::endl;
+  stream << Ebsd::Ctf::LatticeConstants << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
+  << m_LatticeConstants[3] << ", " << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] << std::endl;
   stream << Ebsd::Ctf::PhaseName << " " << m_PhaseName << std::endl;
   stream << Ebsd::Ctf::LaueGroup << " " << m_LaueGroup << std::endl;
   stream << Ebsd::Ctf::SpaceGroup << " " << m_SpaceGroup << std::endl;
@@ -103,10 +106,38 @@ void CtfPhase::printSelf(std::ostream &stream)
 unsigned int CtfPhase::determineCrystalStructure()
 {
   Ebsd::Ctf::LaueGroupTable symmetry = getLaueGroup();
-  unsigned int crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  if (symmetry == Ebsd::Ctf::LG_Cubic_High || symmetry == Ebsd::Ctf::LG_Cubic_Low) crystal_structure = Ebsd::CrystalStructure::Cubic;
-  else if (symmetry == Ebsd::Ctf::LG_Hexagonal_High || symmetry == Ebsd::Ctf::LG_Hexagonal_Low) crystal_structure = Ebsd::CrystalStructure::Hexagonal;
-  return crystal_structure;
+
+  switch(symmetry)
+  {
+    case Ebsd::Ctf::LG_Triclinic:
+      return Ebsd::CrystalStructure::Triclinic;
+    case Ebsd::Ctf::LG_Monoclinic:
+      return Ebsd::CrystalStructure::Monoclinic;
+    case Ebsd::Ctf::LG_Orthorhombic:
+      return Ebsd::CrystalStructure::OrthoRhombic;
+    case Ebsd::Ctf::LG_Tetragonal_Low:
+      return Ebsd::CrystalStructure::Tetragonal_Low;
+    case Ebsd::Ctf::LG_Tetragonal_High:
+      return Ebsd::CrystalStructure::Tetragonal_High;
+    case Ebsd::Ctf::LG_Trigonal_Low:
+      return Ebsd::CrystalStructure::Trigonal_Low;
+    case Ebsd::Ctf::LG_Trigonal_High:
+      return Ebsd::CrystalStructure::Trigonal_High;
+    case Ebsd::Ctf::LG_Hexagonal_Low:
+      return Ebsd::CrystalStructure::Hexagonal_Low;
+    case Ebsd::Ctf::LG_Hexagonal_High:
+      return Ebsd::CrystalStructure::Hexagonal_High;
+    case Ebsd::Ctf::LG_Cubic_Low:
+      return Ebsd::CrystalStructure::Cubic_Low;
+    case Ebsd::Ctf::LG_Cubic_High:
+    return Ebsd::CrystalStructure::Cubic_High;
+    case Ebsd::Ctf::UnknownSymmetry:
+      return Ebsd::CrystalStructure::UnknownCrystalStructure;
+    default:
+      break;
+
+  }
+  return Ebsd::CrystalStructure::UnknownCrystalStructure;
 }
 
 // -----------------------------------------------------------------------------

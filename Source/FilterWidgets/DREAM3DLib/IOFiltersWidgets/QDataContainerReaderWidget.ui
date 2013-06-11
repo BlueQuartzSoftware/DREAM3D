@@ -52,10 +52,10 @@
       </widget>
      </item>
      <item>
-      <widget class="QFSDropLineEdit" name="m_InputFile"/>
+      <widget class="QFSDropLineEdit" name="InputFile"/>
      </item>
      <item>
-      <widget class="QPushButton" name="m_InputFileBtn">
+      <widget class="QPushButton" name="InputFileBtn">
        <property name="text">
         <string>Select...</string>
        </property>
@@ -69,21 +69,21 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QCheckBox" name="m_ReadVoxelData">
+      <widget class="QCheckBox" name="ReadVoxelData">
        <property name="text">
         <string>Read Voxel Data</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="m_ReadSurfaceMeshData">
+      <widget class="QCheckBox" name="ReadSurfaceMeshData">
        <property name="text">
         <string>Read Surface Mesh</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="m_ReadSolidMeshData">
+      <widget class="QCheckBox" name="ReadSolidMeshData">
        <property name="enabled">
         <bool>false</bool>
        </property>

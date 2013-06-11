@@ -111,24 +111,24 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
     setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
 
   if (getBinaryNodesFile().empty() == true)
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   if (getBinaryNodesFile().empty() == true)
   {
     std::stringstream ss;
     ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -4);
     setErrorCondition(-387);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
 }

@@ -48,27 +48,22 @@
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestTrigonalOps()
+void TestQuatMath()
 {
 
-  // if you have a known value and a calculated value you can have the Unit Test Framework
-  // test for equality:
+  float q1[5] = { 0.0f, 0.0, 0.0, 0.22495, .97437};
+  float q2[5] = { 0.0f, .343, -.2185, .90933, 0.08756 };
+  float out[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
-  float known = 1.0f;
+  MULT_QUAT(q1, q2, out);
 
-  float calcedValue = 2.0f;
 
-  DREAM3D_REQUIRE_EQUAL(known, calcedValue)
-
-  // You can also have arbitrary comparisons using the DREAM3D_REQUIRE(...) macro
-
-  DREAM3D_REQUIRE(known == calcedValue)
-
-  // There are a few other macros that you can use, look in the UnitTestSupport.hpp file
-
+  std::cout << "Done" << std::endl;
 }
 
 
@@ -80,7 +75,7 @@ void TestTrigonalOps()
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( TestTrigonalOps() )
+  DREAM3D_REGISTER_TEST( TestQuatMath() )
 
   PRINT_TEST_SUMMARY();
   return err;

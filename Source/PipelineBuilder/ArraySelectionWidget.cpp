@@ -111,13 +111,13 @@ void ArraySelectionWidget::populateArrayNames(VoxelDataContainer::Pointer vdc,
 void ArraySelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
 {
   std::list<std::string> cellNames = vdc->getCellArrayNameList();
-  populateArrayList(voxelCellArrayList, cellNames);
+  populateArrayList(voxelCellArrayList, cellNames, voxelCellCB);
 
   std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
-  populateArrayList(voxelFieldArrayList, fieldNames);
+  populateArrayList(voxelFieldArrayList, fieldNames, voxelFieldCB);
 
   std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
-  populateArrayList(voxelEnsembleArrayList, ensembleNames);
+  populateArrayList(voxelEnsembleArrayList, ensembleNames, voxelEnsembleCB);
 }
 
 // -----------------------------------------------------------------------------
@@ -126,13 +126,13 @@ void ArraySelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer v
 void ArraySelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
 {
   std::list<std::string> cellNames = vdc->getPointArrayNameList();
-  populateArrayList(surfaceMeshVertexArrayList, cellNames);
+  populateArrayList(surfaceMeshVertexArrayList, cellNames, vertexArraysCB);
 
   std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
-  populateArrayList(surfaceMeshFaceArrayList, fieldNames);
+  populateArrayList(surfaceMeshFaceArrayList, fieldNames, faceArraysCB);
 
   std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
-  populateArrayList(surfaceMeshEdgeArrayList, ensembleNames);
+  populateArrayList(surfaceMeshEdgeArrayList, ensembleNames, edgeArraysCB);
 }
 
 // -----------------------------------------------------------------------------
@@ -141,20 +141,20 @@ void ArraySelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContaine
 void ArraySelectionWidget::populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer vdc)
 {
   std::list<std::string> cellNames = vdc->getPointArrayNameList();
-  populateArrayList(solidMeshVertexArrayList, cellNames);
+  populateArrayList(solidMeshVertexArrayList, cellNames, NULL);
 
   std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
-  populateArrayList(solidMeshFaceArrayList, fieldNames);
+  populateArrayList(solidMeshFaceArrayList, fieldNames, NULL);
 
   std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
-  populateArrayList(solidMeshEdgeArrayList, ensembleNames);
+  populateArrayList(solidMeshEdgeArrayList, ensembleNames, NULL);
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames)
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, QCheckBox* cb)
 {
   // Convert from STL container to Qt Container then pass through to the next method.
   QStringList qArrayNames;
@@ -162,33 +162,145 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<
   {
     qArrayNames << QString::fromStdString(*iter);
   }
-  populateArrayList(listWidget, qArrayNames);
+  populateArrayList(listWidget, qArrayNames, cb);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringList &arrayNames)
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox* cb)
 {
   QStringList selectedArrays;
-  for(qint32 i = 0; i < listWidget->count(); ++i)
+  int listWidgetCount = listWidget->count();
+  // First loop through and get the list of arrays that were selected
+  for(qint32 i = 0; i < listWidgetCount; ++i)
   {
     if (listWidget->item(i)->checkState() == Qt::Checked)
     {
       selectedArrays << listWidget->item(i)->text();
     }
   }
+
+  // Now clear the list and start dropping in the array names checking for any previous selections
+  int selectedCount = 0;
   listWidget->blockSignals(true);
   listWidget->clear();
   foreach(QString name, arrayNames)
   {
     listWidget->addItem(name);
     Qt::CheckState checked = Qt::Unchecked;
-    if (selectedArrays.contains(name) == true) { checked = Qt::Checked; }
+    if (selectedArrays.contains(name) == true) {
+      checked = Qt::Checked;
+      selectedCount++;
+    }
     listWidget->item(listWidget->count() - 1)->setCheckState(checked);
   }
+
+// Now make sure to check the "Select All" checkbox for this type of data
+  listWidgetCount = listWidget->count();
+  if (cb != NULL && listWidgetCount > 0)
+  {
+    cb->blockSignals(true);
+    cb->setChecked(listWidgetCount == selectedCount);
+    cb->blockSignals(false);
+  }
+
+
+//  std::cout << "List Widget: " << listWidget->objectName().toStdString() << " Count: " << listWidget->count() << std::endl;
   listWidget->blockSignals(false);
+
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_vertexArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    vertexArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshVertexArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_faceArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    faceArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshFaceArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_edgeArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    edgeArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshEdgeArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_voxelCellCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    voxelCellCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(voxelCellArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_voxelFieldCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    voxelFieldCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(voxelFieldArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_voxelEnsembleCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    voxelEnsembleCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(voxelEnsembleArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::toggleListSelections(QListWidget* w, int state)
+{
+
+  w->blockSignals(true);
+  int count = w->count();
+  for(int i = 0; i < count; ++i)
+  {
+      w->item(i)->setCheckState(static_cast<Qt::CheckState>(state));
+  }
+  w->blockSignals(false);
+  // Emit this signal so the preflight runs which will update all the guis after this one
+  emit arrayListsChanged();
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -204,6 +316,7 @@ void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &s
       listWidget->item(i)->setCheckState(Qt::Checked);
     }
   }
+
   listWidget->blockSignals(false);
 }
 

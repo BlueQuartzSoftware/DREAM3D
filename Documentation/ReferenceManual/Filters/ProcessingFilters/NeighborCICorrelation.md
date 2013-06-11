@@ -1,13 +1,13 @@
-Bad Data Orientation Correlation {#neighborcicorrelation}
+Neighbor CI Correlation {#neighborcicorrelation}
 ======
 
 ## Group (Subgroup) ##
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter first identifies all **Cells** that have a *confidence index* below the minimum set by the user.  Then, for each of those **Cells**, their neighboring **Cells** are checked to identify the neighbor **Cell** with the highest *confidence index*.  If the neighbor with the highest *confidence index* is above the minimum set by the user, then the data from that **Cell** will be copied to the **Cell** with the *confidence index* below the minimum.  If none of the neighbor **Cells** are above the minimum value, then no data will be copied to the **Cell** on that iteration.  
-The filter will complete only one iteration by default, but can be set to *Loop Until Gone* (which will result in all **Cells** below the user defined minimum being replaced by neighboring **Cells** above the minimum). 
+This Filter first identifies all **Cells** that have a *confidence index* below the minimum set by the user.  Then, for each of those **Cells**, their neighboring **Cells** are checked to determine the neighbor **Cell** with maximum *confidence index*.  The attributes of the neighbor with the maximum *confidence index* are then reassigned to the reference **Cell**.
 
+*Note:* By default the filter will run only one iteration of the cleanup.  If the user selects the *Loop Until Gone* option, then the filter will run iteratively until no **Cells** exist with a *confidence index* below the user defined value. So, if a **Cell** is below the tolerance and so are all of its neighbors, then that **Cell** will not be changed during that iteration and will remain unchanged until one of its neighbors gets changed by a **Cell** further away.  
 
 ## Parameters ##
 
@@ -23,7 +23,8 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | Confidence Index | Scalar value defining the confidence in the orientation of the **Cell** (TSL data) |  | ReadH5ebsd |
+| Cell | Confidence Index | Scalar value defining the confidence in the orientation of the **Cell** (TSL data) |
+
 
 ## Created Arrays ##
 None

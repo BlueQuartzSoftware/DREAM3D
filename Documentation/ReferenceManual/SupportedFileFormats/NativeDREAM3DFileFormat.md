@@ -2,7 +2,7 @@ Native DREAM3D File Format {#nativedream3d}
 ===========
 
 ## HDF5 ##
-DREAM3D uses the [HDF5](http://www.hdfgroup.org) as its native file format. HDF5 stores data in a hierarchical format with complete descriptors for the data stored in the file. HDF5 is open-source and a number of tools exist that allow a user to view and manipulate HDF5 data files. Once such tool is the free  [HDFView](http://www.hdfgroup.org/hdf-java-html/hdfview/index.html#download_hdfview) from "The HDF Group" which is a java based program that can view and edit HDF5 data files. 
+DREAM3D uses the [HDF5](http://www.hdfgroup.org) as its native file format which means that **_ANY_** software package capable of reading an HDF5 file can read a DREAM3D file. HDF5 stores data in a hierarchical format with complete descriptors for the data stored in the file. HDF5 is open-source and a number of tools exist that allow a user to view and manipulate HDF5 data files. Once such tool is the free  [HDFView](http://www.hdfgroup.org/hdf-java-html/hdfview/index.html#download_hdfview) from "The HDF Group" which is a java based program that can view and edit HDF5 data files. 
 
 Each array is stored as an individual data set in HDF5 under one of several different types of _DataContainer_ storage groups.
 

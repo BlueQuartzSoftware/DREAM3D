@@ -173,7 +173,12 @@ void DREAM3D_UI::on_actionSave_Pipeline_2_triggered() {
   if (fi.exists() == true)
   {
     QFile f(filePath);
-    f.remove();
+    if (f.remove() == false)
+    {
+      QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
+      QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+      return;
+    }
   }
   QSettings prefs(filePath, QSettings::IniFormat, this);
   m_PipelineBuilderWidget->savePipeline(prefs);
@@ -210,7 +215,7 @@ void DREAM3D_UI::readSettings()
   QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #endif
   // Have the PipelineBuilder Widget read its settings
-  m_PipelineBuilderWidget->readSettings(prefs);
+  m_PipelineBuilderWidget->readSettings(prefs, true);
   readWindowSettings(prefs);
 
   readVersionCheckSettings(prefs);

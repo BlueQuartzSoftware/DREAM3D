@@ -3,6 +3,8 @@
 Creating a surface mesh in DREAM3D can be accomplished in several ways. There are a pair of filters [Multi-Material Marching Cubes (Slice at a Time)](#m3cslicebyslice) and [Quick Surface Mesh](#quicksurfacemesh) that will generate a triangular based mesh of the primary **Field** for you. The terminology of the underlying data structures is something that the user should understand so that they can be well informed. We start out by defining a triangle **T**  which we will call a  **Face**. Each Triangle has 3 **Vertex** (V0, V1, V2) which are  referred to as a **Point**, **Vertex** and/or **Node** interchangeably within DREAM3D.
 
 ![Triangle or Face](TriangleSmall.png)
+@image latex TriangleSmall.png " " width=3in
+
 
 These data structures are declared in DREAM3D in the following code:
 
@@ -26,8 +28,6 @@ To support the creation and manipulation of a surface mesh DREAM3D introduced a 
 
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
-
-In order to stay consistent with the VoxelDataContainer and its terminology DREAM3D refers to _Vertex Attributes_ as **Cell** data and _Triangle Attributes_ as **Field** data. There are also convenience methods that are named ``setPointData(...)``, ``setFaceData(...)`` and ``setEdgeData(...)`` that map loosely to the **Cell**, **Field** and **Ensemble** syntax of the ``VoxelDataContainer``
 
 In the filter documentation the following terminology will be used:
 

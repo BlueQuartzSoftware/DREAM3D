@@ -314,6 +314,12 @@ int CtfReader::readFile()
   err = parseHeaderLines(headerLines);
   if (err < 0) { return err;}
 
+
+  if (getXStep() == 0.0 || getYStep() == 0.0f )
+  {
+    return -1;
+  }
+
   err = readData(in);
   if (err < 0) { return err;}
 

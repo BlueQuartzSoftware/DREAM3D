@@ -128,6 +128,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
+     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
@@ -297,7 +298,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                       if(phase1 == phase2 && phase1 < m_OrientationOps.size())
                       {
                         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-                      } 
+                      }
                     }
                     if(w > m_MisorientationTolerance) disorientation++;
                   }

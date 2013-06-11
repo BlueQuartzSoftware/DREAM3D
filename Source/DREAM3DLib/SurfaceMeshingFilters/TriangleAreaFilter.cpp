@@ -68,15 +68,15 @@ class CalculateAreasImpl
       DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
-	  float ABx, ABy, ABz, ACx, ACy, ACz;
+    float ABx, ABy, ABz, ACx, ACy, ACz;
       for (size_t i = start; i < end; i++)
       {
-		ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
-		ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
-		ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
-		ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
-		ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
-		ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
+    ABx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[1]].pos[0];
+    ABy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[1]].pos[1];
+    ABz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[1]].pos[2];
+    ACx = nodes[triangles[i].verts[0]].pos[0] - nodes[triangles[i].verts[2]].pos[0];
+    ACy = nodes[triangles[i].verts[0]].pos[1] - nodes[triangles[i].verts[2]].pos[1];
+    ACz = nodes[triangles[i].verts[0]].pos[2] - nodes[triangles[i].verts[2]].pos[2];
         m_Areas[i]  = 0.5*sqrt(((ABy*ACz-ABz*ACy)*(ABy*ACz-ABz*ACy)) + ((ABz*ACx-ABx*ACz)*(ABz*ACx-ABx*ACz)) + ((ABx*ACy-ABy*ACx)*(ABx*ACy-ABy*ACx)));
       }
     }
@@ -139,23 +139,23 @@ void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields,
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-    setErrorCondition(-384);
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
   else
   {
     // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
+      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
     }
     else
     {

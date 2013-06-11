@@ -93,9 +93,10 @@ int TestCtfReader()
   DREAM3D_REQUIRE(ystep == 0.5f);
   DREAM3D_REQUIRE(reader.getNumPhases() == 1);
   CtfPhase::Pointer phase = reader.getPhaseVector().at(0);
-  std::vector<float> dimensions = phase->getLatticeDimensions();
+  std::vector<float> dimensions = phase->getLatticeConstants();
   DREAM3D_REQUIRE(dimensions[0] >= 3.230f && dimensions[0] <= 3.232f)
   DREAM3D_REQUIRE(dimensions[1] >= 3.230f && dimensions[1] <= 3.232f)
+  DREAM3D_REQUIRE(dimensions.size() == 6)
 #endif
 
   return 1;

@@ -21,7 +21,9 @@ The main features are:
     - Boundary
 
 ## Size Distribution Tab ##
+
 ![StatsGenerator Main Window](Images/image001.png)
+@image latex Images/image001.png " " width=6in 
 
 
   + **Mu** This is the average value of the lognormal grain size distribution
@@ -41,7 +43,8 @@ The main features are:
   the Wheel Button allows the user to edit the currently selected phase.
   
 ![Phase Properties](Images/image002.png)
-  
+@image latex Images/image002.png " " width=6in 
+
 + Select Crystal Structure: this allows the user to specify the crystal structure of the phase. Currently, the two options are Cubic and  Hexagonal.
 + Fraction: this is the volume fraction of the phase. The Calculated Phase Fraction is updated as more phases are added, by scaling the current total of all the phases fractions to 1 (in case the user's total is not equal to 1 when finished).
 + Select Phase Type: this specifies the type of the phase. Currently, the two types of phases are Primary and Precipitate. Note that there must be at least one Primary phase before any Precipitate phase can be created or the Synthetic Builder will fail.
@@ -50,8 +53,10 @@ The main features are:
 
 
 ## Omega3 Tab ##
+
 ![Omega 3 Gui](Images/image003.png)
-  
+@image latex Images/image003.png " " width=6in 
+
 + Bin: this column is calculated from the size distribution and cannot be changed.
 + Alpha: this is the alpha parameter of a Beta distribution. Omega 3 is normalized and can only be between 0 and 1, so the Beta distribution is a good fit
 + Beta: this is the beta parameter of the Beta distribution.
@@ -62,6 +67,7 @@ The main features are:
 ## Shape Distribution Tab ##
 
 ![Shape Distribution Function GUI](Images/image004.png)
+@image latex Images/image004.png " " width=6in 
   
 + Bin: this column is calculated from the size distribution and cannot be changed.
 +  Alpha: this is the alpha parameter of a Beta distribution. B/A, C/A and C/B are normalized and can only be between 0 and 1, so the Beta distribution is a good fit
@@ -73,6 +79,7 @@ The main features are:
 ## Neighbor Distribution Tab ##
 
 ![Neighbor Distribution Function GUI](Images/image005.png)
+@image latex Images/image005.png " " width=6in 
 
 + Bin: this column is calculated from the size distribution and cannot be changed.
 + Alpha: this is the alpha parameter of a Power Law distribution.
@@ -85,6 +92,7 @@ The main features are:
 ## ODF Tab ##
 
 ![ODF Gui](Images/image006.png)
+@image latex Images/image006.png " " width=6in 
 
 **Weights and Spreads Sub-Tab**
 
@@ -102,6 +110,7 @@ The main features are:
 **MDF Sub Tab** This sub-tab will display the baseline MDF for the generated ODF.  The  implemented algorithm proceeds by randomly sampling pairs of orientations from  the ODF and calculating the misorientation (axis-angle only). Only the angle is plotted in the misorientation distribution plot.  The user can also add axis-angle pairs to increase in weight.
 
 ![MDF Gui](Images/image007.png)
+@image latex Images/image007.png " " width=6in 
   
 - Angle Ð this is the angle of the misorientation to increase in weight.
 - Axis Ð this is the axis of the misorientation to increase in weight.  If the crystal structure being used for the phase is Hexagonal, then this axis is in the 3-index, orthogonal convention, not the true (hkil) convention.
@@ -114,6 +123,8 @@ The main features are:
 ## Axis ODF Tab ##
 
 ![Axis ODF Gui](Images/image008.png)  
+@image latex Images/image008.png " " width=6in 
+
 **Weights and Spreads Sub-Tab**
       
 - Euler 1-3 Ð these are the Euler angles that define an orientation that the user would like to increase in weight.

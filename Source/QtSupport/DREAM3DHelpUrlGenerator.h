@@ -43,6 +43,10 @@
 
 #include <QtGui/QApplication>
 
+
+/**
+ * @brief The DREAM3DHelpUrlGenerator class generates a QUrl that contains a path to the specified help file
+ */
 class DREAM3DHelpUrlGenerator
 {
 
@@ -50,22 +54,22 @@ public:
   DREAM3DHelpUrlGenerator();
   virtual ~DREAM3DHelpUrlGenerator();
 
-	/**
+  /**
      * @brief Generates a help URL from the given lowercase name.
      */
-	static QUrl generateHTMLUrl(QString helpName);
+  static QUrl generateHTMLUrl(QString helpName);
 
-	/**
+  /**
      * @brief Opens the URL specified in a web browser.  The variable "parent" is needed
-	 * to pop-up a dialog box if the opening process fails.
+   * to pop-up a dialog box if the opening process fails.
      */
-	static void openHTMLUrl(QUrl URL, QWidget* parent);
+  static void openHTMLUrl(QUrl URL, QWidget* parent);
 
-	/**
+  /**
      * @brief This function both generates a URL and opens it in a browser.  It is simply
-	 * a combination of the two previous functions, for convenience.
+   * a combination of the two previous functions, for convenience.
      */
-	static void generateAndOpenHTMLUrl(QString helpName, QWidget* parent);
+  static void generateAndOpenHTMLUrl(QString helpName, QWidget* parent);
 
 private:
 

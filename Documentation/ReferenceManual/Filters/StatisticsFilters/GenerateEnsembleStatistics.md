@@ -8,6 +8,7 @@ Statistics Filters (Ensemble)
 This filter will fit "common" statistical distributions (as chosen by the user) to specific **Field** level attributes.  The user can chose both which attributes to fit and with what distribution to fit them.  The parameters that define the "best-fit" distributions will be stored in an **Ensemble** array.
 
 ## Parameters ##
+
 | Name | Type | Description |
 |------|------| ----------- |
 | Size Distribution | Boolean | Whether to fit the size distibution |

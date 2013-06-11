@@ -718,6 +718,9 @@ font-size: 10px;
        <property name="text">
         <string>Use Recommended Transformations</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item row="0" column="3">
