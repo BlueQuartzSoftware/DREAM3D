@@ -1260,7 +1260,22 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+	  QString filterName = filterNameWidgetItem->text();
+	  
+
+	  #if 0
+QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl(value.toString());
+	  QString text("<a href=\"");
+	  text.append(url.toString()).append("\">").append(value.toString()).append("</a>");
+#endif
+
+	  // Create error hyperlink
+	  QLabel* hyperlinkLabel = new QLabel( "<a href=http://www.google.com> Click Here</a>" );
+	  hyperlinkLabel->setTextFormat(Qt::RichText);
+	  hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+	  hyperlinkLabel->setOpenExternalLinks(true);
+
+	  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
