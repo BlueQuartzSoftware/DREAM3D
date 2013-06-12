@@ -1241,17 +1241,11 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       msgColor.setBlue(193);
     {
       QBrush msgBrush(msgColor);
-<<<<<<< HEAD
 
-      QString msgName = QString::fromStdString(msg.getMessagePrefix());
-=======
-      /* JOEY LOOK HERE */
-      QString className = QString::fromStdString(msg.getFilterClassName() );
-      QString humanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
-      /* Now figure out how to turn that information into a Hyperlink */
+      QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
+      QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
+	  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
 
-      QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
->>>>>>> 7b1df5606c3988939485d47f81cff58aacb73892
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1270,12 +1264,10 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       codeWidgetItem->setBackground(msgBrush);
 
 	// Create error hyperlink
-	QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
-
 
 	QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
     QString filterHTMLText("<a href=\"");
-    filterHTMLText.append(filterURL.toString()).append("\">").append(msgName).append("</a>");
+    filterHTMLText.append(filterURL.toString()).append("\">").append(filterHumanLabel).append("</a>");
 
     QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
     hyperlinkLabel->setTextFormat(Qt::RichText);
