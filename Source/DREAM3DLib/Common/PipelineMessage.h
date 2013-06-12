@@ -63,7 +63,8 @@ class PipelineMessage
 
     PipelineMessage(const PipelineMessage& rhs)
     {
-      m_filterName = rhs.m_filterName;
+      m_FilterClassName = rhs.m_FilterClassName;
+      m_MessagePrefix = rhs.m_MessagePrefix;
       m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
@@ -71,18 +72,24 @@ class PipelineMessage
     }
 
 
-    PipelineMessage(const std::string &filterName, const char* msg, int code,
-                   MessageType msgType = UnknownMessageType, int status = -1) :
-        m_filterName(filterName),
+    PipelineMessage(const std::string &className,
+                    const char* msg,
+                    int code,
+                    MessageType msgType = UnknownMessageType,
+                    int status = -1) :
+        m_FilterClassName(className),
         m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
         m_Progress(status)
     {}
 
-    PipelineMessage(const std::string &filterName, const std::string &msg, int code,
-      MessageType msgType = UnknownMessageType, int status = -1) :
-        m_filterName(filterName),
+    PipelineMessage(const std::string &className,
+                    const std::string &msg,
+                    int code,
+                    MessageType msgType = UnknownMessageType,
+                    int status = -1) :
+        m_FilterClassName(className),
         m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
@@ -95,7 +102,8 @@ class PipelineMessage
 
     bool operator==(const PipelineMessage& rhs)
     {
-      return (m_filterName == rhs.m_filterName &&
+      return (m_FilterClassName == rhs.m_FilterClassName &&
+          m_MessagePrefix == rhs.m_MessagePrefix &&
           m_Msg == rhs.m_Msg &&
             m_Code == rhs.m_Code &&
               m_msgType == rhs.m_msgType &&
@@ -104,7 +112,8 @@ class PipelineMessage
 
     void operator=(const PipelineMessage& rhs)
     {
-      m_filterName = rhs.m_filterName;
+      m_FilterClassName = rhs.m_FilterClassName;
+      m_MessagePrefix = rhs.m_MessagePrefix;
       m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
@@ -112,15 +121,27 @@ class PipelineMessage
     }
 
     /**
-     * @brief This function is the member m_filterName's accessor.
+     * @brief This function is the member m_FilterClassName's accessor.
      */
-    std::string getFilterName() { return m_filterName; }
+    std::string getFilterClassName() { return m_FilterClassName; }
 
     /**
-     * @brief This function is the member m_filterName's mutator.
+     * @brief This function is the member m_FilterClassName's mutator.
      * @param val Variable whose value is assigned to m_filterName.
      */
-    void setFilterName(const std::string &val) { m_filterName = val; }
+    void setFilterClassName(const std::string &val) { m_FilterClassName = val; }
+
+
+    /**
+     * @brief This function is the member
+     */
+    std::string getMessagePrefix() { return m_MessagePrefix; }
+
+    /**
+     * @brief This function is th
+     * @param val Variable whose value is assigned to m_filterName.
+     */
+    void setMessagePrefix(const std::string &val) { m_MessagePrefix = val; }
 
     /**
      * @brief This function is the member m_Msg's accessor.
@@ -172,7 +193,7 @@ class PipelineMessage
     std::string generateErrorString()
     {
       std::stringstream ss;
-      ss << "Error(" << m_Code << "):" << m_filterName << " :" << m_Msg;
+      ss << "Error(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
       return ss.str();
     }
 
@@ -182,7 +203,7 @@ class PipelineMessage
     std::string generateWarningString()
     {
       std::stringstream ss;
-      ss << "Warning(" << m_Code << "):" << m_filterName << " :" << m_Msg;
+      ss << "Warning(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
       return ss.str();
     }
 
@@ -192,12 +213,13 @@ class PipelineMessage
     std::string generateStatusString()
      {
        std::stringstream ss;
-       ss << m_filterName << ":" << m_Msg;
+       ss << m_MessagePrefix << ":" << m_Msg;
        return ss.str();
      }
 
   private:
-    std::string m_filterName;   // Name of the Filter
+    std::string m_FilterClassName; //name of the class
+    std::string m_MessagePrefix;   // Prefix for this message
     std::string m_Msg;          // Message Text
     int m_Code;                 // Error/Warning Code
     MessageType m_msgType;      // Type of Message (see enumeration "MessageType")

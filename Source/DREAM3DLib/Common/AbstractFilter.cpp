@@ -146,7 +146,7 @@ void AbstractFilter::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
 {
-  PipelineMessage em(filterName, errorDescription, errorCode, PipelineMessage::Error);
+  PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
   m_PipelineMessages.push_back(em);
 }
 
@@ -172,7 +172,7 @@ void AbstractFilter::addWarningMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 void AbstractFilter::addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode)
 {
-  PipelineMessage em(filterName, warnDescription, warnCode, PipelineMessage::Warning);
+  PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
   m_PipelineMessages.push_back(em);
 }
 

@@ -1046,7 +1046,7 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 {
-	std::cout << item->text().toStdString().c_str() << std::endl;
+  std::cout << item->text().toStdString().c_str() << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -1241,8 +1241,12 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       msgColor.setBlue(193);
     {
       QBrush msgBrush(msgColor);
+      /* JOEY LOOK HERE */
+      QString className = QString::fromStdString(msg.getFilterClassName() );
+      /* Now figure out how to turn that information into a Hyperlink */
 
-      QString msgName = QString::fromStdString(msg.getFilterName());
+
+      QString msgName = QString::fromStdString(msg.getMessagePrefix());
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1260,22 +1264,22 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-	  QString filterName = filterNameWidgetItem->text();
-	  
+    QString filterName = filterNameWidgetItem->text();
 
-	  #if 0
+
+    #if 0
 QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl(value.toString());
-	  QString text("<a href=\"");
-	  text.append(url.toString()).append("\">").append(value.toString()).append("</a>");
+    QString text("<a href=\"");
+    text.append(url.toString()).append("\">").append(value.toString()).append("</a>");
 #endif
 
-	  // Create error hyperlink
-	  QLabel* hyperlinkLabel = new QLabel( "<a href=http://www.google.com> Click Here</a>" );
-	  hyperlinkLabel->setTextFormat(Qt::RichText);
-	  hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-	  hyperlinkLabel->setOpenExternalLinks(true);
+    // Create error hyperlink
+    QLabel* hyperlinkLabel = new QLabel( "<a href=http://www.google.com> Click Here</a>" );
+    hyperlinkLabel->setTextFormat(Qt::RichText);
+    hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    hyperlinkLabel->setOpenExternalLinks(true);
 
-	  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+    errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1290,7 +1294,7 @@ QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl(value.toString());
     {
       QBrush msgBrush(msgColor);
 
-      QString msgName = QString::fromStdString(msg.getFilterName());
+      QString msgName = QString::fromStdString(msg.getMessagePrefix());
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1322,7 +1326,7 @@ QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl(value.toString());
     case PipelineMessage::StatusMessage:
       if(NULL != this->statusBar())
       {
-        QString s = QString::fromStdString(msg.getFilterName());
+        QString s = QString::fromStdString(msg.getMessagePrefix());
         s = s.append(" ").append(msg.getMessageText().c_str());
         this->statusBar()->showMessage(s);
       }
@@ -1331,7 +1335,7 @@ QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl(value.toString());
       this->m_progressBar->setValue(msg.getProgressValue());
       if(NULL != this->statusBar())
       {
-        QString s = QString::fromStdString(msg.getFilterName());
+        QString s = QString::fromStdString(msg.getMessagePrefix());
         s = s.append(" ").append(msg.getMessageText().c_str());
         this->statusBar()->showMessage(s);
       }
