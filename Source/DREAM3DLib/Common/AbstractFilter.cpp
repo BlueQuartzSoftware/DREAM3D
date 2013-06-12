@@ -144,10 +144,10 @@ void AbstractFilter::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode)
+void AbstractFilter::addErrorMessage(const std::string &filterHumanLabel, const std::string &errorDescription, int errorCode)
 {
   PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
-  em.setMessagePrefix(filterName);
+  em.setFilterHumanLabel(getHumanLabel());
   m_PipelineMessages.push_back(em);
 }
 
@@ -165,6 +165,8 @@ void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 void AbstractFilter::addWarningMessage(PipelineMessage &msg)
 {
+  msg.setFilterHumanLabel(getHumanLabel());
+  msg.setFilterClassName(getNameOfClass());
   m_PipelineMessages.push_back(msg);
 }
 
@@ -174,7 +176,8 @@ void AbstractFilter::addWarningMessage(PipelineMessage &msg)
 void AbstractFilter::addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode)
 {
   PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
-  em.setMessagePrefix(filterName);
+  em.setFilterHumanLabel(getHumanLabel());
+  em.setFilterClassName(getNameOfClass());
   m_PipelineMessages.push_back(em);
 }
 
