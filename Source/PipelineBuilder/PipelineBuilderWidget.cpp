@@ -1241,8 +1241,17 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       msgColor.setBlue(193);
     {
       QBrush msgBrush(msgColor);
+<<<<<<< HEAD
 
       QString msgName = QString::fromStdString(msg.getMessagePrefix());
+=======
+      /* JOEY LOOK HERE */
+      QString className = QString::fromStdString(msg.getFilterClassName() );
+      QString humanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
+      /* Now figure out how to turn that information into a Hyperlink */
+
+      QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+>>>>>>> 7b1df5606c3988939485d47f81cff58aacb73892
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1250,7 +1259,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
       QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
