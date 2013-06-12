@@ -1241,10 +1241,6 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       msgColor.setBlue(193);
     {
       QBrush msgBrush(msgColor);
-      /* JOEY LOOK HERE */
-      QString className = QString::fromStdString(msg.getFilterClassName() );
-      /* Now figure out how to turn that information into a Hyperlink */
-
 
       QString msgName = QString::fromStdString(msg.getMessagePrefix());
       QString msgDesc = QString::fromStdString(msg.getMessageText());
@@ -1264,17 +1260,15 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    QString filterName = filterNameWidgetItem->text();
+	// Create error hyperlink
+	QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
 
 
-    #if 0
-QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl(value.toString());
-    QString text("<a href=\"");
-    text.append(url.toString()).append("\">").append(value.toString()).append("</a>");
-#endif
+	QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
+    QString filterHTMLText("<a href=\"");
+    filterHTMLText.append(filterURL.toString()).append("\">").append(msgName).append("</a>");
 
-    // Create error hyperlink
-    QLabel* hyperlinkLabel = new QLabel( "<a href=http://www.google.com> Click Here</a>" );
+    QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
     hyperlinkLabel->setTextFormat(Qt::RichText);
     hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     hyperlinkLabel->setOpenExternalLinks(true);
