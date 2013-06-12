@@ -102,7 +102,11 @@ class CalculateGBCDImpl
       int32_t gbcd_index;
       int inversion = 1;
       int grain1, grain2;
-      float q1[5], q2[5], misq[5], sym_q1[5], sym_q2[5], s1misq[5], s2misq[5], euler_mis[3];
+      float g1[3][3], g2[3][3];
+      float g1s[3][3], g2s[3][3];
+      float sym1[3][3], sym2[3][3];
+      float g2t[3][3], dg[3][3];
+      float q1[5], q2[5], misq[5], sym_q1[5], sym_q2[5], sq1[5], sq2[5], euler_mis[3];
       float normal[3];
       float xstl1_norm0[3], xstl1_norm1[3], xstl1_norm_sc[2], xstl1_norm_sc_inv[2];
       int SYMcounter=0;
@@ -135,17 +139,24 @@ class CalculateGBCDImpl
               q2[m] = m_Quats[5*grain2+m];
             }
 
+            OrientationMath::QuattoMat(q1,g1);
+            OrientationMath::QuattoMat(q2,g2);
 
             //get the crystal directions along the triangle normals
-            OrientationMath::multiplyQuaternionVector(q1, normal, xstl1_norm0);
+//            OrientationMath::multiplyQuaternionVector(q1, normal, xstl1_norm0);
+            MatrixMath::multiply3x3with3x1(g1,normal,xstl1_norm0);
             //get the misorientation between grain1 and grain2
-            OrientationMath::invertQuaternion(q2);
-            OrientationMath::multiplyQuaternions(q2, q1, misq);
+//            OrientationMath::invertQuaternion(q2);
+//            OrientationMath::multiplyQuaternions(q2, q1, misq);
             int nsym = m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getNumSymOps();
             for (j=0; j< nsym;j++)
             {
               //find symmetric crystal directions
               m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(j, sym_q1);
+              OrientationMath::QuattoMat(sym_q1,sym1);
+              MatrixMath::multiply3x3with3x3(sym1,g1,g1s);
+              MatrixMath::multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
+              OrientationMath::multiplyQuaternions(sym_q1, q1, sq1);
               OrientationMath::multiplyQuaternionVector(sym_q1, xstl1_norm0, xstl1_norm1);
               //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
               xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
@@ -158,25 +169,30 @@ class CalculateGBCDImpl
                 xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
               }
 
-              OrientationMath::multiplyQuaternions(sym_q1, misq, s1misq);
               for (k=0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation
                 m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getQuatSymOp(k, sym_q2);
-                OrientationMath::invertQuaternion(sym_q2);
-                OrientationMath::multiplyQuaternions(s1misq, sym_q2, s2misq);
-                OrientationMath::QuattoEuler(s2misq, euler_mis[0], euler_mis[1], euler_mis[2]);
+              OrientationMath::QuattoMat(sym_q2,sym2);
+              MatrixMath::multiply3x3with3x3(sym2,g2,g2s);
+                OrientationMath::multiplyQuaternions(q2, sym_q2, sq2);
+                OrientationMath::invertQuaternion(sq2);
+                OrientationMath::multiplyQuaternions(sq2, sq1, misq);
+//                OrientationMath::QuattoEuler(misq, euler_mis[0], euler_mis[1], euler_mis[2]);
+              MatrixMath::transpose3x3(g2s,g2t);
+              MatrixMath::multiply3x3with3x3(g1s,g2t,dg);
+                OrientationMath::mattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
 
-                OrientationMath::QuattoAxisAngle(s2misq,w,n1,n2,n3);
-        w = w * (180.0f/m_pi);
+                OrientationMath::QuattoAxisAngle(misq,w,n1,n2,n3);
+                w = w * (180.0f/m_pi);
                 float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
                 float axisdiff111_norm = acosf(fabs(xstl1_norm1[0])*0.57735f+fabs(xstl1_norm1[1])*0.57735f+fabs(xstl1_norm1[2])*0.57735f);
                 float angdiff60 = fabs(w-60.0f);
                 if (axisdiff111 < axistol && angdiff60 < angtol && axisdiff111_norm < axistol)
-        {
-          int stop = 0;
-        }
+                {
+                  int stop = 0;
+                }
                  
                 //get the indexes that this point would be in the GBCD histogram
                 gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
