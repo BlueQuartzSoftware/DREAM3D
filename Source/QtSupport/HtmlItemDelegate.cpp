@@ -40,6 +40,7 @@
 
 #include <QtGui/QTextDocument>
 #include <QtGui/QPainter>
+#include <QtGui/QLabel>
 
 
 #include "DREAM3DHelpUrlGenerator.h"
@@ -65,6 +66,7 @@ HtmlItemDelegate::~HtmlItemDelegate()
 // -----------------------------------------------------------------------------
 void HtmlItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+#if 0
   QTextDocument document;
   QVariant value = index.data(Qt::DisplayRole);
   if (value.isValid() && !value.isNull())
@@ -74,9 +76,14 @@ void HtmlItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     QString text("<a href=\"");
     text.append(url.toString()).append("\">").append(value.toString()).append("</a>");
 
-    document.setHtml(text);
+	QLabel hyperlinkLabel(text);
+	hyperlinkLabel.setTextFormat(Qt::RichText);
+	hyperlinkLabel.setTextInteractionFlags(Qt::TextBrowserInteraction);
+	hyperlinkLabel.setOpenExternalLinks(true);
+
     painter->translate(option.rect.topLeft());
     document.drawContents(painter);
     painter->translate(-option.rect.topLeft());
   }
+#endif
 }
