@@ -120,28 +120,12 @@ class PipelineMessage
       m_Progress = rhs.m_Progress;
     }
 
-    /**
-     * @brief This function is the member m_FilterClassName's accessor.
-     */
-    std::string getFilterClassName() { return m_FilterClassName; }
-
-    /**
-     * @brief This function is the member m_FilterClassName's mutator.
-     * @param val Variable whose value is assigned to m_filterName.
-     */
-    void setFilterClassName(const std::string &val) { m_FilterClassName = val; }
 
 
-    /**
-     * @brief This function is the member
-     */
-    std::string getMessagePrefix() { return m_MessagePrefix; }
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MessagePrefix)
 
-    /**
-     * @brief This function is th
-     * @param val Variable whose value is assigned to m_filterName.
-     */
-    void setMessagePrefix(const std::string &val) { m_MessagePrefix = val; }
 
     /**
      * @brief This function is the member m_Msg's accessor.
@@ -218,8 +202,6 @@ class PipelineMessage
      }
 
   private:
-    std::string m_FilterClassName; //name of the class
-    std::string m_MessagePrefix;   // Prefix for this message
     std::string m_Msg;          // Message Text
     int m_Code;                 // Error/Warning Code
     MessageType m_msgType;      // Type of Message (see enumeration "MessageType")
