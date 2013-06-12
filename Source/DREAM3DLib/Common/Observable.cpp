@@ -94,7 +94,7 @@ void Observable::notifyMessage(PipelineMessage &msg)
     // information to use and display to the user.
     if (m_Prefix.empty() == false)
     {
-       msg.setFilterName(m_Prefix);
+       msg.setMessagePrefix(m_Prefix);
     }
     for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
     {
