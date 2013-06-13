@@ -50,7 +50,6 @@ GenerateIPFColors::GenerateIPFColors() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
   m_CellPhases(NULL),
-  m_GoodVoxels(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
   m_CellIPFColors(NULL)
@@ -116,10 +115,9 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
+
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellIPFColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
@@ -159,6 +157,23 @@ void GenerateIPFColors::execute()
     return;
   }
 
+  bool* m_GoodVoxels;
+  BoolArrayType* goodVoxels = NULL;
+  bool missingGoodVoxels = false;
+  IDataArray::Pointer gvPtr = m->getCellData(m_GoodVoxelsArrayName);
+
+  if (m->getCellData(m_GoodVoxelsArrayName).get() == NULL)
+  {
+    missingGoodVoxels = true;
+  }
+  else
+  {
+    goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
+    m_GoodVoxels = goodVoxels->GetPointer(0);
+  }
+
+
+
   int phase;
   size_t index = 0;
 
@@ -175,7 +190,7 @@ void GenerateIPFColors::execute()
     m_CellIPFColors[index + 1] = 0;
     m_CellIPFColors[index + 2] = 0;
 
-    if(m_GoodVoxels[i] != false)
+    if(missingGoodVoxels == true || m_GoodVoxels[i] != false)
     {
       if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
       {
