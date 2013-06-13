@@ -192,10 +192,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void readVersionCheckSettings(QSettings &prefs);
     void writeVersionCheckSettings(QSettings &prefs);
 
-    void checkForUpdateAtStartup();
-
-    void checkForUpdateAtStartup(DREAM3DUpdateCheckDialog* d);
-
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */

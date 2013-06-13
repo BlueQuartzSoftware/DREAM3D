@@ -112,9 +112,6 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
-
-  // Create thread and check for updates
-  checkForUpdateAtStartup();
 }
 
 // -----------------------------------------------------------------------------
@@ -325,7 +322,8 @@ void DREAM3D_UI::setupGui()
   connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), 
 	  this, SLOT( versionCheckReply(int, int, int) ) );
 
-  m_UpdateCheck->checkVersion( getUpdateWebsite() );
+  QUrl updateWebsiteURL(Detail::UpdateWebSite);
+  m_UpdateCheck->checkVersion(updateWebsiteURL);
   
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
@@ -888,21 +886,6 @@ void DREAM3D_UI::on_actionUpdateCheckBtn_toggled(bool boolValue)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::checkForUpdateAtStartup()
-{
-    m_UpdateCheckThread = new QThread(); // Create a new Thread Resource
-  DREAM3DUpdateCheckDialog* m_UpdateCheck = new DREAM3DUpdateCheckDialog(this);
-  m_UpdateCheck->moveToThread(m_UpdateCheckThread);
-  m_UpdateCheckThread->start();
-  if ( m_UpdateCheck->getAutomaticallyBtn()->isChecked() )
-  {
-    m_UpdateCheck->on_checkNowBtn_clicked();
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3D_UI::displayUpdateDialog()
 {
   std::cout << "Testing" << std::endl;
@@ -911,15 +894,43 @@ void DREAM3D_UI::displayUpdateDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::versionCheckReply(int majorNum, int minorNum, int patchNum)
+void DREAM3D_UI::versionCheckReply(int serverMajor, int serverMinor, int serverPatch)
 {
-	// Compare Version to Current Version
+	QString message = "";
 
-	#if 0
-if (version is newer than current version AND skipVersion < version)
+	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+	QString appName = d->getAppName();
+
+	QString appVersion = d->getCurrentVersion();
+	QLabel* currentVersionLabel = d->getCurrentVersionLabel();
+	QLabel* latestVersionLabel = d->getLatestVersionLabel();
+
+	QStringList appVersionParts = appVersion.split(QString("."));
+
+	bool ok = false;
+	int appMajor = appVersionParts.at(0).toInt(&ok);
+	int appMinor = appVersionParts.at(1).toInt(&ok);
+	int appPatch = appVersionParts.at(2).toInt(&ok);
+
+	if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
 	{
-		// Initialize dialog with messages and values
-		m_UpdateCheck->exec();	// Execute dialog
+		d->toSimpleUpdateCheckDialog();
+		message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+
+		QLabel* feedbackTextLabel = d->getFeedbackTextLabel();
+		feedbackTextLabel->setText(message);
+		{
+			QString vStr(appVersionParts.at(0));
+			vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
+			currentVersionLabel->setText(vStr);
+			d->setCurrentVersion(vStr);
+		}
+
+		{
+			QString vStr = QString::number(serverMajor);
+			vStr.append(".").append(QString::number(serverMinor)).append(".").append(QString::number(serverPatch));
+			latestVersionLabel->setText(vStr);
+		}
+		d->exec();
 	}
-#endif
 }
