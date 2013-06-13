@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -74,8 +74,15 @@
     <addaction name="actionShow_User_Manual"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="action_OpenStatsGenerator"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPipeline"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -174,6 +181,11 @@
   <action name="actionShow_User_Manual">
    <property name="text">
     <string>Show User Manual</string>
+   </property>
+  </action>
+  <action name="action_OpenStatsGenerator">
+   <property name="text">
+    <string>Open StatsGenerator</string>
    </property>
   </action>
  </widget>
