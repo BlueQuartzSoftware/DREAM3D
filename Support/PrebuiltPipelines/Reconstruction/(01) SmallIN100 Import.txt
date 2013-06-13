@@ -5,7 +5,7 @@ Name=(01) SmallIN100 Import
 [0]
 Filter_Name=EbsdToH5Ebsd
 InputDir=Data/SmallIN100
-FilePrefix=
+FilePrefix=Small_IN100_
 FileSuffix=
 FileExt=ang
 ZStartIndex=1
