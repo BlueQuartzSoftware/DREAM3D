@@ -82,6 +82,7 @@ class DREAM3DLib_EXPORT OrientationMath
     virtual float getMisoQuat(float q1[5], float q2[5], float &n1, float &n2, float &n3) = 0;
     virtual void getQuatSymOp(int i, float *q) = 0;
     virtual void getRodSymOp(int i, float *r) = 0;
+    virtual void getMatSymOp(int i, float g[3][3]) = 0;
     virtual void getODFFZRod(float &r1, float &r2, float &r3) = 0;
     virtual void getMDFFZRod(float &r1, float &r2, float &r3) = 0;
     virtual void getNearestQuat(float *q1, float *q2) = 0;
