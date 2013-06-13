@@ -1563,5 +1563,3 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
 
 
 }
-
-

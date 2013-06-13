@@ -60,6 +60,12 @@ UpdateCheck::~UpdateCheck()
 // -----------------------------------------------------------------------------
 void UpdateCheck::checkVersion(QUrl website)
 {
+	if (m_Nam != NULL)
+	{
+		m_Nam->deleteLater();
+	}
+	m_Nam = new QNetworkAccessManager(this);
+
 	QObject::connect(m_Nam, SIGNAL(finished(QNetworkReply*)),
 		this, SLOT(networkReplied(QNetworkReply*)));
 

@@ -61,7 +61,8 @@ namespace Detail
 DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   QDialog(parent),
   nam(NULL),
-  m_UpdateCheckThread(NULL)
+  m_UpdateCheckThread(NULL),
+  m_DialogState(DefaultDialog)
 {
 
   setupUi(this);
@@ -115,6 +116,54 @@ QRadioButton* DREAM3DUpdateCheckDialog::getManuallyBtn()
 QComboBox* DREAM3DUpdateCheckDialog::getHowOftenComboBox()
 {
   return howOften;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QPushButton* DREAM3DUpdateCheckDialog::getCheckNowBtn()
+{
+	return checkNowBtn;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getCurrentVersion()
+{
+	return m_CurrentVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* DREAM3DUpdateCheckDialog::getCurrentVersionLabel()
+{
+	return currentVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* DREAM3DUpdateCheckDialog::getLatestVersionLabel()
+{
+	return latestVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getAppName()
+{
+	return m_AppName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* DREAM3DUpdateCheckDialog::getFeedbackTextLabel()
+{
+	return feedbackText;
 }
 
 // -----------------------------------------------------------------------------
@@ -242,8 +291,12 @@ void DREAM3DUpdateCheckDialog::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
 {
+	QPushButton* checkNowBtn = getCheckNowBtn();
+	checkNowBtn->setEnabled(false);
 	m_UpdateCheck = new UpdateCheck(this);
 	m_UpdateCheck->checkVersion(m_UpdateWebSite);
+	checkNowBtn->setEnabled(true);
+
 
 #if 0
   if (nam != NULL)
@@ -293,6 +346,7 @@ void DREAM3DUpdateCheckDialog::checkVersion()
 
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -372,6 +426,7 @@ void DREAM3DUpdateCheckDialog::networkReplied(QNetworkReply* reply)
 
   std::cout << "DREAM3DUpdateCheckDialog::networkReplied  complete" << std::endl;
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -439,7 +494,88 @@ void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::LatestVersionReplied(int, int, int)
+void DREAM3DUpdateCheckDialog::LatestVersionReplied(int serverMajor, int serverMinor, int serverPatch)
 {
+	QString message = "";
 
+	QString appVersion = m_CurrentVersion;
+	QStringList appVersionParts = appVersion.split(QString("."));
+
+	bool ok = false;
+	int appMajor = appVersionParts.at(0).toInt(&ok);
+	int appMinor = appVersionParts.at(1).toInt(&ok);
+	int appPatch = appVersionParts.at(2).toInt(&ok);
+
+	if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+	{
+		message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+	}
+	else
+	{
+		message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
+	}
+	feedbackText->setText(message);
+
+	{
+		QString vStr(appVersionParts.at(0));
+		vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
+		currentVersion->setText(vStr);
+		m_CurrentVersion = vStr;
+	}
+
+	{
+		QString vStr = QString::number(serverMajor);
+		vStr.append(".").append(QString::number(serverMinor)).append(".").append(QString::number(serverPatch));
+		latestVersion->setText(vStr);
+	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::toSimpleUpdateCheckDialog()
+{
+	// Exit immediately if the dialog is already in simple state
+	if (m_DialogState == SimpleDialog)
+	{
+		return;
+	}
+
+	QPushButton* checkNowBtn = getCheckNowBtn();
+	QRadioButton* automaticallyBtn = getAutomaticallyBtn();
+	QRadioButton* manuallyBtn = getManuallyBtn();
+	QComboBox* howOftenComboBo = getHowOftenComboBox();
+
+	checkNowBtn->setVisible(false);
+	automaticallyBtn->setVisible(false);
+	manuallyBtn->setVisible(false);
+	howOftenComboBo->setVisible(false);
+
+	// Update Dialog State
+	m_DialogState = SimpleDialog;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::toDefaultUpdateCheckDialog()
+{
+	// Exit immediately if the dialog is already in default state
+	if (m_DialogState == DefaultDialog)
+	{
+		return;
+	}
+
+	QPushButton* checkNowBtn = getCheckNowBtn();
+	QRadioButton* automaticallyBtn = getAutomaticallyBtn();
+	QRadioButton* manuallyBtn = getManuallyBtn();
+	QComboBox* howOftenComboBo = getHowOftenComboBox();
+
+	checkNowBtn->setVisible(true);
+	automaticallyBtn->setVisible(true);
+	manuallyBtn->setVisible(true);
+	howOftenComboBo->setVisible(true);
+
+	// Update Dialog State
+	m_DialogState = DefaultDialog;
 }
