@@ -64,6 +64,7 @@ class PipelineMessage
     PipelineMessage(const PipelineMessage& rhs)
     {
       m_FilterClassName = rhs.m_FilterClassName;
+      m_FilterHumanLabel = rhs.m_FilterHumanLabel;
       m_MessagePrefix = rhs.m_MessagePrefix;
       m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
@@ -90,11 +91,14 @@ class PipelineMessage
                     MessageType msgType = UnknownMessageType,
                     int status = -1) :
         m_FilterClassName(className),
+        m_FilterHumanLabel("Foo"),
         m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
         m_Progress(status)
-    {}
+    {
+
+    }
 
     DREAM3D_TYPE_MACRO(PipelineMessage)
 
@@ -104,6 +108,7 @@ class PipelineMessage
     {
       return (m_FilterClassName == rhs.m_FilterClassName &&
           m_MessagePrefix == rhs.m_MessagePrefix &&
+          m_FilterHumanLabel == rhs.m_FilterHumanLabel &&
           m_Msg == rhs.m_Msg &&
             m_Code == rhs.m_Code &&
               m_msgType == rhs.m_msgType &&
@@ -114,6 +119,7 @@ class PipelineMessage
     {
       m_FilterClassName = rhs.m_FilterClassName;
       m_MessagePrefix = rhs.m_MessagePrefix;
+      m_FilterHumanLabel = rhs.m_FilterHumanLabel;
       m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
@@ -123,7 +129,19 @@ class PipelineMessage
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
+    private:
+      std::string m_FilterHumanLabel;
+    public:
+       void setFilterHumanLabel(const std::string &s)
+       {
+       m_FilterHumanLabel = s;
+       }
+      std::string getFilterHumanLabel()
+      {
+      return m_FilterHumanLabel;
+      }
+
     DREAM3D_INSTANCE_STRING_PROPERTY(MessagePrefix)
 
 
