@@ -1259,14 +1259,11 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-	  if (hyperlinkLabel != NULL)
+	  if (hyperlinkLabel == NULL)
 	  {
-		errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+		  hyperlinkLabel->setText("Hyperlink Error");
 	  }
-	  else
-	  {
-		  // Set errorTableWidget column 0 to a default value
-	  }
+	  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1301,6 +1298,10 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
+	  if (hyperlinkLabel == NULL)
+	  {
+		  hyperlinkLabel->setText("Hyperlink Error");
+	  }
       msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
