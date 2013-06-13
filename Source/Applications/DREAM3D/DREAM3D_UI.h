@@ -56,6 +56,8 @@
 //-- UIC generated Header
 #include <ui_DREAM3D_UI.h>
 
+#include "UpdateCheck.h"
+
 class DREAM3DPluginInterface;
 class HelpDialog;
 class PipelineBuilderWidget;
@@ -127,7 +129,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void displayUpdateDialog();
 
-
+	void versionCheckReply(int, int, int);
 
   private slots:
     // slots for our worker thread to communicate
@@ -219,6 +221,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QToolBar*                   m_PluginToolBar;
     HelpDialog*                 m_HelpDialog;
     PipelineBuilderWidget*      m_PipelineBuilderWidget;
+	UpdateCheck*				m_UpdateCheck;
 
     QString                     m_OpenDialogLastDirectory;
 

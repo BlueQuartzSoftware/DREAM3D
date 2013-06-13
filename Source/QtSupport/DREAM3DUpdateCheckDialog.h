@@ -46,7 +46,7 @@
 
 #include "ui_DREAM3DUpdateCheckDialog.h"
 
-
+#include "QtSupport/UpdateCheck.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -76,8 +76,6 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
   QRadioButton* getManuallyBtn();
   QComboBox* getHowOftenComboBox();
 
-  bool isUpdateAvailable(QStringList serverVersionParts, QStringList appVersionParts);
-
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
     void setWhenToCheck(int whenToCheck);
@@ -98,6 +96,9 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void on_checkNowBtn_clicked();
     void on_websiteBtn_clicked();
 
+  protected slots:
+	void LatestVersionReplied(int, int, int);
+
   signals:
     void finished();
     void hasMessage(const QString& message);
@@ -111,6 +112,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
   QString						m_UpdatePreferencesPath;
     QString						m_UpdateWebSite;
     QString						m_AppName;
+	UpdateCheck*				m_UpdateCheck;
     QThread*					m_UpdateCheckThread;
 
     DREAM3DUpdateCheckDialog(const DREAM3DUpdateCheckDialog&); // Copy Constructor Not Implemented

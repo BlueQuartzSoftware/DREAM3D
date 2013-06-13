@@ -320,7 +320,13 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
+  m_UpdateCheck = new UpdateCheck(this);
+  
+  connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), 
+	  this, SLOT( versionCheckReply(int, int, int) ) );
 
+  m_UpdateCheck->checkVersion( getUpdateWebsite() );
+  
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
@@ -859,4 +865,20 @@ void DREAM3D_UI::checkForUpdateAtStartup()
 void DREAM3D_UI::displayUpdateDialog()
 {
   std::cout << "Testing" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::versionCheckReply(int majorNum, int minorNum, int patchNum)
+{
+	// Compare Version to Current Version
+
+	#if 0
+if (version is newer than current version AND skipVersion < version)
+	{
+		// Initialize dialog with messages and values
+		m_UpdateCheck->exec();	// Execute dialog
+	}
+#endif
 }

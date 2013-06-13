@@ -230,6 +230,8 @@ void DREAM3DUpdateCheckDialog::setUpdateWebSite(QString url)
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::setupGui()
 {
+	connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), this, SLOT( LatestVersionReplied(int, int, int) ) );
+
   latestVersion->setText("Not Checked");
   feedbackText->setText("");
 }
@@ -240,6 +242,10 @@ void DREAM3DUpdateCheckDialog::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
 {
+	m_UpdateCheck = new UpdateCheck(this);
+	m_UpdateCheck->checkVersion(m_UpdateWebSite);
+
+#if 0
   if (nam != NULL)
   {
     nam->deleteLater();
@@ -255,6 +261,7 @@ void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
   QNetworkReply* reply = nam->get(request);
 
   feedbackText->setText("Checking Website for latest version....");
+#endif
 }
 
 
@@ -318,15 +325,25 @@ void DREAM3DUpdateCheckDialog::networkReplied(QNetworkReply* reply)
     QStringList serverVersionParts = serverVersion.split(QString("."));
     QStringList appVersionParts = appVersion.split(QString("."));
 
-    emit updateFound();
-    if ( isUpdateAvailable(serverVersionParts, appVersionParts) )
-    {
-      message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
-    }
-    else
-    {
-      message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
-    }
+	bool ok = false;
+	int serverMajor = serverVersionParts.at(0).toInt(&ok);
+	int appMajor = appVersionParts.at(0).toInt(&ok);
+
+	int serverMinor = serverVersionParts.at(1).toInt(&ok);
+	int appMinor = appVersionParts.at(1).toInt(&ok);
+
+	int serverPatch = serverVersionParts.at(2).toInt(&ok);
+	int appPatch = appVersionParts.at(2).toInt(&ok);
+
+	if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+	{
+		message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+	}
+	else
+	{
+		message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
+	}
+
     feedbackText->setText(message);
 
     {
@@ -422,24 +439,7 @@ void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DREAM3DUpdateCheckDialog::isUpdateAvailable(QStringList serverVersionParts, QStringList appVersionParts)
+void DREAM3DUpdateCheckDialog::LatestVersionReplied(int, int, int)
 {
-    bool ok = false;
-    int serverMajor = serverVersionParts.at(0).toInt(&ok);
-    int appMajor = appVersionParts.at(0).toInt(&ok);
 
-    int serverMinor = serverVersionParts.at(1).toInt(&ok);
-    int appMinor = appVersionParts.at(1).toInt(&ok);
-
-    int serverPatch = serverVersionParts.at(2).toInt(&ok);
-    int appPatch = appVersionParts.at(2).toInt(&ok);
-
-    if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
 }
