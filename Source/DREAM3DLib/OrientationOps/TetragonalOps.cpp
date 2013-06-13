@@ -74,6 +74,38 @@ static const float TetraRodSym[8][3] = {{0.0f,0.0f,0.0f},
                   {10000000000.0f,10000000000.0f,0.0},
                   {-10000000000.0f,10000000000.0f,0.0}};
 
+    static const float TetraMatSym[8][3][3] = 
+         {{{1.0, 0.0, 0.0},
+          {0.0, 1.0, 0.0},
+          {0.0, 0.0, 1.0}},
+
+          {{0.0, 0.0, 1.0},
+          {0.0, 1.0, 0.0},
+          {-1.0, 0.0, 0.0}},
+
+          {{-1.0, 0.0,  0.0},
+          {0.0, 1.0,  0.0},
+          {0.0, 0.0, -1.0}},
+
+          {{-1.0,  0.0, 0.0},
+          {0.0, -1.0, 0.0},
+          {0.0,  0.0, 1.0}},
+
+          {{0.0, 1.0, 0.0},
+          {-1.0, 0.0, 0.0},
+          {0.0, 0.0, 1.0}},
+
+          {{0.0, -1.0, 0.0},	
+          {1.0,  0.0, 0.0},
+          {0.0,  0.0, 1.0}},
+
+          {{0.0, -1.0, 0.0},
+          {0.0,  0.0, 1.0},
+          {-1.0,  0.0, 0.0}},
+
+          {{0.0, -1.0,  0.0},
+          {-1.0,  0.0,  0.0},
+          {0.0,  0.0, -1.0}}};
 
 
 
@@ -161,6 +193,19 @@ void TetragonalOps::getRodSymOp(int i,float *r)
   r[0] = TetraRodSym[i][0];
   r[1] = TetraRodSym[i][1];
   r[2] = TetraRodSym[i][2];
+}
+
+void TetragonalOps::getMatSymOp(int i,float g[3][3])
+{
+  g[0][0] = TetraMatSym[i][0][0];
+  g[0][1] = TetraMatSym[i][0][1];
+  g[0][2] = TetraMatSym[i][0][2];
+  g[1][0] = TetraMatSym[i][1][0];
+  g[1][1] = TetraMatSym[i][1][1];
+  g[1][2] = TetraMatSym[i][1][2];
+  g[2][0] = TetraMatSym[i][2][0];
+  g[2][1] = TetraMatSym[i][2][1];
+  g[2][2] = TetraMatSym[i][2][2];
 }
 
 void TetragonalOps::getODFFZRod(float &r1,float &r2, float &r3)
