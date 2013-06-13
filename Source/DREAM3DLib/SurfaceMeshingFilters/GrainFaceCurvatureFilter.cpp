@@ -273,7 +273,7 @@ void GrainFaceCurvatureFilter::execute()
 
   // Calculate/update the Face Normals
   bool clearFaceNormals = false;
-  if (getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals).get() == NULL)
+  if (getSurfaceMeshDataContainer()->getFaceData(m_SurfaceMeshTriangleNormalsArrayName).get() == NULL)
   {
     clearFaceNormals = true;
   }

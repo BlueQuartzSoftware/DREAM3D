@@ -96,6 +96,10 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
     void on_actionExit_triggered();
     void on_actionSave_triggered();
     void on_actionSaveAs_triggered();
+    // Tools Menu
+    void on_action_OpenDREAM3D_triggered();
+
+    // HELP Menu
     void on_actionAbout_triggered();
     void on_actionLicense_Information_triggered();
     void on_actionStatsGenerator_Help_triggered();

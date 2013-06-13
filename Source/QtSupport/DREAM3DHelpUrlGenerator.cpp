@@ -125,3 +125,4 @@ void DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(QString helpName, QWidget* 
 	QUrl URL = generateHTMLUrl(helpName);
 	openHTMLUrl(URL, parent);
 }
+

@@ -126,7 +126,6 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 
   private:
     int32_t* m_CellPhases;
-    bool* m_GoodVoxels;
     float* m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
     uint8_t* m_CellIPFColors;

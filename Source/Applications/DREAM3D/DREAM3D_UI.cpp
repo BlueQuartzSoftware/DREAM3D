@@ -53,7 +53,7 @@
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QListWidget>
-
+#include <QtGui/QDesktopServices>
 
 //-- DREAM3D Includes
 #include "DREAM3DLib/Common/Constants.h"
@@ -366,6 +366,47 @@ void DREAM3D_UI::setWidgetListEnabled(bool b)
   foreach (QWidget* w, m_WidgetList) {
     w->setEnabled(b);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_action_OpenStatsGenerator_triggered()
+{
+	QString appPath = qApp->applicationDirPath();
+
+	QDir appDir = QDir(appPath);
+	QString s("file://");
+
+#if defined(Q_OS_WIN)
+	s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+#elif defined(Q_OS_MAC)
+	if (appDir.dirName() == "MacOS")
+	{
+		appDir.cdUp();
+		appDir.cdUp();
+		appDir.cdUp();
+	}
+#else
+	// We are on Linux - I think
+	appDir.cdUp();
+#endif
+
+	QString appName = "StatsGenerator";
+#ifdef QT_DEBUG
+	appName.append("_debug");
+#endif
+
+
+#if defined(Q_OS_WIN)
+	s = s + appDir.absolutePath() + QDir::separator() + appName + ".exe";
+#elif defined(Q_OS_MAC)
+	s = s + appDir.absolutePath() + QDir::separator() + appName  + ".app";
+#else
+	s = s + appDir.absolutePath() + QDir::separator() + appName  + ".sh";
+#endif
+	QDesktopServices::openUrl(QUrl(s));
+
 }
 
 // -----------------------------------------------------------------------------

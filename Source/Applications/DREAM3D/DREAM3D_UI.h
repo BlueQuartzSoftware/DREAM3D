@@ -85,13 +85,18 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   protected slots:
 
   /* Menu Slots */
-    void on_actionExit_triggered();
+    // File MENU
+	void on_actionExit_triggered();
     void on_actionOpen_Pipeline_2_triggered();
     void on_actionSave_Pipeline_2_triggered();
     void on_action_CheckForUpdates_triggered();
   void on_actionHowOftenComboBox_Changed(int index);
   void on_actionUpdateCheckBtn_toggled(bool);
 
+	//Tools Menu
+	void on_action_OpenStatsGenerator_triggered();
+
+	// Help Menu
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
   void on_actionShow_User_Manual_triggered();
