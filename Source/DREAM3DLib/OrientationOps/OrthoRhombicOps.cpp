@@ -66,6 +66,22 @@ static const float OrthoRodSym[4][3] = {{0.0f,0.0f,0.0f},
                   {0.0f,10000000000.0f,0.0f},
                   {0.0f,0.0f,10000000000.0}};
 
+    static const float OrthoMatSym[4][3][3] = 
+         {{{1.0, 0.0, 0.0},
+          {0.0, 1.0, 0.0},
+          {0.0, 0.0, 1.0}},
+
+          {{1.0, 0.0,  0.0},
+          {0.0, 0.0, -1.0},
+          {0.0, 1.0,  0.0}},
+
+          {{1.0,  0.0,  0.0},
+          {0.0, -1.0,  0.0},
+          {0.0,  0.0, -1.0}},
+
+          {{0.0, -1.0,  0.0},
+          {-1.0,  0.0,  0.0},
+          {0.0,  0.0, -1.0}}};
 
 
 
@@ -153,6 +169,19 @@ void OrthoRhombicOps::getRodSymOp(int i,float *r)
   r[0] = OrthoRodSym[i][0];
   r[1] = OrthoRodSym[i][1];
   r[2] = OrthoRodSym[i][2];
+}
+
+void OrthoRhombicOps::getMatSymOp(int i,float g[3][3])
+{
+  g[0][0] = OrthoMatSym[i][0][0];
+  g[0][1] = OrthoMatSym[i][0][1];
+  g[0][2] = OrthoMatSym[i][0][2];
+  g[1][0] = OrthoMatSym[i][1][0];
+  g[1][1] = OrthoMatSym[i][1][1];
+  g[1][2] = OrthoMatSym[i][1][2];
+  g[2][0] = OrthoMatSym[i][2][0];
+  g[2][1] = OrthoMatSym[i][2][1];
+  g[2][2] = OrthoMatSym[i][2][2];
 }
 
 void OrthoRhombicOps::getODFFZRod(float &r1,float &r2, float &r3)
