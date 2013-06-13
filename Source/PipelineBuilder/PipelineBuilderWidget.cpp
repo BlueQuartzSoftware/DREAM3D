@@ -65,7 +65,6 @@
 
 #include "QtSupport/HelpDialog.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
-#include "QtSupport/HtmlItemDelegate.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -113,7 +112,7 @@ PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *paren
 // -----------------------------------------------------------------------------
 PipelineBuilderWidget::~PipelineBuilderWidget()
 {
-  delete m_HtmlItemDelegate;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -581,9 +580,6 @@ void PipelineBuilderWidget::setupGui()
   errorTableWidget->horizontalHeader()->resizeSection(1, 250);
   errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
-
-  m_HtmlItemDelegate = new HtmlItemDelegate(this);
-  errorTableWidget->setItemDelegateForColumn(0, m_HtmlItemDelegate);
 
   m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
 
@@ -1231,6 +1227,9 @@ void PipelineBuilderWidget::pipelineProgress(int val)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 {
+	// Create error hyperlink
+	QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
+
   QColor msgColor;
   switch(msg.getMessageType())
   {
@@ -1242,10 +1241,6 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     {
       QBrush msgBrush(msgColor);
 
-      QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
-      QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
-	  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
-
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1253,6 +1248,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
+	  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
@@ -1263,18 +1259,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-	// Create error hyperlink
-
-	QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
-    QString filterHTMLText("<a href=\"");
-    filterHTMLText.append(filterURL.toString()).append("\">").append(filterHumanLabel).append("</a>");
-
-    QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
-    hyperlinkLabel->setTextFormat(Qt::RichText);
-    hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    hyperlinkLabel->setOpenExternalLinks(true);
-
-    errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+	  if (hyperlinkLabel != NULL)
+	  {
+		errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+	  }
+	  else
+	  {
+		  // Set errorTableWidget column 0 to a default value
+	  }
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1309,7 +1301,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-      msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1584,4 +1576,28 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* PipelineBuilderWidget::createHyperlinkLabel(PipelineMessage msg)
+{
+	QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
+	QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
+	QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
 
+	if ( filterClassName.isEmpty() || filterHumanLabel.isEmpty() )
+	{
+		return NULL;
+	}
+
+	QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
+	QString filterHTMLText("<a href=\"");
+	filterHTMLText.append(filterURL.toString()).append("\">").append(filterHumanLabel).append("</a>");
+
+	QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
+	hyperlinkLabel->setTextFormat(Qt::RichText);
+	hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+	hyperlinkLabel->setOpenExternalLinks(true);
+
+	return hyperlinkLabel;
+}

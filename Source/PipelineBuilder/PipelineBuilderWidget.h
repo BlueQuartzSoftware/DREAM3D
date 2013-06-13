@@ -52,7 +52,6 @@ class QTreeWidgetItem;
 class QFilterWidget;
 class QMenu;
 class HelpDialog;
-class HtmlItemDelegate;
 
 /**
  * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
@@ -194,6 +193,12 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     void initFilterListMenu();
 
+	/**
+     * @brief Creates and returns a QLabel hyperlink to the documentation of the filter that sent the PipelineMessage.
+	 * Returns NULL if either the filter class name or human label are empty.
+     */
+	QLabel* createHyperlinkLabel(PipelineMessage msg);
+
   public slots:
     void openPipelineFile(const QString& filePath);
 
@@ -266,7 +271,6 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QMenu						m_FilterMenu;
     QAction*					m_actionFilterHelp;
     QPoint						filterListPosition;
-    HtmlItemDelegate*           m_HtmlItemDelegate;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented
