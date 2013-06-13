@@ -54,6 +54,32 @@ namespace TrigonalMath {
                       {8660254000000.0f, 5000000000000.0f, 0.0f},
                       {0.0f, 1000000000000.0f, 0.0f},
                       {-8660254000000.0f, 5000000000000.0f, 0.0f}};
+
+    static const float TrigMatSym[6][3][3] = 
+         {{{1.0, 0.0, 0.0},
+          {0.0, 1.0, 0.0},
+          {0.0, 0.0, 1.0}},
+
+          {{1.0, 0.0,  0.0},
+          {0.0, 0.0, -1.0},
+          {0.0, 1.0,  0.0}},
+
+          {{1.0,  0.0,  0.0},
+          {0.0, -1.0,  0.0},
+          {0.0,  0.0, -1.0}},
+
+          {{1.0,  0.0, 0.0},
+          {0.0,  0.0, 1.0},
+          {0.0, -1.0, 0.0}},
+
+          {{0.0, 0.0, -1.0},
+          {0.0, 1.0,  0.0},
+          {1.0, 0.0,  0.0}},
+
+          {{0.0, -1.0,  0.0},
+          {-1.0,  0.0,  0.0},
+          {0.0,  0.0, -1.0}}};
+
   }
 }
 
@@ -163,6 +189,19 @@ void TrigonalOps::getRodSymOp(int i,float *r)
   r[0] = TrigRodSym[i][0];
   r[1] = TrigRodSym[i][1];
   r[2] = TrigRodSym[i][2];
+}
+
+void TrigonalOps::getMatSymOp(int i,float g[3][3])
+{
+  g[0][0] = TrigMatSym[i][0][0];
+  g[0][1] = TrigMatSym[i][0][1];
+  g[0][2] = TrigMatSym[i][0][2];
+  g[1][0] = TrigMatSym[i][1][0];
+  g[1][1] = TrigMatSym[i][1][1];
+  g[1][2] = TrigMatSym[i][1][2];
+  g[2][0] = TrigMatSym[i][2][0];
+  g[2][1] = TrigMatSym[i][2][1];
+  g[2][2] = TrigMatSym[i][2][2];
 }
 
 void TrigonalOps::getODFFZRod(float &r1,float &r2, float &r3)
