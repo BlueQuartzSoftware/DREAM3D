@@ -595,6 +595,47 @@ void StatsGeneratorUI::on_actionSaveAs_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGeneratorUI::on_action_OpenDREAM3D_triggered()
+{
+    QString appPath = qApp->applicationDirPath();
+
+  QDir appDir = QDir(appPath);
+  QString s("file://");
+
+#if defined(Q_OS_WIN)
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+#elif defined(Q_OS_MAC)
+  if (appDir.dirName() == "MacOS")
+  {
+    appDir.cdUp();
+    appDir.cdUp();
+    appDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  appDir.cdUp();
+#endif
+
+  QString appName = "DREAM3D";
+#ifdef QT_DEBUG
+  appName.append("_debug");
+#endif
+
+
+#if defined(Q_OS_WIN)
+  s = s + appDir.absolutePath() + QDir::separator() + appName + ".exe";
+#elif defined(Q_OS_MAC)
+  s = s + appDir.absolutePath() + QDir::separator() + appName  + ".app";
+#else
+  s = s + appDir.absolutePath() + QDir::separator() + appName  + ".sh";
+#endif
+  QDesktopServices::openUrl(QUrl(s));
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionSave_triggered()
 {
   int err = 0;
