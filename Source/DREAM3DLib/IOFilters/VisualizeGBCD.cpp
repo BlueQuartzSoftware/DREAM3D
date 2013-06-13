@@ -254,22 +254,25 @@ void VisualizeGBCD::execute()
     xyz_temp[4*i+2] = cosf(xyz_temp_ph[3*i+2]);
   }
   
-  float mis_quat[5];
-  float mis_quat_orig[5];
-  float mis_quat1[5];
-  float mis_quat2[5];
-  float mis_euler1[3];
-  float sym_q1[5], sym_q1_inv[5], sym_q2[5];
   float vec[3];
   float trash[3];
+  float dg[3][3];
+  float dgOrig[3][3];
+  float dgt[3][3];
+  float dg1[3][3];
+  float dg2[3][3];
+  float sym1[3][3];
+  float sym2[3][3];
+  float sym2t[3][3];
+  float mis_euler1[3];
 
   float mis_angle = 60;
-  float misvect[3] = {1,1,1};
+  float misvect[3] = {-1,1,1};
 
   mis_angle = mis_angle * m_pi/180.0f;
 
   //convert axis angle to quaternion representation of misorientation
-  OrientationMath::axisAngletoQuat(mis_angle, misvect[0], misvect[1], misvect[2], mis_quat);
+  OrientationMath::axisAngletoMat(mis_angle, misvect[0], misvect[1], misvect[2], dg);
     
   //get number of symmetry operators
   int n_sym = m_OrientationOps[1]->getNumSymOps();
@@ -282,35 +285,30 @@ void VisualizeGBCD::execute()
   float* xyz = xyzArray->GetPointer(0);
   int counter = 0;
 
+  n_sym = 1;
   for(int q=0;q<1;q++)
   {
     if(q == 1)
 	{ 
-		//copy misorientation before taking inverse
-		for(int i=0;i<5;i++)
-		{
-			mis_quat_orig[i] = mis_quat[i];
-		}
 		//take inverse of misorientation, but leave in misorientation variable to use for switching symmetry
-		OrientationMath::invertQuaternion(mis_quat);
+    MatrixMath::transpose3x3(dg, dg);
+		//take inverse again of misorientation and put in original
+    MatrixMath::transpose3x3(dg, dgOrig);
 	}
     for(int i=0; i<n_sym; i++)
 	{
 	  //get symmetry operator1
-      m_OrientationOps[1]->getQuatSymOp(i, sym_q1);
-	  //get inverse of symmetry operator1
-      m_OrientationOps[1]->getQuatSymOp(i, sym_q1_inv);
-	  OrientationMath::invertQuaternion(sym_q1_inv);
-      OrientationMath::multiplyQuaternions(sym_q1, mis_quat, mis_quat1);
+      m_OrientationOps[1]->getMatSymOp(i, sym1);
+      MatrixMath::multiply3x3with3x3(sym1,dg,dg1);
       for(int j=0; j<n_sym; j++)
 	  {
-		//get symmetry operator2
-        m_OrientationOps[1]->getQuatSymOp(j, sym_q2);
+		   //get symmetry operator2
+       m_OrientationOps[1]->getMatSymOp(j, sym2);
+       MatrixMath::transpose3x3(sym2,sym2t);
 		//calculate symmetric misorientation
-        OrientationMath::invertQuaternion(sym_q2);
-        OrientationMath::multiplyQuaternions(mis_quat1, sym_q2, mis_quat2);
+       MatrixMath::multiply3x3with3x3(dg1,sym2t,dg2);
 		//convert to euler angle
-		OrientationMath::QuattoEuler(mis_quat2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+    OrientationMath::mattoEuler(dg, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
         
         mis_euler1[1] = cosf(mis_euler1[1]);
         
@@ -339,11 +337,11 @@ void VisualizeGBCD::execute()
 			vec[1] = xyz_temp[4*k+1];
 			vec[2] = xyz_temp[4*k+2];
 			//find symmetric poles using inverted symmetry operator
-			OrientationMath::multiplyQuaternionVector(sym_q1_inv, vec, trash);
+      MatrixMath::multiply3x3with3x1(sym1, vec, trash);
 			if(q == 1)
 			{
 				//rotate symmetric pole by original misorientation
-				OrientationMath::multiplyQuaternionVector(mis_quat_orig, trash, trash);
+        MatrixMath::multiply3x3with3x1(dgOrig, trash, trash);
 				//take negative of vector
 				trash[0] = -trash[0];
 				trash[1] = -trash[1];
