@@ -65,7 +65,6 @@
 
 #include "QtSupport/HelpDialog.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
-#include "QtSupport/HtmlItemDelegate.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -113,7 +112,7 @@ PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *paren
 // -----------------------------------------------------------------------------
 PipelineBuilderWidget::~PipelineBuilderWidget()
 {
-  delete m_HtmlItemDelegate;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -582,11 +581,6 @@ void PipelineBuilderWidget::setupGui()
   errorTableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::ResizeToContents);
   errorTableWidget->verticalHeader()->setResizeMode(QHeaderView::ResizeToContents);
 
-#if 0
-  m_HtmlItemDelegate = new HtmlItemDelegate(this);
-  errorTableWidget->setItemDelegateForColumn(0, m_HtmlItemDelegate);
-#endif
-
   m_PipelineViewWidget->setErrorsTextArea(errorTableWidget);
 
   // Connect the PipelineViewWidget Signals to slots
@@ -1046,6 +1040,14 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
+{
+  std::cout << item->text().toStdString().c_str() << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionFilterListHelp_triggered()
 {
   QListWidgetItem* listItem = filterList->itemAt(filterListPosition);
@@ -1225,6 +1227,9 @@ void PipelineBuilderWidget::pipelineProgress(int val)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 {
+	// Create error hyperlink
+	QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
+
   QColor msgColor;
   switch(msg.getMessageType())
   {
@@ -1236,7 +1241,6 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     {
       QBrush msgBrush(msgColor);
 
-      QString msgName = QString::fromStdString(msg.getFilterName());
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1244,7 +1248,8 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+	  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
       QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
@@ -1254,7 +1259,11 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+	  if (hyperlinkLabel == NULL)
+	  {
+		  hyperlinkLabel->setText("Hyperlink Error");
+	  }
+	  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1269,7 +1278,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     {
       QBrush msgBrush(msgColor);
 
-      QString msgName = QString::fromStdString(msg.getFilterName());
+      QString msgName = QString::fromStdString(msg.getMessagePrefix());
       QString msgDesc = QString::fromStdString(msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
@@ -1289,7 +1298,11 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-      msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+	  if (hyperlinkLabel == NULL)
+	  {
+		  hyperlinkLabel->setText("Hyperlink Error");
+	  }
+      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1301,7 +1314,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     case PipelineMessage::StatusMessage:
       if(NULL != this->statusBar())
       {
-        QString s = QString::fromStdString(msg.getFilterName());
+        QString s = QString::fromStdString(msg.getMessagePrefix());
         s = s.append(" ").append(msg.getMessageText().c_str());
         this->statusBar()->showMessage(s);
       }
@@ -1310,7 +1323,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       this->m_progressBar->setValue(msg.getProgressValue());
       if(NULL != this->statusBar())
       {
-        QString s = QString::fromStdString(msg.getFilterName());
+        QString s = QString::fromStdString(msg.getMessagePrefix());
         s = s.append(" ").append(msg.getMessageText().c_str());
         this->statusBar()->showMessage(s);
       }
@@ -1564,4 +1577,28 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* PipelineBuilderWidget::createHyperlinkLabel(PipelineMessage msg)
+{
+	QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
+	QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
+	QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
 
+	if ( filterClassName.isEmpty() || filterHumanLabel.isEmpty() )
+	{
+		return NULL;
+	}
+
+	QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
+	QString filterHTMLText("<a href=\"");
+	filterHTMLText.append(filterURL.toString()).append("\">").append(filterHumanLabel).append("</a>");
+
+	QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
+	hyperlinkLabel->setTextFormat(Qt::RichText);
+	hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+	hyperlinkLabel->setOpenExternalLinks(true);
+
+	return hyperlinkLabel;
+}
