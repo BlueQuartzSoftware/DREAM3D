@@ -5,6 +5,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ StatsGen crashes if data is missing
++ Raw Binary Reader does not error out if we read off the end of the file
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 
@@ -16,7 +18,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### Groeber Documentation
 
 + Update the documentation for the disorientation coloring
-+ Missing Documentation File for IOFilters/ImportImageStack
 + incorrect Documentation for Find Twin Boundary Info
 + Update Documentation for Visualize GBCD
 
@@ -36,6 +37,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Workshop Priority
 
++ Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
++ Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 
 ### User Centric
 
@@ -52,11 +55,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Ideas/Wish List ###
 
-+ Add "help" button to each filter that would display the help for that specific filter
 + Comprehensive search of the help system (Possibly QAssistant based?)
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
 + Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
-
++ Add Prebuilt Favorite/Pipeline to generate 3 IPF Colors for 3 Orientations.
++ ImageJ exporter codes
 
 ### Joey K. Summer List ###
 
@@ -135,7 +138,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
 + Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
-    + Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
++ Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
 + Sometimes dragging a filter from the filter list to the PipelineView area will cause a crash.
 + Filter that can execute any program on the users computer
 + Look into creating multiple maps at each level (i.e. parent and grain filed maps)
@@ -317,7 +320,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add filter to calculate ensemble stats (fit distributions to arrays)
 + Fix calculation+storage of real stats for reading into synthetic builder
 + Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
-
++ Missing Documentation File for IOFilters/ImportImageStack
++ Add "help" button to each filter that would display the help for that specific filter (right click)
 
 ##  No Longer Wanted ##
 + Add structured grid writer
