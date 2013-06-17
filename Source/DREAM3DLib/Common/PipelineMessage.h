@@ -63,7 +63,9 @@ class PipelineMessage
 
     PipelineMessage(const PipelineMessage& rhs)
     {
-      m_filterName = rhs.m_filterName;
+      m_FilterClassName = rhs.m_FilterClassName;
+      m_FilterHumanLabel = rhs.m_FilterHumanLabel;
+      m_MessagePrefix = rhs.m_MessagePrefix;
       m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
@@ -71,23 +73,32 @@ class PipelineMessage
     }
 
 
-    PipelineMessage(const std::string &filterName, const char* msg, int code,
-                   MessageType msgType = UnknownMessageType, int status = -1) :
-        m_filterName(filterName),
+    PipelineMessage(const std::string &className,
+                    const char* msg,
+                    int code,
+                    MessageType msgType = UnknownMessageType,
+                    int status = -1) :
+        m_FilterClassName(className),
         m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
         m_Progress(status)
     {}
 
-    PipelineMessage(const std::string &filterName, const std::string &msg, int code,
-      MessageType msgType = UnknownMessageType, int status = -1) :
-        m_filterName(filterName),
+    PipelineMessage(const std::string &className,
+                    const std::string &msg,
+                    int code,
+                    MessageType msgType = UnknownMessageType,
+                    int status = -1) :
+        m_FilterClassName(className),
+        m_FilterHumanLabel("Foo"),
         m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),
         m_Progress(status)
-    {}
+    {
+
+    }
 
     DREAM3D_TYPE_MACRO(PipelineMessage)
 
@@ -95,7 +106,9 @@ class PipelineMessage
 
     bool operator==(const PipelineMessage& rhs)
     {
-      return (m_filterName == rhs.m_filterName &&
+      return (m_FilterClassName == rhs.m_FilterClassName &&
+          m_MessagePrefix == rhs.m_MessagePrefix &&
+          m_FilterHumanLabel == rhs.m_FilterHumanLabel &&
           m_Msg == rhs.m_Msg &&
             m_Code == rhs.m_Code &&
               m_msgType == rhs.m_msgType &&
@@ -104,23 +117,33 @@ class PipelineMessage
 
     void operator=(const PipelineMessage& rhs)
     {
-      m_filterName = rhs.m_filterName;
+      m_FilterClassName = rhs.m_FilterClassName;
+      m_MessagePrefix = rhs.m_MessagePrefix;
+      m_FilterHumanLabel = rhs.m_FilterHumanLabel;
       m_Msg = rhs.m_Msg;
       m_Code = rhs.m_Code;
       m_msgType = rhs.m_msgType;
       m_Progress = rhs.m_Progress;
     }
 
-    /**
-     * @brief This function is the member m_filterName's accessor.
-     */
-    std::string getFilterName() { return m_filterName; }
 
-    /**
-     * @brief This function is the member m_filterName's mutator.
-     * @param val Variable whose value is assigned to m_filterName.
-     */
-    void setFilterName(const std::string &val) { m_filterName = val; }
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
+    private:
+      std::string m_FilterHumanLabel;
+    public:
+       void setFilterHumanLabel(const std::string &s)
+       {
+       m_FilterHumanLabel = s;
+       }
+      std::string getFilterHumanLabel()
+      {
+      return m_FilterHumanLabel;
+      }
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(MessagePrefix)
+
 
     /**
      * @brief This function is the member m_Msg's accessor.
@@ -172,7 +195,7 @@ class PipelineMessage
     std::string generateErrorString()
     {
       std::stringstream ss;
-      ss << "Error(" << m_Code << "):" << m_filterName << " :" << m_Msg;
+      ss << "Error(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
       return ss.str();
     }
 
@@ -182,7 +205,7 @@ class PipelineMessage
     std::string generateWarningString()
     {
       std::stringstream ss;
-      ss << "Warning(" << m_Code << "):" << m_filterName << " :" << m_Msg;
+      ss << "Warning(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
       return ss.str();
     }
 
@@ -192,12 +215,11 @@ class PipelineMessage
     std::string generateStatusString()
      {
        std::stringstream ss;
-       ss << m_filterName << ":" << m_Msg;
+       ss << m_MessagePrefix << ":" << m_Msg;
        return ss.str();
      }
 
   private:
-    std::string m_filterName;   // Name of the Filter
     std::string m_Msg;          // Message Text
     int m_Code;                 // Error/Warning Code
     MessageType m_msgType;      // Type of Message (see enumeration "MessageType")
