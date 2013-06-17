@@ -1573,10 +1573,6 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
     // filter widget manager.
     filterItem->setData( Qt::UserRole, filterName);
   }
-
-
-<<<<<<< HEAD
-=======
 }
 
 // -----------------------------------------------------------------------------
@@ -1603,5 +1599,4 @@ QLabel* PipelineBuilderWidget::createHyperlinkLabel(PipelineMessage msg)
 	hyperlinkLabel->setOpenExternalLinks(true);
 
 	return hyperlinkLabel;
->>>>>>> 38cdc33f94b4472f7d0915bd43512c1c80794dfa
 }
