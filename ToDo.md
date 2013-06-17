@@ -5,6 +5,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
++ "Tools" menu launches new instances of DREAM3D/StatsGenerator on Windows/Linux (Bummer)
 + StatsGen crashes if data is missing
 + Raw Binary Reader does not error out if we read off the end of the file
 + Fix GBCD Generation or make private on next release
@@ -35,10 +36,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Update documentation file structure now that users can specify array names
 
 
-### Workshop Priority
+### Workshop Feedback
 
++ SurfaceMesh Face IPF Color display something about normals/orientation (Nathalie Gey's Question at workshop during surface meshing session)
 + Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
++ Insert a "favorite" in between other filters, instead of only at the end of a pipeline
++ Write a .med file for the Salome FEM package which is just an HDF5 file.
 
 ### User Centric
 
