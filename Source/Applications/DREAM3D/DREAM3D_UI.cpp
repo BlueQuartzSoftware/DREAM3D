@@ -899,6 +899,8 @@ void DREAM3D_UI::versionCheckReply(int serverMajor, int serverMinor, int serverP
 	QString message = "";
 
 	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+	d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+	d->setApplicationName("DREAM3D");
 	QString appName = d->getAppName();
 
 	QString appVersion = d->getCurrentVersion();

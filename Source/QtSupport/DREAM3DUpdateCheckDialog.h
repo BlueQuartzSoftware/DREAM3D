@@ -132,7 +132,6 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void updateFound();
 
   private:
-    QNetworkAccessManager*		nam;
     QString						m_CurrentVersion;
     QDateTime					m_LastCheckDateTime;
     int							m_WhenToCheck;
