@@ -35,40 +35,48 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _UPDATECHECK_H_
-#define _UPDATECHECK_H_
-
-#include <QtCore/QUrl>
+#ifndef _UPDATECHECKDATA_H_
+#define _UPDATECHECKDATA_H_
 
 #include <QtGui/QWidget>
 
-#include "QNetworkAccessManager.h"
-#include "UpdateCheckData.h"
+#if defined (QT_CORE_LIB)
+#include <QtCore/QMetaType>
+#endif
 
-class UpdateCheck : public QWidget
+class UpdateCheckData : public QWidget
 {
 	Q_OBJECT
 
   public:
-	UpdateCheck(QWidget* parent = 0);
-	virtual ~UpdateCheck();
+	UpdateCheckData(QWidget* parent = 0);
+	UpdateCheckData(const UpdateCheckData&);
+	void operator=(const UpdateCheckData&);
+	bool operator==(const UpdateCheckData&);
 
-	void checkVersion(QUrl website);
+	virtual ~UpdateCheckData();
 
-  protected slots:
-	  void networkReplied(QNetworkReply* reply);
+	bool getHasUpdate();
+	QString getMessageDescription();
+	QString getAppString();
+	QString getServerString();
 
-  signals:
-	  void LatestVersion(UpdateCheckData*);
-
-  protected:
-	  void writeUpdateCheckDate();
+	void setHasUpdate(bool val);
+	void setMessageDescription(QString msg);
+	void setAppString(QString str);
+	void setServerString(QString str);
 
   private:
-	QNetworkAccessManager*				m_Nam;
+	  bool					m_HasUpdate;
+	  QString				m_MessageDescription;
+	  QString				m_AppString;
+	  QString				m_ServerString;
 
-	UpdateCheck(const UpdateCheck&);    // Copy Constructor Not Implemented
-	void operator=(const UpdateCheck&);  // Operator '=' Not Implemented
+
 };
 
-#endif /* _UPDATECHECK_H_ */
+#if defined (QT_CORE_LIB)
+	Q_DECLARE_METATYPE(UpdateCheckData);
+#endif
+
+#endif /* _UPDATECHECKDATA_H_ */

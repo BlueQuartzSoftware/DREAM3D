@@ -50,6 +50,8 @@
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class UpdateCheck;
+class UpdateCheckData;
 
 
 class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckDialog
@@ -125,7 +127,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void on_websiteBtn_clicked();
 
   protected slots:
-	void LatestVersionReplied(int, int, int);
+	void LatestVersionReplied(UpdateCheckData*);
 
   signals:
     void finished();
