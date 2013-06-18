@@ -42,7 +42,8 @@
 //
 // -----------------------------------------------------------------------------
 UpdateCheck::UpdateCheck(QWidget* parent) :
-QWidget(parent)
+QWidget(parent),
+m_Nam(NULL)
 {
 
 }
