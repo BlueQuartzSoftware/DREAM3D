@@ -62,7 +62,7 @@ class DREAM3DPluginInterface;
 class HelpDialog;
 class PipelineBuilderWidget;
 class DREAM3DUpdateCheckDialog;
-
+class UpdateCheckData;
 
 
 /**
@@ -134,7 +134,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void displayUpdateDialog();
 
-	void versionCheckReply(int, int, int);
+	void versionCheckReply(UpdateCheckData*);
 
   private slots:
     // slots for our worker thread to communicate

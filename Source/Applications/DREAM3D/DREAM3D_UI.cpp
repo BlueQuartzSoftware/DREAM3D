@@ -318,8 +318,8 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
 {
 	m_UpdateCheck = new UpdateCheck(this);
 
-	connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), 
-		this, SLOT( versionCheckReply(int, int, int) ) );
+	connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ), 
+		this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
 	QUrl updateWebsiteURL(Detail::UpdateWebSite);
 	m_UpdateCheck->checkVersion(updateWebsiteURL);
@@ -925,45 +925,23 @@ void DREAM3D_UI::displayUpdateDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::versionCheckReply(int serverMajor, int serverMinor, int serverPatch)
+void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 {
-	QString message = "";
-
 	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 	d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
 	d->setApplicationName("DREAM3D");
-	QString appName = d->getAppName();
 
-	QString appVersion = d->getCurrentVersion();
-	QLabel* currentVersionLabel = d->getCurrentVersionLabel();
-	QLabel* latestVersionLabel = d->getLatestVersionLabel();
-
-	QStringList appVersionParts = appVersion.split(QString("."));
-
-	bool ok = false;
-	int appMajor = appVersionParts.at(0).toInt(&ok);
-	int appMinor = appVersionParts.at(1).toInt(&ok);
-	int appPatch = appVersionParts.at(2).toInt(&ok);
-
-	if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+	bool DREAM3DHasUpdates = dataObj->getHasUpdate();
+	QString message = dataObj->getMessageDescription();
+	if (DREAM3DHasUpdates == true)
 	{
 		d->toSimpleUpdateCheckDialog();
-		message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
 
 		QLabel* feedbackTextLabel = d->getFeedbackTextLabel();
 		feedbackTextLabel->setText(message);
-		{
-			QString vStr(appVersionParts.at(0));
-			vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
-			currentVersionLabel->setText(vStr);
-			d->setCurrentVersion(vStr);
-		}
-
-		{
-			QString vStr = QString::number(serverMajor);
-			vStr.append(".").append(QString::number(serverMinor)).append(".").append(QString::number(serverPatch));
-			latestVersionLabel->setText(vStr);
-		}
+		d->getCurrentVersionLabel()->setText( dataObj->getAppString() );
+		d->setCurrentVersion( dataObj->getAppString() );
+		d->getLatestVersionLabel()->setText( dataObj->getServerString() );
 		d->exec();
 	}
 }

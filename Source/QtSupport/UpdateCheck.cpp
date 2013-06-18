@@ -34,6 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "UpdateCheck.h"
+#include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DUpdateCheckDialog.h"
 
 #include <QtCore/QDate>
@@ -98,23 +99,61 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 	// no error received?
 	if (reply->error() == QNetworkReply::NoError)
 	{
+		UpdateCheckData* dataObj = new UpdateCheckData(this);
+
+		DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+		d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+		d->setApplicationName("DREAM3D");
+		QString appName = d->getAppName();
+
 		// read data from QNetworkReply here
 
 		// Example 2: Reading bytes form the reply
 		QString message;
 
+
 		QByteArray bytes = reply->readAll();  // bytes
 		QString serverVersion(bytes); // string
 		serverVersion = serverVersion.trimmed();
 
+		QString appVersion = QString::fromStdString(DREAM3DLib::Version::Complete());
+
 		QStringList serverVersionParts = serverVersion.split(QString("."));
+		QStringList appVersionParts = appVersion.split(QString("."));
 
 		bool ok = false;
+		int appMajor = appVersionParts.at(0).toInt(&ok);
+		int appMinor = appVersionParts.at(1).toInt(&ok);
+		int appPatch = appVersionParts.at(2).toInt(&ok);
+
 		int serverMajor = serverVersionParts.at(0).toInt(&ok);
 		int serverMinor = serverVersionParts.at(1).toInt(&ok);
 		int serverPatch = serverVersionParts.at(2).toInt(&ok);
 
-		emit LatestVersion(serverMajor, serverMinor, serverPatch);
+		if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+		{
+			dataObj->setHasUpdate(true);
+			message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+		}
+		else
+		{
+			dataObj->setHasUpdate(false);
+			message.append("<qt><b>").append(appName).append(" is up to date.</b><br /><br /></qt>");
+		}
+		dataObj->setMessageDescription(message);
+
+		{
+			QString vStr(appVersionParts.at(0));
+			vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
+			dataObj->setAppString(vStr);
+		}
+
+		{
+			QString vStr(serverVersionParts.at(0));
+			vStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
+			dataObj->setServerString(vStr);
+		}
+		emit LatestVersion(dataObj);
 	}
 }
 
