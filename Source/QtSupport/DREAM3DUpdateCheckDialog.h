@@ -88,6 +88,9 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
   QComboBox* getHowOftenComboBox();
   QPushButton* getCheckNowBtn();
 
+  static QString getUpdatePreferencesGroup();
+  static QString createUpdatePreferencesPath();
+
 
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
@@ -97,8 +100,6 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
 
   void readUpdatePreferences(QSettings &prefs);
   void writeUpdatePreferences(QSettings &prefs);
-
-  QString createUpdatePreferencesPath();
 
       /**
      * @brief Hides the UI items necessary to change the dialog into a simple prompt 

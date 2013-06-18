@@ -311,19 +311,50 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
   prefs.endGroup();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::checkForUpdatesAtStartup()
+{
+	m_UpdateCheck = new UpdateCheck(this);
+
+	connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), 
+		this, SLOT( versionCheckReply(int, int, int) ) );
+
+	QUrl updateWebsiteURL(Detail::UpdateWebSite);
+	m_UpdateCheck->checkVersion(updateWebsiteURL);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
-  m_UpdateCheck = new UpdateCheck(this);
-  
-  connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), 
-	  this, SLOT( versionCheckReply(int, int, int) ) );
+	// Automatically check for updates at startup if the user has indicated that preference before
+	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+	if ( d->getAutomaticallyBtn()->isChecked() )
+	{
+		QString filePath = DREAM3DUpdateCheckDialog::createUpdatePreferencesPath();
+		QSettings prefs(filePath, QSettings::IniFormat);
+		prefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
+		QDate lastUpdateCheckDate = prefs.value("LastUpdateCheckDate").toDate();
+		prefs.endGroup();
 
-  QUrl updateWebsiteURL(Detail::UpdateWebSite);
-  m_UpdateCheck->checkVersion(updateWebsiteURL);
+		QDate systemDate;
+		QDate currentDateToday = systemDate.currentDate();
+
+		QDate dailyThreshold = lastUpdateCheckDate.addDays(1);
+		QDate weeklyThreshold = lastUpdateCheckDate.addDays(7);
+		QDate monthlyThreshold = lastUpdateCheckDate.addMonths(1);
+
+		if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
+			&& currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
+			&& currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
+			&& currentDateToday >= monthlyThreshold))
+		{
+			checkForUpdatesAtStartup();
+		}
+	}
   
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
@@ -410,7 +441,7 @@ void DREAM3D_UI::on_action_OpenStatsGenerator_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_action_CheckForUpdates_triggered()
+void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 

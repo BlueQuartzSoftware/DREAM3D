@@ -34,6 +34,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "UpdateCheck.h"
+#include "DREAM3DUpdateCheckDialog.h"
+
+#include <QtCore/QDate>
+#include <QtCore/QSettings>
 
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
@@ -61,6 +65,8 @@ UpdateCheck::~UpdateCheck()
 // -----------------------------------------------------------------------------
 void UpdateCheck::checkVersion(QUrl website)
 {
+	writeUpdateCheckDate();
+
 	if (m_Nam != NULL)
 	{
 		m_Nam->deleteLater();
@@ -110,4 +116,18 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 
 		emit LatestVersion(serverMajor, serverMinor, serverPatch);
 	}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UpdateCheck::writeUpdateCheckDate()
+{
+	QDate systemDate;
+	QDate currentDateToday = systemDate.currentDate();
+	QString filePath = DREAM3DUpdateCheckDialog::createUpdatePreferencesPath();
+	QSettings prefs(filePath, QSettings::IniFormat);
+	prefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
+	prefs.setValue ("LastUpdateCheckDate", currentDateToday.currentDate());
+	prefs.endGroup();
 }

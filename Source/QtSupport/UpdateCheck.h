@@ -44,8 +44,6 @@
 
 #include "QNetworkAccessManager.h"
 
-class DREAM3DUpdateCheckDialog;
-
 class UpdateCheck : public QWidget
 {
 	Q_OBJECT
@@ -61,6 +59,9 @@ class UpdateCheck : public QWidget
 
   signals:
 	  void LatestVersion(int, int, int);
+
+  protected:
+	  void writeUpdateCheckDate();
 
   private:
 	QNetworkAccessManager*				m_Nam;

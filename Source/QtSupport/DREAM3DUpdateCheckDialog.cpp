@@ -42,6 +42,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QDir>
+#include <QtCore/QDate>
 
 #include <QtGui/QDesktopServices>
 
@@ -52,7 +53,7 @@
 
 namespace Detail
 {
-  const QString UpdatePreferencesGroup("UpdatePreferences");
+	const QString UpdatePreferencesGroup("UpdatePreferences");
 }
 
 // -----------------------------------------------------------------------------
@@ -97,9 +98,17 @@ DREAM3DUpdateCheckDialog::~DREAM3DUpdateCheckDialog()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup()
+{
+	return Detail::UpdatePreferencesGroup;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QRadioButton* DREAM3DUpdateCheckDialog::getAutomaticallyBtn()
 {
-  return automatically;
+	return automatically;
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +116,7 @@ QRadioButton* DREAM3DUpdateCheckDialog::getAutomaticallyBtn()
 // -----------------------------------------------------------------------------
 QRadioButton* DREAM3DUpdateCheckDialog::getManuallyBtn()
 {
-  return manually;
+	return manually;
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +124,7 @@ QRadioButton* DREAM3DUpdateCheckDialog::getManuallyBtn()
 // -----------------------------------------------------------------------------
 QComboBox* DREAM3DUpdateCheckDialog::getHowOftenComboBox()
 {
-  return howOften;
+	return howOften;
 }
 
 // -----------------------------------------------------------------------------
@@ -279,8 +288,6 @@ void DREAM3DUpdateCheckDialog::setUpdateWebSite(QString url)
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::setupGui()
 {
-	connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), this, SLOT( LatestVersionReplied(int, int, int) ) );
-
   latestVersion->setText("Not Checked");
   feedbackText->setText("");
 }
@@ -291,9 +298,12 @@ void DREAM3DUpdateCheckDialog::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
 {
-	QPushButton* checkNowBtn = getCheckNowBtn();
 	checkNowBtn->setEnabled(false);
 	m_UpdateCheck = new UpdateCheck(this);
+
+	connect( m_UpdateCheck, SIGNAL( LatestVersion(int, int, int) ), 
+		this, SLOT( LatestVersionReplied(int, int, int) ) );
+
 	m_UpdateCheck->checkVersion(m_UpdateWebSite);
 	checkNowBtn->setEnabled(true);
 
@@ -447,36 +457,32 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
   m_WhenToCheck = static_cast<UpdateType>( prefs.value("Frequency").toInt(&ok) );
   prefs.endGroup();
 
-  // Set QRadioButtons and QComboBox according to value
-  QRadioButton* automaticallyBtn = getAutomaticallyBtn();
-  QRadioButton* manuallyBtn = getManuallyBtn();
-  QComboBox* howOftenBox = getHowOftenComboBox();
   if (m_WhenToCheck == UpdateCheckManual)
   {
-    manuallyBtn->blockSignals(true);
-    manuallyBtn->setChecked(true);
-    howOftenBox->setEnabled(false);
-    manuallyBtn->blockSignals(false);
+    manually->blockSignals(true);
+    manually->setChecked(true);
+    howOften->setEnabled(false);
+    manually->blockSignals(false);
   }
   else
   {
-    automaticallyBtn->blockSignals(true);
-    howOftenBox->blockSignals(true);
-    automaticallyBtn->setChecked(true);
+    automatically->blockSignals(true);
+    howOften->blockSignals(true);
+    automatically->setChecked(true);
     if (m_WhenToCheck == UpdateCheckDaily)
     {
-      howOftenBox->setCurrentIndex(UpdateCheckDaily);
+      howOften->setCurrentIndex(UpdateCheckDaily);
     }
     else if (m_WhenToCheck == UpdateCheckWeekly)
     {
-      howOftenBox->setCurrentIndex(UpdateCheckWeekly);
+      howOften->setCurrentIndex(UpdateCheckWeekly);
     }
     else
     {
-      howOftenBox->setCurrentIndex(UpdateCheckMonthly);
+      howOften->setCurrentIndex(UpdateCheckMonthly);
     }
-    automaticallyBtn->blockSignals(false);
-    howOftenBox->blockSignals(false);
+    automatically->blockSignals(false);
+    howOften->blockSignals(false);
   }
 }
 
@@ -486,7 +492,6 @@ void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
 void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
 {
   prefs.beginGroup(Detail::UpdatePreferencesGroup);
-  QString fileName = prefs.fileName();
   prefs.setValue( "Frequency", m_WhenToCheck );
   prefs.endGroup();
 }
@@ -541,15 +546,11 @@ void DREAM3DUpdateCheckDialog::toSimpleUpdateCheckDialog()
 		return;
 	}
 
-	QPushButton* checkNowBtn = getCheckNowBtn();
-	QRadioButton* automaticallyBtn = getAutomaticallyBtn();
-	QRadioButton* manuallyBtn = getManuallyBtn();
-	QComboBox* howOftenComboBo = getHowOftenComboBox();
-
 	checkNowBtn->setVisible(false);
-	automaticallyBtn->setVisible(false);
-	manuallyBtn->setVisible(false);
-	howOftenComboBo->setVisible(false);
+	automatically->setVisible(false);
+	manually->setVisible(false);
+	howOften->setVisible(false);
+	messageLabel->setText("Update Available!");
 
 	// Update Dialog State
 	m_DialogState = SimpleDialog;
@@ -566,15 +567,10 @@ void DREAM3DUpdateCheckDialog::toDefaultUpdateCheckDialog()
 		return;
 	}
 
-	QPushButton* checkNowBtn = getCheckNowBtn();
-	QRadioButton* automaticallyBtn = getAutomaticallyBtn();
-	QRadioButton* manuallyBtn = getManuallyBtn();
-	QComboBox* howOftenComboBo = getHowOftenComboBox();
-
 	checkNowBtn->setVisible(true);
-	automaticallyBtn->setVisible(true);
-	manuallyBtn->setVisible(true);
-	howOftenComboBo->setVisible(true);
+	automatically->setVisible(true);
+	manually->setVisible(true);
+	howOften->setVisible(true);
 
 	// Update Dialog State
 	m_DialogState = DefaultDialog;
