@@ -38,7 +38,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -73,6 +73,7 @@
     <addaction name="separator"/>
     <addaction name="actionShow_User_Manual"/>
     <addaction name="separator"/>
+    <addaction name="actionCheck_For_Updates"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -186,6 +187,11 @@
   <action name="action_OpenStatsGenerator">
    <property name="text">
     <string>Open StatsGenerator</string>
+   </property>
+  </action>
+  <action name="actionCheck_For_Updates">
+   <property name="text">
+    <string>Check For Updates</string>
    </property>
   </action>
  </widget>
