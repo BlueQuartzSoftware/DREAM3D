@@ -37,10 +37,10 @@ Launch DREAM3D and create the pipeline that is displayed in the following image.
 -------------------
 
 ## Notes ##
-Be sure to properly select the .h5stats (or .dream3d) input file and properly select an output file to save the data. We will save the data as a .dream3d file with the XDMF file wrapper enabled. **Make sure you do NOT name the output file the same as the input file or it will get over written**. 
+Be sure to properly select the .h5stats (or .dream3d) input file and properly select an output file to save the data. We will save the data as a .dream3d file with the XDMF file wrapper enabled. **Make sure you do NOT name the output file the same as the input file or it will be over-written**. 
 
 ## Visualization ##
-From ParaView open the .xdmf file and select the "Grain Ids" and "IPFColors" data sets then click the "Apply" button. The microstructure should look something like below which is shown with IPF coloring with a 001 reference direction.
+From ParaView open the .xdmf file and select the "Grain Ids" and "IPFColors" data sets. Then click the "Apply" button. The microstructure should look something like the image below, which is shown with IPF coloring with a 001 reference direction.
 
 -------------------
 

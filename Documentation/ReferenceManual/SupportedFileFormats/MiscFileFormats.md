@@ -30,5 +30,5 @@ Import & Export File Formats {#miscfileformats}
 + Nodes/Triangles from Surfacemesh
 + CSV File of Field Values
 
-Please take a look at each of the various filters that read or write those files for notes on each type of file.
+Please take a look at each of the various filters that read or write these files for notes on each type of file.
 
