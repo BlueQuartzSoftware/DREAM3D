@@ -333,11 +333,15 @@ void DREAM3D_UI::setupGui()
 	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 	if ( d->getAutomaticallyBtn()->isChecked() )
 	{
-		QString filePath = DREAM3DUpdateCheckDialog::createUpdatePreferencesPath();
-		QSettings prefs(filePath, QSettings::IniFormat);
-		prefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
-		QDate lastUpdateCheckDate = prefs.value("LastUpdateCheckDate").toDate();
-		prefs.endGroup();
+		#if defined (Q_OS_MAC)
+			QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+		#else
+			QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+		#endif
+
+		updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
+		QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey()).toDate();
+		updatePrefs.endGroup();
 
 		QDate systemDate;
 		QDate currentDateToday = systemDate.currentDate();
@@ -466,7 +470,7 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
     this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
 
   connect(d->getHowOftenComboBox(), SIGNAL( currentIndexChanged(int) ),
-    this, SLOT( on_actionHowOftenComboBox_Changed(int) ) );
+    this, SLOT( on_actionHowOftenComboBox_currentIndexChanged(int) ) );
 
   // Now display the dialog box
   d->exec();
@@ -475,7 +479,7 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionHowOftenComboBox_Changed(int index)
+void DREAM3D_UI::on_actionHowOftenComboBox_currentIndexChanged(int index)
 {
   QComboBox* box = static_cast<QComboBox*>( sender() );
   DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( box->parent() );
@@ -493,8 +497,11 @@ void DREAM3D_UI::on_actionHowOftenComboBox_Changed(int index)
     d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
   }
 
-  QString updatePrefPath = d->createUpdatePreferencesPath();
-  QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
+#if defined (Q_OS_MAC)
+  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
   d->writeUpdatePreferences(updatePrefs);
 }
 
@@ -907,8 +914,11 @@ void DREAM3D_UI::on_actionUpdateCheckBtn_toggled(bool boolValue)
     {
       d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
     }
-    QString updatePrefPath = d->createUpdatePreferencesPath();
-    QSettings updatePrefs(updatePrefPath, QSettings::IniFormat);
+#if defined (Q_OS_MAC)
+	QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+	QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
     d->writeUpdatePreferences(updatePrefs);
   }
 }

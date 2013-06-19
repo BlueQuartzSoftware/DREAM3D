@@ -54,6 +54,8 @@
 namespace Detail
 {
 	const QString UpdatePreferencesGroup("UpdatePreferences");
+	const QString UpdateCheckDateKey("LastUpdateCheckDate");
+	const QString UpdateFrequencyKey("Frequency");
 }
 
 // -----------------------------------------------------------------------------
@@ -63,28 +65,36 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   QDialog(parent),
   m_UpdateCheckThread(NULL),
   m_DialogState(DefaultDialog),
-  m_UpdateCheck(NULL)
+  m_UpdateCheck(NULL),
+  m_WhenToCheck(UpdateType::UpdateCheckMonthly)
 {
 
   setupUi(this);
 
   setupGui();
 
-  // If the UpdatePreferences.ini file exists, read the values in
-  m_UpdatePreferencesPath = createUpdatePreferencesPath();
-  QSettings updatePrefs(m_UpdatePreferencesPath, QSettings::IniFormat);
-  QDir prefPathDir(m_UpdatePreferencesPath);
-  if ( prefPathDir.exists(m_UpdatePreferencesPath) )
-  {
-    readUpdatePreferences(updatePrefs);
-  }
 
-  // If file doesn't exist yet, write the default preferences for the first time
-  else
-  {
-    m_WhenToCheck = UpdateCheckManual;
-      writeUpdatePreferences(updatePrefs);
-  }
+	#if defined (Q_OS_MAC)
+		QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+	#else
+		QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+	#endif
+
+	updatePrefs.beginGroup(Detail::UpdatePreferencesGroup);
+	// If the update preferences exist in the preferences file, read them in
+	if ( updatePrefs.contains(Detail::UpdateFrequencyKey) )
+	{
+		updatePrefs.endGroup();
+		readUpdatePreferences(updatePrefs);
+	}
+	// Otherwise, write and set the defaults
+	else
+	{
+		updatePrefs.endGroup();
+		automatically->setChecked(true);
+		howOften->setCurrentIndex(UpdateType::UpdateCheckMonthly);
+		writeUpdatePreferences(updatePrefs);
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -101,6 +111,14 @@ DREAM3DUpdateCheckDialog::~DREAM3DUpdateCheckDialog()
 QString DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup()
 {
 	return Detail::UpdatePreferencesGroup;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getUpdateCheckKey()
+{
+	return Detail::UpdateCheckDateKey;
 }
 
 // -----------------------------------------------------------------------------
@@ -173,39 +191,6 @@ QString DREAM3DUpdateCheckDialog::getAppName()
 QLabel* DREAM3DUpdateCheckDialog::getFeedbackTextLabel()
 {
 	return feedbackText;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString DREAM3DUpdateCheckDialog::createUpdatePreferencesPath()
-{
-#if defined (Q_OS_MAC)
-  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  QString extension = ".ini";
-#else
-  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-  QString extension = ".ini";
-#endif
-
-  QString prefFile = prefs.fileName();
-  QFileInfo prefFileInfo = QFileInfo(prefFile);
-  QString parentPath = prefFileInfo.path();
-  QString newParentPrefPath = parentPath + "/DREAM3D_Update_Preferences";
-  QDir parentPathDir = QDir(newParentPrefPath);
-
-  if(parentPathDir.mkpath(newParentPrefPath))
-  {
-    QString newPrefPath = newParentPrefPath + "/UpdatePreferences" + extension;
-
-    newPrefPath = QDir::toNativeSeparators(newPrefPath);
-    return newPrefPath;
-  }
-  else
-  {
-    // This lets us know if there was an error creating the parent path
-    return "";
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -312,20 +297,11 @@ void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::on_websiteBtn_clicked()
-{
-  QUrl url("http://dream3d.bluequartz.net/downloads");
-  QDesktopServices::openUrl(url);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
 {  // Read in value from preferences file
   prefs.beginGroup(Detail::UpdatePreferencesGroup);
   bool ok = false;
-  m_WhenToCheck = static_cast<UpdateType>( prefs.value("Frequency").toInt(&ok) );
+  m_WhenToCheck = static_cast<UpdateType>( prefs.value(Detail::UpdateFrequencyKey).toInt(&ok) );
   prefs.endGroup();
 
   if (m_WhenToCheck == UpdateCheckManual)

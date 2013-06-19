@@ -90,7 +90,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionOpen_Pipeline_2_triggered();
     void on_actionSave_Pipeline_2_triggered();
     void on_actionCheck_For_Updates_triggered();
-  void on_actionHowOftenComboBox_Changed(int index);
+  void on_actionHowOftenComboBox_currentIndexChanged(int);
   void on_actionUpdateCheckBtn_toggled(bool);
 
 	//Tools Menu

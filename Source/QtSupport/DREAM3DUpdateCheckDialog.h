@@ -91,7 +91,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
   QPushButton* getCheckNowBtn();
 
   static QString getUpdatePreferencesGroup();
-  static QString createUpdatePreferencesPath();
+  static QString getUpdateCheckKey();
 
 
     void setCurrentVersion(QString version);
@@ -121,7 +121,6 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
 
   public slots:
     void on_checkNowBtn_clicked();
-    void on_websiteBtn_clicked();
 
   protected slots:
 	void LatestVersionReplied(UpdateCheckData*);
