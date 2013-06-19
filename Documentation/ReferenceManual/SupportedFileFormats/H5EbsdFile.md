@@ -2,19 +2,19 @@ H5EBSD Data File Specification {#h5ebsdfile}
 ================
 
 ## Introduction
-The EBSD Data from multiple vendors is stored in a data file using the HDF5 file format library. While the general layout of the HDF5 file is the same between vendors there are details that are NOT the same between vendors because each vendors chooses to save different types of data. The top-level datasets that deal with the basic volume information is the same for every file.
+The EBSD Data from multiple vendors is stored in a data file using the HDF5 file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are NOT the same between vendors, because each vendor chooses to save different types of data. The top-level datasets that deal with the basic volume information is the same for every file.
 
 
 ## Orientations, Reference Frames and Coordinate Systems
-DREAM.3D's origin follows the sample coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display. Sample Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
+DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure: Specimen Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
 
 ![TSL Coordintate System (Spatial)](Images/CoordinateSystem1.png)
 @image latex Images/CoordinateSystem1.png " " width=3in
 
-Commercial EBSD acquisition systems do not typically follow this convention and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data in which case the DREAM.3D environment does not have any way of determining if those transformations have already occured. During the import process the user is asked a few questions regarding the orientation of their EBSD data in relation to the sample coordinate system. Currently there are 3 items that must be answered otherwise undefined behavior may occur during any of the analysis algorithms.
+Commercial EBSD acquisition systems do not typically follow this convention, and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data, in which case the DREAM.3D environment does not have any way of determining if those transformations have already occurred. During the import process the user is asked a few questions regarding the orientation of the EBSD data in relation to the specimen coordinate system. Currently, there are three (3) items that must be answered; otherwise, undefined behavior may occur during any of the analysis algorithms.
 
 - Some Commercial EBSD acquisition systems allow for a **scan rotation** which
-rotates the sample coordinate system 180 degrees around the Z axis.
+rotates the specimen coordinate system 180 degrees around the Z axis.
 - Should we rotate the Euler angles to bring them in line with the sample
 reference frame?
 
@@ -43,7 +43,7 @@ reference frame?
 | Slice Data organized by Slice index |  |  |
 
 ### Slice Group Specification
-Each Slice is grouped into its own H5G_GROUP with the Name of the group simply the index of the slice. Within each slice group are 2 more groups with names **Data** and **Header**
+Each Slice is grouped into its own H5G_GROUP with the Name of the group as the index of the slice. Within each slice group there are two (2) more groups with names **Data** and **Header**
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -53,7 +53,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 
 
 ## TSL Specification
- This section details the data to be imported from a .ang file into the .h5ebsd file
+ This section details the data to be imported from a .ang file into the .h5ebsd file.
  
 ### TSL (.ang) Data Group Specification
 
@@ -93,7 +93,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 | OPERATOR | H5T\_STRING | Contains value for the header entry OPERATOR |
 | SAMPLEID | H5T\_STRING | Contains value for the header entry SAMPLEID |
 | SCANID | H5T\_STRING | Contains value for the header entry SCANID |
-| Phases | H5G_GROUP | Group that contains a subgroup for each phase where the name of each subgroup is simply the index of the phase starting at 1. |
+| Phases | H5G_GROUP | Group that contains a subgroup for each phase where the name of each subgroup is the index of the phase starting at 1. |
 
 
 ### TSL (.ang) Phase Group Specification
@@ -108,7 +108,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 | NumberFamilies | H5T\_NATIVE\_INT32 |  |
 | Phase | H5T\_NATIVE\_INT32 |  |
 | Symmetry | H5T\_NATIVE\_INT32 |  |
-| hklFamilies | H5G_GROUP | Contains all the HKL Family information where the number of datasetscontained in this group is the number of HKL Families |
+| hklFamilies | H5G_GROUP | Contains all the HKL Family information where the number of datasets contained in this group is the number of HKL Families |
 
 
 ### TSL (.ang) HKLFamily Group Specification
@@ -133,7 +133,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
  This section details the data to be imported from a .ctf file into the .h5ebsd file
 
 ### HKL (.ctf) Data Group Specification
-1D Array of Values where the number of elements in the array is equal to the total number of points per 2D Slice.
+1D Array of Values, where the number of elements in the array is equal to the total number of points per 2D Slice.
 
 | **Name** | **HDF5 Type** | **Value** |
 |----------|---------------|-----------|
@@ -179,7 +179,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 | KV | H5T\_NATIVE\_INT32 | Contains value for the header entry KV |
 | TiltAngle | H5T\_NATIVE\_FLOAT | Contains value for the header entry TiltAngle |
 | TiltAxis | H5T\_NATIVE\_FLOAT | Contains value for the header entry TiltAxis |
-| Phases | H5G_GROUP | Group that contains a subgroup for each phase where the name of each subgroup is simply the index of the phase starting at **1.** |
+| Phases | H5G_GROUP | Group that contains a subgroup for each phase where the name of each subgroup is the index of the phase starting at **1.** |
 
 
 ### HKL (.ctf) Phase Group Specification
@@ -191,7 +191,7 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 | Internal2 | H5T\_STRING | Contains value for the header entry Internal2 |
 | LatticeAngles | H5T\_NATIVE\_FLOAT | Contains value for the header entry Lattice Angles in a 1x3 array |
 | LatticeDimensions | H5T\_NATIVE\_FLOAT | Contains value for the header entry Lattice Dimensions in a 1x3 array |
-| LaueGroup | H5T\_NATIVE\_INT32 | Contains value for the header entry LaueGroup plus an H5T\_STRING Attribute which is the string name of the Laue Group for example "Hexagonal-High 6/mmm" |
+| LaueGroup | H5T\_NATIVE\_INT32 | Contains value for the header entry LaueGroup plus an H5T\_STRING Attribute which is the string name of the Laue Group, for example "Hexagonal-High 6/mmm" |
 | SpaceGroup | H5T\_NATIVE\_INT32 | Contains value for the header entry SpaceGroup |
 | PhaseName | H5T\_STRING | Contains value for the header entry PhaseName |
 
@@ -201,6 +201,6 @@ Each Slice is grouped into its own H5G_GROUP with the Name of the group simply t
 
 The **Stacking Order** refers to the order in which the z slices are stacked together when they are read from the file. The enumerations are also in the EbsdLibConstants.h header file.
 
-As a further explanation if the ordering is **Low To High** then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High" then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **High to Low** in which case the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
+As a further explanation, if the ordering is **Low To High**, then the slice with the lowest number is positioned at Z=0 in 3D Cartesian space. For example, if your data set is numbered from 23 to 86 with file names of the form Slice\_023.ang and you select "Low To High", then the data inside of file Slice\_023.ang will be positioned at Z=0 during any method that has to deal with the data. The opposite of this is if the user were to select to have their data **High to Low**, in which case, the file with name Slice\_086.ang will be positioned at Z=0 and the file with name "Slice_023.ang" will be positioned at Z=64.
 
  
