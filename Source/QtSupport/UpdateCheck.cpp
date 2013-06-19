@@ -34,11 +34,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "UpdateCheck.h"
+#include "Version.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DUpdateCheckDialog.h"
 
 #include <QtCore/QDate>
 #include <QtCore/QSettings>
+
+#include <QtGui/QMessageBox>
 
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
@@ -89,6 +92,7 @@ void UpdateCheck::checkVersion(QUrl website)
 // -----------------------------------------------------------------------------
 void UpdateCheck::networkReplied(QNetworkReply* reply)
 {
+	UpdateCheckData* dataObj = new UpdateCheckData(this);
 	// Reading attributes of the reply
 	// e.g. the HTTP status code
 	QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
@@ -99,8 +103,6 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 	// no error received?
 	if (reply->error() == QNetworkReply::NoError)
 	{
-		UpdateCheckData* dataObj = new UpdateCheckData(this);
-
 		DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 		d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
 		d->setApplicationName("DREAM3D");
@@ -113,27 +115,39 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 
 
 		QByteArray bytes = reply->readAll();  // bytes
-		QString serverVersion(bytes); // string
-		serverVersion = serverVersion.trimmed();
+		QString serverVersionStr(bytes); // string
+		serverVersionStr = serverVersionStr.trimmed();
 
-		QString appVersion = QString::fromStdString(DREAM3DLib::Version::Complete());
+		QString appVersionStr = QString::fromStdString(DREAM3DLib::Version::Complete());
 
-		QStringList serverVersionParts = serverVersion.split(QString("."));
-		QStringList appVersionParts = appVersion.split(QString("."));
+		QStringList serverVersionParts = serverVersionStr.split(QString("."));
+		QStringList appVersionParts = appVersionStr.split(QString("."));
 
 		bool ok = false;
-		int appMajor = appVersionParts.at(0).toInt(&ok);
-		int appMinor = appVersionParts.at(1).toInt(&ok);
-		int appPatch = appVersionParts.at(2).toInt(&ok);
+		Version appVersion;
+		appVersion.setMajorNum( appVersionParts.at(0).toInt(&ok) );
+		appVersion.setMinorNum( appVersionParts.at(1).toInt(&ok) );
+		appVersion.setPatchNum( appVersionParts.at(2).toInt(&ok) );
 
-		int serverMajor = serverVersionParts.at(0).toInt(&ok);
-		int serverMinor = serverVersionParts.at(1).toInt(&ok);
-		int serverPatch = serverVersionParts.at(2).toInt(&ok);
+		Version serverVersion;
+		serverVersion.setMajorNum( serverVersionParts.at(0).toInt(&ok) );
+		serverVersion.setMinorNum( serverVersionParts.at(1).toInt(&ok) );
+		serverVersion.setPatchNum( serverVersionParts.at(2).toInt(&ok) );
 
-		if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
+		// If the server returned garbage values
+		if ( serverVersion.getMajorNum() == 0 && serverVersion.getMinorNum() == 0 && serverVersion.getPatchNum() == 0 )
+		{
+			dataObj->setMessageDescription("There was an error while trying to access the DREAM3D server. Please contact the DREAM3D developers for more information.");
+			dataObj->setHasError(true);
+			emit LatestVersion(dataObj);
+			return;
+		}
+		
+		// If the server returned a legitimate version, compare it with the app version
+		if (serverVersion > appVersion)
 		{
 			dataObj->setHasUpdate(true);
-			message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+			message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersionStr).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
 		}
 		else
 		{
@@ -154,6 +168,14 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 			dataObj->setServerString(vStr);
 		}
 		emit LatestVersion(dataObj);
+	}
+	// The URL does not exist on the server
+	else
+	{
+		dataObj->setMessageDescription("The URL to the DREAM3D server is not valid. Please contact the DREAM3D developers for more information.");
+		dataObj->setHasError(true);
+		emit LatestVersion(dataObj);
+		reply->abort();
 	}
 }
 

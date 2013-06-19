@@ -374,9 +374,16 @@ void DREAM3DUpdateCheckDialog::LatestVersionReplied(UpdateCheckData* dataObj)
 {
 	QString message = dataObj->getMessageDescription();
 	feedbackText->setText(message);
-	currentVersion->setText( dataObj->getAppString() );
-	setCurrentVersion( dataObj->getAppString() );
-	latestVersion->setText( dataObj->getServerString() );
+	if (!dataObj->hasError())
+	{
+		currentVersion->setText( dataObj->getAppString() );
+		setCurrentVersion( dataObj->getAppString() );
+		latestVersion->setText( dataObj->getServerString() );
+	}
+	else
+	{
+		latestVersion->setText("Error!");
+	}
 }
 
 // -----------------------------------------------------------------------------
