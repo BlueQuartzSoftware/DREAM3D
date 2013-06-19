@@ -34,18 +34,15 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "UpdateCheckData.h"
+#include "Version.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UpdateCheckData::UpdateCheckData(QWidget* parent) :
-QWidget(parent),
-m_HasUpdate(false),
-m_HasError(false),
-m_MessageDescription(""),
-m_AppString(""),
-m_ServerString("")
+Version::Version() :
+m_MajorNum(-1),
+m_MinorNum(-1),
+m_PatchNum(-1)
 {
 
 }
@@ -53,7 +50,17 @@ m_ServerString("")
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UpdateCheckData::~UpdateCheckData()
+Version::Version(int majorNum, int minorNum, int patchNum)
+{
+	m_MajorNum = majorNum;
+	m_MinorNum = minorNum;
+	m_PatchNum = patchNum;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+Version::~Version()
 {
 
 }
@@ -61,115 +68,151 @@ UpdateCheckData::~UpdateCheckData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UpdateCheckData::UpdateCheckData(const UpdateCheckData& rhs)
+Version::Version(const Version& rhs)
 {
-	m_AppString = rhs.m_AppString;
-	m_HasUpdate = rhs.m_HasUpdate;
-	m_HasError = rhs.m_HasError;
-	m_MessageDescription = rhs.m_MessageDescription;
-	m_ServerString = rhs.m_ServerString;
+	m_MajorNum = rhs.m_MajorNum;
+	m_MinorNum = rhs.m_MinorNum;
+	m_PatchNum = rhs.m_PatchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UpdateCheckData::operator=(const UpdateCheckData& rhs)
+void Version::operator=(const Version& rhs)
 {
-	m_AppString = rhs.m_AppString;
-	m_HasUpdate = rhs.m_HasUpdate;
-	m_HasError = rhs.m_HasError;
-	m_MessageDescription = rhs.m_MessageDescription;
-	m_ServerString = rhs.m_ServerString;
+	m_MajorNum = rhs.m_MajorNum;
+	m_MinorNum = rhs.m_MinorNum;
+	m_PatchNum = rhs.m_PatchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool UpdateCheckData::operator==(const UpdateCheckData& rhs)
+bool Version::operator==(const Version& rhs)
 {
-	return (m_AppString == rhs.m_AppString &&
-		m_HasUpdate == rhs.m_HasUpdate &&
-		m_HasError == rhs.m_HasError &&
-		m_MessageDescription == rhs.m_MessageDescription &&
-		m_ServerString == rhs.m_ServerString);
+	return (m_MajorNum == rhs.m_MajorNum &&
+			m_MinorNum == rhs.m_MinorNum &&
+			m_PatchNum == rhs.m_PatchNum);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool UpdateCheckData::hasUpdate()
+bool Version::operator>(const Version& rhs)
 {
-	return m_HasUpdate;
+	if (m_MajorNum > rhs.m_MajorNum)
+	{
+		return true;
+	}
+	else if (m_MajorNum == rhs.m_MajorNum)
+	{
+		if (m_MinorNum > rhs.m_MinorNum)
+		{
+			return true;
+		}
+		else if (m_MinorNum == rhs.m_MinorNum)
+		{
+			if (m_PatchNum > rhs.m_PatchNum)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool UpdateCheckData::hasError()
+bool Version::operator<(const Version& rhs)
 {
-	return m_HasError;
+	if (m_MajorNum < rhs.m_MajorNum)
+	{
+		return true;
+	}
+	else if (m_MajorNum == rhs.m_MajorNum)
+	{
+		if (m_MinorNum < rhs.m_MinorNum)
+		{
+			return true;
+		}
+		else if (m_MinorNum == rhs.m_MinorNum)
+		{
+			if (m_PatchNum < rhs.m_PatchNum)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString UpdateCheckData::getMessageDescription()
+int Version::getMajorNum()
 {
-	return m_MessageDescription;
+	return m_MajorNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString UpdateCheckData::getAppString()
+int Version::getMinorNum()
 {
-	return m_AppString;
+	return m_MinorNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString UpdateCheckData::getServerString()
+int Version::getPatchNum()
 {
-	return m_ServerString;
+	return m_PatchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UpdateCheckData::setHasUpdate(bool val)
+void Version::setMajorNum(int major)
 {
-	m_HasUpdate = val;
+	m_MajorNum = major;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UpdateCheckData::setHasError(bool val)
+void Version::setMinorNum(int minor)
 {
-	m_HasError = val;
+	m_MinorNum = minor;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UpdateCheckData::setMessageDescription(QString msg)
+void Version::setPatchNum(int patch)
 {
-	m_MessageDescription = msg;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void UpdateCheckData::setAppString(QString str)
-{
-	m_AppString = str;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void UpdateCheckData::setServerString(QString str)
-{
-	m_ServerString = str;
+	m_PatchNum = patch;
 }

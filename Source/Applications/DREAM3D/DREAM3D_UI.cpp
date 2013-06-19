@@ -321,8 +321,7 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
 	connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ), 
 		this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
-	QUrl updateWebsiteURL(Detail::UpdateWebSite);
-	m_UpdateCheck->checkVersion(updateWebsiteURL);
+	m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
 }
 
 // -----------------------------------------------------------------------------
@@ -931,13 +930,11 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 	d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
 	d->setApplicationName("DREAM3D");
 
-	bool DREAM3DHasUpdates = dataObj->getHasUpdate();
-	QString message = dataObj->getMessageDescription();
-	if (DREAM3DHasUpdates == true)
+	if ( dataObj->hasUpdate() && !dataObj->hasError() )
 	{
-		d->toSimpleUpdateCheckDialog();
-
+		QString message = dataObj->getMessageDescription();
 		QLabel* feedbackTextLabel = d->getFeedbackTextLabel();
+		d->toSimpleUpdateCheckDialog();
 		feedbackTextLabel->setText(message);
 		d->getCurrentVersionLabel()->setText( dataObj->getAppString() );
 		d->setCurrentVersion( dataObj->getAppString() );
