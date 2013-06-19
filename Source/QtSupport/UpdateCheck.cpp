@@ -123,6 +123,11 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 		QStringList serverVersionParts = serverVersionStr.split(QString("."));
 		QStringList appVersionParts = appVersionStr.split(QString("."));
 
+		appVersionStr = appVersionParts.at(0);
+		appVersionStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
+		serverVersionStr = serverVersionParts.at(0);
+		serverVersionStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
+
 		bool ok = false;
 		Version appVersion;
 		appVersion.setMajorNum( appVersionParts.at(0).toInt(&ok) );
@@ -147,7 +152,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 		if (serverVersion > appVersion)
 		{
 			dataObj->setHasUpdate(true);
-			message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersionStr).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+			message.append("<qt><b>There is an update available for ").append(appName).append(".</b><br /><br />  You are currently running version ").append(appVersionStr).append(". If you are ready to update you can go to the main download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
 		}
 		else
 		{
@@ -155,18 +160,9 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 			message.append("<qt><b>").append(appName).append(" is up to date.</b><br /><br /></qt>");
 		}
 		dataObj->setMessageDescription(message);
+		dataObj->setAppString(appVersionStr);
+		dataObj->setServerString(serverVersionStr);
 
-		{
-			QString vStr(appVersionParts.at(0));
-			vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
-			dataObj->setAppString(vStr);
-		}
-
-		{
-			QString vStr(serverVersionParts.at(0));
-			vStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
-			dataObj->setServerString(vStr);
-		}
 		emit LatestVersion(dataObj);
 	}
 	// The URL does not exist on the server
@@ -186,9 +182,14 @@ void UpdateCheck::writeUpdateCheckDate()
 {
 	QDate systemDate;
 	QDate currentDateToday = systemDate.currentDate();
-	QString filePath = DREAM3DUpdateCheckDialog::createUpdatePreferencesPath();
-	QSettings prefs(filePath, QSettings::IniFormat);
-	prefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
-	prefs.setValue ("LastUpdateCheckDate", currentDateToday.currentDate());
-	prefs.endGroup();
+
+#if defined (Q_OS_MAC)
+	QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+	QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+
+	updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
+	updatePrefs.setValue (DREAM3DUpdateCheckDialog::getUpdateCheckKey(), currentDateToday.currentDate());
+	updatePrefs.endGroup();
 }

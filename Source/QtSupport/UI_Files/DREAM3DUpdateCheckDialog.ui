@@ -132,13 +132,6 @@ font-size: 12px;
         <number>10</number>
        </property>
        <item>
-        <widget class="QPushButton" name="websiteBtn">
-         <property name="text">
-          <string>Take Me to the Web Site!</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
