@@ -120,9 +120,6 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     void setupGui();
 
   public slots:
-    void checkVersion();
-    //void networkReplied(QNetworkReply* reply);
-
     void on_checkNowBtn_clicked();
     void on_websiteBtn_clicked();
 
