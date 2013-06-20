@@ -379,8 +379,6 @@ void DREAM3D_UI::setupGui()
           this, SLOT(writeSettings()) );
   connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
           this, SLOT(readSettings() ) );
-  connect(this, SIGNAL(updateFound()),
-          this->parent(), SLOT(displayUpdateDialog() ) );
 
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
@@ -463,46 +461,8 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
   d->setLastCheckDateTime(dateTime);
   prefs.endGroup();
 
-  connect(d->getAutomaticallyBtn(), SIGNAL( toggled(bool) ),
-    this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
-
-  connect(d->getManuallyBtn(), SIGNAL( toggled(bool) ),
-    this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
-
-  connect(d->getHowOftenComboBox(), SIGNAL( currentIndexChanged(int) ),
-    this, SLOT( on_actionHowOftenComboBox_currentIndexChanged(int) ) );
-
   // Now display the dialog box
   d->exec();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionHowOftenComboBox_currentIndexChanged(int index)
-{
-  QComboBox* box = static_cast<QComboBox*>( sender() );
-  DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( box->parent() );
-
-  if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
-  {
-    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
-  }
-  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
-  {
-    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
-  }
-  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
-  {
-    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
-  }
-
-#if defined (Q_OS_MAC)
-  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-  d->writeUpdatePreferences(updatePrefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -881,54 +841,6 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 {
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionUpdateCheckBtn_toggled(bool boolValue)
-{
-  QRadioButton* btn = static_cast<QRadioButton*>( sender() );
-  DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( btn->parent() );
-  // Now pull any new values from the dialog and push back into the prefs
-  if ( btn->isChecked() )
-  {
-    if (btn->text() == "Automatically")
-    {
-      QComboBox* howOftenBox = d->getHowOftenComboBox();
-      QString howOftenBoxText = howOftenBox->currentText();
-      if (howOftenBoxText == "Daily")
-      {
-        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
-      }
-      else if (howOftenBoxText == "Weekly")
-      {
-        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
-      }
-      else if (howOftenBoxText == "Monthly")
-      {
-        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
-      }
-    }
-    else if (btn->text() == "Manually")
-    {
-      d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
-    }
-#if defined (Q_OS_MAC)
-	QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-	QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
-    d->writeUpdatePreferences(updatePrefs);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::displayUpdateDialog()
-{
-  std::cout << "Testing" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
