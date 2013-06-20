@@ -58,22 +58,8 @@ Initial implementation in _QtSupport/DREAM3DUpdateCheckDialog_
 **Items to Complete**
 
 + Do we need to add a _close_ button to the UI?
-+ The "How Often" Radio button needs to store the users selection and get this information back to the DREAM3D_UI class so it can be stored.
-+ When reading the preferences on startup the code needs to be written to figure out if an update check needs to be run.
-+ When quitting or closing the DREAM3DUpdateCheckDialog the settings from the dialog need to be saved back to the users preferences file
-+ The code that does the actual update check (network code) may need to be extracted from the Dialog so it can be used without the dialog or just implement enough of an API in the DREAM3DUpdateCheckDialog class so that you can run the update check and get an answer without actually showing the dialog
-    - What to do if there is an update? Pop up the dialog?
+
 + Users behind Proxy Servers will not be able to use this feature. We will need to put in a QNetworkProxy option at some point.
-
-
-
--------------------
-## Having Hyperlinks in the Error Messages (Started) ##
-Implemented an ItemDelegate in _QtSupport/HtmlItemDelegate.h_ file that will allow the use of limited HTML in the text. I was able to put in the hyperlinks but there are a few things wrong.
-
-1. PipelineMessage that gets sent back has the "Human Label" for the filter and NOT the actual class name which is needed.
-    + We need to find a way to get the actual class name passed through the PipelineMessage class. If you add another member variable to the PipelineMessage class then you will need to update ALL the source codes that call _addErrorMessage()_ which could be interesting or maybe you can use Polymorhphism to your advantage and call "getClassName()" from the "addErrorMessage()" method in the AbstractFilter class?
-2. Text interaction is NOT allowed for the TableItemWidget or QTableView. This is going to need to be set either through QDesigner or through the code.
 
 -------------------
 
