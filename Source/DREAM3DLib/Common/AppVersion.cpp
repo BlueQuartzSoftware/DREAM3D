@@ -34,12 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "Version.h"
+#include "AppVersion.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Version::Version() :
+AppVersion::AppVersion() :
 m_MajorNum(-1),
 m_MinorNum(-1),
 m_PatchNum(-1)
@@ -50,17 +50,17 @@ m_PatchNum(-1)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Version::Version(int majorNum, int minorNum, int patchNum)
+AppVersion::AppVersion(int majorNum, int minorNum, int patchNum)
 {
-	m_MajorNum = majorNum;
-	m_MinorNum = minorNum;
-	m_PatchNum = patchNum;
+  m_MajorNum = majorNum;
+  m_MinorNum = minorNum;
+  m_PatchNum = patchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Version::~Version()
+AppVersion::~AppVersion()
 {
 
 }
@@ -68,151 +68,151 @@ Version::~Version()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Version::Version(const Version& rhs)
+AppVersion::AppVersion(const AppVersion& rhs)
 {
-	m_MajorNum = rhs.m_MajorNum;
-	m_MinorNum = rhs.m_MinorNum;
-	m_PatchNum = rhs.m_PatchNum;
+  m_MajorNum = rhs.m_MajorNum;
+  m_MinorNum = rhs.m_MinorNum;
+  m_PatchNum = rhs.m_PatchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Version::operator=(const Version& rhs)
+void AppVersion::operator=(const AppVersion& rhs)
 {
-	m_MajorNum = rhs.m_MajorNum;
-	m_MinorNum = rhs.m_MinorNum;
-	m_PatchNum = rhs.m_PatchNum;
+  m_MajorNum = rhs.m_MajorNum;
+  m_MinorNum = rhs.m_MinorNum;
+  m_PatchNum = rhs.m_PatchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool Version::operator==(const Version& rhs)
+bool AppVersion::operator==(const AppVersion& rhs)
 {
-	return (m_MajorNum == rhs.m_MajorNum &&
-			m_MinorNum == rhs.m_MinorNum &&
-			m_PatchNum == rhs.m_PatchNum);
+  return (m_MajorNum == rhs.m_MajorNum &&
+      m_MinorNum == rhs.m_MinorNum &&
+      m_PatchNum == rhs.m_PatchNum);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool Version::operator>(const Version& rhs)
+bool AppVersion::operator>(const AppVersion& rhs)
 {
-	if (m_MajorNum > rhs.m_MajorNum)
-	{
-		return true;
-	}
-	else if (m_MajorNum == rhs.m_MajorNum)
-	{
-		if (m_MinorNum > rhs.m_MinorNum)
-		{
-			return true;
-		}
-		else if (m_MinorNum == rhs.m_MinorNum)
-		{
-			if (m_PatchNum > rhs.m_PatchNum)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return false;
-	}
+  if (m_MajorNum > rhs.m_MajorNum)
+  {
+    return true;
+  }
+  else if (m_MajorNum == rhs.m_MajorNum)
+  {
+    if (m_MinorNum > rhs.m_MinorNum)
+    {
+      return true;
+    }
+    else if (m_MinorNum == rhs.m_MinorNum)
+    {
+      if (m_PatchNum > rhs.m_PatchNum)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool Version::operator<(const Version& rhs)
+bool AppVersion::operator<(const AppVersion& rhs)
 {
-	if (m_MajorNum < rhs.m_MajorNum)
-	{
-		return true;
-	}
-	else if (m_MajorNum == rhs.m_MajorNum)
-	{
-		if (m_MinorNum < rhs.m_MinorNum)
-		{
-			return true;
-		}
-		else if (m_MinorNum == rhs.m_MinorNum)
-		{
-			if (m_PatchNum < rhs.m_PatchNum)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return false;
-	}
+  if (m_MajorNum < rhs.m_MajorNum)
+  {
+    return true;
+  }
+  else if (m_MajorNum == rhs.m_MajorNum)
+  {
+    if (m_MinorNum < rhs.m_MinorNum)
+    {
+      return true;
+    }
+    else if (m_MinorNum == rhs.m_MinorNum)
+    {
+      if (m_PatchNum < rhs.m_PatchNum)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int Version::getMajorNum()
+int AppVersion::getMajorNum()
 {
-	return m_MajorNum;
+  return m_MajorNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int Version::getMinorNum()
+int AppVersion::getMinorNum()
 {
-	return m_MinorNum;
+  return m_MinorNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int Version::getPatchNum()
+int AppVersion::getPatchNum()
 {
-	return m_PatchNum;
+  return m_PatchNum;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Version::setMajorNum(int major)
+void AppVersion::setMajorNum(int major)
 {
-	m_MajorNum = major;
+  m_MajorNum = major;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Version::setMinorNum(int minor)
+void AppVersion::setMinorNum(int minor)
 {
-	m_MinorNum = minor;
+  m_MinorNum = minor;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Version::setPatchNum(int patch)
+void AppVersion::setPatchNum(int patch)
 {
-	m_PatchNum = patch;
+  m_PatchNum = patch;
 }

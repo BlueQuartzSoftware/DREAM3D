@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UpdateCheckData::UpdateCheckData(QWidget* parent) :
-QWidget(parent),
+UpdateCheckData::UpdateCheckData(QObject* parent) :
+QObject(parent),
 m_HasUpdate(false),
 m_HasError(false),
 m_MessageDescription(""),
@@ -63,11 +63,11 @@ UpdateCheckData::~UpdateCheckData()
 // -----------------------------------------------------------------------------
 UpdateCheckData::UpdateCheckData(const UpdateCheckData& rhs)
 {
-	m_AppString = rhs.m_AppString;
-	m_HasUpdate = rhs.m_HasUpdate;
-	m_HasError = rhs.m_HasError;
-	m_MessageDescription = rhs.m_MessageDescription;
-	m_ServerString = rhs.m_ServerString;
+  m_AppString = rhs.m_AppString;
+  m_HasUpdate = rhs.m_HasUpdate;
+  m_HasError = rhs.m_HasError;
+  m_MessageDescription = rhs.m_MessageDescription;
+  m_ServerString = rhs.m_ServerString;
 }
 
 // -----------------------------------------------------------------------------
@@ -75,11 +75,11 @@ UpdateCheckData::UpdateCheckData(const UpdateCheckData& rhs)
 // -----------------------------------------------------------------------------
 void UpdateCheckData::operator=(const UpdateCheckData& rhs)
 {
-	m_AppString = rhs.m_AppString;
-	m_HasUpdate = rhs.m_HasUpdate;
-	m_HasError = rhs.m_HasError;
-	m_MessageDescription = rhs.m_MessageDescription;
-	m_ServerString = rhs.m_ServerString;
+  m_AppString = rhs.m_AppString;
+  m_HasUpdate = rhs.m_HasUpdate;
+  m_HasError = rhs.m_HasError;
+  m_MessageDescription = rhs.m_MessageDescription;
+  m_ServerString = rhs.m_ServerString;
 }
 
 // -----------------------------------------------------------------------------
@@ -87,11 +87,11 @@ void UpdateCheckData::operator=(const UpdateCheckData& rhs)
 // -----------------------------------------------------------------------------
 bool UpdateCheckData::operator==(const UpdateCheckData& rhs)
 {
-	return (m_AppString == rhs.m_AppString &&
-		m_HasUpdate == rhs.m_HasUpdate &&
-		m_HasError == rhs.m_HasError &&
-		m_MessageDescription == rhs.m_MessageDescription &&
-		m_ServerString == rhs.m_ServerString);
+  return (m_AppString == rhs.m_AppString &&
+    m_HasUpdate == rhs.m_HasUpdate &&
+    m_HasError == rhs.m_HasError &&
+    m_MessageDescription == rhs.m_MessageDescription &&
+    m_ServerString == rhs.m_ServerString);
 }
 
 // -----------------------------------------------------------------------------
@@ -99,7 +99,7 @@ bool UpdateCheckData::operator==(const UpdateCheckData& rhs)
 // -----------------------------------------------------------------------------
 bool UpdateCheckData::hasUpdate()
 {
-	return m_HasUpdate;
+  return m_HasUpdate;
 }
 
 // -----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ bool UpdateCheckData::hasUpdate()
 // -----------------------------------------------------------------------------
 bool UpdateCheckData::hasError()
 {
-	return m_HasError;
+  return m_HasError;
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ bool UpdateCheckData::hasError()
 // -----------------------------------------------------------------------------
 QString UpdateCheckData::getMessageDescription()
 {
-	return m_MessageDescription;
+  return m_MessageDescription;
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +123,7 @@ QString UpdateCheckData::getMessageDescription()
 // -----------------------------------------------------------------------------
 QString UpdateCheckData::getAppString()
 {
-	return m_AppString;
+  return m_AppString;
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ QString UpdateCheckData::getAppString()
 // -----------------------------------------------------------------------------
 QString UpdateCheckData::getServerString()
 {
-	return m_ServerString;
+  return m_ServerString;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +139,7 @@ QString UpdateCheckData::getServerString()
 // -----------------------------------------------------------------------------
 void UpdateCheckData::setHasUpdate(bool val)
 {
-	m_HasUpdate = val;
+  m_HasUpdate = val;
 }
 
 // -----------------------------------------------------------------------------
@@ -147,7 +147,7 @@ void UpdateCheckData::setHasUpdate(bool val)
 // -----------------------------------------------------------------------------
 void UpdateCheckData::setHasError(bool val)
 {
-	m_HasError = val;
+  m_HasError = val;
 }
 
 // -----------------------------------------------------------------------------
@@ -155,7 +155,7 @@ void UpdateCheckData::setHasError(bool val)
 // -----------------------------------------------------------------------------
 void UpdateCheckData::setMessageDescription(QString msg)
 {
-	m_MessageDescription = msg;
+  m_MessageDescription = msg;
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ void UpdateCheckData::setMessageDescription(QString msg)
 // -----------------------------------------------------------------------------
 void UpdateCheckData::setAppString(QString str)
 {
-	m_AppString = str;
+  m_AppString = str;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,5 +171,5 @@ void UpdateCheckData::setAppString(QString str)
 // -----------------------------------------------------------------------------
 void UpdateCheckData::setServerString(QString str)
 {
-	m_ServerString = str;
+  m_ServerString = str;
 }

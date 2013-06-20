@@ -47,30 +47,30 @@
 #include "UpdateCheckData.h"
 
 
-class UpdateCheck : public QWidget
+class UpdateCheck : public QObject
 {
-	Q_OBJECT
+  Q_OBJECT
 
   public:
-	UpdateCheck(QWidget* parent = 0);
-	virtual ~UpdateCheck();
+  UpdateCheck(QObject* parent = 0);
+  virtual ~UpdateCheck();
 
-	void checkVersion(QUrl website);
+  void checkVersion(QUrl website);
 
   protected slots:
-	  void networkReplied(QNetworkReply* reply);
+    void networkReplied(QNetworkReply* reply);
 
   signals:
-	  void LatestVersion(UpdateCheckData*);
+    void LatestVersion(UpdateCheckData*);
 
   protected:
-	  void writeUpdateCheckDate();
+    void writeUpdateCheckDate();
 
   private:
-	QNetworkAccessManager*				m_Nam;
+  QNetworkAccessManager*				m_Nam;
 
-	UpdateCheck(const UpdateCheck&);    // Copy Constructor Not Implemented
-	void operator=(const UpdateCheck&);  // Operator '=' Not Implemented
+  UpdateCheck(const UpdateCheck&);    // Copy Constructor Not Implemented
+  void operator=(const UpdateCheck&);  // Operator '=' Not Implemented
 };
 
 #endif /* _UPDATECHECK_H_ */
