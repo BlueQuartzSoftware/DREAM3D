@@ -142,7 +142,9 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 		// If the server returned garbage values
 		if ( serverVersion.getMajorNum() == 0 && serverVersion.getMinorNum() == 0 && serverVersion.getPatchNum() == 0 )
 		{
-			dataObj->setMessageDescription("There was an error while trying to access the DREAM3D server. Please contact the DREAM3D developers for more information.");
+			QString errorMessage = "Bad latest version values were read in from the DREAM3D database. ";
+			errorMessage.append("Please contact the DREAM3D developers for more information.\n");
+			dataObj->setMessageDescription(errorMessage);
 			dataObj->setHasError(true);
 			emit LatestVersion(dataObj);
 			return;
@@ -168,7 +170,11 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 	// The URL does not exist on the server
 	else
 	{
-		dataObj->setMessageDescription("The URL to the DREAM3D server is not valid. Please contact the DREAM3D developers for more information.");
+		QString errorMessage = "There was an error while reading information from the DREAM3D server. ";
+		errorMessage.append("Please contact the DREAM3D developers for more information.\n\n");
+		errorMessage.append("Error Message: ");
+		errorMessage.append( reply->errorString() );
+		dataObj->setMessageDescription(errorMessage);
 		dataObj->setHasError(true);
 		emit LatestVersion(dataObj);
 		reply->abort();
