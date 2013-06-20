@@ -59,6 +59,8 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
   protected:
     void setupGui();
 
+	QString generateFileSystemPath(QString);
+
 protected slots:
   void on_selectButton_clicked();
   void on_generateButton_clicked();
