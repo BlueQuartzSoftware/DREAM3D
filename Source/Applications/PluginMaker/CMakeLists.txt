@@ -66,7 +66,8 @@ SET(PluginMaker_UIS
 cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
 
 # and finally any resource files
-SET(PluginMaker_RCS ${PluginMaker_SOURCE_DIR}/Templates.qrc)
+# SET(PluginMaker_RCS ${PluginMaker_SOURCE_DIR}/Templates.qrc)
+SET(PluginMaker_RCS "")
 
 # -- Run MOC and UIC on the necessary files
 QT4_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENSE_FILES})
@@ -128,3 +129,17 @@ BuildQtAppBundle(
     COMPONENT     Applications
     INSTALL_DEST  ${DEST_DIR}
 )
+
+
+#-------------------------------------------------------------------------------
+#- This copies all the Prebuilt Pipeline files into the Build directory so the help
+#- works from the Build Tree
+add_custom_target(TemplateFileCopy ALL
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${PluginMaker_SOURCE_DIR}/Template/
+            ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Template/
+            COMMENT "Copying PluginMakeTemplate into Binary Directory")
+set_target_properties(TemplateFileCopy PROPERTIES FOLDER ZZ_COPY_FILES)
+
+# Make Sure this target is built so that the DREAM3D Application has access to
+# the HTML help files
+add_dependencies(${PROJECT_NAME} PrebuiltPipelinesCopy)
