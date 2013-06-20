@@ -42,8 +42,10 @@
 
 #include <QtGui/QWidget>
 
-#include "QNetworkAccessManager.h"
+#include <QtNetwork/QNetworkAccessManager>
+
 #include "UpdateCheckData.h"
+
 
 class UpdateCheck : public QWidget
 {

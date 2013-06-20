@@ -134,7 +134,7 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
     QString						m_CurrentVersion;
     QDateTime					m_LastCheckDateTime;
     int							m_WhenToCheck;
-  QString						m_UpdatePreferencesPath;
+    QString						m_UpdatePreferencesPath;
     QString						m_UpdateWebSite;
     QString						m_AppName;
 	UpdateCheck*				m_UpdateCheck;

@@ -63,10 +63,10 @@ namespace Detail
 // -----------------------------------------------------------------------------
 DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   QDialog(parent),
-  m_UpdateCheckThread(NULL),
-  m_DialogState(DefaultDialog),
+  m_WhenToCheck(UpdateCheckMonthly),
   m_UpdateCheck(NULL),
-  m_WhenToCheck(UpdateCheckMonthly)
+  m_UpdateCheckThread(NULL),
+  m_DialogState(DefaultDialog)
 {
 
   setupUi(this);
