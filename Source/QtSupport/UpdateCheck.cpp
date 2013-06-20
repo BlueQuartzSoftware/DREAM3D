@@ -110,7 +110,7 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 	// no error received?
 	if (reply->error() == QNetworkReply::NoError)
 	{
-		DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+		DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(NULL);
 		d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
 		d->setApplicationName("DREAM3D");
 		QString appName = d->getAppName();
@@ -136,12 +136,12 @@ void UpdateCheck::networkReplied(QNetworkReply* reply)
 		serverVersionStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
 
 		bool ok = false;
-		Version appVersion;
+		AppVersion appVersion;
 		appVersion.setMajorNum( appVersionParts.at(0).toInt(&ok) );
 		appVersion.setMinorNum( appVersionParts.at(1).toInt(&ok) );
 		appVersion.setPatchNum( appVersionParts.at(2).toInt(&ok) );
 
-		Version serverVersion;
+		AppVersion serverVersion;
 		serverVersion.setMajorNum( serverVersionParts.at(0).toInt(&ok) );
 		serverVersion.setMinorNum( serverVersionParts.at(1).toInt(&ok) );
 		serverVersion.setPatchNum( serverVersionParts.at(2).toInt(&ok) );

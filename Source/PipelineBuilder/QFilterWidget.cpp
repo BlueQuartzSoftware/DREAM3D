@@ -729,35 +729,32 @@ void QFilterWidget::setupGui()
     }
 
 
-    /* Change to SurfaceMesh
-        else if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
+
+    else if (wType == FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget)
     {
       setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget)
     {
       setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
 
-    Change to SolidMesh
-
-        else if (wType == FilterParameter::VoxelCellArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SolidMeshEdgeArrayNameSelectionWidget)
     {
       setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VoxelFieldArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SolidMeshFaceArrayNameSelectionWidget)
     {
       setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    else if (wType == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
+    else if (wType == FilterParameter::SolidMeshVertexArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-    */
 
     else if (wType == FilterParameter::ArraySelectionWidget)
     {
