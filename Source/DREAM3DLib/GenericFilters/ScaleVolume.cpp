@@ -36,6 +36,8 @@
 
 #include "ScaleVolume.h"
 
+#include <limits>
+
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>

@@ -108,6 +108,7 @@ add_library(QtSupport STATIC ${Project_SRCS})
 target_link_libraries(QtSupport
                     ${QT_QTCORE_LIBRARY}
                     ${QT_QTGUI_LIBRARY}
+                    ${QT_QTNETWORK_LIBRARY}
                     )
 
 LibraryProperties( QtSupport ${EXE_DEBUG_EXTENSION})

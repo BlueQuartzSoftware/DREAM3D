@@ -84,7 +84,13 @@ QUrl DREAM3DHelpUrlGenerator::generateHTMLUrl(QString htmlName)
 	}
 #else
 	// We are on Linux - I think
-	helpDir.cdUp();
+    QFileInfo fi( helpDir.absolutePath() + Detail::Dream3DHelpPath + htmlName + ".html");
+    if (fi.exists() == false)
+    {
+        // The help file does not exist at the default location because we are probably running from the build tree.
+        // Try up one more directory
+        helpDir.cdUp();
+    }
 #endif
 
 
