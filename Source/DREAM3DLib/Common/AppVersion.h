@@ -35,35 +35,35 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _VERSION_H_
-#define _VERSION_H_
+#ifndef _AppVersion_H_
+#define _AppVersion_H_
 
-class Version
+class AppVersion
 {
   public:
-	Version();
-	Version(int majorNum, int minorNum, int patchNum);
+  AppVersion();
+  AppVersion(int majorNum, int minorNum, int patchNum);
 
-	Version(const Version&);
-	void operator=(const Version&);
-	bool operator==(const Version&);
-	bool operator>(const Version&);
-	bool operator<(const Version&);
+  AppVersion(const AppVersion&);
+  void operator=(const AppVersion&);
+  bool operator==(const AppVersion&);
+  bool operator>(const AppVersion&);
+  bool operator<(const AppVersion&);
 
-	virtual ~Version();
+  virtual ~AppVersion();
 
-	int getMajorNum();
-	int getMinorNum();
-	int getPatchNum();
+  int getMajorNum();
+  int getMinorNum();
+  int getPatchNum();
 
-	void setMajorNum(int major);
-	void setMinorNum(int minor);
-	void setPatchNum(int patch);
+  void setMajorNum(int major);
+  void setMinorNum(int minor);
+  void setPatchNum(int patch);
 
   private:
-	int m_MajorNum;
-	int m_MinorNum;
-	int m_PatchNum;
+  int m_MajorNum;
+  int m_MinorNum;
+  int m_PatchNum;
 };
 
-#endif /* _VERSION_H_ */
+#endif /* _AppVersion_H_ */
