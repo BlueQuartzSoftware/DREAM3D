@@ -121,6 +121,9 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
 
   public slots:
     void on_checkNowBtn_clicked();
+	void on_howOften_currentIndexChanged(int);
+	void on_automatically_toggled(bool);
+	void on_manually_toggled(bool);
 
   protected slots:
 	void LatestVersionReplied(UpdateCheckData*);
