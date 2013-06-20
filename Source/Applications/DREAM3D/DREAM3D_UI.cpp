@@ -96,8 +96,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
   m_PipelineBuilderWidget(NULL),
-  m_UpdateCheckThread(NULL),
-  m_UpdateCheck(NULL)
+  m_UpdateCheckThread(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   // Calls the Parent Class to do all the Widget Initialization that were created
@@ -124,7 +123,6 @@ DREAM3D_UI::~DREAM3D_UI()
     delete m_WorkerThread;
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -313,13 +311,54 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
   prefs.endGroup();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::checkForUpdatesAtStartup()
+{
+	m_UpdateCheck = new UpdateCheck(this);
+
+	connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ), 
+		this, SLOT( versionCheckReply(UpdateCheckData*) ) );
+
+	m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
+	// Automatically check for updates at startup if the user has indicated that preference before
+	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+	if ( d->getAutomaticallyBtn()->isChecked() )
+	{
+		#if defined (Q_OS_MAC)
+			QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+		#else
+			QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+		#endif
 
+		updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
+		QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey()).toDate();
+		updatePrefs.endGroup();
+
+		QDate systemDate;
+		QDate currentDateToday = systemDate.currentDate();
+
+		QDate dailyThreshold = lastUpdateCheckDate.addDays(1);
+		QDate weeklyThreshold = lastUpdateCheckDate.addDays(7);
+		QDate monthlyThreshold = lastUpdateCheckDate.addMonths(1);
+
+		if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
+			&& currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
+			&& currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
+			&& currentDateToday >= monthlyThreshold))
+		{
+			checkForUpdatesAtStartup();
+		}
+	}
+  
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
@@ -340,6 +379,8 @@ void DREAM3D_UI::setupGui()
           this, SLOT(writeSettings()) );
   connect(m_PipelineBuilderWidget, SIGNAL(fireReadSettings()),
           this, SLOT(readSettings() ) );
+  connect(this, SIGNAL(updateFound()),
+          this->parent(), SLOT(displayUpdateDialog() ) );
 
 
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
@@ -403,12 +444,13 @@ void DREAM3D_UI::on_action_OpenStatsGenerator_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_action_CheckForUpdates_triggered()
+void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 {
-  DREAM3DUpdateCheckDialog d;
-  d.setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
-  d.setUpdateWebSite(Detail::UpdateWebSite);
-  d.setApplicationName("DREAM3D");
+  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+
+  d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+  d->setUpdateWebSite(Detail::UpdateWebSite);
+  d->setApplicationName("DREAM3D");
 
   // Read from the QSettings Pref file the information that we need
   #if defined (Q_OS_MAC)
@@ -418,17 +460,49 @@ void DREAM3D_UI::on_action_CheckForUpdates_triggered()
 #endif
   prefs.beginGroup(Detail::VersionCheckGroupName);
   QDateTime dateTime = prefs.value(Detail::LastVersionCheck, QDateTime::currentDateTime()).toDateTime();
-  d.setLastCheckDateTime(dateTime);
-
-  DREAM3DUpdateCheckDialog::UpdateType whenToCheck = static_cast<DREAM3DUpdateCheckDialog::UpdateType>(prefs.value(Detail::WhenToCheck, DREAM3DUpdateCheckDialog::UpdateCheckManual).toUInt());
-  d.setWhenToCheck(whenToCheck);
+  d->setLastCheckDateTime(dateTime);
   prefs.endGroup();
 
+  connect(d->getAutomaticallyBtn(), SIGNAL( toggled(bool) ),
+    this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
+
+  connect(d->getManuallyBtn(), SIGNAL( toggled(bool) ),
+    this, SLOT( on_actionUpdateCheckBtn_toggled(bool) ) );
+
+  connect(d->getHowOftenComboBox(), SIGNAL( currentIndexChanged(int) ),
+    this, SLOT( on_actionHowOftenComboBox_currentIndexChanged(int) ) );
+
   // Now display the dialog box
-  d.exec();
+  d->exec();
+}
 
-  // Now pull any new values from the dialog and push back into the prefs
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionHowOftenComboBox_currentIndexChanged(int index)
+{
+  QComboBox* box = static_cast<QComboBox*>( sender() );
+  DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( box->parent() );
 
+  if (index == DREAM3DUpdateCheckDialog::UpdateCheckDaily)
+  {
+    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+  }
+  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckWeekly)
+  {
+    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+  }
+  else if (index == DREAM3DUpdateCheckDialog::UpdateCheckMonthly)
+  {
+    d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+  }
+
+#if defined (Q_OS_MAC)
+  QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+  QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+  d->writeUpdatePreferences(updatePrefs);
 }
 
 // -----------------------------------------------------------------------------
@@ -807,4 +881,74 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
 void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 {
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl("index", this);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionUpdateCheckBtn_toggled(bool boolValue)
+{
+  QRadioButton* btn = static_cast<QRadioButton*>( sender() );
+  DREAM3DUpdateCheckDialog* d = static_cast<DREAM3DUpdateCheckDialog*>( btn->parent() );
+  // Now pull any new values from the dialog and push back into the prefs
+  if ( btn->isChecked() )
+  {
+    if (btn->text() == "Automatically")
+    {
+      QComboBox* howOftenBox = d->getHowOftenComboBox();
+      QString howOftenBoxText = howOftenBox->currentText();
+      if (howOftenBoxText == "Daily")
+      {
+        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckDaily);
+      }
+      else if (howOftenBoxText == "Weekly")
+      {
+        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckWeekly);
+      }
+      else if (howOftenBoxText == "Monthly")
+      {
+        d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckMonthly);
+      }
+    }
+    else if (btn->text() == "Manually")
+    {
+      d->setWhenToCheck(DREAM3DUpdateCheckDialog::UpdateCheckManual);
+    }
+#if defined (Q_OS_MAC)
+	QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#else
+	QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+#endif
+    d->writeUpdatePreferences(updatePrefs);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::displayUpdateDialog()
+{
+  std::cout << "Testing" << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
+{
+	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+	d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+	d->setApplicationName("DREAM3D");
+
+	if ( dataObj->hasUpdate() && !dataObj->hasError() )
+	{
+		QString message = dataObj->getMessageDescription();
+		QLabel* feedbackTextLabel = d->getFeedbackTextLabel();
+		d->toSimpleUpdateCheckDialog();
+		feedbackTextLabel->setText(message);
+		d->getCurrentVersionLabel()->setText( dataObj->getAppString() );
+		d->setCurrentVersion( dataObj->getAppString() );
+		d->getLatestVersionLabel()->setText( dataObj->getServerString() );
+		d->exec();
+	}
 }

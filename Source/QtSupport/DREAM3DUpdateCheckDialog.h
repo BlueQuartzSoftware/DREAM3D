@@ -38,6 +38,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
+#include <QtCore/QSettings>
 
 #include <QtGui/QWidget>
 #include <QtGui/QDialog>
@@ -45,10 +46,12 @@
 
 #include "ui_DREAM3DUpdateCheckDialog.h"
 
-
+#include "QtSupport/UpdateCheck.h"
 
 class QNetworkAccessManager;
 class QNetworkReply;
+class UpdateCheck;
+class UpdateCheckData;
 
 
 class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckDialog
@@ -67,34 +70,76 @@ class DREAM3DUpdateCheckDialog : public QDialog, private Ui::DREAM3DUpdateCheckD
       UpdateCheckManual
     };
 
+	enum DialogState
+	{
+		SimpleDialog,
+		DefaultDialog
+	};
+
+  int getWhenToCheck();
+
+  QString getUpdatePreferencesPath();
+  QString getCurrentVersion();
+  QLabel* getCurrentVersionLabel();
+  QLabel* getLatestVersionLabel();
+  QString getAppName();
+  QLabel* getFeedbackTextLabel();
+
+  QRadioButton* getAutomaticallyBtn();
+  QRadioButton* getManuallyBtn();
+  QComboBox* getHowOftenComboBox();
+  QPushButton* getCheckNowBtn();
+
+  static QString getUpdatePreferencesGroup();
+  static QString getUpdateCheckKey();
+
 
     void setCurrentVersion(QString version);
     void setLastCheckDateTime(QDateTime lastDateTime);
-    void setWhenToCheck(UpdateType whenToCheck);
+    void setWhenToCheck(int whenToCheck);
     void setUpdateWebSite(QString url);
     void setApplicationName(QString name);
+
+  void readUpdatePreferences(QSettings &prefs);
+  void writeUpdatePreferences(QSettings &prefs);
+
+      /**
+     * @brief Hides the UI items necessary to change the dialog into a simple prompt 
+	 * that notifies of new updates and only provides a link to check the website.
+     */
+  void toSimpleUpdateCheckDialog();
+
+      /**
+	  * @brief Shows the UI items necessary to change the dialog into its
+	  * default, more complex prompt that allows the user to change updates
+	  * to manual or automatic, and press a "Check Now" button to manually 
+	  * check for updates.
+     */
+  void toDefaultUpdateCheckDialog();
 
     void setupGui();
 
   public slots:
-    void checkVersion();
-    void networkReplied(QNetworkReply* reply);
-
     void on_checkNowBtn_clicked();
-    void on_websiteBtn_clicked();
+
+  protected slots:
+	void LatestVersionReplied(UpdateCheckData*);
 
   signals:
     void finished();
     void hasMessage(const QString& message);
+    void updateFound();
 
   private:
-    QNetworkAccessManager* nam;
-    QString    m_CurrentVersion;
-    QDateTime  m_LastCheckDateTime;
-    int        m_WhenToCheck;
-    QString    m_UpdateWebSite;
-    QString    m_AppName;
-    QThread*   m_UpdateCheckThread;
+    QString						m_CurrentVersion;
+    QDateTime					m_LastCheckDateTime;
+    int							m_WhenToCheck;
+  QString						m_UpdatePreferencesPath;
+    QString						m_UpdateWebSite;
+    QString						m_AppName;
+	UpdateCheck*				m_UpdateCheck;
+    QThread*					m_UpdateCheckThread;
+	DialogState					m_DialogState;
 
     DREAM3DUpdateCheckDialog(const DREAM3DUpdateCheckDialog&); // Copy Constructor Not Implemented
     void operator=(const DREAM3DUpdateCheckDialog&); // Operator '=' Not Implemented
