@@ -1573,8 +1573,6 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
     // filter widget manager.
     filterItem->setData( Qt::UserRole, filterName);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------

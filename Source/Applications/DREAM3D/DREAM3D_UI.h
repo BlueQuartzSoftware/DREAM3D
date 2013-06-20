@@ -56,11 +56,13 @@
 //-- UIC generated Header
 #include <ui_DREAM3D_UI.h>
 
+#include "UpdateCheck.h"
+
 class DREAM3DPluginInterface;
 class HelpDialog;
 class PipelineBuilderWidget;
-class DREAM3DUpdateCheck;
-
+class DREAM3DUpdateCheckDialog;
+class UpdateCheckData;
 
 
 /**
@@ -87,7 +89,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 	void on_actionExit_triggered();
     void on_actionOpen_Pipeline_2_triggered();
     void on_actionSave_Pipeline_2_triggered();
-    void on_action_CheckForUpdates_triggered();
+    void on_actionCheck_For_Updates_triggered();
+  void on_actionHowOftenComboBox_currentIndexChanged(int);
+  void on_actionUpdateCheckBtn_toggled(bool);
 
 	//Tools Menu
 	void on_action_OpenStatsGenerator_triggered();
@@ -95,7 +99,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 	// Help Menu
     void on_actionLicense_Information_triggered();
     void on_actionAbout_triggered();
-	void on_actionShow_User_Manual_triggered();
+  void on_actionShow_User_Manual_triggered();
 
     /**
      * @brief Reads the Preferences from the users pref file
@@ -127,6 +131,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setInputUI();
 
     void displayHelp(QString helpFile);
+
+    void displayUpdateDialog();
+
+	void versionCheckReply(UpdateCheckData*);
 
   private slots:
     // slots for our worker thread to communicate
@@ -184,6 +192,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void readVersionCheckSettings(QSettings &prefs);
     void writeVersionCheckSettings(QSettings &prefs);
 
+	void checkForUpdatesAtStartup();
+
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
@@ -214,12 +224,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QToolBar*                   m_PluginToolBar;
     HelpDialog*                 m_HelpDialog;
     PipelineBuilderWidget*      m_PipelineBuilderWidget;
+	UpdateCheck*				m_UpdateCheck;
 
     QString                     m_OpenDialogLastDirectory;
 
     QThread*                    m_UpdateCheckThread;
-    DREAM3DUpdateCheck*         m_UpdateCheck;
-
 
     DREAM3D_UI(const DREAM3D_UI&);    // Copy Constructor Not Implemented
     void operator=(const DREAM3D_UI&);  // Operator '=' Not Implemented

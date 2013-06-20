@@ -41,6 +41,8 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QtCore/QDir>
+#include <QtCore/QDate>
 
 #include <QtGui/QDesktopServices>
 
@@ -49,18 +51,50 @@
 #include <QtNetwork/QNetworkReply>
 
 
+namespace Detail
+{
+  const QString UpdatePreferencesGroup("UpdatePreferences");
+  const QString UpdateCheckDateKey("LastUpdateCheckDate");
+  const QString UpdateFrequencyKey("Frequency");
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
   QDialog(parent),
-  nam(NULL),
-  m_UpdateCheckThread(NULL)
+  m_UpdateCheckThread(NULL),
+  m_DialogState(DefaultDialog),
+  m_UpdateCheck(NULL),
+  m_WhenToCheck(UpdateCheckMonthly)
 {
 
   setupUi(this);
 
   setupGui();
+
+
+  #if defined (Q_OS_MAC)
+    QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  #else
+    QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  #endif
+
+  updatePrefs.beginGroup(Detail::UpdatePreferencesGroup);
+  // If the update preferences exist in the preferences file, read them in
+  if ( updatePrefs.contains(Detail::UpdateFrequencyKey) )
+  {
+    updatePrefs.endGroup();
+    readUpdatePreferences(updatePrefs);
+  }
+  // Otherwise, write and set the defaults
+  else
+  {
+    updatePrefs.endGroup();
+    automatically->setChecked(true);
+    howOften->setCurrentIndex(UpdateCheckMonthly);
+    writeUpdatePreferences(updatePrefs);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -69,6 +103,102 @@ DREAM3DUpdateCheckDialog::DREAM3DUpdateCheckDialog(QWidget* parent) :
 DREAM3DUpdateCheckDialog::~DREAM3DUpdateCheckDialog()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup()
+{
+  return Detail::UpdatePreferencesGroup;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getUpdateCheckKey()
+{
+  return Detail::UpdateCheckDateKey;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QRadioButton* DREAM3DUpdateCheckDialog::getAutomaticallyBtn()
+{
+  return automatically;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QRadioButton* DREAM3DUpdateCheckDialog::getManuallyBtn()
+{
+  return manually;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QComboBox* DREAM3DUpdateCheckDialog::getHowOftenComboBox()
+{
+  return howOften;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QPushButton* DREAM3DUpdateCheckDialog::getCheckNowBtn()
+{
+  return checkNowBtn;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getCurrentVersion()
+{
+  return m_CurrentVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* DREAM3DUpdateCheckDialog::getCurrentVersionLabel()
+{
+  return currentVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* DREAM3DUpdateCheckDialog::getLatestVersionLabel()
+{
+  return latestVersion;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getAppName()
+{
+  return m_AppName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QLabel* DREAM3DUpdateCheckDialog::getFeedbackTextLabel()
+{
+  return feedbackText;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DUpdateCheckDialog::getUpdatePreferencesPath()
+{
+  return m_UpdatePreferencesPath;
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +235,15 @@ void DREAM3DUpdateCheckDialog::setApplicationName(QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::setWhenToCheck(UpdateType whenToCheck)
+int DREAM3DUpdateCheckDialog::getWhenToCheck()
+{
+  return m_WhenToCheck;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::setWhenToCheck(int whenToCheck)
 
 {
   m_WhenToCheck = whenToCheck;
@@ -145,136 +283,123 @@ void DREAM3DUpdateCheckDialog::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3DUpdateCheckDialog::on_checkNowBtn_clicked()
 {
-  if (nam != NULL)
+  checkNowBtn->setEnabled(false);
+  feedbackText->setText("Checking for Updates...");
+  m_UpdateCheck = new UpdateCheck(this);
+
+  connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
+    this, SLOT( LatestVersionReplied(UpdateCheckData*) ) );
+
+  m_UpdateCheck->checkVersion(m_UpdateWebSite);
+  checkNowBtn->setEnabled(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::readUpdatePreferences(QSettings &prefs)
+{  // Read in value from preferences file
+  prefs.beginGroup(Detail::UpdatePreferencesGroup);
+  bool ok = false;
+  m_WhenToCheck = static_cast<UpdateType>( prefs.value(Detail::UpdateFrequencyKey).toInt(&ok) );
+  prefs.endGroup();
+
+  if (m_WhenToCheck == UpdateCheckManual)
   {
-    nam->deleteLater();
+    manually->blockSignals(true);
+    manually->setChecked(true);
+    howOften->setEnabled(false);
+    manually->blockSignals(false);
   }
-  nam = new QNetworkAccessManager(this);
-  QObject::connect(nam, SIGNAL(finished(QNetworkReply*)),
-                   this, SLOT(networkReplied(QNetworkReply*)));
-
-  QNetworkRequest request;
-  request.setUrl(QUrl(m_UpdateWebSite));
-  request.setRawHeader("User-Agent", "DREAM3D");
-
-  QNetworkReply* reply = nam->get(request);
-
-  feedbackText->setText("Checking Website for latest version....");
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::checkVersion()
-{
-
-
-#if 0
-  m_UpdateCheckThread = new QThread(); // Create a new Thread Resource
-  m_UpdateCheck = new DREAM3DUpdateCheck(NULL);
-  m_UpdateCheck->moveToThread(m_UpdateCheckThread);
-  // When the thread starts its event loop, start the PipelineBuilder going
-  connect(m_UpdateCheckThread, SIGNAL(started()),
-          m_UpdateCheck, SLOT(checkVersion()));
-
-  // When the PipelineBuilder ends then tell the QThread to stop its event loop
-  connect(m_UpdateCheck, SIGNAL(finished() ),
-          m_UpdateCheckThread, SLOT(quit()) );
-
-  connect(m_UpdateCheck, SIGNAL(hasMessage(const QString&)),
-          this, SLOT(threadHasMessage(const QString)));
-  m_UpdateCheckThread->start();
-#endif
-
-
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::networkReplied(QNetworkReply* reply)
-{
-  // Reading attributes of the reply
-  // e.g. the HTTP status code
-  QVariant statusCodeV = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute);
-  // Or the target URL if it was a redirect:
-  QVariant redirectionTargetUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-  // see CS001432 on how to handle this
-
-  // no error received?
-  if (reply->error() == QNetworkReply::NoError)
+  else
   {
-    // read data from QNetworkReply here
-
-    // Example 2: Reading bytes form the reply
-    QString message;
-
-
-    QByteArray bytes = reply->readAll();  // bytes
-    QString serverVersion(bytes); // string
-    serverVersion = serverVersion.trimmed();
-
-    latestVersion->setText(serverVersion);
-
-    QString appVersion = m_CurrentVersion;
-
-    bool ok = false;
-    QStringList serverVersionParts = serverVersion.split(QString("."));
-    QStringList appVersionParts = appVersion.split(QString("."));
-
+    automatically->blockSignals(true);
+    howOften->blockSignals(true);
+    automatically->setChecked(true);
+    if (m_WhenToCheck == UpdateCheckDaily)
     {
-      QString vStr(appVersionParts.at(0));
-      vStr.append(".").append(appVersionParts.at(1)).append(".").append(appVersionParts.at(2));
-      currentVersion->setText(vStr);
-      m_CurrentVersion = vStr;
+      howOften->setCurrentIndex(UpdateCheckDaily);
     }
-
+    else if (m_WhenToCheck == UpdateCheckWeekly)
     {
-      QString vStr(serverVersionParts.at(0));
-      vStr.append(".").append(serverVersionParts.at(1)).append(".").append(serverVersionParts.at(2));
-      latestVersion->setText(vStr);
-    }
-
-    int serverMajor = serverVersionParts.at(0).toInt(&ok);
-    int appMajor = appVersionParts.at(0).toInt(&ok);
-
-    int serverMinor = serverVersionParts.at(1).toInt(&ok);
-    int appMinor = appVersionParts.at(1).toInt(&ok);
-
-    int serverPatch = serverVersionParts.at(2).toInt(&ok);
-    int appPatch = appVersionParts.at(2).toInt(&ok);
-
-    if (serverMajor > appMajor  || serverMinor > appMinor || serverPatch > appPatch)
-    {
-      message.append("<qt><b>There is an update available for ").append(m_AppName).append(".</b><br /><br />  You are currently running version ").append(m_CurrentVersion).append(". If you are ready to update you can go to the regular download <a href=\"http://dream3d.bluequartz.net/downloads\">website</a>.</qt>");
+      howOften->setCurrentIndex(UpdateCheckWeekly);
     }
     else
     {
-      message.append("<qt><b>").append(m_AppName).append(" is up to date.</b><br /><br /></qt>");
+      howOften->setCurrentIndex(UpdateCheckMonthly);
     }
-    feedbackText->setText(message);
+    automatically->blockSignals(false);
+    howOften->blockSignals(false);
   }
-  // Some http error received
-  else
-  {
-    // handle errors here
-  }
-
-  // We receive ownership of the reply object
-  // and therefore need to handle deletion.
-  reply->deleteLater();
-  emit finished();
-
-  std::cout << "DREAM3DUpdateCheckDialog::networkReplied  complete" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DUpdateCheckDialog::on_websiteBtn_clicked()
+void DREAM3DUpdateCheckDialog::writeUpdatePreferences(QSettings &prefs)
 {
-  QUrl url("http://dream3d.bluequartz.net/downloads");
-  QDesktopServices::openUrl(url);
+  prefs.beginGroup(Detail::UpdatePreferencesGroup);
+  prefs.setValue( "Frequency", m_WhenToCheck );
+  prefs.endGroup();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::LatestVersionReplied(UpdateCheckData* dataObj)
+{
+  QString message = dataObj->getMessageDescription();
+  feedbackText->setText(message);
+  if (!dataObj->hasError())
+  {
+    currentVersion->setText( dataObj->getAppString() );
+    setCurrentVersion( dataObj->getAppString() );
+    latestVersion->setText( dataObj->getServerString() );
+  }
+  else
+  {
+    latestVersion->setText("Error!");
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::toSimpleUpdateCheckDialog()
+{
+  // Exit immediately if the dialog is already in simple state
+  if (m_DialogState == SimpleDialog)
+  {
+    return;
+  }
+
+  checkNowBtn->setVisible(false);
+  automatically->setVisible(false);
+  manually->setVisible(false);
+  howOften->setVisible(false);
+  messageLabel->setText("Update Available!");
+
+  // Update Dialog State
+  m_DialogState = SimpleDialog;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DUpdateCheckDialog::toDefaultUpdateCheckDialog()
+{
+  // Exit immediately if the dialog is already in default state
+  if (m_DialogState == DefaultDialog)
+  {
+    return;
+  }
+
+  checkNowBtn->setVisible(true);
+  automatically->setVisible(true);
+  manually->setVisible(true);
+  howOften->setVisible(true);
+  messageLabel->setText("How would you like to check for updates?");
+
+  // Update Dialog State
+  m_DialogState = DefaultDialog;
 }
