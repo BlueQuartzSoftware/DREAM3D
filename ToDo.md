@@ -67,11 +67,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
-+ Design protocol to check for updated Version of DREAM3D.
-	- This work is moved to the "CheckVersion" Git branch
-    - Initial Skeleton Code Already Done.
-    - See DevelopmentNotes.md
-
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
 
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
@@ -191,6 +186,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
++ Design protocol to check for updated Version of DREAM3D.
 + Error messages returned from Pipeline are hyperlinked to the filter docs.
 + Update the documentation for the Neighbor Cleanup Filters.
 + When removing a Favorite, present a standard dialog to make sure this is what they wanted to do.

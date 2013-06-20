@@ -90,8 +90,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionOpen_Pipeline_2_triggered();
     void on_actionSave_Pipeline_2_triggered();
     void on_actionCheck_For_Updates_triggered();
-  void on_actionHowOftenComboBox_currentIndexChanged(int);
-  void on_actionUpdateCheckBtn_toggled(bool);
 
 	//Tools Menu
 	void on_action_OpenStatsGenerator_triggered();
@@ -131,8 +129,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void setInputUI();
 
     void displayHelp(QString helpFile);
-
-    void displayUpdateDialog();
 
 	void versionCheckReply(UpdateCheckData*);
 
