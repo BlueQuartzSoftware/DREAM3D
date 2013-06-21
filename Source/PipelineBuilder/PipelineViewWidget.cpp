@@ -319,6 +319,7 @@ void PipelineViewWidget::preflightPipeline()
 
 
   // Build up the pipeline
+  bool pipelineHasErrors = false;
   qint32 count = filterCount();
   for(qint32 i = 0; i < count; ++i)
   {
@@ -346,6 +347,8 @@ void PipelineViewWidget::preflightPipeline()
           if ( (*iter).getMessageType() == PipelineMessage::Error)
           {
             fw->setHasPreflightErrors(true);
+			pipelineHasErrors = true;
+			
           }
           else if ((*iter).getMessageType() == PipelineMessage::Warning)
           {
@@ -358,6 +361,16 @@ void PipelineViewWidget::preflightPipeline()
       fw->preflightDoneExecuting(m, sm, solid);
     }
   }
+
+  if (pipelineHasErrors == true)
+  {
+	  emit pipelineHasErrorsSignal();
+  }
+  else
+  {
+	  emit pipelineHasNoErrors();
+  }
+
   errorTableWidget->resizeRowsToContents();
 }
 

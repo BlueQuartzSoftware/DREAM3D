@@ -212,6 +212,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionFilterListHelp_triggered();
 
     void on_m_GoBtn_clicked();
+	void disableGoBtn();
+	void enableGoBtn();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
