@@ -5,18 +5,26 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
-
-
-## Next Release Bugs to Fix ##
-+ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates (Verify what was written already)
-+ Add Prebuilt Favorite/Pipeline to generate 3 IPF Colors for 3 Orientations.
-+ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter. Have it pop open the Web browser to the proper file.
-+ "Tools" menu launches new instances of DREAM3D/StatsGenerator on Windows/Linux (Bummer)
 + StatsGen crashes if data is missing
+
+## Next Release Bugs to Fix (4.2) ##
+
++ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
+    - Have it pop open the Web browser to the proper file.
+    - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
 + Raw Binary Reader does not error out if we read off the end of the file
++ Disable adding of filters into the pipeline while it is running.
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 + Create filter to dump IPF Color Maps for XY, YZ, XZ planes to a folder.
++ Update the documentation for the disorientation coloring
++ Incorrect Documentation for Find Twin Boundary Info
++ ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
+
+## Version 4.4 Features/Bugs to Fix ##
++ Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
++ Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
+
 
 ### Critical to Fix Before Bad Things Happen ###
 
@@ -25,13 +33,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Groeber Documentation
 
-+ Update the documentation for the disorientation coloring
-+ incorrect Documentation for Find Twin Boundary Info
 + Update Documentation for Visualize GBCD
 
 ### Documentation ###
 
-+ Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
 + Tutorial::Visualization Techniques for Docs/Website
@@ -45,26 +50,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### Workshop Feedback
 
 + SurfaceMesh Face IPF Color display something about normals/orientation (Nathalie Gey's Question at workshop during surface meshing session)
-+ Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
-+ Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 + Insert a "favorite" in between other filters, instead of only at the end of a pipeline
 + Write a .med file for the Salome FEM package which is just an HDF5 file.
-
-### User Centric
-
-+ Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
-+ ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
-
 
 ### Developer Centric ###
 
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
-
-
-### Ideas/Wish List ###
-
-
 
 ### Joey K. Summer List ###
 
@@ -120,6 +112,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Still to Do ##
 
++ "Tools" menu launches new instances of DREAM3D/StatsGenerator on Windows/Linux (Bummer)
 + Comprehensive search of the help system (Possibly QAssistant based?)
 + Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
 + ImageJ exporter codes
@@ -170,7 +163,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ##  Feature Request ##
 + A filter that finds all the twins in the microstructure and assigns them to another phase (phase 3), so that they can be visualised differently to the surrouding grains (phase 2) and grains that are untwinned (phase 1).
-
++ Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 
 ##  Surface Meshing ##
 + Add mesh decimation filter (surface or volume)
@@ -189,6 +182,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
+
++ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates (Verify what was written already)
++ Add Prebuilt Pipeline to generate 3 IPF Colors for 3 Orientations.
 + Disable the **Go** button if there are preflight errors on the DREAM3D Interface
 + Design protocol to check for updated Version of DREAM3D.
 + Error messages returned from Pipeline are hyperlinked to the filter docs.
