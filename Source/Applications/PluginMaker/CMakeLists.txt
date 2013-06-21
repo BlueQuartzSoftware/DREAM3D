@@ -142,4 +142,11 @@ set_target_properties(TemplateFileCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
-add_dependencies(${PROJECT_NAME} PrebuiltPipelinesCopy)
+add_dependencies(${PROJECT_NAME} TemplateFileCopy)
+
+#- This installs all the help files. Note that we assume a flat directory structure
+#- in the "Help" folder, ie, all html files, images, etc are all in the "Help"
+#- folder and NOT in any subfolders beyond that.
+install(DIRECTORY ${PluginMaker_SOURCE_DIR}/Template
+        DESTINATION .
+        COMPONENT Applications )
