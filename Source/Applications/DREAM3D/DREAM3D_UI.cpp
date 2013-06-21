@@ -112,6 +112,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
   this->setAcceptDrops(true);
+
+  // Hides the Tools menu until the feature is ready
+  menuTools->setHidden(true);
 }
 
 // -----------------------------------------------------------------------------
