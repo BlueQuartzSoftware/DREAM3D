@@ -122,6 +122,8 @@ class PipelineViewWidget : public QFrame
     void addPlaceHolderFilter(QPoint p);
     void removePlaceHolderFilter();
     void pipelineFileDropped(const QString& file);
+	void pipelineHasErrorsSignal();
+	void pipelineHasNoErrors();
     void preflightHasMessage(PipelineMessage msg);
 
   protected:

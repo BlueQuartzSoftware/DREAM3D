@@ -903,7 +903,8 @@ QString PluginMaker::generateCmakeContents() {
   QString text = "";
 
   // Create SourceList File
-  QFile rfile(":/Template/Filter/SourceList.cmake.in");
+  
+  QFile rfile( generateFileSystemPath("/Template/Filter/SourceList.cmake.in") );
   if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
   {
     QTextStream in(&rfile);
