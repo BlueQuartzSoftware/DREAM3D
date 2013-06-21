@@ -6,7 +6,15 @@ SurfaceMesh
 
 ## Description ##
 This surface meshing algorithm proceeds by creating a pair of triangles for each face of the **Cell** where the neighboring **Cell** have a different **Field** id value. No attempt is made to mimic the operations of a MultiMaterial Marching Cubes algorithm. The meshing operation is extremely quick but can result in a surface mesh that is very "stair stepped". The user is encouraged to use a smoothing operation on the surface mesh.
- 
+
+
+
+---------------
+
+![Example output showing a single grain on the edge of a box. Note the sharp edge of the box.](QuickSurfaceMeshOutput.png)
+@image latex QuickSurfaceMeshOutput.png "Example output showing a single grain on the edge of a box. Note the sharp edge on the box." width=3in
+
+---------------
 
 ## Parameters ##
 None
