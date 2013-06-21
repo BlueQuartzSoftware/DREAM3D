@@ -2,12 +2,13 @@ Import, Export & Favorite Pipelines {#importexportsavepipeline}
 =========
 
 ## Saving and Loading a Predefined Pipeline
-DREAM3D allows the user to _Export_ and _Import_ pipelines via the **File** menu and the **Save Pipeline** and **Open Pipeline** menu items. The pipeline files are saved in the _.ini_ file format popular among many other programs. This file format is a simple text file with delineated sections with _Key::Value_ entries. This makes the sharing of Pipelines mostly transparent between users. If a pipeline has filters that require files to be read from or written to and the pipeline file is passed to another user that does not have those same paths then the new user may have to make the adjustments inside of DREAM3D after the pipeline is loaded.
+DREAM3D allows the user to _Export_ and _Import_ pipelines via the **File** menu and the **Save Pipeline** and **Open Pipeline** menu items. The pipeline files are saved in the _.ini_ file format popular among many other programs. This file format is a simple text file with delineated sections with _Key::Value_ entries. This makes the sharing of Pipelines mostly transparent between users. If a pipeline has filters that require files to be read from or written to and the pipeline file is passed to another user that does not have those same paths, then the new user may have to make the adjustments inside of DREAM3D after the pipeline is loaded.
 
 -------
 
 ![Figure 1: File Menu](Images/ImportExport-1.png)
-@image latex Images/ImportExport-1.png " " width=2in
+
+@image latex Images/ImportExport-1.png "Figure 1: File Menu" width=2in
 
 -------
 
@@ -61,18 +62,19 @@ The following is a partial listing of a 3D EBSD reconstruction pipeline saved as
 
 ## Creating a Favorite Pipeline ##
 
-If the user creates a pipeline that they intend to use several times then they may want to save the pipeline to the _Favorites_ area. This can simply be accomplished by using the **Pipeline** menu and selecting the **Add Favorite**. If the user wants to remove a favorite at any time they simply need to select the **Remove Favorite** menu item.
+If the user creates a pipeline that the user intends to use several times, then the user may want to save the pipeline to the _Favorites_ area. This can be accomplished by using the **Pipeline** menu and selecting the **Add Favorite**. If the user wants to remove a favorite at any time the user needs to select the **Remove Favorite** menu item.
 
 --------------
 
 ![Pipeline Menu](Images/PipelineMenu.png)
-@image latex Images/PipelineMenu.png " " width=3in
+
+@image latex Images/PipelineMenu.png "Pipeline Menu" width=3in
 
 --------------
 
 ## Clearing the Pipeline ##
 
-As a convenience for those situations where the user has created a large pipeline and they would like to delete every filter from the pipeline the **Pipeline Menu** also has a menu item to remove every filter from a pipeline and an associated keyboard short cut.
+As a convenience for those situations where the user has created a large pipeline and the user would like to delete every filter from the pipeline, the **Pipeline Menu** also has a menu item to remove every filter from a pipeline and an associated keyboard shortcut.
 
 
 @htmlonly

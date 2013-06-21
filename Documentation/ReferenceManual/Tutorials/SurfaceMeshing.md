@@ -47,18 +47,20 @@ In the filter documentation the following terminology will be used:
 For this tutorial we are going to be using a pre-made DREAM3D data file. The file is a Single Phase Synthetic Structure that was quickly generated using the Synthetic Microstructure Creation abilities of DREAM3D. There are other options that exist to create a surface mesh. One can read in a Ph or Dx file, use the Raw Binary Reader to read in the Raw Grain Ids from a binary file or have an already existing set of Grain Ids from a DREAM3D pipeline that segmented the grains for you.
 
 ![Surface Meshing Pipeline](Images/SurfaceMeshingPipeline.png)
-@image latex Images/SurfaceMeshingPipeline.png " " width=4.5in
+
+@image latex Images/SurfaceMeshingPipeline.png "Surface Meshing Pipeline" width=4.5in
 
 
-Start by adding the "Read DREAM3D Data File" filter. Select the file that you just downloaded an then only check the "GrainIds" data under the "Cell Data" section. This will ensure that this is the only data that is loaded from the file. Because creating the mesh can take large amounts of memory, we only want to load the data necessary. 
+Start by adding the "Read DREAM3D Data File" filter. Select the file that you just downloaded and then only check the "GrainIds" data under the "Cell Data" section. This will ensure that this is the only data that is loaded from the file. Because creating the mesh can take large amounts of memory, we only want to load the data necessary. 
 
 Next add in the "M3C Surface Meshing (Slice at a time)" filter which will create the actual surface mesh. Leave the option to "Delete Temp Files" checked ON. The files are in a binary format meant for debugging if things go wrong during the meshing.
 
-After we get the surface mesh we could simply write out a DREAM3D file or a VTK legacy file, but we are selecting to also smooth the surface mesh to prepare it for other analysis.
+After we get the surface mesh we could simply write out a DREAM3D file or a VTK legacy file, but we are selecting to also smooth the surface mesh to prepare it for other analyses.
 
-In order to smooth the mesh we now add the "Laplacian Smoothing Filter" which takes 7 arguments. The first argument is the number of iterations of smoothing to use. The remaining 6 arguments are two (2) sets of three (3) arguments where you can set the lambda value for the bulk nodes, triple line nodes and quad point nodes for both the "inside triangles" and those triangles that touch the outer surface of the model. The user should understand that a side effect of the Laplacian smoothing algorithm is shrinkage of the actual value due to movement of the nodes. If enough iterations are run and all 6 arguments have valid value (0 to 1), then the volume can collapse on itself. This is why we have the 6 arguments to alleviate some of the shrinkage by pinning the outer shell of triangles in place and only allowing the internal triangles to move. We can also allow the bulk triangles to move more than the triple line or quad point nodes.
+In order to smooth the mesh, we now add the "Laplacian Smoothing Filter" which takes 7 arguments. The first argument is the number of iterations of smoothing to use. The remaining 6 arguments are two (2) sets of three (3) arguments where you can set the lambda value for the bulk nodes, triple line nodes and quad point nodes for both the "inside triangles" and those triangles that touch the outer surface of the model. The user should understand that a side effect of the Laplacian smoothing algorithm is shrinkage of the actual value due to movement of the nodes. If enough iterations are run and all 6 arguments have valid value (0 to 1), then the volume can collapse on itself. This is why we have the 6 arguments to alleviate some of the shrinkage by pinning the outer shell of triangles in place and only allowing the internal triangles to move. We can also allow the bulk triangles to move more than the triple line or quad point nodes.
 
-Finally after the Smoothing filter add a "Write DREAM3D Data File" filter. Be sure to check the option to write the SurfaceMesh Data and also make sure the "Write Xdmf File" is also checked. After smoothing, the mesh can be viewed with ParaView, as seen in the image below. See the DREAM3D documentation for more details on the exact storage layout of the mesh within the DREAM3D data file.
+Finally, after the Smoothing filter, add a "Write DREAM3D Data File" filter. Be sure to check the option to write the SurfaceMesh Data and also make sure the "Write Xdmf File" is also checked. After smoothing, the mesh can be viewed with ParaView, as seen in the image below. See the DREAM3D documentation for more details on the exact storage layout of the mesh within the DREAM3D data file.
 
 ![Surface Meshing Resulting Mesh](Images/SurfaceMeshingResult.png)
-@image latex Images/SurfaceMeshingResult.png "Mesh Generated from DREAM3D" width=6in
+
+@image latex Images/SurfaceMeshingResult.png "Surface Meshing Resulting Mesh" width=6in

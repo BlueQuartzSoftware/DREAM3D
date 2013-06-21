@@ -154,7 +154,8 @@ void PluginMaker::setupGui()
   cmake->setText(0, tr("CMakeLists.txt"));
   {
     pathTemplate = "@PluginName@";
-    QString resourceTemplate(":/Template/CMakeLists.txt.in");
+	
+    QString resourceTemplate( generateFileSystemPath("/Template/CMakeLists.txt.in") );
     PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
                                                pathTemplate,
                                                QString("CMakeLists.txt"),
@@ -202,7 +203,7 @@ void PluginMaker::setupGui()
   PMGeneratorTreeItem* pluginCPP = new PMGeneratorTreeItem(F_main);
   pluginCPP->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/";
-  QString resourceTemplate(":/Template/Plugin.cpp.in");
+  QString resourceTemplate( generateFileSystemPath("/Template/Plugin.cpp.in") );
   PMFileGenerator* cppPluginGen = new PMFileGenerator(m_OutputDir->text(),
                                                       pathTemplate,
                                                       QString(""),
@@ -227,7 +228,7 @@ void PluginMaker::setupGui()
   PMGeneratorTreeItem* pluginH = new PMGeneratorTreeItem(F_main);
   pluginH->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/";
-  resourceTemplate = ":/Template/Plugin.h.in";
+  resourceTemplate = generateFileSystemPath("/Template/Plugin.h.in");
   PMFileGenerator* hPluginGen = new PMFileGenerator(m_OutputDir->text(),
                                                     pathTemplate,
                                                     QString(""),
@@ -260,7 +261,7 @@ void PluginMaker::setupGui()
   PMGeneratorTreeItem* filterCPP = new PMGeneratorTreeItem(F_name);
   filterCPP->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/@PluginName@Filters/";
-  resourceTemplate = ":/Template/Filter/Filter.cpp.in";
+  resourceTemplate = generateFileSystemPath("/Template/Filter/Filter.cpp.in");
   PMFileGenerator* cppFilterGen = new PMFileGenerator(m_OutputDir->text(),
                                                       pathTemplate,
                                                       QString(""),
@@ -285,7 +286,7 @@ void PluginMaker::setupGui()
   PMGeneratorTreeItem* filterH = new PMGeneratorTreeItem(F_name);
   filterH->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/@PluginName@Filters/";
-  resourceTemplate = ":/Template/Filter/Filter.h.in";
+  resourceTemplate = generateFileSystemPath("/Template/Filter/Filter.h.in");
   PMFileGenerator* hFilterGen = new PMFileGenerator(m_OutputDir->text(),
                                                     pathTemplate,
                                                     QString(""),
@@ -338,7 +339,7 @@ void PluginMaker::setupGui()
   PMGeneratorTreeItem* filterHTML = new PMGeneratorTreeItem(F_namefilters);
   filterHTML->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
-  resourceTemplate = ":/Template/Documentation/Filter/Documentation.md.in";
+  resourceTemplate = generateFileSystemPath("/Template/Documentation/Filter/Documentation.md.in");
   PMFileGenerator* htmlFilterDoc = new PMFileGenerator(m_OutputDir->text(),
                                                        pathTemplate,
                                                        QString(""),
@@ -368,6 +369,50 @@ void PluginMaker::setupGui()
   treeWidget->expandAll();
   statusbar->showMessage("Ready");
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PluginMaker::generateFileSystemPath(QString pathEnding)
+{
+	QString appPath = qApp->applicationDirPath();
+
+	QDir pluginMakerDir = QDir(appPath);
+
+	#if defined(Q_OS_WIN)
+
+	#elif defined(Q_OS_MAC)
+		if (pluginMakerDir.dirName() == "MacOS")
+		{
+			pluginMakerDir.cdUp();
+			pluginMakerDir.cdUp();
+			pluginMakerDir.cdUp();
+		}
+	#else
+		// We are on Linux - I think
+		QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
+		if (fi.exists() == false)
+		{
+			// The help file does not exist at the default location because we are probably running from the build tree.
+			// Try up one more directory
+			pluginMakerDir.cdUp();
+		}
+	#endif
+
+	#if defined(Q_OS_WIN)
+		QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
+		if (fi.exists() == false)
+		{
+			// The help file does not exist at the default location because we are probably running from visual studio.
+			// Try up one more directory
+			pluginMakerDir.cdUp();
+		}
+	#endif
+
+	QString filePath = pluginMakerDir.absolutePath() + pathEnding;
+	filePath = QDir::toNativeSeparators(filePath);
+	return filePath;
 }
 
 // -----------------------------------------------------------------------------
