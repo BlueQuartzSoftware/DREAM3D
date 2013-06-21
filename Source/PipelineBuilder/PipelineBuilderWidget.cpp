@@ -103,8 +103,6 @@ PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *paren
 
   // Initialize filterList right-click menu
   initFilterListMenu();
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -522,6 +520,9 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
+	connect(m_PipelineViewWidget, SIGNAL(pipelineHasErrorsSignal()), this, SLOT(disableGoBtn()));
+	connect(m_PipelineViewWidget, SIGNAL(pipelineHasNoErrors()), this, SLOT(enableGoBtn()));
+
   filterLibraryTree->setEditTriggers(QAbstractItemView::SelectedClicked);
   m_hasErrors = false;
   m_hasWarnings = false;
@@ -613,6 +614,22 @@ void PipelineBuilderWidget::setupGui()
   filterList->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
           this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::disableGoBtn()
+{
+	m_GoBtn->setEnabled(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::enableGoBtn()
+{
+	m_GoBtn->setEnabled(true);
 }
 
 // -----------------------------------------------------------------------------
