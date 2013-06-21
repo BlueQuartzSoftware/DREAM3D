@@ -8,7 +8,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Next Release Bugs to Fix ##
-+ Disable the **Go** button if there are preflight errors on the DREAM3D Interface
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates (Verify what was written already)
 + Add Prebuilt Favorite/Pipeline to generate 3 IPF Colors for 3 Orientations.
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter. Have it pop open the Web browser to the proper file.
@@ -190,6 +189,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
++ Disable the **Go** button if there are preflight errors on the DREAM3D Interface
 + Design protocol to check for updated Version of DREAM3D.
 + Error messages returned from Pipeline are hyperlinked to the filter docs.
 + Update the documentation for the Neighbor Cleanup Filters.
