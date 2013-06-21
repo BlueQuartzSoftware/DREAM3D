@@ -5,11 +5,19 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Show Stopping Bugs ##
 
+
+
+## Next Release Bugs to Fix ##
++ Disable the **Go** button if there are preflight errors on the DREAM3D Interface
++ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates (Verify what was written already)
++ Add Prebuilt Favorite/Pipeline to generate 3 IPF Colors for 3 Orientations.
++ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter. Have it pop open the Web browser to the proper file.
 + "Tools" menu launches new instances of DREAM3D/StatsGenerator on Windows/Linux (Bummer)
 + StatsGen crashes if data is missing
 + Raw Binary Reader does not error out if we read off the end of the file
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
++ Create filter to dump IPF Color Maps for XY, YZ, XZ planes to a folder.
 
 ### Critical to Fix Before Bad Things Happen ###
 
@@ -24,7 +32,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Documentation ###
 
-+ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter. Have it pop open the Web browser to the proper file.
 + Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
@@ -46,7 +53,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### User Centric
 
-+ Disable the **Go** button if there are preflight errors on the DREAM3D Interface
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 + ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 
@@ -59,11 +65,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Ideas/Wish List ###
 
-+ Comprehensive search of the help system (Possibly QAssistant based?)
-+ Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates
-+ Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
-+ Add Prebuilt Favorite/Pipeline to generate 3 IPF Colors for 3 Orientations.
-+ ImageJ exporter codes
+
 
 ### Joey K. Summer List ###
 
@@ -119,9 +121,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Still to Do ##
 
++ Comprehensive search of the help system (Possibly QAssistant based?)
++ Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
++ ImageJ exporter codes
 + Add option to each filter to pause the pipeline. See DevelopmentNotes.md
 + Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
-+ Create filter to dump IPF Color Maps for XY, YZ, XZ planes to a folder.
 + Fix parent IDs not being initialized in merge twins, beta grains, etc.
 + Pole Figure smoothing function in Visualize GBCD
 + Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
