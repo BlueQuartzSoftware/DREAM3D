@@ -315,7 +315,7 @@ function(BuildToolBundle)
                      BINARY_DIR COMPONENT INSTALL_DEST SOLUTION_FOLDER)
     set(multiValueArgs SOURCES LINK_LIBRARIES LIB_SEARCH_DIRS)
     cmake_parse_arguments(QAB "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-	
+
     # Default GUI type is blank
     set(GUI_TYPE "")
 
@@ -337,11 +337,11 @@ function(BuildToolBundle)
                 DEBUG_OUTPUT_NAME ${QAB_TARGET}${QAB_DEBUG_EXTENSION}
                 RELEASE_OUTPUT_NAME ${QAB_TARGET}
     )
-	if (NOT "${QAB_SOLUTION_FOLDER}" STREQUAL "")
-		SET_TARGET_PROPERTIES(${QAB_TARGET}
+  if (NOT "${QAB_SOLUTION_FOLDER}" STREQUAL "")
+    SET_TARGET_PROPERTIES(${QAB_TARGET}
                 PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
-	
-	endif()
+
+  endif()
 
 #-- Create an Install Rule for the main app bundle target
     INSTALL(TARGETS ${QAB_TARGET}
@@ -621,26 +621,26 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
                 GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
 
                 if( ${CMAKE_BUILD_TOOL} STREQUAL "nmake")
-					if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-						set(TYPE "")
-					endif()
-					add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+          if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+            set(TYPE "")
+          endif()
+          add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
                               COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-					set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+          set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
                 else()
-					add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+          add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/
                               COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
-					set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-				#   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
-					add_custom_target(ZZ_${qtlib}-Release-Copy ALL
+          set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+        #   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+          add_custom_target(ZZ_${qtlib}-Release-Copy ALL
                               COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}4.dll
                               ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
                               COMMENT "Copying ${qtlib}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/")
-					set_target_properties(ZZ_${qtlib}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+          set_target_properties(ZZ_${qtlib}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
                 endif()
             ENDFOREACH(qtlib)
         endif(DEFINED QT_QMAKE_EXECUTABLE)
@@ -658,7 +658,7 @@ macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                             ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
                             COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/")
-				set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+        set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
             ENDFOREACH(qtlib)
         endif(DEFINED QT_QMAKE_EXECUTABLE)
     endif()
@@ -737,7 +737,7 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           get_filename_component(lib_name ${${upperlib}_LIBRARY_${TYPE}} NAME_WE)
           #message(STATUS "lib_path: ${lib_path}")
           #message(STATUS "lib_name: ${lib_name}")
-		  #message(STATUS "${upperlib}_BIN_DIR: ${${upperlib}_BIN_DIR}")
+      #message(STATUS "${upperlib}_BIN_DIR: ${${upperlib}_BIN_DIR}")
 
           find_file(${upperlib}_LIBRARY_DLL_${TYPE}
                         NAMES ${lib_name}.dll
@@ -757,11 +757,11 @@ MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           if(${CMAKE_BUILD_TOOL} STREQUAL "nmake")
             set(BTYPE ".")
           endif()
-			ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL
+      ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL
                       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/
                       COMMENT "  Copy: ${${upperlib}_LIBRARY_DLL_${TYPE}}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/")
-			set_target_properties(ZZ_${upperlib}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+      set_target_properties(ZZ_${upperlib}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
         ENDFOREACH(BTYPE ${TYPES})
       ENDif(${upperlib}_IS_SHARED)
     ENDFOREACH(lib ${_libraryList})
@@ -926,6 +926,81 @@ macro(cmpGenerateVersionString GENERATED_HEADER_PATH GENERATED_SOURCE_PATH NAMES
 endmacro()
 
 #-------------------------------------------------------------------------------
+# This function generates a file ONLY if the MD5 between the "to be" generated file
+# and the current file are different. This will help reduce recompiles based on
+# the generation of files that are really the same.
+#
+function(cmpConfigureFileWithMD5Check)
+    set(options)
+    set(oneValueArgs CONFIGURED_TEMPLATE_PATH GENERATED_FILE_PATH )
+    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+  #  message(STATUS "GVS_CONFIGURED_TEMPLATE_PATH: ${GVS_CONFIGURED_TEMPLATE_PATH}")
+  #  message(STATUS "GVS_GENERATED_FILE_PATH: ${GVS_GENERATED_FILE_PATH}")
+
+    # Only Generate a file if it is different than what is already there.
+    if(EXISTS ${GVS_GENERATED_FILE_PATH} )
+        file(MD5 ${GVS_GENERATED_FILE_PATH} VERSION_HDR_MD5)
+        #configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}_tmp.h  )
+        configure_file(${GVS_CONFIGURED_TEMPLATE_PATH}   ${GVS_GENERATED_FILE_PATH}_tmp  )
+        file(MD5 ${GVS_GENERATED_FILE_PATH}_tmp VERSION_GEN_HDR_MD5)
+    #    message(STATUS "  File Exists, doing MD5 Comparison")
+        # Compare the MD5 checksums. If they are different then configure the file into the proper location
+        if(NOT "${VERSION_HDR_MD5}" STREQUAL "${VERSION_GEN_HDR_MD5}")
+     #       message(STATUS "  Files differ: Replacing with newly generated file")
+            configure_file(${GVS_CONFIGURED_TEMPLATE_PATH}  ${GVS_GENERATED_FILE_PATH} )
+        else()
+     #       message(STATUS "  NO Difference in Files")
+        endif()
+        file(REMOVE ${GVS_GENERATED_FILE_PATH}_tmp)
+    else()
+     #   message(STATUS "  File does NOT Exist, Generating one...")
+        configure_file(${GVS_CONFIGURED_TEMPLATE_PATH} ${GVS_GENERATED_FILE_PATH} )
+    endif()
+
+endfunction()
+
+#-------------------------------------------------------------------------------
+# This function generates a file ONLY if the MD5 between the "to be" generated file
+# and the current file are different. This will help reduce recompiles based on
+# the generation of files that are really the same.
+#
+function(cmpReplaceFileIfDifferent)
+    set(options)
+    set(oneValueArgs NEW_FILE_PATH OLD_FILE_PATH )
+    cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+   # message(STATUS "GVS_NEW_FILE_PATH: ${GVS_NEW_FILE_PATH}")
+   # message(STATUS "GVS_OLD_FILE_PATH: ${GVS_OLD_FILE_PATH}")
+
+    # Only Generate a file if it is different than what is already there.
+    if(EXISTS ${GVS_OLD_FILE_PATH} )
+      #  message(STATUS "  File Exists, doing MD5 Comparison")
+        file(MD5 ${GVS_OLD_FILE_PATH} VERSION_HDR_MD5)
+        file(MD5 ${GVS_NEW_FILE_PATH} VERSION_GEN_HDR_MD5)
+
+        # Compare the MD5 checksums. If they are different then configure the file into the proper location
+        if(NOT "${VERSION_HDR_MD5}" STREQUAL "${VERSION_GEN_HDR_MD5}")
+        #    message(STATUS "  Files differ: Replacing with newly generated file")
+            file(REMOVE ${GVS_OLD_FILE_PATH})
+            file(RENAME ${GVS_NEW_FILE_PATH} ${GVS_OLD_FILE_PATH})
+
+        else()
+         #   message(STATUS "  NO Difference in Files")
+            file(REMOVE ${GVS_NEW_FILE_PATH})
+        endif()
+
+    else()
+       # message(STATUS "  File does NOT Exist, Generating one...")
+        file(RENAME ${GVS_NEW_FILE_PATH} ${GVS_OLD_FILE_PATH})
+    endif()
+
+endfunction()
+
+
+
+
+#-------------------------------------------------------------------------------
 # We are going to use Git functionality to create a version number for our package
 # The specific functionality we are going to use is the 'git describe' function
 # which should return the latest tag, the number commits since that tag and the
@@ -937,11 +1012,11 @@ function(cmpVersionStringsFromGit)
     set(oneValueArgs GENERATED_HEADER_FILE_PATH GENERATED_SOURCE_FILE_PATH NAMESPACE cmpProjectName)
     cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     if(0)
-    message(STATUS "--------------------------------------------")
-    message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
-    message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
-    message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
-    message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
+      message(STATUS "--------------------------------------------")
+      message(STATUS "GVS_NAMESPACE: ${GVS_NAMESPACE}")
+      message(STATUS "GVS_cmpProjectName: ${GVS_cmpProjectName}")
+      message(STATUS "GVS_GENERATED_HEADER_FILE_PATH: ${GVS_GENERATED_HEADER_FILE_PATH}")
+      message(STATUS "GVS_GENERATED_SOURCE_FILE_PATH: ${GVS_GENERATED_SOURCE_FILE_PATH}")
     endif()
 
     # Find Git executable
@@ -953,7 +1028,7 @@ function(cmpVersionStringsFromGit)
         RESULT_VARIABLE did_run
         ERROR_VARIABLE git_error
         WORKING_DIRECTORY ${DREAM3DProj_SOURCE_DIR}
-         )
+    )
 
         # message(STATUS "DVERS: ${DVERS}")
 
@@ -988,9 +1063,14 @@ function(cmpVersionStringsFromGit)
                # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
             mark_as_advanced( ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
             set(PROJECT_PREFIX "${GVS_cmpProjectName}")
-            configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}  )
-            configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in   ${GVS_GENERATED_SOURCE_FILE_PATH}  )
-            #    MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
+
+            cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_HEADER_FILE_PATH}
+                                         CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in )
+
+            cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_SOURCE_FILE_PATH}
+                                         CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in )
+
+            # MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
 
         endif()
     else()
