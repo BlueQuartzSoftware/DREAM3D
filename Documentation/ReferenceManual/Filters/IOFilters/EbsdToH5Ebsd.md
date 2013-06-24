@@ -30,7 +30,7 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 
 ### Setting the Spatial Reference Frame ###
 
-The user next item that the user needs to do is to click the _**Set Reference Frame**_ button to set the proper reference frame for the data set which will be written to the H5Ebsd file as meta data. Below are a number of examples showing the differences in the data sets that the different reference frames will have on the data set when the data is finally processed by DREAM3D.
+The next item that the user needs to do is to click the **Set Reference Frame** button to set the proper reference frame for the data set which will be written to the H5Ebsd file as meta data. Below are a number of examples showing the differences in the data sets that the different reference frames will have on the data set when the data is finally processed by DREAM3D.
 
 ![No Transform or Unknown Manufacturer](NoUnknown_RefFrame.png)
 @image latex NoUnknown_RefFrame.png " " width=4in

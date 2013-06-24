@@ -45,9 +45,6 @@
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
 #include <QtCore/QDateTime>
-
-
-
 #include <QtGui/QApplication>
 #include <QtGui/QFileDialog>
 #include <QtGui/QCloseEvent>
@@ -56,9 +53,8 @@
 #include <QtGui/QDesktopServices>
 
 //-- DREAM3D Includes
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
-
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -69,6 +65,7 @@
 #include "QtSupport/HelpDialog.h"
 #include "QtSupport/DREAM3DUpdateCheckDialog.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
+#include "QtSupport/UpdateCheck.h"
 
 #include "PipelineBuilder/PipelineBuilderWidget.h"
 
@@ -316,12 +313,12 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::checkForUpdatesAtStartup()
 {
-	m_UpdateCheck = new UpdateCheck(this);
+  m_UpdateCheck = new UpdateCheck(this);
 
-	connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ), 
-		this, SLOT( versionCheckReply(UpdateCheckData*) ) );
+  connect( m_UpdateCheck, SIGNAL( LatestVersion(UpdateCheckData*) ),
+    this, SLOT( versionCheckReply(UpdateCheckData*) ) );
 
-	m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
+  m_UpdateCheck->checkVersion(Detail::UpdateWebSite);
 }
 
 // -----------------------------------------------------------------------------
@@ -329,36 +326,36 @@ void DREAM3D_UI::checkForUpdatesAtStartup()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupGui()
 {
-	// Automatically check for updates at startup if the user has indicated that preference before
-	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-	if ( d->getAutomaticallyBtn()->isChecked() )
-	{
-		#if defined (Q_OS_MAC)
-			QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-		#else
-			QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-		#endif
+  // Automatically check for updates at startup if the user has indicated that preference before
+  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+  if ( d->getAutomaticallyBtn()->isChecked() )
+  {
+    #if defined (Q_OS_MAC)
+      QSettings updatePrefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    #else
+      QSettings updatePrefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    #endif
 
-		updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
-		QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey()).toDate();
-		updatePrefs.endGroup();
+    updatePrefs.beginGroup( DREAM3DUpdateCheckDialog::getUpdatePreferencesGroup() );
+    QDate lastUpdateCheckDate = updatePrefs.value(DREAM3DUpdateCheckDialog::getUpdateCheckKey()).toDate();
+    updatePrefs.endGroup();
 
-		QDate systemDate;
-		QDate currentDateToday = systemDate.currentDate();
+    QDate systemDate;
+    QDate currentDateToday = systemDate.currentDate();
 
-		QDate dailyThreshold = lastUpdateCheckDate.addDays(1);
-		QDate weeklyThreshold = lastUpdateCheckDate.addDays(7);
-		QDate monthlyThreshold = lastUpdateCheckDate.addMonths(1);
+    QDate dailyThreshold = lastUpdateCheckDate.addDays(1);
+    QDate weeklyThreshold = lastUpdateCheckDate.addDays(7);
+    QDate monthlyThreshold = lastUpdateCheckDate.addMonths(1);
 
-		if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
-			&& currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
-			&& currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
-			&& currentDateToday >= monthlyThreshold))
-		{
-			checkForUpdatesAtStartup();
-		}
-	}
-  
+    if ( (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckDaily
+      && currentDateToday >= dailyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckWeekly
+      && currentDateToday >= weeklyThreshold) || (d->getHowOftenComboBox()->currentIndex() == DREAM3DUpdateCheckDialog::UpdateCheckMonthly
+      && currentDateToday >= monthlyThreshold))
+    {
+      checkForUpdatesAtStartup();
+    }
+  }
+
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
@@ -405,39 +402,39 @@ void DREAM3D_UI::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_action_OpenStatsGenerator_triggered()
 {
-	QString appPath = qApp->applicationDirPath();
+  QString appPath = qApp->applicationDirPath();
 
-	QDir appDir = QDir(appPath);
-	QString s("file://");
+  QDir appDir = QDir(appPath);
+  QString s("file://");
 
 #if defined(Q_OS_WIN)
-	s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
-	if (appDir.dirName() == "MacOS")
-	{
-		appDir.cdUp();
-		appDir.cdUp();
-		appDir.cdUp();
-	}
+  if (appDir.dirName() == "MacOS")
+  {
+    appDir.cdUp();
+    appDir.cdUp();
+    appDir.cdUp();
+  }
 #else
-	// We are on Linux - I think
-	appDir.cdUp();
+  // We are on Linux - I think
+  appDir.cdUp();
 #endif
 
-	QString appName = "StatsGenerator";
+  QString appName = "StatsGenerator";
 #ifdef QT_DEBUG
-	appName.append("_debug");
+  appName.append("_debug");
 #endif
 
 
 #if defined(Q_OS_WIN)
-	s = s + appDir.absolutePath() + QDir::separator() + appName + ".exe";
+  s = s + appDir.absolutePath() + QDir::separator() + appName + ".exe";
 #elif defined(Q_OS_MAC)
-	s = s + appDir.absolutePath() + QDir::separator() + appName  + ".app";
+  s = s + appDir.absolutePath() + QDir::separator() + appName  + ".app";
 #else
-	s = s + appDir.absolutePath() + QDir::separator() + appName  + ".sh";
+  s = s + appDir.absolutePath() + QDir::separator() + appName  + ".sh";
 #endif
-	QDesktopServices::openUrl(QUrl(s));
+  QDesktopServices::openUrl(QUrl(s));
 
 }
 #endif
@@ -821,6 +818,7 @@ void DREAM3D_UI::on_actionAbout_triggered()
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
   msg.append("Please send any help, bug or feature requests dream3d@bluequartz.net\n\n");
+  msg.append("See the Help->License Menu for complete license information.\n\n");
   msg.append("The latest version can always be downloaded from http://dream3d.bluequartz.net\n");
   QMessageBox::information(this, QString("About DREAM.3D"), msg, QMessageBox::Ok | QMessageBox::Default);
 }
@@ -851,19 +849,19 @@ void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 {
-	DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-	d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
-	d->setApplicationName("DREAM3D");
+  DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
+  d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+  d->setApplicationName("DREAM3D");
 
-	if ( dataObj->hasUpdate() && !dataObj->hasError() )
-	{
-		QString message = dataObj->getMessageDescription();
-		QLabel* feedbackTextLabel = d->getFeedbackTextLabel();
-		d->toSimpleUpdateCheckDialog();
-		feedbackTextLabel->setText(message);
-		d->getCurrentVersionLabel()->setText( dataObj->getAppString() );
-		d->setCurrentVersion( dataObj->getAppString() );
-		d->getLatestVersionLabel()->setText( dataObj->getServerString() );
-		d->exec();
-	}
+  if ( dataObj->hasUpdate() && !dataObj->hasError() )
+  {
+    QString message = dataObj->getMessageDescription();
+    QLabel* feedbackTextLabel = d->getFeedbackTextLabel();
+    d->toSimpleUpdateCheckDialog();
+    feedbackTextLabel->setText(message);
+    d->getCurrentVersionLabel()->setText( dataObj->getAppString() );
+    d->setCurrentVersion( dataObj->getAppString() );
+    d->getLatestVersionLabel()->setText( dataObj->getServerString() );
+    d->exec();
+  }
 }
