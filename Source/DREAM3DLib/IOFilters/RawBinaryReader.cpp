@@ -78,12 +78,14 @@ namespace Detail
 
 #endif
 
-int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, const std::string &filename)
-{
-  uint64_t fileSize = MXAFileInfo::fileSize(filename);
 
-  if (fileSize < allocatedBytes) { return -1; }
-  else if (fileSize > allocatedBytes) { return 1; }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes,size_t fileSize, int skipHeaderBytes)
+{
+  if (fileSize-skipHeaderBytes < allocatedBytes) { return -1; }
+  else if (fileSize-skipHeaderBytes > allocatedBytes) { return 1; }
   // File Size and Allocated Size are equal so we  are good to go
   return 0;
 }
@@ -94,12 +96,12 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, const std::str
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename)
+int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename, int skipHeaderBytes)
 {
   int err = 0;
-
+  uint64_t fileSize = MXAFileInfo::fileSize(filename);
   size_t allocatedBytes = p->GetSize() * sizeof(T);
-  err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, filename);
+  err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
   if (err < 0)
   {
@@ -118,6 +120,15 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
   size_t numRead = 0;
 
   T* ptr = p->GetPointer(0);
+
+  //Skip some header bytes by just reading those bytes into the pointer knowing that the next
+  // thing we are going to do it over write those bytes with the real data that we are after.
+  if (skipHeaderBytes > 0)
+  {
+    numRead = fread(ptr, 1, skipHeaderBytes, f);
+  }
+  numRead = 0;
+  // Now start reading the data in chunks if needed.
   while(1)
   {
     numRead += fread(ptr, sizeof(T), numElements, f);
@@ -131,14 +142,11 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
     {
       break;
     }
+    // If we are here we did NOT read all the data, so increment the pointer and loop again.
     ptr = p->GetPointer(numRead);
   }
   return RBR_NO_ERROR;
 }
-
-
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -149,6 +157,8 @@ RawBinaryReader::RawBinaryReader() :
   m_Endian(0),
   m_Dimensionality(0),
   m_NumberOfComponents(0),
+  m_OverRideOriginResolution(true),
+  m_SkipHeaderBytes(0),
   m_OutputArrayName(""),
   m_InputFile("")
 {
@@ -265,14 +275,29 @@ void RawBinaryReader::setupFilterParameters()
     option->setUnits("XYZ");
     parameters.push_back(option);
   }
-
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Array Name");
-    parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameter::StringWidget);
-    parameter->setValueType("string");
-    parameters.push_back(parameter);
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Over Ride Origin & Resolution");
+    option->setPropertyName("OverRideOriginResolution");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Skip Header Bytes");
+    option->setPropertyName("SkipHeaderBytes");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output Array Name");
+    option->setPropertyName("OutputArrayName");
+    option->setWidgetType(FilterParameter::StringWidget);
+    option->setValueType("string");
+    parameters.push_back(option);
   }
   setFilterParameters(parameters);
 }
@@ -292,6 +317,8 @@ void RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("OverRideOriginResolution", getOverRideOriginResolution() );
+  writer->writeValue("SkipHeaderBytes", getSkipHeaderBytes() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
 }
 
@@ -317,11 +344,19 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
+  if(m_OutputArrayName.empty() == true)
+  {
+    ss.str("");
+    ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
+    setErrorCondition(-398);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+  }
+
   if (m_NumberOfComponents < 1)
   {
     ss.str("");
     ss << "The number of components must be larger than Zero";
-    setErrorCondition(-388);
+    setErrorCondition(-391);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
@@ -336,7 +371,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
   if (  m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
   {
     ss.str("");
-    ss << "One of the dimensions has a size less than Zero (0). The minimum size must be at least One (1).";
+    ss << "One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).";
     setErrorCondition(-390);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -353,51 +388,67 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     else if (m_ScalarType == Detail::UInt8)
     {
       p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(uint8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int16)
     {
       p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(int16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt16)
     {
       p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(uint16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int32)
     {
       p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(int32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt32)
     {
       p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(uint32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int64)
     {
       p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(int64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt64)
     {
       p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(uint64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Float)
     {
       p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(float) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Double)
     {
       p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
+      allocatedBytes = sizeof(double) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
 
     // Sanity Check Allocated Bytes versus size of file
-    int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, m_InputFile);
+    uint64_t fileSize = MXAFileInfo::fileSize(m_InputFile);
+    int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, m_SkipHeaderBytes);
     if (check == -1)
     {
+      ss.str("");
+      ss << "The file size is " << fileSize << " but the number of bytes needed to fill the array is " << allocatedBytes << ". This condition would cause an error reading the input file.";
+      ss << " Please adjust the input parameters to match the size of the file or select a different data file.";
       setErrorCondition(RBR_FILE_TOO_SMALL);
-      notifyErrorMessage("The file size is less than the allocated size.  The reader will continue reading past the end of the file.", getErrorCondition());
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
     else if (check == 1)
     {
+      ss.str("");
+      ss << "The file size is " << fileSize << " but the number of bytes needed to fill the array is " << allocatedBytes << " which is less than the size of the file.";
+      ss << " DREAM3D will read only the first part of the file into the array.";
       setErrorCondition(RBR_FILE_TOO_BIG);
-      notifyWarningMessage("The file size is greater than the allocated size", getErrorCondition());
+      addWarningMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
 
     m->addCellData(p->GetName(), p);
@@ -439,8 +490,11 @@ void RawBinaryReader::execute()
 
   // Get the total size of the array from the options
   size_t voxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
-  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  if (m_OverRideOriginResolution == true)
+  {
+    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  }
   m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
 
@@ -448,70 +502,70 @@ void RawBinaryReader::execute()
   if (m_ScalarType == Detail::Int8)
   {
     Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<int8_t>(p, m_InputFile);
+    err = ReadBinaryFile<int8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::UInt8)
   {
     UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<uint8_t>(p, m_InputFile);
+    err = ReadBinaryFile<uint8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::Int16)
   {
     Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<int16_t>(p, m_InputFile);
+    err = ReadBinaryFile<int16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::UInt16)
   {
     UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<uint16_t>(p, m_InputFile);
+    err = ReadBinaryFile<uint16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::Int32)
   {
     Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<int32_t>(p, m_InputFile);
+    err = ReadBinaryFile<int32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::UInt32)
   {
     UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<uint32_t>(p, m_InputFile);
+    err = ReadBinaryFile<uint32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::Int64)
   {
     Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<int64_t>(p, m_InputFile);
+    err = ReadBinaryFile<int64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::UInt64)
   {
     UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<uint64_t>(p, m_InputFile);
+    err = ReadBinaryFile<uint64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::Float)
   {
     FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<float>(p, m_InputFile);
+    err = ReadBinaryFile<float>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
   else if (m_ScalarType == Detail::Double)
   {
     DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
-    err = ReadBinaryFile<double>(p, m_InputFile);
+    err = ReadBinaryFile<double>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 ) { SWAP_ARRAY(p)
           array = p;}
   }
@@ -527,18 +581,18 @@ void RawBinaryReader::execute()
   }
   else if (err == RBR_FILE_TOO_SMALL)
   {
-	  setErrorCondition(RBR_FILE_TOO_SMALL);
-	  notifyErrorMessage("The file size is smaller than the allocated size.", getErrorCondition());
+    setErrorCondition(RBR_FILE_TOO_SMALL);
+    notifyErrorMessage("The file size is smaller than the allocated size.", getErrorCondition());
   }
   else if (err == RBR_FILE_TOO_BIG)
   {
-	  setErrorCondition(RBR_FILE_TOO_BIG);
-	  notifyErrorMessage("The file size is larger than the allocated size.", getErrorCondition());
+    setErrorCondition(RBR_FILE_TOO_BIG);
+    notifyErrorMessage("The file size is larger than the allocated size.", getErrorCondition());
   }
   else if(err == RBR_READ_EOF)
   {
-	  setErrorCondition(RBR_READ_EOF);
-	  notifyErrorMessage("RawBinaryReader read past the end of the specified file.", getErrorCondition());
+    setErrorCondition(RBR_READ_EOF);
+    notifyErrorMessage("RawBinaryReader read past the end of the specified file.", getErrorCondition());
   }
 
   /* Let the GUI know we are done with this filter */
