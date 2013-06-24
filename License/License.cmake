@@ -15,7 +15,7 @@ set(LICENSE_FILES
                    ${DREAM3DProj_SOURCE_DIR}/License/HDF5.license
            )
 set(QRC_LICENSE_FILES "")
-set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/DREAM3D/License/${PROJECT_NAME}LicenseFiles.h)
+set(LICENSE_HEADER_FILE  ${PROJECT_BINARY_DIR}/DREAM3D/License/${PROJECT_NAME}LicenseFiles.h_tmp)
 file(WRITE ${LICENSE_HEADER_FILE} "#ifndef _LICENSE_FILES_H_\n")
 file(APPEND ${LICENSE_HEADER_FILE} "#define _LICENSE_FILES_H_\n")
 file(APPEND ${LICENSE_HEADER_FILE} "namespace ${PROJECT_PREFIX} {\n")
@@ -43,4 +43,9 @@ cmp_IDE_GENERATED_PROPERTIES("Generated/qrc" "${QRC_LICENSE_FILES}" "")
 
 file(APPEND ${LICENSE_HEADER_FILE}  ");\n")
 file(APPEND ${LICENSE_HEADER_FILE}  "}\n#endif /* _LICENSE_FILES_H_ */ \n")
+
+
+cmpReplaceFileIfDifferent(OLD_FILE_PATH ${PROJECT_BINARY_DIR}/DREAM3D/License/${PROJECT_NAME}LicenseFiles.h
+                          NEW_FILE_PATH ${LICENSE_HEADER_FILE} )
+
 
