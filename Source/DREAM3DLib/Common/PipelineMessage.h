@@ -91,7 +91,7 @@ class PipelineMessage
                     MessageType msgType = UnknownMessageType,
                     int status = -1) :
         m_FilterClassName(className),
-        m_FilterHumanLabel("Foo"),
+        m_FilterHumanLabel(""),
         m_Msg(msg),
         m_Code(code),
         m_msgType(msgType),

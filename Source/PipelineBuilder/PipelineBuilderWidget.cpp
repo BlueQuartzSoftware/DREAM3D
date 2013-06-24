@@ -1278,9 +1278,12 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
 	  if (hyperlinkLabel == NULL)
 	  {
-		  hyperlinkLabel->setText("Hyperlink Error");
+		  errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
 	  }
-	  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+	  else
+	  {
+		  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+	  }
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1317,9 +1320,12 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
 	  if (hyperlinkLabel == NULL)
 	  {
-		  hyperlinkLabel->setText("Hyperlink Error");
+		  msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
 	  }
-      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+	  else
+	  {
+		  msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+	  }
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
