@@ -71,7 +71,6 @@ namespace Detail
 
 #endif
 
-template<typename T>
 int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, const std::string &filename)
 {
   uint64_t fileSize = MXAFileInfo::fileSize(filename);
@@ -93,9 +92,21 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
   int err = 0;
 
   size_t allocatedBytes = p->GetSize() * sizeof(T);
-  err = SanityCheckFileSizeVersusAllocatedSize(....)
-  // Check Err
+  err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, filename);
 
+#error Check err
+  if (err < 0)
+  {
+
+  }
+  else if (err > 0)
+  {
+
+  }
+  else
+  {
+
+  }
 
   FILE* f = fopen(filename.c_str(), "rb");
   if (NULL == f)
@@ -115,6 +126,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
     // If we try to read at or past EOF
     if ( feof(f) != 0 )
     {
+#error This is where we set the pointer to NULL
       p = p->NullPointer();
       return -604;
     }
@@ -384,13 +396,11 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, m_InputFile);
     if (check == -1)
     {
-    #error Fix this with a real message
-      notifyErrorMessage();
+		notifyErrorMessage("The file size is less than the allocated size.  The reader will continue reading past the end of the file.", -878);
     }
     else if (check == 1)
     {
-    #error Fix this with a real message
-    notifyWarningMessage();
+		notifyWarningMessage("The file size is greater than the allocated size", -246);
     }
 
     m->addCellData(p->GetName(), p);
@@ -436,7 +446,7 @@ void RawBinaryReader::execute()
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
-  int err = 0;
+
   array = IDataArray::NullPointer();
   if (m_ScalarType == Detail::Int8)
   {
@@ -449,75 +459,74 @@ void RawBinaryReader::execute()
   {
     UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint8_t>(p, m_InputFile);
-    #error CHECk the error codes for all below
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::Int16)
   {
     Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int16_t>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::UInt16)
   {
     UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint16_t>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::Int32)
   {
     Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int32_t>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::UInt32)
   {
     UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint32_t>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::Int64)
   {
     Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int64_t>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::UInt64)
   {
     UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint64_t>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::Float)
   {
     FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<float>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
   else if (m_ScalarType == Detail::Double)
   {
     DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<double>(p, m_InputFile);
-    SWAP_ARRAY(p)
-        array = p;
+	if (err < 0 ) { SWAP_ARRAY(p)
+		array = p;}
   }
 
+#error This if statement gets executed even though we previously set the pointer to NULL
   if (NULL != array.get())
   {
     m->addCellData(array->GetName(), array);
   }
   else
   {
-    #error Fix this with a real message
-    notifyErrorMessage("Error");
+    notifyErrorMessage("The reader read past the end of the file.", -654);
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
