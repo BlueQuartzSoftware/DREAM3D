@@ -523,9 +523,23 @@ void RawBinaryReader::execute()
   else if(err == RBR_FILE_NOT_OPEN )
   {
     setErrorCondition(RBR_FILE_NOT_OPEN);
-    notifyErrorMessage("", getErrorCondition());
+    notifyErrorMessage("RawBinaryReader was unable to open the specified file.", getErrorCondition());
   }
-  #warning Finish up the Error/Warning messages
+  else if (err == RBR_FILE_TOO_SMALL)
+  {
+	  setErrorCondition(RBR_FILE_TOO_SMALL);
+	  notifyErrorMessage("The file size is smaller than the allocated size.", getErrorCondition());
+  }
+  else if (err == RBR_FILE_TOO_BIG)
+  {
+	  setErrorCondition(RBR_FILE_TOO_BIG);
+	  notifyErrorMessage("The file size is larger than the allocated size.", getErrorCondition());
+  }
+  else if(err == RBR_READ_EOF)
+  {
+	  setErrorCondition(RBR_READ_EOF);
+	  notifyErrorMessage("RawBinaryReader read past the end of the specified file.", getErrorCondition());
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

@@ -106,8 +106,8 @@ void Observable::notifyMessage(PipelineMessage &msg)
 //
 // -----------------------------------------------------------------------------
 void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
-  PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
-  notifyMessage(errorMsg);
+		PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
+		notifyMessage(errorMsg);
 }
 
 // -----------------------------------------------------------------------------
