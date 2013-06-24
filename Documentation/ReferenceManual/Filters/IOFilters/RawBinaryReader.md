@@ -12,6 +12,10 @@ binary form versus ascii form. The data file should **NOT** have any type of hea
 
 The data is assumed to be on a rectilinear grid and will be stored in the Voxel DataContainer. In a rectilinear grid the spacing on each axis is constant but each axis can have a different value. The spacing is also sometimes referred to as the _Resolution_ of the axis..
 
+This filter will error out and block the pipeline from running if the total number of bytes that would need to be read from the file is larger than the actual file itself. The pipeline will not run at this point.
+
+The user can use an input file that is actually **Larger** than the number of bytes required by the filter and the filter will only read the first part of the file unless an amount of bytes to skip is set. See more input parameters farther down the documentation.
+
 ---
 
 ![User Interface for Raw Binary Reader](RawBinaryReader-GUI.png)
@@ -69,9 +73,18 @@ while a 3D Data set of 128 x 256 x 64 (X, Y, Z) would have the following:
 This tells the program where in space the (0,0,0) element is located. The default is (0.0, 0.0, 0.0).
 
 
-### Spacing ###
+### Resolution ###
 
-This tells the program the spacing along each axis of the rectilinear grid.
+This tells the program the Resolution along each axis of the rectilinear grid.
+
+### Over Ride Origin & Resolution ###
+
+If this checkbox is checked (defaulted to ON) then the origin and resolution values from this filter will be applied to the Voxel Data Container. If the checkbox is left _unchecked_ then the origin and resolution values will NOT be applied to the Voxel Data Container
+
+### Skip Header Bytes ###
+
+If the raw binary file you are reading has a _header_ before the actual data begins in the file the user can instruct the filter to skip this header portion of the file. The user needs to know how many bytes the header is. 
+ Another way to use this value is if the user wants to read data out of the interior of a file then they can set the number of bytes to skip at the beginning of the file.
 
 ### Output Array Name ###
 This is the name of the array that the data should be stored as in the Voxel Data Container. Certain filters depend on specific names for the arrays that they require. If you are importing data in order to run a filter on the data then consulting the documentation for the specific filter should indicate an appropriate name to use for the created array.
