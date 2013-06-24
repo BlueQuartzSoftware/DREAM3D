@@ -92,7 +92,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionCheck_For_Updates_triggered();
 
 	//Tools Menu
-	void on_action_OpenStatsGenerator_triggered();
+	//void on_action_OpenStatsGenerator_triggered();
 
 	// Help Menu
     void on_actionLicense_Information_triggered();
