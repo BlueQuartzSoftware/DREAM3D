@@ -75,15 +75,8 @@
     <addaction name="separator"/>
     <addaction name="actionCheck_For_Updates"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-    <addaction name="action_OpenStatsGenerator"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPipeline"/>
-   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

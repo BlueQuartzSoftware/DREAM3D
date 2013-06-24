@@ -93,7 +93,14 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
   while(1)
   {
     numRead += fread(ptr, sizeof(T), numElements, f);
-    if (numRead == numElements)
+
+	// If we try to read at or past EOF
+	if ( feof(f) != 0 )
+	{
+		p = p->NullPointer();
+		return 604;
+	}
+    else if (numRead == numElements)
     {
       break;
     }
@@ -394,7 +401,7 @@ void RawBinaryReader::execute()
   m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
 
-  IDataArray::Pointer array = IDataArray::NullPointer();
+  array = IDataArray::NullPointer();
   if (m_ScalarType == Detail::Int8)
   {
     Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
@@ -466,8 +473,10 @@ void RawBinaryReader::execute()
         array = p;
   }
 
-
-  m->addCellData(array->GetName(), array);
+  if (NULL == array.get())
+  {
+		m->addCellData(array->GetName(), array);
+  }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
