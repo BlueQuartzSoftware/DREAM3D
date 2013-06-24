@@ -12,7 +12,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
     - Have it pop open the Web browser to the proper file.
     - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
-+ Raw Binary Reader does not error out if we read off the end of the file
 + Disable adding of filters into the pipeline while it is running.
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
@@ -21,7 +20,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Incorrect Documentation for Find Twin Boundary Info
 + ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 
-## Version 4.4 Features/Bugs to Fix ##
+## Version 4.3 Features/Bugs to Fix ##
 + Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 
@@ -45,6 +44,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + FileFormats::Xdmf files for Docs/Website
 + Update/Create a user manual for the stats generator - last parts need pasting
 + Update documentation file structure now that users can specify array names
++ Update StatsGen documentation regarding the file format for loading ODF Angles.
 
 
 ### Workshop Feedback
@@ -183,6 +183,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Raw Binary Reader does not error out if we read off the end of the file
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates (Verify what was written already)
 + Add Prebuilt Pipeline to generate 3 IPF Colors for 3 Orientations.
 + Disable the **Go** button if there are preflight errors on the DREAM3D Interface
