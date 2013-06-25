@@ -26,11 +26,10 @@ file(WRITE ${AllFiltersHeaderFile} "#ifndef _${PLUGIN_NAME}_Filters_H_\n#define 
 # Create a File that will be used to generate a program that itself generates a
 # QFilterWidget derived header for each of the filters based on thier exposed
 # filter options
-set(CodeGeneratorFile  ${ImageImportPlugin_BINARY_DIR}/ImageImportCodeGenerator.h)
+set(CodeGeneratorFile  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}CodeGenerator.h)
 file(WRITE ${CodeGeneratorFile} "")
 
 # --------------------------------------------------------------------
-# Create a File that has all the headers for the various Filter Widgets
 # Create a File that has all the headers for the various Filter Widgets
 set(AllFilterWidgetsHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetHeaders.h_tmp)
 file(WRITE ${AllFilterWidgetsHeaderFile} "#ifndef _ALL${PLUGIN_NAME}_H_\n#define _ALL${PLUGIN_NAME}_H_\n")
@@ -52,10 +51,10 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 set(Project_SRCS "")
 
 # Add in our Filter classes
-include(${ImageImportPlugin_SOURCE_DIR}/ImageImportFilters/SourceList.cmake)
+include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
 
 
-set(ImageImportPlugin_Project_SRCS ${Project_SRCS})
+set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
 #-----------------------------------------------------
 # Close up all the files that we just generated
@@ -83,9 +82,10 @@ include_directories( ${QtSupport_SOURCE_DIR} )
 include_directories( ${PipelineBuilderLib_SOURCE_DIR} )
 include_directories( ${PipelineBuilderLib_BINARY_DIR} )
 include_directories( ${FilterWidgetsLib_SOURCE_DIR} )
-include_directories( ${ImageImportPlugin_BINARY_DIR} )
-include_directories( ${ImageImportPlugin_SOURCE_DIR}/.. )
-include_directories( ${ImageImportPlugin_SOURCE_DIR})
+include_directories( ${${PLUGIN_NAME}_BINARY_DIR} )
+include_directories( ${${PLUGIN_NAME}_BINARY_DIR}/.. )
+include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/.. )
+include_directories( ${${PLUGIN_NAME}_SOURCE_DIR})
 
 # ******************************************************************************
 # Create our custom executable that will generate most of our QFilterWidget
@@ -93,8 +93,8 @@ include_directories( ${ImageImportPlugin_SOURCE_DIR})
 # Read the file back into a string so we can configure our file
 file(READ ${RegisterKnownFilterWidgetsFile} QFILTERWIDGET_FACTORY_SOURCE)
 file(READ ${CodeGeneratorFile} CODE_GEN_FILTER_FUNCTION)
-file(READ ${FilterWidget_GEN_HDRS_File} ImageImportWidget_GEN_HDRS)
-file(READ ${FilterWidget_GEN_SRCS_File} ImageImportWidget_GEN_SRCS)
+file(READ ${FilterWidget_GEN_HDRS_File} ${PLUGIN_NAME}Widget_GEN_HDRS)
+file(READ ${FilterWidget_GEN_SRCS_File} ${PLUGIN_NAME}Widget_GEN_SRCS)
 
 # Remove the temp files that we no longer need
 file(REMOVE ${CodeGeneratorFile})
@@ -103,34 +103,34 @@ file(REMOVE ${FilterWidget_GEN_SRCS_File})
 
 
 set(FILTER_HEADERS "#include \"${AllFiltersHeaderFile}\"")
-set(FILTER_WIDGETS_TEMP_DIR ${ImageImportPlugin_BINARY_DIR}/Temp)
-set(FILTER_WIDGETS_BINARY_DIR ${ImageImportPlugin_BINARY_DIR})
-set(FILTER_WIDGETS_SOURCE_DIR ${ImageImportPlugin_SOURCE_DIR})
-set(FILTER_WIDGETS_DOCS_DIR ${ImageImportPlugin_SOURCE_DIR}/Documentation/Filters)
-set(FILTER_INCLUDE_PREFIX "")
-file(MAKE_DIRECTORY ${ImageImportPlugin_BINARY_DIR}/Temp)
+set(FILTER_WIDGETS_TEMP_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Temp)
+set(FILTER_WIDGETS_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR})
+set(FILTER_WIDGETS_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR})
+set(FILTER_WIDGETS_DOCS_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/Filters)
+set(FILTER_INCLUDE_PREFIX "${PLUGIN_NAME}")
+file(MAKE_DIRECTORY ${${PLUGIN_NAME}_BINARY_DIR}/Temp)
 configure_file( ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetsCodeGen.h.in
-                ${ImageImportPlugin_BINARY_DIR}/FilterWidgetCodeGen.h)
+                ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h)
 
 # --------------------------------------------------------------------
 # On Linux we need -fPIC for linking static and shared libraries
 if(UNIX AND NOT APPLE)
-  set_source_files_properties(${ImageImportPlugin_Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
+  set_source_files_properties(${${PLUGIN_NAME}_Project_SRCS} PROPERTIES COMPILE_FLAGS -fPIC)
   set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.h PROPERTIES COMPILE_FLAGS -fPIC)
   set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp PROPERTIES COMPILE_FLAGS -fPIC)
 endif()
 
-add_executable(ImageImportWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
-                                            ${ImageImportPlugin_BINARY_DIR}/FilterWidgetCodeGen.h
-                                            ${ImageImportPlugin_Project_SRCS}
+add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
+                                            ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
+                                            ${${PLUGIN_NAME}_Project_SRCS}
                                             )
-target_link_libraries(ImageImportWidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 
 # Now run the code to generate the header files which will over write the place
 # holder files that were generated from above
-add_custom_command(TARGET ImageImportWidgetCodeGen POST_BUILD
-                    COMMAND $<TARGET_FILE:ImageImportWidgetCodeGen> )
+add_custom_command(TARGET ${PLUGIN_NAME}WidgetCodeGen POST_BUILD
+                    COMMAND $<TARGET_FILE:${PLUGIN_NAME}WidgetCodeGen> )
 # ******************************************************************************
 
 
@@ -156,40 +156,39 @@ cmp_IDE_SOURCE_PROPERTIES( "ImageImport/" "${ImageImportPlugin_HDRS}" "${ImageIm
 # --------------------------------------------------------------------
 # This section is for a Custom GUI for a Filter. We need to add the Header, Source and UI file here so that
 # they do not get auto generated during cmake and build time.
-set(ImageImportPlugin_CustomWidgets_HDRS
-  ${PROJECT_SOURCE_DIR}/ImageImportPlugin/ImageImportFiltersWidgets/QImportImageStackWidget.h
+set(${PLUGIN_NAME}_CustomWidgets_HDRS
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QImportImageStackWidget.h
 )
 
-set(ImageImportPlugin_CustomWidgets_SRCS
-  ${PROJECT_SOURCE_DIR}/ImageImportPlugin/ImageImportFiltersWidgets/QImportImageStackWidget.cpp
+set(${PLUGIN_NAME}_CustomWidgets_SRCS
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QImportImageStackWidget.cpp
 )
 
-QT4_WRAP_UI( ImageImportPlugin_Generated_UI_HDRS
-  ${PROJECT_SOURCE_DIR}/ImageImportPlugin/ImageImportFiltersWidgets/QImportImageStackWidget.ui
+QT4_WRAP_UI( ${PLUGIN_NAME}_Generated_UI_HDRS
+   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/QImportImageStackWidget.ui
 )
-
 
 # --------------------------------------------------------------------
 # We need to run Qt's moc system on our Qt based files (Anything deriving from QObject)
 # This cmake code sets up moc to be run.
-QT4_WRAP_CPP( ImageImportPlugin_Generated_MOC_SRCS ${ImageImportWidget_GEN_HDRS} )
-QT4_WRAP_CPP( ImageImportPlugin_MOC_SRCS ${ImageImportPlugin_HDRS} ${ImageImportPlugin_CustomWidgets_HDRS})
+QT4_WRAP_CPP( ${PLUGIN_NAME}_Generated_MOC_SRCS ${${PLUGIN_NAME}Widget_GEN_HDRS} )
+QT4_WRAP_CPP( ${PLUGIN_NAME}_MOC_SRCS ${${PLUGIN_NAME}_HDRS} ${${PLUGIN_NAME}_CustomWidgets_HDRS})
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
-set_source_files_properties( ${ImageImportPlugin_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
-set_source_files_properties( ${ImageImportPlugin_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties( ${${PLUGIN_NAME}_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties( ${${PLUGIN_NAME}_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # --------------------------------------------------------------------
 # -- Create a Qt Resource header file of the documentation html files
-#QT4_ADD_RESOURCES( ImageImportPlugin_Generated_RC_SRCS "${HtmlDocQrcFile}"  )
+#QT4_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${HtmlDocQrcFile}"  )
 
 # --------------------------------------------------------------------
 # Group all the generated source files in IDE's that support it. Makes it clear
 # to the user of the IDE what is generated and what is not.
-cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "${ImageImportPlugin_GEN_HDRS}" "${ImageImportPlugin_Generated_MOC_SRCS};${ImageImportPlugin_MOC_SRCS};${ImageImportPlugin_GEN_SRCS}" "0")
-cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${ImageImportPlugin_Generated_UI_HDRS}" "" "0")
-cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${ImageImportPlugin_Generated_RC_SRCS}" "" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Moc" "${${PLUGIN_NAME}_GEN_HDRS}" "${${PLUGIN_NAME}_Generated_MOC_SRCS};${${PLUGIN_NAME}_MOC_SRCS};${${PLUGIN_NAME}_GEN_SRCS}" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Uic" "${${PLUGIN_NAME}_Generated_UI_HDRS}" "" "0")
+cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRCS}" "" "0")
 
 
 # --------------------------------------------------------------------
@@ -197,22 +196,22 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${ImageImportPlugin_Generated_RC_
 # installed for a deployment to other machines then change the PROJECT_INSTALL_HEADERS
 # to a Zero
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
-    INSTALL(FILES ${ImageImportPlugin_HDRS} DESTINATION include/${PLUGIN_NAME}/ImageImport COMPONENT Headers)
+    INSTALL(FILES ${${PLUGIN_NAME}_HDRS} DESTINATION include/${PLUGIN_NAME}/${PLUGIN_NAME} COMPONENT Headers)
 endif()
 
 
-set(ImageImportPlugin_Project_SRCS
-   ${ImageImportPlugin_Project_SRCS}
-   ${ImageImportPlugin_HDRS}
-   ${ImageImportPlugin_SRCS}
-   ${ImageImportPlugin_CustomWidgets_HDRS}
-   ${ImageImportPlugin_CustomWidgets_SRCS}
-   ${ImageImportPlugin_Generated_UI_HDRS}
-   ${ImageImportWidget_GEN_HDRS}
-   ${ImageImportWidget_GEN_SRCS}
-   ${ImageImportPlugin_Generated_MOC_SRCS}
-   ${ImageImportPlugin_MOC_SRCS}
-   ${ImageImportPlugin_Generated_RC_SRCS}
+set(${PLUGIN_NAME}_Project_SRCS
+   ${${PLUGIN_NAME}_Project_SRCS}
+   ${${PLUGIN_NAME}_HDRS}
+   ${${PLUGIN_NAME}_SRCS}
+   ${${PLUGIN_NAME}_CustomWidgets_HDRS}
+   ${${PLUGIN_NAME}_CustomWidgets_SRCS}
+   ${${PLUGIN_NAME}_Generated_UI_HDRS}
+   ${${PLUGIN_NAME}Widget_GEN_HDRS}
+   ${${PLUGIN_NAME}Widget_GEN_SRCS}
+   ${${PLUGIN_NAME}_Generated_MOC_SRCS}
+   ${${PLUGIN_NAME}_MOC_SRCS}
+   ${${PLUGIN_NAME}_Generated_RC_SRCS}
    )
 
 # --------------------------------------------------------------------
@@ -223,7 +222,8 @@ endif()
 
 # --------------------------------------------------------------------
 # Add the plugin as a MODULE
-add_library(${PLUGIN_NAME} MODULE ${ImageImportPlugin_Project_SRCS})
+add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
+
 # --------------------------------------------------------------------
 # Link the plugin with other DREAM3D Libraries.
 target_link_libraries(${PLUGIN_NAME}
@@ -248,7 +248,7 @@ FindQt4Plugins("qgif;qjpeg;qtiff" "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt"
 # --------------------------------------------------------------------
 # Add a dependency on the code generation step to make sure the code is
 # generated before we try to compile the plugin
-add_dependencies(${PLUGIN_NAME} ImageImportWidgetCodeGen)
+add_dependencies(${PLUGIN_NAME} ${PLUGIN_NAME}WidgetCodeGen)
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name

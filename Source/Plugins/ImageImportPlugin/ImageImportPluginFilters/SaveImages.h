@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ImportImageStack_H_
-#define ImportImageStack_H_
+#ifndef _SaveImages_H_
+#define _SaveImages_H_
 
 #include <string>
 
@@ -45,48 +45,53 @@
 
 
 /**
- * @class ImportImageStack ImportImageStack.h ImageImport/Code/ImageImportFilters/ImportImageStack.h
+ * @class SaveImages SaveImages.h /IOFilters/SaveImages.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class ImportImageStack : public AbstractFilter
+class DREAM3DLib_EXPORT SaveImages : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ImportImageStack)
-    DREAM3D_STATIC_NEW_MACRO(ImportImageStack)
-    DREAM3D_TYPE_MACRO_SUPER(ImportImageStack, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SaveImages)
+    DREAM3D_STATIC_NEW_MACRO(SaveImages)
+    DREAM3D_TYPE_MACRO_SUPER(SaveImages, AbstractFilter)
 
-    virtual ~ImportImageStack();
+    virtual ~SaveImages();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
+    DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ColorsArrayName)
 
-
+    enum ImageFormatType
+    {
+      TifImageType = 0,
+      BmpImageType = 1,
+      PngImageType = 2,
+      JpgImageType = 3
+    };
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ImageImport"; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const std::string getHumanLabel() { return "Import Images (3D Stack)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const std::string getSubGroupName() { return "IO"; }
+    virtual const std::string getSubGroupName() { return "Output"; }
+
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const std::string getHumanLabel() { return "Write XY Slice Images"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -100,7 +105,7 @@ class ImportImageStack : public AbstractFilter
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-   /**
+    /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -111,8 +116,16 @@ class ImportImageStack : public AbstractFilter
     */
     virtual void preflight();
 
+    /**
+     * @brief saveImage This will do the actual saving of the data to an Image on the disk
+     * @param ipfColors
+     * @param slice
+     * @return
+     */
+    int saveImage(uint8_t* ipfColors, size_t slice, size_t* dims);
+
   protected:
-    ImportImageStack();
+    SaveImages();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -125,10 +138,10 @@ class ImportImageStack : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_ImageData;
+    uint8_t*  m_Colors;
 
-    ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
-    void operator=(const ImportImageStack&); // Operator '=' Not Implemented
+    SaveImages(const SaveImages&); // Copy Constructor Not Implemented
+    void operator=(const SaveImages&); // Operator '=' Not Implemented
 };
 
-#endif /* ImportImageStack_H_ */
+#endif /* _SaveImages_H_ */
