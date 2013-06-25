@@ -33,6 +33,7 @@ set(_PublicFilters
   RenameCellArray
   RenameFieldArray
   ScaleVolume
+  ConvertData
 )
 
 
