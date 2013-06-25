@@ -146,15 +146,15 @@ cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS}" "${${PLUGI
 # This section is for a Custom GUI for a Filter. We need to add the Header, Source and UI file here so that
 # they do not get auto generated during cmake and build time.
 set(${PLUGIN_NAME}_CustomWidgets_HDRS
-  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.h
+  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.h
 )
 
 set(${PLUGIN_NAME}_CustomWidgets_SRCS
-  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.cpp
+  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.cpp
 )
 
 QT4_WRAP_UI( ${PLUGIN_NAME}_Generated_UI_HDRS
-  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.ui
+  # ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}/${PLUGIN_NAME}FiltersWidgets/Q${PLUGIN_NAME}Widget.ui
 )
 
 
