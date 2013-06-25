@@ -53,6 +53,16 @@
 
 /**
  * @brief These are used in the filters to run checks on available arrays
+ * @param dc The Data Container variable
+ * @param NameSpace
+ * @param DType The type of data: CellData, FieldData....
+ * @param Name The name of the variable or constant
+ * @param ss A String Stream object
+ * @param err The default error code to be returned if something goes wrong
+ * @param ptrType The primitive type of the data
+ * @param ArrayType The Type of DataArray<T> that is used
+ * @param size The number of tuples in the array
+ * @param NumComp The number of components of the DataArray
  */
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){ \
@@ -76,6 +86,42 @@
     setErrorCondition(err##002);\
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition()); \
   }}}
+
+/**
+ * @brief These are used in the filters to run checks on available arrays
+ * @param dc The Data Container variable
+ * @param DType The type of data: CellData, FieldData....
+ * @param Name The name of the variable or constant
+ * @param ss A String Stream object
+ * @param err The default error code to be returned if something goes wrong
+ * @param ptrType The primitive type of the data
+ * @param ArrayType The Type of DataArray<T> that is used
+ * @param size The number of tuples in the array
+ * @param NumComp The number of components of the DataArray
+ */
+#define GET_PREREQ_DATA_2( dc, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
+  {if (m_##Name##ArrayName.empty() == true){ \
+    setErrorCondition(err##000);\
+    ss << "The name of the array for the " << #Name << " was empty. Please provide a name for this array" << std::endl;\
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+  }\
+  if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
+    setErrorCondition(err##001);\
+    ss.str("");\
+    ss << "An array with name '" << m_##Name##ArrayName << "'' in the " << #DType << " grouping does not exist and is required for this filter to execute." << std::endl;\
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+  }\
+  else { \
+  std::string _s(#Name); \
+  /* addRequired##DType(_s);*/\
+  m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
+  if (NULL == m_##Name ) {\
+    ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named '" << #DType << "::" << #Name  << "' for this filter."\
+    << "The preflight failed for one or more reasons. Check additional error messages for more details." << std::endl;\
+    setErrorCondition(err##002);\
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition()); \
+  }}}
+
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
   {\
