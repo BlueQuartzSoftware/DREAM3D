@@ -56,5 +56,5 @@ void ImageImportPlugin::readSettings(QSettings &prefs)
 
 }
 
-#include "ImageImportFilters/RegisterKnownFilterWidgets.cpp"
+#include "ImageImportPluginFilters/RegisterKnownFilterWidgets.cpp"
 

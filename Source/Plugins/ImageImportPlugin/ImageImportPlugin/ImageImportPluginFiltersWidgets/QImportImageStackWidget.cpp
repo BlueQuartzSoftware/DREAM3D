@@ -58,9 +58,9 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 
 // Our own plugin headers
-#include "ImageImportPlugin/ImageImportFilters/ImportImageStack.h"
+#include "ImageImportPlugin/ImageImportPluginFilters/ImportImageStack.h"
 
-#include "ImageImportPlugin/ImageImportFiltersWidgets/moc_QImportImageStackWidget.cxx"
+#include "ImageImportPlugin/ImageImportPluginFiltersWidgets/moc_QImportImageStackWidget.cxx"
 
 // -----------------------------------------------------------------------------
 //
