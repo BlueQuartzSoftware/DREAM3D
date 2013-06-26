@@ -278,6 +278,7 @@ std::string MXA_FILESYSTEM_BASE_CLASS::parentPath(const std::string &path)
 bool MXA_FILESYSTEM_BASE_CLASS::exists(const std::string &fsPath)
 {
   int error;
+  if (fsPath.empty() == true) { return false; }
   std::string dirName(MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(fsPath));
   // Both windows and OS X both don't like trailing slashes so just get rid of them
   // for all Operating Systems.
