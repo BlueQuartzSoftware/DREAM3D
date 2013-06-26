@@ -9,6 +9,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Next Release Bugs to Fix (4.2) ##
 
++ Import OrientationData GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
     - Have it pop open the Web browser to the proper file.
     - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
@@ -17,13 +18,14 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 + Update the documentation for the disorientation coloring
 + Incorrect Documentation for Find Twin Boundary Info
-+ Import OrientationData GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 + Write out Lattice Constants from EBSD data to XDMF data
 
 ## Version 4.3 Features/Bugs to Fix ##
 + Modify filter to dump Images by adding ability to dump images for XY, YZ, XZ planes to a folder.
 + Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
++ Add Filter to set Phase/Ensemble data instead of reading it from a file (Custom Gui for this one).
++ During Execution of the pipeline dim the filters except for the one that is currently running
 
 
 ### Critical to Fix Before Bad Things Happen ###
