@@ -193,11 +193,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     void initFilterListMenu();
 
-	/**
+    /**
      * @brief Creates and returns a QLabel hyperlink to the documentation of the filter that sent the PipelineMessage.
-	 * Returns NULL if either the filter class name or human label are empty.
+   * Returns NULL if either the filter class name or human label are empty.
      */
-	QLabel* createHyperlinkLabel(PipelineMessage msg);
+    QLabel* createHyperlinkLabel(PipelineMessage msg);
 
   public slots:
     void openPipelineFile(const QString& filePath);
@@ -207,13 +207,13 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void actionAddFavorite_triggered();
     void actionRemoveFavorite_triggered();
     void actionRenameFavorite_triggered();
-	void actionAppendFavorite_triggered();
-	void actionShowInFileSystem_triggered();
+    void actionAppendFavorite_triggered();
+    void actionShowInFileSystem_triggered();
     void actionFilterListHelp_triggered();
 
     void on_m_GoBtn_clicked();
-	void disableGoBtn();
-	void enableGoBtn();
+    void disableGoBtn();
+    void enableGoBtn();
 
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
@@ -225,7 +225,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     void on_filterSearch_textChanged (const QString& text);
 
-	void on_errorTableWidget_itemClicked(QTableWidgetItem* item);
+    void on_errorTableWidget_itemClicked(QTableWidgetItem* item);
 
     void on_toggleDocs_clicked();
     void on_showErrors_clicked();
@@ -260,9 +260,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QAction*                    m_actionAddFavorite;
     QAction*                    m_actionRemoveFavorite;
     QAction*                    m_actionRenameFavorite;
-	QAction*					m_actionAppendFavorite;
-	QAction*					m_actionShowInFileSystem;
-    QList<QAction*>				m_ActionList;
+    QAction*                    m_actionAppendFavorite;
+    QAction*                    m_actionShowInFileSystem;
+    QList<QAction*>             m_ActionList;
 
     QTreeWidgetItem*            m_favorites;
     QTreeWidgetItem*            m_prebuilts;
@@ -270,9 +270,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     bool                        m_hasWarnings;
     HelpDialog*                 m_HelpDialog;
 
-    QMenu						m_FilterMenu;
-    QAction*					m_actionFilterHelp;
-    QPoint						filterListPosition;
+    QMenu                       m_FilterMenu;
+    QAction*                    m_actionFilterHelp;
+    QPoint                      m_FilterListPosition;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented
