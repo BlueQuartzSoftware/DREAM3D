@@ -118,7 +118,7 @@ PipelineBuilderWidget::~PipelineBuilderWidget()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::onFilterListCustomContextMenuRequested(const QPoint& pos)
 {
-  filterListPosition = pos;
+  m_FilterListPosition = pos;
   QListWidgetItem* item = filterList->itemAt(pos);
   if(NULL != item)
   {
@@ -157,7 +157,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 
   m_actionRenameFavorite = new QAction(m_MenuPipeline);
   m_actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
-  m_actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename Favorite", 0, QApplication::UnicodeUTF8));
+  m_actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename ...", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionRenameFavorite);
   QKeySequence actionRenameFavKeySeq(Qt::CTRL + Qt::Key_R);
   m_actionRenameFavorite->setShortcut(actionRenameFavKeySeq);
@@ -166,7 +166,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 
   m_actionAppendFavorite = new QAction(m_MenuPipeline);
   m_actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
-  m_actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
+  m_actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append to Pipeline", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(m_actionAppendFavorite);
   QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
   m_actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
@@ -225,7 +225,7 @@ void PipelineBuilderWidget::setupContextualMenus()
   m_ActionList.clear();
 
   // Create prebuilt action list and add to tree
-  m_ActionList << m_actionShowInFileSystem;
+  m_ActionList << m_actionShowInFileSystem << m_actionAppendFavorite;
   filterLibraryTree->setActionList(PipelineTreeWidget::Prebuilt_Item_Type, m_ActionList);
   m_ActionList.clear();
 
@@ -520,8 +520,8 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
-	connect(m_PipelineViewWidget, SIGNAL(pipelineHasErrorsSignal()), this, SLOT(disableGoBtn()));
-	connect(m_PipelineViewWidget, SIGNAL(pipelineHasNoErrors()), this, SLOT(enableGoBtn()));
+  connect(m_PipelineViewWidget, SIGNAL(pipelineHasErrorsSignal()), this, SLOT(disableGoBtn()));
+  connect(m_PipelineViewWidget, SIGNAL(pipelineHasNoErrors()), this, SLOT(enableGoBtn()));
 
   filterLibraryTree->setEditTriggers(QAbstractItemView::SelectedClicked);
   m_hasErrors = false;
@@ -621,7 +621,7 @@ void PipelineBuilderWidget::setupGui()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::disableGoBtn()
 {
-	m_GoBtn->setEnabled(false);
+  m_GoBtn->setEnabled(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -629,7 +629,7 @@ void PipelineBuilderWidget::disableGoBtn()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::enableGoBtn()
 {
-	m_GoBtn->setEnabled(true);
+  m_GoBtn->setEnabled(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -1067,7 +1067,7 @@ void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* i
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionFilterListHelp_triggered()
 {
-  QListWidgetItem* listItem = filterList->itemAt(filterListPosition);
+  QListWidgetItem* listItem = filterList->itemAt(m_FilterListPosition);
   if (NULL == listItem) { return; }
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
 
@@ -1244,8 +1244,8 @@ void PipelineBuilderWidget::pipelineProgress(int val)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 {
-	// Create error hyperlink
-	QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
+  // Create error hyperlink
+  QLabel* hyperlinkLabel = createHyperlinkLabel(msg);
 
   QColor msgColor;
   switch(msg.getMessageType())
@@ -1265,7 +1265,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
-	  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+    QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
@@ -1276,14 +1276,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-	  if (hyperlinkLabel == NULL)
-	  {
-		  errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
-	  }
-	  else
-	  {
-		  errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-	  }
+    if (hyperlinkLabel == NULL)
+    {
+      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+    }
+    else
+    {
+      errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+    }
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1318,14 +1318,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-	  if (hyperlinkLabel == NULL)
-	  {
-		  msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
-	  }
-	  else
-	  {
-		  msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-	  }
+    if (hyperlinkLabel == NULL)
+    {
+      msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+    }
+    else
+    {
+      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+    }
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1603,23 +1603,23 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
 // -----------------------------------------------------------------------------
 QLabel* PipelineBuilderWidget::createHyperlinkLabel(PipelineMessage msg)
 {
-	QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
-	QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
-	QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+  QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
+  QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
+  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
 
-	if ( filterClassName.isEmpty() || filterHumanLabel.isEmpty() )
-	{
-		return NULL;
-	}
+  if ( filterClassName.isEmpty() || filterHumanLabel.isEmpty() )
+  {
+    return NULL;
+  }
 
-	QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
-	QString filterHTMLText("<a href=\"");
-	filterHTMLText.append(filterURL.toString()).append("\">").append(filterHumanLabel).append("</a>");
+  QUrl filterURL = DREAM3DHelpUrlGenerator::generateHTMLUrl( filterClassName.toLower() );
+  QString filterHTMLText("<a href=\"");
+  filterHTMLText.append(filterURL.toString()).append("\">").append(filterHumanLabel).append("</a>");
 
-	QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
-	hyperlinkLabel->setTextFormat(Qt::RichText);
-	hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
-	hyperlinkLabel->setOpenExternalLinks(true);
+  QLabel* hyperlinkLabel = new QLabel(filterHTMLText);
+  hyperlinkLabel->setTextFormat(Qt::RichText);
+  hyperlinkLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  hyperlinkLabel->setOpenExternalLinks(true);
 
-	return hyperlinkLabel;
+  return hyperlinkLabel;
 }
