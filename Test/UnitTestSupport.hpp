@@ -223,6 +223,13 @@ void TestFailed(const std::string &test)
 
 
 
+#define DREAM3D_RAN_OFF_EOF( L, R )\
+	if ( (L) == (R) ) {  \
+	std::stringstream ss;\
+	ss << "Your test ran off the end of the file.\n";\
+	DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
+
+
 #define DREAM3D_ENTER_TEST( test )\
   DREAM3D::unittest::CurrentMethod = #test;\
   DREAM3D::unittest::numTests++;
