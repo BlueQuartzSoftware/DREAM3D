@@ -163,6 +163,9 @@ int FileNameTest()
   ext = "";
   CheckFile(filepath, filename, ext);
 
+  exists = MXADir::exists(std::string(""));
+  DREAM3D_REQUIRE_EQUAL(exists, false);
+
   return err;
 }
 

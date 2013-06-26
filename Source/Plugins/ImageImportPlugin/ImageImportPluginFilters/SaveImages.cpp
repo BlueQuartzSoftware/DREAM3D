@@ -151,7 +151,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
   }
 
-  if (MXADir::exists(m_OutputPath) == false)
+  else if (MXADir::exists(m_OutputPath) == false)
   {
     ss.str("");
     ss <<  "The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.";
