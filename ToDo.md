@@ -15,13 +15,14 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Disable adding of filters into the pipeline while it is running.
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
-+ Create filter to dump IPF Color Maps for XY, YZ, XZ planes to a folder.
 + Update the documentation for the disorientation coloring
 + Incorrect Documentation for Find Twin Boundary Info
-+ ReadH5Ebsd GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
++ Import OrientationData GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
++ Write out Lattice Constants from EBSD data to XDMF data
 
 ## Version 4.3 Features/Bugs to Fix ##
-+ Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
++ Modify filter to dump Images by adding ability to dump images for XY, YZ, XZ planes to a folder.
++ Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 
 
@@ -60,8 +61,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Joey K. Summer List ###
 
++ Copy Pipeline from .dream3d into new .dream3d during pipeline execution
 + Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
-
 + When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
@@ -183,6 +184,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
++ Create filter to dump color images based on an RGB Array (currently only the Generate IPF Colors creates these types of arrays)
++ Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
 + Raw Binary Reader does not error out if we read off the end of the file
 + Add a filter to apply operations to the surface mesh such as moving the surface mesh in space coordinates (Verify what was written already)
 + Add Prebuilt Pipeline to generate 3 IPF Colors for 3 Orientations.
