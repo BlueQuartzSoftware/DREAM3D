@@ -33,9 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef _SurfaceMeshToStl_H_
-#define _SurfaceMeshToStl_H_
+#ifndef ImportImageStack_H_
+#define ImportImageStack_H_
 
 #include <string>
 
@@ -46,39 +45,49 @@
 
 
 /**
- * @class SurfaceMeshToStl SurfaceMeshToStl.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToStl.h
- * @brief This filter creates an STL file for each Grain ID, or Region ID that is encountered in
- * the volume.
+ * @class ImportImageStack ImportImageStack.h ImageImport/Code/ImageImportFilters/ImportImageStack.h
+ * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
+class ImportImageStack : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshToStl);
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshToStl);
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ImportImageStack)
+    DREAM3D_STATIC_NEW_MACRO(ImportImageStack)
+    DREAM3D_TYPE_MACRO_SUPER(ImportImageStack, AbstractFilter)
 
-    virtual ~SurfaceMeshToStl();
+    virtual ~ImportImageStack();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlPrefix);
+    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
+
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getGroupName() { return "ImageImport"; }
+
+    /**
+     * @brief getSubGroupName This returns the subgroup within the main group for this filter.
+     * @return
+     */
+    virtual const std::string getSubGroupName() { return "IO"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write Stl Files from SurfaceMesh"; }
+    virtual const std::string getHumanLabel() { return "Import Images (3D Stack)"; }
+
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -92,7 +101,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
 
-    /**
+   /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -104,7 +113,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     virtual void preflight();
 
   protected:
-    SurfaceMeshToStl();
+    ImportImageStack();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -117,11 +126,10 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int writeHeader(FILE* f, const std::string &header, int triCount);
-    int writeNumTrianglesToFile(const std::string &filename, int triCount);
+    uint8_t* m_ImageData;
 
-    SurfaceMeshToStl(const SurfaceMeshToStl&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshToStl&); // Operator '=' Not Implemented
+    ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
+    void operator=(const ImportImageStack&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshToStl_H_ */
+#endif /* ImportImageStack_H_ */

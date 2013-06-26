@@ -47,5 +47,5 @@ endforeach()
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
-END_FILTER_GROUP(${ExamplePlugin_BINARY_DIR} "${_filterGroupName}" "Image Import Filters")
+END_FILTER_GROUP(${ExamplePlugin_BINARY_DIR} "${_filterGroupName}" "ExamplePlugin")
 

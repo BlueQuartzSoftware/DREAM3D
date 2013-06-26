@@ -45,19 +45,19 @@
 
 namespace DREAM3D
 {
-namespace unittest
-{
-  static std::string CurrentMethod("");
-  static int numTestsPass = 0;
-  static int numTestFailed = 0;
-  static int numTests = 0;
+  namespace unittest
+  {
+    static std::string CurrentMethod("");
+    static int numTestsPass = 0;
+    static int numTestFailed = 0;
+    static int numTests = 0;
 
-  static char TestMessage[NUM_COLS + 1];
-  static const char Passed[6] = { 'P', 'A', 'S', 'S', 'E', 'D'};
-  static const char Failed[6] = { 'F', 'A', 'I', 'L', 'E', 'D'};
-  static int SizeOfPassed = 6;
-  static int SizeOfFailed = 6;
-}
+    static char TestMessage[NUM_COLS + 1];
+    static const char Passed[6] = { 'P', 'A', 'S', 'S', 'E', 'D'};
+    static const char Failed[6] = { 'F', 'A', 'I', 'L', 'E', 'D'};
+    static int SizeOfPassed = 6;
+    static int SizeOfFailed = 6;
+  }
 }
 
 
@@ -73,50 +73,91 @@ class TestException : public std::exception
     * @param file
     * @param lineNumber
     */
-     TestException(const std::string &what, const std::string &filename, int lineNumber) :
+    TestException(const std::string &what, const std::string &filename, int lineNumber) :
       m_Message(what), m_FileName(filename), m_LineNumber(lineNumber)
     {
+      updateWhat();
     }
 
     /**
     * @brief Copy Constructor
     */
-     TestException(const TestException &te)
-     {
-       m_Message = (&te)->getMessage();
-       m_FileName = te.getFilename();
-       m_LineNumber = te.getLineNumber();
-     }
+    TestException(const TestException &te)
+    {
+      m_Message = (&te)->getMessage();
+      m_FileName = te.getFileName();
+      m_LineNumber = te.getLineNumber();
+      updateWhat();
+    }
 
-     virtual ~TestException() throw() {}
+    virtual ~TestException() throw() {
+    }
 
-     /**
+    /**
      * @brief Over ride from base class
      */
-     virtual const char* what() const throw()
+    virtual const char* what() const throw()
     {
-       std::stringstream ss;
-       ss << "    Reason: " << m_Message << std::endl;
-       ss << "    File:   " << m_FileName << std::endl;
-       ss << "    Line:   " << m_LineNumber;
-       return ss.str().c_str();
-     }
+      return m_What;
+    }
 
-     DREAM3D_INSTANCE_STRING_PROPERTY(Message)
-       std::string getMessage() const { return m_Message; }
-     DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
-       std::string getFilename() const { return m_FileName; }
+    void setMessage(const std::string &m)
+    {
+      m_Message = m;
+      updateWhat();
+    }
+    std::string getMessage()
+    {
+      return m_Message;
+    }
+    std::string getMessage() const { return m_Message; }
 
-     DREAM3D_INSTANCE_PROPERTY(int, LineNumber)
-       int getLineNumber() const { return m_LineNumber; }
+    void setFileName(const std::string &fn)
+    {
+      m_FileName = fn;
+      updateWhat();
+    }
+    std::string getFileName()
+    {
+      return m_FileName;
+    }
+    std::string getFileName() const { return m_FileName; }
+
+    void setLineNumber(int ln)
+    {
+      m_LineNumber = ln;
+      updateWhat();
+    }
+    int getLineNumber()
+    {
+      return m_LineNumber;
+    }
+    int getLineNumber() const { return m_LineNumber; }
 
   protected:
-     TestException() {}
+    TestException() {
+      updateWhat();
+    }
+
+    void updateWhat()
+    {
+      std::stringstream ss;
+      ss << "    Reason: " << m_Message << std::endl;
+      ss << "    File:   " << m_FileName << std::endl;
+      ss << "    Line:   " << m_LineNumber;
+
+      ::memset(m_What, 0, 2048);
+      ::memcpy(m_What, ss.str().c_str(), ss.str().size() );
+      m_What[2047] = 0; // Make sure we NULL terminate no matter what.
+    }
 
   private:
+    std::string m_Message;
+    std::string m_FileName;
+    int m_LineNumber;
 
-
-      void operator=(const TestException&);  // Operator '=' Not Implemented
+    char m_What[2048];
+    void operator=(const TestException&);  // Operator '=' Not Implemented
 };
 
 
@@ -171,7 +212,7 @@ void TestFailed(const std::string &test)
 //
 // -----------------------------------------------------------------------------
 #define DREAM3D_TEST_THROW_EXCEPTION( P)\
-      throw TestException( P, __FILE__, __LINE__);\
+  throw TestException( P, __FILE__, __LINE__);\
 
 
 #define DREAM3D_ASSERT( P )\
@@ -179,47 +220,47 @@ void TestFailed(const std::string &test)
 
 
 #define DREAM3D_REQUIRE( P ) \
-  { \
+{ \
   bool b = (P);\
   if ( (b) == (false) ) \
-  {\
-    std::string s ("Your test required the following\n            '");\
-    s = s.append(#P).append("'\n             but this condition was not met.");\
-    DREAM3D_TEST_THROW_EXCEPTION( s )\
+{\
+  std::string s ("Your test required the following\n            '");\
+  s = s.append(#P).append("'\n             but this condition was not met.");\
+  DREAM3D_TEST_THROW_EXCEPTION( s )\
   }\
   }
 
 #define DREAM3D_REQUIRED(L, Q, R)\
-  { \
+{ \
   std::stringstream ss;\
   bool b = (L Q R);\
   if ( (b) == (false) ) \
-  {\
-    ss <<"Your test required the following\n            '";\
-    ss << #L << #Q << #R << "' but this condition was not met.\n";\
-    ss << "            " << #L << " = " << L << "\n";\
-    ss << "            " << #R << " = " << R << "\n";\
-    DREAM3D_TEST_THROW_EXCEPTION( ss.str() )\
+{\
+  ss <<"Your test required the following\n            '";\
+  ss << #L << #Q << #R << "' but this condition was not met.\n";\
+  ss << "            " << #L << " = " << L << "\n";\
+  ss << "            " << #R << " = " << R << "\n";\
+  DREAM3D_TEST_THROW_EXCEPTION( ss.str() )\
   }\
   }
 
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \
-    std::stringstream ss;\
-    ss << "Your test required the following\n            '";\
-    ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
-    ss << "             " << L << "==" << R;\
+  std::stringstream ss;\
+  ss << "Your test required the following\n            '";\
+  ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+  ss << "             " << L << "==" << R;\
   DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
 
 
 
 #define DREAM3D_REQUIRE_EQUAL( L, R) \
-    if ( (L) != (R) ) {  \
-      std::stringstream ss;\
-      ss << "Your test required the following\n            '";\
-      ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
-      ss << "             " << L << "==" << R;\
-    DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
+  if ( (L) != (R) ) {  \
+  std::stringstream ss;\
+  ss << "Your test required the following\n            '";\
+  ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
+  ss << "             " << L << "==" << R;\
+  DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
 
 
 
@@ -241,26 +282,26 @@ void TestFailed(const std::string &test)
 
 
 #define DREAM3D_REGISTER_TEST( test )\
-    try {\
-      DREAM3D_ENTER_TEST(test);\
-      test;\
-      DREAM3D_LEAVE_TEST(test)\
-    } catch (TestException& e)\
-    {\
-      TestFailed(DREAM3D::unittest::CurrentMethod);\
-      std::cout << e.what() << std::endl;\
-      err = EXIT_FAILURE;\
-    }
+  try {\
+  DREAM3D_ENTER_TEST(test);\
+  test;\
+  DREAM3D_LEAVE_TEST(test)\
+  } catch (TestException& e)\
+{\
+  TestFailed(DREAM3D::unittest::CurrentMethod);\
+  std::cout << e.what() << std::endl;\
+  err = EXIT_FAILURE;\
+  }
 
 #define PRINT_TEST_SUMMARY()\
-    std::cout << "Test Summary:" << std::endl;\
-    std::cout << "  Tests Passed: " << DREAM3D::unittest::numTestsPass << std::endl;\
-    std::cout << "  Tests Failed: " << DREAM3D::unittest::numTestFailed << std::endl;\
-    std::cout << "  Total Tests:  " << DREAM3D::unittest::numTests << std::endl;\
-    if (DREAM3D::unittest::numTestFailed > 0)\
-    {\
-      err = EXIT_FAILURE;\
-    }\
+  std::cout << "Test Summary:" << std::endl;\
+  std::cout << "  Tests Passed: " << DREAM3D::unittest::numTestsPass << std::endl;\
+  std::cout << "  Tests Failed: " << DREAM3D::unittest::numTestFailed << std::endl;\
+  std::cout << "  Total Tests:  " << DREAM3D::unittest::numTests << std::endl;\
+  if (DREAM3D::unittest::numTestFailed > 0)\
+{\
+  err = EXIT_FAILURE;\
+  }\
 
 
 

@@ -2,7 +2,7 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-set(_filterGroupName ImageImportFilters)
+set(_filterGroupName ImageImportPluginFilters)
 set(${_filterGroupName}_FILTERS_HDRS "")
 
 START_FILTER_GROUP(${ImageImportPlugin_BINARY_DIR} "${_filterGroupName}" "Image Import Filters")
@@ -13,6 +13,7 @@ START_FILTER_GROUP(${ImageImportPlugin_BINARY_DIR} "${_filterGroupName}" "Image 
 
 set(_PublicFilters
   ImportImageStack
+  SaveImages
 )
 
 
