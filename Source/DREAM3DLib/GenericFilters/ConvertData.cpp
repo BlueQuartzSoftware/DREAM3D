@@ -181,7 +181,8 @@ namespace Detail
 ConvertData::ConvertData() :
   AbstractFilter(),
   m_ScalarType(0),
-  m_OutputArrayName("")
+  m_OutputArrayName(""),
+  m_SelectedCellArrayName("")
 {
   setupFilterParameters();
 }
