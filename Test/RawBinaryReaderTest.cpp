@@ -59,6 +59,12 @@
 #define Z_DIM      1000
 #define ARRAY_SIZE  (X_DIM * Y_DIM * Z_DIM)
 
+#define RBRT_FILE_NOT_OPEN -1000
+#define RBRT_FILE_TOO_SMALL -1010
+#define RBRT_FILE_TOO_BIG  -1020
+#define RBRT_READ_EOF       -1030
+#define RBRT_NO_ERROR       0
+
 namespace Detail
 {
   enum NumType {
@@ -92,6 +98,62 @@ void RemoveTestFiles()
 #endif
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T, size_t N>
+int testLongFile(const std::string &name, int scalarType)
+{
+	int err = 0;
+	std::cout << "Testing long file: " << name << " with num comps " << N << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T, size_t N>
+int testHeaderBytes(const std::string &name, int scalarType)
+{
+	int err = 0;
+	std::cout << "Testing header bytes: " << name << " with num comps " << N << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T, size_t N>
+int testWalkingOffEOF(const std::string &name, int scalarType)
+{
+	int err = 0;
+	std::cout << "Testing walking off EOF: " << name << " with num comps " << N << std::endl;
+
+	// Part 1: Create the file
+	boost::shared_array<T> array(new T[ARRAY_SIZE * N]); // This makes sure our allocated array is deleted when we leave
+	T* ptr = array.get();
+
+	createAndWriteToFile(array, ptr, N, X_DIM-1, Y_DIM-1, Z_DIM-1);
+
+	// Part 2: Create and run a RawBinaryReader instance
+	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+	RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N);
+	filt->setVoxelDataContainer(m.get());
+	filt->preflight();
+
+	err = filt->getErrorCondition();
+	DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL);
+
+//	if ( filt->getErrorCondition() < 0 )
+	//{
+		//std::cout << "Testing walking off EOF: Preflight detected errors.  Error Code " << filt->getErrorCondition() << std::endl;
+	//}
+
+	filt->execute();
+	err = filt->getErrorCondition();
+	DREAM3D_REQUIRE_EQUAL(err, RBRT_READ_EOF);
+	// Part 3: Test the error condition from the RawBinaryReader instance
+//	DREAM3D_RAN_OFF_EOF(filt->getErrorCondition(), RBRT_READ_EOF)
+	return err;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -106,56 +168,14 @@ int testComponents(const std::string &name, int scalarType)
   // Allocate an array
   boost::shared_array<T> array(new T[ARRAY_SIZE * N]); // This makes sure our allocated array is deleted when we leave
   T* ptr = array.get();
-  // Write some data into the array
-  for(size_t i = 0; i < ARRAY_SIZE * N; ++i)
-  {
-    ptr[i] = static_cast<T>(i);
-  }
-
-  {
-    // Create the output file to dump some data into
-    FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.c_str(), "wb");
-    DREAM3D_REQUIRE(f != NULL)
-        ScopedFileMonitor monitor(f); // This makes sure the file gets closed if we go out of scope
-
-    size_t numWritten = 0;
-    while(1)
-    {
-      //std::cout << "write pass..." << std::endl;
-      numWritten += fwrite(ptr, sizeof(T), ARRAY_SIZE * N, f);
-      if (numWritten == ARRAY_SIZE * N)
-      {
-        break;
-      }
-      ptr = ptr + numWritten;
-    }
-  }
-  // Reset the pointer back to the front of the array
-  ptr = array.get();
+  
+  FILE* f = createAndWriteToFile<T>(array, ptr, N);
 
   // Now that the temp file with some data is written we need to read it back up and test for equality
   // First we need a Voxel Data Container
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
   // Now we need the filter
-  RawBinaryReader::Pointer filt = RawBinaryReader::New();
-  filt->setInputFile(UnitTest::RawBinaryReaderTest::OutputFile);
-  filt->setScalarType(scalarType);
-  filt->setEndian(Detail::Little);
-  filt->setDimensionality(3);
-  filt->setNumberOfComponents(N);
-  IntVec3Widget_t dims;
-  dims.x = X_DIM;
-  dims.y = Y_DIM;
-  dims.z = Z_DIM;
-  filt->setDimensions(dims);
-  FloatVec3Widget_t origin;
-  origin.x = origin.y = origin.z = 1.0f;
-  filt->setOrigin(origin);
-  FloatVec3Widget_t spacing;
-  spacing.x = spacing.y = spacing.z = 0.55f;
-  filt->setResolution(spacing);
-  filt->setOutputArrayName("Test_Array");
-
+  RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N);
   filt->setVoxelDataContainer(m.get());
   filt->execute();
 
@@ -181,7 +201,67 @@ int testComponents(const std::string &name, int scalarType)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void createAndWriteToFile(boost::shared_array<T> array, T* ptr, size_t N, int xDim, int yDim, int zDim)
+{
+	// Write some data into the array
+	int dimension = xDim * yDim * zDim;
+	for(size_t i = 0; i < dimension * N; ++i)
+	{
+		ptr[i] = static_cast<T>(i);
+	}
 
+	// Create the output file to dump some data into
+	FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.c_str(), "wb");
+
+	size_t numWritten = 0;
+	while(1)
+	{
+		//std::cout << "write pass..." << std::endl;
+		numWritten += fwrite(ptr, sizeof(T), dimension * N, f);
+		if (numWritten == dimension * N)
+		{
+			break;
+		}
+		ptr = ptr + numWritten;
+	}
+
+	// Reset the pointer back to the front of the array
+	ptr = array.get();
+
+	// Close the file
+	fclose(f);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+RawBinaryReader::Pointer createRawBinaryReaderFilter(int scalarType, size_t N)
+{
+	RawBinaryReader::Pointer filt = RawBinaryReader::New();
+	filt->setInputFile(UnitTest::RawBinaryReaderTest::OutputFile);
+	filt->setScalarType(scalarType);
+	filt->setEndian(Detail::Little);
+	filt->setDimensionality(3);
+	filt->setNumberOfComponents(N);
+	IntVec3Widget_t dims;
+	dims.x = X_DIM;
+	dims.y = Y_DIM;
+	dims.z = Z_DIM;
+	filt->setDimensions(dims);
+	FloatVec3Widget_t origin;
+	origin.x = origin.y = origin.z = 1.0f;
+	filt->setOrigin(origin);
+	FloatVec3Widget_t spacing;
+	spacing.x = spacing.y = spacing.z = 0.55f;
+	filt->setResolution(spacing);
+	filt->setOutputArrayName("Test_Array");
+
+	return filt;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -190,9 +270,14 @@ template<typename T>
 int testPrimitive(const std::string &name, int scalarType)
 {
   int err = 0;
-  testComponents<T, 1>(name, scalarType);
-  testComponents<T, 2>(name, scalarType);
-  testComponents<T, 3>(name, scalarType);
+  //testComponents<T, 1>(name, scalarType);
+  //testComponents<T, 2>(name, scalarType);
+  //testComponents<T, 3>(name, scalarType);
+
+  err = testWalkingOffEOF<T, 1>(name, scalarType);
+  err = testWalkingOffEOF<T, 2>(name, scalarType);
+  err = testWalkingOffEOF<T, 3>(name, scalarType);
+
   return err;
 }
 
@@ -223,6 +308,8 @@ void ReaderTest()
   testPrimitive<float>("float", Detail::Float);
   testPrimitive<double>("double", Detail::Double);
 }
+
+
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
