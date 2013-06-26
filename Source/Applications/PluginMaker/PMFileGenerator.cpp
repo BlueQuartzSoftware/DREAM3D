@@ -185,8 +185,7 @@ QString PMFileGenerator::generateFileContents() {
     QFileInfo fi( getFileName() );
     QString className = fi.baseName();
     text.replace("@ClassName@", className);
- //   text.replace( "@HTML_FILE_NAME@", getFileName() );
-
+    text.replace("@ClassNameLowerCase@", className.toLower());
   }
   return text;
 }

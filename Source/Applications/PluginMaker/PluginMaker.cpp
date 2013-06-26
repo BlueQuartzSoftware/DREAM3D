@@ -154,7 +154,7 @@ void PluginMaker::setupGui()
   cmake->setText(0, tr("CMakeLists.txt"));
   {
     pathTemplate = "@PluginName@";
-	
+
     QString resourceTemplate( generateFileSystemPath("/Template/CMakeLists.txt.in") );
     PMFileGenerator* gen = new PMFileGenerator(m_OutputDir->text(),
                                                pathTemplate,
@@ -376,43 +376,43 @@ void PluginMaker::setupGui()
 // -----------------------------------------------------------------------------
 QString PluginMaker::generateFileSystemPath(QString pathEnding)
 {
-	QString appPath = qApp->applicationDirPath();
+  QString appPath = qApp->applicationDirPath();
 
-	QDir pluginMakerDir = QDir(appPath);
+  QDir pluginMakerDir = QDir(appPath);
 
-	#if defined(Q_OS_WIN)
+  #if defined(Q_OS_WIN)
 
-	#elif defined(Q_OS_MAC)
-		if (pluginMakerDir.dirName() == "MacOS")
-		{
-			pluginMakerDir.cdUp();
-			pluginMakerDir.cdUp();
-			pluginMakerDir.cdUp();
-		}
-	#else
-		// We are on Linux - I think
-		QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
-		if (fi.exists() == false)
-		{
-			// The help file does not exist at the default location because we are probably running from the build tree.
-			// Try up one more directory
-			pluginMakerDir.cdUp();
-		}
-	#endif
+  #elif defined(Q_OS_MAC)
+    if (pluginMakerDir.dirName() == "MacOS")
+    {
+      pluginMakerDir.cdUp();
+      pluginMakerDir.cdUp();
+      pluginMakerDir.cdUp();
+    }
+  #else
+    // We are on Linux - I think
+    QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
+    if (fi.exists() == false)
+    {
+      // The help file does not exist at the default location because we are probably running from the build tree.
+      // Try up one more directory
+      pluginMakerDir.cdUp();
+    }
+  #endif
 
-	#if defined(Q_OS_WIN)
-		QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
-		if (fi.exists() == false)
-		{
-			// The help file does not exist at the default location because we are probably running from visual studio.
-			// Try up one more directory
-			pluginMakerDir.cdUp();
-		}
-	#endif
+  #if defined(Q_OS_WIN)
+    QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
+    if (fi.exists() == false)
+    {
+      // The help file does not exist at the default location because we are probably running from visual studio.
+      // Try up one more directory
+      pluginMakerDir.cdUp();
+    }
+  #endif
 
-	QString filePath = pluginMakerDir.absolutePath() + pathEnding;
-	filePath = QDir::toNativeSeparators(filePath);
-	return filePath;
+  QString filePath = pluginMakerDir.absolutePath() + pathEnding;
+  filePath = QDir::toNativeSeparators(filePath);
+  return filePath;
 }
 
 // -----------------------------------------------------------------------------
@@ -570,10 +570,10 @@ void PluginMaker::on_addFilterBtn_clicked()
     filterTitle = cleanName_filters(filterTitle);
 
     /* This simulates the user clicking on the "Add Filter" button */
-    QTreeWidgetItem* filt2cpp = new QTreeWidgetItem(F_name);
+    PMGeneratorTreeItem* filt2cpp = new PMGeneratorTreeItem(F_name);
     filt2cpp->setText(0, filterTitle + ".cpp");
     QString pathTemplate = "@PluginName@/@PluginName@Filters/";
-    QString resourceTemplate(":/Template/Filter/Filter.cpp.in");
+    QString resourceTemplate = generateFileSystemPath("/Template/Filter/Filter.cpp.in");
     PMFilterGenerator* cppgen = new PMFilterGenerator(m_OutputDir->text(),
                                                       pathTemplate,
                                                       QString(filterTitle + ".cpp"),
@@ -594,15 +594,16 @@ void PluginMaker::on_addFilterBtn_clicked()
     cppgen->setNameChangeable(false);
     QString tempPluginName = cppgen->cleanName(m_PluginName->text());
     cppgen->setPluginName(tempPluginName);
+    filt2cpp->setFileGenPtr(cppgen);
 
     //m_itemMap[filt2cpp] = cppgen;
 
 
     /* This simulates the user clicking on the "Add Filter" button */
-    QTreeWidgetItem* filt2h = new QTreeWidgetItem(F_name);
+    PMGeneratorTreeItem* filt2h = new PMGeneratorTreeItem(F_name);
     filt2h->setText(0, filterTitle + ".h");
     pathTemplate = "@PluginName@/@PluginName@Filters/";
-    resourceTemplate = ":/Template/Filter/Filter.h.in";
+    resourceTemplate = generateFileSystemPath("/Template/Filter/Filter.h.in");
     PMFilterGenerator* hgen = new PMFilterGenerator(m_OutputDir->text(),
                                                     pathTemplate,
                                                     QString(filterTitle + ".h"),
@@ -623,15 +624,16 @@ void PluginMaker::on_addFilterBtn_clicked()
     hgen->setNameChangeable(false);
     tempPluginName = hgen->cleanName(m_PluginName->text());
     hgen->setPluginName(tempPluginName);
+    filt2h->setFileGenPtr(hgen);
 
     //m_itemMap[filt2h] = hgen;
 
 
     /* This simulates the user clicking on the "Add Filter" button */
-    QTreeWidgetItem* filt2html = new QTreeWidgetItem(F_namefilters);
+    PMGeneratorTreeItem* filt2html = new PMGeneratorTreeItem(F_namefilters);
     filt2html->setText(0, filterTitle + ".md");
     pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
-    resourceTemplate = ":/Template/Documentation/Filter/Documentation.md.in";
+    resourceTemplate = generateFileSystemPath("/Template/Documentation/Filter/Documentation.md.in");
     PMFilterGenerator* htmlgen = new PMFilterGenerator(m_OutputDir->text(),
                                                        pathTemplate,
                                                        QString(filterTitle + ".md"),
@@ -652,7 +654,7 @@ void PluginMaker::on_addFilterBtn_clicked()
     htmlgen->setNameChangeable(false);
     tempPluginName = htmlgen->cleanName(m_PluginName->text());
     htmlgen->setPluginName(tempPluginName);
-
+    filt2html->setFileGenPtr(htmlgen);
     //m_itemMap[filt2html] = htmlgen;
 
 
@@ -903,7 +905,7 @@ QString PluginMaker::generateCmakeContents() {
   QString text = "";
 
   // Create SourceList File
-  
+
   QFile rfile( generateFileSystemPath("/Template/Filter/SourceList.cmake.in") );
   if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
   {
@@ -916,40 +918,4 @@ QString PluginMaker::generateCmakeContents() {
   }
   return text;
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PluginMaker::generateQrcContents() {
-  QString pluginName = m_PluginName->text();
-
-  QString htmlPathCode("@PluginName@Filters/");
-  htmlPathCode.replace("@PluginName@", pluginName);
-
-  QString htmlContents = "";
-  for (int i = 0; i < m_FilterBundles.count(); ++i)
-  {
-    PMFileGenerator* htmlGen = m_FilterBundles[i].getHTMLGenerator();
-
-    htmlContents.append("<file>").append(htmlPathCode).append(htmlGen->getFileName()).append("</file>\n");
-
-    pluginName = m_PluginName->text();
-  }
-
-  QString text = "";
-
-  // Create QRC File
-  QFile rfile2(":/Template/Documentation/FilterDocs.qrc.in");
-  if ( rfile2.open(QIODevice::ReadOnly | QIODevice::Text) )
-  {
-    QTextStream in(&rfile2);
-    text = in.readAll();
-    text.replace("@PluginName@", pluginName);
-    text.replace("@GENERATED_HTML_FILTERS_CODE@", htmlContents);
-  }
-
-  return text;
-}
-#endif
 
