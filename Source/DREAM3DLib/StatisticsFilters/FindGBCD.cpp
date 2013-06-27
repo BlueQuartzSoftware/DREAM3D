@@ -91,10 +91,6 @@ class CalculateGBCDImpl
       //DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       //DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
-      float w, n1, n2, n3;
-      float axistol = 3*m_pi/180.0;
-      float angtol = 2.0;
-
       int j;//, j4;
       int k;//, k4;
       int m;
@@ -102,7 +98,7 @@ class CalculateGBCDImpl
       int32_t gbcd_index;
       int inversion = 1;
       int grain1, grain2;
-      float g1ea1, g1ea2, g1ea3, g2ea1, g2ea2, g2ea3;
+      float g1ea[3], g2ea[3];
       float g1[3][3], g2[3][3];
       float g1s[3][3], g2s[3][3];
       float sym1[3][3], sym2[3][3];
@@ -136,16 +132,12 @@ class CalculateGBCDImpl
             }
             for(m=0; m < 3; m++)
             {
-              g1ea1 = m_Eulers[3*grain1+m];
-              g1ea2 = m_Eulers[3*grain1+m];
-              g1ea3 = m_Eulers[3*grain1+m];
-              g2ea1 = m_Eulers[3*grain2+m];
-              g2ea2 = m_Eulers[3*grain2+m];
-              g2ea3 = m_Eulers[3*grain2+m];
+              g1ea[m] = m_Eulers[3*grain1+m];
+              g2ea[m] = m_Eulers[3*grain2+m];
             }
 
-            OrientationMath::eulertoMat(g1ea1, g1ea2, g1ea3, g1);
-            OrientationMath::eulertoMat(g2ea1, g2ea2, g2ea3, g2);
+            OrientationMath::eulertoMat(g1ea[0], g1ea[1], g1ea[2], g1);
+            OrientationMath::eulertoMat(g2ea[0], g2ea[1], g2ea[2], g2);
 
             //get the crystal directions along the triangle normals
             MatrixMath::multiply3x3with3x1(g1,normal,xstl1_norm0);
@@ -154,9 +146,9 @@ class CalculateGBCDImpl
             for (j=0; j< nsym;j++)
             {
               //rotate g1 by symOp
+              m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(j, sym1);
               MatrixMath::multiply3x3with3x3(sym1,g1,g1s);
               //find symmetric crystal directions
-              m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(j, sym1);
               MatrixMath::multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
               //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
               xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
@@ -173,9 +165,13 @@ class CalculateGBCDImpl
               {
                 //calculate the symmetric misorienation
                 m_OrientationOps[m_CrystalStructures[m_Phases[grain1]]]->getMatSymOp(k, sym2);
+                //rotate g2 by symOp
                 MatrixMath::multiply3x3with3x3(sym2,g2,g2s);
+                //transpose rotated g2
                 MatrixMath::transpose3x3(g2s,g2t);
+                //calculate delta g
                 MatrixMath::multiply3x3with3x3(g1s,g2t,dg);
+                //translate matrix to euler angles
                 OrientationMath::mattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
                  
