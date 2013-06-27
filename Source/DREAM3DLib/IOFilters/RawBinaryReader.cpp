@@ -138,6 +138,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
     {
       return RBR_READ_EOF;
     }
+	// Don't read junk at the end of the file
     else if (numRead == numElements)
     {
       break;
