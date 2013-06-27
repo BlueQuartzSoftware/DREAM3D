@@ -237,7 +237,7 @@ void TestFailed(const std::string &test)
   if ( (b) == (false) ) \
 {\
   ss <<"Your test required the following\n            '";\
-  ss << #L << #Q << #R << "' but this condition was not met.\n";\
+  ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
   ss << "            " << #L << " = " << L << "\n";\
   ss << "            " << #R << " = " << R << "\n";\
   DREAM3D_TEST_THROW_EXCEPTION( ss.str() )\
@@ -262,13 +262,6 @@ void TestFailed(const std::string &test)
   ss << "             " << L << "==" << R;\
   DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
 
-
-
-#define DREAM3D_RAN_OFF_EOF( L, R )\
-	if ( (L) == (R) ) {  \
-	std::stringstream ss;\
-	ss << "Your test ran off the end of the file.\n";\
-	DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
 
 
 #define DREAM3D_ENTER_TEST( test )\
