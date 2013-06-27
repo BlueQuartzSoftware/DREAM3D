@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 
 namespace EbsdColor
 {
@@ -540,6 +541,116 @@ class EbsdColoring
       rgb[1] = static_cast<unsigned char>(_rgb[1]);
       rgb[2] = static_cast<unsigned char>(_rgb[2]);
     }
+
+    /**
+     * @brief Wrapper for convenience - Generates an RGB color based on the Inverse
+     * Pole Figure coloring for a Tetra Crystal Structure.  <b>The Reference Direction MUST be a Normalized vector for this algorithm to work correctly</b>
+     * @param eulers The euler angles which MUST be encode into the array in the following order:
+     * phi1, Phi, phi2
+     * @param refDir The Reference direction. Usually either the ND (001), RD(100), or TD(010)
+     * @param rgb A pointer to store the RGB value into
+     */
+    template<typename T, typename K>
+    static void GenerateTetraIPFColor(T* eulers, K* refDir, unsigned char* rgb)
+    {
+      EbsdColoring::GenerateTetraIPFColor<T>(eulers[0], eulers[1], eulers[2],
+          refDir[0], refDir[1], refDir[2],rgb);
+    }
+
+    /**
+     * @brief Generates an RGB color based on the Inverse Pole Figure coloring
+     * for a Tetra Crystal Structure.  <b>The Reference Direction MUST be a Normalized vector for this algorithm to work correctly</b>
+     * @param phi1 The phi1 euler Angle
+     * @param phi The Phi euler Angle
+     * @param phi2 The phi2 euler Angle
+     * @param refDir0 The first component of the Reference direction vector
+     * @param refDir1 The Second component of the Reference direction vector
+     * @param refDir2 The third component of the Reference direction vector
+     * @param rgb Output - A pointer to store the RGB value into a unsigned char[3] array.
+     */
+    template <typename T, typename K>
+    static void GenerateTetraIPFColor(T phi1, T phi, T phi2,
+                                     K refDir0, K refDir1, K refDir2,
+                                     unsigned char* rgb)
+    {
+      float qc[5];
+      float q1[5];
+      float g[3][3];
+      float p[3];
+      float refDirection[3];
+      float d[3];
+      float theta, phi_local;
+      float _rgb[3] = { 0.0, 0.0, 0.0 };
+
+      OrientationMath::eulertoQuat(q1, phi1, phi, phi2);
+
+      for (int j = 0; j < 12; j++)
+      {
+        //        q2 =  const_TetraagonalMath::Detail::TetraQuatSym[j];
+        //        OrientationMath::multiplyQuaternions(q1, q2, qc);
+        MULT_QUAT(q1, TetragonalMath::Detail::TetraQuatSym[j], qc);
+
+        OrientationMath::QuattoMat(qc, g);
+
+        refDirection[0] = refDir0;
+        refDirection[1] = refDir1;
+        refDirection[2] = refDir2;
+        MatrixMath::multiply3x3with3x1(g, refDirection, p);
+        MatrixMath::normalize3x1(p);
+
+
+        if (p[2] < 0)
+        {
+          p[0] = -p[0];
+          p[1] = -p[1];
+          p[2] = -p[2];
+        }
+        d[0] = p[0];
+        d[1] = p[1];
+        d[2] = 0;
+        MatrixMath::normalize3x1(d);
+        if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (45.0 * EbsdColor::Detail::DegToRads))
+        {
+          theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
+          if (theta > 1) theta = 1;
+
+          if (theta < -1) theta = -1;
+
+          theta = (EbsdColor::Detail::RadToDegs) * acos(theta);
+          _rgb[0] = (90.0f - theta) / 90.0f;
+          phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
+          if (phi_local > 1) phi_local = 1;
+
+          if (phi_local < -1) phi_local = -1;
+
+          phi_local = (EbsdColor::Detail::RadToDegs) * acos(phi_local);
+          _rgb[1] = (1 - _rgb[0]) * ((45.0f - phi_local) / 45.0f);
+          _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+          break;
+        }
+      }
+
+      float max = _rgb[0];
+      if (_rgb[1] > max) max = _rgb[1];
+      if (_rgb[2] > max) max = _rgb[2];
+
+      _rgb[0] = _rgb[0] / max;
+      _rgb[1] = _rgb[1] / max;
+      _rgb[2] = _rgb[2] / max;
+      _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
+      _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
+      _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
+
+      // Multiply by 255 to get an R/G/B value
+      _rgb[0] = _rgb[0] * 255.0f;
+      _rgb[1] = _rgb[1] * 255.0f;
+      _rgb[2] = _rgb[2] * 255.0f;
+
+      rgb[0] = static_cast<unsigned char>(_rgb[0]);
+      rgb[1] = static_cast<unsigned char>(_rgb[1]);
+      rgb[2] = static_cast<unsigned char>(_rgb[2]);
+    }
+
 
   protected:
     EbsdColoring() {}
