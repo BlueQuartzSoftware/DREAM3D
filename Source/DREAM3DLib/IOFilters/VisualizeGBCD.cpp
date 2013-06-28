@@ -43,6 +43,9 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
@@ -255,7 +258,8 @@ void VisualizeGBCD::execute()
   }
   
   float vec[3];
-  float trash[3];
+  float rotNormal[3];
+  float rotNormalsc[2];
   float dg[3][3];
   float dgOrig[3][3];
   float dgt[3][3];
@@ -266,6 +270,7 @@ void VisualizeGBCD::execute()
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
+  int theta, cosPhi;
 
   float mis_angle = 60;
   float misvect[3] = {1,1,1};
@@ -281,7 +286,7 @@ void VisualizeGBCD::execute()
   //set up array for x,y,z,intensity for numPhiBins*numThetaBins times 1152 symmetric misorientations
   int nchunk = m_GBCDsizes[3]*m_GBCDsizes[4];
   FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
-  xyzArray = FloatArrayType::CreateArray((nchunk*2*n_sym*n_sym), 4, "xyz");
+  xyzArray = FloatArrayType::CreateArray((nchunk), "xyz");
   xyzArray->initializeWithValues(0.0f);
   float* xyz = xyzArray->GetPointer(0);
   int counter = 0;
@@ -340,21 +345,26 @@ void VisualizeGBCD::execute()
             vec[1] = xyz_temp[4*k+1];
             vec[2] = xyz_temp[4*k+2];
             //find symmetric poles using inverted symmetry operator
-            MatrixMath::multiply3x3with3x1(sym1t, vec, trash);
+            MatrixMath::multiply3x3with3x1(sym1t, vec, rotNormal);
             if(q == 2)
             {
               //rotate symmetric pole by original misorientation
-              MatrixMath::multiply3x3with3x1(dgOrig, trash, trash);
+              MatrixMath::multiply3x3with3x1(dgOrig, rotNormal, rotNormal);
               //take negative of vector
-              trash[0] = -trash[0];
-              trash[1] = -trash[1];
-              trash[2] = -trash[2];
+              rotNormal[0] = -rotNormal[0];
+              rotNormal[1] = -rotNormal[1];
+              rotNormal[2] = -rotNormal[2];
             }
-            //store symmetric vectors and copied intensity in final x,y,z,value array
-            xyz[4*(counter*nchunk+k)] = trash[0];
-            xyz[4*(counter*nchunk+k)+1] = trash[1];
-            xyz[4*(counter*nchunk+k)+2] = trash[2];
-            xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
+            //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
+            rotNormalsc[0] = atan2f(rotNormal[1], rotNormal[0]);
+            if (rotNormalsc[0] < 0) rotNormalsc[0] += m_pi2;
+            rotNormalsc[1] = rotNormal[2];
+
+            theta = (int) floorf((rotNormalsc[0] - m_GBCDlimits[3])/m_GBCDdeltas[3]);
+            cosPhi = (int) floorf((rotNormalsc[1] - m_GBCDlimits[4])/m_GBCDdeltas[4]);
+
+            //add symmetric vector intensity to final x,y,z,value array
+            xyz[(theta+(m_GBCDsizes[3]*cosPhi))] = xyz[(theta+(m_GBCDsizes[3]*cosPhi))] + xyz_temp[4*k+3];
           }
           counter += 1;
         }
@@ -364,53 +374,76 @@ void VisualizeGBCD::execute()
 
   float x, y, z;
 
-  std::ofstream outFile;
-  std::string filename = "testGBCDViz.vtk";
-  outFile.open(filename.c_str());
-  outFile << "# vtk DataFile Version 2.0" << std::endl;
-  outFile << "DREAM3D Generated Data Set: Deformation Statistics" << std::endl;
-  outFile << "ASCII" << std::endl;
-  outFile << "DATASET UNSTRUCTURED_GRID" << std::endl;
-  outFile << "POINTS " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << " float" << std::endl;
-  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
-  {
-	x = xyz[4*k+0];
-	y = xyz[4*k+1];
-	z = xyz[4*k+2];
-	if(z >= 0)
-	{
-	  outFile << x*(1-(z/(z+1))) << " " << y*(1-(z/(z+1))) << " " << 0 << std::endl;
-	}
-	else
-	{
-	  x = -x;
-	  y = -y;
-	  z = -z;
-	  outFile << x*(1-(z/(z+1))) << " " << y*(1-(z/(z+1))) << " " << 0 << std::endl;
-	}
-  }
-  outFile << "CELLS " << m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << " " << 2*m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << std::endl;
-//  Store the Grain Ids so we don't have to re-read the triangles file again
-  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
-  {
-	  outFile << "1 " << k << std::endl;
+  std::string file = "testGBCDViz.vtk";
+  FILE* f = NULL;
+  f = fopen(file.c_str(), "wb");
+
+  int xpoints = 100;
+  int ypoints = 100;
+  int zpoints = 1;
+  int xpointshalf = xpoints/2;
+  int ypointshalf = ypoints/2;
+  float xres = 2.0/float(xpoints);
+  float yres = 2.0/float(ypoints);
+  float zres = (xres+yres)/2.0;
+
+  // Write the correct header
+  fprintf(f, "# vtk DataFile Version 2.0\n");
+  fprintf(f, "data set from DREAM3D\n");
+  fprintf(f, "BINARY"); fprintf(f, "\n");
+  fprintf(f, "DATASET RECTILINEAR_GRID\n");
+  fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints+1, ypoints+1, zpoints+1);
+
+  // Write the Coords
+  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, 0.0f - xres * 0.5f, (float)(xpoints + 1 * xres), xres);
+  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, 0.0f - yres * 0.5f, (float)(ypoints + 1 * yres), yres);
+  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, 0.0f - zres * 0.5f, (float)(zpoints + 1 * zres), zres);
+
+  size_t total = xpoints * ypoints * zpoints;
+  fprintf(f, "CELL_DATA %d\n", (int)total);
+
+  fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
+  fprintf(f, "LOOKUP_TABLE default\n");
+  { 
+    float* gn = new float[total];
+    float t;
+    int count = 0;
+    for (int64_t i = 0; i < (xpoints); i++) 
+    {
+      for (int64_t j = 0; j < (ypoints); j++) 
+      {
+        x = (i-xpointshalf)*(xres)+(xres/2.0);
+        y = (j-ypointshalf)*(yres)+(yres/2.0);
+        if((x*x+y*y) <= 1)
+        {
+          z = -((x*x+y*y)-1)/((x*x+y*y)+1);
+          x = x*(1-z);
+          y = y*(1-z);
+          rotNormalsc[0] = atan2f(y, x);
+          if (rotNormalsc[0] < 0) rotNormalsc[0] += m_pi2;
+          rotNormalsc[1] = z;
+          theta = (int) floorf((rotNormalsc[0] - m_GBCDlimits[3])/m_GBCDdeltas[3]);
+          cosPhi = (int) floorf((rotNormalsc[1] - m_GBCDlimits[4])/m_GBCDdeltas[4]);
+          t = xyz[(theta+(m_GBCDsizes[3]*cosPhi))];
+        }
+        else
+        {
+          t = 0;
+        }
+        MXA::Endian::FromSystemToBig::convert<float>(t); 
+        gn[count] = t; 
+        count++;
+      }
+    }
+    int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
+    delete[] gn;
+    if (totalWritten != (total))  {
+      std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;
+      fclose(f);
+    }
   }
 
-  // Write the CELL_TYPES into the file
-  outFile << std::endl;
-  outFile << "CELL_TYPES " << m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym << std::endl;
-  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
-  {
-	  outFile << "1" << std::endl;
-  }
-  outFile << std::endl;
-  outFile << "CELL_DATA " << (m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym) << std::endl;
-  outFile << "SCALARS Intensity float" << std::endl;
-  outFile << "LOOKUP_TABLE default" << std::endl;
-  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]*2*n_sym*n_sym);k++)
-  {
-	  outFile << xyz[4*k+3] << std::endl;
-  }
+  fclose(f);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
