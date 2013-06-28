@@ -338,7 +338,7 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, (40*20*40*40*20))
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, (60*29*60*60*29))
     }
 
   }
@@ -455,7 +455,7 @@ void FindGBCD::execute()
   m_GBCDlimits[8] = 2.0*m_pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = 9.0*m_pi/180.0;
+  float binsize = 6.0*m_pi/180.0;
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
