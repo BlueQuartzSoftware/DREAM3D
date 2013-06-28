@@ -54,9 +54,10 @@
  *
  *  testCase2: This tests when the file size is smaller than the allocated size. (Reading past the end of the file)
  *
- *	testCase3: This tests when the file size is larger than the allocated size and skipBytes == 0.
+ *	testCase3: This tests when the file size is larger than the allocated size and skipHeaderBytes == 0.
  *
- *	testCase4: This tests when the file size is larger than the allocated size and skipBytes != 0.
+ *	testCase4: This tests when the file size is larger than the allocated size and skipHeaderBytes != 0.  
+ *             Also tests when skipHeaderBytes is larger than expected.
  *
  *	testCase5: This tests when (file size + skipBytes) is equal to the allocated size.
  */
@@ -74,7 +75,6 @@
 
 #define RBRT_FILE_NOT_OPEN -1000
 #define RBRT_FILE_TOO_SMALL -1010
-#define RBRT_FILE_TOO_BIG  -1020
 #define RBRT_READ_EOF       -1030
 #define RBRT_NO_ERROR       0
 
@@ -126,16 +126,25 @@ template<typename T, size_t N>
 int testCase1_Execute(const std::string &name, int scalarType)
 {
 	int err = 0;
-	int offset = 0;
+	int dataArraySize = ARRAY_SIZE * N;
+	int junkArraySize = 0;
 	int skipHeaderBytes = 0;
 	std::cout << "Testing case 1: " << name << " with num comps " << N << std::endl;
 
 
 	// Allocate an array
-	boost::shared_array<T> array(new T[ARRAY_SIZE * N]); // This makes sure our allocated array is deleted when we leave
-	T* ptr = array.get();
+	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
+	T* dataArray = array.get();
 
-	createAndWriteToFile<T>(array, ptr, N, offset);
+	// Write some data into the data array
+	for(size_t i = 0; i < dataArraySize; ++i)
+	{
+		dataArray[i] = static_cast<T>(i);
+	}
+
+	T* junkArray = NULL;
+
+	createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::None);
 
 	// Now that the temp file with some data is written we need to read it back up and test for equality
 	// First we need a Voxel Data Container
@@ -150,10 +159,10 @@ int testCase1_Execute(const std::string &name, int scalarType)
 
 	// Now we need to compare the arrays to make sure we read up the right values
 	T d, p;
-	for(size_t i = 0; i < ARRAY_SIZE * N; ++i)
+	for(size_t i = 0; i < dataArraySize; ++i)
 	{
 		d = data[i];
-		p = ptr[i];
+		p = dataArray[i];
 		DREAM3D_REQUIRE_EQUAL(d, p)
 			//    if (d != p)
 			//    {
@@ -211,15 +220,25 @@ template<typename T, size_t N>
 int testCase2_Execute(const std::string &name, int scalarType)
 {
 	int err = 0;
-	int offset = -10;
-	int skipHeaderBytes = 0;
+	int dataArraySize = ARRAY_SIZE * N / 2;		// We don't care what is written...we just need the data array size to be less than the file size
+	int junkArraySize = 0;
+	int skipHeaderBytes = junkArraySize * sizeof(T);
 	std::cout << "Testing case 2: " << name << " with num comps " << N << std::endl;
 
 	// Part 1: Create the file
-	boost::shared_array<T> array(new T[ARRAY_SIZE * N]); // This makes sure our allocated array is deleted when we leave
+	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
 	T* ptr = array.get();
+	T* dataArray = new T[dataArraySize];
 
-	createAndWriteToFile(array, ptr, N, offset);
+	// Write some data into the data array
+	for(size_t i = 0; i < dataArraySize; ++i)
+	{
+		dataArray[i] = static_cast<T>(i);
+	}
+
+	T* junkArray = NULL;
+
+	createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::None);
 
 	// Part 2: Create and run a RawBinaryReader instance
 	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
@@ -230,18 +249,11 @@ int testCase2_Execute(const std::string &name, int scalarType)
 	err = filt->getErrorCondition();
 	DREAM3D_REQUIRED(err, !=, RBRT_FILE_TOO_SMALL);
 
-	//	if ( filt->getErrorCondition() < 0 )
-	//{
-	//std::cout << "Testing walking off EOF: Preflight detected errors.  Error Code " << filt->getErrorCondition() << std::endl;
-	//}
-
 	filt->execute();
 	err = filt->getErrorCondition();
 
 	DREAM3D_REQUIRED(err, !=, RBRT_FILE_TOO_SMALL);
 	DREAM3D_REQUIRED(err, !=, RBRT_READ_EOF);
-	// Part 3: Test the error condition from the RawBinaryReader instance
-	//	DREAM3D_RAN_OFF_EOF(filt->getErrorCondition(), RBRT_READ_EOF)
 	return err;
 }
 
@@ -282,39 +294,63 @@ void testCase2()
 	testCase2_TestPrimitives<double>("double", Detail::Double);
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T, size_t N>
 void testCase3_Execute(const std::string &name, int scalarType)
 {
-	int skipHeaderBytes = 0;
-	int offset = 100;
+	int dataArraySize = ARRAY_SIZE * N;
+	int junkArraySize = 10;
+	int skipHeaderBytes = junkArraySize * sizeof(T);
 	int err = 0;
 	std::cout << "Testing case 3: " << name << " with num comps " << N << std::endl;
 
 	// Part 1: Create the file
-	boost::shared_array<T> array(new T[ARRAY_SIZE * N]); // This makes sure our allocated array is deleted when we leave
-	T* ptr = array.get();
+	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
+	T* writtenData = array.get();
 
-	createAndWriteToFile(array, ptr, N, offset);
+	// Write some data into the data array
+	for(size_t i = 0; i < 20; ++i)
+	{
+		writtenData[i] = static_cast<T>(i);
+	}
+
+	T* junkArray = new T[junkArraySize];
+
+	// Write a pattern into the junk array
+	for(size_t i = 0; i < junkArraySize; ++i)
+	{
+		junkArray[i] = 0xAB;
+	}
+
+	createAndWriteToFile(writtenData, dataArraySize, junkArray, junkArraySize, Detail::End);
 
 	// Part 2: Create and run a RawBinaryReader instance
 	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 	RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
 	filt->setVoxelDataContainer(m.get());
+	filt->preflight();
+	err = filt->getErrorCondition();
+
+	DREAM3D_REQUIRED(err, >=, 0)
+
 	filt->execute();
 	err = filt->getErrorCondition();
 
 	DREAM3D_REQUIRED(err, >=, 0)
 
 	IDataArray::Pointer iData = m->getCellData("Test_Array");
-	T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
+	T* readData = reinterpret_cast<T*>(iData->GetVoidPointer(0));
 	T d, p;
-	for(size_t i = 0; i < ARRAY_SIZE * N; ++i)
+
+	for(size_t i = 0; i < 10; ++i)
 	{
-		d = data[i];
-		p = ptr[i];
+		d = readData[i];
+		p = writtenData[i];
+		std::cout << "Read Data: " << readData[i] << std::endl;
+		std::cout << "Written Data: " << writtenData[i] << std::endl << std::endl;
 		DREAM3D_REQUIRE_EQUAL(d, p)
 	}
 }
@@ -362,16 +398,30 @@ void testCase3()
 template<typename T, size_t N>
 void testCase4_Execute(const std::string &name, int scalarType)
 {
-	int skipHeaderBytes = 10;
-	int offset = 100;
+	int dataArraySize = ARRAY_SIZE * N;
+	int junkArraySize = 5;
+	int skipHeaderBytes = junkArraySize * sizeof(T);
 	int err = 0;
 	std::cout << "Testing case 4: " << name << " with num comps " << N << std::endl;
 
-	// Part 1: Create the file
-	boost::shared_array<T> array(new T[ARRAY_SIZE * N]); // This makes sure our allocated array is deleted when we leave
-	T* ptr = array.get();
+	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
+	T* dataArray = array.get();
 
-	createAndWriteToFile(array, ptr, N, offset);
+	// Write some data into the data array
+	for(size_t i = 0; i < dataArraySize; ++i)
+	{
+		dataArray[i] = static_cast<T>(i);
+	}
+
+	T* junkArray = new T[junkArraySize];
+
+	// Write a pattern into the junk array
+	for(size_t i = 0; i < junkArraySize; ++i)
+	{
+		junkArray[i] = 0xAB;
+	}
+
+	createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
 
 	// Part 2: Create and run a RawBinaryReader instance
 	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
@@ -381,12 +431,47 @@ void testCase4_Execute(const std::string &name, int scalarType)
 
 	err = filt->getErrorCondition();
 
-	DREAM3D_REQUIRED(err, !=, RBRT_FILE_TOO_SMALL);
+	DREAM3D_REQUIRED(err, >=, 0)
 
 	filt->execute();
 	err = filt->getErrorCondition();
 
-	DREAM3D_REQUIRED(err, !=, RBRT_READ_EOF);
+	DREAM3D_REQUIRED(err, !=, RBRT_FILE_TOO_SMALL)
+	DREAM3D_REQUIRED(err, !=, RBRT_READ_EOF)
+
+		IDataArray::Pointer iData = m->getCellData("Test_Array");
+	T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
+	T d, p;
+	for(size_t i = 0; i < dataArraySize; ++i)
+	{
+		d = data[i];
+		p = dataArray[i];
+		DREAM3D_REQUIRE_EQUAL(d, p)
+	}
+
+	// Test if the header bytes is larger than expected
+	VoxelDataContainer::Pointer m2 = VoxelDataContainer::New();
+	RawBinaryReader::Pointer filt2 = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes+1);
+	filt2->setVoxelDataContainer(m2.get());
+	filt2->preflight();
+
+	err = filt2->getErrorCondition();
+
+	DREAM3D_REQUIRED(err, <, 0)
+
+		filt2->execute();
+	err = filt2->getErrorCondition();
+
+	DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
+
+		iData = m2->getCellData("Test_Array");
+	data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
+	for(size_t i = 0; i < dataArraySize; ++i)
+	{
+		d = data[i];
+		p = dataArray[i];
+		DREAM3D_REQUIRE_EQUAL(d, p)
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -430,9 +515,9 @@ void testCase4()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t junkSize, JunkPlacement junkPlacement)
+bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t junkSize, Detail::JunkPlacement junkPlacement)
 {
-	/* Any of these combinations will return false:
+	/* Any of these combinations will return failure:
 	 *      If the junkArray has values and junkPlacement is set to NONE
 	 *      If junkArray is NULL and junkPlacement is not set to NONE
 	 *      If junkPlacement is set to an invalid value
@@ -449,7 +534,7 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
 
 	// If junkPlacement is set to START or BOTH, write junk to file
 	size_t numWritten = 0;
-	if (junkPlacement == Start || junkPlacement == Both)
+	if (junkPlacement == Detail::Start || junkPlacement == Detail::Both)
 	{
 		while(1)
 		{
@@ -475,13 +560,13 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
 		dataArray = dataArray + numWritten;
 	}
 
-	// Reset the pointer back to the front of the array, and return dataArrayFront's allocated memory
+	// Reset the pointer back to the front of the array, and set dataArrayFront to NULL
 	dataArray = dataArrayFront;
-	delete dataArrayFront;
+	dataArrayFront = NULL;
 
 	// If junkPlacement is set to END or BOTH, write junk to file
 	numWritten = 0;
-	if (junkPlacement == End || junkPlacement == Both)
+	if (junkPlacement == Detail::End || junkPlacement == Detail::Both)
 	{
 		while(1)
 		{
@@ -496,6 +581,9 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
 
 	// Close the file
 	fclose(f);
+
+	// Return successful
+	return true;
 }
 
 // -----------------------------------------------------------------------------

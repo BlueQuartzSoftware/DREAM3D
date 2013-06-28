@@ -46,7 +46,7 @@
 
 #define RBR_FILE_NOT_OPEN -1000
 #define RBR_FILE_TOO_SMALL -1010
-#define RBR_FILE_TOO_BIG  -1020
+#define RBR_FILE_TOO_BIG -1020
 #define RBR_READ_EOF       -1030
 #define RBR_NO_ERROR       0
 
@@ -448,8 +448,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
       ss.str("");
       ss << "The file size is " << fileSize << " but the number of bytes needed to fill the array is " << allocatedBytes << " which is less than the size of the file.";
       ss << " DREAM3D will read only the first part of the file into the array.";
-      setErrorCondition(RBR_FILE_TOO_BIG);
-      addWarningMessage(getHumanLabel(), ss.str(), getErrorCondition());
+      addWarningMessage(getHumanLabel(), ss.str(), RBR_FILE_TOO_BIG);
     }
 
     m->addCellData(p->GetName(), p);
@@ -587,8 +586,7 @@ void RawBinaryReader::execute()
   }
   else if (err == RBR_FILE_TOO_BIG)
   {
-    setErrorCondition(RBR_FILE_TOO_BIG);
-    notifyErrorMessage("The file size is larger than the allocated size.", getErrorCondition());
+    notifyWarningMessage("The file size is larger than the allocated size.", RBR_FILE_TOO_BIG);
   }
   else if(err == RBR_READ_EOF)
   {
