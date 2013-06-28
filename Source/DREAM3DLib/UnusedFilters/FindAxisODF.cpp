@@ -67,7 +67,15 @@ FindAxisODF::~FindAxisODF()
 {
 }
 // -----------------------------------------------------------------------------
+void FindAxisODF::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

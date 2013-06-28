@@ -84,7 +84,15 @@ void JumbleOrientations::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
 }

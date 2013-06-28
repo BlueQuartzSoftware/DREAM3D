@@ -62,7 +62,15 @@ FindBoundingBoxGrains::~FindBoundingBoxGrains()
 {
 }
 // -----------------------------------------------------------------------------
+void FindBoundingBoxGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

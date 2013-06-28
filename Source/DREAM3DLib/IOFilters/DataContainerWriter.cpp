@@ -134,7 +134,15 @@ void DataContainerWriter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteVoxelData", getWriteVoxelData() );

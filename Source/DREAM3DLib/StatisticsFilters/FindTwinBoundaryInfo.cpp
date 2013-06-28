@@ -106,7 +106,15 @@ void FindTwinBoundaryInfo::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void FindTwinBoundaryInfo::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindTwinBoundaryInfo::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("TwinBoundaryInfoFile", getTwinBoundaryInfoFile() );
   writer->writeValue("AxisTolerance", getAxisTolerance() );

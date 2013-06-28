@@ -151,7 +151,15 @@ void CropVolume::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );

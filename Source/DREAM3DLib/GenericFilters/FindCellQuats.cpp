@@ -69,7 +69,15 @@ FindCellQuats::~FindCellQuats()
 }
 
 // -----------------------------------------------------------------------------
+void FindCellQuats::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

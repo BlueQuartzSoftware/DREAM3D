@@ -105,7 +105,15 @@ void ReadOrientationData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ReadOrientationData::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("InputFile", getInputFile() );
 }

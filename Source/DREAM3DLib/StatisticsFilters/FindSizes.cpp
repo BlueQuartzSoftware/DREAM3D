@@ -73,7 +73,15 @@ void FindSizes::setupFilterParameters()
 {
 }
 // -----------------------------------------------------------------------------
+void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

@@ -112,7 +112,15 @@ void SingleThresholdCells::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SingleThresholdCells::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("ComparisonOperator", getComparisonOperator() );

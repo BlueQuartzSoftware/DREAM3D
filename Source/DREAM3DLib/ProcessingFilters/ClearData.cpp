@@ -128,7 +128,15 @@ void ClearData::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void ClearData::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );

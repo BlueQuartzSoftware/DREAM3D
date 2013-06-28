@@ -73,7 +73,15 @@ void VtkGrainIdWriter::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void VtkGrainIdWriter::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }

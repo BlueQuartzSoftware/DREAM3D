@@ -115,7 +115,15 @@ void AlignSectionsMutualInformation::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   AlignSections::writeFilterParameters(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );

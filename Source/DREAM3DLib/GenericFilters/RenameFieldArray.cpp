@@ -85,7 +85,15 @@ void RenameFieldArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RenameFieldArray::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("NewFieldArrayName", getNewFieldArrayName() );

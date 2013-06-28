@@ -120,7 +120,15 @@ void DataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );

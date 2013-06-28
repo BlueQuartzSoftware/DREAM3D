@@ -87,7 +87,15 @@ void M3CEntireVolume::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void M3CEntireVolume::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer() );
 

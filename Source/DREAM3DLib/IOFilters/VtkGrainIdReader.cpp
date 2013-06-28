@@ -93,7 +93,15 @@ void VtkGrainIdReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VtkGrainIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

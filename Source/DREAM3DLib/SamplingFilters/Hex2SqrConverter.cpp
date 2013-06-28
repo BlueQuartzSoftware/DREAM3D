@@ -87,7 +87,15 @@ void Hex2SqrConverter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void Hex2SqrConverter::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

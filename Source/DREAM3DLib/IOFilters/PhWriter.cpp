@@ -83,7 +83,15 @@ void PhWriter::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void PhWriter::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("OutputFile", getOutputFile() );
 }

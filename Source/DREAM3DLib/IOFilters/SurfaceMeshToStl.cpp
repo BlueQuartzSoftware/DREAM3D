@@ -89,7 +89,15 @@ void SurfaceMeshToStl::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
   writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );

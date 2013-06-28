@@ -112,7 +112,15 @@ void NodesTrianglesToVtk::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );

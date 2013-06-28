@@ -219,7 +219,15 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("IterationSteps", getIterationSteps());
   writer->writeValue("ConstrainNodes", getNodeConstraints());

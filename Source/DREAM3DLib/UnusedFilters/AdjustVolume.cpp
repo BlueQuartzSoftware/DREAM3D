@@ -87,7 +87,15 @@ void AdjustVolume::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void AdjustVolume::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("MaxIterations", getMaxIterations() );
 }

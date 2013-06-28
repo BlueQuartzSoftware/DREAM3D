@@ -118,7 +118,15 @@ void FindDeformationStatistics::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void FindDeformationStatistics::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("DeformationStatisticsFile", getDeformationStatisticsFile() );
   writer->writeValue("VtkOutputFile", getVtkOutputFile() );

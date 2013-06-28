@@ -73,7 +73,15 @@ EstablishMatrixPhase::~EstablishMatrixPhase()
 {
 }
 // -----------------------------------------------------------------------------
+void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

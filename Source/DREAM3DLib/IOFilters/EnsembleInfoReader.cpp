@@ -89,7 +89,15 @@ void EnsembleInfoReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("InputFile", getInputFile() );
 }

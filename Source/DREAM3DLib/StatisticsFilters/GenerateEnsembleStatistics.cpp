@@ -111,7 +111,15 @@ GenerateEnsembleStatistics::~GenerateEnsembleStatistics()
 {
 }
 // -----------------------------------------------------------------------------
+void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

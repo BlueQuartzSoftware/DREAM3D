@@ -71,7 +71,15 @@ FindMisorientations::~FindMisorientations()
 {
 }
 // -----------------------------------------------------------------------------
+void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

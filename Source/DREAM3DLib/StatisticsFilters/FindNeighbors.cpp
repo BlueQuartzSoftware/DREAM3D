@@ -70,7 +70,15 @@ FindNeighbors::~FindNeighbors()
 {
 }
 // -----------------------------------------------------------------------------
+void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

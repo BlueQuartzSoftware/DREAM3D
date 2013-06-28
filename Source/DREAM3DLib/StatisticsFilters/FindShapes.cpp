@@ -90,7 +90,15 @@ void FindShapes::setupFilterParameters()
 
 }
 // -----------------------------------------------------------------------------
+void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
 }

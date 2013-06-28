@@ -81,7 +81,15 @@ void RenumberGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RenumberGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RenumberGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

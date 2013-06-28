@@ -82,7 +82,15 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
 
 }
 // -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
 }
