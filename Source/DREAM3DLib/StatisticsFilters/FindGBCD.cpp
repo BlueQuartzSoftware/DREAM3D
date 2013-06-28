@@ -469,46 +469,65 @@ void FindGBCD::execute()
   m_GBCDsizes[3] = int((m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
   m_GBCDsizes[4] = int((m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
 
+  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t currentMillis = millis;
+  uint64_t startMillis = millis;
+  uint64_t estimatedTime = 0;
+  float timeDiff = 0.0f;
+  millis = MXA::getMilliSeconds();
+  startMillis = millis;
+  int lastIteration = 0;
+  int numIterationsPerTime = 0;
 
   float totalFaceArea = 0.0;
   int counter = 0;
+  ss.str("");
+  ss << "Calculating GBCD: 0/" << totalFaces << " Completed";
   for(size_t i=0;i<totalFaces;i=i+faceChunkSize)
   {
-    ss.str("");
-    ss << "Triangles Complete: " << i << "/" << totalFaces;
-    notifyStatusMessage(ss.str());
+
     if(getCancel() == true) return;
-	  if(i+faceChunkSize >= totalFaces)
-	  {
-		  faceChunkSize = totalFaces-i;
-	  }
-	  gbcdBinsArray->initializeWithZeros();	 
+    if(i+faceChunkSize >= totalFaces)
+    {
+      faceChunkSize = totalFaces-i;
+    }
+    gbcdBinsArray->initializeWithZeros();
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-	  if (doParallel == true)
-	  {
-		  tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
-			  CalculateGBCDImpl(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+    if (doParallel == true)
+    {
+      tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
+                        CalculateGBCDImpl(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
-	  }
-	  else
+    }
+    else
 #endif
-	  {
-		  CalculateGBCDImpl serial(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
-		  serial.generate(i, i+faceChunkSize);
-	  }
+    {
+      CalculateGBCDImpl serial(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      serial.generate(i, i+faceChunkSize);
+    }
 
     ss.str("");
-    ss << "Updating GBCD (Cycle: " << counter++ << ")";
+    ss << "Calculating GBCD: Triangles " << i << "/" << totalFaces << " Completed";
+    currentMillis = MXA::getMilliSeconds();
+    if (currentMillis - millis > 1000)
+    {
+      timeDiff = ((float)i / (float)(currentMillis - startMillis));
+      estimatedTime = (float)(totalFaces - i) / timeDiff;
+      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      millis = MXA::getMilliSeconds();
+      numIterationsPerTime = i - lastIteration;
+      lastIteration = i;
+    }
     notifyStatusMessage(ss.str());
 
-	  for(int j=0;j<faceChunkSize;j++)
-	  {
-		  for(int k=0;k<1152;k++)
-		  {
-			  m_GBCD[m_Bins[j*1152+k]] += m_SurfaceMeshFaceAreas[i+j];
-			  totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
-		  }
-	  }
+    for(int j=0;j<faceChunkSize;j++)
+    {
+      for(int k=0;k<1152;k++)
+      {
+        m_GBCD[m_Bins[j*1152+k]] += m_SurfaceMeshFaceAreas[i+j];
+        totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
+      }
+    }
   }
 
   ss.str("");
