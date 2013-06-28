@@ -59,7 +59,15 @@ QuickSolidMesh::~QuickSolidMesh()
 {
 }
 // -----------------------------------------------------------------------------
+void QuickSolidMesh::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

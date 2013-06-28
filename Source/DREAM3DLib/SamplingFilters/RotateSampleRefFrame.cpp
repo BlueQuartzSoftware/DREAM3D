@@ -202,7 +202,15 @@ void RotateSampleRefFrame::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("RotationAxis", getRotationAxis() );
   writer->writeValue("RotationAngle", getRotationAngle() );

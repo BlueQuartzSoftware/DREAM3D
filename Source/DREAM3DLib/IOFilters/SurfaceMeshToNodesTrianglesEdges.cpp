@@ -100,7 +100,15 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SurfaceMeshToNodesTrianglesEdges::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshToNodesTrianglesEdges::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("OutputNodesFile", getOutputNodesFile() );
   writer->writeValue("OutputEdgesFile", getOutputEdgesFile() );

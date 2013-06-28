@@ -117,7 +117,15 @@ void MatchCrystallography::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("MaxIterations", getMaxIterations() );
 }

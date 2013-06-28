@@ -76,7 +76,15 @@ void LinkFieldMapToCellArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void LinkFieldMapToCellArray::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("SelectedCellDataArrayName", getSelectedCellDataArrayName() );
 }

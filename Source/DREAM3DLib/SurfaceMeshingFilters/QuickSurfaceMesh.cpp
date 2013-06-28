@@ -62,7 +62,15 @@ QuickSurfaceMesh::~QuickSurfaceMesh()
 {
 }
 // -----------------------------------------------------------------------------
+void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 // -----------------------------------------------------------------------------

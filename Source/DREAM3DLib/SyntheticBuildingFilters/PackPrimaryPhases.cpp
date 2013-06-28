@@ -327,7 +327,15 @@ void PackPrimaryPhases::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->writeValue("WriteGoalAttributes", getWriteGoalAttributes() );

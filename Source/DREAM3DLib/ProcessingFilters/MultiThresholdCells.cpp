@@ -94,7 +94,15 @@ void MultiThresholdCells::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
   int numQFilters = static_cast<int>( m_ComparisonInputs.size() );

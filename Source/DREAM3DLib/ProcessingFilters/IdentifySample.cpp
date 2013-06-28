@@ -75,7 +75,15 @@ void IdentifySample::setupFilterParameters()
 
 }
 // -----------------------------------------------------------------------------
+void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
 }

@@ -95,7 +95,15 @@ void MultiThresholdFields::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void MultiThresholdFields::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
   int numQFilters = static_cast<int>( m_ComparisonInputs.size() );

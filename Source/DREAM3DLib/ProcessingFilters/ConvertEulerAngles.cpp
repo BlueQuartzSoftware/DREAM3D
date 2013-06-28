@@ -121,7 +121,15 @@ void ConvertEulerAngles::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("ConversionType", getConversionType() );
 }

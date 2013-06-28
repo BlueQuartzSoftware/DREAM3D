@@ -105,7 +105,15 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("NumberofNeighbors", getNumberOfNeighbors() );

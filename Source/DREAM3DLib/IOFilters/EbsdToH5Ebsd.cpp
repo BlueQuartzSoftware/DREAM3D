@@ -98,7 +98,15 @@ void EbsdToH5Ebsd::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

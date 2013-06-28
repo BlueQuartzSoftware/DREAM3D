@@ -89,7 +89,15 @@ void FillBadData::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
 }

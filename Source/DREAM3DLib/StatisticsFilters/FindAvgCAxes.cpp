@@ -64,7 +64,15 @@ FindAvgCAxes::~FindAvgCAxes()
 {
 }
 // -----------------------------------------------------------------------------
+void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

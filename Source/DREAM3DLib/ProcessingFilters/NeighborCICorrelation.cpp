@@ -98,7 +98,15 @@ void NeighborCICorrelation::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("MinConfidence", getMinConfidence() );
   writer->writeValue("Loop", getLoop() );

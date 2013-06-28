@@ -95,7 +95,15 @@ void FindRadialDist::setupFilterParameters()
   }
 }
 // -----------------------------------------------------------------------------
+void FindRadialDist::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("OutputFile", getOutputFile());
 }

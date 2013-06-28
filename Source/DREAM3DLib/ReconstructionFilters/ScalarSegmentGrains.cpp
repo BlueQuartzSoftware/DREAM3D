@@ -128,7 +128,15 @@ void ScalarSegmentGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("ScalarArrayName", getScalarArrayName() );
   writer->writeValue("ScalarTolerance", getScalarTolerance() );

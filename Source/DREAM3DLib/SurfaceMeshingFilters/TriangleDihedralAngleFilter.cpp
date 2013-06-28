@@ -147,7 +147,15 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */

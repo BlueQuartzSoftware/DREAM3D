@@ -85,7 +85,15 @@ void RenameCellArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );

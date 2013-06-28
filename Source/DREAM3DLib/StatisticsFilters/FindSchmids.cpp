@@ -110,7 +110,15 @@ void FindSchmids::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
+void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("XLoading", getXLoading() );
   writer->writeValue("YLoading", getYLoading() );

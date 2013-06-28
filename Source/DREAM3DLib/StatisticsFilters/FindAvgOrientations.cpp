@@ -68,7 +68,15 @@ FindAvgOrientations::~FindAvgOrientations()
 {
 }
 // -----------------------------------------------------------------------------
+void FindAvgOrientations::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

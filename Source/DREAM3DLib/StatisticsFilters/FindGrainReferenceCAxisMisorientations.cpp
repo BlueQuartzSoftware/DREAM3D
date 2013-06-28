@@ -85,7 +85,15 @@ void FindGrainReferenceCAxisMisorientations::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
+void FindGrainReferenceCAxisMisorientations::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

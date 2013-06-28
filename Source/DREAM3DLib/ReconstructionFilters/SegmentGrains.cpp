@@ -76,7 +76,15 @@ SegmentGrains::~SegmentGrains()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void SegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 }
 

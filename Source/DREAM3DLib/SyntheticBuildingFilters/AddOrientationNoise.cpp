@@ -87,7 +87,15 @@ void AddOrientationNoise::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
   writer->writeValue("Magnitude", getMagnitude() );
 }

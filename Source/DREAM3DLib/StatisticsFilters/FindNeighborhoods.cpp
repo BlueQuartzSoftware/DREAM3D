@@ -75,7 +75,15 @@ void FindNeighborhoods::setupFilterParameters()
 
 }
 // -----------------------------------------------------------------------------
+void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
 {
 
 }
