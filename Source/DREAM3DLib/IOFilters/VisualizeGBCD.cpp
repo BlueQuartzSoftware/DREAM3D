@@ -123,7 +123,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     }
     else
     {
-		GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -388, float, FloatArrayType, ensembles, (40*20*40*40*20))
+		GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -388, float, FloatArrayType, ensembles, (60*29*60*60*29))
 	}
 
   }
@@ -204,7 +204,7 @@ void VisualizeGBCD::execute()
   m_GBCDlimits[8] = 2.0*m_pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = 9.0*m_pi/180.0;
+  float binsize = 6.0*m_pi/180.0;
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
@@ -378,8 +378,8 @@ void VisualizeGBCD::execute()
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
 
-  int xpoints = 100;
-  int ypoints = 100;
+  int xpoints = 500;
+  int ypoints = 500;
   int zpoints = 1;
   int xpointshalf = xpoints/2;
   int ypointshalf = ypoints/2;
