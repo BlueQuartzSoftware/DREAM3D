@@ -71,7 +71,6 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     void setHKLDefault(bool checked);
     void setHEDMDefault(bool checked);
     void setNoTrans(bool checked);
-
     void loadEbsdData();
     void updateGraphicsView();
     void updateDisplay();
@@ -86,11 +85,9 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
   protected slots:
     void originChanged(bool checked);
 
-    void toggleHelp();
-
     void degToRagsChanged(int state);
 
-
+    void referenceDirectionChanged();
 
   private:
     QString                     m_EbsdFileName;
@@ -98,6 +95,7 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     QImage                      m_EbsdImage;
     QGraphicsPixmapItem*        m_PixmapGraphicsItem;
     int                         m_CurrentCorner;
+    QSize                       m_ImageSize;
 
 
     QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&); // Copy Constructor Not Implemented

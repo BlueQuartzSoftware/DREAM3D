@@ -317,11 +317,14 @@ int CtfReader::readFile()
 
   if (getXStep() == 0.0 || getYStep() == 0.0f )
   {
-    return -1;
+    setErrorMessage("Either the X Step or Y Step was Zero (0.0) which is NOT allowed. Please update the CTF file header with appropriate values.");
+    return -102;
   }
 
   err = readData(in);
-  if (err < 0) { return err;}
+  if (err < 0) {
+    return err;
+  }
 
   return err;
 }
@@ -390,12 +393,14 @@ int CtfReader::readData(std::ifstream &in)
       ss << "Column Header '" << tokens[i] << "' is not a recognized column for CTF Files. Please recheck your .ctf file and report this error to the DREAM3D developers.";
       setErrorMessage(ss.str());
       deletePointers();
-      return -1;
+      return -107;
     }
 
     if(m_ColumnData[i] == NULL)
     {
-      return -1; // Could not allocate the memory
+      setErrorCode(-106);
+      setErrorMessage("The CTF reader could not allocate memory for the data.");
+      return -106; // Could not allocate the memory
     }
     m_NameIndexMap[tokens[i]] = static_cast<int>(i);
     m_NamePointerMap[tokens[i]] = m_ColumnData[i];
@@ -439,8 +444,12 @@ int CtfReader::readData(std::ifstream &in)
 
   if(counter != getNumberOfElements() && in.eof() == true)
   {
-    std::cout << "Premature End Of File reached.\n" << getFileName() << "\nNumRows=" << getNumberOfElements() << "\ncounter=" << counter
+    ss.str("");
+    ss << "Premature End Of File reached.\n" << getFileName() << "\nNumRows=" << getNumberOfElements() << "\ncounter=" << counter
         << "\nTotal Data Points Read=" << counter << std::endl;
+    setErrorMessage(ss.str());
+    setErrorCode(-105);
+    return -105;
   }
   return 0;
 }

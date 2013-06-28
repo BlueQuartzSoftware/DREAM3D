@@ -687,10 +687,8 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi1));
     f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Phi2));
-    fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
-    fArray->SetNumberOfComponents(3);
+    fArray = FloatArrayType::CreateArray(totalPoints, 3, DREAM3D::CellData::EulerAngles);
     float* cellEulerAngles = fArray->GetPointer(0);
-    //int* cellPhases = iArray->GetPointer(0);
 
     for (int64_t i = 0; i < totalPoints; i++)
     {
@@ -705,7 +703,6 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ImageQuality);
-    fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::ImageQuality, fArray);
   }
@@ -714,7 +711,6 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::ConfidenceIndex);
-    fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::ConfidenceIndex, fArray);
   }
@@ -723,7 +719,6 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::SEMSignal);
-    fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::SEMSignal, fArray);
   }
@@ -732,7 +727,6 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Fit));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ang::Fit);
-    fArray->SetNumberOfComponents(1);
     ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
     m->addCellData(Ebsd::Ang::Fit, fArray);
   }

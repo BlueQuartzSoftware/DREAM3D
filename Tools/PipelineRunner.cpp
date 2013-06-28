@@ -87,7 +87,7 @@ int main (int argc, char  *argv[])
     QString filterName = QString::fromStdString((*iter).first);
     std::cout << "Writing " << filterName.toStdString() << std::endl;
     IFilterWidgetFactory::Pointer wf = (*iter).second;
-    if (NULL == wf) { return NULL;}
+    if (NULL == wf) { return EXIT_FAILURE;}
     QFilterWidget* w = wf->createWidget();
     QString filePath = QString("/tmp/") + filterName + QString(".ini");
     QSettings prefs(filePath, QSettings::IniFormat, NULL);
