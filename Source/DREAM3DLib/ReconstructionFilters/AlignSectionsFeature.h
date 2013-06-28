@@ -71,16 +71,17 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+  virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const std::string getHumanLabel() { return "Align Sections (Feature)"; }
 
     virtual void setupFilterParameters();
-//    /**
+//
+     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

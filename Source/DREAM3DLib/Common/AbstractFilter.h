@@ -48,6 +48,7 @@
 #include "DREAM3DLib/Common/SolidMeshDataContainer.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Common/AbstractFilterParametersReader.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
 
@@ -134,7 +135,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

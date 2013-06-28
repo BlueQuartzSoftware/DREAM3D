@@ -105,6 +105,21 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* reader)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer)
+
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
