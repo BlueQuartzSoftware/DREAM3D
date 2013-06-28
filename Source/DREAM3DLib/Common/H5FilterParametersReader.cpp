@@ -204,8 +204,13 @@ int H5FilterParametersReader::readValue(const std::string name, QualityMetricFil
 
   float value = f->getFieldValue();
   err = H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
-  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "FieldName", f->getFieldName());
-  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "FieldOperator", f->getFieldOperator());
+  std::string fieldName;
+  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "FieldName", fieldName);
+  f->setFieldName(fieldName);
+
+  std::string fieldOp;
+  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "FieldOperator", fieldOp);
+  f->setFieldOperator(fieldOp);
   return err;
 }
 
