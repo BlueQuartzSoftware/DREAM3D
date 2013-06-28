@@ -100,6 +100,12 @@ class ImportImageStack : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    
+    /**
+    * @brief This method will read the options from a file
+    * @param reader The reader that is used to read the options from a file
+    */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
    /**
     * @brief Reimplemented from @see AbstractFilter class

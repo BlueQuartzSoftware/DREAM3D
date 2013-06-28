@@ -120,7 +120,17 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     virtual const std::string getHumanLabel() { return "M3C Surface Meshing (Slice at a time)"; }
 
     virtual void setupFilterParameters();
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    
+    /**
+    * @brief This method will read the options from a file
+    * @param reader The reader that is used to read the options from a file
+    */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
     void execute();
 
