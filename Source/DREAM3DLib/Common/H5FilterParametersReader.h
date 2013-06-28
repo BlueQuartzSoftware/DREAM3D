@@ -57,7 +57,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
   public:
     DREAM3D_SHARED_POINTERS(H5FilterParametersReader)
     DREAM3D_STATIC_NEW_MACRO(H5FilterParametersReader)
-    DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersReader, AbstractFilterParametersWriter)
+    DREAM3D_TYPE_MACRO_SUPER(H5FilterParametersReader, AbstractFilterParametersReader)
 
 
     virtual ~H5FilterParametersReader();
@@ -67,18 +67,18 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual int openOptionsGroup(AbstractFilter* filter);
     virtual int closeOptionsGroup();
 
-    virtual int readValue(const std::string name, const std::string value);
+    virtual int readValue(const std::string name, std::string &value);
 
-    virtual int readValue(const std::string name, int8_t value);
-    virtual int readValue(const std::string name, int16_t value);
-    virtual int readValue(const std::string name, int32_t value);
-    virtual int readValue(const std::string name, int64_t value);
-    virtual int readValue(const std::string name, uint8_t value);
-    virtual int readValue(const std::string name, uint16_t value);
-    virtual int readValue(const std::string name, uint32_t value);
-    virtual int readValue(const std::string name, uint64_t value);
-    virtual int readValue(const std::string name, float value);
-    virtual int readValue(const std::string name, double value);
+    virtual int readValue(const std::string name, int8_t &value);
+    virtual int readValue(const std::string name, int16_t &value);
+    virtual int readValue(const std::string name, int32_t &value);
+    virtual int readValue(const std::string name, int64_t &value);
+    virtual int readValue(const std::string name, uint8_t &value);
+    virtual int readValue(const std::string name, uint16_t &value);
+    virtual int readValue(const std::string name, uint32_t &value);
+    virtual int readValue(const std::string name, uint64_t &value);
+    virtual int readValue(const std::string name, float &value);
+    virtual int readValue(const std::string name, double &value);
 
     virtual int readValue(const std::string name, QualityMetricFilter* f);
     virtual int readValue(const std::string name, IntVec3Widget_t v);
