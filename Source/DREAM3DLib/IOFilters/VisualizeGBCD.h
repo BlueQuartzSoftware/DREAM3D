@@ -38,6 +38,8 @@
 
 #include <string>
 
+#include "MXA/Common/MXAEndian.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
@@ -124,6 +126,41 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 
 	unsigned int* m_CrystalStructures;
     float* m_GBCD;
+
+    /**
+     * @brief This function writes a set of Axis coordinates to that are needed
+     * for a Rectilinear Grid based data set.
+     * @param f The "C" FILE* pointer to the file being written to.
+     * @param axis The name of the Axis that is being written
+     * @param type The type of primitive being written (float, int, ...)
+     * @param npoints The total number of points in the array
+     * @param min The minimum value of the axis
+     * @param max The maximum value of the axis
+     * @param step The step value between each point on the axis.
+     */
+
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float max, float step)
+    {
+      int err = 0;
+      fprintf(f, "%s %lld %s\n", axis, npoints, type);
+        float* data = new float[npoints];
+        float d;
+        for (int idx = 0; idx < npoints; ++idx)
+        {
+          d = idx * step + min;
+          MXA::Endian::FromSystemToBig::convert<float>(d);
+          data[idx] = d;
+        }
+        size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+        delete[] data;
+        if (totalWritten != static_cast<size_t>(npoints) )
+        {
+          std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+          fclose(f);
+          return -1;
+        }
+      return err;
+    }
 
     VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
