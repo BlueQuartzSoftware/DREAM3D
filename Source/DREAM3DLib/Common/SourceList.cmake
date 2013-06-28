@@ -11,6 +11,7 @@
 
 set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Constants.h
@@ -29,6 +30,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.h
@@ -64,6 +66,7 @@ set(DREAM3DLib_Common_HDRS
 
 set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.cpp
@@ -74,6 +77,7 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.cpp
