@@ -67,18 +67,18 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int openOptionsGroup(AbstractFilter* filter) = 0;
     virtual int closeOptionsGroup() = 0;
 
-    virtual int readValue(const std::string name, const std::string value) = 0;
+    virtual int readValue(const std::string name, std::string &value) = 0;
 
-    virtual int readValue(const std::string name, int8_t value) = 0;
-    virtual int readValue(const std::string name, int16_t value) = 0;
-    virtual int readValue(const std::string name, int32_t value) = 0;
-    virtual int readValue(const std::string name, int64_t value) = 0;
-    virtual int readValue(const std::string name, uint8_t value) = 0;
-    virtual int readValue(const std::string name, uint16_t value) = 0;
-    virtual int readValue(const std::string name, uint32_t value) = 0;
-    virtual int readValue(const std::string name, uint64_t value) = 0;
-    virtual int readValue(const std::string name, float value) = 0;
-    virtual int readValue(const std::string name, double value) = 0;
+    virtual int readValue(const std::string name, int8_t &value) = 0;
+    virtual int readValue(const std::string name, int16_t &value) = 0;
+    virtual int readValue(const std::string name, int32_t &value) = 0;
+    virtual int readValue(const std::string name, int64_t &value) = 0;
+    virtual int readValue(const std::string name, uint8_t &value) = 0;
+    virtual int readValue(const std::string name, uint16_t &value) = 0;
+    virtual int readValue(const std::string name, uint32_t &value) = 0;
+    virtual int readValue(const std::string name, uint64_t &value) = 0;
+    virtual int readValue(const std::string name, float &value) = 0;
+    virtual int readValue(const std::string name, double &value) = 0;
 
     virtual int readValue(const std::string name, QualityMetricFilter* f) = 0;
     virtual int readValue(const std::string name, IntVec3Widget_t v) = 0;
