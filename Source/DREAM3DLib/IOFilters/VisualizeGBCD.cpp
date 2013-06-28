@@ -262,16 +262,17 @@ void VisualizeGBCD::execute()
   float dg1[3][3];
   float dg2[3][3];
   float sym1[3][3];
+  float sym1t[3][3];
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
 
   float mis_angle = 60;
-  float misvect[3] = {-1,1,1};
+  float misvect[3] = {1,1,1};
 
   mis_angle = mis_angle * m_pi/180.0f;
 
-  //convert axis angle to quaternion representation of misorientation
+  //convert axis angle to matrix representation of misorientation
   OrientationMath::axisAngletoMat(mis_angle, misvect[0], misvect[1], misvect[2], dg);
     
   //get number of symmetry operators
@@ -285,44 +286,45 @@ void VisualizeGBCD::execute()
   float* xyz = xyzArray->GetPointer(0);
   int counter = 0;
 
-  n_sym = 1;
-  for(int q=0;q<1;q++)
+  for(int q=0;q<2;q++)
   {
-    if(q == 1)
-	{ 
-		//take inverse of misorientation, but leave in misorientation variable to use for switching symmetry
-    MatrixMath::transpose3x3(dg, dg);
-		//take inverse again of misorientation and put in original
-    MatrixMath::transpose3x3(dg, dgOrig);
-	}
+    if(q == 2)
+    { 
+      //take inverse of misorientation, but leave in misorientation variable to use for switching symmetry
+      MatrixMath::transpose3x3(dg, dg);
+      //take inverse again of misorientation and put in original
+      MatrixMath::transpose3x3(dg, dgOrig);
+    }
     for(int i=0; i<n_sym; i++)
-	{
-	  //get symmetry operator1
+    {
+      //get symmetry operator1
       m_OrientationOps[1]->getMatSymOp(i, sym1);
       MatrixMath::multiply3x3with3x3(sym1,dg,dg1);
+      //transpose sym1 for later use with normals
+      MatrixMath::transpose3x3(sym1,sym1t);
       for(int j=0; j<n_sym; j++)
-	  {
-		   //get symmetry operator2
-       m_OrientationOps[1]->getMatSymOp(j, sym2);
-       MatrixMath::transpose3x3(sym2,sym2t);
-		//calculate symmetric misorientation
-       MatrixMath::multiply3x3with3x3(dg1,sym2t,dg2);
-		//convert to euler angle
-    OrientationMath::mattoEuler(dg, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        
+      {
+        //get symmetry operator2
+        m_OrientationOps[1]->getMatSymOp(j, sym2);
+        MatrixMath::transpose3x3(sym2,sym2t);
+        //calculate symmetric misorientation
+        MatrixMath::multiply3x3with3x3(dg1,sym2t,dg2);
+        //convert to euler angle
+        OrientationMath::mattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+
         mis_euler1[1] = cosf(mis_euler1[1]);
-        
-		//find bins in GBCD
+
+        //find bins in GBCD
         int location1 = int((mis_euler1[0]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
         int location2 = int((mis_euler1[1]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
         int location3 = int((mis_euler1[2]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
         //make sure that euler angles are within the GBCD space
         if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < m_GBCDsizes[0] && location2 < m_GBCDsizes[1] && location3 < m_GBCDsizes[2])
-		{
-		  //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
+        {
+          //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
           int shift = (location1)+(location2*m_GBCDsizes[0])+(location3*m_GBCDsizes[0]*m_GBCDsizes[1]);
 
-		  //copy intensity for each phi,theta bin in 4th slot of temp cartesian x,y,z,value array
+          //copy intensity for each phi,theta bin in 4th slot of temp cartesian x,y,z,value array
           for(int k=0;k<m_GBCDsizes[4];k++)
           {
             for(int l=0;l<m_GBCDsizes[3];l++)
@@ -330,32 +332,33 @@ void VisualizeGBCD::execute()
               xyz_temp[4*(l+(m_GBCDsizes[3]*k))+3] = m_GBCD[shift+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
             }
           }
-		  for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
-		  {
-			//create vector using x,y,z for each phi,theta bin
-			vec[0] = xyz_temp[4*k];
-			vec[1] = xyz_temp[4*k+1];
-			vec[2] = xyz_temp[4*k+2];
-			//find symmetric poles using inverted symmetry operator
-      MatrixMath::multiply3x3with3x1(sym1, vec, trash);
-			if(q == 1)
-			{
-				//rotate symmetric pole by original misorientation
-        MatrixMath::multiply3x3with3x1(dgOrig, trash, trash);
-				//take negative of vector
-				trash[0] = -trash[0];
-				trash[1] = -trash[1];
-				trash[2] = -trash[2];
-			}
-			//store symmetric vectors and copied intensity in final x,y,z,value array
-			xyz[4*(counter*nchunk+k)] = trash[0];
-			xyz[4*(counter*nchunk+k)+1] = trash[1];
-			xyz[4*(counter*nchunk+k)+2] = trash[2];
-			xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
-		  }
-		  counter += 1;
-		}
-	  }
+
+          for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
+          {
+            //create vector using x,y,z for each phi,theta bin
+            vec[0] = xyz_temp[4*k];
+            vec[1] = xyz_temp[4*k+1];
+            vec[2] = xyz_temp[4*k+2];
+            //find symmetric poles using inverted symmetry operator
+            MatrixMath::multiply3x3with3x1(sym1t, vec, trash);
+            if(q == 2)
+            {
+              //rotate symmetric pole by original misorientation
+              MatrixMath::multiply3x3with3x1(dgOrig, trash, trash);
+              //take negative of vector
+              trash[0] = -trash[0];
+              trash[1] = -trash[1];
+              trash[2] = -trash[2];
+            }
+            //store symmetric vectors and copied intensity in final x,y,z,value array
+            xyz[4*(counter*nchunk+k)] = trash[0];
+            xyz[4*(counter*nchunk+k)+1] = trash[1];
+            xyz[4*(counter*nchunk+k)+2] = trash[2];
+            xyz[4*(counter*nchunk+k)+3] = xyz_temp[4*k+3];
+          }
+          counter += 1;
+        }
+      }
     }
   }
 

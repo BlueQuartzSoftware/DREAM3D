@@ -39,6 +39,61 @@
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
+
+namespace TetragonalMath {
+  namespace Detail {
+
+    static const float TetraDim1InitValue = powf((0.75f*((M_PI/4.0f)-sinf((M_PI/4.0f)))),(1.0f/3.0f));
+    static const float TetraDim2InitValue = powf((0.75f*((M_PI/4.0f)-sinf((M_PI/4.0f)))),(1.0f/3.0f));
+    static const float TetraDim3InitValue = powf((0.75f*((M_PI/2.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
+    static const float TetraDim1StepValue = TetraDim1InitValue/18.0f;
+    static const float TetraDim2StepValue = TetraDim2InitValue/18.0f;
+    static const float TetraDim3StepValue = TetraDim3InitValue/9.0f;
+
+    static const float TetraRodSym[8][3] = {{0.0f,0.0f,0.0f},
+                      {10000000000.0f,0.0f,0.0f},
+                      {0.0f,10000000000.0f,0.0f},
+                      {0.0f,0.0f,10000000000.0f},
+                      {0.0f,0.0f,-1.0f},
+                      {0.0f,0.0f,1.0f},
+                      {10000000000.0f,10000000000.0f,0.0},
+                      {-10000000000.0f,10000000000.0f,0.0}};
+
+        static const float TetraMatSym[8][3][3] = 
+             {{{1.0, 0.0, 0.0},
+              {0.0, 1.0, 0.0},
+              {0.0, 0.0, 1.0}},
+
+              {{0.0, 0.0, 1.0},
+              {0.0, 1.0, 0.0},
+              {-1.0, 0.0, 0.0}},
+
+              {{-1.0, 0.0,  0.0},
+              {0.0, 1.0,  0.0},
+              {0.0, 0.0, -1.0}},
+
+              {{-1.0,  0.0, 0.0},
+              {0.0, -1.0, 0.0},
+              {0.0,  0.0, 1.0}},
+
+              {{0.0, 1.0, 0.0},
+              {-1.0, 0.0, 0.0},
+              {0.0, 0.0, 1.0}},
+
+              {{0.0, -1.0, 0.0},	
+              {1.0,  0.0, 0.0},
+              {0.0,  0.0, 1.0}},
+
+              {{0.0, -1.0, 0.0},
+              {0.0,  0.0, 1.0},
+              {-1.0,  0.0, 0.0}},
+
+              {{0.0, -1.0,  0.0},
+              {-1.0,  0.0,  0.0},
+              {0.0,  0.0, -1.0}}};
+  }
+}
+
 const static float m_pi = (float)M_PI;
 const static float two_pi = 2.0f * m_pi;
 const static float recip_pi = 1.0f/m_pi;
@@ -48,66 +103,7 @@ const float threesixty_over_pi = 360.0f/m_pi;
 const float oneeighty_over_pi = 180.0f/m_pi;
 const float sqrt_two = powf(2.0f, 0.5f);
 
-static const float TetraDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-static const float TetraDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-static const float TetraDim3InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
-static const float TetraDim1StepValue = TetraDim1InitValue/18.0f;
-static const float TetraDim2StepValue = TetraDim2InitValue/18.0f;
-static const float TetraDim3StepValue = TetraDim3InitValue/9.0f;
-
-
-static const float TetraQuatSym[8][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
-                   {0.000000000f,1.000000000f,0.000000000f,0.000000000f,0.000000000f},
-                   {0.000000000f,0.000000000f,1.000000000f,0.000000000f,0.000000000f},
-                   {0.000000000f,0.000000000f,0.000000000f,1.000000000f,0.000000000f},
-				   {0.000000000f,0.000000000f,0.000000000f,0.707106781f,-0.707106781f},
-                   {0.000000000f,0.000000000f,0.000000000f,0.707106781f,0.707106781f},
-                   {0.000000000f,0.707106781f,0.707106781f,0.000000000f,0.000000000f},
-				   {0.000000000f,-0.707106781f,0.707106781f,0.000000000f,0.000000000f}};
-
-static const float TetraRodSym[8][3] = {{0.0f,0.0f,0.0f},
-                  {10000000000.0f,0.0f,0.0f},
-                  {0.0f,10000000000.0f,0.0f},
-                  {0.0f,0.0f,10000000000.0f},
-                  {0.0f,0.0f,-1.0f},
-                  {0.0f,0.0f,1.0f},
-                  {10000000000.0f,10000000000.0f,0.0},
-                  {-10000000000.0f,10000000000.0f,0.0}};
-
-    static const float TetraMatSym[8][3][3] = 
-         {{{1.0, 0.0, 0.0},
-          {0.0, 1.0, 0.0},
-          {0.0, 0.0, 1.0}},
-
-          {{0.0, 0.0, 1.0},
-          {0.0, 1.0, 0.0},
-          {-1.0, 0.0, 0.0}},
-
-          {{-1.0, 0.0,  0.0},
-          {0.0, 1.0,  0.0},
-          {0.0, 0.0, -1.0}},
-
-          {{-1.0,  0.0, 0.0},
-          {0.0, -1.0, 0.0},
-          {0.0,  0.0, 1.0}},
-
-          {{0.0, 1.0, 0.0},
-          {-1.0, 0.0, 0.0},
-          {0.0, 0.0, 1.0}},
-
-          {{0.0, -1.0, 0.0},	
-          {1.0,  0.0, 0.0},
-          {0.0,  0.0, 1.0}},
-
-          {{0.0, -1.0, 0.0},
-          {0.0,  0.0, 1.0},
-          {-1.0,  0.0, 0.0}},
-
-          {{0.0, -1.0,  0.0},
-          {-1.0,  0.0,  0.0},
-          {0.0,  0.0, -1.0}}};
-
-
+using namespace TetragonalMath::Detail;
 
 TetragonalOps::TetragonalOps()
 {

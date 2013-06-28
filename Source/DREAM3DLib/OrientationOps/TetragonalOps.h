@@ -40,6 +40,19 @@
 #include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 
+namespace TetragonalMath {
+  namespace Detail {
+
+    static const float TetraQuatSym[8][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
+                       {0.000000000f,1.000000000f,0.000000000f,0.000000000f,0.000000000f},
+                       {0.000000000f,0.000000000f,1.000000000f,0.000000000f,0.000000000f},
+                       {0.000000000f,0.000000000f,0.000000000f,1.000000000f,0.000000000f},
+				       {0.000000000f,0.000000000f,0.000000000f,0.707106781f,-0.707106781f},
+                       {0.000000000f,0.000000000f,0.000000000f,0.707106781f,0.707106781f},
+                       {0.000000000f,0.707106781f,0.707106781f,0.000000000f,0.000000000f},
+				       {0.000000000f,-0.707106781f,0.707106781f,0.000000000f,0.000000000f}};
+  }
+}
 /**
  * @class TetragonalOps TetragonalOps.h DREAM3DLib/Common/OrientationOps/TetragonalOps.h
  * @brief
