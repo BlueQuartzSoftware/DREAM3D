@@ -70,6 +70,12 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
      virtual const std::string getHumanLabel() { return "Find Boundary Cells"; }
 
 	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    
+    /**
+    * @brief This method will read the options from a file
+    * @param reader The reader that is used to read the options from a file
+    */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
 	virtual void execute();
      virtual void preflight();

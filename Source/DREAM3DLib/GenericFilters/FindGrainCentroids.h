@@ -71,7 +71,17 @@ class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Centroids"; }
 
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    
+    /**
+    * @brief This method will read the options from a file
+    * @param reader The reader that is used to read the options from a file
+    */
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
     virtual void execute();
     virtual void preflight();
