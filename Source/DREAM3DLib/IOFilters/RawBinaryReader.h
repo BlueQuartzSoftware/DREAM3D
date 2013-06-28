@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
     DREAM3D_INSTANCE_PROPERTY(bool, OverRideOriginResolution)
-    DREAM3D_INSTANCE_PROPERTY(int, SkipHeaderBytes)
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, SkipHeaderBytes)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 

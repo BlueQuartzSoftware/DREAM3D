@@ -64,10 +64,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ### Joey K. Summer List ###
 
 + Copy Pipeline from .dream3d into new .dream3d during pipeline execution
-+ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
-+ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
++ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
++ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
 + Create a "ExamplePlugin" that has one of every FilterParameter Type
     - Create a new Plugin called "ExamplePlugin"
     - Jackson has most of the code done.

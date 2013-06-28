@@ -526,7 +526,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
     ss.str("");
     ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    notifyErrorMessage( ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -536,7 +536,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
     ss.str("");
     ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    notifyErrorMessage( ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -552,7 +552,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
+      notifyErrorMessage(ss.str(), err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
