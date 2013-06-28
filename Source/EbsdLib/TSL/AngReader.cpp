@@ -273,7 +273,7 @@ int AngReader::readFile()
 
   if (getXStep() == 0.0 || getYStep() == 0.0f )
   {
-    return -1;
+    return -110;
   }
 
   // We need to pass in the buffer because it has the first line of data
