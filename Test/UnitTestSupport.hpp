@@ -209,16 +209,8 @@ void TestFailed(const std::string &test)
 
 
 // -----------------------------------------------------------------------------
-//
+// Developer Used Macros
 // -----------------------------------------------------------------------------
-#define DREAM3D_TEST_THROW_EXCEPTION( P)\
-  throw TestException( P, __FILE__, __LINE__);\
-
-
-#define DREAM3D_ASSERT( P )\
-  assert( (P) );
-
-
 #define DREAM3D_REQUIRE( P ) \
 { \
   bool b = (P);\
@@ -261,6 +253,20 @@ void TestFailed(const std::string &test)
   ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
   ss << "             " << L << "==" << R;\
   DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
+
+
+
+
+// -----------------------------------------------------------------------------
+// Private Macros. The Normal developer should NOT be using these.
+// -----------------------------------------------------------------------------
+#define DREAM3D_TEST_THROW_EXCEPTION( P)\
+  throw TestException( P, __FILE__, __LINE__);\
+
+
+#define DREAM3D_ASSERT( P )\
+  assert( (P) );
+
 
 
 
