@@ -48,8 +48,8 @@ class AbstractFilter;
 class QualityMetricFilter;
 
 /**
- * @class AbstractFilterParametersWriter AbstractFilterParametersWriter.h DREAM3DLib/Common/AbstractFilterParametersWriter.h
- * @brief This class writes the various parameters of a filter to an output file
+ * @class AbstractFilterParametersReader AbstractFilterParametersReader.h DREAM3DLib/Common/AbstractFilterParametersReader.h
+ * @brief This class reads the various parameters of a filter
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 17, 2012
  * @version 1.0
@@ -84,6 +84,25 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int readValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual int readValue(const std::string name, FloatVec3Widget_t v) = 0;
     virtual int readValue(const std::string name, ComparisonInput_t v) = 0;
+
+
+	virtual int setStringValue(std::string value, std::string type) = 0;
+
+	virtual int setInt8Value(int8_t value, std::string type) = 0;
+	virtual int setInt16Value(int16_t value, std::string type) = 0;
+	virtual int setInt32Value(int32_t value, std::string type) = 0;
+	virtual int setInt64Value(int64_t value, std::string type) = 0;
+	virtual int setUInt8Value(uint8_t value, std::string type) = 0;
+	virtual int setUInt16Value(uint16_t value, std::string type) = 0;
+	virtual int setUInt32Value(uint32_t value, std::string type) = 0;
+	virtual int setUInt64Value(uint64_t value, std::string type) = 0;
+	virtual int setFloatValue(float value, std::string type) = 0;
+	virtual int setDoubleValue(double value, std::string type) = 0;
+
+	virtual int setQualityMetricFilter(QualityMetricFilter* value, std::string type) = 0;
+	virtual int setIntVec3Widget(IntVec3Widget_t value, std::string type) = 0;
+	virtual int setFloatVec3Widget(FloatVec3Widget_t value, std::string type) = 0;
+	virtual int setComparisonInput(ComparisonInput_t value, std::string type) = 0;
 
   protected:
     AbstractFilterParametersReader();

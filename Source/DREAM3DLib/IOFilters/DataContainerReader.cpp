@@ -122,6 +122,7 @@ void DataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+
 }
 
 // -----------------------------------------------------------------------------

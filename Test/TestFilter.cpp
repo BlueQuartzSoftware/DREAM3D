@@ -249,7 +249,7 @@ void TestFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 {
-
+	
 }
 
 // -----------------------------------------------------------------------------

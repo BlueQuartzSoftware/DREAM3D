@@ -85,6 +85,24 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual int readValue(const std::string name, FloatVec3Widget_t v);
     virtual int readValue(const std::string name, ComparisonInput_t v);
 
+	virtual int setStringValue(std::string value, std::string name);
+
+	virtual int setInt8Value(int8_t value, std::string name);
+	virtual int setInt16Value(int16_t value, std::string name);
+	virtual int setInt32Value(int32_t value, std::string name);
+	virtual int setInt64Value(int64_t value, std::string name);
+	virtual int setUInt8Value(uint8_t value, std::string name);
+	virtual int setUInt16Value(uint16_t value, std::string name);
+	virtual int setUInt32Value(uint32_t value, std::string name);
+	virtual int setUInt64Value(uint64_t value, std::string name);
+	virtual int setFloatValue(float value, std::string name);
+	virtual int setDoubleValue(double value, std::string name);
+
+	virtual int setQualityMetricFilter(QualityMetricFilter* value, std::string name);
+	virtual int setIntVec3Widget(IntVec3Widget_t value, std::string name);
+	virtual int setFloatVec3Widget(FloatVec3Widget_t value, std::string name);
+	virtual int setComparisonInput(ComparisonInput_t value, std::string name);
+
   protected:
     H5FilterParametersReader();
 
