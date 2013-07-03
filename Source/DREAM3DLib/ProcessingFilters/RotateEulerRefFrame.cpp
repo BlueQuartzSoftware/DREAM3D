@@ -84,6 +84,7 @@ class RotateEulerRefFrameImpl
         OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
         m_CellEulerAngles[3*i+0] = ea1new;
         m_CellEulerAngles[3*i+1] = ea2new;
+
         m_CellEulerAngles[3*i+2] = ea3new;
       }
     }
@@ -203,6 +204,7 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
+  m_RotationAngle = m_RotationAngle*m_pi/180.0;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
