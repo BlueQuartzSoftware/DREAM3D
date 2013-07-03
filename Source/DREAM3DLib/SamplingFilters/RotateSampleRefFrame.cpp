@@ -78,10 +78,12 @@ class RotateSampleRefFrameImpl
     DataArray<int64_t>::Pointer newIndicesPtr;
     RotateSampleRefFrameImplArg_t*  m_params;
     float rotMatrixInv[3][3];
+    bool m_sliceBySlice;
 
   public:
-    RotateSampleRefFrameImpl(DataArray<int64_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3]) :
+    RotateSampleRefFrameImpl(DataArray<int64_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3], bool sliceBySlice) :
       newIndicesPtr(newindices),
+      m_sliceBySlice(sliceBySlice),
       m_params(args)
     {
       // We have to inline the 3x3 Maxtrix transpose here because of the "const" nature of the 'convert' function
@@ -108,8 +110,6 @@ class RotateSampleRefFrameImpl
       float coordsNew[3];
       size_t colOld, rowOld, planeOld;
 
-      //MatrixMath::transpose3x3(rotMatrix, rotMatrixInv);
-
       for (size_t k = zStart; k < zEnd; k++)
       {
         ktot = (m_params->xpNew*m_params->ypNew)*k;
@@ -129,6 +129,7 @@ class RotateSampleRefFrameImpl
             colOld = coordsNew[0]/m_params->xRes;
             rowOld = coordsNew[1]/m_params->yRes;
             planeOld = coordsNew[2]/m_params->zRes;
+            if(m_sliceBySlice == true) planeOld = k;
             if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
             {
               newindicies[index] = (m_params->xp*m_params->yp*planeOld)+(m_params->xp*rowOld)+colOld;
@@ -155,6 +156,7 @@ class RotateSampleRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
+  m_sliceBySlice(false),
   m_RotationAngle(0.0)
 {
   m_RotationAxis.x = 0.0;
@@ -447,12 +449,12 @@ void RotateSampleRefFrame::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range3d<size_t, size_t, size_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew),
-                      RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat), tbb::auto_partitioner());
+                      RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat, m_sliceBySlice), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat);
+    RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat, m_sliceBySlice);
     serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
   }
 
