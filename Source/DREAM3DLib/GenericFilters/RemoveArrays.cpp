@@ -124,6 +124,14 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       sm->removeEdgeData(*iter);
     }
+    for(NameList_t::iterator iter = m_SelectedSurfaceMeshFieldArrays.begin(); iter != m_SelectedSurfaceMeshFieldArrays.end(); ++iter)
+    {
+      sm->removeFieldData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedSurfaceMeshEnsembleArrays.begin(); iter != m_SelectedSurfaceMeshEnsembleArrays.end(); ++iter)
+    {
+      sm->removeEnsembleData(*iter);
+    }
   }
 
   SolidMeshDataContainer* sol = getSolidMeshDataContainer();
@@ -193,12 +201,16 @@ void RemoveArrays::setVoxelSelectedArrayNames(std::set<std::string> selectedCell
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                     std::set<std::string> selectedFaceArrays,
-                                                     std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------

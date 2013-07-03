@@ -111,10 +111,17 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,   std::set<std::string> selectedFieldArrays, std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,   std::set<std::string> selectedFaceArrays, std::set<std::string> selectedEdgeArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,   std::set<std::string> selectedFaceArrays, std::set<std::string> selectedEdgeArrays);
-
+    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+                                            std::set<std::string> selectedFieldArrays,
+                                            std::set<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                std::set<std::string> selectedFaceArrays,
+                                                std::set<std::string> selectedEdgeArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
