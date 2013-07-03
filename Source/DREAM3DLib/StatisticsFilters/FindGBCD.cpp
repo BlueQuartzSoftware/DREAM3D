@@ -348,48 +348,7 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
-      FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
-      FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
-      Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
-      gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
-      gbcdDeltasArray->SetNumberOfComponents(1);
-      gbcdDeltasArray->initializeWithZeros();
-      gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
-      gbcdLimitsArray->SetNumberOfComponents(1);
-      gbcdLimitsArray->initializeWithZeros();
-      gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
-      gbcdSizesArray->SetNumberOfComponents(1);
-      gbcdSizesArray->initializeWithZeros();
-      float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
-      int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
-      float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
-
-      m_GBCDlimits[0] = 0.0;
-      m_GBCDlimits[1] = cosf(1.0*m_pi);
-      m_GBCDlimits[2] = 0.0;
-      m_GBCDlimits[3] = 0.0;
-      m_GBCDlimits[4] = cosf(1.0*m_pi);
-      m_GBCDlimits[5] = 2.0*m_pi;
-      m_GBCDlimits[6] = cosf(0.0);
-      m_GBCDlimits[7] = 2.0*m_pi;
-      m_GBCDlimits[8] = 2.0*m_pi;
-      m_GBCDlimits[9] = cosf(0.0);
-
-      float binsize = m_GBCDRes*m_pi/180.0;
-      float binsize2 = binsize*(2.0/m_pi);
-      m_GBCDdeltas[0] = binsize;
-      m_GBCDdeltas[1] = binsize2;
-      m_GBCDdeltas[2] = binsize;
-      m_GBCDdeltas[3] = binsize;
-      m_GBCDdeltas[4] = binsize2;
-
-      m_GBCDsizes[0] = int(0.5+(m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
-      m_GBCDsizes[1] = int(0.5+(m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
-      m_GBCDsizes[2] = int(0.5+(m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
-      m_GBCDsizes[3] = int(0.5+(m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
-      m_GBCDsizes[4] = int(0.5+(m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
-
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, (m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]))
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, 1)
     }
 
   }
@@ -519,6 +478,8 @@ void FindGBCD::execute()
   m_GBCDsizes[2] = int(0.5+(m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
   m_GBCDsizes[3] = int(0.5+(m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
   m_GBCDsizes[4] = int(0.5+(m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
+
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4])
 
   uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
