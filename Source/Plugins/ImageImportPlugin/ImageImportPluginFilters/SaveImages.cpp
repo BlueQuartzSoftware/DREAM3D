@@ -268,7 +268,7 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
      for(size_t x = 0; x < dims[0]; ++x)
     {
       #if defined (CMP_WORDS_BIGENDIAN)
-        ipfColors
+        #error
       #else
         scanLine[x*4 + 3] = 0xFF;
         index = y * dims[0] * 3 + x * 3;

@@ -462,7 +462,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std:
   herr_t err = 0;
   herr_t retErr = 0;
   hsize_t size;
-
+  data.clear();
   did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
     std::cout << "Error Opening Dataset" << std::endl;
