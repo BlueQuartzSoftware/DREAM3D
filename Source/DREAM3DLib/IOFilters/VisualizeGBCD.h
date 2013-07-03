@@ -67,10 +67,9 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
-    DREAM3D_INSTANCE_PROPERTY(float, misAngle)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, misAxis)
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
     /**
@@ -126,7 +125,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
   private:
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
-	unsigned int* m_CrystalStructures;
+  unsigned int* m_CrystalStructures;
     float* m_GBCD;
 
     /**

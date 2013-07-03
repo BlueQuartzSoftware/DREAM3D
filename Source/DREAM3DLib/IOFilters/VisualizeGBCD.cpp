@@ -60,6 +60,7 @@ VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_OutputFile("GBCD_PoleFigure.vtk"),
   m_CrystalStructures(NULL),
   m_GBCD(NULL)
 {
@@ -82,7 +83,7 @@ void VisualizeGBCD::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("misAngle");
+    option->setPropertyName("MisAngle");
     option->setHumanLabel("Misorientation Angle");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
@@ -94,10 +95,20 @@ void VisualizeGBCD::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
 
     option->setHumanLabel("Misorientation Axis");
-    option->setPropertyName("misAxis");
+    option->setPropertyName("MisAxis");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
     option->setUnits("");
+    parameters.push_back(option);
+  }
+    {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output File");
+    option->setPropertyName("OutputFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setFileExtension("*.vtk");
+    option->setFileType("VTK File");
+    option->setValueType("string");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -108,8 +119,9 @@ void VisualizeGBCD::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("MisorientationAngle", getmisAngle() );
-  writer->writeValue("MisorientationAxis", getmisAxis() );
+  writer->writeValue("MisorientationAngle", getMisAngle() );
+  writer->writeValue("MisorientationAxis", getMisAxis() );
+  writer->writeValue("OutputFile", getOutputFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -120,6 +132,18 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
   setErrorCondition(0);
   std::stringstream ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+
+    if(getOutputFile().empty() == true)
+  {
+    ss.str("");
+    ss << ClassName() << " needs the Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-387);
+  }
+
+
+
+
   if(NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
@@ -145,7 +169,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       IDataArray::Pointer iDataArray = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD);
       int numComp = iDataArray->GetNumberOfComponents();
       GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, float, FloatArrayType, ensembles, numComp)
-	  }
+    }
   }
 }
 
@@ -197,52 +221,49 @@ void VisualizeGBCD::execute()
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumEnsembleTuples());
 
-  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
-  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
-  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
-  gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
-  gbcdDeltasArray->SetNumberOfComponents(1);
+  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();
-  gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
-  gbcdLimitsArray->SetNumberOfComponents(1);
-  gbcdLimitsArray->initializeWithZeros();
-  gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
-  gbcdSizesArray->SetNumberOfComponents(1);
-  gbcdSizesArray->initializeWithZeros();
-  float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
-  int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
-  float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
 
-  m_GBCDlimits[0] = 0.0;
-  m_GBCDlimits[1] = cosf(1.0*m_pi);
-  m_GBCDlimits[2] = 0.0;
-  m_GBCDlimits[3] = 0.0;
-  m_GBCDlimits[4] = cosf(1.0*m_pi);
-  m_GBCDlimits[5] = 2.0*m_pi;
-  m_GBCDlimits[6] = cosf(0.0);
-  m_GBCDlimits[7] = 2.0*m_pi;
-  m_GBCDlimits[8] = 2.0*m_pi;
-  m_GBCDlimits[9] = cosf(0.0);
+  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+  gbcdLimitsArray->initializeWithZeros();
+
+  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+  gbcdSizesArray->initializeWithZeros();
+
+  float* gbcdDeltas = gbcdDeltasArray->GetPointer(0);
+  int* gbcdSizes = gbcdSizesArray->GetPointer(0);
+  float* gbcdLimits = gbcdLimitsArray->GetPointer(0);
+
+  gbcdLimits[0] = 0.0;
+  gbcdLimits[1] = cosf(1.0*m_pi);
+  gbcdLimits[2] = 0.0;
+  gbcdLimits[3] = 0.0;
+  gbcdLimits[4] = cosf(1.0*m_pi);
+  gbcdLimits[5] = 2.0*m_pi;
+  gbcdLimits[6] = cosf(0.0);
+  gbcdLimits[7] = 2.0*m_pi;
+  gbcdLimits[8] = 2.0*m_pi;
+  gbcdLimits[9] = cosf(0.0);
 
   //get num components of GBCD
   int numComp = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD)->GetNumberOfComponents();
   //determine the size of the 1,3,4 dimensions of the GBCD - 2,4 are dim/1.5
   int dim = int(pow((numComp/(2.0*2.0*2.0)),(1.0/5.0))+0.5);
 
-  m_GBCDsizes[0] = dim*2;
-  m_GBCDsizes[1] = dim;
-  m_GBCDsizes[2] = dim*2;
-  m_GBCDsizes[3] = dim*2;
-  m_GBCDsizes[4] = dim;
+  gbcdSizes[0] = dim*2;
+  gbcdSizes[1] = dim;
+  gbcdSizes[2] = dim*2;
+  gbcdSizes[3] = dim*2;
+  gbcdSizes[4] = dim;
 
-  float binsize = m_GBCDlimits[5]/float(m_GBCDsizes[0]);
+  float binsize = gbcdLimits[5]/float(gbcdSizes[0]);
   float binsize2 = binsize*(2.0/m_pi);
-  m_GBCDdeltas[0] = binsize;
-  m_GBCDdeltas[1] = binsize2;
-  m_GBCDdeltas[2] = binsize;
-  m_GBCDdeltas[3] = binsize;
-  m_GBCDdeltas[4] = binsize2;
-  
+  gbcdDeltas[0] = binsize;
+  gbcdDeltas[1] = binsize2;
+  gbcdDeltas[2] = binsize;
+  gbcdDeltas[3] = binsize;
+  gbcdDeltas[4] = binsize2;
+
   float vec[3];
   float rotNormal[3];
   float rotNormal2[3];
@@ -259,12 +280,12 @@ void VisualizeGBCD::execute()
   float qtest[5];
   float w, n1, n2, n3;
   float dist;
-  float theta, cosPhi, phi;  
+  float theta, cosPhi, phi;
 
-  m_misAngle = m_misAngle * m_pi/180.0f;
+  m_MisAngle = m_MisAngle * m_pi/180.0f;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath::axisAngletoMat(m_misAngle, m_misAxis.x, m_misAxis.y, m_misAxis.z, dg);
-  
+  OrientationMath::axisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
+
   int inversion = 1;
   //get number of symmetry operators
   int n_sym = m_OrientationOps[1]->getNumSymOps();
@@ -286,27 +307,27 @@ void VisualizeGBCD::execute()
   float* poleFigure = poleFigureArray->GetPointer(0);
 
   FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
-  xyzArray = FloatArrayType::CreateArray(m_GBCDsizes[3]*m_GBCDsizes[4], 3, "xyz");
+  xyzArray = FloatArrayType::CreateArray(gbcdSizes[3]*gbcdSizes[4], 3, "xyz");
   xyzArray->initializeWithValues(0.0);
   float* xyz = xyzArray->GetPointer(0);
 
-  for (int64_t k = 0; k < (m_GBCDsizes[3]); k++) 
+  for (int64_t k = 0; k < (gbcdSizes[3]); k++)
   {
-    for (int64_t l = 0; l < (m_GBCDsizes[4]); l++) 
+    for (int64_t l = 0; l < (gbcdSizes[4]); l++)
     {
-      theta = float(k)*m_GBCDdeltas[3]+m_GBCDlimits[3]+(m_GBCDdeltas[3]/2.0);
-      cosPhi = float(l)*m_GBCDdeltas[4]+m_GBCDlimits[4]+(m_GBCDdeltas[4]/2.0);
+      theta = float(k)*gbcdDeltas[3]+gbcdLimits[3]+(gbcdDeltas[3]/2.0);
+      cosPhi = float(l)*gbcdDeltas[4]+gbcdLimits[4]+(gbcdDeltas[4]/2.0);
       phi = acosf(cosPhi);
-      xyz[3*(l*m_GBCDsizes[3]+k)+0] = cosf(theta)*sinf(phi);
-      xyz[3*(l*m_GBCDsizes[3]+k)+1] = sinf(theta)*sinf(phi);
-      xyz[3*(l*m_GBCDsizes[3]+k)+2] = cosPhi;
+      xyz[3*(l*gbcdSizes[3]+k)+0] = cosf(theta)*sinf(phi);
+      xyz[3*(l*gbcdSizes[3]+k)+1] = sinf(theta)*sinf(phi);
+      xyz[3*(l*gbcdSizes[3]+k)+2] = cosPhi;
     }
   }
 
   for(int q=0;q<2;q++)
   {
     if(q == 1)
-    { 
+    {
       //copy original misorientation for use later
       MatrixMath::copy3x3(dg, dgOrig);
       //take inverse of misorientation, then copy into misorientation variable to use for switching symmetry
@@ -336,22 +357,22 @@ void VisualizeGBCD::execute()
         mis_euler1[1] = cosf(mis_euler1[1]);
 
         //find bins in GBCD
-        int location1 = int((mis_euler1[0]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
-        int location2 = int((mis_euler1[1]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
-        int location3 = int((mis_euler1[2]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
+        int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
+        int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
+        int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
         //make sure that euler angles are within the GBCD space
-        if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < m_GBCDsizes[0] && location2 < m_GBCDsizes[1] && location3 < m_GBCDsizes[2])
+        if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2])
         {
           //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
-          int shift = (location1)+(location2*m_GBCDsizes[0])+(location3*m_GBCDsizes[0]*m_GBCDsizes[1]);
+          int shift = (location1)+(location2*gbcdSizes[0])+(location3*gbcdSizes[0]*gbcdSizes[1]);
 
-          for (int64_t k = 0; k < (m_GBCDsizes[3]); k++) 
+          for (int64_t k = 0; k < (gbcdSizes[3]); k++)
           {
-            for (int64_t l = 0; l < (m_GBCDsizes[4]); l++) 
+            for (int64_t l = 0; l < (gbcdSizes[4]); l++)
             {
-              vec[0] = xyz[3*(l*m_GBCDsizes[3]+k)+0];
-              vec[1] = xyz[3*(l*m_GBCDsizes[3]+k)+1];
-              vec[2] = xyz[3*(l*m_GBCDsizes[3]+k)+2];
+              vec[0] = xyz[3*(l*gbcdSizes[3]+k)+0];
+              vec[1] = xyz[3*(l*gbcdSizes[3]+k)+1];
+              vec[2] = xyz[3*(l*gbcdSizes[3]+k)+2];
               //find symmetric poles using the first symmetry operator
               MatrixMath::multiply3x3with3x1(sym1t, vec, rotNormal);
               if(q == 1)
@@ -367,7 +388,7 @@ void VisualizeGBCD::execute()
               //find x,y point in stereographic projection
               x = rotNormal[0]/(rotNormal[2]+1);
               y = rotNormal[1]/(rotNormal[2]+1);
-              //shift projection from -1 to 1 to 0 to 2              
+              //shift projection from -1 to 1 to 0 to 2
               x = x+1.0;
               y = y+1.0;
               //find bin in poleFigure array
@@ -377,7 +398,7 @@ void VisualizeGBCD::execute()
               if(ybin < 0) ybin = 0;
               if(xbin >= xpoints) xbin = xpoints-1;
               if(ybin >= ypoints) ybin = ypoints-1;
-              poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
+              poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(l*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
             }
           }
         }
@@ -397,9 +418,9 @@ void VisualizeGBCD::execute()
   while(counter != 0)
   {
     counter = 0;
-    for (int64_t k = 0; k < (xpoints); k++) 
+    for (int64_t k = 0; k < (xpoints); k++)
     {
-      for (int64_t l = 0; l < (ypoints); l++) 
+      for (int64_t l = 0; l < (ypoints); l++)
       {
         x = (k-xpointshalf)*(xres)+(xres/2.0);
         y = (l-ypointshalf)*(yres)+(yres/2.0);
@@ -436,14 +457,26 @@ void VisualizeGBCD::execute()
   }
 
 
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
+  {
+    ss.str("");
+    ss << "Error creating parent path '" << parentPath << "'";
+    setErrorCondition(-998);
+    notifyErrorMessage(ss.str(), getErrorCondition());
+    return;
+  }
 
-  std::string file = "testGBCDViz.vtk";
   FILE* f = NULL;
-  f = fopen(file.c_str(), "wb");
+  f = fopen(m_OutputFile.c_str(), "wb");
   if(NULL == f)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("Could not open GBCD viz file", getErrorCondition());
+
+    ss.str("");
+    ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
+    notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
 
@@ -454,7 +487,7 @@ void VisualizeGBCD::execute()
   fprintf(f, "data set from DREAM3D\n");
   fprintf(f, "BINARY"); fprintf(f, "\n");
   fprintf(f, "DATASET RECTILINEAR_GRID\n");
-  fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints+1, ypoints+1, zpoints+1);
+  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints+1, ypoints+1, zpoints+1);
 
   // Write the Coords
   writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
@@ -466,24 +499,24 @@ void VisualizeGBCD::execute()
 
   fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
   fprintf(f, "LOOKUP_TABLE default\n");
-  { 
+  {
     float* gn = new float[total];
     float t;
     int count = 0;
-    for (int64_t i = 0; i < (xpoints); i++) 
+    for (int64_t i = 0; i < (xpoints); i++)
     {
-      for (int64_t j = 0; j < (ypoints); j++) 
+      for (int64_t j = 0; j < (ypoints); j++)
       {
         t = poleFigure[(j*xpoints)+i];
-        MXA::Endian::FromSystemToBig::convert<float>(t); 
-        gn[count] = t; 
+        MXA::Endian::FromSystemToBig::convert<float>(t);
+        gn[count] = t;
         count++;
       }
     }
     int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
     delete[] gn;
     if (totalWritten != (total))  {
-      std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;
+      std::cout << "Error Writing Binary VTK Data into file " << m_OutputFile << std::endl;
       fclose(f);
     }
   }
