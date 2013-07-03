@@ -968,17 +968,19 @@ herr_t testReadStringDatasetAndAttributes(hid_t file_id)
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE( refData.compare(strData) == 0);
 
+
+  strData = "FooBarJunk";
+  err = H5Lite::readStringDataset(file_id, dsetName, strData);
+  DREAM3D_REQUIRE(err >= 0);
+  DREAM3D_REQUIRE( refData.compare(strData) == 0);
+
+
   // Write the Attributes
   std::string attributeKey ("std::string");
   std::string attrData ("");
   err = H5Lite::readStringAttribute(file_id, dsetName, attributeKey, attrData);
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE( refAttrData.compare(attrData) == 0);
-
-//  AbstractH5Attribute::Pointer ptr = H5Attribute::ReadH5Attribute(file_id, dsetName, attributeKey);
-//  DREAM3D_REQUIRE(ptr.get() != NULL);
-//  DREAM3D_REQUIRE( ::memcmp(ptr->getAttributeValue()->getVoidPointer(0), refAttrData.c_str(), refAttrData.size() ) == 0 );
-
 
   std::vector<uint8_t> attrDataPtr (refAttrData.size() + 1, 0);
   attributeKey = "c_string";
