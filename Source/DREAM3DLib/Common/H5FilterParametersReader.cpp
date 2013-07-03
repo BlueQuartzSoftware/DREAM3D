@@ -89,14 +89,14 @@ int H5FilterParametersReader::closeOptionsGroup()
 // -----------------------------------------------------------------------------
 std::string H5FilterParametersReader::readValue(const std::string name, std::string value)
 {
-	std::string defaultStr = value;
-	value.clear();
-	int err = 0;
-	err = H5Lite::readStringDataset(m_CurrentGroupId, name, value);
-	if (err == 0)
-		return value;
-	else
-		return defaultStr;
+  std::string defaultStr = value;
+  value.clear();
+  int err = 0;
+  err = H5Lite::readStringDataset(m_CurrentGroupId, name, value);
+  if (err == 0)
+    return value;
+  else
+    return defaultStr;
 }
 
 
@@ -189,26 +189,6 @@ double H5FilterParametersReader::readValue(const std::string name, double value)
   H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
   return value;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5FilterParametersReader::readValue(const std::string name, QualityMetricFilter* f)
-{
-  int err = 0;
-
-  float value = f->getFieldValue();
-  err = H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
-  std::string fieldName;
-  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "FieldName", fieldName);
-  f->setFieldName(fieldName);
-
-  std::string fieldOp;
-  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "FieldOperator", fieldOp);
-  f->setFieldOperator(fieldOp);
-  return err;
-}
-
 
 // -----------------------------------------------------------------------------
 //

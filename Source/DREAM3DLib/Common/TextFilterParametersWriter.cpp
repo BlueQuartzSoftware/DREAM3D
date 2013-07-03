@@ -170,15 +170,6 @@ int TextFilterParametersWriter::writeValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, QualityMetricFilter* f)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, IntVec3Widget_t v)
 {
   int err = -1;

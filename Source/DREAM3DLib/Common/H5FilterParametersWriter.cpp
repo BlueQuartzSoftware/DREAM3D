@@ -194,20 +194,6 @@ int H5FilterParametersWriter::writeValue(const std::string name, double value)
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, QualityMetricFilter* f)
-{
-  int err = 0;
-
-  float value = f->getFieldValue();
-  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
-  err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "FieldName", f->getFieldName());
-  err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "FieldOperator", f->getFieldOperator());
-  return err;
-}
-
 
 // -----------------------------------------------------------------------------
 //

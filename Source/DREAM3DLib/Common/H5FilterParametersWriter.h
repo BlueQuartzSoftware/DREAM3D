@@ -40,14 +40,10 @@
 
 #include <string>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/QualityMetricFilter.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "AbstractFilterParametersWriter.h"
-#include "QualityMetricFilter.h"
+#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 
 /*
  *
@@ -80,7 +76,6 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const std::string name, float value);
     virtual int writeValue(const std::string name, double value);
 
-    virtual int writeValue(const std::string name, QualityMetricFilter* f);
     virtual int writeValue(const std::string name, IntVec3Widget_t v);
     virtual int writeValue(const std::string name, FloatVec3Widget_t v);
     virtual int writeValue(const std::string name, ComparisonInput_t v);

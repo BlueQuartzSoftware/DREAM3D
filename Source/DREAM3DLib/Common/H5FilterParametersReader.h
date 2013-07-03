@@ -40,14 +40,11 @@
 
 #include <string>
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/QualityMetricFilter.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "AbstractFilterParametersReader.h"
-#include "QualityMetricFilter.h"
+#include "DREAM3DLib/Common/AbstractFilterParametersReader.h"
+
 
 /*
  *
@@ -80,7 +77,6 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual float readValue(const std::string name, float value);
     virtual double readValue(const std::string name, double value);
 
-    virtual int readValue(const std::string name, QualityMetricFilter* f);
     virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v);
     virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v);
     virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v);
