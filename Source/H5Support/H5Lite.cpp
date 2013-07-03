@@ -534,7 +534,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
  hsize_t    size;
  herr_t err = 0;
  herr_t retErr = 0;
-
+ data.clear();
  HDF_ERROR_HANDLER_OFF;
 
   /* Get the type of object */
