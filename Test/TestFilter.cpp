@@ -5,7 +5,24 @@
 #include "TestFilter.h"
 
 
-
+#define StlFilePrefixDefaultValue "StlFilePrefixDefaultValue"
+#define MaxIterationsDefaultValue 92
+#define MisorientationToleranceDefaultValue 21
+#define InputFileDefaultValue "InputFileDefaultValue.html"
+#define InputPathDefaultValue "InputPathDefaultValue.html"
+#define OutputFileDefaultValue "OutputFileDefaultValue.html"
+#define OutputPathDefaultValue "OutputPathDefaultValue.html"
+#define WriteAlignmentShiftsDefaultValue false
+#define ConversionTypeDefaultValue 78
+#define SelectedCellArrayNameDefaultValue "SelectedCellArrayNameDefaultValue"
+#define SelectedFieldArrayNameDefaultValue "SelectedFieldArrayNameDefaultValue"
+#define SelectedEnsembleArrayNameDefaultValue "SelectedEnsembleArrayNameDefaultValue"
+#define SurfaceMeshPointArrayNameDefaultValue "SurfaceMeshPointArrayNameDefaultValue"
+#define SurfaceMeshFaceArrayNameDefaultValue "SurfaceMeshFaceArrayNameDefaultValue"
+#define SurfaceMeshEdgeArrayNameDefaultValue "SurfaceMeshEdgeArrayNameDefaultValue"
+#define SolidMeshPointArrayNameDefaultValue "SolidMeshPointArrayNameDefaultValue"
+#define SolidMeshFaceArrayNameDefaultValue "SolidMeshFaceArrayNameDefaultValue"
+#define SolidMeshEdgeArrayNameDefaultValue "SolidMeshEdgeArrayNameDefaultValue"
 
 // -----------------------------------------------------------------------------
 //
@@ -249,7 +266,24 @@ void TestFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 {
-	
+	setStlFilePrefix( reader->readValue("StlFilePrefix", StlFilePrefixDefaultValue) );
+	setMaxIterations( reader->readValue("MaxIterations", MaxIterationsDefaultValue) );
+	setMisorientationTolerance( reader->readValue("MisorientationTolerance", MisorientationToleranceDefaultValue) );
+	setInputFile( reader->readValue("InputFile", InputFileDefaultValue) );
+	setInputPath( reader->readValue("InputPath", InputPathDefaultValue) );
+	setOutputFile( reader->readValue("OutputFile", OutputFileDefaultValue) );
+	setOutputPath( reader->readValue("OutputPath", OutputPathDefaultValue) );
+	setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", WriteAlignmentShiftsDefaultValue) );
+	setConversionType( reader->readValue("ConversionType", ConversionTypeDefaultValue) );
+	setSelectedCellArrayName( reader->readValue("SelectedCellArrayName", SelectedCellArrayNameDefaultValue) );
+	setSelectedFieldArrayName( reader->readValue("SelectedFieldArrayName", SelectedFieldArrayNameDefaultValue) );
+	setSelectedEnsembleArrayName( reader->readValue("SelectedEnsembleArrayName", SelectedEnsembleArrayNameDefaultValue) );
+	setSurfaceMeshPointArrayName( reader->readValue("SurfaceMeshPointArrayName", SurfaceMeshPointArrayNameDefaultValue) );
+	setSurfaceMeshFaceArrayName( reader->readValue("SurfaceMeshFaceArrayName", SurfaceMeshFaceArrayNameDefaultValue) );
+	setSurfaceMeshEdgeArrayName( reader->readValue("SurfaceMeshEdgeArrayName", SurfaceMeshEdgeArrayNameDefaultValue) );
+	setSolidMeshPointArrayName( reader->readValue("SolidMeshPointArrayName", SolidMeshPointArrayNameDefaultValue) );
+	setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
+	setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
 }
 
 // -----------------------------------------------------------------------------
@@ -261,19 +295,25 @@ void TestFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("StlFilePrefix", getStlFilePrefix() );
+  writer->writeValue("MaxIterations", getMaxIterations() );
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
-
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("InputPath", getInputPath() );
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("OutputPath", getOutputPath() );
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts() );
   writer->writeValue("ConversionType", getConversionType() );
-
+  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
+  writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
+  writer->writeValue("SelectedEnsembleArrayName", getSelectedEnsembleArrayName() );
+  writer->writeValue("SurfaceMeshPointArrayName", getSurfaceMeshPointArrayName() );
+  writer->writeValue("SurfaceMeshFaceArrayName", getSurfaceMeshFaceArrayName() );
+  writer->writeValue("SurfaceMeshEdgeArrayName", getSurfaceMeshEdgeArrayName() );
+  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName() );
+  writer->writeValue("SolidMeshFaceArrayName", getSolidMeshFaceArrayName() );
+  writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName() );
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
-
-
 }
 
 

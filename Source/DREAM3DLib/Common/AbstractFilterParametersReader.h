@@ -67,42 +67,23 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int openOptionsGroup(AbstractFilter* filter) = 0;
     virtual int closeOptionsGroup() = 0;
 
-    virtual int readValue(const std::string name, std::string &value) = 0;
+    virtual std::string readValue(const std::string name, std::string value) = 0;
 
-    virtual int readValue(const std::string name, int8_t &value) = 0;
-    virtual int readValue(const std::string name, int16_t &value) = 0;
-    virtual int readValue(const std::string name, int32_t &value) = 0;
-    virtual int readValue(const std::string name, int64_t &value) = 0;
-    virtual int readValue(const std::string name, uint8_t &value) = 0;
-    virtual int readValue(const std::string name, uint16_t &value) = 0;
-    virtual int readValue(const std::string name, uint32_t &value) = 0;
-    virtual int readValue(const std::string name, uint64_t &value) = 0;
-    virtual int readValue(const std::string name, float &value) = 0;
-    virtual int readValue(const std::string name, double &value) = 0;
+    virtual int8_t readValue(const std::string name, int8_t value) = 0;
+    virtual int16_t readValue(const std::string name, int16_t value) = 0;
+    virtual int32_t readValue(const std::string name, int32_t value) = 0;
+    virtual int64_t readValue(const std::string name, int64_t value) = 0;
+    virtual uint8_t readValue(const std::string name, uint8_t value) = 0;
+    virtual uint16_t readValue(const std::string name, uint16_t value) = 0;
+    virtual uint32_t readValue(const std::string name, uint32_t value) = 0;
+    virtual uint64_t readValue(const std::string name, uint64_t value) = 0;
+    virtual float readValue(const std::string name, float value) = 0;
+    virtual double readValue(const std::string name, double value) = 0;
 
     virtual int readValue(const std::string name, QualityMetricFilter* f) = 0;
-    virtual int readValue(const std::string name, IntVec3Widget_t v) = 0;
-    virtual int readValue(const std::string name, FloatVec3Widget_t v) = 0;
-    virtual int readValue(const std::string name, ComparisonInput_t v) = 0;
-
-
-	virtual int setStringValue(std::string value, std::string type) = 0;
-
-	virtual int setInt8Value(int8_t value, std::string type) = 0;
-	virtual int setInt16Value(int16_t value, std::string type) = 0;
-	virtual int setInt32Value(int32_t value, std::string type) = 0;
-	virtual int setInt64Value(int64_t value, std::string type) = 0;
-	virtual int setUInt8Value(uint8_t value, std::string type) = 0;
-	virtual int setUInt16Value(uint16_t value, std::string type) = 0;
-	virtual int setUInt32Value(uint32_t value, std::string type) = 0;
-	virtual int setUInt64Value(uint64_t value, std::string type) = 0;
-	virtual int setFloatValue(float value, std::string type) = 0;
-	virtual int setDoubleValue(double value, std::string type) = 0;
-
-	virtual int setQualityMetricFilter(QualityMetricFilter* value, std::string type) = 0;
-	virtual int setIntVec3Widget(IntVec3Widget_t value, std::string type) = 0;
-	virtual int setFloatVec3Widget(FloatVec3Widget_t value, std::string type) = 0;
-	virtual int setComparisonInput(ComparisonInput_t value, std::string type) = 0;
+    virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v) = 0;
+    virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v) = 0;
+    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v) = 0;
 
   protected:
     AbstractFilterParametersReader();
