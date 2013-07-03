@@ -67,6 +67,8 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
+    DREAM3D_INSTANCE_PROPERTY(float, misAngle)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, misAxis)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
@@ -139,7 +141,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
      * @param step The step value between each point on the axis.
      */
 
-    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float max, float step)
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
     {
       int err = 0;
       fprintf(f, "%s %lld %s\n", axis, npoints, type);

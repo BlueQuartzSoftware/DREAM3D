@@ -80,6 +80,26 @@ VisualizeGBCD::~VisualizeGBCD()
 void VisualizeGBCD::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setPropertyName("misAngle");
+    option->setHumanLabel("Misorientation Angle");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    option->setUnits("Degrees");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+
+    option->setHumanLabel("Misorientation Axis");
+    option->setPropertyName("misAxis");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("FloatVec3Widget_t");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -88,9 +108,8 @@ void VisualizeGBCD::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("MisorientationAngle", getmisAngle() );
+  writer->writeValue("MisorientationAxis", getmisAxis() );
 }
 
 // -----------------------------------------------------------------------------
@@ -123,9 +142,10 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     }
     else
     {
-		GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -388, float, FloatArrayType, ensembles, (60*29*60*60*29))
-	}
-
+      IDataArray::Pointer iDataArray = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD);
+      int numComp = iDataArray->GetNumberOfComponents();
+      GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, float, FloatArrayType, ensembles, numComp)
+	  }
   }
 }
 
@@ -204,62 +224,28 @@ void VisualizeGBCD::execute()
   m_GBCDlimits[8] = 2.0*m_pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = 6.0*m_pi/180.0;
+  //get num components of GBCD
+  int numComp = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD)->GetNumberOfComponents();
+  //determine the size of the 1,3,4 dimensions of the GBCD - 2,4 are dim/1.5
+  int dim = int(pow((numComp/(2.0*2.0*2.0)),(1.0/5.0))+0.5);
+
+  m_GBCDsizes[0] = dim*2;
+  m_GBCDsizes[1] = dim;
+  m_GBCDsizes[2] = dim*2;
+  m_GBCDsizes[3] = dim*2;
+  m_GBCDsizes[4] = dim;
+
+  float binsize = m_GBCDlimits[5]/float(m_GBCDsizes[0]);
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
   m_GBCDdeltas[2] = binsize;
   m_GBCDdeltas[3] = binsize;
   m_GBCDdeltas[4] = binsize2;
-
-  m_GBCDsizes[0] = int((m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
-  m_GBCDsizes[1] = int((m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
-  m_GBCDsizes[2] = int((m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
-  m_GBCDsizes[3] = int((m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
-  m_GBCDsizes[4] = int((m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
-    
-  int inversion = 1;
-  float tol = 5.0;
-      
-  FloatArrayType::Pointer xyz_temp_phArray = FloatArrayType::NullPointer();
-  xyz_temp_phArray = FloatArrayType::CreateArray((m_GBCDsizes[3]*m_GBCDsizes[4]), 3, "xyz");
-  xyz_temp_phArray->initializeWithValues(1.0f);
-  float* xyz_temp_ph = xyz_temp_phArray->GetPointer(0);
-
-  //determine phi, theta for each bin
-  int count = 0;
-  for(int j=0;j<m_GBCDsizes[4];j++)
-  {
-    for(int i=0;i<m_GBCDsizes[3];i++)
-    {
-      xyz_temp_ph[3*count+1] = i;
-      xyz_temp_ph[3*count+2] = j;
-      xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] * m_GBCDdeltas[3];
-      xyz_temp_ph[3*count+1] = xyz_temp_ph[3*count+1] + m_GBCDlimits[3] + (m_GBCDdeltas[3]/2.0);
-      xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] * m_GBCDdeltas[4];
-      xyz_temp_ph[3*count+2] = xyz_temp_ph[3*count+2] + m_GBCDlimits[4] + (m_GBCDdeltas[4]/2.0);
-      xyz_temp_ph[3*count+2] = acosf(xyz_temp_ph[3*count+2]);
-      count++;
-    }
-  }
-
-  //set up temp array for x,y,z,intensity for numPhiBins*numThetaBins times 1152 symmetric misorientations
-  FloatArrayType::Pointer xyz_tempArray = FloatArrayType::NullPointer();
-  xyz_tempArray = FloatArrayType::CreateArray((m_GBCDsizes[3]*m_GBCDsizes[4]), 4, "xyztemp");
-  xyz_tempArray->initializeWithValues(0.0f);
-  float* xyz_temp = xyz_tempArray->GetPointer(0);
-
-  //determine cartesian coordinates for phi,theta values at each bin
-  for(int i=0;i<(m_GBCDsizes[3]*m_GBCDsizes[4]);i++)
-  {
-    xyz_temp[4*i] = sinf(xyz_temp_ph[3*i+2])*cosf(xyz_temp_ph[3*i+1]);
-    xyz_temp[4*i+1] = sinf(xyz_temp_ph[3*i+2])*sinf(xyz_temp_ph[3*i+1]);
-    xyz_temp[4*i+2] = cosf(xyz_temp_ph[3*i+2]);
-  }
   
   float vec[3];
   float rotNormal[3];
-  float rotNormalsc[2];
+  float rotNormal2[3];
   float dg[3][3];
   float dgOrig[3][3];
   float dgt[3][3];
@@ -270,43 +256,71 @@ void VisualizeGBCD::execute()
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
-  int theta, cosPhi;
+  float qtest[5];
+  float w, n1, n2, n3;
+  float dist;
+  float theta, cosPhi, phi;  
 
-  float mis_angle = 60;
-  float misvect[3] = {1,1,1};
-
-  mis_angle = mis_angle * m_pi/180.0f;
-
+  m_misAngle = m_misAngle * m_pi/180.0f;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath::axisAngletoMat(mis_angle, misvect[0], misvect[1], misvect[2], dg);
-    
+  OrientationMath::axisAngletoMat(m_misAngle, m_misAxis.x, m_misAxis.y, m_misAxis.z, dg);
+  
+  int inversion = 1;
   //get number of symmetry operators
   int n_sym = m_OrientationOps[1]->getNumSymOps();
 
-  //set up array for x,y,z,intensity for numPhiBins*numThetaBins times 1152 symmetric misorientations
-  int nchunk = m_GBCDsizes[3]*m_GBCDsizes[4];
+  int xpoints = 500;
+  int ypoints = 500;
+  int zpoints = 1;
+  int xpointshalf = xpoints/2;
+  int ypointshalf = ypoints/2;
+  float xres = 2.0/float(xpoints);
+  float yres = 2.0/float(ypoints);
+  float zres = (xres+yres)/2.0;
+  float x, y, z;
+  int xbin, ybin;
+
+  FloatArrayType::Pointer poleFigureArray = FloatArrayType::NullPointer();
+  poleFigureArray = FloatArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
+  poleFigureArray->initializeWithValues(-1);
+  float* poleFigure = poleFigureArray->GetPointer(0);
+
   FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
-  xyzArray = FloatArrayType::CreateArray((nchunk), "xyz");
-  xyzArray->initializeWithValues(0.0f);
+  xyzArray = FloatArrayType::CreateArray(m_GBCDsizes[3]*m_GBCDsizes[4], 3, "xyz");
+  xyzArray->initializeWithValues(0.0);
   float* xyz = xyzArray->GetPointer(0);
-  int counter = 0;
+
+  for (int64_t k = 0; k < (m_GBCDsizes[3]); k++) 
+  {
+    for (int64_t l = 0; l < (m_GBCDsizes[4]); l++) 
+    {
+      theta = float(k)*m_GBCDdeltas[3]+m_GBCDlimits[3]+(m_GBCDdeltas[3]/2.0);
+      cosPhi = float(l)*m_GBCDdeltas[4]+m_GBCDlimits[4]+(m_GBCDdeltas[4]/2.0);
+      phi = acosf(cosPhi);
+      xyz[3*(l*m_GBCDsizes[3]+k)+0] = cosf(theta)*sinf(phi);
+      xyz[3*(l*m_GBCDsizes[3]+k)+1] = sinf(theta)*sinf(phi);
+      xyz[3*(l*m_GBCDsizes[3]+k)+2] = cosPhi;
+    }
+  }
 
   for(int q=0;q<2;q++)
   {
-    if(q == 2)
+    if(q == 1)
     { 
-      //take inverse of misorientation, but leave in misorientation variable to use for switching symmetry
-      MatrixMath::transpose3x3(dg, dg);
-      //take inverse again of misorientation and put in original
-      MatrixMath::transpose3x3(dg, dgOrig);
+      //copy original misorientation for use later
+      MatrixMath::copy3x3(dg, dgOrig);
+      //take inverse of misorientation, then copy into misorientation variable to use for switching symmetry
+      MatrixMath::transpose3x3(dg, dgt);
+      MatrixMath::copy3x3(dgt, dg);
+
     }
     for(int i=0; i<n_sym; i++)
     {
       //get symmetry operator1
       m_OrientationOps[1]->getMatSymOp(i, sym1);
       MatrixMath::multiply3x3with3x3(sym1,dg,dg1);
-      //transpose sym1 for later use with normals
-      MatrixMath::transpose3x3(sym1,sym1t);
+      //get transpose for rotation of directions
+      MatrixMath::transpose3x3(sym1, sym1t);
       for(int j=0; j<n_sym; j++)
       {
         //get symmetry operator2
@@ -316,6 +330,8 @@ void VisualizeGBCD::execute()
         MatrixMath::multiply3x3with3x3(dg1,sym2t,dg2);
         //convert to euler angle
         OrientationMath::mattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        OrientationMath::eulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        OrientationMath::QuattoAxisAngle(qtest, w, n1, n2, n3);
 
         mis_euler1[1] = cosf(mis_euler1[1]);
 
@@ -329,63 +345,109 @@ void VisualizeGBCD::execute()
           //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
           int shift = (location1)+(location2*m_GBCDsizes[0])+(location3*m_GBCDsizes[0]*m_GBCDsizes[1]);
 
-          //copy intensity for each phi,theta bin in 4th slot of temp cartesian x,y,z,value array
-          for(int k=0;k<m_GBCDsizes[4];k++)
+          for (int64_t k = 0; k < (m_GBCDsizes[3]); k++) 
           {
-            for(int l=0;l<m_GBCDsizes[3];l++)
+            for (int64_t l = 0; l < (m_GBCDsizes[4]); l++) 
             {
-              xyz_temp[4*(l+(m_GBCDsizes[3]*k))+3] = m_GBCD[shift+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
+              vec[0] = xyz[3*(l*m_GBCDsizes[3]+k)+0];
+              vec[1] = xyz[3*(l*m_GBCDsizes[3]+k)+1];
+              vec[2] = xyz[3*(l*m_GBCDsizes[3]+k)+2];
+              //find symmetric poles using the first symmetry operator
+              MatrixMath::multiply3x3with3x1(sym1t, vec, rotNormal);
+              if(q == 1)
+              {
+                //rotate symmetric pole by original misorientation
+                MatrixMath::multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
+                //take negative of vector
+                rotNormal[0] = -rotNormal2[0];
+                rotNormal[1] = -rotNormal2[1];
+                rotNormal[2] = -rotNormal2[2];
+              }
+              if(rotNormal[2] < 0) rotNormal[0] = -rotNormal[0], rotNormal[1] = -rotNormal[1], rotNormal[2] = -rotNormal[2];
+              //find x,y point in stereographic projection
+              x = rotNormal[0]/(rotNormal[2]+1);
+              y = rotNormal[1]/(rotNormal[2]+1);
+              //shift projection from -1 to 1 to 0 to 2              
+              x = x+1.0;
+              y = y+1.0;
+              //find bin in poleFigure array
+              xbin = int(x/xres);
+              ybin = int(y/yres);
+              if(xbin < 0) xbin = 0;
+              if(ybin < 0) ybin = 0;
+              if(xbin >= xpoints) xbin = xpoints-1;
+              if(ybin >= ypoints) ybin = ypoints-1;
+              poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2])+(l*m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3])];
             }
           }
-
-          for(int k=0;k<(m_GBCDsizes[3]*m_GBCDsizes[4]);k++)
-          {
-            //create vector using x,y,z for each phi,theta bin
-            vec[0] = xyz_temp[4*k];
-            vec[1] = xyz_temp[4*k+1];
-            vec[2] = xyz_temp[4*k+2];
-            //find symmetric poles using inverted symmetry operator
-            MatrixMath::multiply3x3with3x1(sym1t, vec, rotNormal);
-            if(q == 2)
-            {
-              //rotate symmetric pole by original misorientation
-              MatrixMath::multiply3x3with3x1(dgOrig, rotNormal, rotNormal);
-              //take negative of vector
-              rotNormal[0] = -rotNormal[0];
-              rotNormal[1] = -rotNormal[1];
-              rotNormal[2] = -rotNormal[2];
-            }
-            //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
-            rotNormalsc[0] = atan2f(rotNormal[1], rotNormal[0]);
-            if (rotNormalsc[0] < 0) rotNormalsc[0] += m_pi2;
-            rotNormalsc[1] = rotNormal[2];
-
-            theta = (int) floorf((rotNormalsc[0] - m_GBCDlimits[3])/m_GBCDdeltas[3]);
-            cosPhi = (int) floorf((rotNormalsc[1] - m_GBCDlimits[4])/m_GBCDdeltas[4]);
-
-            //add symmetric vector intensity to final x,y,z,value array
-            xyz[(theta+(m_GBCDsizes[3]*cosPhi))] = xyz[(theta+(m_GBCDsizes[3]*cosPhi))] + xyz_temp[4*k+3];
-          }
-          counter += 1;
         }
       }
     }
   }
 
-  float x, y, z;
+  int neighbors[4];
+  neighbors[0] = -1;
+  neighbors[1] = 1;
+  neighbors[2] = -xpoints;
+  neighbors[3] = xpoints;
+  int counter = 1;
+  int point, neighbor;
+  int good = 1;
+  std::vector<int> neighs(xpoints*ypoints,-1);
+  while(counter != 0)
+  {
+    counter = 0;
+    for (int64_t k = 0; k < (xpoints); k++) 
+    {
+      for (int64_t l = 0; l < (ypoints); l++) 
+      {
+        x = (k-xpointshalf)*(xres)+(xres/2.0);
+        y = (l-ypointshalf)*(yres)+(yres/2.0);
+        if((x*x+y*y) <= 1)
+        {
+          point = l*xpoints+k;
+          if(poleFigure[point] == -1)
+          {
+            counter++;
+            for(int m = 0; m< 4; m++)
+            {
+              good = 1;
+              if(k == 0 && m == 0) good = 0;
+              if(k == xpoints-1 && m == 1) good = 0;
+              if(l == 0 && m == 2) good = 0;
+              if(l == ypoints-1 && m == 3) good = 0;
+              if(good == 1)
+              {
+                neighbor = point + neighbors[m];
+                if(poleFigure[neighbor] != -1) neighs[point] = neighbor;
+              }
+            }
+          }
+        }
+      }
+    }
+    for(int n = 0; n < (neighs.size()); n++)
+    {
+      if(neighs[n] != -1 && poleFigure[n] == -1)
+      {
+        poleFigure[n] = poleFigure[neighs[n]];
+      }
+    }
+  }
+
+
 
   std::string file = "testGBCDViz.vtk";
   FILE* f = NULL;
   f = fopen(file.c_str(), "wb");
+  if(NULL == f)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("Could not open GBCD viz file", getErrorCondition());
+    return;
+  }
 
-  int xpoints = 500;
-  int ypoints = 500;
-  int zpoints = 1;
-  int xpointshalf = xpoints/2;
-  int ypointshalf = ypoints/2;
-  float xres = 2.0/float(xpoints);
-  float yres = 2.0/float(ypoints);
-  float zres = (xres+yres)/2.0;
+
 
   // Write the correct header
   fprintf(f, "# vtk DataFile Version 2.0\n");
@@ -395,9 +457,9 @@ void VisualizeGBCD::execute()
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints+1, ypoints+1, zpoints+1);
 
   // Write the Coords
-  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, 0.0f - xres * 0.5f, (float)(xpoints + 1 * xres), xres);
-  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, 0.0f - yres * 0.5f, (float)(ypoints + 1 * yres), yres);
-  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, 0.0f - zres * 0.5f, (float)(zpoints + 1 * zres), zres);
+  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
+  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, (-float(ypoints)*yres/2.0), yres);
+  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, (-float(zpoints)*zres/2.0), zres);
 
   size_t total = xpoints * ypoints * zpoints;
   fprintf(f, "CELL_DATA %d\n", (int)total);
@@ -412,24 +474,7 @@ void VisualizeGBCD::execute()
     {
       for (int64_t j = 0; j < (ypoints); j++) 
       {
-        x = (i-xpointshalf)*(xres)+(xres/2.0);
-        y = (j-ypointshalf)*(yres)+(yres/2.0);
-        if((x*x+y*y) <= 1)
-        {
-          z = -((x*x+y*y)-1)/((x*x+y*y)+1);
-          x = x*(1-z);
-          y = y*(1-z);
-          rotNormalsc[0] = atan2f(y, x);
-          if (rotNormalsc[0] < 0) rotNormalsc[0] += m_pi2;
-          rotNormalsc[1] = z;
-          theta = (int) floorf((rotNormalsc[0] - m_GBCDlimits[3])/m_GBCDdeltas[3]);
-          cosPhi = (int) floorf((rotNormalsc[1] - m_GBCDlimits[4])/m_GBCDdeltas[4]);
-          t = xyz[(theta+(m_GBCDsizes[3]*cosPhi))];
-        }
-        else
-        {
-          t = 0;
-        }
+        t = poleFigure[(j*xpoints)+i];
         MXA::Endian::FromSystemToBig::convert<float>(t); 
         gn[count] = t; 
         count++;
