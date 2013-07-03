@@ -60,7 +60,7 @@
  *
  *	testCase5: This tests when the file size is larger than the allocated size and there is junk at the beginning and end of the file.
  *
- *	testCase6: This tests when the file has nothing but junk in it. (skipHeaderBytes equals the file size)
+ *	testCase6: This tests when skipHeaderBytes equals the file size
  */
 
 
@@ -157,7 +157,7 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
     }
   }
 
-  // Write data to file
+  // Write the data to the file
   numWritten = 0;
   T* dataArrayFront = dataArray;
   while(1)
@@ -228,6 +228,7 @@ RawBinaryReader::Pointer createRawBinaryReaderFilter(int scalarType, size_t N, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// testCase1: This tests when the file size is equal to the allocated size, and checks to see if the data read is the same as the data written.
 template<typename T, size_t N>
 int testCase1_Execute(const std::string &name, int scalarType)
 {
@@ -238,7 +239,7 @@ int testCase1_Execute(const std::string &name, int scalarType)
   std::cout << "Testing case 1: " << name << " with num comps " << N << std::endl;
 
 
-  // Allocate an array
+  // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
   T* dataArray = array.get();
 
@@ -248,23 +249,33 @@ int testCase1_Execute(const std::string &name, int scalarType)
     dataArray[i] = static_cast<T>(i);
   }
 
+  // Create junkArray and set it to NULL because there is no junk in this test case
   T* junkArray = NULL;
 
+  // Create the file and write to it.  If any of the information is wrong, the result will be false
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::None);
+
+  // Test to make sure that the file was created and written to successfully
   DREAM3D_REQUIRED(result, ==, true)
 
-  // Now that the temp file with some data is written we need to read it back up and test for equality
-  // First we need a Voxel Data Container
+  // Create the data container
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  // Now we need the filter
+
+  // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
   filt->setVoxelDataContainer(m.get());
+
+  // Preflight, get the error condition, and check that there are no errors
+  filt->preflight();
+  err = filt->getErrorCondition();
+  DREAM3D_REQUIRED(err, >=, 0)
+
+  // Execute the filter, check that there are no errors, and compare the data
   filt->execute();
+  DREAM3D_REQUIRED(err, >=, 0)
 
   IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
-
-  // Now we need to compare the arrays to make sure we read up the right values
   T d, p;
   for(size_t i = 0; i < dataArraySize; ++i)
   {
@@ -315,8 +326,9 @@ void testCase1()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// testCase2: This tests when the file size is smaller than the allocated size. (Reading past the end of the file)
 template<typename T, size_t N>
-int testCase2_Execute(const std::string &name, int scalarType)
+void testCase2_Execute(const std::string &name, int scalarType)
 {
   int err = 0;
   int dataArraySize = ARRAY_SIZE * N / 2;		// We don't care what is written...we just need the data array size to be less than the file size
@@ -324,10 +336,9 @@ int testCase2_Execute(const std::string &name, int scalarType)
   int skipHeaderBytes = junkArraySize * sizeof(T);
   std::cout << "Testing case 2: " << name << " with num comps " << N << std::endl;
 
-  // Part 1: Create the file
+  // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
-  //T* ptr = array.get();
-  T* dataArray = new T[dataArraySize];
+  T* dataArray = array.get();
 
   // Write some data into the data array
   for(size_t i = 0; i < dataArraySize; ++i)
@@ -335,25 +346,31 @@ int testCase2_Execute(const std::string &name, int scalarType)
     dataArray[i] = static_cast<T>(i);
   }
 
+  // Create junkArray and set it to NULL because there is no junk in this test case
   T* junkArray = NULL;
 
+  // Create the file and write to it.  If any of the information is wrong, the result will be false
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::None);
+
+  // Test to make sure that the file was created and written to successfully
   DREAM3D_REQUIRED(result, ==, true)
 
-  // Part 2: Create and run a RawBinaryReader instance
+  // Create the data container
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+
+  // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
   filt->setVoxelDataContainer(m.get());
+
+  // Preflight, get error condition, and check that the "file is too small" error is returned
   filt->preflight();
-
   err = filt->getErrorCondition();
-  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL);
+  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
 
+  // Execute, get error condition, and check that the "file is too small" error is returned
   filt->execute();
   err = filt->getErrorCondition();
-
-  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL);
-  return err;
+  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
 }
 
 // -----------------------------------------------------------------------------
@@ -397,6 +414,7 @@ void testCase2()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// testCase3: This tests when the file size is larger than the allocated size and there is junk at the end of the file.
 template<typename T, size_t N>
 void testCase3_Execute(const std::string &name, int scalarType)
 {
@@ -406,49 +424,55 @@ void testCase3_Execute(const std::string &name, int scalarType)
   int err = 0;
   std::cout << "Testing case 3: " << name << " with num comps " << N << std::endl;
 
-  // Part 1: Create the file
+  // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
-  T* writtenData = array.get();
+  T* dataArray = array.get();
 
   // Write some data into the data array
   for(size_t i = 0; i < dataArraySize; ++i)
   {
-    writtenData[i] = static_cast<T>(i);
+    dataArray[i] = static_cast<T>(i);
   }
 
+  // Create junkArray
   T* junkArray = new T[junkArraySize];
 
-  // Write a pattern into the junk array
+  // Write a pattern into junkArray
   for(size_t i = 0; i < junkArraySize; ++i)
   {
     junkArray[i] = (unsigned)0xAB;
   }
 
-  bool result = createAndWriteToFile(writtenData, dataArraySize, junkArray, junkArraySize, Detail::End);
+  // Create the file and write to it.  If any of the information is wrong, the result will be false
+  bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::End);
+
+  // Test to make sure that the file was created and written to successfully
   DREAM3D_REQUIRED(result, ==, true)
 
-  // Part 2: Create and run a RawBinaryReader instance
+  // Create the data container
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+
+  // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
   filt->setVoxelDataContainer(m.get());
+
+  // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
   err = filt->getErrorCondition();
-
   DREAM3D_REQUIRED(err, >=, 0)
 
+  // Execute, get the error condition, check that there are no errors, and compare the data
   filt->execute();
   err = filt->getErrorCondition();
-
   DREAM3D_REQUIRED(err, >=, 0)
 
   IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* readData = reinterpret_cast<T*>(iData->GetVoidPointer(0));
   T d, p;
-
   for(size_t i = 0; i < dataArraySize; ++i)
   {
     d = readData[i];
-    p = writtenData[i];
+    p = dataArray[i];
     DREAM3D_REQUIRE_EQUAL(d, p)
   }
 }
@@ -493,6 +517,7 @@ void testCase3()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// testCase4: This tests when the file size is larger than the allocated size and there is junk at the beginning of the file.
 template<typename T, size_t N>
 void testCase4_Execute(const std::string &name, int scalarType)
 {
@@ -502,6 +527,7 @@ void testCase4_Execute(const std::string &name, int scalarType)
   int err = 0;
   std::cout << "Testing case 4: " << name << " with num comps " << N << std::endl;
 
+  // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
   T* dataArray = array.get();
 
@@ -511,33 +537,40 @@ void testCase4_Execute(const std::string &name, int scalarType)
     dataArray[i] = static_cast<T>(i);
   }
 
+  // Create junkArray
   T* junkArray = new T[junkArraySize];
 
-  // Write a pattern into the junk array
+  // Write a pattern into junkArray
   for(size_t i = 0; i < junkArraySize; ++i)
   {
     junkArray[i] = (unsigned)0xAB;
   }
 
+
+  // Create the file and write to it.  If any of the information is wrong, the result will be false
   bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
+
+  // Test to make sure that the file was created and written to successfully
   DREAM3D_REQUIRED(result, ==, true)
 
-  // Part 2: Create and run a RawBinaryReader instance
+  // Create the data container
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+
+  // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
   filt->setVoxelDataContainer(m.get());
+
+  // Preflight, get error condition, and check that there are no errors
   filt->preflight();
-
   err = filt->getErrorCondition();
-
   DREAM3D_REQUIRED(err, >=, 0)
 
+  // Execute, get error condition, check that there are no errors, and compare the data
   filt->execute();
   err = filt->getErrorCondition();
-
   DREAM3D_REQUIRED(err, >=, 0)
 
-    IDataArray::Pointer iData = m->getCellData("Test_Array");
+  IDataArray::Pointer iData = m->getCellData("Test_Array");
   T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
   T d, p;
   for(size_t i = 0; i < dataArraySize; ++i)
@@ -547,19 +580,25 @@ void testCase4_Execute(const std::string &name, int scalarType)
     DREAM3D_REQUIRE_EQUAL(d, p)
   }
 
-  // Test if the header bytes is larger than expected
+  /*
+   * SUBTEST: Test when skipHeaderBytes is larger than expected
+   */
+
+  // Create another data container
   VoxelDataContainer::Pointer m2 = VoxelDataContainer::New();
+
+  // Create another filter, passing in the skipHeaderBytes + 1
   RawBinaryReader::Pointer filt2 = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes+1);
   filt2->setVoxelDataContainer(m2.get());
+
+  // Preflight, get error condition, and check that there are errors
   filt2->preflight();
-
   err = filt2->getErrorCondition();
-
   DREAM3D_REQUIRED(err, <, 0)
 
-    filt2->execute();
+  // Execute, get error condition, and check that the "file too small" error occurred
+  filt2->execute();
   err = filt2->getErrorCondition();
-
   DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
 }
 
@@ -603,6 +642,7 @@ void testCase4()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// testCase5: This tests when the file size is larger than the allocated size and there is junk both at the beginning and end of the file.
 template<typename T, size_t N>
 void testCase5_Execute(const std::string &name, int scalarType)
 {
@@ -612,6 +652,7 @@ void testCase5_Execute(const std::string &name, int scalarType)
 	int err = 0;
 	std::cout << "Testing case 5: " << name << " with num comps " << N << std::endl;
 
+	// Allocate an array, and get the dataArray from that array
 	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
 	T* dataArray = array.get();
 
@@ -621,33 +662,40 @@ void testCase5_Execute(const std::string &name, int scalarType)
 		dataArray[i] = static_cast<T>(i);
 	}
 
+	// Create junkArray
 	T* junkArray = new T[junkArraySize];
 
-	// Write a pattern into the junk array
+	// Write a pattern into junkArray
 	for(size_t i = 0; i < junkArraySize; ++i)
 	{
 		junkArray[i] = (unsigned)0xAB;
 	}
 
+
+	// Create the file and write to it.  If any of the information is wrong, the result will be false
 	bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Both);
+
+	// Test to make sure that the file was created and written to successfully
 	DREAM3D_REQUIRED(result, ==, true)
 
-	// Part 2: Create and run a RawBinaryReader instance
-	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+    // Create the data container
+    VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+
+	// Create the filter, passing in the skipHeaderBytes
 	RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
 	filt->setVoxelDataContainer(m.get());
+
+	// Preflight, get error condition, and check that there are no errors
 	filt->preflight();
-
 	err = filt->getErrorCondition();
-
 	DREAM3D_REQUIRED(err, >=, 0)
 
-		filt->execute();
+	// Execute, get error condition, check that there are no errors, and compare the data
+	filt->execute();
 	err = filt->getErrorCondition();
-
 	DREAM3D_REQUIRED(err, >=, 0)
 
-		IDataArray::Pointer iData = m->getCellData("Test_Array");
+	IDataArray::Pointer iData = m->getCellData("Test_Array");
 	T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
 	T d, p;
 	for(size_t i = 0; i < dataArraySize; ++i)
@@ -698,6 +746,7 @@ void testCase5()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// testCase6: This tests when skipHeaderBytes equals the file size
 template<typename T, size_t N>
 void testCase6_Execute(const std::string &name, int scalarType)
 {
@@ -707,6 +756,7 @@ void testCase6_Execute(const std::string &name, int scalarType)
 	int err = 0;
 	std::cout << "Testing case 6: " << name << " with num comps " << N << std::endl;
 
+	// Allocate an array, and get the dataArray from that array
 	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
 	T* dataArray = array.get();
 
@@ -716,31 +766,37 @@ void testCase6_Execute(const std::string &name, int scalarType)
 		dataArray[i] = static_cast<T>(i);
 	}
 
+	// Create junkArray
 	T* junkArray = new T[junkArraySize];
 
-	// Write a pattern into the junk array
+	// Write a pattern into junkArray
 	for(size_t i = 0; i < junkArraySize; ++i)
 	{
 		junkArray[i] = (unsigned)0xAB;
 	}
 
+
+	// Create the file and write to it.  If any of the information is wrong, the result will be false
 	bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
+
+	// Test to make sure that the file was created and written to successfully
 	DREAM3D_REQUIRED(result, ==, true)
 
-
-	// Part 2: Create and run a RawBinaryReader instance
+	// Create the data container
 	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+
+	// Create the filter, passing in the skipHeaderBytes
 	RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
 	filt->setVoxelDataContainer(m.get());
+
+	// Preflight, get error condition, and check that the "file too small" error has occurred
 	filt->preflight();
-
 	err = filt->getErrorCondition();
-
 	DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
 
-		filt->execute();
+	// Execute, get error condition, and check that there are errors
+	filt->execute();
 	err = filt->getErrorCondition();
-
 	DREAM3D_REQUIRED(err, <, 0)
 }
 

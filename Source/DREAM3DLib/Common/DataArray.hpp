@@ -778,6 +778,7 @@ class DataArray : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
+      if (Array == NULL) { return -85648; }
       return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
@@ -790,6 +791,7 @@ class DataArray : public IDataArray
     virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
     const std::string &label)
     {
+      if (Array == NULL) { return -85648; }
       std::stringstream dimStr;
       int precision = 0;
       std::string xdmfTypeName;
@@ -876,6 +878,17 @@ class DataArray : public IDataArray
         }
         ptr += size; // increment the pointer
       }
+    }
+
+   /**
+     * @brief operator []
+     * @param i
+     * @return
+     */
+    inline T& operator[](size_t i)
+    {
+      BOOST_ASSERT(i < Size);
+      return Array[i];
     }
 
   protected:
