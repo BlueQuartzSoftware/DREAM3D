@@ -48,7 +48,7 @@
 
 #define StlFilePrefixTestValue "StlFilePrefixTestValue"
 #define MaxIterationsTestValue 20
-#define MisorientationToleranceTestValue 43.2
+#define MisorientationToleranceTestValue 43.0
 #define InputFileTestValue "InputFileTestValue.html"
 #define InputPathTestValue "InputPathTestValue.html"
 #define OutputFileTestValue "OutputFileTestValue.html"
@@ -137,7 +137,24 @@ void FilterParametersReaderTest()
 
 	// Now one by one, compare each of the filter parameters that you have stored in some constant somewhere to the values that are now in the filt variable.
 	// Use DREAM3D_REQUIRED() to make sure each one is what you think it is.
-
+	DREAM3D_REQUIRED(StlFilePrefixTestValue, ==, filt->getStlFilePrefix() )
+	DREAM3D_REQUIRED(MaxIterationsTestValue, ==, filt->getMaxIterations() )
+	DREAM3D_REQUIRED(MisorientationToleranceTestValue, ==, filt->getMisorientationTolerance() )
+	DREAM3D_REQUIRED(InputFileTestValue, ==, filt->getInputFile() )
+	DREAM3D_REQUIRED(InputPathTestValue, ==, filt->getInputPath() )
+	DREAM3D_REQUIRED(OutputFileTestValue, ==, filt->getOutputFile() )
+	DREAM3D_REQUIRED(OutputPathTestValue, ==, filt->getOutputPath() )
+	DREAM3D_REQUIRED(WriteAlignmentShiftsTestValue, ==, filt->getWriteAlignmentShifts() )
+	DREAM3D_REQUIRED(ConversionTypeTestValue, ==, filt->getConversionType() )
+	DREAM3D_REQUIRED(SelectedCellArrayNameTestValue, ==, filt->getSelectedCellArrayName() )
+	DREAM3D_REQUIRED(SelectedFieldArrayNameTestValue, ==, filt->getSelectedFieldArrayName() )
+	DREAM3D_REQUIRED(SelectedEnsembleArrayNameTestValue, ==, filt->getSelectedEnsembleArrayName() )
+	DREAM3D_REQUIRED(SurfaceMeshPointArrayNameTestValue, ==, filt->getSurfaceMeshPointArrayName() )
+	DREAM3D_REQUIRED(SurfaceMeshFaceArrayNameTestValue, ==, filt->getSurfaceMeshFaceArrayName() )
+	DREAM3D_REQUIRED(SurfaceMeshEdgeArrayNameTestValue, ==, filt->getSurfaceMeshEdgeArrayName() )
+	DREAM3D_REQUIRED(SolidMeshPointArrayNameTestValue, ==, filt->getSolidMeshPointArrayName() )
+	DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, filt->getSolidMeshFaceArrayName() )
+	DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, filt->getSolidMeshEdgeArrayName() )
 
 	err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
 	DREAM3D_REQUIRED(err, >=, 0)

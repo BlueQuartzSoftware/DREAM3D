@@ -67,41 +67,23 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual int openOptionsGroup(AbstractFilter* filter);
     virtual int closeOptionsGroup();
 
-    virtual int readValue(const std::string name, std::string &value);
+    virtual std::string readValue(const std::string name, std::string value);
 
-    virtual int readValue(const std::string name, int8_t &value);
-    virtual int readValue(const std::string name, int16_t &value);
-    virtual int readValue(const std::string name, int32_t &value);
-    virtual int readValue(const std::string name, int64_t &value);
-    virtual int readValue(const std::string name, uint8_t &value);
-    virtual int readValue(const std::string name, uint16_t &value);
-    virtual int readValue(const std::string name, uint32_t &value);
-    virtual int readValue(const std::string name, uint64_t &value);
-    virtual int readValue(const std::string name, float &value);
-    virtual int readValue(const std::string name, double &value);
+    virtual int8_t readValue(const std::string name, int8_t value);
+    virtual int16_t readValue(const std::string name, int16_t value);
+    virtual int32_t readValue(const std::string name, int32_t value);
+    virtual int64_t readValue(const std::string name, int64_t value);
+    virtual uint8_t readValue(const std::string name, uint8_t value);
+    virtual uint16_t readValue(const std::string name, uint16_t value);
+    virtual uint32_t readValue(const std::string name, uint32_t value);
+    virtual uint64_t readValue(const std::string name, uint64_t value);
+    virtual float readValue(const std::string name, float value);
+    virtual double readValue(const std::string name, double value);
 
     virtual int readValue(const std::string name, QualityMetricFilter* f);
-    virtual int readValue(const std::string name, IntVec3Widget_t v);
-    virtual int readValue(const std::string name, FloatVec3Widget_t v);
-    virtual int readValue(const std::string name, ComparisonInput_t v);
-
-	virtual int setStringValue(std::string value, std::string name);
-
-	virtual int setInt8Value(int8_t value, std::string name);
-	virtual int setInt16Value(int16_t value, std::string name);
-	virtual int setInt32Value(int32_t value, std::string name);
-	virtual int setInt64Value(int64_t value, std::string name);
-	virtual int setUInt8Value(uint8_t value, std::string name);
-	virtual int setUInt16Value(uint16_t value, std::string name);
-	virtual int setUInt32Value(uint32_t value, std::string name);
-	virtual int setUInt64Value(uint64_t value, std::string name);
-	virtual int setFloatValue(float value, std::string name);
-	virtual int setDoubleValue(double value, std::string name);
-
-	virtual int setQualityMetricFilter(QualityMetricFilter* value, std::string name);
-	virtual int setIntVec3Widget(IntVec3Widget_t value, std::string name);
-	virtual int setFloatVec3Widget(FloatVec3Widget_t value, std::string name);
-	virtual int setComparisonInput(ComparisonInput_t value, std::string name);
+    virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v);
+    virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v);
+    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v);
 
   protected:
     H5FilterParametersReader();
