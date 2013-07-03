@@ -60,6 +60,7 @@ class DREAM3DLib_EXPORT MatrixMath
     static void multiply3x3with3x1(double g1[3][3], double g2[3], double outMat[3]);
 
     static void transpose3x3(float g[3][3], float outMat[3][3]);
+    static void copy3x3(float g[3][3], float outMat[3][3]);
     static void normalize3x3(float g[3][3]);
     static void normalize3x1(float g[3]);
     static float dotProduct(float a[3], float b[3]);
