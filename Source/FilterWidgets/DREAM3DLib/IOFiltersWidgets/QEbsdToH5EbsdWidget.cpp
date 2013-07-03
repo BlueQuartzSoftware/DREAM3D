@@ -612,7 +612,7 @@ void QEbsdToH5EbsdWidget::setTransformationAngleAxis()
     m_SampleTransformationAxis[0] = 0.0;
     m_SampleTransformationAxis[1] = 1.0;
     m_SampleTransformationAxis[2] = 0.0;
-    m_EulerTransformationAngle = 270.0;
+    m_EulerTransformationAngle = 90.0;
     m_EulerTransformationAxis[0] = 0.0;
     m_EulerTransformationAxis[1] = 0.0;
     m_EulerTransformationAxis[2] = 1.0;
