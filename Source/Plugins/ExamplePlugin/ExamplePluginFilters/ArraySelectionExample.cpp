@@ -70,12 +70,16 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<std::string> sel
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                          std::set<std::string> selectedFaceArrays,
-                                                          std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------

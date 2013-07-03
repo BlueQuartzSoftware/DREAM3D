@@ -110,7 +110,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
                                           getSelectedArrays(voxelEnsembleArrayList));
       filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList),
                                                 getSelectedArrays(surfaceMeshFaceArrayList),
-                                                getSelectedArrays(surfaceMeshEdgeArrayList));
+                                                getSelectedArrays(surfaceMeshEdgeArrayList),
+                                                getSelectedArrays(surfaceMeshFieldArrayList),
+                                                getSelectedArrays(surfaceMeshEnsembleArrayList));
       filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList),
                                               getSelectedArrays(solidMeshFaceArrayList),
                                               getSelectedArrays(solidMeshEdgeArrayList));
@@ -170,14 +172,20 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
   protected slots:
     void arrayListUpdated(QListWidgetItem* item);
 
-    void on_vertexArraysCB_stateChanged(int state);
-    void on_faceArraysCB_stateChanged(int state);
-    void on_edgeArraysCB_stateChanged(int state);
+//    void on_vertexArraysCB_stateChanged(int state);
+//    void on_faceArraysCB_stateChanged(int state);
+//    void on_edgeArraysCB_stateChanged(int state);
 
     void on_voxelCellCB_stateChanged(int state);
     void on_voxelFieldCB_stateChanged(int state);
     void on_voxelEnsembleCB_stateChanged(int state);
 
+
+    void on_smVertexArraysCB_stateChanged(int state);
+    void on_smFaceArraysCB_stateChanged(int state);
+    void on_smEdgeArraysCB_stateChanged(int state);
+    void on_smFieldArraysCB_stateChanged(int state);
+    void on_smEnsembleArraysCB_stateChanged(int state);
 
   protected:
 

@@ -60,11 +60,16 @@ VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_MisAngle(60.0f),
   m_OutputFile("GBCD_PoleFigure.vtk"),
   m_CrystalStructures(NULL),
   m_GBCD(NULL)
 {
-    m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_MisAxis.x = 1;
+  m_MisAxis.y = 1;
+  m_MisAxis.z = 1;
+
+  m_OrientationOps = OrientationMath::getOrientationOpsVector();
   setupFilterParameters();
 }
 

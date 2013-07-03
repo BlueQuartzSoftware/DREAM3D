@@ -534,8 +534,10 @@ void ReadH5Ebsd::setVoxelSelectedArrayNames(std::set<std::string> selectedCellAr
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Surface Mesh data in an H5Ebsd file
 }

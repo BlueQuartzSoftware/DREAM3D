@@ -103,15 +103,19 @@ void VoxelDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t f
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
+
   if(m_HdfFileId < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
-
-  if (m_HdfFileId > 0)
+  else if (preflight == true)
   {
-    gatherData(preflight);
+    int err = gatherData(preflight);
+    if (err < 0)
+    {
+
+    }
   }
 
 }
@@ -339,10 +343,6 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-//    for(size_t i = 0; i < readNames.size(); ++i)
-//    {
-//      addCreatedCellData(readNames[i]);
-//    }
   }
 
   if(m_ReadFieldData == true)
@@ -355,10 +355,6 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-//    for(size_t i = 0; i < readNames.size(); ++i)
-//    {
-//      addCreatedFieldData(readNames[i]);
-//    }
   }
 
   if(m_ReadEnsembleData == true)
@@ -371,10 +367,6 @@ int VoxelDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-//    for(size_t i = 0; i < readNames.size(); ++i)
-//    {
-//      addCreatedEnsembleData(readNames[i]);
-//    }
   }
 
   err |= H5Gclose(dcGid);

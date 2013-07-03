@@ -290,6 +290,8 @@ void DataContainerReader::execute()
     smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
     smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
     smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
+    smReader->setFieldArraysToRead(m_SelectedSurfaceMeshFieldArrays);
+    smReader->setEnsembleArraysToRead(m_SelectedSurfaceMeshEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
     smReader->setObservers(getObservers());
@@ -347,11 +349,15 @@ void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selec
 // -----------------------------------------------------------------------------
 void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                            std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
 
