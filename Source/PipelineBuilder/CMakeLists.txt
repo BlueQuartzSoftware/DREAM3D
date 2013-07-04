@@ -59,6 +59,7 @@ set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
 	${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
+	${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
 )
 
 set(PipelineBuilderLib_SRCS
@@ -71,6 +72,7 @@ set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
 	${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
+	${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")
@@ -83,6 +85,7 @@ QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS
             ${PROJECT_SOURCE_DIR}/UI_Files/PipelineBuilderWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/AddFavoriteWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/ArraySelectionWidget.ui
+            ${PROJECT_SOURCE_DIR}/UI_Files/AxisAngleWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/ComparisonSelectionWidget.ui
       )
 
