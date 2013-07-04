@@ -35,14 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VisualizeGBCD.h"
 
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
-
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
@@ -51,6 +43,9 @@
 
 const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2*M_PI);
+
+#define WRITE_XYZ_POINTS 0
+
 
 
 // -----------------------------------------------------------------------------
@@ -106,7 +101,7 @@ void VisualizeGBCD::setupFilterParameters()
     option->setUnits("");
     parameters.push_back(option);
   }
-    {
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
@@ -138,7 +133,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
   std::stringstream ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
-    if(getOutputFile().empty() == true)
+  if(getOutputFile().empty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";
@@ -159,21 +154,31 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
       setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
+      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+
     }
     else
     {
       IDataArray::Pointer iDataArray = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD);
-      int numComp = iDataArray->GetNumberOfComponents();
-      GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, float, FloatArrayType, ensembles, numComp)
+      if (NULL == iDataArray.get())
+      {
+        setErrorCondition(-387);
+        addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
+      }
+      else
+      {
+        int numComp = iDataArray->GetNumberOfComponents();
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, float, FloatArrayType, ensembles, numComp)
+      }
     }
   }
 }
@@ -213,11 +218,6 @@ void VisualizeGBCD::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
 
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
@@ -225,6 +225,10 @@ void VisualizeGBCD::execute()
 
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumEnsembleTuples());
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();
@@ -284,14 +288,14 @@ void VisualizeGBCD::execute()
   float mis_euler1[3];
   float qtest[5];
   float w, n1, n2, n3;
-  float dist;
+  //  float dist;
   float theta, cosPhi, phi;
 
   m_MisAngle = m_MisAngle * m_pi/180.0f;
   //convert axis angle to matrix representation of misorientation
   OrientationMath::axisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
 
-  int inversion = 1;
+  //  int inversion = 1;
   //get number of symmetry operators
   int n_sym = m_OrientationOps[1]->getNumSymOps();
 
@@ -316,6 +320,9 @@ void VisualizeGBCD::execute()
   xyzArray->initializeWithValues(0.0);
   float* xyz = xyzArray->GetPointer(0);
 
+#if WRITE_XYZ_POINTS
+  size_t nPoints = 0;
+#endif
   for (int64_t k = 0; k < (gbcdSizes[3]); k++)
   {
     for (int64_t l = 0; l < (gbcdSizes[4]); l++)
@@ -328,6 +335,11 @@ void VisualizeGBCD::execute()
       xyz[3*(l*gbcdSizes[3]+k)+2] = cosPhi;
     }
   }
+
+  std::stringstream positions;
+  std::stringstream scalars;
+
+  std::stringstream sphericalPositions;
 
   for(int q=0;q<2;q++)
   {
@@ -389,10 +401,22 @@ void VisualizeGBCD::execute()
                 rotNormal[1] = -rotNormal2[1];
                 rotNormal[2] = -rotNormal2[2];
               }
-              if(rotNormal[2] < 0) rotNormal[0] = -rotNormal[0], rotNormal[1] = -rotNormal[1], rotNormal[2] = -rotNormal[2];
+#if WRITE_XYZ_POINTS
+              sphericalPositions  << rotNormal[0] << " " << rotNormal[1] << " " << rotNormal[2] << "\n";
+#endif
+              if(rotNormal[2] < 0) {
+                rotNormal[0] = -rotNormal[0];
+                rotNormal[1] = -rotNormal[1];
+                rotNormal[2] = -rotNormal[2];
+              }
               //find x,y point in stereographic projection
               x = rotNormal[0]/(rotNormal[2]+1);
               y = rotNormal[1]/(rotNormal[2]+1);
+
+#if WRITE_XYZ_POINTS
+              positions << x << " " << y << " 0.0\n";
+              nPoints++;
+#endif
               //shift projection from -1 to 1 to 0 to 2
               x = x+1.0;
               y = y+1.0;
@@ -404,12 +428,53 @@ void VisualizeGBCD::execute()
               if(xbin >= xpoints) xbin = xpoints-1;
               if(ybin >= ypoints) ybin = ypoints-1;
               poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(l*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+#if WRITE_XYZ_POINTS
+              scalars << poleFigure[(ybin*xpoints)+xbin] << "\n";
+#endif
             }
           }
         }
       }
     }
   }
+
+#if WRITE_XYZ_POINTS
+  {
+    FILE* f = fopen("/tmp/stereo_graphic_gbcd.vtk", "wb");
+    // Write the correct header
+    fprintf(f, "# vtk DataFile Version 2.0\n");
+    fprintf(f, "data set from DREAM3D\n");
+    fprintf(f, "ASCII"); fprintf(f, "\n");
+    fprintf(f, "DATASET POLYDATA\n");
+    fprintf(f, "POINTS %d float\n", nPoints);
+    fprintf(f, "%s\n", positions.str().c_str());
+
+    fprintf(f, "\n");
+    fprintf(f, "POINT_DATA %d\n", nPoints);
+    fprintf(f, "SCALARS GBCD float 1\n");
+    fprintf(f, "LOOKUP_TABLE default\n");
+    fprintf(f, "%s\n", scalars.str().c_str());
+    fclose(f);
+  }
+
+  {
+    FILE* f = fopen("/tmp/spherical_gbcd.vtk", "wb");
+    // Write the correct header
+    fprintf(f, "# vtk DataFile Version 2.0\n");
+    fprintf(f, "data set from DREAM3D\n");
+    fprintf(f, "ASCII"); fprintf(f, "\n");
+    fprintf(f, "DATASET POLYDATA\n");
+    fprintf(f, "POINTS %d float\n", nPoints);
+    fprintf(f, "%s\n", sphericalPositions.str().c_str());
+
+    fprintf(f, "\n");
+    fprintf(f, "POINT_DATA %d\n", nPoints);
+    fprintf(f, "SCALARS GBCD float 1\n");
+    fprintf(f, "LOOKUP_TABLE default\n");
+    fprintf(f, "%s\n", scalars.str().c_str());
+    fclose(f);
+  }
+#endif
 
   int neighbors[4];
   neighbors[0] = -1;
@@ -474,60 +539,61 @@ void VisualizeGBCD::execute()
     return;
   }
 
-  FILE* f = NULL;
-  f = fopen(m_OutputFile.c_str(), "wb");
-  if(NULL == f)
   {
-
-    ss.str("");
-    ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
-    notifyErrorMessage(ss.str(), getErrorCondition());
-    return;
-  }
-
-
-
-  // Write the correct header
-  fprintf(f, "# vtk DataFile Version 2.0\n");
-  fprintf(f, "data set from DREAM3D\n");
-  fprintf(f, "BINARY"); fprintf(f, "\n");
-  fprintf(f, "DATASET RECTILINEAR_GRID\n");
-  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints+1, ypoints+1, zpoints+1);
-
-  // Write the Coords
-  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
-  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, (-float(ypoints)*yres/2.0), yres);
-  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, (-float(zpoints)*zres/2.0), zres);
-
-  size_t total = xpoints * ypoints * zpoints;
-  fprintf(f, "CELL_DATA %d\n", (int)total);
-
-  fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  {
-    float* gn = new float[total];
-    float t;
-    int count = 0;
-    for (int64_t i = 0; i < (xpoints); i++)
+    FILE* f = NULL;
+    f = fopen(m_OutputFile.c_str(), "wb");
+    if(NULL == f)
     {
-      for (int64_t j = 0; j < (ypoints); j++)
+
+      ss.str("");
+      ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
+      notifyErrorMessage(ss.str(), getErrorCondition());
+      return;
+    }
+
+
+
+    // Write the correct header
+    fprintf(f, "# vtk DataFile Version 2.0\n");
+    fprintf(f, "data set from DREAM3D\n");
+    fprintf(f, "BINARY"); fprintf(f, "\n");
+    fprintf(f, "DATASET RECTILINEAR_GRID\n");
+    fprintf(f, "DIMENSIONS %d %d %d\n", xpoints+1, ypoints+1, zpoints+1);
+
+    // Write the Coords
+    writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
+    writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, (-float(ypoints)*yres/2.0), yres);
+    writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, (-float(zpoints)*zres/2.0), zres);
+
+    size_t total = xpoints * ypoints * zpoints;
+    fprintf(f, "CELL_DATA %d\n", (int)total);
+
+    fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
+    fprintf(f, "LOOKUP_TABLE default\n");
+    {
+      float* gn = new float[total];
+      float t;
+      int count = 0;
+      for (int64_t i = 0; i < (xpoints); i++)
       {
-        t = poleFigure[(j*xpoints)+i];
-        MXA::Endian::FromSystemToBig::convert<float>(t);
-        gn[count] = t;
-        count++;
+        for (int64_t j = 0; j < (ypoints); j++)
+        {
+          t = poleFigure[(j*xpoints)+i];
+          MXA::Endian::FromSystemToBig::convert<float>(t);
+          gn[count] = t;
+          count++;
+        }
+      }
+      int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
+      delete[] gn;
+      if (totalWritten != (total))  {
+        std::cout << "Error Writing Binary VTK Data into file " << m_OutputFile << std::endl;
+        fclose(f);
       }
     }
-    int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
-    delete[] gn;
-    if (totalWritten != (total))  {
-      std::cout << "Error Writing Binary VTK Data into file " << m_OutputFile << std::endl;
-      fclose(f);
-    }
+
+    fclose(f);
   }
-
-  fclose(f);
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

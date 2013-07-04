@@ -68,7 +68,7 @@ class CalculateGBCDImpl
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   public:
-    CalculateGBCDImpl(size_t i, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures, 
+    CalculateGBCDImpl(size_t i, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
                     int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       startOffset(i),
       m_Labels(Labels),
@@ -174,7 +174,7 @@ class CalculateGBCDImpl
                 //translate matrix to euler angles
                 OrientationMath::mattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
-                 
+
                 //get the indexes that this point would be in the GBCD histogram
                 gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
                 if (gbcd_index != -1)
@@ -273,9 +273,9 @@ FindGBCD::FindGBCD() :
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
   m_FieldEulerAngles(NULL),
-  m_GBCD(NULL),
   m_FieldPhases(NULL),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+    m_GBCD(NULL)
 {
   setupFilterParameters();
 }
@@ -492,7 +492,6 @@ void FindGBCD::execute()
   int numIterationsPerTime = 0;
 
   float totalFaceArea = 0.0;
-  int counter = 0;
   ss.str("");
   ss << "Calculating GBCD: 0/" << totalFaces << " Completed";
   for(size_t i=0;i<totalFaces;i=i+faceChunkSize)
@@ -550,7 +549,7 @@ void FindGBCD::execute()
   float MRDfactor = float(totalBins)/totalFaceArea;
   for(int i=0;i<totalBins;i++)
   {
-	  m_GBCD[i] *= MRDfactor;
+    m_GBCD[i] *= MRDfactor;
   }
 
   /* Let the GUI know we are done with this filter */

@@ -462,6 +462,8 @@ void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
   readSelections(prefs, name, "SurfaceMeshPoint", surfaceMeshVertexArrayList);
   readSelections(prefs, name, "SurfaceMeshFace", surfaceMeshFaceArrayList);
   readSelections(prefs, name, "SurfaceMeshEdge", surfaceMeshEdgeArrayList);
+  readSelections(prefs, name, "SurfaceMeshField", surfaceMeshFieldArrayList);
+  readSelections(prefs, name, "SurfaceMeshEnsemble", surfaceMeshEnsembleArrayList);
 
   readSelections(prefs, name, "SolidMeshPoint", solidMeshVertexArrayList);
   readSelections(prefs, name, "SolidMeshFace", solidMeshFaceArrayList);
@@ -479,6 +481,8 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
   writeSelections(prefs, name, "SurfaceMeshPoint", surfaceMeshVertexArrayList);
   writeSelections(prefs, name, "SurfaceMeshFace", surfaceMeshFaceArrayList);
   writeSelections(prefs, name, "SurfaceMeshEdge", surfaceMeshEdgeArrayList);
+  writeSelections(prefs, name, "SurfaceMeshField", surfaceMeshFieldArrayList);
+  writeSelections(prefs, name, "SurfaceMeshEnsemble", surfaceMeshEnsembleArrayList);
 
   writeSelections(prefs, name, "SolidMeshPoint", solidMeshVertexArrayList);
   writeSelections(prefs, name, "SolidMeshFace", solidMeshFaceArrayList);
