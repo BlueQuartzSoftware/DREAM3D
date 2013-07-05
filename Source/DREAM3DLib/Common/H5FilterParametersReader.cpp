@@ -225,5 +225,6 @@ ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, Co
   H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
   H5Lite::readStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
   H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
+  H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompValue", v.compValue);
   return v;
 }

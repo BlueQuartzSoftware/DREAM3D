@@ -39,6 +39,8 @@ class TestFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
+	DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
+	DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
