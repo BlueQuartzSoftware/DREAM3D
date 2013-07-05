@@ -22,7 +22,7 @@ endif(WIN32)
 include_directories(${PROJECT_CODE_DIR}/QtSupport
                     ${DREAM3DProj_BINARY_DIR}
                     ${DREAM3DProj_BINARY_DIR}/QtSupport
-                    ${PROJECT_BINARY_DIR}
+                    ${PipelineBuilderLib_BINARY_DIR}
                     ${PipelineBuilderLib_SOURCE_DIR}
 )
 
@@ -58,8 +58,10 @@ set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
-	${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
-	${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
+  ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
+  ${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
+  ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.h
+  ${PROJECT_SOURCE_DIR}/AxisAngleItemDelegate.h
 )
 
 set(PipelineBuilderLib_SRCS
@@ -71,8 +73,9 @@ set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
-	${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
-	${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
+  ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
+  ${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
+  ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")

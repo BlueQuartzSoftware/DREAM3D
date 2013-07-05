@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SGMDFTABLEMODEL_H_
-#define SGMDFTABLEMODEL_H_
+#ifndef AxisAngleTableModel_H_
+#define AxisAngleTableModel_H_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>
@@ -48,7 +48,7 @@ class QAbstractItemDelegate;
 /*
  *
  */
-class SGMDFTableModel : public QAbstractTableModel
+class AxisAngleTableModel : public QAbstractTableModel
 {
     Q_OBJECT
 
@@ -59,13 +59,12 @@ class SGMDFTableModel : public QAbstractTableModel
     {
       Angle = 0,
       Axis,
-      Weight,
       ColumnCount
     };
 
 
-    SGMDFTableModel(QObject* parent = 0);
-    virtual ~SGMDFTableModel();
+    AxisAngleTableModel(QObject* parent = 0);
+    virtual ~AxisAngleTableModel();
 
     /**
       *
@@ -155,23 +154,15 @@ class SGMDFTableModel : public QAbstractTableModel
       */
     virtual QVector<float> getData(int col);
 
-    /**
-      *
-      * @param col
-      * @param row
-      * @return
-      */
-    // virtual float getDataValue(int col, int row);
-
     int parseHKLRow(int row, float &h, float &k, float &l);
 
     virtual void setColumnData(int col, QVector<float> &data);
 
-    virtual void setRowData(int row, float angle, std::string axis, float weight);
+    virtual void setRowData(int row, float angle, std::string axis);
 
     virtual void setInitialValues();
 
-    void setTableData(QVector<float> angles, QVector<float> axis, QVector<float> weights);
+    void setTableData(QVector<float> angles, QVector<float> axis);
 
   private:
     int m_ColumnCount;
@@ -179,11 +170,10 @@ class SGMDFTableModel : public QAbstractTableModel
 
     QVector<float> m_Angles;
     QVector<QString> m_Axis;
-    QVector<float> m_Weights;
 
 
-    SGMDFTableModel(const SGMDFTableModel&); // Copy Constructor Not Implemented
-    void operator=(const SGMDFTableModel&); // Operator '=' Not Implemented
+    AxisAngleTableModel(const AxisAngleTableModel&); // Copy Constructor Not Implemented
+    void operator=(const AxisAngleTableModel&); // Operator '=' Not Implemented
 };
 
-#endif /* SGMDFTABLEMODEL_H_ */
+#endif /* AxisAngleTableModel_H_ */

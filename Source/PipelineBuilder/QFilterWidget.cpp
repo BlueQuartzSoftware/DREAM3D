@@ -69,6 +69,7 @@
 
 #include "ArraySelectionWidget.h"
 #include "ComparisonSelectionWidget.h"
+#include "AxisAngleWidget.h"
 
 
 #define PADDING 5
@@ -78,13 +79,15 @@
 
 // These Streams need to be implemented so that our 3 Element Vectors can be read/write to disk/prefs files
 QDataStream &operator<<( QDataStream &out, const IntVec3Widget_t& v) {
- out << v.x << v.y << v.z; return out;
+  out << v.x << v.y << v.z; return out;
 }
 QDataStream &operator>>( QDataStream &in, IntVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
 
 QDataStream &operator<<( QDataStream &out, const FloatVec3Widget_t& v) { out << v.x << v.y << v.z; return out; }
 QDataStream &operator>>( QDataStream &in, FloatVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
 
+//QDataStream &operator<<( QDataStream &out, const AxisAngleWidget_t& v)  { out << v.angle << v.h << v.k << v.l; return out; }
+//QDataStream &operator>>( QDataStream &in, AxisAngleWidget_t& v)  { in >> v.angle >> v.h >> v.k >> v.l; return in; }
 
 
 // Initialize private static member variable
@@ -109,6 +112,9 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
   qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
 
+ // qRegisterMetaType<AxisAngleWidget_t>("AxisAngleWidget_t");
+ // qRegisterMetaTypeStreamOperators<AxisAngleWidget_t>("AxisAngleWidget_t");
+
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
     m_OpenDialogLastDirectory = QDir::homePath();
@@ -127,8 +133,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this,
-    SIGNAL(customContextMenuRequested(const QPoint&)),
-    SLOT(onCustomContextMenuRequested(const QPoint&)));
+          SIGNAL(customContextMenuRequested(const QPoint&)),
+          SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -163,7 +169,7 @@ void QFilterWidget::initFilterMenu()
   m_actionFilterHelp->setObjectName(QString::fromUtf8("actionWidgetHelp"));
   m_actionFilterHelp->setText(QApplication::translate("QFilterWidget", "Show Filter Help", 0, QApplication::UnicodeUTF8));
   connect(m_actionFilterHelp, SIGNAL(triggered()),
-    this, SLOT( actionWidgetHelp_triggered() ) );
+          this, SLOT( actionWidgetHelp_triggered() ) );
   m_FilterMenu.addAction(m_actionFilterHelp);
 
   m_FilterMenu.addSeparator();
@@ -172,7 +178,7 @@ void QFilterWidget::initFilterMenu()
   m_actionRemoveFilter->setObjectName(QString::fromUtf8("actionRemoveFilter"));
   m_actionRemoveFilter->setText(QApplication::translate("QFilterWidget", "Remove Filter", 0, QApplication::UnicodeUTF8));
   connect(m_actionRemoveFilter, SIGNAL(triggered()),
-    this, SLOT( actionRemoveFilter_triggered() ) );
+          this, SLOT( actionRemoveFilter_triggered() ) );
   m_FilterMenu.addAction(m_actionRemoveFilter);
 
 }
@@ -727,9 +733,6 @@ void QFilterWidget::setupGui()
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
-
-
-
     else if (wType == FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget)
     {
       setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
@@ -739,6 +742,14 @@ void QFilterWidget::setupGui()
       setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget)
+    {
+      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget)
+    {
+      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+    }
+    else if (wType == FilterParameter::SurfaceMeshEnsembleArrayNameSelectionWidget)
     {
       setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
@@ -767,6 +778,10 @@ void QFilterWidget::setupGui()
     else if (wType == FilterParameter::FloatVec3Widget)
     {
       setupFloatVec3Widget(frmLayout, optIndex, option, label);
+    }
+     else if (wType == FilterParameter::AxisAngleWidget)
+    {
+      setupAxisAngleWidget(frmLayout, optIndex, option, label);
     }
     else if (wType >= FilterParameter::CellArrayComparisonSelectionWidget && wType <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
@@ -862,6 +877,20 @@ void QFilterWidget::setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex,
   connect(Dimensions_1, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
   connect(Dimensions_2, SIGNAL( textChanged(const QString &)), this, SLOT(updateFloatVec3Widget(const QString &)));
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
+                                         FilterParameter* option, QLabel* label )
+{
+  label->deleteLater();
+  AxisAngleWidget* w = new AxisAngleWidget(this);
+  w->setObjectName((QString::fromStdString(option->getPropertyName())));
+  frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
+  connect(w, SIGNAL(AxisAnglesChanged()), this, SLOT(updateAxisAngleWidget()));
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1137,7 +1166,7 @@ void QFilterWidget::updateQLineEditDoubleValue()
 // -----------------------------------------------------------------------------
 void QFilterWidget::selectInputFile()
 {
-    QObject* whoSent = sender();
+  QObject* whoSent = sender();
   // for QButtons we prepended "btn_" to the end of the property name so strip that off
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
@@ -1455,6 +1484,14 @@ void QFilterWidget::updateLineEdit(const QString &v)
   std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
             << " via QLineEdit." <<  std::endl;
   BOOST_ASSERT(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::updateAxisAngleWidget()
+{
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

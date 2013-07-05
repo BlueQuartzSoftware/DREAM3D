@@ -178,7 +178,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void updateIntVec3Widget(const QString &v);
     virtual void updateFloatVec3Widget(const QString &v);
     virtual void updateComparisonSelectionWidget();
-
+    virtual void updateAxisAngleWidget();
     virtual void setIsSelected(bool b);
 
    /**
@@ -230,7 +230,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     void setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label );
     void setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label ,
                                      FilterParameter::WidgetType arrayListType);
-
+    void setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
+                                         FilterParameter* option, QLabel* label );
   private:
     QRect										m_DeleteRect;
     QPoint										dragStartPosition;

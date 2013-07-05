@@ -248,3 +248,14 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v)
+{
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 4 };
+  err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  return err;
+}
