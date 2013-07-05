@@ -25,6 +25,7 @@ Due to different experimental setups the definition of the _bottom_ slice or the
 Many serial sectioning systems are inherently a series of 2D scans stacked together to form a 3D volume of material. Due to this the experimental systems have no knowledge of the amount of material that was removed between each slice and so the user is responsible for setting this value correctly for their data set.
 
 ![Import Orientation Files User Interface](ImportOrientationDataFilter.png)
+
 @image latex ImportOrientationDataFilter.png " " width=6in
 
 
@@ -32,17 +33,19 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 
 The next item that the user needs to do is to click the **Set Reference Frame** button to set the proper reference frame for the data set which will be written to the H5Ebsd file as meta data. Below are a number of examples showing the differences in the data sets that the different reference frames will have on the data set when the data is finally processed by DREAM3D.
 
-![No Transform or Unknown Manufacturer](NoUnknown_RefFrame.png)
-@image latex NoUnknown_RefFrame.png " " width=4in
+---
 
+![No Transform or Unknown Manufacturer or HEDM Data](NoUnknown_HEDM_RefFrame.png)
 
-![TSL & HKL Transform](EDAX_HKL_RefFrame.png)
+@image latex NoUnknown_HEDM_RefFrame.png " " width=4in
+
+---
+
+![TSL or HKL Transform](EDAX_HKL_RefFrame.png)
+
 @image latex EDAX_HKL_RefFrame.png " " width=4in
 
-
-![HEDM Transform](HEDM_RefFrame.png)
-@image latex HEDM_RefFrame.png " " width=4in
-
+---
 
 ### Supported File Formats ###
 
