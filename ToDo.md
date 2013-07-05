@@ -15,8 +15,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
     - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
     - Take into account the Euler Reference Frame Rotations (Current does not matter because all rotations are about the Z Axis)
 + Disable adding of filters into the pipeline while it is running.
-+ Fix GBCD Generation or make private on next release
-+ Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 + Update the documentation for the disorientation coloring
 + Incorrect Documentation for Find Twin Boundary Info
 + Write out Lattice Constants from EBSD data to XDMF data
@@ -78,7 +76,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Statistics/Analysis/Other Algorithms ##
-+ Add filter to calculate info for twin boundaries for UCSB guys
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -186,6 +183,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
++ Add filter to calculate info for twin boundaries for UCSB guys
++ Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
++ Fix GBCD Generation or make private on next release
 + Make Euler Color Filter Private as the implementation is not correct.
 + Import OrientationData GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 + Create filter to dump color images based on an RGB Array (currently only the Generate IPF Colors creates these types of arrays)
