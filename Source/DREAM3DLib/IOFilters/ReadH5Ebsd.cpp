@@ -503,7 +503,7 @@ void ReadH5Ebsd::execute()
       rot_Euler->execute();
     }
 
-    if(m_EulerTransformationAngle > 0)
+    if(m_SampleTransformationAngle > 0)
     {
       FloatVec3Widget_t sampleAxis;
       sampleAxis.x = m_SampleTransformationAxis[0];
@@ -515,6 +515,7 @@ void ReadH5Ebsd::execute()
       rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
       rot_Sample->setRotationAngle(m_SampleTransformationAngle);
       rot_Sample->setRotationAxis(sampleAxis);
+      rot_Sample->setsliceBySlice(true);
       rot_Sample->execute();
     }
   }
@@ -541,8 +542,10 @@ void ReadH5Ebsd::setVoxelSelectedArrayNames(std::set<std::string> selectedCellAr
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Surface Mesh data in an H5Ebsd file
 }

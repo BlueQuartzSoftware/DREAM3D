@@ -45,7 +45,7 @@
 typedef struct { int x; int y; int z; } IntVec3Widget_t;
 typedef struct { float x; float y; float z; } FloatVec3Widget_t;
 typedef struct { std::string arrayName; int compOperator; double compValue; } ComparisonInput_t;
-
+typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 /**
  * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
@@ -74,6 +74,9 @@ class FilterParameter
       OutputPathWidget,
       BooleanWidget,
       ChoiceWidget, // Generic ComboBox Drop down where the filter provides the list of strings
+      IntVec3Widget,
+      FloatVec3Widget,
+      AxisAngleWidget,
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       VoxelCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
       VoxelFieldArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
@@ -81,6 +84,8 @@ class FilterParameter
       SurfaceMeshVertexArrayNameSelectionWidget,
       SurfaceMeshFaceArrayNameSelectionWidget,
       SurfaceMeshEdgeArrayNameSelectionWidget,
+      SurfaceMeshFieldArrayNameSelectionWidget,
+      SurfaceMeshEnsembleArrayNameSelectionWidget,
       SolidMeshVertexArrayNameSelectionWidget,
       SolidMeshFaceArrayNameSelectionWidget,
       SolidMeshEdgeArrayNameSelectionWidget,
@@ -93,8 +98,6 @@ class FilterParameter
       PointArrayComparisonSelectionWidget,
       FaceArrayComparisonSelectionWidget,
       EdgeArrayComparisonSelectionWidget,
-      IntVec3Widget,
-      FloatVec3Widget,
       CustomWidget
       /* If you add more widget types you need to update the QFilterWidget code to
        * account for these new types. You also need to update the FilterWidgetCodeGen.cpp

@@ -19,19 +19,22 @@ If the processing pipeline is going to process phase based data for crystallogra
 
 | Name | Type |
 |------|------|
-| Input File | File Path to .h5ebsd |  
-| Start Slice | The first slice of data to read |  
-| End Slice | The last slice of data to read |  
-| Use Recommended Transformations | Boolean |  
+| Input File | File Path to .h5ebsd |
+| Start Slice | The first slice of data to read |
+| End Slice | The last slice of data to read |
+| Use Recommended Transformations | Boolean |
 | Various Arrays | User selected arrays to read into memory |
 
 ## Required DataContainers ##
+
 Voxel
 
 ## Required Arrays ##
+
 None
 
 ## Created Arrays ##
+
 An array for each of the arrays selected will be created, possibly over writing any arrays that were already in memory with the same name.
 
 ## Authors ##

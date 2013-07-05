@@ -126,13 +126,19 @@ void ArraySelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer v
 void ArraySelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
 {
   std::list<std::string> cellNames = vdc->getPointArrayNameList();
-  populateArrayList(surfaceMeshVertexArrayList, cellNames, vertexArraysCB);
+  populateArrayList(surfaceMeshVertexArrayList, cellNames, smVertexArraysCB);
 
-  std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
-  populateArrayList(surfaceMeshFaceArrayList, fieldNames, faceArraysCB);
+  std::list<std::string> faceNames = vdc->getFaceArrayNameList();
+  populateArrayList(surfaceMeshFaceArrayList, faceNames, smFaceArraysCB);
 
-  std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
-  populateArrayList(surfaceMeshEdgeArrayList, ensembleNames, edgeArraysCB);
+  std::list<std::string> edgeNames = vdc->getEdgeArrayNameList();
+  populateArrayList(surfaceMeshEdgeArrayList, edgeNames, smEdgeArraysCB);
+
+  std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
+  populateArrayList(surfaceMeshFieldArrayList, fieldNames, smFieldArraysCB);
+
+  std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
+  populateArrayList(surfaceMeshEnsembleArrayList, ensembleNames, smEnsembleArraysCB);
 }
 
 // -----------------------------------------------------------------------------
@@ -215,10 +221,10 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_vertexArraysCB_stateChanged(int state)
+void ArraySelectionWidget::on_smVertexArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    vertexArraysCB->setCheckState(Qt::Checked);
+    smVertexArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
   toggleListSelections(surfaceMeshVertexArrayList, state);
@@ -227,10 +233,10 @@ void ArraySelectionWidget::on_vertexArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_faceArraysCB_stateChanged(int state)
+void ArraySelectionWidget::on_smFaceArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    faceArraysCB->setCheckState(Qt::Checked);
+    smFaceArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
   toggleListSelections(surfaceMeshFaceArrayList, state);
@@ -239,13 +245,37 @@ void ArraySelectionWidget::on_faceArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_edgeArraysCB_stateChanged(int state)
+void ArraySelectionWidget::on_smEdgeArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    edgeArraysCB->setCheckState(Qt::Checked);
+    smEdgeArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
   toggleListSelections(surfaceMeshEdgeArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_smFieldArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    smFieldArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshFieldArrayList, state);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::on_smEnsembleArraysCB_stateChanged(int state)
+{
+  if (state == Qt::PartiallyChecked) {
+    smEnsembleArraysCB->setCheckState(Qt::Checked);
+    state = Qt::Checked;
+  }
+  toggleListSelections(surfaceMeshEnsembleArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -432,6 +462,8 @@ void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
   readSelections(prefs, name, "SurfaceMeshPoint", surfaceMeshVertexArrayList);
   readSelections(prefs, name, "SurfaceMeshFace", surfaceMeshFaceArrayList);
   readSelections(prefs, name, "SurfaceMeshEdge", surfaceMeshEdgeArrayList);
+  readSelections(prefs, name, "SurfaceMeshField", surfaceMeshFieldArrayList);
+  readSelections(prefs, name, "SurfaceMeshEnsemble", surfaceMeshEnsembleArrayList);
 
   readSelections(prefs, name, "SolidMeshPoint", solidMeshVertexArrayList);
   readSelections(prefs, name, "SolidMeshFace", solidMeshFaceArrayList);
@@ -449,6 +481,8 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
   writeSelections(prefs, name, "SurfaceMeshPoint", surfaceMeshVertexArrayList);
   writeSelections(prefs, name, "SurfaceMeshFace", surfaceMeshFaceArrayList);
   writeSelections(prefs, name, "SurfaceMeshEdge", surfaceMeshEdgeArrayList);
+  writeSelections(prefs, name, "SurfaceMeshField", surfaceMeshFieldArrayList);
+  writeSelections(prefs, name, "SurfaceMeshEnsemble", surfaceMeshEnsembleArrayList);
 
   writeSelections(prefs, name, "SolidMeshPoint", solidMeshVertexArrayList);
   writeSelections(prefs, name, "SolidMeshFace", solidMeshFaceArrayList);

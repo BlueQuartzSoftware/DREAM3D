@@ -232,7 +232,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
 
   bool implementArrayNameComboBoxUpdated = false;
   bool implementPreflightAboutToExecute = true;
-
+  int axisAngleWidgetCount = 0;
   // Loop on all the filter options
   for(size_t i = 0; i < options.size(); ++i)
   {
@@ -280,6 +280,15 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     {
       fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.c_str());
+    }
+    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    {
+      fprintf(f, "// AxisAngleWidget: Nothing in the header for %s \n", prop.c_str());
+      axisAngleWidgetCount++;
+      if (axisAngleWidgetCount > 1)
+      {
+        fprintf(f, "#error You can have only 1 AxisAngleWidget per filter.\n");
+      }
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget
@@ -398,7 +407,7 @@ void createSourceFile( const std::string &group,
   bool implementArrayNameComboBoxUpdated = false;
   bool implementArrayNameSelectionWidget = false;
   bool implementComparisonSelectionWidget = false;
-
+  bool implementAxisAngleWidget = false;
   fprintf(f, "/*\n");
   fprintf(f, "* This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "* If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
@@ -430,6 +439,10 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "#include \"ComparisonSelectionWidget.h\"\n");
     }
+    if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    {
+      fprintf(f, "#include \"AxisAngleWidget.h\"\n");
+    }
   }
   fprintf(f, "\n\n\n");
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
@@ -453,13 +466,18 @@ void createSourceFile( const std::string &group,
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      fprintf(f, "    //Do we need to preset something from the filter maybe?\n");
+      fprintf(f, "    //ArraySelectionWidget: Do we need to preset something from the filter maybe?\n");
       implementArrayNameSelectionWidget = true;
+    }
+    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    {
+      fprintf(f, "    //AxisAngleWidget: Do we need to preset something from the filter maybe?\n");
+      implementAxisAngleWidget = true;
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "    //Do we need to preset something from the filter maybe?\n");
+      fprintf(f, "    //ComparisonSelectionWidget: Do we need to preset something from the filter maybe?\n");
       implementComparisonSelectionWidget = true;
     }
     else
@@ -504,6 +522,12 @@ void createSourceFile( const std::string &group,
       fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->getArraySelections(filter.get());\n    }\n  }\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    {
+      fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
@@ -628,6 +652,14 @@ void createSourceFile( const std::string &group,
       fprintf(f, "  prefs.setArrayIndex(2);\n");
       fprintf(f, "  prefs.setValue(\"z\", static_cast<double>(v_%s.z));\n", prop.c_str());
       fprintf(f, "  prefs.endArray();\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    {
+      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
+      fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "    }\n  }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
@@ -782,6 +814,13 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   if (le_2) { le_2->setText(QString::number(v3.z)); }\n");
 
       fprintf(f, "   prefs.endArray();\n");
+    }
+    else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
+    {
+      fprintf(f, "    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    if (NULL != w) {\n");
+      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "    }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)

@@ -241,6 +241,16 @@ void GenericExample::setupFilterParameters()
     options.push_back(option);
   }
 
+  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Crystal Rotations");
+    option->setPropertyName("AxisAngleRotations");
+    option->setWidgetType(FilterParameter::AxisAngleWidget);
+    options.push_back(option);
+  }
+
+
   setFilterParameters(options);
 }
 

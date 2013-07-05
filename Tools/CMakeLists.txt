@@ -45,12 +45,27 @@ function(COMPILE_TOOL)
         LIB_SEARCH_DIRS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMPONENT     Applications
         INSTALL_DEST  "${D3DTOOL_INSTALL_DEST}"
-    SOLUTION_FOLDER "Tools"
+        SOLUTION_FOLDER "Tools"
     )
 
 endfunction()
 #
 #-------------------------------------------------------------------------------
+
+# Create a Command line tool for the AxisAngle Widget
+include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
+COMPILE_TOOL(
+    TARGET AxisAngleWidgetTest
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/AxisAngleWidgetTest.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES PipelineBuilderLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
+)
 
 # Create a Command line tool for the AngReaderTest
 COMPILE_TOOL(

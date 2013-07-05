@@ -1,26 +1,33 @@
-Name of Filter {#name_of_file_in_lower_case}
+Read Orientation Data {#readorientationdata}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+IOFilters (Input)
 
 
 ## Description ##
-This filter does the following...
+This filter will read a single .ang or .ctf file into the VoxelDataContainer allowing the immediate use of filters
+on the data instead of having to generate the intermediate .h5ebsd file.
 
 ## Parameters ##
+
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Input File | The Path to the .ang or .ctf file |
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+None
+
+## Required DataContainers ##
+
+Voxel
 
 
 ## Created Arrays ##
+
+Arrays are created based on the data read from the EBSD file.
+
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|

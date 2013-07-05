@@ -86,7 +86,8 @@ namespace Ebsd
     const std::string YPoints("Max Y Points");
 
     const std::string FileVersionStr("FileVersion");
-    const unsigned int FileVersion = 4;
+    const unsigned int FileVersion = 5;
+    const std::string EbsdLibVersionStr("EbsdLibVersion");
   }
 
   /** @brief Constants defined for the 5 orientation options */
