@@ -230,6 +230,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
   err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
   err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, "CompValue", v.compValue);
   return err;
 }
 
