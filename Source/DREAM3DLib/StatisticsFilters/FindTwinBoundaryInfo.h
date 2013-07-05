@@ -81,6 +81,7 @@ class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(TwinBoundaryInfoFile)
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
