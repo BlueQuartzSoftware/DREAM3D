@@ -257,6 +257,15 @@ void TestFilter::setupFilterParameters()
     option->setUnits("XYZ");
     options.push_back(option);
   }
+  /* To Compare Arrays like a threshold filter */
+  {
+	  FilterParameter::Pointer option = FilterParameter::New();
+	  option->setHumanLabel("Voxel Cell Arrays to Threshold");
+	  option->setPropertyName("CellComparisonInputs");
+	  option->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
+	  option->setValueType("std::vector<ComparisonInput_t>");
+	  options.push_back(option);
+  }
 
   setFilterParameters(options);
 }
@@ -284,6 +293,20 @@ void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 	setSolidMeshPointArrayName( reader->readValue("SolidMeshPointArrayName", SolidMeshPointArrayNameDefaultValue) );
 	setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
 	setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
+
+	/* --- CellArrayComparisonSelectionWidget --- */
+	{
+		int numComparisonsSize = 0;
+		ComparisonInput_t cellComparisonDefault;
+		int numQFilters = static_cast<int>( reader->readValue("NumComparisons0",  numComparisonsSize) );
+		std::stringstream ss;
+		for(int i = 0; i < numQFilters; i++)
+		{
+			ss << "Comparison-" << i;
+			m_CellComparisonInputs[i] = reader->readValue(ss.str(), cellComparisonDefault);
+			ss.str("");
+		}
+	}
 }
 
 // -----------------------------------------------------------------------------
@@ -314,6 +337,19 @@ void TestFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
   writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName() );
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
+
+  /* --- CellArrayComparisonSelectionWidget --- */
+  {
+	  int numQFilters = static_cast<int>( m_CellComparisonInputs.size() );
+	  writer->writeValue("NumComparisons0",  numQFilters);
+	  std::stringstream ss;
+	  for(int i = 0; i < numQFilters; i++)
+	  {
+		  ss << "Comparison-" << i;
+		  writer->writeValue(ss.str(), m_CellComparisonInputs[i]);
+		  ss.str("");
+	  }
+  }
 }
 
 
