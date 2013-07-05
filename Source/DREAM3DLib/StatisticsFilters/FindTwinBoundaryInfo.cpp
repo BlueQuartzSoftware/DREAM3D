@@ -65,15 +65,17 @@ class CalculateTwinBoundaryImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundarySchmidFactors;
     unsigned int* m_CrystalStructures;
+    float* m_LoadDir;
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   public:
-    CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundarySchmidFactors) :
+    CalculateTwinBoundaryImpl(float angtol, float axistol, float* LoadingDir, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundarySchmidFactors) :
       m_AxisTol(axistol),
       m_AngTol(angtol),
       m_Labels(Labels),
       m_Normals(Normals),
       m_Phases(Phases),
+      m_LoadDir(LoadingDir),
       m_Quats(Quats),
       m_TwinBoundary(TwinBoundary),
       m_TwinBoundarySchmidFactors(TwinBoundarySchmidFactors),
@@ -147,6 +149,7 @@ class CalculateTwinBoundaryImpl
                 n[0] = xstl_norm[0], n[1] = xstl_norm[1], n[2] = xstl_norm[2];
               }
             }
+            MatrixMath::multiply3x3with3x1(g1, m_LoadDir, crystalLoading);
             if (isTwin == true)
             {
               m_TwinBoundary[i] = true;
@@ -154,73 +157,69 @@ class CalculateTwinBoundaryImpl
               if(n[0] > 0 && n[1] > 0)
               {
                 plane = 1;
-                b[0] = 1, b[1] = -1, b[2] = 0;
+                n[0] = 1, n[1] = 1, n[2] = 1;
                 cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+                b[0] = 1, b[1] = -1, b[2] = 0;
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid1 = cosPhi*cosLambda;
                 b[0] = -1, b[1] = 0, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid2 = cosPhi*cosLambda;
                 b[0] = 0, b[1] = -1, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid3 = cosPhi*cosLambda;
                 m_TwinBoundarySchmidFactors[3*i] = schmid1;
                 m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
                 m_TwinBoundarySchmidFactors[3*i+2] = schmid3;
               }
-              if(n[0] > 0 && n[1] < 0)
+              else if(n[0] > 0 && n[1] < 0)
               {
                 plane = 2;
-                b[0] = 1, b[1] = 1, b[2] = 0;
+                n[0] = 1, n[1] = -1, n[2] = 1;
                 cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+                b[0] = 1, b[1] = 1, b[2] = 0;
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid1 = cosPhi*cosLambda;
                 b[0] = 0, b[1] = 1, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid2 = cosPhi*cosLambda;
                 b[0] = -1, b[1] = 0, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid3 = cosPhi*cosLambda;
                 m_TwinBoundarySchmidFactors[3*i] = schmid1;
                 m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
                 m_TwinBoundarySchmidFactors[3*i+2] = schmid3;
               }
-              if(n[0] < 0 && n[1] > 0)
+              else if(n[0] < 0 && n[1] > 0)
               {
                 plane = 3;
-                b[0] = 1, b[1] = 1, b[2] = 0;
+                n[0] = -1, n[1] = 1, n[2] = 1;
                 cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+                b[0] = 1, b[1] = 1, b[2] = 0;
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid1 = cosPhi*cosLambda;
                 b[0] = 1, b[1] = 0, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid2 = cosPhi*cosLambda;
                 b[0] = 0, b[1] = -1, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid3 = cosPhi*cosLambda;
                 m_TwinBoundarySchmidFactors[3*i] = schmid1;
                 m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
                 m_TwinBoundarySchmidFactors[3*i+2] = schmid3;
               }
-              if(n[0] < 0 && n[1] < 0)
+              else if(n[0] < 0 && n[1] < 0)
               {
                 plane = 4;
-                b[0] = 1, b[1] = 0, b[2] = 1;
+                n[0] = -1, n[1] = -1, n[2] = 1;
                 cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+                b[0] = 1, b[1] = 0, b[2] = 1;
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid1 = cosPhi*cosLambda;
                 b[0] = 0, b[1] = 1, b[2] = 1;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid2 = cosPhi*cosLambda;
                 b[0] = 1, b[1] = -1, b[2] = 0;
-                cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
                 cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
                 schmid3 = cosPhi*cosLambda;
                 m_TwinBoundarySchmidFactors[3*i] = schmid1;
@@ -261,6 +260,9 @@ FindTwinBoundaryInfo::FindTwinBoundaryInfo()  :
   m_SurfaceMeshTwinBoundary(NULL),
   m_SurfaceMeshTwinBoundarySchmidFactors(NULL)
 {
+  m_LoadingDir.x = 1.0f;
+  m_LoadingDir.y = 1.0f;
+  m_LoadingDir.z = 1.0f;
   m_OrientationOps = OrientationMath::getOrientationOpsVector();
   setupFilterParameters();
 }
@@ -292,7 +294,7 @@ void FindTwinBoundaryInfo::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-  option->setUnits("Degrees");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   {
@@ -305,6 +307,16 @@ void FindTwinBoundaryInfo::setupFilterParameters()
   option->setUnits("Degrees");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+
+    option->setHumanLabel("Loading Direction");
+    option->setPropertyName("LoadingDir");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("FloatVec3Widget_t");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -313,6 +325,7 @@ void FindTwinBoundaryInfo::writeFilterParameters(AbstractFilterParametersWriter*
   writer->writeValue("TwinBoundaryInfoFile", getTwinBoundaryInfoFile() );
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
+  writer->writeValue("LoadingDirection", getLoadingDir() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -391,19 +404,22 @@ void FindTwinBoundaryInfo::execute()
 
   float angtol = m_AngleTolerance;
   float axistol = static_cast<float>( m_AxisTolerance*M_PI/180.0f );
-
+  float LoadingDir[3];
+  LoadingDir[0] = m_LoadingDir.x;
+  LoadingDir[1] = m_LoadingDir.y;
+  LoadingDir[2] = m_LoadingDir.z;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-        CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundarySchmidFactors), tbb::auto_partitioner());
+        CalculateTwinBoundaryImpl(angtol, axistol, LoadingDir, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundarySchmidFactors), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateTwinBoundaryImpl serial(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundarySchmidFactors);
+      CalculateTwinBoundaryImpl serial(angtol, axistol, LoadingDir, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FieldPhases, m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundarySchmidFactors);
       serial.generate(0, numTriangles);
     }
 
