@@ -72,7 +72,11 @@ class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundaryArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundarySchmidFactorsArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(TwinBoundaryInfoFile)
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
@@ -112,11 +116,14 @@ class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
 
     float* m_AvgQuats;
     int32_t* m_FieldPhases;
-    NeighborList<int>* m_NeighborList;
-
     unsigned int* m_CrystalStructures;
+    int32_t* m_SurfaceMeshFaceLabels;
+    double* m_SurfaceMeshFaceNormals;
+    bool* m_SurfaceMeshTwinBoundary;
+    float* m_SurfaceMeshTwinBoundarySchmidFactors;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindTwinBoundaryInfo(const FindTwinBoundaryInfo&); // Copy Constructor Not Implemented
     void operator=(const FindTwinBoundaryInfo&); // Operator '=' Not Implemented

@@ -62,9 +62,20 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
+
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
@@ -125,10 +136,13 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     int gatherData(bool preflight);
     int gatherVertexData(hid_t dcGid, bool preflight);
     int gatherFaceData(hid_t dcGid, bool preflight);
     int gatherEdgeData(hid_t dcGid, bool preflight);
+    int gatherFieldData(hid_t dcGid, bool preflight);
+    int gatherEnsembleData(hid_t dcGid, bool preflight);
     int readVertices(hid_t dcGid);
     int readFaces(hid_t dcGid);
     int readEdges(hid_t dcGid);
@@ -136,6 +150,10 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
     int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
     int readVertexAttributeData(hid_t dcGid);
     int readFaceAttributeData(hid_t dcGid);
+//    int readFieldData(hid_t dcGid);
+//    int readEnsembleData(hid_t dcGid);
+
+
     int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
                                                 std::vector<std::string> &namesRead,
                                                 std::set<std::string> &namesToRead);

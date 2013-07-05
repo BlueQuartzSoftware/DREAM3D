@@ -27,7 +27,7 @@ set(_PublicFilters
   FindSurfaceCells
   FindSurfaceGrains
   GenerateIPFColors
-  GenerateEulerColors
+
   LinkFieldMapToCellArray
   RemoveArrays
   RenameCellArray
@@ -52,6 +52,7 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   RenumberGrains
+  GenerateEulerColors
 )
 
 #-----------------

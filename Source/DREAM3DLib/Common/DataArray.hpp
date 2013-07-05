@@ -880,6 +880,17 @@ class DataArray : public IDataArray
       }
     }
 
+   /**
+     * @brief operator []
+     * @param i
+     * @return
+     */
+    inline T& operator[](size_t i)
+    {
+      BOOST_ASSERT(i < Size);
+      return Array[i];
+    }
+
   protected:
 
     int NumberOfComponents; // the number of components per tuple
