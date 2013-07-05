@@ -1218,7 +1218,8 @@ static herr_t readScalarDataset(hid_t loc_id,
 
 
 /**
- * @brief Reads a string dataset into the supplied string.
+ * @brief Reads a string dataset into the supplied string. Any data currently in the 'data' variable
+ * is cleared first before the new data is read into the string.
  * @param loc_id The parent group that holds the data object to read
  * @param dsetName The name of the dataset.
  * @param data The std::string to hold the data
@@ -1231,7 +1232,7 @@ static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
 
 
 /**
- * @brief reads a nullterminated string dataset into the supplied buffer. The buffer
+ * @brief reads a null terminated string dataset into the supplied buffer. The buffer
  * should be already preallocated.
  * @param loc_id The parent group that holds the data object to read
  * @param dsetName The name of the dataset.

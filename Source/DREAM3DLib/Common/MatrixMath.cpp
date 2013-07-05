@@ -184,6 +184,19 @@ void MatrixMath::transpose3x3(float g[3][3], float outMat[3][3])
   outMat[2][2] = g[2][2];
 }
 
+void MatrixMath::copy3x3(float g[3][3], float outMat[3][3])
+{
+  outMat[0][0] = g[0][0];
+  outMat[0][1] = g[0][1];
+  outMat[0][2] = g[0][2];
+  outMat[1][0] = g[1][0];
+  outMat[1][1] = g[1][1];
+  outMat[1][2] = g[1][2];
+  outMat[2][0] = g[2][0];
+  outMat[2][1] = g[2][1];
+  outMat[2][2] = g[2][2];
+}
+
 void MatrixMath::normalize3x3(float g[3][3])
 {
   float denom;

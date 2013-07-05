@@ -68,7 +68,7 @@ class CalculateGBCDImpl
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   public:
-    CalculateGBCDImpl(size_t i, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures, 
+    CalculateGBCDImpl(size_t i, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
                     int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       startOffset(i),
       m_Labels(Labels),
@@ -174,7 +174,7 @@ class CalculateGBCDImpl
                 //translate matrix to euler angles
                 OrientationMath::mattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
-                 
+
                 //get the indexes that this point would be in the GBCD histogram
                 gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
                 if (gbcd_index != -1)
@@ -268,13 +268,14 @@ FindGBCD::FindGBCD() :
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_GBCDRes(9.0),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
   m_FieldEulerAngles(NULL),
-  m_GBCD(NULL),
   m_FieldPhases(NULL),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+    m_GBCD(NULL)
 {
   setupFilterParameters();
 }
@@ -292,6 +293,16 @@ FindGBCD::~FindGBCD()
 void FindGBCD::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setPropertyName("GBCDRes");
+    option->setHumanLabel("GBCD Resolution");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    option->setUnits("Degrees");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -308,9 +319,7 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
 void FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("GBCDResolution", getGBCDRes() );
 }
 
 // -----------------------------------------------------------------------------
@@ -346,7 +355,8 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, (60*29*60*60*29))
+
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, ensembles, 1)
     }
 
   }
@@ -448,7 +458,7 @@ void FindGBCD::execute()
   gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, 1152, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
-  int* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
+  int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
   int32_t* m_Bins = gbcdBinsArray->GetPointer(0);
 
@@ -463,7 +473,7 @@ void FindGBCD::execute()
   m_GBCDlimits[8] = 2.0*m_pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = 6.0*m_pi/180.0;
+  float binsize = m_GBCDRes*m_pi/180.0;
   float binsize2 = binsize*(2.0/m_pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
@@ -471,52 +481,72 @@ void FindGBCD::execute()
   m_GBCDdeltas[3] = binsize;
   m_GBCDdeltas[4] = binsize2;
 
-  m_GBCDsizes[0] = int((m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
-  m_GBCDsizes[1] = int((m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
-  m_GBCDsizes[2] = int((m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
-  m_GBCDsizes[3] = int((m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
-  m_GBCDsizes[4] = int((m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
+  m_GBCDsizes[0] = int(0.5+(m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
+  m_GBCDsizes[1] = int(0.5+(m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
+  m_GBCDsizes[2] = int(0.5+(m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
+  m_GBCDsizes[3] = int(0.5+(m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
+  m_GBCDsizes[4] = int(0.5+(m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
 
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, float, FloatArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4])
+
+  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t currentMillis = millis;
+  uint64_t startMillis = millis;
+  uint64_t estimatedTime = 0;
+  float timeDiff = 0.0f;
+  millis = MXA::getMilliSeconds();
+  startMillis = millis;
+  int lastIteration = 0;
+  int numIterationsPerTime = 0;
 
   float totalFaceArea = 0.0;
-  int counter = 0;
+  ss.str("");
+  ss << "Calculating GBCD: 0/" << totalFaces << " Completed";
   for(size_t i=0;i<totalFaces;i=i+faceChunkSize)
   {
-    ss.str("");
-    ss << "Triangles Complete: " << i << "/" << totalFaces;
-    notifyStatusMessage(ss.str());
+
     if(getCancel() == true) return;
-	  if(i+faceChunkSize >= totalFaces)
-	  {
-		  faceChunkSize = totalFaces-i;
-	  }
-	  gbcdBinsArray->initializeWithZeros();	 
+    if(i+faceChunkSize >= totalFaces)
+    {
+      faceChunkSize = totalFaces-i;
+    }
+    gbcdBinsArray->initializeWithZeros();
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-	  if (doParallel == true)
-	  {
-		  tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
-			  CalculateGBCDImpl(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+    if (doParallel == true)
+    {
+      tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
+                        CalculateGBCDImpl(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
-	  }
-	  else
+    }
+    else
 #endif
-	  {
-		  CalculateGBCDImpl serial(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
-		  serial.generate(i, i+faceChunkSize);
-	  }
+    {
+      CalculateGBCDImpl serial(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      serial.generate(i, i+faceChunkSize);
+    }
 
     ss.str("");
-    ss << "Updating GBCD (Cycle: " << counter++ << ")";
+    ss << "Calculating GBCD: Triangles " << i << "/" << totalFaces << " Completed";
+    currentMillis = MXA::getMilliSeconds();
+    if (currentMillis - millis > 1000)
+    {
+      timeDiff = ((float)i / (float)(currentMillis - startMillis));
+      estimatedTime = (float)(totalFaces - i) / timeDiff;
+      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      millis = MXA::getMilliSeconds();
+      numIterationsPerTime = i - lastIteration;
+      lastIteration = i;
+    }
     notifyStatusMessage(ss.str());
 
-	  for(int j=0;j<faceChunkSize;j++)
-	  {
-		  for(int k=0;k<1152;k++)
-		  {
-			  m_GBCD[m_Bins[j*1152+k]] += m_SurfaceMeshFaceAreas[i+j];
-			  totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
-		  }
-	  }
+    for(int j=0;j<faceChunkSize;j++)
+    {
+      for(int k=0;k<1152;k++)
+      {
+        m_GBCD[m_Bins[j*1152+k]] += m_SurfaceMeshFaceAreas[i+j];
+        totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
+      }
+    }
   }
 
   ss.str("");
@@ -527,7 +557,7 @@ void FindGBCD::execute()
   float MRDfactor = float(totalBins)/totalFaceArea;
   for(int i=0;i<totalBins;i++)
   {
-	  m_GBCD[i] *= MRDfactor;
+    m_GBCD[i] *= MRDfactor;
   }
 
   /* Let the GUI know we are done with this filter */

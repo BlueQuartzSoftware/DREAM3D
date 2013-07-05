@@ -347,8 +347,8 @@ void PipelineViewWidget::preflightPipeline()
           if ( (*iter).getMessageType() == PipelineMessage::Error)
           {
             fw->setHasPreflightErrors(true);
-			pipelineHasErrors = true;
-			
+            pipelineHasErrors = true;
+
           }
           else if ((*iter).getMessageType() == PipelineMessage::Warning)
           {
@@ -364,11 +364,11 @@ void PipelineViewWidget::preflightPipeline()
 
   if (pipelineHasErrors == true)
   {
-	  emit pipelineHasErrorsSignal();
+    emit pipelineHasErrorsSignal();
   }
   else
   {
-	  emit pipelineHasNoErrors();
+    emit pipelineHasNoErrors();
   }
 
   errorTableWidget->resizeRowsToContents();
