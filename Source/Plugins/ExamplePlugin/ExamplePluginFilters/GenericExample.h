@@ -43,9 +43,13 @@ class GenericExample : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEnsembleArrayName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshPointArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEnsembleArrayName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshPointArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshFaceArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshEdgeArrayName)
@@ -87,7 +91,7 @@ class GenericExample : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

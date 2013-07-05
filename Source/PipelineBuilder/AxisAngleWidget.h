@@ -115,7 +115,7 @@ class PipelineBuilderLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Ax
 
     void on_addRow_clicked();
     void on_deleteRow_clicked();
-    void on_loadData_clicked();
+ //   void on_loadData_clicked();
 
 
   protected:

@@ -11,7 +11,7 @@
 //
 // -----------------------------------------------------------------------------
 GenericExample::GenericExample() :
-AbstractFilter()
+  AbstractFilter()
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -186,6 +186,27 @@ void GenericExample::setupFilterParameters()
     option->setUnits("");
     options.push_back(option);
   }
+  /* To Display a Combobox with a list of current SurfaceMesh Field Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SurfaceMesh Field Array Name");
+    option->setPropertyName("SurfaceMeshFieldArrayName");
+    option->setWidgetType(FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
+
+  /* To Display a Combobox with a list of current SurfaceMesh Ensemble Arrays in it */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("SurfaceMesh Ensemble Array Name");
+    option->setPropertyName("SurfaceMeshEnsembleArrayName");
+    option->setWidgetType(FilterParameter::SurfaceMeshEnsembleArrayNameSelectionWidget);
+    option->setValueType("string");
+    option->setUnits("");
+    options.push_back(option);
+  }
 
 
   /* To Display a Combobox with a list of current SolidMesh Point Arrays in it */
@@ -259,6 +280,8 @@ void GenericExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -267,7 +290,7 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 void GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
- /* Place code that will write the inputs values into a file. reference the
+  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("StlFilePrefix", getStlFilePrefix() );
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
@@ -282,7 +305,21 @@ void GenericExample::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
 
+  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName());
+  writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName());
+  writer->writeValue("SelectedEnsembleArrayName", getSelectedEnsembleArrayName());
 
+  writer->writeValue("SurfaceMeshPointArrayName", getSurfaceMeshPointArrayName());
+  writer->writeValue("SurfaceMeshFaceArrayName", getSurfaceMeshFaceArrayName());
+  writer->writeValue("SurfaceMeshEdgeArrayName", getSurfaceMeshEdgeArrayName());
+  writer->writeValue("SurfaceMeshFieldArrayName", getSurfaceMeshFieldArrayName());
+  writer->writeValue("SurfaceMeshEnsembleArrayName", getSurfaceMeshEnsembleArrayName());
+
+  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName());
+  writer->writeValue("SolidMeshFaceArrayName", getSolidMeshFaceArrayName());
+  writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName());
+
+  writer->writeValue("AxisAngleRotations", getAxisAngleRotations());
 }
 
 
@@ -339,5 +376,5 @@ void GenericExample::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

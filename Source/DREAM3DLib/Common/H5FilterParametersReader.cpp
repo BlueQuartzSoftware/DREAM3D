@@ -193,38 +193,60 @@ double H5FilterParametersReader::readValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntVec3Widget_t H5FilterParametersReader::readValue(const std::string name, IntVec3Widget_t v)
+IntVec3Widget_t H5FilterParametersReader::readValue(const std::string name, IntVec3Widget_t defaultValue)
 {
   int err = 0;
+  IntVec3Widget_t v;
   int32_t rank = 1;
   hsize_t dims[1] = { 3 };
-  H5Lite::readPointerDataset<int32_t>(m_CurrentGroupId, name, reinterpret_cast<int32_t*>(&v) );
+  err = H5Lite::readPointerDataset<int32_t>(m_CurrentGroupId, name, reinterpret_cast<int32_t*>(&v) );
+  if (err < 0) { return defaultValue; }
+
   return v;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatVec3Widget_t H5FilterParametersReader::readValue(const std::string name, FloatVec3Widget_t v)
+FloatVec3Widget_t H5FilterParametersReader::readValue(const std::string name, FloatVec3Widget_t defaultValue)
 {
   int err = 0;
+  FloatVec3Widget_t v;
   int32_t rank = 1;
   hsize_t dims[1] = { 3 };
-  H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0) { return defaultValue; }
   return v;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, ComparisonInput_t v)
+ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, ComparisonInput_t defaultValue)
 {
   int err = 0;
-
-  float value = v.compValue;
-  H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
-  H5Lite::readStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
-  H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
-  H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompValue", v.compValue);
+  ComparisonInput_t v;
+  float value = defaultValue.compValue;
+  err = H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
+  if (err < 0) { return defaultValue; }
+  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
+  if (err < 0) { return defaultValue; }
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
+  if (err < 0) { return defaultValue; }
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompValue", v.compValue);
+  if (err < 0) { return defaultValue; }
   return v;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::string name, std::vector<ComparisonInput_t> defaultValue)
+{
+int err = 0;
+return defaultValue;
+}
+
+
+
+

@@ -79,10 +79,12 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const std::string name, IntVec3Widget_t v);
     virtual int writeValue(const std::string name, FloatVec3Widget_t v);
     virtual int writeValue(const std::string name, ComparisonInput_t v);
+    virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v);
     virtual int writeValue(const std::string name, AxisAngleInput_t v);
+    virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v);
 
-  protected:
-    H5FilterParametersWriter();
+    protected:
+      H5FilterParametersWriter();
 
   private:
     hid_t m_CurrentGroupId;
