@@ -64,7 +64,12 @@
 #define SolidMeshPointArrayNameTestValue "SolidMeshPointArrayNameTestValue"
 #define SolidMeshFaceArrayNameTestValue "SolidMeshFaceArrayNameTestValue"
 #define SolidMeshEdgeArrayNameTestValue "SolidMeshEdgeArrayNameTestValue"
-
+#define Comparison1InputArrayNameTestValue "Comparison1InputArrayNameTestValue"
+#define Comparison1CompOperatorTestValue 12;
+#define Comparison1CompValueTestValue 15.0;
+#define Comparison2InputArrayNameTestValue "Comparison2InputArrayNameTestValue"
+#define Comparison2CompOperatorTestValue 23;
+#define Comparison2CompValueTestValue 21.0;
 
 // -----------------------------------------------------------------------------
 //
@@ -107,6 +112,21 @@ void FilterParametersReaderTest()
 	filt->setSolidMeshPointArrayName(SolidMeshPointArrayNameTestValue);
 	filt->setSolidMeshFaceArrayName(SolidMeshFaceArrayNameTestValue);
 	filt->setSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);
+
+	ComparisonInput_t comparison1;
+	comparison1.arrayName = Comparison1InputArrayNameTestValue;
+	comparison1.compOperator = Comparison1CompOperatorTestValue;
+	comparison1.compValue = Comparison1CompValueTestValue;
+
+	ComparisonInput_t comparison2;
+	comparison2.arrayName = Comparison2InputArrayNameTestValue;
+	comparison2.compOperator = Comparison2CompOperatorTestValue;
+	comparison2.compValue = Comparison2CompValueTestValue;
+
+	std::vector<ComparisonInput_t> comparisonVector;
+	comparisonVector.push_back(comparison1);
+	comparisonVector.push_back(comparison2);
+	filt->setCellComparisonInputs(comparisonVector);
 
 	DataContainerWriter::Pointer writer = DataContainerWriter::New();
 	writer->setOutputFile(UnitTest::FilterParametersReaderTest::OutputFile);
@@ -155,6 +175,17 @@ void FilterParametersReaderTest()
 	DREAM3D_REQUIRED(SolidMeshPointArrayNameTestValue, ==, filt->getSolidMeshPointArrayName() )
 	DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, filt->getSolidMeshFaceArrayName() )
 	DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, filt->getSolidMeshEdgeArrayName() )
+	
+	std::vector<ComparisonInput_t> comparisonVectorRead = filt->getCellComparisonInputs();
+	ComparisonInput_t comparison1Read = comparisonVectorRead[0];
+	ComparisonInput_t comparison2Read = comparisonVectorRead[1];
+
+	DREAM3D_REQUIRED(comparison1.arrayName, ==, comparison1Read.arrayName)
+	DREAM3D_REQUIRED(comparison1.compOperator, ==, comparison1Read.compOperator)
+	DREAM3D_REQUIRED(comparison1.compValue, ==, comparison1Read.compValue)
+	DREAM3D_REQUIRED(comparison2.arrayName, ==, comparison2Read.arrayName)
+	DREAM3D_REQUIRED(comparison2.compOperator, ==, comparison2Read.compOperator)
+	DREAM3D_REQUIRED(comparison2.compValue, ==, comparison2Read.compValue)
 
 	err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
 	DREAM3D_REQUIRED(err, >=, 0)
