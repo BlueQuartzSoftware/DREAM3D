@@ -17,10 +17,13 @@
    <property name="margin">
     <number>4</number>
    </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <item row="0" column="1">
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="leftMargin">
-      <number>10</number>
+      <number>0</number>
      </property>
      <item>
       <widget class="QPushButton" name="addRow">
@@ -95,19 +98,6 @@
        </property>
        <property name="flat">
         <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="loadData">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Load List ...</string>
        </property>
       </widget>
      </item>

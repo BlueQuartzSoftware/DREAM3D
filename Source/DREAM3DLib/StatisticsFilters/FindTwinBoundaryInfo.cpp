@@ -75,11 +75,11 @@ class CalculateTwinBoundaryImpl
       m_Labels(Labels),
       m_Normals(Normals),
       m_Phases(Phases),
-      m_LoadDir(LoadingDir),
       m_Quats(Quats),
       m_TwinBoundary(TwinBoundary),
       m_TwinBoundarySchmidFactors(TwinBoundarySchmidFactors),
-      m_CrystalStructures(CrystalStructures)
+      m_CrystalStructures(CrystalStructures),
+      m_LoadDir(LoadingDir)
     {
     m_OrientationOps = OrientationMath::getOrientationOpsVector();
     }
@@ -122,7 +122,7 @@ class CalculateTwinBoundaryImpl
             q1[m]=m_Quats[5*grain1+m];
             q2[m]=m_Quats[5*grain2+m];
           }
-          
+
           phase1 = m_CrystalStructures[m_Phases[grain1]];
           phase2 = m_CrystalStructures[m_Phases[grain2]];
           if (phase1 == phase2)

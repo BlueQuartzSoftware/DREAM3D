@@ -76,9 +76,9 @@ class RotateSampleRefFrameImpl
 {
 
     DataArray<int64_t>::Pointer newIndicesPtr;
-    RotateSampleRefFrameImplArg_t*  m_params;
     float rotMatrixInv[3][3];
     bool m_sliceBySlice;
+    RotateSampleRefFrameImplArg_t*  m_params;
 
   public:
     RotateSampleRefFrameImpl(DataArray<int64_t>::Pointer newindices, RotateSampleRefFrameImplArg_t*  args, float rotMat[3][3], bool sliceBySlice) :
@@ -156,8 +156,8 @@ class RotateSampleRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
-  m_sliceBySlice(false),
-  m_RotationAngle(0.0)
+  m_RotationAngle(0.0),
+  m_sliceBySlice(false)
 {
   m_RotationAxis.x = 0.0;
   m_RotationAxis.y = 0.0;
