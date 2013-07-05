@@ -43,6 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -85,7 +86,8 @@ class CalculateTwinBoundaryImpl
     void generate(size_t start, size_t end) const
     {
       int grain1, grain2;
-      int normal[3];
+      float normal[3];
+      float g1[3][3];
       float w;
       float schmid1, schmid2, schmid3;
       int plane =0;
@@ -94,12 +96,11 @@ class CalculateTwinBoundaryImpl
       float q1[5], q2[5];
       float axisdiff111, angdiff60;
       float n[3], b[3];
-   //   float g[3][3];
-   //   float sampleLoading[3];
       float crystalLoading[3];
       float cosPhi, cosLambda;
       float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
-      float misq[5], sym_q1[5], sym_q2[5], s1misq[5], s2misq[5];
+      float misq[5], sym_q[5], s_misq[5];
+      float xstl_norm[3];
 
       for (size_t i = start; i < end; i++)
       {
@@ -119,7 +120,7 @@ class CalculateTwinBoundaryImpl
             q1[m]=m_Quats[5*grain1+m];
             q2[m]=m_Quats[5*grain2+m];
           }
-
+          
           phase1 = m_CrystalStructures[m_Phases[grain1]];
           phase2 = m_CrystalStructures[m_Phases[grain2]];
           if (phase1 == phase2)
@@ -129,23 +130,21 @@ class CalculateTwinBoundaryImpl
             int nsym = m_OrientationOps[phase1]->getNumSymOps();
             for (int k=0; k< nsym;k++)
             {
+              //calculate crystal direction parallel to normal
+              OrientationMath::QuattoMat(q1, g1);
+              MatrixMath::multiply3x3with3x1(g1,normal,xstl_norm);
               //calculate the symmetric misorienation
-              m_OrientationOps[phase1]->getQuatSymOp(k, sym_q1);
-              for (int l=0; l < nsym; l++)
+              m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
+              OrientationMath::invertQuaternion(sym_q);
+              OrientationMath::multiplyQuaternions(misq, sym_q, s_misq);
+              OrientationMath::QuattoAxisAngle(s_misq, w, n1, n2, n3);
+              w = w*180.0/m_pi;
+              axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
+              angdiff60 = fabs(w-60.0f);
+              if (axisdiff111 < m_AxisTol && angdiff60 < m_AngTol)
               {
-                m_OrientationOps[phase1]->getQuatSymOp(l, sym_q2);
-                OrientationMath::invertQuaternion(sym_q2);
-                OrientationMath::multiplyQuaternions(misq, sym_q2, s2misq);
-                OrientationMath::multiplyQuaternions(sym_q1, s2misq, s1misq);
-                OrientationMath::QuattoAxisAngle(s1misq, w, n1, n2, n3);
-                w = w*180.0/m_pi;
-                axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
-                angdiff60 = fabs(w-60.0f);
-                if (axisdiff111 < m_AxisTol && angdiff60 < m_AngTol)
-                {
-                  isTwin = true;
-                  n[0] = n1, n[1] = n2, n[2] = n3;
-                }
+                isTwin = true;
+                n[0] = xstl_norm[0], n[1] = xstl_norm[1], n[2] = xstl_norm[2];
               }
             }
             if (isTwin == true)
