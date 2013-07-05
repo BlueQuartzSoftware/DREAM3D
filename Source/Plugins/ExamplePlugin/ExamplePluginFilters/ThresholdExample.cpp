@@ -136,8 +136,8 @@ void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-
-
+  writer->writeValue("CellComparisonInputs", getCellComparisonInputs());
+#error update all this
   /* --- CellArrayComparisonSelectionWidget --- */
   {
     int numQFilters = static_cast<int>( m_CellComparisonInputs.size() );
