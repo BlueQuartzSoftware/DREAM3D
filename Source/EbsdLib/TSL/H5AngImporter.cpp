@@ -45,6 +45,7 @@
 #include "H5Support/H5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/EbsdLibVersion.h"
 #include "EbsdLib/Utilities/MXADir.h"
 #include "EbsdLib/Utilities/StringUtils.h"
 
@@ -219,6 +220,19 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     {
       H5Aclose(attr_type);
     }
+
+    err = H5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::EbsdLibVersionStr, dims, type_class, type_size, attr_type);
+    if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
+    {
+      // The file version does not exist so write it to the file
+      err = H5Lite::writeStringAttribute(fileId, "/", Ebsd::H5::EbsdLibVersionStr, EbsdLib::Version::Complete());
+    }
+    else
+    {
+      H5Aclose(attr_type);
+    }
+
+
   }
 
   // Start creating the HDF5 group structures for this file

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,58 +28,65 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _AxisAngleWidget_H_
+#define _AxisAngleWidget_H_
 
-#ifndef _MatrixMath_H_
-#define _MatrixMath_H_
+#include <QtCore/QSettings>
+#include <QtGui/QTabWidget>
 
+#include "ui_AxisAngleWidget.h"
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
 
+#include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
-/*
- * @class MatrixMath MatrixMath.h DREAM3DLib/Common/MatrixMath.h
- * @brief This class performs Crystallographic Misorientation Calculations
- * @author Michael A. Jackson (BlueQuartz Software)
- * @author Michael A. Groeber (US Air Force Research Laboratory)
- * @date Feb 19, 2011
+/**
+ * @class AxisAngleWidget AxisAngleWidget.h PipelineBuilder/UI/AxisAngleWidget.h
+ * @brief This class
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 30, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT MatrixMath
+class PipelineBuilderLib_EXPORT AxisAngleWidget : public QWidget, private Ui::AxisAngleWidget
 {
+
+    Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(MatrixMath)
-    DREAM3D_TYPE_MACRO(MatrixMath)
+    AxisAngleWidget(QWidget* parent = 0);
+    virtual ~AxisAngleWidget();
 
-    virtual ~MatrixMath();
-
-    static void multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3]);
-    static void multiply3x3with3x1(float g1[3][3], float g2[3], float outMat[3]);
-    static void multiply3x3with3x1(const float g1[3][3], float g2[3], float outMat[3]);
-    static void multiply3x3with3x1(double g1[3][3], double g2[3], double outMat[3]);
-
-    static void transpose3x3(float g[3][3], float outMat[3][3]);
-    static void copy3x3(float g[3][3], float outMat[3][3]);
-    static void normalize3x3(float g[3][3]);
-    static void normalize3x1(float g[3]);
-    static float dotProduct(float a[3], float b[3]);
-
-    static void crossProduct(double a[3], double b[3], double c[3]);
+    /**
+     * @brief Initializes some of the GUI elements with selections or other GUI related items
+     */
+    virtual void setupGui();
 
 
 
-    static void normalizeVector(double a[3]);
-    static void normalizeVector(double &i, double &j, double &k);
-    static void normalizeVector(float a[3]);
-    static void normalizeVector(float &i, float &j, float &k);
+  signals:
+    void arrayListsChanged();
+
+  protected slots:
 
   protected:
-    MatrixMath();
+
 
   private:
-    MatrixMath(const MatrixMath&); // Copy Constructor Not Implemented
-    void operator=(const MatrixMath&); // Operator '=' Not Implemented
+    AxisAngleWidget(const AxisAngleWidget&); // Copy Constructor Not Implemented
+    void operator=(const AxisAngleWidget&); // Operator '=' Not Implemented
+
 };
 
-#endif /* _MatrixMath_H_ */
+
+
+
+#endif /* _AxisAngleWidget_H_ */
+
+
+

@@ -9,10 +9,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Next Release Bugs to Fix (4.2) ##
 
-+ Import OrientationData GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
+
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
     - Have it pop open the Web browser to the proper file.
     - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
+    - Take into account the Euler Reference Frame Rotations (Current does not matter because all rotations are about the Z Axis)
 + Disable adding of filters into the pipeline while it is running.
 + Fix GBCD Generation or make private on next release
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
@@ -185,7 +186,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
-
++ Make Euler Color Filter Private as the implementation is not correct.
++ Import OrientationData GUI, ReferenceFrameDialog assumes cubic crystal when calculating IPF Colors.
 + Create filter to dump color images based on an RGB Array (currently only the Generate IPF Colors creates these types of arrays)
 + Create Filter to change data types, ie, convert 16 bit ints to 32 bit ints.
 + Raw Binary Reader does not error out if we read off the end of the file

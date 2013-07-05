@@ -64,9 +64,17 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 
     typedef std::set<std::string> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(ArrayList_t selectedCellArrays,   ArrayList_t selectedFieldArrays, ArrayList_t selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
-    virtual void setSolidMeshSelectedArrayNames(ArrayList_t selectedVertexArrays,   ArrayList_t selectedFaceArrays, ArrayList_t selectedEdgeArrays);
+    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+                                            std::set<std::string> selectedFieldArrays,
+                                            std::set<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                std::set<std::string> selectedFaceArrays,
+                                                std::set<std::string> selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -74,7 +82,7 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -132,6 +140,8 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
     std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
     std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
+    std::set<std::string> m_SelectedSurfaceMeshFieldArrays;
+    std::set<std::string> m_SelectedSurfaceMeshEnsembleArrays;
 
     std::set<std::string> m_SelectedSolidMeshVertexArrays;
     std::set<std::string> m_SelectedSolidMeshFaceArrays;

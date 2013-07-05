@@ -378,6 +378,21 @@ void QReadH5EbsdWidget::updateFileInfoWidgets()
           h5Reader->updateToLatestVersion();
         }
       }
+      if (h5Reader->getFileVersion() < 5)
+      {
+              QMessageBox msgBox;
+        msgBox.setText("H5Ebsd File Needs Updating");
+        QString iText("Due to a bug in earlier versions of DREAM3D the default transformation values for TSL EBSD data were incorrect.\n");
+        iText.append(QString("This may cause results obtained through DREAM3D or another analysis program to be incorrect. We suggest that you reimport your .ang files into an .h5ebsd file to correct this error."));
+        msgBox.setInformativeText("");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Cancel);
+        int ret = msgBox.exec();
+//        if (QMessageBox::Ok == ret)
+//        {
+//          h5Reader->updateToLatestVersion();
+//        }
+      }
 
       // Now test again to see if we are at the correct file version
       if (h5Reader->getFileVersion() >= 4)

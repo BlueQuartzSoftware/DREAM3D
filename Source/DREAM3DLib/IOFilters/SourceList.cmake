@@ -47,6 +47,7 @@ set(_PublicFilters
   SolidMeshToVtk
   SPParksWriter
   VisualizeGBCD
+  ReadOrientationData
 )
 
 
@@ -75,7 +76,7 @@ set(_PrivateFilters
   SolidMeshDataContainerWriter
   SolidMeshDataContainerReader
   GBCDTriangleDumper
-  ReadOrientationData
+
 )
 
 #-----------------

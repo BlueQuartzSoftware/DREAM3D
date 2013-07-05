@@ -52,6 +52,12 @@
 SurfaceMeshDataContainerReader::SurfaceMeshDataContainerReader() :
   AbstractFilter(),
   m_HdfFileId(-1),
+  m_ReadVertexData(true),
+  m_ReadEdgeData(true),
+  m_ReadFaceData(true),
+  m_ReadCellData(true),
+  m_ReadFieldData(true),
+  m_ReadEnsembleData(true),
   m_ReadAllArrays(false)
 {
   setupFilterParameters();
@@ -105,6 +111,7 @@ void SurfaceMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, si
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer is missing", getErrorCondition());
   }
+
   if(m_HdfFileId < 0)
   {
     setErrorCondition(-150);
@@ -186,12 +193,50 @@ int SurfaceMeshDataContainerReader::gatherData(bool preflight)
 
   err = gatherEdgeData(dcGid, preflight);
 
+
+  err = gatherFieldData(dcGid, preflight);
+
+
+  err = gatherEnsembleData(dcGid, preflight);
+
   // Now finally close the group
   H5Gclose(dcGid); // Close the Data Container Group
 
   HDF_ERROR_HANDLER_ON
 
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
+{
+    std::vector<std::string> readNames;
+    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int SurfaceMeshDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
+{
+    std::vector<std::string> readNames;
+    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -574,6 +619,14 @@ int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::strin
       else if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
       {
         getSurfaceMeshDataContainer()->addEdgeData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      {
+        getSurfaceMeshDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      {
+        getSurfaceMeshDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 
