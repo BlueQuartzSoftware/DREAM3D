@@ -234,6 +234,22 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int writeValue(const std::string name, std::vector<ComparisonInput_t> v)
+{
+#error Start here
+    int numQFilters = static_cast<int>( v.size() );
+    writeValue("NumComparisons0",  numQFilters);
+    std::stringstream ss;
+    for(int i = 0; i < numQFilters; i++)
+    {
+      ss << "Comparison-" << i;
+      writer->writeValue(ss.str(), m_CellComparisonInputs[i]);
+      ss.str("");
+    }
+}
 
 // -----------------------------------------------------------------------------
 //
