@@ -88,15 +88,13 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     void degToRagsChanged(int state);
 
     void referenceDirectionChanged();
+    QImage paintImage(QImage image);
 
   private:
     QString                     m_EbsdFileName;
     QButtonGroup*               m_OriginGroup;
-    QImage                      m_EbsdImage;
-    QGraphicsPixmapItem*        m_PixmapGraphicsItem;
-    int                         m_CurrentCorner;
-    QSize                       m_ImageSize;
-
+    QImage                      m_BaseImage;
+    QImage                      m_DisplayedImage;
 
     QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&); // Copy Constructor Not Implemented
     void operator=(const QEbsdReferenceFrameDialog&); // Operator '=' Not Implemented
