@@ -53,15 +53,15 @@ m_PolesArrayName(DREAM3D::FieldData::Poles),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_XLoading(1.0f),
-m_YLoading(1.0f),
-m_ZLoading(1.0f),
 m_Schmids(NULL),
 m_Poles(NULL),
 m_FieldPhases(NULL),
 m_AvgQuats(NULL),
 m_SlipSystems(NULL)
 {
+  m_LoadingDir.x = 1.0f;
+  m_LoadingDir.y = 1.0f;
+  m_LoadingDir.z = 1.0f;
   m_OrientationOps = OrientationMath::getOrientationOpsVector();
 
   setupFilterParameters();
@@ -82,29 +82,12 @@ void FindSchmids::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Loading X:");
-    option->setPropertyName("XLoading");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Loading Y:");
-    option->setPropertyName("YLoading");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Loading Z:");
-    option->setPropertyName("ZLoading");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
+
+    option->setHumanLabel("Loading Direction");
+    option->setPropertyName("LoadingDir");
+    option->setWidgetType(FilterParameter::FloatVec3Widget);
+    option->setValueType("FloatVec3Widget_t");
+    option->setUnits("");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -112,9 +95,7 @@ void FindSchmids::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-  writer->writeValue("XLoading", getXLoading() );
-  writer->writeValue("YLoading", getYLoading() );
-  writer->writeValue("ZLoading", getZLoading() );
+  writer->writeValue("LoadingDirection", getLoadingDir() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -187,9 +168,9 @@ void FindSchmids::execute()
 
     OrientationMath::QuattoMat(q1, g);
 
-    sampleLoading[0] = m_XLoading;
-    sampleLoading[1] = m_YLoading;
-    sampleLoading[2] = m_ZLoading;
+    sampleLoading[0] = m_LoadingDir.x;
+    sampleLoading[1] = m_LoadingDir.y;
+    sampleLoading[2] = m_LoadingDir.z;
 
     MatrixMath::multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
