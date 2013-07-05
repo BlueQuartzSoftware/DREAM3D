@@ -35,12 +35,21 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AxisAngleWidget.h"
 
+//-- C++ Includes
+#include <iostream>
+#include <fstream>
+
+#include <QtGui/QFileDialog>
+
+
+#include "AxisAngleTableModel.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AxisAngleWidget::AxisAngleWidget(QWidget *parent) :
-  QWidget(parent)
+  QWidget(parent),
+  m_TableModel(NULL)
 {
   setupUi(this);
   setupGui();
@@ -51,6 +60,10 @@ AxisAngleWidget::AxisAngleWidget(QWidget *parent) :
 // -----------------------------------------------------------------------------
 AxisAngleWidget::~AxisAngleWidget()
 {
+  if (NULL != m_TableModel)
+  {
+    m_TableModel->deleteLater();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -58,6 +71,125 @@ AxisAngleWidget::~AxisAngleWidget()
 // -----------------------------------------------------------------------------
 void AxisAngleWidget::setupGui()
 {
-
-
+  m_TableModel = new AxisAngleTableModel;
+  m_TableModel->setInitialValues();
+  m_TableView->setModel(m_TableModel);
+  QAbstractItemDelegate* aid = m_TableModel->getItemDelegate();
+  m_TableView->setItemDelegate(aid);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::on_addRow_clicked()
+{
+  if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
+  m_TableView->resizeColumnsToContents();
+  m_TableView->scrollToBottom();
+  m_TableView->setFocus();
+  QModelIndex index = m_TableModel->index(m_TableModel->rowCount() - 1, 0);
+  m_TableView->setCurrentIndex(index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::on_deleteRow_clicked()
+{
+  QItemSelectionModel *selectionModel = m_TableView->selectionModel();
+  if (!selectionModel->hasSelection()) return;
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) return;
+  m_TableModel->removeRow(index.row(), index.parent());
+  if (m_TableModel->rowCount() > 0)
+  {
+    m_TableView->resizeColumnsToContents();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::on_loadData_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory;
+  QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  else
+  {
+    size_t numMisorients = 0;
+    std::string filename = file.toStdString();
+    std::ifstream inFile;
+    inFile.open(filename.c_str());
+
+    inFile >> numMisorients;
+
+    float angle, weight;
+    std::string axis, n1, n2, n3;
+    for(size_t i = 0; i < numMisorients; i++)
+    {
+      inFile >> angle >> n1 >> n2 >> n3 >> weight;
+
+      axis = std::string("<" + n1 + "," + n2 + "," + n3 + ">");
+
+      if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
+      int row = m_TableModel->rowCount() - 1;
+      m_TableModel->setRowData(row, angle, axis);
+
+      m_TableView->resizeColumnsToContents();
+      m_TableView->scrollToBottom();
+      m_TableView->setFocus();
+      QModelIndex index = m_TableModel->index(m_TableModel->rowCount() - 1, 0);
+      m_TableView->setCurrentIndex(index);
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::readOptions(QSettings &prefs, QString name)
+{
+  int count = prefs.beginReadArray(name);
+
+  QVector<float> angles(count);
+  QVector<float> axis(count * 3);
+  bool ok = false;
+  for(int i = 0; i < count; ++i)
+  {
+    prefs.setArrayIndex(i);
+    angles[i] = prefs.value("Angle").toFloat(&ok);
+    axis[i*3 + 0] = prefs.value("H").toFloat(&ok);
+    axis[i*3 + 1] = prefs.value("K").toFloat(&ok);
+    axis[i*3 + 2] = prefs.value("L").toFloat(&ok);
+  }
+  prefs.endArray();
+
+  m_TableModel->setTableData(angles, axis);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::writeOptions(QSettings &prefs, QString name)
+{
+  int count = m_TableModel->rowCount();
+  QVector<float> angles = m_TableModel->getData(AxisAngleTableModel::Angle);
+  QVector<float> axis = m_TableModel->getData(AxisAngleTableModel::Axis);
+  prefs.beginWriteArray(name, count);
+  for(int i = 0; i < count; ++i)
+  {
+    prefs.setArrayIndex(i);
+    prefs.setValue("Angle", QString::number(angles[i]));
+    prefs.setValue("H", QString::number(axis[i*3 + 0]));
+    prefs.setValue("K", QString::number(axis[i*3 + 1]));
+    prefs.setValue("L", QString::number(axis[i*3 + 2]));
+  }
+  prefs.endArray();
+}
+
+

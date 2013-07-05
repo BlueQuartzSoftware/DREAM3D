@@ -203,3 +203,11 @@ int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInp
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v)
+{
+  int err = -1;
+  return err;
+}

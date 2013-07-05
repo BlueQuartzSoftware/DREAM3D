@@ -36,20 +36,23 @@
 #ifndef _AxisAngleWidget_H_
 #define _AxisAngleWidget_H_
 
+#include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtGui/QTabWidget>
+#include <QtGui/QWidget>
 
 #include "ui_AxisAngleWidget.h"
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
+#include "AxisAngleTableModel.h"
+
+
 
 /**
  * @class AxisAngleWidget AxisAngleWidget.h PipelineBuilder/UI/AxisAngleWidget.h
- * @brief This class
+ * @brief This class presents the use with a Table where they can add pairs of HKL axis and angle in degrees that define
+ * a rotation.
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Jan 30, 2011
  * @version 1.0
@@ -67,17 +70,62 @@ class PipelineBuilderLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Ax
      */
     virtual void setupGui();
 
+    /**
+     * @brief writeOptions
+     * @param prefs
+     */
+    virtual void readOptions(QSettings &prefs, QString name);
 
+        /**
+     * @brief writeOptions
+     * @param prefs
+     */
+    virtual void writeOptions(QSettings &prefs, QString name);
+
+    /**
+     * @brief This method extracts the values from the widget and pushes those values down into the AbstractFilter
+     * instance.
+     */
+    template<typename Filter>
+    void setAxisAnglesIntoFilter(Filter* filter)
+    {
+      std::vector<AxisAngleInput_t> comps;
+      if (m_TableModel == NULL) { return; }
+
+      int filterCount = m_TableModel->rowCount();
+      QVector<float> angles = m_TableModel->getData(AxisAngleTableModel::Angle);
+      QVector<float> axis = m_TableModel->getData(AxisAngleTableModel::Axis);
+
+      for(int i = 0; i < filterCount; ++i)
+      {
+        AxisAngleInput_t comp;
+        comp.angle = angles[i];
+        comp.h = axis[i*3 + 0];
+        comp.k = axis[i*3 + 1];
+        comp.l = axis[i*3 + 2];
+        comps.push_back(comp);
+      }
+      filter->setAxisAngleRotations(comps);
+    }
 
   signals:
-    void arrayListsChanged();
+    void AxisAnglesChanged();
 
   protected slots:
+
+    void on_addRow_clicked();
+    void on_deleteRow_clicked();
+    void on_loadData_clicked();
+
 
   protected:
 
 
   private:
+    AxisAngleTableModel* m_TableModel;
+
+    QString m_OpenDialogLastDirectory; // Must be last in the list
+
     AxisAngleWidget(const AxisAngleWidget&); // Copy Constructor Not Implemented
     void operator=(const AxisAngleWidget&); // Operator '=' Not Implemented
 
