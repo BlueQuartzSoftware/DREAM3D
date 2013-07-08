@@ -21,6 +21,8 @@ set(DREAM3DLib_HDF5_HDRS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5MatrixStatsDataDelegate.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.h
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5Macros.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5FilterParametersReader.h
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5FilterParametersWriter.h
 )
 
 set(DREAM3DLib_HDF5_SRCS
@@ -32,7 +34,10 @@ set(DREAM3DLib_HDF5_SRCS
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5BoundaryStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5MatrixStatsDataDelegate.cpp
   ${DREAM3DLib_SOURCE_DIR}/HDF5/H5VoxelReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5FilterParametersReader.cpp
+  ${DREAM3DLib_SOURCE_DIR}/HDF5/H5FilterParametersWriter.cpp
 )
+  
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/HDF5" "${DREAM3DLib_HDF5_HDRS}" "${DREAM3DLib_HDF5_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_HDF5_HDRS}
