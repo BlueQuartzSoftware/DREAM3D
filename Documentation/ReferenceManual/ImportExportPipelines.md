@@ -78,7 +78,9 @@ As a convenience for those situations where the user has created a large pipelin
 
 
 @htmlonly
+
 |   | Navigation |    |
 |----|---------|------|
-| [Back](creatingpipeline.html) | [Top](usermanual.html) | [Next Section](statsgenerator.html) |
+| [Back](creatingpipeline.html) | [Top](usermanual.html) | [Next Section](statsgenerator.html) |  
+ 
 @endhtmlonly

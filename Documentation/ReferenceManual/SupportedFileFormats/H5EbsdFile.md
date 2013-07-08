@@ -5,19 +5,6 @@ H5EBSD Data File Specification {#h5ebsdfile}
 The EBSD Data from multiple vendors is stored in a data file using the HDF5 file format library. Although the general layout of the HDF5 file is the same between vendors, there are details that are NOT the same between vendors, because each vendor chooses to save different types of data. The top-level datasets that deal with the basic volume information is the same for every file.
 
 
-## Orientations, Reference Frames and Coordinate Systems
-DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure: Specimen Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
-
-![TSL Coordinate System (Spatial)](Images/CoordinateSystem1.png)
-
-@image latex Images/CoordinateSystem1.png "TSL Coordinate System (Spatial)" width=3in
-
-Commercial EBSD acquisition systems do not typically follow this convention, and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data, in which case the DREAM.3D environment does not have any way of determining if those transformations have already occurred. During the import process the user is asked a few questions regarding the orientation of the EBSD data in relation to the specimen coordinate system. Currently, there are three (3) items that must be answered; otherwise, undefined behavior may occur during any of the analysis algorithms.
-
-- Some Commercial EBSD acquisition systems allow for a **scan rotation** which
-rotates the specimen coordinate system 180 degrees around the Z axis.
-- Should we rotate the Euler angles to bring them in line with the sample
-reference frame?
 
 ## HDF5 File Layout
 

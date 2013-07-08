@@ -83,9 +83,17 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
     {
-
       return StatsDataArray::New();
     }
+
+    /**
+    * @brief
+    */
+    virtual bool isAllocated()
+    {
+      return m_IsAllocated;
+    }
+
 
     /**
      *
@@ -285,6 +293,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
   private:
     std::string m_Name;
+    bool m_IsAllocated;
 
     StatsDataArray(const StatsDataArray&); // Copy Constructor Not Implemented
     void operator=(const StatsDataArray&); // Operator '=' Not Implemented

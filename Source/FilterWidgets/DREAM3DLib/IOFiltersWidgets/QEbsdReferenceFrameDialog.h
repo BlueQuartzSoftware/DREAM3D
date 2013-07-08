@@ -90,6 +90,8 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     void referenceDirectionChanged();
     QImage paintImage(QImage image);
 
+    void on_showHelp_clicked();
+
   private:
     QString                     m_EbsdFileName;
     QButtonGroup*               m_OriginGroup;

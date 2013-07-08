@@ -41,7 +41,7 @@
 #include <string>
 
 #include "H5Support/H5Lite.h"
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+//#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 
@@ -74,19 +74,19 @@ class H5DataArrayWriter
       { numTuples, numComp };
       int err = 0;
       if (H5Lite::datasetExists(gid, name) == false) {
-        err |= H5Lite::writePointerDataset(gid, name, rank, dims, data);
+        err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
         if(err < 0)
         {
           return err;
         }
       }
-      err |= H5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+      err = H5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
       if(err < 0)
       {
         return err;
       }
 
-      err |= H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
+      err = H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
       if(err < 0)
       {
         return err;
@@ -102,5 +102,52 @@ class H5DataArrayWriter
   H5DataArrayWriter(const H5DataArrayWriter&); // Copy Constructor Not Implemented
     void operator=(const H5DataArrayWriter&); // Operator '=' Not Implemented
 };
+
+
+
+
+/**
+ * @class H5DataArrayWriter H5DataArrayWriter.h DREAM3DLib/HDF5/H5DataArrayWriter.h
+ * @brief This class handles writing of DataArray<T> objects to an HDF5 file
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Jan 22, 2012
+ * @version 1.0
+ */
+template<typename T>
+class H5GBCDArrayWriter
+{
+  public:
+  virtual ~H5GBCDArrayWriter() {}
+
+  static int writeArray(hid_t gid, const std::string &name, size_t* gbcdDims, T* data, const std::string &className)
+  {
+      int32_t rank = 5;
+      hsize_t dims[5] = {gbcdDims[0],gbcdDims[1],gbcdDims[2],gbcdDims[3],gbcdDims[4],};
+      int err = 0;
+      if (H5Lite::datasetExists(gid, name) == false) {
+        err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
+        if(err < 0)
+        {
+          return err;
+        }
+      }
+
+      err = H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
+      if(err < 0)
+      {
+        return err;
+      }
+      return err;
+    }
+
+
+  protected:
+    H5GBCDArrayWriter(){}
+
+  private:
+    H5GBCDArrayWriter(const H5GBCDArrayWriter&); // Copy Constructor Not Implemented
+    void operator=(const H5GBCDArrayWriter&); // Operator '=' Not Implemented
+};
+
 
 #endif /* _H5DataArrayWriter_H_ */

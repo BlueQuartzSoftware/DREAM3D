@@ -89,6 +89,13 @@ class StringDataArray : public IDataArray
     virtual ~StringDataArray(){}
 
     /**
+     * @brief isAllocated
+     * @return
+     */
+    virtual bool isAllocated() { return true; }
+
+
+    /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
