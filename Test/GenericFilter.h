@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _TestFilter_H_
-#define _TestFilter_H_
+#ifndef _GenericFilter_H_
+#define _GenericFilter_H_
 
 #include <string>
 
@@ -14,20 +14,20 @@
 
 
 /**
- * @class TestFilter TestFilter.h ExamplePlugin/Code/ExamplePluginFilters/TestFilter.h
+ * @class GenericFilter GenericFilter.h ExamplePlugin/Code/ExamplePluginFilters/GenericFilter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class TestFilter : public AbstractFilter
+class GenericFilter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(TestFilter);
-    DREAM3D_STATIC_NEW_MACRO(TestFilter);
-    DREAM3D_TYPE_MACRO_SUPER(TestFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenericFilter);
+    DREAM3D_STATIC_NEW_MACRO(GenericFilter);
+    DREAM3D_TYPE_MACRO_SUPER(GenericFilter, AbstractFilter);
 
-    virtual ~TestFilter();
+    virtual ~GenericFilter();
 
    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
@@ -39,8 +39,8 @@ class TestFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-	DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
+	  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
+	  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
@@ -69,7 +69,7 @@ class TestFilter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "TestFilter"; }
+    virtual const std::string getHumanLabel() { return "GenericFilter"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
@@ -107,7 +107,7 @@ class TestFilter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    TestFilter();
+    GenericFilter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -121,8 +121,8 @@ class TestFilter : public AbstractFilter
 
   private:
 
-    TestFilter(const TestFilter&); // Copy Constructor Not Implemented
-    void operator=(const TestFilter&); // Operator '=' Not Implemented
+    GenericFilter(const GenericFilter&); // Copy Constructor Not Implemented
+    void operator=(const GenericFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* _TestFilter_H_ */
+#endif /* _GenericFilter_H_ */

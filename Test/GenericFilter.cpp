@@ -2,7 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#include "TestFilter.h"
+#include "GenericFilter.h"
 
 
 #define StlFilePrefixDefaultValue "StlFilePrefixDefaultValue"
@@ -27,7 +27,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TestFilter::TestFilter() :
+GenericFilter::GenericFilter() :
 AbstractFilter()
 {
   m_Dimensions.x = 0;
@@ -44,14 +44,14 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TestFilter::~TestFilter()
+GenericFilter::~GenericFilter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFilter::setupFilterParameters()
+void GenericFilter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
@@ -266,7 +266,6 @@ void TestFilter::setupFilterParameters()
     option->setValueType("std::vector<ComparisonInput_t>");
     options.push_back(option);
   }
-
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
   {
 	  FilterParameter::Pointer option = FilterParameter::New();
@@ -282,7 +281,7 @@ void TestFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 {
   setStlFilePrefix( reader->readValue("StlFilePrefix", StlFilePrefixDefaultValue) );
   setMaxIterations( reader->readValue("MaxIterations", MaxIterationsDefaultValue) );
@@ -310,7 +309,7 @@ void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
  /* Place code that will write the inputs values into a file. reference the
@@ -335,16 +334,15 @@ void TestFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
   writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName() );
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
-
-  writer->writeValue("CellComparisonInputs", m_CellComparisonInputs);
-  writer->writeValue("AxisAngleRotations", m_AxisAngleRotations);
+  writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
+  writer->writeValue( "AxisAngleRotations", getAxisAngleRotations() );
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenericFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
 
@@ -368,7 +366,7 @@ void TestFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFilter::preflight()
+void GenericFilter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -378,7 +376,7 @@ void TestFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFilter::execute()
+void GenericFilter::execute()
 {
   int err = 0;
   setErrorCondition(err);

@@ -123,7 +123,7 @@ add_test(EbsdTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdTests)
 # --------------------------------------------------------------------------
 # FilterParametersRW Test
 # --------------------------------------------------------------------------
-add_executable(FilterParametersRWTest FilterParametersRWTest.cpp TestFilter.h TestFilter.cpp )
+add_executable(FilterParametersRWTest FilterParametersRWTest.cpp GenericFilter.h GenericFilter.cpp )
 target_link_libraries(FilterParametersRWTest DREAM3DLib)
 set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
 add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
