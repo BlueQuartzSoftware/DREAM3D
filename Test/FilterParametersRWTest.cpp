@@ -43,7 +43,7 @@
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-#include "TestFilter.h"
+#include "GenericFilter.h"
 
 
 #define StlFilePrefixTestValue "StlFilePrefixTestValue"
@@ -98,7 +98,7 @@ void FilterParametersRWTest()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  TestFilter::Pointer filt = TestFilter::New();
+  GenericFilter::Pointer filt = GenericFilter::New();
 
   // Set something for each and every property so you have something to compare against.
   // You may want to make some constants for these values
