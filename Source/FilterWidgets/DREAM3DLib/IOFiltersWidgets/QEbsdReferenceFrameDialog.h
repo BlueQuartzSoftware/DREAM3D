@@ -81,6 +81,8 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     bool getHKLchecked();
     bool getHEDMchecked();
     bool getNoTranschecked();
+    void getSampleTranformation(float &angle, float &dir0, float &dir1, float &dir2);
+    void getEulerTranformation(float &eulerTransAngle, float &dir0, float &dir1, float &dir2);
 
   protected slots:
     void originChanged(bool checked);

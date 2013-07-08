@@ -193,6 +193,7 @@ bool QEbsdReferenceFrameDialog::getNoTranschecked()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::loadEbsdData()
 {
+  if (m_EbsdFileName.isEmpty() == true) { return; }
   VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 
   ReadOrientationData::Pointer reader = ReadOrientationData::New();
@@ -309,7 +310,92 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
   if (checked == true) {
     updateDisplay();
   }
+
+  // Initialize to "No Transform"
+  float sampleTransAngle = 0.0f;
+  float sampleTransAxis[3] = { 0.0f, 0.0f, 1.0f};
+  float eulerTranAngle = 0.0f;
+  float eulerTransAxis[3] = { 0.0f, 0.0f, 1.0f};
+
+  getSampleTranformation(sampleTransAngle, sampleTransAxis[0], sampleTransAxis[1], sampleTransAxis[2]);
+  getEulerTranformation(eulerTranAngle, eulerTransAxis[0], eulerTransAxis[1], eulerTransAxis[2]);
+
+  QString sampleTrans = QString::number(sampleTransAngle) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
+  QString eulerTrans = QString::number(eulerTranAngle) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
+  m_SampleTransformationLabel->setText(sampleTrans);
+  m_EulerTransformationLabel->setText(eulerTrans);
+
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::getSampleTranformation(float &sampleTransAngle, float &dir0, float &dir1, float &dir2)
+{
+  // Initialize to "No Transform"
+  sampleTransAngle = 0.0f;
+  dir0 = 0.0f;
+  dir1 = 0.0f;
+  dir2 = 1.0f;
+
+
+  if (getTSLchecked() == true)
+  {
+    sampleTransAngle = 180.0;
+    dir0 = 0.0;
+    dir1 = 1.0;
+    dir2 = 0.0;
+  }
+  else if (getHKLchecked() == true)
+  {
+    sampleTransAngle = 180.0;
+    dir0 = 0.0;
+    dir1 = 1.0;
+    dir2 = 0.0;
+  }
+  else if (getHEDMchecked() == true)
+  {
+    sampleTransAngle = 0.0;
+    dir0 = 0.0;
+    dir1 = 0.0;
+    dir2 = 1.0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdReferenceFrameDialog::getEulerTranformation(float &eulerTransAngle, float &dir0, float &dir1, float &dir2)
+{
+  eulerTransAngle = 0.0f;
+  dir0 = 0.0f;
+  dir1 = 0.0f;
+  dir2 = 1.0f;
+
+  if (getTSLchecked() == true)
+  {
+    eulerTransAngle = 90.0;
+    dir0 = 0.0;
+    dir1 = 0.0;
+    dir2 = 1.0;
+  }
+  else if (getHKLchecked() == true)
+  {
+    eulerTransAngle = 0.0;
+    dir0 = 0.0;
+    dir1 = 0.0;
+    dir2 = 1.0;
+  }
+  else if (getHEDMchecked() == true)
+  {
+    eulerTransAngle = 0.0;
+    dir0 = 0.0;
+    dir1 = 0.0;
+    dir2 = 1.0;
+  }
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
