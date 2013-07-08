@@ -279,12 +279,3 @@ int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_
   err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
   return err;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
-{
-  int err = -1;
-  return err;
-}
