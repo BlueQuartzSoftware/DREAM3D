@@ -48,7 +48,7 @@
 StatsDataArray::StatsDataArray() :
     m_Name(DREAM3D::EnsembleData::Statistics)
 {
-
+  m_IsAllocated = true;
 }
 
 // -----------------------------------------------------------------------------

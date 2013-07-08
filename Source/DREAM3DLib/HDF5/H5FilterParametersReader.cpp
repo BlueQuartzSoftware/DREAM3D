@@ -197,8 +197,8 @@ IntVec3Widget_t H5FilterParametersReader::readValue(const std::string name, IntV
 {
   int err = 0;
   IntVec3Widget_t v;
-  int32_t rank = 1;
-  hsize_t dims[1] = { 3 };
+//  int32_t rank = 1;
+//  hsize_t dims[1] = { 3 };
   err = H5Lite::readPointerDataset<int32_t>(m_CurrentGroupId, name, reinterpret_cast<int32_t*>(&v) );
   if (err < 0) { return defaultValue; }
 
@@ -212,8 +212,8 @@ FloatVec3Widget_t H5FilterParametersReader::readValue(const std::string name, Fl
 {
   int err = 0;
   FloatVec3Widget_t v;
-  int32_t rank = 1;
-  hsize_t dims[1] = { 3 };
+//  int32_t rank = 1;
+//  hsize_t dims[1] = { 3 };
   err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
   if (err < 0) { return defaultValue; }
   return v;

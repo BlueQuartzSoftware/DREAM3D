@@ -34,10 +34,12 @@
 #include <iostream>
 #include <string>
 
+#include "MXA/Utilities/MXADir.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/NeighborList.hpp"
-
+#include "DREAM3DLib/Common/GbcdDataArray.hpp"
 
 #include "UnitTestSupport.hpp"
 
@@ -64,7 +66,9 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-
+#if REMOVE_TEST_FILES
+  MXADir::remove(UnitTest::DataArrayTest::TestFile);
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -75,6 +79,8 @@ void __TestCopyTuples()
 {
   int err = 0;
   typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "TestCopyTuples");
+  DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
+
   array->SetNumberOfComponents(NUM_COMPONENTS_2);
   for(size_t i = 0; i < NUM_TUPLES_2; ++i)
   {
@@ -130,6 +136,7 @@ void __TestEraseElements()
   // Test dropping of front elements only
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS, "Test1");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_ELEMENTS; ++i)
     {
       array->SetComponent(i, 0, static_cast<T>(i) );
@@ -149,6 +156,7 @@ void __TestEraseElements()
   // Test Dropping of internal elements
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test2");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -174,6 +182,7 @@ void __TestEraseElements()
   // Test Dropping of internal elements
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test3");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -198,6 +207,7 @@ void __TestEraseElements()
   // Test Dropping of internal continuous elements
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test4");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -222,6 +232,7 @@ void __TestEraseElements()
   // Test Dropping of Front and Back Elements
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test5");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -244,6 +255,7 @@ void __TestEraseElements()
   // Test Dropping of Back Elements
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_ELEMENTS_2, "Test6");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     array->SetNumberOfComponents(NUM_COMPONENTS_2);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
@@ -263,9 +275,10 @@ void __TestEraseElements()
     DREAM3D_REQUIRE_EQUAL(array->GetComponent(5, 1), 5);
   }
 
-    // Test Dropping of indices larger than the number of tuples
+  // Test Dropping of indices larger than the number of tuples
   {
     typename DataArray<T>::Pointer array = DataArray<T>::CreateArray(NUM_TUPLES_2, NUM_COMPONENTS_2, "Test6");
+    DREAM3D_REQUIRE_EQUAL(array->isAllocated(), true);
     for(size_t i = 0; i < NUM_TUPLES_2; ++i)
     {
       array->SetComponent(i, 0, static_cast<T>(i));
@@ -277,14 +290,14 @@ void __TestEraseElements()
     int err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , -100)
 
-    eraseElements.clear();
+        eraseElements.clear();
     err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
 
-    eraseElements.resize(20);
+        eraseElements.resize(20);
     err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
-    size_t nTuples = array->GetNumberOfTuples();
+        size_t nTuples = array->GetNumberOfTuples();
     DREAM3D_REQUIRE_EQUAL(nTuples, 0)
   }
 
@@ -321,11 +334,13 @@ void TestDataArray()
     DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples());
     ptr = d->GetPointer(0);
     DREAM3D_REQUIRE_EQUAL(ptr, 0);
+    DREAM3D_REQUIRE_EQUAL(d->isAllocated(), false);
   }
 
   {
     Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS, "Test8");
     ptr = int32Array->GetPointer(0);
+    DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());
     int32Array->SetNumberOfComponents(NUM_COMPONENTS);
@@ -344,6 +359,7 @@ void TestDataArray()
     int32Array->Resize(NUM_TUPLES_2);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2, int32Array->GetNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2, int32Array->GetSize());
+    DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
 
     // This should have saved our data so lets look at the data and compare it
     for (int i = 0; i < NUM_TUPLES; ++i)
@@ -358,6 +374,7 @@ void TestDataArray()
     int32Array->Resize(NUM_TUPLES_3);
     DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->GetNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->GetSize());
+    DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
 
     // This should have saved our data so lets look at the data and compare it
     for (int i = 0; i < NUM_TUPLES; ++i)
@@ -395,36 +412,36 @@ void __TestNeighborList()
   typename NeighborList<T>::Pointer n = NeighborList<T>::New();
   n->SetName("Test");
 
-   for(int i = 0; i < 4; ++i) {
-     for(T j = 0; j < (T)(i+4); ++j) {
-       n->addEntry(i, static_cast<T>(j*i+3) );
-     }
-   }
+  for(int i = 0; i < 4; ++i) {
+    for(T j = 0; j < (T)(i+4); ++j) {
+      n->addEntry(i, static_cast<T>(j*i+3) );
+    }
+  }
 
-   typename NeighborList<T>::SharedVectorType v;
-   for(int i = 0; i < 4; ++i)
-   {
-     v = n->getList(i);
-     DREAM3D_REQUIRE_NE(v.get(), 0);
-   }
+  typename NeighborList<T>::SharedVectorType v;
+  for(int i = 0; i < 4; ++i)
+  {
+    v = n->getList(i);
+    DREAM3D_REQUIRE_NE(v.get(), 0);
+  }
 
-   // Remove the front 2 elements and test
-   std::vector<size_t> eraseElements;
-   eraseElements.push_back(0);
-   eraseElements.push_back(1);
+  // Remove the front 2 elements and test
+  std::vector<size_t> eraseElements;
+  eraseElements.push_back(0);
+  eraseElements.push_back(1);
 
-   n->EraseTuples(eraseElements);
-   for(int i = 0; i < 2; ++i)
-   {
-     v = n->getList(i);
-     DREAM3D_REQUIRE_NE(v.get(), 0);
-     DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
-     for(T j = 0; j < (T)(i+4+2); ++j) {
-       DREAM3D_REQUIRE_EQUAL(v->at(j), j*(i+2)+3);
-     }
-   }
+  n->EraseTuples(eraseElements);
+  for(int i = 0; i < 2; ++i)
+  {
+    v = n->getList(i);
+    DREAM3D_REQUIRE_NE(v.get(), 0);
+    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+2+4) );
+    for(T j = 0; j < (T)(i+4+2); ++j) {
+      DREAM3D_REQUIRE_EQUAL(v->at(j), j*(i+2)+3);
+    }
+  }
 
-   // Reset and erase the back 2 "Tuples"
+  // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
   for(int i = 0; i < 4; ++i) {
     for(T j = 0; j < (T)(i+4); ++j) {
@@ -437,20 +454,20 @@ void __TestNeighborList()
   n->EraseTuples(eraseElements);
   for(int i = 0; i < 2; ++i)
   {
-   v = n->getList(i);
-   DREAM3D_REQUIRE_NE(v.get(), 0);
-   DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
-   for(T j = 0; j < (T)(i+4); ++j) {
-     DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
-   }
+    v = n->getList(i);
+    DREAM3D_REQUIRE_NE(v.get(), 0);
+    DREAM3D_REQUIRE_EQUAL(v->size(), static_cast<size_t>(i+4) );
+    for(T j = 0; j < (T)(i+4); ++j) {
+      DREAM3D_REQUIRE_EQUAL(v->at(j), j*i+3);
+    }
   }
 
   // Reset and erase the back 2 "Tuples"
   n->clearAllLists();
   for(int i = 0; i < 4; ++i) {
-   for(T j = 0; j < (T)(i+4); ++j) {
-     n->addEntry(i, j*i+3);
-   }
+    for(T j = 0; j < (T)(i+4); ++j) {
+      n->addEntry(i, j*i+3);
+    }
   }
   eraseElements.clear();
   eraseElements.push_back(1);
@@ -491,26 +508,128 @@ void TestNeighborList()
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestGbcdDataArray()
+{
+
+  size_t dims[5] = {60,29,60,60,29};
+  size_t size = dims[0]*dims[1]*dims[2]*dims[3]*dims[4];
+  GBCDFloatArrayType::Pointer m_GBCD = GBCDFloatArrayType::CreateArray(dims, "GBCD Data", false);
+
+  size_t retDims[5];
+  m_GBCD->GetGbcdDimension(retDims);
+  DREAM3D_REQUIRE_EQUAL(retDims[0], dims[0])
+      DREAM3D_REQUIRE_EQUAL(retDims[1], dims[1])
+      DREAM3D_REQUIRE_EQUAL(retDims[2], dims[2])
+      DREAM3D_REQUIRE_EQUAL(retDims[3], dims[3])
+      DREAM3D_REQUIRE_EQUAL(retDims[4], dims[4])
+      DREAM3D_REQUIRE_EQUAL(false, m_GBCD->isAllocated())
+
+      DREAM3D_REQUIRE_EQUAL(size, m_GBCD->GetSize())
+
+      // This will test writing an array that has not been allocated which should return an
+      // negative error code.
+  {
+    hid_t fid = H5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
+    DREAM3D_REQUIRE(fid > 0)
+        int err = m_GBCD->writeH5Data(fid);
+    DREAM3D_REQUIRE(err < 0)
+        H5Utilities::closeFile(fid);
+  }
+
+  // Now allocate all the memory we need
+  m_GBCD->Allocate();
+  DREAM3D_REQUIRE_EQUAL(true, m_GBCD->isAllocated())
+      float* ptr = m_GBCD->GetPointer(0);
+  size_t idx = 0;
+  // Now dump some actual data in the arrays
+  for(size_t i = 0; i < dims[0]; ++i)
+  {
+    for(size_t j = 0; j < dims[1]; ++j)
+    {
+      for(size_t k = 0; k < dims[2]; ++k)
+      {
+        for(size_t l = 0; l < dims[3]; ++l)
+        {
+          for(size_t m = 0; m < dims[4]; ++m)
+          {
+            ptr[idx] = static_cast<float>(i+j+k+l+m);
+            idx++;
+          }
+        }
+      }
+    }
+  }
+
+
+  // This will test writing an array that has been allocated which should return an
+  // Zero or Positive error code.
+  {
+    hid_t fid = H5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
+    DREAM3D_REQUIRE(fid > 0)
+        int err = m_GBCD->writeH5Data(fid);
+    DREAM3D_REQUIRE(err >= 0)
+        H5Utilities::closeFile(fid);
+  }
+
+  {
+    hid_t fid = H5Utilities::openFile(UnitTest::DataArrayTest::TestFile, true);
+    DREAM3D_REQUIRE(fid > 0)
+        m_GBCD->initializeWithZeros();
+    int err = m_GBCD->readH5Data(fid);
+    DREAM3D_REQUIRE(err >= 0)
+        H5Utilities::closeFile(fid);
+    ptr = m_GBCD->GetPointer(0);
+    idx = 0;
+    // Now dump some actual data in the arrays
+    for(size_t i = 0; i < dims[0]; ++i)
+    {
+      for(size_t j = 0; j < dims[1]; ++j)
+      {
+        for(size_t k = 0; k < dims[2]; ++k)
+        {
+          for(size_t l = 0; l < dims[3]; ++l)
+          {
+            for(size_t m = 0; m < dims[4]; ++m)
+            {
+              DREAM3D_REQUIRE(ptr[idx] == i+j+k+l+m)
+              idx++;
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+}
+
+// -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
+
+  MXADir::mkdir(UnitTest::DataArrayTest::TestDir, true);
+
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
+    #endif
 
-  DREAM3D_REGISTER_TEST( TestDataArray() )
-  DREAM3D_REGISTER_TEST( TestEraseElements() )
-  DREAM3D_REGISTER_TEST( TestCopyTuples() )
-  DREAM3D_REGISTER_TEST( TestNeighborList() )
+      DREAM3D_REGISTER_TEST( TestDataArray() )
+      DREAM3D_REGISTER_TEST( TestEraseElements() )
+      DREAM3D_REGISTER_TEST( TestCopyTuples() )
+      DREAM3D_REGISTER_TEST( TestNeighborList() )
+      DREAM3D_REGISTER_TEST( TestGbcdDataArray() )
 
-#if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-#endif
+    #if REMOVE_TEST_FILES
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    #endif
 
 
-  PRINT_TEST_SUMMARY();
+      PRINT_TEST_SUMMARY();
   return err;
 }
 

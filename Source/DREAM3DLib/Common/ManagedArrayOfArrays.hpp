@@ -102,6 +102,13 @@ class ManagedArrayOfArrays : public IDataArray
       }
     }
 
+    /**
+     * @brief isAllocated
+     * @return
+     */
+    virtual bool isAllocated() {
+      return m_IsAllocated;
+    }
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -180,40 +187,9 @@ class ManagedArrayOfArrays : public IDataArray
         return -1;
       }
       this->Size = newSize;
+      this->m_IsAllocated = true;
       initializeWithZeros(); // MAKE SURE TO SPLAT Zero and NULL across the entire array otherwise we are going to have issues.
       return 1;
-    }
-
-
-    /**
-    * @brief Get the address of a particular data index. Make sure data is allocated
-    * for the number of items requested. Set MaxId according to the number of
-    * data values requested. For example if you want to ensure that you have enough
-    * memory allocated to write to the 1000 element then you would have code such
-    * as:
-    * @code
-    *  int* ptr = array->WritePointer(0, 1000);
-    * @endcode
-    * @param id The offset of the data index
-    * @param number The number of elements to ensure memory allocation
-    * @return
-    */
-    T* WritePointer(size_t id, size_t number)
-    {
-      size_t newSize=id+number;
-      if ( newSize > this->Size )
-      {
-        if (this->ResizeAndExtend(newSize)==0)
-        {
-          return 0;
-        }
-      }
-      if ( (--newSize) > this->MaxId )
-      {
-        this->MaxId = newSize-1;
-      }
-
-      return this->Array + id;
     }
 
     /**
@@ -229,6 +205,7 @@ class ManagedArrayOfArrays : public IDataArray
       this->Size = 0;
       this->_ownsData = true;
       this->MaxId = 0;
+      m_IsAllocated = false;
       //   this->_dims[0] = _nElements;
     }
 
@@ -595,7 +572,8 @@ class ManagedArrayOfArrays : public IDataArray
     ManagedArrayOfArrays(size_t numElements, bool ownsData = true) :
       Array(NULL),
       Size(numElements),
-      _ownsData(ownsData)
+      _ownsData(ownsData),
+      m_IsAllocated(false)
     {
 
       MaxId = (Size > 0) ? Size - 1: Size;
@@ -632,6 +610,7 @@ class ManagedArrayOfArrays : public IDataArray
       free(this->Array);
 #endif
       this->Array = NULL;
+      m_IsAllocated = false;
     }
 
     /**
@@ -720,7 +699,7 @@ class ManagedArrayOfArrays : public IDataArray
       this->_ownsData = true;
 
       this->MaxId = newSize-1;
-
+      m_IsAllocated = true;
       return this->Array;
     }
 
@@ -735,6 +714,8 @@ class ManagedArrayOfArrays : public IDataArray
     bool _ownsData;
     //  unsigned long long int MUD_FLAP_2;
     size_t MaxId;
+
+    bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
     std::string m_Name;
     //  unsigned long long int MUD_FLAP_5;

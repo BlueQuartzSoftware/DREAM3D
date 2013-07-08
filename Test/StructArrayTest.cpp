@@ -104,6 +104,8 @@ Vec3IntListPointer_t initializeStructArray()
   Vec3IntListPointer_t nodes = Vec3IntList_t::CreateArray(ARRAY_SIZE, kArrayName);
   size_t nTuples = nodes->GetNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(ARRAY_SIZE, nTuples)
+  bool isAllocated = nodes->isAllocated();
+  DREAM3D_REQUIRE_EQUAL(isAllocated, true)
 
   int nComp = nodes->GetNumberOfComponents();
   DREAM3D_REQUIRE_EQUAL(1, nComp)

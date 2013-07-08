@@ -9,11 +9,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Next Release Bugs to Fix (4.2) ##
 
-
-+ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
-    - Have it pop open the Web browser to the proper file.
-    - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
-    - Take into account the Euler Reference Frame Rotations (Current does not matter because all rotations are about the Z Axis)
 + Disable adding of filters into the pipeline while it is running.
 + Update the documentation for the disorientation coloring
 + Incorrect Documentation for Find Twin Boundary Info
@@ -183,6 +178,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
+
++ Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
+    - Have it pop open the Web browser to the proper file.
+    - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
+    - Take into account the Euler Reference Frame Rotations (Current does not matter because all rotations are about the Z Axis)
 + Add filter to calculate info for twin boundaries for UCSB guys
 + Read in the Field and Ensemble Arrays of the SurfaceMesh data container including updating the GUI for this.
 + Fix GBCD Generation or make private on next release

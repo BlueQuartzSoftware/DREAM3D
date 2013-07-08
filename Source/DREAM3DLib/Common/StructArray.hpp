@@ -100,6 +100,16 @@ class StructArray : public IDataArray
     }
 
     /**
+     * @brief isAllocated
+     * @return
+     */
+    virtual bool isAllocated()
+    {
+      return m_IsAllocated;
+    }
+
+
+    /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
@@ -178,6 +188,7 @@ class StructArray : public IDataArray
       }
       this->Array = NULL;
       this->_ownsData = true;
+      this->m_IsAllocated = false;
 
       if (this->Size == 0)
       {
@@ -197,6 +208,7 @@ class StructArray : public IDataArray
         std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
         return -1;
       }
+      this->m_IsAllocated = true;
       this->Size = newSize;
       return 1;
     }
@@ -214,7 +226,7 @@ class StructArray : public IDataArray
       this->Size = 0;
       this->_ownsData = true;
       this->MaxId = 0;
-      //   this->_dims[0] = _nElements;
+      this->m_IsAllocated = false;
     }
 
     /**
@@ -586,9 +598,9 @@ class StructArray : public IDataArray
     StructArray(size_t numElements, bool ownsData = true) :
       Array(NULL),
       Size(numElements),
-      _ownsData(ownsData)
+      _ownsData(ownsData),
+      m_IsAllocated(false)
     {
-
       MaxId = (Size > 0) ? Size - 1: Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
@@ -622,6 +634,7 @@ class StructArray : public IDataArray
       free(this->Array);
 #endif
       this->Array = NULL;
+      this->m_IsAllocated = false;
     }
 
     /**
@@ -710,6 +723,7 @@ class StructArray : public IDataArray
       this->_ownsData = true;
 
       this->MaxId = newSize-1;
+      this->m_IsAllocated = true;
 
       return this->Array;
     }
@@ -724,6 +738,8 @@ class StructArray : public IDataArray
     bool _ownsData;
     //  unsigned long long int MUD_FLAP_2;
     size_t MaxId;
+
+    bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
     std::string m_Name;
     //  unsigned long long int MUD_FLAP_5;

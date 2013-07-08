@@ -32,8 +32,8 @@
  //                           FA8650-07-D-5800
  //
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DataArray_h_
-#define _DataArray_h_
+#ifndef _GbcdDataArray_h_
+#define _GbcdDataArray_h_
 
 // STL Includes
 #include <vector>
@@ -50,42 +50,23 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/HDF5/H5DataArrayWriter.hpp"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
-
-
-#define mxa_bswap(s,d,t)\
-  t[0] = ptr[s];\
-  ptr[s] = ptr[d];\
-  ptr[d] = t[0];
-
-/** @brief Resizes the DataArray Shared Array and assigns its internal data pointer
- *
- */
-#define RESIZE_ARRAY(sharedArray, pointer, size)\
-  pointer = sharedArray->WritePointer(0, size);
-
-#define DECLARE_WRAPPED_ARRAY(pubVar, priVar, Type)\
-  DataArray<Type>::Pointer priVar;\
-  Type* pubVar;
-
-#define INIT_DataArray(var, Type)\
-  var = DataArray<Type>::CreateArray(0, #var);
-
+#include "DREAM3DLib/HDF5/H5GbcdArrayReader.h"
 
 
 /**
- * @class DataArray DataArray.hpp DREAM3DLib/Common/DataArray.hpp
+ * @class GbcdDataArray GbcdDataArray.hpp DREAM3DLib/Common/GbcdDataArray.hpp
  * @brief Template class for wrapping raw arrays of data.
  * @author mjackson
  * @date July 3, 2008
  * @version $Revision: 1.2 $
  */
 template<typename T>
-class DataArray : public IDataArray
+class GbcdDataArray : public IDataArray
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(DataArray<T> )
-    DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
+    DREAM3D_SHARED_POINTERS(GbcdDataArray<T> )
+    DREAM3D_TYPE_MACRO_SUPER(GbcdDataArray<T>, IDataArray)
 
     typedef std::vector<Pointer>   ContainterType;
 
@@ -104,6 +85,106 @@ class DataArray : public IDataArray
     UnknownNumType
   };
 
+  /**
+     * @brief Static constructor
+     * @param numElements The number of elements in the internal array.
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t* dims, const std::string &name, bool allocateArray = true)
+    {
+      if (name.empty() == true)
+      {
+        return NullPointer();
+      }
+      GbcdDataArray<T>* d = new GbcdDataArray<T> (dims, true);
+      if (allocateArray && d->Allocate() < 0)
+      { // Could not allocate enough memory, reset the pointer to null and return
+        delete d;
+        return GbcdDataArray<T>::NullPointer();
+      }
+      d->SetName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    /**
+     * @brief Static constructor
+     * @param numTuples The number of tuples in the array.
+     * @param numComponents The number of Components in each Tuple
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t dim0, size_t dim1, size_t dim2, size_t dim3, size_t dim4,
+                              const std::string &name, bool allocateArray = true)
+    {
+      GbcdDataArray<T>* d = new GbcdDataArray<T> (dim0, dim1, dim2, dim3, dim4, true);
+      if (allocateArray && d->Allocate() < 0)
+      { // Could not allocate enough memory, reset the pointer to null and return
+        delete d;
+        return GbcdDataArray<T>::NullPointer();
+      }
+      d->SetName(name);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    /**
+     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * contained in the vector. The number of components will be set to 1.
+     * @param vec The vector to copy the data from
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    {
+      IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, numComponents, 1, 1, 1, name);
+      return p;
+    }
+
+
+    /**
+     * @brief Destructor
+     */
+    virtual ~GbcdDataArray()
+    {
+      //std::cout << "~GbcdDataArrayTemplate '" << m_Name << "'" << std::endl;
+      if ((NULL != this->Array) && (true == this->_ownsData))
+      {
+        _deallocate();
+      }
+    }
+
+
+    /**
+     * @brief isAllocated
+     * @return
+     */
+    virtual bool isAllocated() { return m_IsAllocated; }
+
+    /**
+     * @brief GetGbcdDimension Returns through the passed in argument the sizes of the GBCD Array
+     * @param dims The 1x5 array that will hold the values of the GBCD dimensions
+     */
+    virtual void GetGbcdDimension(size_t* dims)
+    {
+      dims[0] = m_Dims[0];
+      dims[1] = m_Dims[1];
+      dims[2] = m_Dims[2];
+      dims[3] = m_Dims[3];
+      dims[4] = m_Dims[4];
+    }
+
+    virtual void GetGbcdDimension(size_t &dim0, size_t& dim1, size_t& dim2, size_t& dim3, size_t& dim4)
+    {
+      dim0 = m_Dims[0];
+      dim1 = m_Dims[1];
+      dim2 = m_Dims[2];
+      dim3 = m_Dims[3];
+      dim4 = m_Dims[4];
+    }
+
+
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
@@ -111,25 +192,25 @@ class DataArray : public IDataArray
      */
     void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
     {
-      T value = 0x00;
+   //   T value = 0x00;
       xdmfTypeName = "UNKNOWN";
       precision = 0;
-      if (typeid(value) == typeid(int8_t)) { xdmfTypeName = "Char"; precision = 1;}
-      if (typeid(value) == typeid(uint8_t)) { xdmfTypeName = "UChar"; precision = 1;}
+//      if (typeid(value) == typeid(int8_t)) { xdmfTypeName = "Char"; precision = 1;}
+//      if (typeid(value) == typeid(uint8_t)) { xdmfTypeName = "UChar"; precision = 1;}
 
-      if (typeid(value) == typeid(int16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
-      if (typeid(value) == typeid(uint16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+//      if (typeid(value) == typeid(int16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+//      if (typeid(value) == typeid(uint16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
 
-      if (typeid(value) == typeid(int32_t)) { xdmfTypeName = "Int"; precision = 4;}
-      if (typeid(value) == typeid(uint32_t)) { xdmfTypeName = "UInt"; precision = 4;}
+//      if (typeid(value) == typeid(int32_t)) { xdmfTypeName = "Int"; precision = 4;}
+//      if (typeid(value) == typeid(uint32_t)) { xdmfTypeName = "UInt"; precision = 4;}
 
-      if (typeid(value) == typeid(int64_t)) { xdmfTypeName = "Int"; precision = 8;}
-      if (typeid(value) == typeid(uint64_t)) { xdmfTypeName = "UInt"; precision = 8;}
+//      if (typeid(value) == typeid(int64_t)) { xdmfTypeName = "Int"; precision = 8;}
+//      if (typeid(value) == typeid(uint64_t)) { xdmfTypeName = "UInt"; precision = 8;}
 
-      if (typeid(value) == typeid(float)) { xdmfTypeName = "Float"; precision = 4;}
-      if (typeid(value) == typeid(double)) { xdmfTypeName = "Float"; precision = 8;}
+//      if (typeid(value) == typeid(float)) { xdmfTypeName = "Float"; precision = 4;}
+//      if (typeid(value) == typeid(double)) { xdmfTypeName = "Float"; precision = 8;}
 
-      if (typeid(value) == typeid(bool)) { xdmfTypeName = "uchar"; precision = 1;}
+//      if (typeid(value) == typeid(bool)) { xdmfTypeName = "uchar"; precision = 1;}
     }
 
 
@@ -159,97 +240,9 @@ class DataArray : public IDataArray
 
       if (typeid(value) == typeid(bool)) { return Bool;}
 
-    return UnknownNumType;
+      return UnknownNumType;
     }
 
-  /**
-     * @brief Static constructor
-     * @param numElements The number of elements in the internal array.
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
-     */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
-    {
-      if (name.empty() == true)
-      {
-        return NullPointer();
-      }
-      DataArray<T>* d = new DataArray<T> (numElements, true);
-      if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return DataArray<T>::NullPointer();
-      }
-      d->SetName(name);
-      Pointer ptr(d);
-      return ptr;
-    }
-
-    /**
-     * @brief Static constructor
-     * @param numTuples The number of tuples in the array.
-     * @param numComponents The number of Components in each Tuple
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
-     */
-    static Pointer CreateArray(size_t numTuples, int numComponents, const std::string &name)
-    {
-
-      DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
-      if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return DataArray<T>::NullPointer();
-      }
-      d->SetName(name);
-      Pointer ptr(d);
-      return ptr;
-    }
-
-    /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
-     * contained in the vector. The number of components will be set to 1.
-     * @param vec The vector to copy the data from
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
-     */
-    static Pointer FromStdVector(std::vector<T> &vec, const std::string &name)
-    {
-      Pointer p = CreateArray(vec.size(), name);
-      ::memcpy(p->GetPointer(0), &(vec.front()), vec.size() * sizeof(T));
-      return p;
-    }
-
-    /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
-     * contained in the vector. The number of components will be set to 1.
-     * @param vec The vector to copy the data from
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
-     */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
-    {
-      IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, numComponents, name);
-      return p;
-    }
-
-    /**
-     * @brief Destructor
-     */
-    virtual ~DataArray()
-    {
-      //std::cout << "~DataArrayTemplate '" << m_Name << "'" << std::endl;
-      if ((NULL != this->Array) && (true == this->_ownsData))
-      {
-        _deallocate();
-      }
-    }
-
-    /**
-     * @brief isAllocated
-     * @return
-     */
-    virtual bool isAllocated() { return m_IsAllocated; }
 
     /**
      * @brief Gives this array a human readable name
@@ -288,6 +281,15 @@ class DataArray : public IDataArray
     }
 
     /**
+     * @brief GetSize
+     * @return
+     */
+    virtual size_t GetSize()
+    {
+      return Size;
+    }
+
+    /**
      * @brief Allocates the memory needed for this class
      * @return 1 on success, -1 on failure
      */
@@ -299,13 +301,12 @@ class DataArray : public IDataArray
       }
       this->Array = NULL;
       this->_ownsData = true;
-      m_IsAllocated = false;
+      this->m_IsAllocated = false;
       if (this->Size == 0)
       {
         initialize();
         return 1;
       }
-
 
       size_t newSize = this->Size;
 #if defined ( AIM_USE_SSE ) && defined ( __SSE2__ )
@@ -319,11 +320,9 @@ class DataArray : public IDataArray
         return -1;
       }
       this->Size = newSize;
-      m_IsAllocated = true;
-
+      this->m_IsAllocated = true;
       return 1;
     }
-
 
     /**
      * @brief Initializes this class to zero bytes freeing any data that it currently owns
@@ -338,9 +337,7 @@ class DataArray : public IDataArray
       this->Size = 0;
       this->_ownsData = true;
       this->MaxId = 0;
-      m_IsAllocated = false;
-
-      //   this->_dims[0] = _nElements;
+      this->m_IsAllocated = false;
     }
 
     /**
@@ -348,6 +345,7 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithValues(T value)
     {
+      BOOST_ASSERT(m_IsAllocated == true);
       for (size_t i = 0; i < this->Size; i++)
       {
         this->Array[i] = value;
@@ -359,6 +357,7 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
+      BOOST_ASSERT(m_IsAllocated == true);
       size_t typeSize = sizeof(T);
       ::memset(this->Array, 0, this->Size * typeSize);
     }
@@ -373,109 +372,7 @@ class DataArray : public IDataArray
      */
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
-
-      int err = 0;
-
-      // If nothing is to be erased just return
-      if(idxs.size() == 0)
-      {
-        return 0;
-      }
-
-      if (idxs.size() >= GetNumberOfTuples() )
-      {
-        Resize(0);
-        return 0;
-      }
-
-      // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
-      // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
-      {
-        if (idxs[i] * this->NumberOfComponents > this->MaxId) { return -100; }
-      }
-
-      // Calculate the new size of the array to copy into
-      size_t newSize = (GetNumberOfTuples() - idxs.size()) * NumberOfComponents ;
-      T* currentSrc = this->Array;
-
-      // Create a new Array to copy into
-      T* newArray = (T*)malloc(newSize * sizeof(T));
-      // Splat AB across the array so we know if we are copying the values or not
-      ::memset(newArray, 0xAB, newSize * sizeof(T));
-
-      // Keep the current Destination Pointer
-      T* currentDest = newArray;
-      size_t j = 0;
-      size_t k = 0;
-      // Find the first chunk to copy by walking the idxs array until we get an
-      // index that is NOT a continuous increment from the start
-      for (k = 0; k < idxs.size(); ++k)
-      {
-        if(j == idxs[k])
-        {
-          ++j;
-        }
-        else
-        {
-          break;
-        }
-      }
-
-      if(k == idxs.size()) // Only front elements are being dropped
-      {
-        currentSrc = Array + (j * NumberOfComponents);
-        ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
-        _deallocate(); // We are done copying - delete the current Array
-        this->Size = newSize;
-        this->Array = newArray;
-        this->_ownsData = true;
-        this->MaxId = newSize - 1;
-        return 0;
-      }
-
-      std::vector<size_t> srcIdx(idxs.size() + 1);
-      std::vector<size_t> destIdx(idxs.size() + 1);
-      std::vector<size_t> copyElements(idxs.size() + 1);
-      srcIdx[0] = 0;
-      destIdx[0] = 0;
-      copyElements[0] = (idxs[0] - 0) * NumberOfComponents;
-
-      for (size_t i = 1; i < srcIdx.size(); ++i)
-      {
-        srcIdx[i] = (idxs[i - 1] + 1) * NumberOfComponents;
-
-        if(i < srcIdx.size() - 1)
-        {
-          copyElements[i] = (idxs[i] - idxs[i - 1] - 1) * NumberOfComponents;
-        }
-        else
-        {
-          copyElements[i] = (GetNumberOfTuples() - idxs[i - 1] - 1) * NumberOfComponents;
-        }
-        destIdx[i] = copyElements[i - 1] + destIdx[i - 1];
-      }
-
-      // Copy the data
-      for (size_t i = 0; i < srcIdx.size(); ++i)
-      {
-        currentDest = newArray + destIdx[i];
-        currentSrc = Array + srcIdx[i];
-        size_t bytes = copyElements[i] * sizeof(T);
-        ::memcpy(currentDest, currentSrc, bytes);
-      }
-
-      // We are done copying - delete the current Array
-      _deallocate();
-
-      // Allocation was successful.  Save it.
-      this->Size = newSize;
-      this->Array = newArray;
-      // This object has now allocated its memory and owns it.
-      this->_ownsData = true;
-
-      this->MaxId = newSize - 1;
-
+      int err = -1;
       return err;
     }
 
@@ -487,15 +384,8 @@ class DataArray : public IDataArray
      */
     virtual int CopyTuple(size_t currentPos, size_t newPos)
     {
-      size_t max =  ((this->MaxId + 1)/this->NumberOfComponents);
-      if (currentPos >= max
-          || newPos >= max )
-      {return -1;}
-      T* src = this->Array + (currentPos * NumberOfComponents);
-      T* dest = this->Array + (newPos * NumberOfComponents);
-      size_t bytes = sizeof(T) * NumberOfComponents;
-      ::memcpy(dest, src, bytes);
-      return 0;
+      int err = -1;
+      return err;
     }
 
     /**
@@ -517,25 +407,21 @@ class DataArray : public IDataArray
     virtual size_t GetNumberOfTuples()
     {
       if (Size == 0) { return 0; }
-      return (this->MaxId + 1)/this->NumberOfComponents;
+      return 1;
     }
 
-    virtual size_t GetSize()
-    {
-      return Size;
-    }
 
     // Description:
     // Set/Get the dimension (n) of the components. Must be >= 1. Make sure that
     // this is set before allocation.
     virtual void SetNumberOfComponents(int nc)
     {
-      if(nc > 0) this->NumberOfComponents = nc;
+      BOOST_ASSERT(false);
     }
 
     virtual int GetNumberOfComponents()
     {
-      return this->NumberOfComponents;
+      return this->Size;
     }
 
     /**
@@ -568,74 +454,25 @@ class DataArray : public IDataArray
       return (T*)(&(Array[i]));
     }
 
-    /**
-     * @brief Returns the value for a given index
-     * @param i The index to return the value at
-     * @return The value at index i
-     */
-    virtual T GetValue(size_t i)
-    {
-#ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i < Size);}
-#endif
-      return this->Array[i];
-    }
+
 
     /**
-     * @brief Sets a specific value in the array
-     * @param i The index of the value to set
-     * @param value The new value to be set at the specified index
-     */
-    void SetValue(size_t i, T value)
-    {
-#ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i < Size);}
-#endif
-      this->Array[i] = value;
-    }
-
-    //----------------------------------------------------------------------------
-    // These can be overridden for more efficiency
-    T GetComponent(size_t i, int j)
-    {
-#ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents+j < Size);}
-#endif
-      return Array[i*this->NumberOfComponents + j];
-    }
-
-    /**
-     * @brief Sets a specific component of the Tuple located at i
-     * @param i The index of the Tuple
-     * @param j The Component index into the Tuple
-     * @param c The value to set
-     */
-    void SetComponent(size_t i, int j, T c)
-    {
-#ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents+j < Size);}
-#endif
-      Array[i*this->NumberOfComponents + j] = c;
-    }
-
-    /**
-     * @brief Splats the same value c across all values in the Tuple
-     * @param i The index of the Tuple
-     * @param c The value to splat across all components in the tuple
+     * @brief This function makes no sense for this class and will ASSERT if used
      */
     void InitializeTuple(size_t i, double p)
     {
-#ifndef NDEBUG
-      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents < Size);}
-#endif
-      T c = static_cast<T>(p);
-      for (int j = 0; j < this->NumberOfComponents; ++j) {
-        Array[i*this->NumberOfComponents + j] = c;
-      }
+      BOOST_ASSERT(false);
+//#ifndef NDEBUG
+//      if (Size > 0) { BOOST_ASSERT(i*NumberOfComponents < Size);}
+//#endif
+//      T c = static_cast<T>(p);
+//      for (int j = 0; j < this->NumberOfComponents; ++j) {
+//        Array[i*this->NumberOfComponents + j] = c;
+//      }
     }
 
     /**
-     * @brief Reseizes the internal array
+     * @brief Resizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
@@ -651,23 +488,19 @@ class DataArray : public IDataArray
       }
     }
 
-    virtual int32_t Resize(size_t numTuples)
+    virtual int32_t Resize(size_t numElements)
     {
-      return RawResize(numTuples * this->NumberOfComponents);
+      return RawResize(numElements);
     }
 
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
-      for(int j = 0; j < NumberOfComponents; ++j)
-      {
-        if (j != 0) { out << delimiter; }
-        out << Array[i*NumberOfComponents + j];
-      }
+      BOOST_ASSERT(false);
     }
 
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
-      out << Array[i*NumberOfComponents + j];
+      BOOST_ASSERT(false);
     }
 
     /**
@@ -679,7 +512,7 @@ class DataArray : public IDataArray
     std::string getFullNameOfClass()
     {
       std::string theType = getTypeAsString();
-      theType = "DataArray<" + theType + ">";
+      theType = "GbcdDataArray<" + theType + ">";
       return theType;
     }
 
@@ -758,7 +591,7 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       if (Array == NULL) { return -85648; }
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      return H5GBCDArrayWriter<T>::writeArray(parentId, GetName(), m_Dims, Array, getFullNameOfClass());
     }
 
     /**
@@ -770,39 +603,8 @@ class DataArray : public IDataArray
     virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
     const std::string &label)
     {
-      if (Array == NULL) { return -85648; }
-      std::stringstream dimStr;
-      int precision = 0;
-      std::string xdmfTypeName;
-      GetXdmfTypeAndSize(xdmfTypeName, precision);
-      if (0 == precision)
-      {
-        out << "<!-- " << GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
-        return -100;
-      }
-
-      int numComp = GetNumberOfComponents();
-      out << "    <Attribute Name=\"" << GetName() << label  << "\" ";
-      if (numComp == 1)
-      {
-        out << "AttributeType=\"Scalar\" ";
-        dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " ";
-      }
-      else
-      {
-        out << "AttributeType=\"Vector\" ";
-        dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " " << numComp << " ";
-      }
-      out << "Center=\"Cell\">" << std::endl;
-      // Open the <DataItem> Tag
-      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
-      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
-
-
-      out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;
-      out << "      </DataItem>" << std::endl;
-      out << "    </Attribute>" << std::endl << std::endl;
-      return 1;
+      int err = -1;
+      return err;
     }
 
     /**
@@ -815,48 +617,23 @@ class DataArray : public IDataArray
       int err = 0;
 
       this->Resize(0);
-      IDataArray::Pointer p = H5DataArrayReader::readIDataArray(parentId, GetName());
+      IDataArray::Pointer p = H5GbcdArrayReader::readIDataArray(parentId, GetName());
       if (p.get() == NULL)
       {
         return -1;
       }
-      this->NumberOfComponents = p->GetNumberOfComponents();
+      GbcdDataArray<T>* ptr = GbcdDataArray<T>::SafePointerDownCast(p.get());
+      if (ptr == NULL)
+      {
+        return -1;
+      }
+      ptr->GetGbcdDimension(this->m_Dims);
       this->Size = p->GetSize();
       this->MaxId = (Size == 0) ? 0 : Size -1;
       this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
       p->releaseOwnership();
 
       return err;
-    }
-
-    /**
-     * @brief
-     */
-    virtual void byteSwapElements()
-    {
-      char* ptr = (char*)(Array);
-      char t[8];
-      size_t size = GetTypeSize();
-      for (uint64_t var = 0; var < Size; ++var)
-      {
-        if (sizeof(T) == 2)
-        {
-          mxa_bswap(0, 1, t);
-        }
-        else if (sizeof(T) == 4)
-        {
-          mxa_bswap(0, 3, t);
-          mxa_bswap(1, 2, t);
-        }
-        else if (sizeof(T) == 8)
-        {
-          mxa_bswap(0,7,t);
-          mxa_bswap(1,6,t);
-          mxa_bswap(2,5,t);
-          mxa_bswap(3,4,t);
-        }
-        ptr += size; // increment the pointer
-      }
     }
 
    /**
@@ -872,22 +649,24 @@ class DataArray : public IDataArray
 
   protected:
 
-    int NumberOfComponents; // the number of components per tuple
 
     /**
      * @brief Protected Constructor
      * @param numElements The number of elements in the internal array.
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
-    DataArray(size_t numElements, bool ownsData = true) :
+    GbcdDataArray(size_t dim0, size_t dim1, size_t dim2, size_t dim3, size_t dim4, bool ownsData = true) :
       Array(NULL),
-      Size(numElements),
-      _ownsData(ownsData),
-      m_IsAllocated(false)
+      _ownsData(ownsData)
     {
-      NumberOfComponents = 1;
-      MaxId = (Size > 0) ? Size - 1: Size;
+      m_Dims[0] = dim0;
+      m_Dims[1] = dim1;
+      m_Dims[2] = dim2;
+      m_Dims[3] = dim3;
+      m_Dims[4] = dim4;
+      Size = m_Dims[0] * m_Dims[1] * m_Dims[2] * m_Dims[3] * m_Dims[4];
 
+      MaxId = (Size > 0) ? Size - 1: Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -897,13 +676,17 @@ class DataArray : public IDataArray
      * @param numComponents The number of values each Tuple has. Size = NumTuples * NumComponents
      * @param takeOwnership Will the class clean up the memory. Default=true
      */
-    DataArray(size_t numTuples, int numComponents, bool ownsData = true) :
+    GbcdDataArray(size_t* dims, bool ownsData = true) :
       Array(NULL),
-      _ownsData(ownsData),
-      m_IsAllocated(false)
+      _ownsData(ownsData)
     {
-      NumberOfComponents = numComponents;
-      Size = numTuples * numComponents;
+
+      m_Dims[0] = dims[0];
+      m_Dims[1] = dims[1];
+      m_Dims[2] = dims[2];
+      m_Dims[3] = dims[3];
+      m_Dims[4] = dims[4];
+      Size = m_Dims[0] * m_Dims[1] * m_Dims[2] * m_Dims[3] * m_Dims[4];
       MaxId = (Size > 0) ? Size - 1: Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
@@ -936,7 +719,7 @@ class DataArray : public IDataArray
       free(this->Array);
 #endif
       this->Array = NULL;
-      m_IsAllocated = false;
+      this->m_IsAllocated = false;
     }
 
     /**
@@ -1025,7 +808,7 @@ class DataArray : public IDataArray
       this->_ownsData = true;
 
       this->MaxId = newSize-1;
-      m_IsAllocated = true;
+      this->m_IsAllocated = true;
       return this->Array;
     }
 
@@ -1036,18 +819,20 @@ class DataArray : public IDataArray
     T* Array;
     //  unsigned long long int MUD_FLAP_1;
     size_t Size;
-    //  unsigned long long int MUD_FLAP_4;
-    bool _ownsData;
     //  unsigned long long int MUD_FLAP_2;
+    bool _ownsData;
+    //  unsigned long long int MUD_FLAP_3;
     size_t MaxId;
 
     bool m_IsAllocated;
-    //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    // unsigned long long int MUD_FLAP_4;
+    size_t m_Dims[5];
     //  unsigned long long int MUD_FLAP_5;
+    std::string m_Name;
 
-    DataArray(const DataArray&); //Not Implemented
-    void operator=(const DataArray&); //Not Implemented
+
+    GbcdDataArray(const GbcdDataArray&); //Not Implemented
+    void operator=(const GbcdDataArray&); //Not Implemented
 
 };
 
@@ -1056,23 +841,23 @@ class DataArray : public IDataArray
 //
 // -----------------------------------------------------------------------------
 
-typedef DataArray<bool> BoolArrayType;
+typedef GbcdDataArray<bool> GBCDBoolArrayType;
 
-typedef DataArray<unsigned char> UCharArrayType;
+typedef GbcdDataArray<unsigned char> GBCDUCharArrayType;
 
-typedef DataArray<int8_t>  Int8ArrayType;
-typedef DataArray<uint8_t>  UInt8ArrayType;
+typedef GbcdDataArray<int8_t>  GBCDInt8ArrayType;
+typedef GbcdDataArray<uint8_t>  GBCDUInt8ArrayType;
 
-typedef DataArray<int16_t>  Int16ArrayType;
-typedef DataArray<uint16_t>  UInt16ArrayType;
+typedef GbcdDataArray<int16_t>  GBCDInt16ArrayType;
+typedef GbcdDataArray<uint16_t>  GBCDUInt16ArrayType;
 
-typedef DataArray<int32_t>  Int32ArrayType;
-typedef DataArray<uint32_t>  UInt32ArrayType;
+typedef GbcdDataArray<int32_t>  GBCDInt32ArrayType;
+typedef GbcdDataArray<uint32_t>  GBCDUInt32ArrayType;
 
-typedef DataArray<int64_t>  Int64ArrayType;
-typedef DataArray<uint64_t>  UInt64ArrayType;
+typedef GbcdDataArray<int64_t>  GBCDInt64ArrayType;
+typedef GbcdDataArray<uint64_t>  GBCDUInt64ArrayType;
 
-typedef DataArray<float>  FloatArrayType;
-typedef DataArray<double>  DoubleArrayType;
+typedef GbcdDataArray<float>  GBCDFloatArrayType;
+typedef GbcdDataArray<double>  GBCDDoubleArrayType;
 
-#endif //_DataArray_h_
+#endif //_GbcdDataArray_h_

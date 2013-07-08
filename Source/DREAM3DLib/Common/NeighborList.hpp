@@ -49,7 +49,16 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
+
+/**
+ * @class NeighborList NeighborList.hpp DREAM3DLib/Common/NeighborList.hpp
+ * @brief Template class for wrapping raw arrays of data.
+ * @author mjackson
+ * @date July 3, 2008
+ * @version 1.0
+ */
 template<typename T>
 class NeighborList : public IDataArray
 {
@@ -66,6 +75,13 @@ class NeighborList : public IDataArray
     typedef boost::shared_ptr<VectorType> SharedVectorType;
 
     virtual ~NeighborList() {}
+
+    /**
+     * @brief isAllocated
+     * @return
+     */
+    virtual bool isAllocated() { return true; }
+
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This

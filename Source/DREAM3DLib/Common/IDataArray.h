@@ -70,6 +70,11 @@ class DREAM3DLib_EXPORT IDataArray
     virtual Pointer createNewArray(size_t numElements, int numComponents, const std::string &name) = 0;
 
     /**
+     * @brief Has all the memory needed for this class been allocated?
+     */
+    virtual bool isAllocated() = 0;
+
+    /**
      * @brief Makes this class responsible for freeing the memory.
      */
     virtual void takeOwnership () = 0;
@@ -150,7 +155,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void initializeWithZeros() = 0;
 
     /**
-     * @brief Reseizes the internal array
+     * @brief Resizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */

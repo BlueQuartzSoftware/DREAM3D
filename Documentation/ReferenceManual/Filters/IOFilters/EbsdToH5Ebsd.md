@@ -29,6 +29,15 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 @image latex ImportOrientationDataFilter.png " " width=6in
 
 
+## Orientations, Reference Frames and Coordinate Systems
+DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure where the Specimen Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
+
+![TSL Coordinate System (Spatial)](CoordinateSystem1.png)
+
+@image latex CoordinateSystem1.png "TSL Coordinate System (Spatial)" width=3in
+
+Commercial EBSD acquisition systems do not typically follow this convention, and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data, in which case the DREAM.3D environment does not have any way of determining if those transformations have already occurred. During the import process the user is asked a few questions regarding the orientation of the EBSD data in relation to the specimen coordinate system.
+
 ### Setting the Spatial Reference Frame ###
 
 The next item that the user needs to do is to click the **Set Reference Frame** button to set the proper reference frame for the data set which will be written to the H5Ebsd file as meta data. Below are a number of examples showing the differences in the data sets that the different reference frames will have on the data set when the data is finally processed by DREAM3D.
@@ -57,7 +66,7 @@ The next item that the user needs to do is to click the **Set Reference Frame** 
 
 ### Completing the Conversion ###
 
-Once all the inputs are correct the user can click the _**Go**_ button to start the conversion. Progress will be displayed at the bottom of the DREAM3D user interface during the conversion.
+Once all the inputs are correct the user can click the **Go** button to start the conversion. Progress will be displayed at the bottom of the DREAM3D user interface during the conversion.
 
 
 ## Parameters ##
