@@ -259,11 +259,20 @@ void TestFilter::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Voxel Cell Arrays to Threshold");
+    option->setPropertyName("CellComparisonInputs");
+    option->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
+    option->setValueType("std::vector<ComparisonInput_t>");
+    options.push_back(option);
+  }
+
+  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+  {
 	  FilterParameter::Pointer option = FilterParameter::New();
-	  option->setHumanLabel("Voxel Cell Arrays to Threshold");
-	  option->setPropertyName("CellComparisonInputs");
-	  option->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
-	  option->setValueType("std::vector<ComparisonInput_t>");
+	  option->setHumanLabel("Crystal Rotations");
+	  option->setPropertyName("AxisAngleRotations");
+	  option->setWidgetType(FilterParameter::AxisAngleWidget);
 	  options.push_back(option);
   }
 
@@ -275,38 +284,27 @@ void TestFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 {
-	setStlFilePrefix( reader->readValue("StlFilePrefix", StlFilePrefixDefaultValue) );
-	setMaxIterations( reader->readValue("MaxIterations", MaxIterationsDefaultValue) );
-	setMisorientationTolerance( reader->readValue("MisorientationTolerance", MisorientationToleranceDefaultValue) );
-	setInputFile( reader->readValue("InputFile", InputFileDefaultValue) );
-	setInputPath( reader->readValue("InputPath", InputPathDefaultValue) );
-	setOutputFile( reader->readValue("OutputFile", OutputFileDefaultValue) );
-	setOutputPath( reader->readValue("OutputPath", OutputPathDefaultValue) );
-	setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", WriteAlignmentShiftsDefaultValue) );
-	setConversionType( reader->readValue("ConversionType", ConversionTypeDefaultValue) );
-	setSelectedCellArrayName( reader->readValue("SelectedCellArrayName", SelectedCellArrayNameDefaultValue) );
-	setSelectedFieldArrayName( reader->readValue("SelectedFieldArrayName", SelectedFieldArrayNameDefaultValue) );
-	setSelectedEnsembleArrayName( reader->readValue("SelectedEnsembleArrayName", SelectedEnsembleArrayNameDefaultValue) );
-	setSurfaceMeshPointArrayName( reader->readValue("SurfaceMeshPointArrayName", SurfaceMeshPointArrayNameDefaultValue) );
-	setSurfaceMeshFaceArrayName( reader->readValue("SurfaceMeshFaceArrayName", SurfaceMeshFaceArrayNameDefaultValue) );
-	setSurfaceMeshEdgeArrayName( reader->readValue("SurfaceMeshEdgeArrayName", SurfaceMeshEdgeArrayNameDefaultValue) );
-	setSolidMeshPointArrayName( reader->readValue("SolidMeshPointArrayName", SolidMeshPointArrayNameDefaultValue) );
-	setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
-	setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
+  setStlFilePrefix( reader->readValue("StlFilePrefix", StlFilePrefixDefaultValue) );
+  setMaxIterations( reader->readValue("MaxIterations", MaxIterationsDefaultValue) );
+  setMisorientationTolerance( reader->readValue("MisorientationTolerance", MisorientationToleranceDefaultValue) );
+  setInputFile( reader->readValue("InputFile", InputFileDefaultValue) );
+  setInputPath( reader->readValue("InputPath", InputPathDefaultValue) );
+  setOutputFile( reader->readValue("OutputFile", OutputFileDefaultValue) );
+  setOutputPath( reader->readValue("OutputPath", OutputPathDefaultValue) );
+  setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", WriteAlignmentShiftsDefaultValue) );
+  setConversionType( reader->readValue("ConversionType", ConversionTypeDefaultValue) );
+  setSelectedCellArrayName( reader->readValue("SelectedCellArrayName", SelectedCellArrayNameDefaultValue) );
+  setSelectedFieldArrayName( reader->readValue("SelectedFieldArrayName", SelectedFieldArrayNameDefaultValue) );
+  setSelectedEnsembleArrayName( reader->readValue("SelectedEnsembleArrayName", SelectedEnsembleArrayNameDefaultValue) );
+  setSurfaceMeshPointArrayName( reader->readValue("SurfaceMeshPointArrayName", SurfaceMeshPointArrayNameDefaultValue) );
+  setSurfaceMeshFaceArrayName( reader->readValue("SurfaceMeshFaceArrayName", SurfaceMeshFaceArrayNameDefaultValue) );
+  setSurfaceMeshEdgeArrayName( reader->readValue("SurfaceMeshEdgeArrayName", SurfaceMeshEdgeArrayNameDefaultValue) );
+  setSolidMeshPointArrayName( reader->readValue("SolidMeshPointArrayName", SolidMeshPointArrayNameDefaultValue) );
+  setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
+  setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
 
-	/* --- CellArrayComparisonSelectionWidget --- */
-	{
-		int numComparisonsSize = 0;
-		ComparisonInput_t cellComparisonDefault;
-		int numQFilters = static_cast<int>( reader->readValue("NumComparisons0",  numComparisonsSize) );
-		std::stringstream ss;
-		for(int i = 0; i < numQFilters; i++)
-		{
-			ss << "Comparison-" << i;
-			m_CellComparisonInputs[i] = reader->readValue(ss.str(), cellComparisonDefault);
-			ss.str("");
-		}
-	}
+  setCellComparisonInputs( reader->readValue("CellComparisonInputs", m_CellComparisonInputs) );
+  setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
 }
 
 // -----------------------------------------------------------------------------
@@ -338,18 +336,8 @@ void TestFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
 
-  /* --- CellArrayComparisonSelectionWidget --- */
-  {
-	  int numQFilters = static_cast<int>( m_CellComparisonInputs.size() );
-	  writer->writeValue("NumComparisons0",  numQFilters);
-	  std::stringstream ss;
-	  for(int i = 0; i < numQFilters; i++)
-	  {
-		  ss << "Comparison-" << i;
-		  writer->writeValue(ss.str(), m_CellComparisonInputs[i]);
-		  ss.str("");
-	  }
-  }
+  writer->writeValue("CellComparisonInputs", m_CellComparisonInputs);
+  writer->writeValue("AxisAngleRotations", m_AxisAngleRotations);
 }
 
 
