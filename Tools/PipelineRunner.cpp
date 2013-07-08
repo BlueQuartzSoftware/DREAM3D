@@ -59,12 +59,30 @@
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/Common/OrientationMath.h"
 #include "FilterWidgets/FilterWidgetsLib.h"
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "PipelineBuilder/IFilterWidgetFactory.h"
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main (int argc, char  *argv[])
+{
+
+  float q[5] = {0.0, 0.565907, -0.24196, 0.106982, -0.7808710};
+  float euler[3] = {0.0, 0.0, 0.0};
 
 
+  OrientationMath::QuattoEuler(q, euler[0], euler[1], euler[2]);
+
+//2.6014, 1.32595, 3.40947
+  std::cout << "Quat:  " << q[1] << ", " << q[2] << ", " << q[3] << ", " << q[4] << std::endl;
+  std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
+}
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -102,7 +120,7 @@ int main (int argc, char  *argv[])
 }
 
 
-#if 0
+
 
 // -----------------------------------------------------------------------------
 //
