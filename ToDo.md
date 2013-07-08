@@ -7,14 +7,16 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + StatsGen crashes if data is missing
 
-## Next Release Bugs to Fix (4.2) ##
 
-+ Disable adding of filters into the pipeline while it is running.
-+ Update the documentation for the disorientation coloring
+## Version 4.2 Features Bugs to Fix ##
+
 + Incorrect Documentation for Find Twin Boundary Info
-+ Write out Lattice Constants from EBSD data to XDMF data
+
 
 ## Version 4.3 Features/Bugs to Fix ##
+
++ Disable adding of filters into the pipeline while it is running.
++ Write out Lattice Constants from EBSD data to XDMF data
 + Modify filter to dump Images by adding ability to dump images for XY, YZ, XZ planes to a folder.
 + Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
@@ -22,10 +24,27 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + During Execution of the pipeline dim the filters except for the one that is currently running
 
 
+## Future Features to Implement ##
+
+
 ### Critical to Fix Before Bad Things Happen ###
 
 + OrientationOps classes need a redesign so that we don't crash when we hit an unknown crystal structure.
 + All the shape ops classes need to be fully reentrant for parallel applications
+
+### Joey K. Summer List ###
+
++ Copy Pipeline from .dream3d into new .dream3d during pipeline execution
++ Import Pipeline from a .dream3d file
+    - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
++ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
++ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
++ Create a "ExamplePlugin" that has one of every FilterParameter Type
+    - Create a new Plugin called "ExamplePlugin"
+    - Jackson has most of the code done.
+    - break up codes into a few filters
+    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
+    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
 ### Groeber Documentation
 
@@ -55,22 +74,10 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
 
-### Joey K. Summer List ###
 
-+ Copy Pipeline from .dream3d into new .dream3d during pipeline execution
-+ Import Pipeline from a .dream3d file
-    - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
-+ Create Dialog that contains prebuilt stats files for StatsGenerator users to select from
-+ When loading a Pipeline file detect any paths that are the wrong platform (C: on Unix) and offer to pick a new file
-+ Create a "ExamplePlugin" that has one of every FilterParameter Type
-    - Create a new Plugin called "ExamplePlugin"
-    - Jackson has most of the code done.
-    - break up codes into a few filters
-    - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
-    - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
+### Statistics/Analysis/Other Algorithms ###
 
 
-## Statistics/Analysis/Other Algorithms ##
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -106,7 +113,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix the mPrime, F1, F1spt, F7 functions in Hex- and Ortho- Ops
 
 
-## Still to Do ##
+### Still to Do ###
 
 + "Tools" menu launches new instances of DREAM3D/StatsGenerator on Windows/Linux (Bummer)
 + Comprehensive search of the help system (Possibly QAssistant based?)
@@ -139,13 +146,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Work through all filters and change single for loops over totalPoints to triple loops over x-,y- and zPoints if the coordinates need to be calculated
 
 
-##  Synthetic Building Filters ##
+###  Synthetic Building Filters ###
 + Add ability to read list of ellipsoids into packing algorithms
 + Look into bias near outside of box during synthetic building
 + Fix synthetic builder to note if volume is 2D and actually pack slices
 
 
-##  IO Filters ##
+###  IO Filters ###
 
 + Add output directory to the HexToSquare Grid convertor filter
 + Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
@@ -157,20 +164,22 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Read in more meta-data about each phase: Space Group, Phase Name, Material Name
 
 
-##  Feature Request ##
-+ A filter that finds all the twins in the microstructure and assigns them to another phase (phase 3), so that they can be visualised differently to the surrouding grains (phase 2) and grains that are untwinned (phase 1).
+### Feature Request ###
+
+
++ A filter that finds all the twins in the microstructure and assigns them to another phase (phase 3), so that they can be visualized differently to the surrounding grains (phase 2) and grains that are untwined (phase 1).
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 
-##  Surface Meshing ##
+###  Surface Meshing ###
 + Add mesh decimation filter (surface or volume)
 + Add Marching TetraHedra surface Meshing Filter
 
 
-##  MFE Smoothing ##
+###  MFE Smoothing ###
 + add ability to stop the smoothing
 + bug in edges file is stopping the use in the smoothing filter
 
-##  Bruker EBSD System Support ##
+###  Bruker EBSD System Support ###
 + BASE64 decoder
 + XML Parser for the SEM Image file
 + Create XML Parsing code for each file from the Bruker File Archive
@@ -179,6 +188,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
+### Version 4.2 Fixed ###
++ Update the documentation for the disorientation coloring
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
     - Have it pop open the Web browser to the proper file.
     - Write up an .md file for the "Reference Frame Dialog" that explains the transformations that each radio button performs.
@@ -224,12 +235,25 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Added a widget to draw attention to the 'Set Reference Frame' button which is yellow until they click the button.
 + Fixed slow calculation in StatsGenerator when initially calculating default statistics
 + Allow user to set the bin step size in generate ensemble statistics filter
-+ Fix match crystallogrpahy to deal with matrix phases, etc.
++ Fix match crystallography to deal with matrix phases, etc.
 + Remove all "under-the-hood" calls to other filters
 + Add filter to set the Origin, Resolution of the voxel data container( Basically change the meta data with out needing to change any of the data)
 + write-up contributors section for website
 + Drag-and-Drop a pipeline file onto the DREAM3D UI and have it load that file
 + How to Incorporate documentation for plugins into the main help system
++ Break out all stats filters to just calculate stats
++ Update file type stats generator can read (.dream3d)
++ Users can not open .h5stats in StatsGenerator
++ Add ability to open a previously saved stats file back into the stats generator
++ Add filter to calculate only misorientations
++ Modify FindMDF filter to only calculate the MDF, not the actual misorientations
++ Add filter to calculate ensemble stats (fit distributions to arrays)
++ Fix calculation+storage of real stats for reading into synthetic builder
++ Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
++ Missing Documentation File for IOFilters/ImportImageStack
++ Add "help" button to each filter that would display the help for that specific filter (right click)
+
+### Fixed for Version 4.0.638 ###
 + Fix html Help for "Standardize Euler Angles"
 + Fix html Help for "Erode Dilate Coordination Number"
 + Fix html for FindSlicetoSliceRotations.html
@@ -237,11 +261,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Fix html for AddBadData.html
 + Fix html for AddNoise.html
 + fix HTML for JumbleOrientations.html
-+ Missing Documenation File for GenericFilters/LinkFieldMapToCellArray
-+ Missing Documenation File for GenericFilters/RenameCellArray
-+ Missing Documenation File for GenericFilters/RenameFieldArray
-+ Missing Documenation File for StatisticsFilters/GenerateEnsembleStatistics
-+ Missing Documenation File for StatisticsFilters/FindMisorientations
++ Missing Documentation File for GenericFilters/LinkFieldMapToCellArray
++ Missing Documentation File for GenericFilters/RenameCellArray
++ Missing Documentation File for GenericFilters/RenameFieldArray
++ Missing Documentation File for StatisticsFilters/GenerateEnsembleStatistics
++ Missing Documentation File for StatisticsFilters/FindMisorientations
 + RawBinaryReader does not honor the Origin value
 + Design/Implement better system to write up all the documentation but be able to convert to PDF/HTML/etc
 + Tutorial on Surface Meshing for Docs/Website
@@ -318,17 +342,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Add filter to flatten color image to grayscale
 + Add filter to segment features by scalar tolerance value
 + Modify all stats filters to check for 2D in all directions
-+ Break out all stats filters to just calculate stats
-+ Update file type stats generator can read (.dream3d)
-+ Users can not open .h5stats in StatsGenerator
-+ Add ability to open a previously saved stats file back into the stats generator
-+ Add filter to calculate only misorientations
-+ Modify FindMDF filter to only calculate the MDF, not the actual misorientations
-+ Add filter to calculate ensemble stats (fit distributions to arrays)
-+ Fix calculation+storage of real stats for reading into synthetic builder
-+ Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
-+ Missing Documentation File for IOFilters/ImportImageStack
-+ Add "help" button to each filter that would display the help for that specific filter (right click)
 
 ##  No Longer Wanted ##
 + Add structured grid writer
