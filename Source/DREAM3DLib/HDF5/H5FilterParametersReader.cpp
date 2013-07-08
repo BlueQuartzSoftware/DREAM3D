@@ -241,12 +241,51 @@ ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, Co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::string name, std::vector<ComparisonInput_t> defaultValue)
+std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::string name, std::vector<ComparisonInput_t> v)
 {
-int err = 0;
-return defaultValue;
+	std::vector<ComparisonInput_t> comparisons;
+	ComparisonInput_t cellComparisonDefault;
+	int numQFilters = static_cast<int>( readValue(name + "_NumComparisons", 0) );
+	std::stringstream ss;
+	for(int i = 0; i < numQFilters; i++)
+	{
+		ss << "Comparison-" << i;
+		comparisons.push_back( readValue(ss.str(), cellComparisonDefault) );
+		ss.str("");
+	}
+	return comparisons;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, AxisAngleInput_t v)
+{
+	int err = 0;
+	int32_t rank = 1;
+	hsize_t dims[1] = { 4 };
+	err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+	return v;
+}
 
-
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<AxisAngleInput_t> H5FilterParametersReader::readValue(const std::string name, std::vector<AxisAngleInput_t> v)
+{
+	std::vector<AxisAngleInput_t> axisAngleInputsVector;
+	AxisAngleInput_t axisAngleDummyInput;
+	axisAngleDummyInput.angle = 0.0f;
+	axisAngleDummyInput.h = 0.0f;
+	axisAngleDummyInput.k = 0.0f;
+	axisAngleDummyInput.l = 0.0f;
+	int vectorSize = static_cast<int>( readValue(name + "_NumAxisAngleInputs", 0) );
+	std::stringstream ss;
+	for(int i = 0; i < vectorSize; i++)
+	{
+		ss << "AxisAngleInput-" << i;
+		axisAngleInputsVector.push_back( readValue(ss.str(), axisAngleDummyInput) );
+		ss.str("");
+	}
+	return axisAngleInputsVector;
+}

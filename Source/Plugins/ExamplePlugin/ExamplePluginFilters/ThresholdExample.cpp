@@ -137,85 +137,23 @@ void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* wri
  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
-
   /* --- CellArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_CellComparisonInputs.size() );
-    writer->writeValue("NumComparisons0",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_CellComparisonInputs[i]);
-      ss.str("");
-    }
-  }
+  writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
 
   /* --- FieldArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_FieldComparisonInputs.size() );
-    writer->writeValue("NumComparisons1",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_FieldComparisonInputs[i]);
-      ss.str("");
-    }
-  }
+  writer->writeValue( "FieldComparisonInputs", getFieldComparisonInputs() );
 
   /* --- EnsembleArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_EnsembleComparisonInputs.size() );
-    writer->writeValue("NumComparisons2",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_EnsembleComparisonInputs[i]);
-      ss.str("");
-    }
-  }
+  writer->writeValue("EnsembleComparisonInputs", getEnsembleComparisonInputs() );
 
   /* --- PointArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_PointComparisonInputs.size() );
-    writer->writeValue("NumComparisons3",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_PointComparisonInputs[i]);
-      ss.str("");
-    }
-  }
+  writer->writeValue("PointComparisonInputs", getPointComparisonInputs() );
 
   /* --- FaceArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_FaceComparisonInputs.size() );
-    writer->writeValue("NumComparisons4",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_FaceComparisonInputs[i]);
-      ss.str("");
-    }
-  }
+  writer->writeValue("FaceComparisonInputs", getFaceComparisonInputs() );
 
   /* --- EdgeArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_EdgeComparisonInputs.size() );
-    writer->writeValue("NumComparisons5",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_EdgeComparisonInputs[i]);
-      ss.str("");
-    }
-  }
-
+  writer->writeValue("EdgeComparisonInputs", getEdgeComparisonInputs() );
 }
 
 

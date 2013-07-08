@@ -121,12 +121,12 @@ set_target_properties(EbsdTests PROPERTIES FOLDER Test)
 add_test(EbsdTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdTests)
 
 # --------------------------------------------------------------------------
-# FilterParametersReader Test
+# FilterParametersRW Test
 # --------------------------------------------------------------------------
-add_executable(FilterParametersReaderTest FilterParametersReaderTest.cpp TestFilter.h TestFilter.cpp )
-target_link_libraries(FilterParametersReaderTest DREAM3DLib)
-set_target_properties(FilterParametersReaderTest PROPERTIES FOLDER Test)
-add_test(FilterParametersReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersReaderTest)
+add_executable(FilterParametersRWTest FilterParametersRWTest.cpp TestFilter.h TestFilter.cpp )
+target_link_libraries(FilterParametersRWTest DREAM3DLib)
+set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
+add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
 
 
 # --------------------------------------------------------------------------

@@ -239,8 +239,33 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const std::string name, std::vector<ComparisonInput_t> v)
 {
-  int err = -1;
-  return err;
+    int numQFilters = static_cast<int>( v.size() );
+   int err = writeValue(name + "_NumComparisons",  numQFilters);
+	std::stringstream ss;
+	for(int i = 0; i < numQFilters; i++)
+    {
+      ss << "Comparison-" << i;
+      err = writeValue(ss.str(), v[i]);
+      ss.str("");
+    }
+	return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
+{
+	int numQFilters = static_cast<int>( v.size() );
+	int err = writeValue(name + "_NumAxisAngleInputs",  numQFilters);
+	std::stringstream ss;
+	for(int i = 0; i < numQFilters; i++)
+	{
+		ss << "AxisAngleInput-" << i;
+		err = writeValue(ss.str(), v[i]);
+		ss.str("");
+	}
+	return err;
 }
 
 // -----------------------------------------------------------------------------
