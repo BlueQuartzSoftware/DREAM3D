@@ -44,7 +44,7 @@
 const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2*M_PI);
 
-#define WRITE_XYZ_POINTS 0
+#define WRITE_XYZ_POINTS 1
 
 
 
@@ -56,7 +56,9 @@ VisualizeGBCD::VisualizeGBCD() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_MisAngle(60.0f),
-  m_OutputFile("GBCD_PoleFigure.vtk"),
+  m_OutputFile(""),
+  m_StereoOutputFile(""),
+  m_SphericalOutputFile(""),
   m_CrystalStructures(NULL),
   m_GBCD(NULL)
 {
@@ -103,7 +105,7 @@ void VisualizeGBCD::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Output File");
+    option->setHumanLabel("Regular Grid Pole Figure");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
     option->setFileExtension("*.vtk");
@@ -111,6 +113,28 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
+  #if WRITE_XYZ_POINTS
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Stereographic Projection");
+    option->setPropertyName("StereoOutputFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setFileExtension("*.vtk");
+    option->setFileType("VTK File");
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Spherical Data");
+    option->setPropertyName("SphericalOutputFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setFileExtension("*.vtk");
+    option->setFileType("VTK File");
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+  #endif
   setFilterParameters(parameters);
 }
 
@@ -130,6 +154,8 @@ void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
+  writer->writeValue("StereoOutputFile", getStereoOutputFile() );
+  writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -148,9 +174,22 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
-
-
-
+  #if WRITE_XYZ_POINTS
+  if(getStereoOutputFile().empty() == true)
+  {
+    ss.str("");
+    ss << ClassName() << " needs the Stereographic Projection Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-387);
+  }
+    if(getSphericalOutputFile().empty() == true)
+  {
+    ss.str("");
+    ss << ClassName() << " needs the Spherical Data Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-387);
+  }
+#endif
 
   if(NULL == sm)
   {
@@ -448,10 +487,10 @@ void VisualizeGBCD::execute()
 
 #if WRITE_XYZ_POINTS
   {
-    FILE* f = fopen("/tmp/stereo_graphic_gbcd.vtk", "wb");
+    FILE* f = fopen(m_StereoOutputFile.c_str(), "wb");
     // Write the correct header
     fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "data set from DREAM3D\n");
+    fprintf(f, "GBCD Stereograhic Projection irregular grid data\n");
     fprintf(f, "ASCII"); fprintf(f, "\n");
     fprintf(f, "DATASET POLYDATA\n");
     fprintf(f, "POINTS %d float\n", nPoints);
@@ -466,10 +505,10 @@ void VisualizeGBCD::execute()
   }
 
   {
-    FILE* f = fopen("/tmp/spherical_gbcd.vtk", "wb");
+    FILE* f = fopen(m_SphericalOutputFile.c_str(), "wb");
     // Write the correct header
     fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "data set from DREAM3D\n");
+    fprintf(f, "GBCD Spherical Data irregular grid\n");
     fprintf(f, "ASCII"); fprintf(f, "\n");
     fprintf(f, "DATASET POLYDATA\n");
     fprintf(f, "POINTS %d float\n", nPoints);
