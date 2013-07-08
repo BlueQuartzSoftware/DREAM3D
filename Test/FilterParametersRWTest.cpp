@@ -70,6 +70,14 @@
 #define Comparison2InputArrayNameTestValue "Comparison2InputArrayNameTestValue"
 #define Comparison2CompOperatorTestValue 23;
 #define Comparison2CompValueTestValue 21.0;
+#define AxisAngles1AngleTestValue 2.1f;
+#define AxisAngles1HTestValue 5.67f;
+#define AxisAngles1KTestValue 7.0f;
+#define AxisAngles1LTestValue 3.42f;
+#define AxisAngles2AngleTestValue 4.82f;
+#define AxisAngles2HTestValue 9.0f;
+#define AxisAngles2KTestValue 12.234f;
+#define AxisAngles2LTestValue 16.4f;
 
 // -----------------------------------------------------------------------------
 //
@@ -84,7 +92,7 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterParametersReaderTest()
+void FilterParametersRWTest()
 {
 	// Create our Pipeline object
 	FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -127,6 +135,23 @@ void FilterParametersReaderTest()
 	comparisonVector.push_back(comparison1);
 	comparisonVector.push_back(comparison2);
 	filt->setCellComparisonInputs(comparisonVector);
+
+	AxisAngleInput_t axisAngles1;
+	axisAngles1.angle = AxisAngles1AngleTestValue;
+	axisAngles1.h = AxisAngles1HTestValue;
+	axisAngles1.k = AxisAngles1KTestValue;
+	axisAngles1.l = AxisAngles1LTestValue;
+
+	AxisAngleInput_t axisAngles2;
+	axisAngles2.angle = AxisAngles2AngleTestValue;
+	axisAngles2.h = AxisAngles2HTestValue;
+	axisAngles2.k = AxisAngles2KTestValue;
+	axisAngles2.l = AxisAngles2LTestValue;
+
+	std::vector<AxisAngleInput_t> axisAngleInputsVector;
+	axisAngleInputsVector.push_back(axisAngles1);
+	axisAngleInputsVector.push_back(axisAngles2);
+	filt->setAxisAngleRotations(axisAngleInputsVector);
 
 	DataContainerWriter::Pointer writer = DataContainerWriter::New();
 	writer->setOutputFile(UnitTest::FilterParametersReaderTest::OutputFile);
@@ -176,6 +201,7 @@ void FilterParametersReaderTest()
 	DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, filt->getSolidMeshFaceArrayName() )
 	DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, filt->getSolidMeshEdgeArrayName() )
 	
+	// Test the CellComparisonInputs widget
 	std::vector<ComparisonInput_t> comparisonVectorRead = filt->getCellComparisonInputs();
 	ComparisonInput_t comparison1Read = comparisonVectorRead[0];
 	ComparisonInput_t comparison2Read = comparisonVectorRead[1];
@@ -186,6 +212,20 @@ void FilterParametersReaderTest()
 	DREAM3D_REQUIRED(comparison2.arrayName, ==, comparison2Read.arrayName)
 	DREAM3D_REQUIRED(comparison2.compOperator, ==, comparison2Read.compOperator)
 	DREAM3D_REQUIRED(comparison2.compValue, ==, comparison2Read.compValue)
+
+	// Test the AxisAngleInput widget
+	std::vector<AxisAngleInput_t> axisAngleVectorRead = filt->getAxisAngleRotations();
+	AxisAngleInput_t axisAngles1Read = axisAngleVectorRead[0];
+	AxisAngleInput_t axisAngles2Read = axisAngleVectorRead[1];
+
+	DREAM3D_REQUIRED(axisAngles1.angle, ==, axisAngles1Read.angle)
+	DREAM3D_REQUIRED(axisAngles1.h, ==, axisAngles1Read.h)
+	DREAM3D_REQUIRED(axisAngles1.k, ==, axisAngles1Read.k)
+	DREAM3D_REQUIRED(axisAngles1.l, ==, axisAngles1Read.l)
+	DREAM3D_REQUIRED(axisAngles2.angle, ==, axisAngles2Read.angle)
+	DREAM3D_REQUIRED(axisAngles2.h, ==, axisAngles2Read.h)
+	DREAM3D_REQUIRED(axisAngles2.k, ==, axisAngles2Read.k)
+	DREAM3D_REQUIRED(axisAngles2.l, ==, axisAngles2Read.l)
 
 	err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
 	DREAM3D_REQUIRED(err, >=, 0)
@@ -201,7 +241,7 @@ void FilterParametersReaderTest()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( FilterParametersReaderTest() )
+  DREAM3D_REGISTER_TEST( FilterParametersRWTest() )
 
 
   PRINT_TEST_SUMMARY();

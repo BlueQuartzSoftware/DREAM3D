@@ -55,6 +55,7 @@ class TestFilter : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+	DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, AxisAngleRotations)
 
 
     /**
