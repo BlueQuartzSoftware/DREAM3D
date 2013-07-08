@@ -49,6 +49,8 @@ Filter_Name=IdentifySample
 Filter_Name=AlignSectionsFeatureCentroid
 UseReferenceSlice=true
 ReferenceSlice=0
+WriteAlignmentShifts=true
+AlignmentShiftFileName=Data/Output/Small_IN100_AlignmentData.txt
 
 [6]
 Filter_Name=GenerateIPFColors
