@@ -302,6 +302,9 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
   setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
   setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
 
+  setDimensions( reader->readValue("Dimensions", m_Dimensions) );
+  setOrigin( reader->readValue("Origin", m_Origin) );
+
   setCellComparisonInputs( reader->readValue("CellComparisonInputs", m_CellComparisonInputs) );
   setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
 }

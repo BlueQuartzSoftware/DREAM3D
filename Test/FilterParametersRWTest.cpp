@@ -65,19 +65,25 @@
 #define SolidMeshFaceArrayNameTestValue "SolidMeshFaceArrayNameTestValue"
 #define SolidMeshEdgeArrayNameTestValue "SolidMeshEdgeArrayNameTestValue"
 #define Comparison1InputArrayNameTestValue "Comparison1InputArrayNameTestValue"
-#define Comparison1CompOperatorTestValue 12;
-#define Comparison1CompValueTestValue 15.0;
+#define Comparison1CompOperatorTestValue 12
+#define Comparison1CompValueTestValue 15.0
 #define Comparison2InputArrayNameTestValue "Comparison2InputArrayNameTestValue"
-#define Comparison2CompOperatorTestValue 23;
-#define Comparison2CompValueTestValue 21.0;
-#define AxisAngles1AngleTestValue 2.1f;
-#define AxisAngles1HTestValue 5.67f;
-#define AxisAngles1KTestValue 7.0f;
-#define AxisAngles1LTestValue 3.42f;
-#define AxisAngles2AngleTestValue 4.82f;
-#define AxisAngles2HTestValue 9.0f;
-#define AxisAngles2KTestValue 12.234f;
-#define AxisAngles2LTestValue 16.4f;
+#define Comparison2CompOperatorTestValue 23
+#define Comparison2CompValueTestValue 21.0
+#define AxisAngles1AngleTestValue 2.1f
+#define AxisAngles1HTestValue 5.67f
+#define AxisAngles1KTestValue 7.0f
+#define AxisAngles1LTestValue 3.42f
+#define AxisAngles2AngleTestValue 4.82f
+#define AxisAngles2HTestValue 9.0f
+#define AxisAngles2KTestValue 12.234f
+#define AxisAngles2LTestValue 16.4f
+#define IntWidgetXTestValue 3
+#define IntWidgetYTestValue 4
+#define IntWidgetZTestValue 5
+#define FloatWidgetXTestValue 6.0f
+#define FloatWidgetYTestValue 7.234f
+#define FloatWidgetZTestValue 12.3f
 
 // -----------------------------------------------------------------------------
 //
@@ -121,12 +127,23 @@ void FilterParametersRWTest()
   filt->setSolidMeshFaceArrayName(SolidMeshFaceArrayNameTestValue);
   filt->setSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);
 
-  ComparisonInput_t comparison1;
+  IntVec3Widget_t intWidget;
+  intWidget.x = IntWidgetXTestValue;
+  intWidget.y = IntWidgetYTestValue;
+  intWidget.z = IntWidgetZTestValue;
+  filt->setDimensions(intWidget);
+
+  FloatVec3Widget_t floatWidget;
+  floatWidget.x = FloatWidgetXTestValue;
+  floatWidget.y = FloatWidgetYTestValue;
+  floatWidget.z = FloatWidgetZTestValue;
+  filt->setOrigin(floatWidget);
+
+  ComparisonInput_t comparison1, comparison2;
   comparison1.arrayName = Comparison1InputArrayNameTestValue;
   comparison1.compOperator = Comparison1CompOperatorTestValue;
   comparison1.compValue = Comparison1CompValueTestValue;
 
-  ComparisonInput_t comparison2;
   comparison2.arrayName = Comparison2InputArrayNameTestValue;
   comparison2.compOperator = Comparison2CompOperatorTestValue;
   comparison2.compValue = Comparison2CompValueTestValue;
@@ -201,31 +218,43 @@ void FilterParametersRWTest()
   DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, filt->getSolidMeshFaceArrayName() )
   DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, filt->getSolidMeshEdgeArrayName() )
 
-  // Test the CellComparisonInputs widget
+  // Test the IntVec3Widget
+  IntVec3Widget_t intWidgetRead = filt->getDimensions();
+  DREAM3D_REQUIRED(IntWidgetXTestValue, ==, intWidgetRead.x );
+  DREAM3D_REQUIRED(IntWidgetYTestValue, ==, intWidgetRead.y );
+  DREAM3D_REQUIRED(IntWidgetZTestValue, ==, intWidgetRead.z );
+
+  // Test the FloatVec3Widget
+  FloatVec3Widget_t floatWidgetRead = filt->getOrigin();
+  DREAM3D_REQUIRED(FloatWidgetXTestValue, ==, floatWidgetRead.x)
+  DREAM3D_REQUIRED(FloatWidgetYTestValue, ==, floatWidgetRead.y)
+  DREAM3D_REQUIRED(FloatWidgetZTestValue, ==, floatWidgetRead.z)
+
+  // Test the CellComparisonInputs
   std::vector<ComparisonInput_t> comparisonVectorRead = filt->getCellComparisonInputs();
   ComparisonInput_t comparison1Read = comparisonVectorRead[0];
   ComparisonInput_t comparison2Read = comparisonVectorRead[1];
 
-  DREAM3D_REQUIRED(comparison1.arrayName, ==, comparison1Read.arrayName)
-  DREAM3D_REQUIRED(comparison1.compOperator, ==, comparison1Read.compOperator)
-  DREAM3D_REQUIRED(comparison1.compValue, ==, comparison1Read.compValue)
-  DREAM3D_REQUIRED(comparison2.arrayName, ==, comparison2Read.arrayName)
-  DREAM3D_REQUIRED(comparison2.compOperator, ==, comparison2Read.compOperator)
-  DREAM3D_REQUIRED(comparison2.compValue, ==, comparison2Read.compValue)
+  DREAM3D_REQUIRED(Comparison1InputArrayNameTestValue, ==, comparison1Read.arrayName)
+  DREAM3D_REQUIRED(Comparison1CompOperatorTestValue, ==, comparison1Read.compOperator)
+  DREAM3D_REQUIRED(Comparison1CompValueTestValue, ==, comparison1Read.compValue)
+  DREAM3D_REQUIRED(Comparison2InputArrayNameTestValue, ==, comparison2Read.arrayName)
+  DREAM3D_REQUIRED(Comparison2CompOperatorTestValue, ==, comparison2Read.compOperator)
+  DREAM3D_REQUIRED(Comparison2CompValueTestValue, ==, comparison2Read.compValue)
 
-  // Test the AxisAngleInput widget
+  // Test the AxisAngleInput
   std::vector<AxisAngleInput_t> axisAngleVectorRead = filt->getAxisAngleRotations();
   AxisAngleInput_t axisAngles1Read = axisAngleVectorRead[0];
   AxisAngleInput_t axisAngles2Read = axisAngleVectorRead[1];
 
-  DREAM3D_REQUIRED(axisAngles1.angle, ==, axisAngles1Read.angle)
-  DREAM3D_REQUIRED(axisAngles1.h, ==, axisAngles1Read.h)
-  DREAM3D_REQUIRED(axisAngles1.k, ==, axisAngles1Read.k)
-  DREAM3D_REQUIRED(axisAngles1.l, ==, axisAngles1Read.l)
-  DREAM3D_REQUIRED(axisAngles2.angle, ==, axisAngles2Read.angle)
-  DREAM3D_REQUIRED(axisAngles2.h, ==, axisAngles2Read.h)
-  DREAM3D_REQUIRED(axisAngles2.k, ==, axisAngles2Read.k)
-  DREAM3D_REQUIRED(axisAngles2.l, ==, axisAngles2Read.l)
+  DREAM3D_REQUIRED(AxisAngles1AngleTestValue, ==, axisAngles1Read.angle)
+  DREAM3D_REQUIRED(AxisAngles1HTestValue, ==, axisAngles1Read.h)
+  DREAM3D_REQUIRED(AxisAngles1KTestValue, ==, axisAngles1Read.k)
+  DREAM3D_REQUIRED(AxisAngles1LTestValue, ==, axisAngles1Read.l)
+  DREAM3D_REQUIRED(AxisAngles2AngleTestValue, ==, axisAngles2Read.angle)
+  DREAM3D_REQUIRED(AxisAngles2HTestValue, ==, axisAngles2Read.h)
+  DREAM3D_REQUIRED(AxisAngles2KTestValue, ==, axisAngles2Read.k)
+  DREAM3D_REQUIRED(AxisAngles2LTestValue, ==, axisAngles2Read.l)
 
   err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
