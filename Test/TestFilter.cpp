@@ -267,6 +267,15 @@ void TestFilter::setupFilterParameters()
     options.push_back(option);
   }
 
+  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+  {
+	  FilterParameter::Pointer option = FilterParameter::New();
+	  option->setHumanLabel("Crystal Rotations");
+	  option->setPropertyName("AxisAngleRotations");
+	  option->setWidgetType(FilterParameter::AxisAngleWidget);
+	  options.push_back(option);
+  }
+
   setFilterParameters(options);
 }
 
@@ -294,21 +303,8 @@ void TestFilter::readFilterParameters(AbstractFilterParametersReader* reader)
   setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
   setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
 
-
-#error this should be one line
-  /* --- CellArrayComparisonSelectionWidget --- */
-  {
-    int numComparisonsSize = 0;
-    ComparisonInput_t cellComparisonDefault;
-    int numQFilters = static_cast<int>( reader->readValue("NumComparisons0",  numComparisonsSize) );
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      m_CellComparisonInputs[i] = reader->readValue(ss.str(), cellComparisonDefault);
-      ss.str("");
-    }
-  }
+  setCellComparisonInputs( reader->readValue("CellComparisonInputs", m_CellComparisonInputs) );
+  setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
 }
 
 // -----------------------------------------------------------------------------
@@ -340,19 +336,8 @@ void TestFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
 
-#error this should be one line
-  /* --- CellArrayComparisonSelectionWidget --- */
-  {
-    int numQFilters = static_cast<int>( m_CellComparisonInputs.size() );
-    writer->writeValue("NumComparisons0",  numQFilters);
-    std::stringstream ss;
-    for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      writer->writeValue(ss.str(), m_CellComparisonInputs[i]);
-      ss.str("");
-    }
-  }
+  writer->writeValue("CellComparisonInputs", m_CellComparisonInputs);
+  writer->writeValue("AxisAngleRotations", m_AxisAngleRotations);
 }
 
 
