@@ -64,9 +64,10 @@ Filter_Name=FindMisorientations
 
 [3]
 Filter_Name=FindSchmids
-XLoading=0
-YLoading=0
-ZLoading=1
+LoadingDir\size=3
+LoadingDir\1\x=0
+LoadingDir\2\y=0
+LoadingDir\3\z=1
 
 [4]
 Filter_Name=FindGrainReferenceMisorientations
