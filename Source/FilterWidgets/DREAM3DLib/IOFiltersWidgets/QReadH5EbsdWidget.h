@@ -105,7 +105,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     std::vector<float>           eulerTransAxis;
 
     QString m_FilterGroup;
-
+    bool m_Version4Warning;
 
     QReadH5EbsdWidget(const QReadH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const QReadH5EbsdWidget&); // Operator '=' Not Implemented
