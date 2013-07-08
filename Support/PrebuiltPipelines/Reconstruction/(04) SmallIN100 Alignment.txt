@@ -41,6 +41,8 @@ Filter_Name=FindCellQuats
 [3]
 Filter_Name=AlignSectionsMisorientation
 MisorientationTolerance=5
+WriteAlignmentShifts=true
+AlignmentShiftFileName=Data/Output/Small_IN100_AlignmentData.txt
 
 [4]
 Filter_Name=GenerateIPFColors
