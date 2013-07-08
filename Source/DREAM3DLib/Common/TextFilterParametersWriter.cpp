@@ -197,7 +197,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<ComparisonInput_t> v)
+int TextFilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
 {
   int err = -1;
   return err;
@@ -207,15 +207,6 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<C
 //
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v)
-{
-  int err = -1;
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
 {
   int err = -1;
   return err;

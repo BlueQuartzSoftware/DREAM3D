@@ -82,8 +82,9 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const std::string name, FloatVec3Widget_t v);
     virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v);
     virtual int writeValue(const std::string name, ComparisonInput_t v);
-    virtual int writeValue(const std::string name, AxisAngleInput_t v);
     virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v);
+    virtual int writeValue(const std::string name, AxisAngleInput_t v);
+
 
   protected:
     TextFilterParametersWriter();
