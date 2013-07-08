@@ -91,7 +91,9 @@ void AlignSectionsMisorientation::setupFilterParameters()
   // Run the superclass first.
   //AlignSections::setupFilterParameters();
   // Now append our options
+
   std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
+
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
@@ -100,6 +102,22 @@ void AlignSectionsMisorientation::setupFilterParameters()
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Alignment Shift File");
+    option->setPropertyName("WriteAlignmentShifts");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Alignment File");
+    option->setPropertyName("AlignmentShiftFileName");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -120,6 +138,8 @@ void AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParameters
 {
   AlignSections::writeFilterParameters(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +156,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
