@@ -59,6 +59,7 @@ VisualizeGBCD::VisualizeGBCD() :
   m_OutputFile(""),
   m_StereoOutputFile(""),
   m_SphericalOutputFile(""),
+  m_GMTOutputFile(""),
   m_CrystalStructures(NULL),
   m_GBCD(NULL)
 {
@@ -134,7 +135,17 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-  #endif
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("GMT Output File");
+    option->setPropertyName("GMTOutputFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setFileExtension("*.txt");
+    option->setFileType("GMT File");
+    option->setValueType("string");
+    parameters.push_back(option);
+  }
+    #endif
   setFilterParameters(parameters);
 }
 
@@ -385,8 +396,9 @@ void VisualizeGBCD::execute()
 
   std::stringstream positions;
   std::stringstream scalars;
-
   std::stringstream sphericalPositions;
+
+  std::vector<float> gmtValues;
 
   for(int q=0;q<2;q++)
   {
@@ -450,6 +462,11 @@ void VisualizeGBCD::execute()
               }
 #if WRITE_XYZ_POINTS
               sphericalPositions  << rotNormal[0] << " " << rotNormal[1] << " " << rotNormal[2] << "\n";
+
+              gmtValues.push_back(atan2 (rotNormal[1] , rotNormal[0] ));
+              gmtValues.push_back(acos( rotNormal[2] ));
+
+
 #endif
               if(rotNormal[2] < 0) {
                 rotNormal[0] = -rotNormal[0];
@@ -477,6 +494,7 @@ void VisualizeGBCD::execute()
               poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(l*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
 #if WRITE_XYZ_POINTS
               scalars << poleFigure[(ybin*xpoints)+xbin] << "\n";
+              gmtValues.push_back(poleFigure[(ybin*xpoints)+xbin]);
 #endif
             }
           }
@@ -521,6 +539,23 @@ void VisualizeGBCD::execute()
     fprintf(f, "%s\n", scalars.str().c_str());
     fclose(f);
   }
+
+  {
+    FILE* f = fopen(m_GMTOutputFile.c_str(), "wb");
+    fprintf(f, "%f %f %f %f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle);
+    size_t size = gmtValues.size()/3;
+
+    for(size_t i = 0; i < size; i=i+3)
+    {
+      fprintf(f, "%f %f %f\n", gmtValues[i], gmtValues[i+1], gmtValues[i+2]);
+
+    }
+
+    fclose(f);
+  }
+
+
+
 #endif
 
   int neighbors[4];

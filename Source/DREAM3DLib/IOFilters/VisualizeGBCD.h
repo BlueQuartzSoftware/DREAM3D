@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(StereoOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(SphericalOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GMTOutputFile)
 
 
     /**
