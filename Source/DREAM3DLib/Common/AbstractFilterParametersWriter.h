@@ -38,7 +38,7 @@
 #define _AbstractFilterParametersWriter_H_
 
 #include <string>
-
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -87,6 +87,9 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
     virtual int writeValue(const std::string name, AxisAngleInput_t v) = 0;
     virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
+    virtual int writeValue(const std::string name, std::set<std::string> v) = 0;
+
+
 
   protected:
     AbstractFilterParametersWriter();
