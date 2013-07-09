@@ -111,7 +111,6 @@ void FieldInfoReader::readFilterParameters(AbstractFilterParametersReader* reade
 //
 // -----------------------------------------------------------------------------
 void FieldInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("CreateCellLevelArrays", getCreateCellLevelArrays() );

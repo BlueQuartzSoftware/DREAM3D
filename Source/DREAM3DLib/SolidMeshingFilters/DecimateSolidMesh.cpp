@@ -104,7 +104,6 @@ void DecimateSolidMesh::readFilterParameters(AbstractFilterParametersReader* rea
 //
 // -----------------------------------------------------------------------------
 void DecimateSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("GoalElementNumber", getGoalElementNumber() );
 }

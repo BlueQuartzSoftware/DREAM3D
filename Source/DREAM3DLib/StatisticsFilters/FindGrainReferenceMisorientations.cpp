@@ -113,7 +113,6 @@ void FindGrainReferenceMisorientations::readFilterParameters(AbstractFilterParam
 //
 // -----------------------------------------------------------------------------
 void FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("ReferenceOrientation", getReferenceOrientation() );
 }

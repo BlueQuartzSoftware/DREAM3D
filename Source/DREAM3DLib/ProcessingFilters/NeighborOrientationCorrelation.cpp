@@ -122,7 +122,6 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 //
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("MinConfidence", getMinConfidence() );

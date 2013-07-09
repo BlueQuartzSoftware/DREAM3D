@@ -143,7 +143,6 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
 //
 // -----------------------------------------------------------------------------
 void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteVoxelData", getWriteVoxelData() );

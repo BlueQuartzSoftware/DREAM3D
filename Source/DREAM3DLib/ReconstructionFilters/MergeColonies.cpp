@@ -201,7 +201,6 @@ void MergeColonies::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );

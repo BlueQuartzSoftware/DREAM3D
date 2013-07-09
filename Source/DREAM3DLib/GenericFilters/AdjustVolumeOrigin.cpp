@@ -171,7 +171,6 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
 //
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );

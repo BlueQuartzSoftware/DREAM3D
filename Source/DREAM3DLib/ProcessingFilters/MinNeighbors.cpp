@@ -102,7 +102,6 @@ void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
 }

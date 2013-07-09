@@ -93,7 +93,6 @@ void RenameFieldArray::readFilterParameters(AbstractFilterParametersReader* read
 //
 // -----------------------------------------------------------------------------
 void RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("NewFieldArrayName", getNewFieldArrayName() );

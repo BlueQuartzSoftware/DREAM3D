@@ -167,7 +167,6 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 //
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
 }

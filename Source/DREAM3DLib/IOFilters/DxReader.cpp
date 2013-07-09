@@ -113,7 +113,6 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );

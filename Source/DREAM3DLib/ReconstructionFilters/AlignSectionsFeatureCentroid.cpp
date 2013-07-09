@@ -117,7 +117,6 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 //
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
   writer->writeValue("ReferenceSlice", getReferenceSlice() );

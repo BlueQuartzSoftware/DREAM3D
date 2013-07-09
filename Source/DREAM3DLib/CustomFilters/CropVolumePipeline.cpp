@@ -126,7 +126,6 @@ void CropVolumePipeline::readFilterParameters(AbstractFilterParametersReader* re
 //
 // -----------------------------------------------------------------------------
 void CropVolumePipeline::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("InputFile", getInputFile() );
 }

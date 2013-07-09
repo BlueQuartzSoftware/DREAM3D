@@ -105,7 +105,6 @@ void FieldDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* re
 //
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("FieldDataFile", getFieldDataFile() );
   writer->writeValue("WriteNeighborData", getWriteNeighborListData() );

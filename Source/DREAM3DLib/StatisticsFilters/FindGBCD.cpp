@@ -317,7 +317,6 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("GBCDResolution", getGBCDRes() );
 }

@@ -116,7 +116,6 @@ void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersR
 //
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   AlignSections::writeFilterParameters(writer);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );

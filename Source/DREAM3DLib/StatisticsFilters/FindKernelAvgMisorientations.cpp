@@ -103,7 +103,6 @@ void FindKernelAvgMisorientations::readFilterParameters(AbstractFilterParameters
 //
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("KernelSize", getKernelSize() );
 

@@ -94,7 +94,6 @@ void FindSlicetoSliceRotations::readFilterParameters(AbstractFilterParametersRea
 //
 // -----------------------------------------------------------------------------
 void FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("SlicetoSliceRotationsFile", getSlicetoSliceRotationsFile() );
 }

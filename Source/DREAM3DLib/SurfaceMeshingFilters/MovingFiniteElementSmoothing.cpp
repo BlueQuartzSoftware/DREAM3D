@@ -227,7 +227,6 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 //
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("IterationSteps", getIterationSteps());
   writer->writeValue("ConstrainNodes", getNodeConstraints());

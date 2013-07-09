@@ -122,7 +122,6 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ZStartIndex", getZStartIndex() );

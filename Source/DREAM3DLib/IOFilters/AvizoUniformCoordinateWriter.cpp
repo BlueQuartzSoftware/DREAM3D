@@ -93,7 +93,6 @@ void AvizoUniformCoordinateWriter::readFilterParameters(AbstractFilterParameters
 //
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("OutputFile", getOutputFile());
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile());

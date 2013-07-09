@@ -95,7 +95,6 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 //
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("Magnitude", getMagnitude() );
 }

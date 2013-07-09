@@ -277,7 +277,6 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 //
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteGrainIds", getWriteGrainIds() );

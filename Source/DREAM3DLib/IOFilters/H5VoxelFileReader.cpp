@@ -93,7 +93,6 @@ void H5VoxelFileReader::readFilterParameters(AbstractFilterParametersReader* rea
 //
 // -----------------------------------------------------------------------------
 void H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("InputFile", getInputFile() );
 }

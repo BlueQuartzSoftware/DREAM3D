@@ -111,7 +111,6 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 //
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("Loading", getLoading() );
 }

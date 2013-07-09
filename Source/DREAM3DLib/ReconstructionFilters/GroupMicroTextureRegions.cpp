@@ -120,7 +120,6 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
 //
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
 }
