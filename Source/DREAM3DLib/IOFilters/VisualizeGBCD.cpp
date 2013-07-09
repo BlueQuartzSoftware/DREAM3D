@@ -463,8 +463,8 @@ void VisualizeGBCD::execute()
 #if WRITE_XYZ_POINTS
               sphericalPositions  << rotNormal[0] << " " << rotNormal[1] << " " << rotNormal[2] << "\n";
 
-              gmtValues.push_back(atan2 (rotNormal[1] , rotNormal[0] ));
-              gmtValues.push_back(acos( rotNormal[2] ));
+              gmtValues.push_back(180.0/M_PI * atan2 (rotNormal[1] , rotNormal[0] ));
+              gmtValues.push_back(180.0/M_PI * acos( rotNormal[2] ));
 
 
 #endif
