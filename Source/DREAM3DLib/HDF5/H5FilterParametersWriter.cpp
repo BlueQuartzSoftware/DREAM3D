@@ -239,15 +239,15 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const std::string name, std::vector<ComparisonInput_t> v)
 {
-    int numQFilters = static_cast<int>( v.size() );
-   int err = writeValue(name + "_NumComparisons",  numQFilters);
+  int numQFilters = static_cast<int>( v.size() );
+  int err = writeValue(name + "_NumComparisons",  numQFilters);
   std::stringstream ss;
   for(int i = 0; i < numQFilters; i++)
-    {
-      ss << "Comparison-" << i;
-      err = writeValue(ss.str(), v[i]);
-      ss.str("");
-    }
+  {
+    ss << "Comparison-" << i;
+    err = writeValue(ss.str(), v[i]);
+    ss.str("");
+  }
   return err;
 }
 
@@ -286,11 +286,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_
 int H5FilterParametersWriter::writeValue(const std::string name, std::set<std::string> v)
 {
   size_t size = v.size();
-  herr_t err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, size);
-  if (err < 0)
-  {
-    return err;
-  }
+  herr_t err = 0;
   if (size > 0)
   {
     std::string setStr = "";
@@ -300,6 +296,16 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::set<std::s
       setStr.append(*iter).append("\n");
     }
 
-    err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayNames", setStr);
+    err = H5Lite::writeStringDataset(m_CurrentGroupId, name, setStr);
+    if (err < 0)
+    {
+      return err;
+    }
   }
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
+  if (err < 0)
+  {
+    return err;
+  }
+  return err;
 }
