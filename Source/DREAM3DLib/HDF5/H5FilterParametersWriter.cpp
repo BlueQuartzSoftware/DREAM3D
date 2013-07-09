@@ -293,11 +293,13 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::set<std::s
   }
   if (size > 0)
   {
-    // Concatenate all strings together using a \n as the delimiter
+    std::string setStr = "";
+    std::set<std::string>::iterator iter = v.begin();
+    for (; iter != v.end(); iter++)
+    {
+      setStr.append(*iter).append("\n");
+    }
 
-    // Write string to HDF5
-    //      err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
-
-
+    err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayNames", setStr);
   }
 }

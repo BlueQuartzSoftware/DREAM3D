@@ -84,6 +84,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual std::vector<ComparisonInput_t> readValue(const std::string name, std::vector<ComparisonInput_t> v);
     virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v);
     virtual std::vector<AxisAngleInput_t> readValue(const std::string name, std::vector<AxisAngleInput_t> v);
+    virtual std::set<std::string> readValue(const std::string name, std::set<std::string> v);
 
   protected:
     H5FilterParametersReader();
@@ -91,6 +92,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
   private:
     hid_t m_CurrentGroupId;
 
+    std::vector<std::string> tokenize(const char* buf, char delimiter);
 
     H5FilterParametersReader(const H5FilterParametersReader&); // Copy Constructor Not Implemented
     void operator=(const H5FilterParametersReader&); // Operator '=' Not Implemented

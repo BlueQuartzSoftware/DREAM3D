@@ -266,6 +266,51 @@ void GenericFilter::setupFilterParameters()
     option->setValueType("std::vector<ComparisonInput_t>");
     options.push_back(option);
   }
+  /* To Compare Arrays like a threshold filter */
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Voxel Field Arrays to Threshold");
+    parameter->setPropertyName("FieldComparisonInputs");
+    parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
+    parameter->setValueType("std::vector<ComparisonInput_t>");
+    options.push_back(parameter);
+  }
+  /* To Compare Arrays like a threshold filter */
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Voxel Ensemble Arrays to Threshold");
+    parameter->setPropertyName("EnsembleComparisonInputs");
+    parameter->setWidgetType(FilterParameter::EnsembleArrayComparisonSelectionWidget);
+    parameter->setValueType("std::vector<ComparisonInput_t>");
+    options.push_back(parameter);
+  }
+  /* To Compare Arrays like a threshold filter */
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
+    parameter->setPropertyName("PointComparisonInputs");
+    parameter->setWidgetType(FilterParameter::PointArrayComparisonSelectionWidget);
+    parameter->setValueType("std::vector<ComparisonInput_t>");
+    options.push_back(parameter);
+  }
+  /* To Compare Arrays like a threshold filter */
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Surface Mesh Face Arrays to Threshold");
+    parameter->setPropertyName("FaceComparisonInputs");
+    parameter->setWidgetType(FilterParameter::FaceArrayComparisonSelectionWidget);
+    parameter->setValueType("std::vector<ComparisonInput_t>");
+    options.push_back(parameter);
+  }
+  /* To Compare Arrays like a threshold filter */
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Surface Mesh Edge Arrays to Threshold");
+    parameter->setPropertyName("EdgeComparisonInputs");
+    parameter->setWidgetType(FilterParameter::EdgeArrayComparisonSelectionWidget);
+    parameter->setValueType("std::vector<ComparisonInput_t>");
+    options.push_back(parameter);
+  }
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
   {
 	  FilterParameter::Pointer option = FilterParameter::New();
@@ -273,6 +318,14 @@ void GenericFilter::setupFilterParameters()
 	  option->setPropertyName("AxisAngleRotations");
 	  option->setWidgetType(FilterParameter::AxisAngleWidget);
 	  options.push_back(option);
+  }
+  /* To select arrays */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Arrays to Delete");
+    option->setPropertyName("ArraysToDelete");
+    option->setWidgetType(FilterParameter::ArraySelectionWidget);
+    options.push_back(option);
   }
 
   setFilterParameters(options);
@@ -307,6 +360,18 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 
   setCellComparisonInputs( reader->readValue("CellComparisonInputs", m_CellComparisonInputs) );
   setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
+
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays()) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays()) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays()) );
+  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays()) );
+  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays()) );
+  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays()) );
+  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays()) );
+  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays()) );
+  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays()) );
+  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays()) );
+  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays()) );
 }
 
 // -----------------------------------------------------------------------------
@@ -339,6 +404,18 @@ void GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
   writer->writeValue( "AxisAngleRotations", getAxisAngleRotations() );
+
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays());
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays());
+  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays());
+  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays());
+  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays());
+  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays());
+  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays());
+  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays());
+  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays());
+  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays());
 }
 
 
