@@ -289,3 +289,45 @@ std::vector<AxisAngleInput_t> H5FilterParametersReader::readValue(const std::str
 	}
 	return axisAngleInputsVector;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::set<std::string> H5FilterParametersReader::readValue(const std::string name, std::set<std::string> v)
+{
+  size_t size = 0;
+  std::string strData = "";
+  H5Lite::readScalarDataset(m_CurrentGroupId, name, size);
+
+  H5Lite::readStringAttribute(m_CurrentGroupId, name, "ArrayNames", strData);
+
+  std::vector<std::string> strVector = tokenize(strData.c_str(), '\n');
+  for (int i=0; i<strVector.size(); i++)
+  {
+    v.insert(strVector[i]);
+  }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<std::string> H5FilterParametersReader::tokenize(const char* buf, char delimiter)
+{
+  std::vector<std::string> output;
+  std::string values(buf);
+  std::string::size_type start = 0;
+  std::string::size_type pos = 0;
+  //  std::cout << "-----------------------------" << std::endl;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    pos = values.find(delimiter, start);
+    output.push_back(values.substr(start, pos-start));
+    //   std::cout << "Adding: " << output.back() << std::endl;
+    if (pos != std::string::npos)
+    {
+      start = pos + 1;
+    }
+  }
+  return output;
+}

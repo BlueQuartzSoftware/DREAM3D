@@ -78,6 +78,17 @@ void ArraySelectionExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays()) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays()) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays()) );
+  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays()) );
+  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays()) );
+  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays()) );
+  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays()) );
+  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays()) );
+  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays()) );
+  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays()) );
+  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays()) );
 }
 
 // -----------------------------------------------------------------------------
@@ -86,6 +97,16 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 void ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays());
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays());
+  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays());
+  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays());
+  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays());
+  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays());
+  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays());
+  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays());
+  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays());
+  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays());
 }
 
 

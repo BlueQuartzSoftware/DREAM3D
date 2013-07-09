@@ -38,7 +38,7 @@
 #define _AbstractFilterParametersReader_H_
 
 #include <string>
-
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -85,6 +85,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
 	virtual std::vector<ComparisonInput_t> readValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
 	virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v) = 0;
 	virtual std::vector<AxisAngleInput_t> readValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
+  virtual std::set<std::string> readValue(const std::string name, std::set<std::string> v) = 0;
 
   protected:
     AbstractFilterParametersReader();
