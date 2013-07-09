@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindTwinBoundaryInfo_H_
-#define FindTwinBoundaryInfo_H_
+#ifndef FindTwinBoundaries_H_
+#define FindTwinBoundaries_H_
 
 #include <vector>
 #include <string>
@@ -53,20 +53,20 @@
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
- * @class FindTwinBoundaryInfo FindTwinBoundaryInfo.h DREAM3DLib/GenericFilters/FindTwinBoundaryInfo.h
+ * @class FindTwinBoundaries FindTwinBoundaries.h DREAM3DLib/GenericFilters/FindTwinBoundaries.h
  * @brief
  * @author Michael A Groeber (AFRL)
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
+class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindTwinBoundaryInfo)
-    DREAM3D_STATIC_NEW_MACRO(FindTwinBoundaryInfo)
-    DREAM3D_TYPE_MACRO_SUPER(FindTwinBoundaryInfo, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindTwinBoundaries)
+    DREAM3D_STATIC_NEW_MACRO(FindTwinBoundaries)
+    DREAM3D_TYPE_MACRO_SUPER(FindTwinBoundaries, AbstractFilter)
 
-    virtual ~FindTwinBoundaryInfo();
+    virtual ~FindTwinBoundaries();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -76,16 +76,14 @@ class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundaryArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundarySchmidFactorsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundaryIncoherenceArrayName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(TwinBoundaryInfoFile)
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Twin Boundary Info"; }
+    virtual const std::string getHumanLabel() { return "Find Twin Boundaries"; }
 
     virtual void setupFilterParameters();
     /**
@@ -107,7 +105,7 @@ class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
     virtual void preflight();
 
   protected:
-    FindTwinBoundaryInfo();
+    FindTwinBoundaries();
 
   private:
     std::vector<OrientationMath::Pointer> m_OrientationOps;
@@ -121,13 +119,13 @@ class DREAM3DLib_EXPORT FindTwinBoundaryInfo : public AbstractFilter
     int32_t* m_SurfaceMeshFaceLabels;
     double* m_SurfaceMeshFaceNormals;
     bool* m_SurfaceMeshTwinBoundary;
-    float* m_SurfaceMeshTwinBoundarySchmidFactors;
+    float* m_SurfaceMeshTwinBoundaryIncoherence;
 
     void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    FindTwinBoundaryInfo(const FindTwinBoundaryInfo&); // Copy Constructor Not Implemented
-    void operator=(const FindTwinBoundaryInfo&); // Operator '=' Not Implemented
+    FindTwinBoundaries(const FindTwinBoundaries&); // Copy Constructor Not Implemented
+    void operator=(const FindTwinBoundaries&); // Operator '=' Not Implemented
 };
 
-#endif /* FindTwinBoundaryInfo_H_ */
+#endif /* FindTwinBoundaries_H_ */
