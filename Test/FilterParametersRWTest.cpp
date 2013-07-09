@@ -43,7 +43,8 @@
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-#include "GenericFilter.h"
+#include "TestFilters/GenericFilter.h"
+#include "TestFilters/ArraySelectionExample.h"
 
 
 #define StlFilePrefixTestValue "StlFilePrefixTestValue"
