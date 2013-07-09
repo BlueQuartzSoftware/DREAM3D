@@ -105,7 +105,6 @@ class PoleFigureData : QObject
 };
 
 
-
 /**
  * @class ColorPoleFigure ColorPoleFigure.h StatsGenerator/ColorPoleFigure.h
  * @brief
@@ -125,15 +124,15 @@ class PoleFigureMaker
 
 
     int countPixelNeighbors(int imageWidth, int imageHeight, int pX, int pY,
-                            QVector<qint8> &data, QVector<qint32> &counts,
-                            int kX, int kY);
+                            QVector<qint32> &data, QVector<qint32> &counts,
+                            int kX, int kY, bool genmask = false);
     void getColorCorrespondingTovalue(float val,
                                       float &r, float &g, float &b,
                                       float max, float min);
 
     void generateKernelWeigths(int kernelWidth, int kernelHeight);
 
-    QImage paintImage(const PoleFigureData &config, QImage image);
+    QImage paintImage(int width, int imageHeight, QString label, QImage image);
 
   private:
 
@@ -144,5 +143,6 @@ class PoleFigureMaker
     PoleFigureMaker(const PoleFigureMaker&); // Copy Constructor Not Implemented
     void operator=(const PoleFigureMaker&); // Operator '=' Not Implemented
 };
+
 
 #endif /* COLORPOLEFIGURE_H_ */
