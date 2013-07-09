@@ -34,7 +34,8 @@ set(_PublicFilters
   FindSizes
   FindSlipTransmissionMetrics
   FindGBCD
-  FindTwinBoundaryInfo
+  FindTwinBoundaries
+  FindTwinBoundarySchmidFactors
 
   GenerateEnsembleStatistics
 )
