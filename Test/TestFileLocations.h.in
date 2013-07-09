@@ -126,10 +126,10 @@ namespace UnitTest
     const std::string OutputFile("@DREAM3DTest_BINARY_DIR@SyntheticTestOutput.dream3d");
   }
 
-  namespace FilterParametersReaderTest
+  namespace FilterParametersRWTest
   {
-    const std::string TestDir("@MXA_TEMP_DIR@RawBinaryReaderTest");
-    const std::string OutputFile("@MXA_TEMP_DIR@RawBinaryReaderTest/Output.bin");
+    const std::string TestDir("@MXA_TEMP_DIR@FilterParametersRWTest");
+    const std::string OutputFile("@MXA_TEMP_DIR@FilterParametersRWTest/Output.h5");
   }
 }
 

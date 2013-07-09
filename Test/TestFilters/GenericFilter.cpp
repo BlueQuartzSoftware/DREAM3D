@@ -313,11 +313,11 @@ void GenericFilter::setupFilterParameters()
   }
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
   {
-	  FilterParameter::Pointer option = FilterParameter::New();
-	  option->setHumanLabel("Crystal Rotations");
-	  option->setPropertyName("AxisAngleRotations");
-	  option->setWidgetType(FilterParameter::AxisAngleWidget);
-	  options.push_back(option);
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Crystal Rotations");
+    option->setPropertyName("AxisAngleRotations");
+    option->setWidgetType(FilterParameter::AxisAngleWidget);
+    options.push_back(option);
   }
   /* To select arrays */
   {
@@ -359,19 +359,10 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
   setOrigin( reader->readValue("Origin", m_Origin) );
 
   setCellComparisonInputs( reader->readValue("CellComparisonInputs", m_CellComparisonInputs) );
-  setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
+  #error Read in Field, Ensemble.... Comparison Inputs
 
-  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays()) );
-  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays()) );
-  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays()) );
-  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays()) );
-  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays()) );
-  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays()) );
-  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays()) );
-  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays()) );
-  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays()) );
-  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays()) );
-  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays()) );
+
+  setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
 }
 
 // -----------------------------------------------------------------------------
@@ -402,20 +393,10 @@ void GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName() );
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Origin", getOrigin() );
-  writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
-  writer->writeValue( "AxisAngleRotations", getAxisAngleRotations() );
+  writer->writeValue("CellComparisonInputs", getCellComparisonInputs() );
+  writer->writeValue("AxisAngleRotations", getAxisAngleRotations() );
 
-  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
-  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays());
-  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays());
-  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays());
-  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays());
-  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays());
-  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays());
-  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays());
-  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays());
-  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays());
-  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays());
+
 }
 
 

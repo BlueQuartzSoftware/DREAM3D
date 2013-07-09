@@ -243,17 +243,17 @@ ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, Co
 // -----------------------------------------------------------------------------
 std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::string name, std::vector<ComparisonInput_t> v)
 {
-	std::vector<ComparisonInput_t> comparisons;
-	ComparisonInput_t cellComparisonDefault;
-	int numQFilters = static_cast<int>( readValue(name + "_NumComparisons", 0) );
-	std::stringstream ss;
-	for(int i = 0; i < numQFilters; i++)
-	{
-		ss << "Comparison-" << i;
-		comparisons.push_back( readValue(ss.str(), cellComparisonDefault) );
-		ss.str("");
-	}
-	return comparisons;
+  std::vector<ComparisonInput_t> comparisons;
+  ComparisonInput_t cellComparisonDefault;
+  int numQFilters = static_cast<int>( readValue(name + "_NumComparisons", 0) );
+  std::stringstream ss;
+  for(int i = 0; i < numQFilters; i++)
+  {
+    ss << "Comparison-" << i;
+    comparisons.push_back( readValue(ss.str(), cellComparisonDefault) );
+    ss.str("");
+  }
+  return comparisons;
 }
 
 // -----------------------------------------------------------------------------
@@ -261,11 +261,11 @@ std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::st
 // -----------------------------------------------------------------------------
 AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, AxisAngleInput_t v)
 {
-	int err = 0;
-	int32_t rank = 1;
-	hsize_t dims[1] = { 4 };
-	err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-	return v;
+  int err = 0;
+  int32_t rank = 1;
+  hsize_t dims[1] = { 4 };
+  err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  return v;
 }
 
 // -----------------------------------------------------------------------------
@@ -273,21 +273,21 @@ AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, Axi
 // -----------------------------------------------------------------------------
 std::vector<AxisAngleInput_t> H5FilterParametersReader::readValue(const std::string name, std::vector<AxisAngleInput_t> v)
 {
-	std::vector<AxisAngleInput_t> axisAngleInputsVector;
-	AxisAngleInput_t axisAngleDummyInput;
-	axisAngleDummyInput.angle = 0.0f;
-	axisAngleDummyInput.h = 0.0f;
-	axisAngleDummyInput.k = 0.0f;
-	axisAngleDummyInput.l = 0.0f;
-	int vectorSize = static_cast<int>( readValue(name + "_NumAxisAngleInputs", 0) );
-	std::stringstream ss;
-	for(int i = 0; i < vectorSize; i++)
-	{
-		ss << "AxisAngleInput-" << i;
-		axisAngleInputsVector.push_back( readValue(ss.str(), axisAngleDummyInput) );
-		ss.str("");
-	}
-	return axisAngleInputsVector;
+  std::vector<AxisAngleInput_t> axisAngleInputsVector;
+  AxisAngleInput_t axisAngleDummyInput;
+  axisAngleDummyInput.angle = 0.0f;
+  axisAngleDummyInput.h = 0.0f;
+  axisAngleDummyInput.k = 0.0f;
+  axisAngleDummyInput.l = 0.0f;
+  int vectorSize = static_cast<int>( readValue(name + "_NumAxisAngleInputs", 0) );
+  std::stringstream ss;
+  for(int i = 0; i < vectorSize; i++)
+  {
+    ss << "AxisAngleInput-" << i;
+    axisAngleInputsVector.push_back( readValue(ss.str(), axisAngleDummyInput) );
+    ss.str("");
+  }
+  return axisAngleInputsVector;
 }
 
 // -----------------------------------------------------------------------------
@@ -297,11 +297,17 @@ std::set<std::string> H5FilterParametersReader::readValue(const std::string name
 {
   size_t size = 0;
   std::string strData = "";
-  H5Lite::readScalarDataset(m_CurrentGroupId, name, size);
+  herr_t err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
 
-  H5Lite::readStringAttribute(m_CurrentGroupId, name, "ArrayNames", strData);
+  err = H5Lite::readStringDataset(m_CurrentGroupId, name, strData);
 
   std::vector<std::string> strVector = tokenize(strData.c_str(), '\n');
+  // Something has gone wrong in the tokenization and the number of tokens does not match what
+  // was written to the HDF5 file.
+  if (strVector.size() != size)
+  {
+    return v;
+  }
   for (int i=0; i<strVector.size(); i++)
   {
     v.insert(strVector[i]);
