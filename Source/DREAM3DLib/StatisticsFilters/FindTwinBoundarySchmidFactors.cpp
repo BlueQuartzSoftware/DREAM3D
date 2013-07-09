@@ -83,7 +83,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
 
     void generate(size_t start, size_t end) const
     {
-      int grain1, grain2;
+      int grain1, grain2, grain;
       float normal[3];
       float g1[3][3];
       float schmid1, schmid2, schmid3;
@@ -106,10 +106,11 @@ class CalculateTwinBoundarySchmidFactorsImpl
           normal[2] = m_Normals[3*i+2];
           schmid1 = 0, schmid2 = 0, schmid3 = 0;
           plane = 0;
+          if(grain1 > grain2) grain = grain1;
+          else grain = grain2;
           for(int m=0;m<5;m++)
           {
-            q1[m]=m_Quats[5*grain1+m];
-            q2[m]=m_Quats[5*grain2+m];
+            q1[m]=m_Quats[5*grain+m];
           }
           //calculate crystal direction parallel to normal
           OrientationMath::QuattoMat(q1, g1);
@@ -309,7 +310,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
 
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, ss, bool, BoolArrayType, false, fields, 1)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, ss, -388, bool, BoolArrayType, fields, 1)
   CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundarySchmidFactors, ss, float, FloatArrayType, 0, fields, 3)
 }
 
