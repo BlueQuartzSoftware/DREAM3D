@@ -31,6 +31,9 @@
      </item>
      <item>
       <widget class="QComboBox" name="refDir">
+       <property name="currentIndex">
+        <number>2</number>
+       </property>
        <item>
         <property name="text">
          <string>X</string>
