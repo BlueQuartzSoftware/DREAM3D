@@ -97,7 +97,6 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
 }

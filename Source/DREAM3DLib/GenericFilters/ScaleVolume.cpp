@@ -169,7 +169,6 @@ void ScaleVolume::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("ScaleFactor", getScaleFactor() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );

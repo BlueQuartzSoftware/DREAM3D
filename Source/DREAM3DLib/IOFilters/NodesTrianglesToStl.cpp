@@ -116,7 +116,6 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
 //
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );

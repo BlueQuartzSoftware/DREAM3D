@@ -106,7 +106,6 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 //
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("NewZRes", getNewZRes() );

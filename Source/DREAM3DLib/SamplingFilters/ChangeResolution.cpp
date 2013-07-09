@@ -95,7 +95,6 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
 //
 // -----------------------------------------------------------------------------
 void ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("Resolution", getResolution() );
 }

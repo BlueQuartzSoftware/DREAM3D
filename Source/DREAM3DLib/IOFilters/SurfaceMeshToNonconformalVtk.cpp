@@ -94,7 +94,6 @@ void SurfaceMeshToNonconformalVtk::readFilterParameters(AbstractFilterParameters
 //
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );

@@ -110,7 +110,6 @@ void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* read
 //
 // -----------------------------------------------------------------------------
 void OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );

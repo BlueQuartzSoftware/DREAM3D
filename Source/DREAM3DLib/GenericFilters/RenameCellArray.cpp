@@ -93,7 +93,6 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
 //
 // -----------------------------------------------------------------------------
 void RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );

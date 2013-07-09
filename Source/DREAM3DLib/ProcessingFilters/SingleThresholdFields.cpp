@@ -120,7 +120,6 @@ void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader*
 //
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("ComparisonOperator", getComparisonOperator() );

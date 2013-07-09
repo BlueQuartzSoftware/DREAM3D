@@ -110,7 +110,6 @@ void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reade
 //
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );

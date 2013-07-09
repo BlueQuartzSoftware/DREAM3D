@@ -95,7 +95,6 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 //
 // -----------------------------------------------------------------------------
 void SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
