@@ -241,14 +241,14 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Com
 {
     int numQFilters = static_cast<int>( v.size() );
    int err = writeValue(name + "_NumComparisons",  numQFilters);
-	std::stringstream ss;
-	for(int i = 0; i < numQFilters; i++)
+  std::stringstream ss;
+  for(int i = 0; i < numQFilters; i++)
     {
       ss << "Comparison-" << i;
       err = writeValue(ss.str(), v[i]);
       ss.str("");
     }
-	return err;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -256,16 +256,16 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Com
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
 {
-	int numQFilters = static_cast<int>( v.size() );
-	int err = writeValue(name + "_NumAxisAngleInputs",  numQFilters);
-	std::stringstream ss;
-	for(int i = 0; i < numQFilters; i++)
-	{
-		ss << "AxisAngleInput-" << i;
-		err = writeValue(ss.str(), v[i]);
-		ss.str("");
-	}
-	return err;
+  int numQFilters = static_cast<int>( v.size() );
+  int err = writeValue(name + "_NumAxisAngleInputs",  numQFilters);
+  std::stringstream ss;
+  for(int i = 0; i < numQFilters; i++)
+  {
+    ss << "AxisAngleInput-" << i;
+    err = writeValue(ss.str(), v[i]);
+    ss.str("");
+  }
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -278,4 +278,26 @@ int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_
   hsize_t dims[1] = { 4 };
   err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::set<std::string> v)
+{
+  size_t size = v.size();
+  herr_t err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, size);
+  if (err < 0)
+  {
+    return err;
+  }
+  if (size > 0)
+  {
+    // Concatenate all strings together using a \n as the delimiter
+
+    // Write string to HDF5
+    //      err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
+
+
+  }
 }

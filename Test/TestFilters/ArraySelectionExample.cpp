@@ -85,7 +85,7 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
-writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
 }
 
 

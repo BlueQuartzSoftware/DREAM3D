@@ -211,3 +211,12 @@ int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInpu
   int err = -1;
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, std::set<std::string> v)
+{
+  int err = -1;
+  return err;
+}
