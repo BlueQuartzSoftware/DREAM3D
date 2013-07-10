@@ -35,6 +35,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "VisualizeGBCD.h"
 
+
+#include <cmath>
+#include <algorithm>
+#include <limits>
+
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
@@ -114,7 +119,7 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-  #if WRITE_XYZ_POINTS
+#if WRITE_XYZ_POINTS
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Stereographic Projection");
@@ -140,12 +145,12 @@ void VisualizeGBCD::setupFilterParameters()
     option->setHumanLabel("GMT Output File");
     option->setPropertyName("GMTOutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.txt");
+    option->setFileExtension("*.dat");
     option->setFileType("GMT File");
     option->setValueType("string");
     parameters.push_back(option);
   }
-    #endif
+#endif
   setFilterParameters(parameters);
 }
 
@@ -185,7 +190,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
-  #if WRITE_XYZ_POINTS
+#if WRITE_XYZ_POINTS
   if(getStereoOutputFile().empty() == true)
   {
     ss.str("");
@@ -193,7 +198,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
-    if(getSphericalOutputFile().empty() == true)
+  if(getSphericalOutputFile().empty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Spherical Data Output File Set and it was not.";
@@ -462,11 +467,20 @@ void VisualizeGBCD::execute()
               }
 #if WRITE_XYZ_POINTS
               sphericalPositions  << rotNormal[0] << " " << rotNormal[1] << " " << rotNormal[2] << "\n";
-
-              gmtValues.push_back(180.0/M_PI * atan2 (rotNormal[1] , rotNormal[0] ));
-              gmtValues.push_back(180.0/M_PI * acos( rotNormal[2] ));
-
-
+              if(rotNormal[2] < 0) {
+                x = -rotNormal[0];
+                y = -rotNormal[1];
+                z = -rotNormal[2];
+              }
+              float lon = atan2(y, x) * 180.0/M_PI;
+              if (lon < 0.0)
+              {
+                lon =lon + 360.0;
+              }
+              float lat = asin(z) * 180/M_PI;
+              // IntReverse(rotNormal[0], rotNormal[1], rotNormal[2], lat, lon, h, NULL);
+              gmtValues.push_back(lon);
+              gmtValues.push_back(lat);
 #endif
               if(rotNormal[2] < 0) {
                 rotNormal[0] = -rotNormal[0];
@@ -511,11 +525,11 @@ void VisualizeGBCD::execute()
     fprintf(f, "GBCD Stereograhic Projection irregular grid data\n");
     fprintf(f, "ASCII"); fprintf(f, "\n");
     fprintf(f, "DATASET POLYDATA\n");
-    fprintf(f, "POINTS %d float\n", nPoints);
+    fprintf(f, "POINTS %lu float\n", nPoints);
     fprintf(f, "%s\n", positions.str().c_str());
 
     fprintf(f, "\n");
-    fprintf(f, "POINT_DATA %d\n", nPoints);
+    fprintf(f, "POINT_DATA %lu\n", nPoints);
     fprintf(f, "SCALARS GBCD float 1\n");
     fprintf(f, "LOOKUP_TABLE default\n");
     fprintf(f, "%s\n", scalars.str().c_str());
@@ -529,28 +543,32 @@ void VisualizeGBCD::execute()
     fprintf(f, "GBCD Spherical Data irregular grid\n");
     fprintf(f, "ASCII"); fprintf(f, "\n");
     fprintf(f, "DATASET POLYDATA\n");
-    fprintf(f, "POINTS %d float\n", nPoints);
+    fprintf(f, "POINTS %lu float\n", nPoints);
     fprintf(f, "%s\n", sphericalPositions.str().c_str());
 
     fprintf(f, "\n");
-    fprintf(f, "POINT_DATA %d\n", nPoints);
+    fprintf(f, "POINT_DATA %lu\n", nPoints);
     fprintf(f, "SCALARS GBCD float 1\n");
     fprintf(f, "LOOKUP_TABLE default\n");
     fprintf(f, "%s\n", scalars.str().c_str());
     fclose(f);
   }
 
+// Write the GMT file
   {
-    FILE* f = fopen(m_GMTOutputFile.c_str(), "wb");
-    fprintf(f, "%f %f %f %f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle);
+    std::string parentPath = MXAFileInfo::parentPath(m_GMTOutputFile);
+    std::string basename = MXAFileInfo::fileNameWithOutExtension(m_GMTOutputFile);
+    std::string extension = MXAFileInfo::extension(m_GMTOutputFile);
+    std::string path = parentPath + MXAFileInfo::Separator + basename + std::string("_gmt_1.") + extension;
+
+    FILE* f = fopen(path.c_str(), "wb");
+    fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * 180/M_PI);
     size_t size = gmtValues.size()/3;
 
     for(size_t i = 0; i < size; i=i+3)
     {
       fprintf(f, "%f %f %f\n", gmtValues[i], gmtValues[i+1], gmtValues[i+2]);
-
     }
-
     fclose(f);
   }
 
@@ -679,4 +697,3 @@ void VisualizeGBCD::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
-
