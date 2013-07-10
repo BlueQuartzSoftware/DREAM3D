@@ -116,7 +116,7 @@ FilterWidgetManager::Collection FilterWidgetManager::getFactories(const std::str
   for (FilterWidgetManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
-	if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0 && (*factory).second->getFilterSubGroup().compare(subGroupName) == 0)
+  if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0 && (*factory).second->getFilterSubGroup().compare(subGroupName) == 0)
     {
       groupFactories[(*factory).first] = (*factory).second;
     }
@@ -164,10 +164,10 @@ std::set<std::string> FilterWidgetManager::getSubGroupNames(const std::string &g
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
-	if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
+  if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
     {
-	    subGroupNames.insert((*factory).second->getFilterSubGroup());
-	}
+      subGroupNames.insert((*factory).second->getFilterSubGroup());
+  }
   }
   return subGroupNames;
 }
@@ -199,10 +199,3 @@ IFilterWidgetFactory::Pointer FilterWidgetManager::getFactoryForFilterHumanName(
   return widgetFactory;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterWidgetManager::RegisterKnownQFilterWidgets()
-{
-
-}
