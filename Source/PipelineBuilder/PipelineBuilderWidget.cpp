@@ -405,17 +405,40 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
   prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
 
   // So Now we have the top level Directory for the Prebuilts
-  addFiltersRecursively(fi, prebuiltDir);
+  addFiltersRecursively(prebuiltDir, m_prebuilts);
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addFiltersRecursively(QFileInfo fi, QDir currentDir)
+void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem)
 {
-  QDir dir(fi.absoluteFilePath());
+  QTreeWidgetItem* nextDirItem;
+
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  if ( dirList.size() > 0 )
+  {
+    foreach(QFileInfo fi, dirList)
+    {
+      // At this point we have the first level of directories and we want to do 2 things:
+      // 1.Create an entry in the tree widget with this name
+      // 2.drop into the directory and look for all the .txt files and add entries for those items.
+      //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
+      // Add a tree widget item for this Prebuilt Group
+      nextDirItem = new QTreeWidgetItem(currentDirItem);
+      nextDirItem->setText(0, fi.baseName());
+      addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem );   // Recursive call
+    }
+  }
+  else
+  {
+    return;
+  }
+
   QStringList filters;
   filters << "*.txt";
-  QFileInfoList pblist = dir.entryInfoList(filters);
+  QFileInfoList pblist = currentDir.entryInfoList(filters);
   foreach(QFileInfo pbinfo, pblist)
   {
     QString pbFilePath = pbinfo.absoluteFilePath();
@@ -425,25 +448,10 @@ void PipelineBuilderWidget::addFiltersRecursively(QFileInfo fi, QDir currentDir)
     pbPref.endGroup();
     //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
     // Add tree widget for this Prebuilt Pipeline
-    QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(prebuiltDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
+    QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
     prebuiltItem->setText(0, pbName);
     prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
     prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
-  }
-
-  // Get a list of all the directories
-  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-  foreach(QFileInfo fi, dirList)
-  {
-    // At this point we have the first level of directories and we want to do 2 things:
-    // 1.Create an entry in the tree widget with this name
-    // 2.drop into the directory and look for all the .txt files and add entries for those items.
-    //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
-    // Add a tree widget item for this Prebuilt Group
-    QTreeWidgetItem* prebuiltDirItem = new QTreeWidgetItem(m_prebuilts);
-    prebuiltDirItem->setText(0, fi.baseName());
-    //prebuiltItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
-    //prebuiltDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath()));
   }
 }
 
