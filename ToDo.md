@@ -15,6 +15,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Version 4.3 Features/Bugs to Fix ##
 
++ Add information for stats generator about the format of the ODF Files import function
++ Add feature in Stats Generator to read in a .ang or .ctf file for the ODF angles.
 + Disable adding of filters into the pipeline while it is running.
 + Write out Lattice Constants from EBSD data to XDMF data
 + Modify filter to dump Images by adding ability to dump images for XY, YZ, XZ planes to a folder.
