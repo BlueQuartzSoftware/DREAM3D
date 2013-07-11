@@ -157,6 +157,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
     /**
+     * @brief Recursively adds all filters (.txt files) to the Prebuilt list
+     */
+    void addFiltersRecursively(QFileInfo fi, QDir prebuiltDir);
+
+    /**
      * @brief Getter for the m_FavoritesActionList private variable
      */
     QList<QAction*> getFavoritesActionList() {return m_ActionList;}
