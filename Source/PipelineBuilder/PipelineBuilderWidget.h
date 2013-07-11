@@ -37,6 +37,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
+#include <QtCore/QFileInfo>
 #include <QtGui/QDropEvent>
 #include <QInputDialog>
 
@@ -159,7 +160,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     /**
      * @brief Recursively adds all filters (.txt files) to the Prebuilt list
      */
-    void addFiltersRecursively(QFileInfo fi, QDir prebuiltDir);
+    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
 
     /**
      * @brief Getter for the m_FavoritesActionList private variable
