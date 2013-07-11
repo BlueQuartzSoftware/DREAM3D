@@ -405,6 +405,8 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
   prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
 
   // So Now we have the top level Directory for the Prebuilts
+  addFiltersRecursively(fi, prebuiltDir);
+
   // Get a list of all the directories
   QFileInfoList dirList = prebuiltDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
   foreach(QFileInfo fi, dirList)
@@ -418,27 +420,31 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
     prebuiltDirItem->setText(0, fi.baseName());
     //prebuiltItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
     //prebuiltDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath()));
+}
 
-    QDir dir(fi.absoluteFilePath());
-    QStringList filters;
-    filters << "*.txt";
-    QFileInfoList pblist = dir.entryInfoList(filters);
-    foreach(QFileInfo pbinfo, pblist)
-    {
-      QString pbFilePath = pbinfo.absoluteFilePath();
-      QSettings pbPref(pbFilePath, QSettings::IniFormat);
-      pbPref.beginGroup(Detail::PipelineBuilderGroup);
-      QString pbName = pbPref.value("Name").toString();
-      pbPref.endGroup();
-      //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
-      // Add tree widget for this Prebuilt Pipeline
-      QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(prebuiltDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
-      prebuiltItem->setText(0, pbName);
-      prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
-      prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
-    }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::addFiltersRecursively(QFileInfo fi, QDir prebuiltDir)
+{
+  QDir dir(fi.absoluteFilePath());
+  QStringList filters;
+  filters << "*.txt";
+  QFileInfoList pblist = dir.entryInfoList(filters);
+  foreach(QFileInfo pbinfo, pblist)
+  {
+    QString pbFilePath = pbinfo.absoluteFilePath();
+    QSettings pbPref(pbFilePath, QSettings::IniFormat);
+    pbPref.beginGroup(Detail::PipelineBuilderGroup);
+    QString pbName = pbPref.value("Name").toString();
+    pbPref.endGroup();
+    //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
+    // Add tree widget for this Prebuilt Pipeline
+    QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(prebuiltDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
+    prebuiltItem->setText(0, pbName);
+    prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
+    prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
   }
-
 }
 
 // -----------------------------------------------------------------------------
