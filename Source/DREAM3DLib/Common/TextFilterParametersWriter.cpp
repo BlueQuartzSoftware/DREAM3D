@@ -188,7 +188,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, FloatVec3Widg
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v)
+int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v, int vectorPos)
 {
   int err = -1;
   return err;
@@ -206,7 +206,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<A
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v)
+int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v, int vectorPos)
 {
   int err = -1;
   return err;

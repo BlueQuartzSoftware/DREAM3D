@@ -111,7 +111,7 @@ void MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
   for(int i = 0; i < numQFilters; i++)
   {
     ss << "Comparison-" << i;
-    writer->writeValue(ss.str(), m_ComparisonInputs[i]);
+    writer->writeValue(ss.str(), m_ComparisonInputs[i], i);
     ss.str("");
   }
   writer->writeValue("OutputArrayName", getOutputArrayName() );

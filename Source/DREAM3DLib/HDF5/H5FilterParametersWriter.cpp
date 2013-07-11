@@ -40,6 +40,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "DREAM3DLib/HDF5/H5FilterParametersConstants.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -222,15 +224,26 @@ int H5FilterParametersWriter::writeValue(const std::string name, FloatVec3Widget
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v)
+int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v, int vectorPos)
 {
   int err = 0;
 
-  float value = v.compValue;
-  err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
-  err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
-  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
-  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, "CompValue", v.compValue);
+  std::ostringstream convert1;
+  convert1 << vectorPos << H5FilterParameter::ArrayNameConstant;
+  std::string strAttribute1 = convert1.str();
+
+  std::ostringstream convert2;
+  convert2 << vectorPos << H5FilterParameter::CompOperatorConstant;
+  std::string strAttribute2 = convert2.str();
+
+  std::ostringstream convert3;
+  convert3 << vectorPos << H5FilterParameter::CompValueConstant;
+  std::string strAttribute3 = convert3.str();
+
+  err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, strAttribute1, v.arrayName);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.compOperator);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.compValue);
+
   return err;
 }
 
@@ -240,13 +253,10 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
 int H5FilterParametersWriter::writeValue(const std::string name, std::vector<ComparisonInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
-  int err = writeValue(name + "_NumComparisons",  numQFilters);
-  std::stringstream ss;
+  int err = writeValue(name,  numQFilters);
   for(int i = 0; i < numQFilters; i++)
   {
-    ss << "Comparison-" << i;
-    err = writeValue(ss.str(), v[i]);
-    ss.str("");
+    err = writeValue(name, v[i], i);
   }
   return err;
 }
@@ -257,13 +267,11 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Com
 int H5FilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
-  int err = writeValue(name + "_NumAxisAngleInputs",  numQFilters);
+  int err = writeValue(name,  numQFilters);
   std::stringstream ss;
   for(int i = 0; i < numQFilters; i++)
   {
-    ss << "AxisAngleInput-" << i;
-    err = writeValue(ss.str(), v[i]);
-    ss.str("");
+    err = writeValue(name, v[i], i);
   }
   return err;
 }
@@ -271,12 +279,33 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Axi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v)
+int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v, int vectorPos)
 {
   int err = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 4 };
-  err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+
+  std::ostringstream convert1;
+  convert1 << vectorPos << H5FilterParameter::AngleConstant;
+  std::string strAttribute1 = convert1.str();
+
+  std::ostringstream convert2;
+  convert2 << vectorPos << H5FilterParameter::HConstant;
+  std::string strAttribute2 = convert2.str();
+
+  std::ostringstream convert3;
+  convert3 << vectorPos << H5FilterParameter::KConstant;
+  std::string strAttribute3 = convert3.str();
+
+  std::ostringstream convert4;
+  convert4 << vectorPos << H5FilterParameter::LConstant;
+  std::string strAttribute4 = convert4.str();
+
+  //err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute1, v.angle);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.h);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.k);
+  err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute4, v.l);
   return err;
 }
 
