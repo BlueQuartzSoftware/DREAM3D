@@ -431,10 +431,6 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
       addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem );   // Recursive call
     }
   }
-  else
-  {
-    return;
-  }
 
   QStringList filters;
   filters << "*.txt";
