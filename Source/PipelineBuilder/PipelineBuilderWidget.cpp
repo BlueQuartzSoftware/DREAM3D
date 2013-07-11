@@ -407,25 +407,10 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
   // So Now we have the top level Directory for the Prebuilts
   addFiltersRecursively(fi, prebuiltDir);
 
-  // Get a list of all the directories
-  QFileInfoList dirList = prebuiltDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-  foreach(QFileInfo fi, dirList)
-  {
-    // At this point we have the first level of directories and we want to do 2 things:
-    // 1.Create an entry in the tree widget with this name
-    // 2.drop into the directory and look for all the .txt files and add entries for those items.
-    //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
-    // Add a tree widget item for this Prebuilt Group
-    QTreeWidgetItem* prebuiltDirItem = new QTreeWidgetItem(m_prebuilts);
-    prebuiltDirItem->setText(0, fi.baseName());
-    //prebuiltItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
-    //prebuiltDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath()));
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addFiltersRecursively(QFileInfo fi, QDir prebuiltDir)
+void PipelineBuilderWidget::addFiltersRecursively(QFileInfo fi, QDir currentDir)
 {
   QDir dir(fi.absoluteFilePath());
   QStringList filters;
@@ -444,6 +429,21 @@ void PipelineBuilderWidget::addFiltersRecursively(QFileInfo fi, QDir prebuiltDir
     prebuiltItem->setText(0, pbName);
     prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
     prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
+  }
+
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  foreach(QFileInfo fi, dirList)
+  {
+    // At this point we have the first level of directories and we want to do 2 things:
+    // 1.Create an entry in the tree widget with this name
+    // 2.drop into the directory and look for all the .txt files and add entries for those items.
+    //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
+    // Add a tree widget item for this Prebuilt Group
+    QTreeWidgetItem* prebuiltDirItem = new QTreeWidgetItem(m_prebuilts);
+    prebuiltDirItem->setText(0, fi.baseName());
+    //prebuiltItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
+    //prebuiltDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath()));
   }
 }
 
