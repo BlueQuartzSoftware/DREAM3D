@@ -268,7 +268,6 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Axi
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = writeValue(name,  numQFilters);
-  std::stringstream ss;
   for(int i = 0; i < numQFilters; i++)
   {
     err = writeValue(name, v[i], i);
@@ -301,7 +300,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_
   convert4 << vectorPos << H5FilterParameter::LConstant;
   std::string strAttribute4 = convert4.str();
 
-  //err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
+  err = H5Lite::writePointerDataset<float>(m_CurrentGroupId, name, rank, dims, reinterpret_cast<float*>(&v) );
   err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute1, v.angle);
   err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.h);
   err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.k);
