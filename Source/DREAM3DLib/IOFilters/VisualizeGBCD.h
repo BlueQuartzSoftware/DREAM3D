@@ -49,6 +49,9 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+
+typedef float real;
+
 /**
  * @class VisualizeGBCD VisualizeGBCD.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCD.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
@@ -72,6 +75,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(StereoOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(SphericalOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GMTOutputFile)
 
 
     /**
@@ -170,6 +174,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
         }
       return err;
     }
+
 
     VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
