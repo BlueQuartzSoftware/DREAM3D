@@ -17,18 +17,18 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 + Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
 + When running a pipeline have a method that an disable all of the GUI widgets and Menus that would change the pipeline while running
++ During Execution of the pipeline dim the filters except for the one that is currently running
++ Disable modifying pipeline while a pipeline is running
++ Disable adding of filters into the pipeline while it is running.
 + Add information for stats generator about the format of the ODF Files import function
 + Add feature in Stats Generator to read in a .ang or .ctf file for the ODF angles.
 + Add feature when reading ODF Euler Angle files to convert data from Radians to degrees.
 + Ghost data is generated in the ODF in Stats Generator for certain orientations (90,35,45 1000, 3)
-+ Disable modifying pipeline while a pipeline is running
-+ Disable adding of filters into the pipeline while it is running.
 + Write out Lattice Constants from EBSD data to XDMF data
 + Modify filter to dump Images by adding ability to dump images for XY, YZ, XZ planes to a folder.
 + Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 + Add Filter to set Phase/Ensemble data instead of reading it from a file (Custom Gui for this one).
-+ During Execution of the pipeline dim the filters except for the one that is currently running
 
 
 ## Future Features to Implement ##
