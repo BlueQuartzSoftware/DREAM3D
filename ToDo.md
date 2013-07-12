@@ -13,6 +13,8 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Version 4.3 Features/Bugs to Fix ##
 
++ Visualize GBCD not working in develop: Possible clash with GBCD Array versus IDataArray when that was being developed. Just verify with a clean run of the SmallIN100 Data set
++ Visualize GBCD, empty GMT file causes crash.
 + Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
 + When running a pipeline have a method that an disable all of the GUI widgets and Menus that would change the pipeline while running
 + During Execution of the pipeline dim the filters except for the one that is currently running
@@ -195,6 +197,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Version 4.2 Fixed ###
 
++ Fixed bug in MXAFileInfo where passing in an empty string to the "filename()" method would cause infinite recursion.
 + Incorrect Documentation for Find Twin Boundary Info
 + StatsGenerator: Fixed array access out of bounds crash because we were not checking the bounds of the ColorNames array before accessing.
 + StatsGenerator: Fix Tab sequence on Primary Phase Grain Size Distribution Tab
