@@ -219,7 +219,7 @@ int LosAlamosFFTWriter::writeFile()
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
 
-        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n",phi1, phi, phi2, x, y, z, grainId, phaseId);
+        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n",phi1, phi, phi2, x+1, y+1, z+1, grainId, phaseId);
       }
     }
   }
