@@ -48,6 +48,7 @@ set(_PublicFilters
   SPParksWriter
   VisualizeGBCD
   ReadOrientationData
+  LosAlamosFFTWriter
 )
 
 
