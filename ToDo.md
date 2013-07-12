@@ -10,8 +10,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Version 4.2 Features Bugs to Fix ##
 
-+ Incorrect Documentation for Find Twin Boundary Info
-
 
 ## Version 4.3 Features/Bugs to Fix ##
 
@@ -191,6 +189,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ## Items Completed ##
 
 ### Version 4.2 Fixed ###
++ Incorrect Documentation for Find Twin Boundary Info
 + Update the documentation for the disorientation coloring
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
     - Have it pop open the Web browser to the proper file.

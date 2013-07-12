@@ -141,7 +141,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     float* m_FieldEulerAngles;
     int32_t* m_FieldPhases;
     unsigned int* m_CrystalStructures;
-    float* m_GBCD;
+    double* m_GBCD;
 
     FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
     void operator=(const FindGBCD&); // Operator '=' Not Implemented
