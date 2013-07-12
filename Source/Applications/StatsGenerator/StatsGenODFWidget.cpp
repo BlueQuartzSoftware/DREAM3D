@@ -773,9 +773,6 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     for(size_t i = 0; i < numOrients; i++)
     {
       inFile >> e1 >> e2 >> e3 >> weight >> sigma;
-e1 = e1 * 180/M_PI;
-e2 = e2 * 180/M_PI;
-e3 = e3 * 180/M_PI;
       if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
       int row = m_ODFTableModel->rowCount() - 1;
       m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);

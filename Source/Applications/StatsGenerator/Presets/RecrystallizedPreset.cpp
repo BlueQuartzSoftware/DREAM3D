@@ -95,24 +95,27 @@ void RecrystallizedPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, 
   qint32 count = binNumbers.count();
 
   // Remove all the current rows in the table model
-//  model->removeRows(0, model->rowCount());
+  //  model->removeRows(0, model->rowCount());
 
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
+  {
     alpha = (0*i) + 10.0 + rg.genrand_res53();
     beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -141,19 +144,22 @@ void RecrystallizedPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, 
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
+  {
     alpha = (0*i) + 10.0 + rg.genrand_res53();
     beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -182,19 +188,22 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
+  {
     alpha = (0*i) + 10.0 + rg.genrand_res53();
     beta = (0*i) + 1.5 + (0.5*rg.genrand_res53());
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
-   }
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -209,7 +218,7 @@ void RecrystallizedPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, 
 void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-	plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
+  plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
   if (NULL == model)
@@ -225,7 +234,7 @@ void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot
   float mu, sigma;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> mus;
+      QVector<float> mus;
   QVector<float> sigmas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
@@ -238,6 +247,9 @@ void RecrystallizedPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot
     mus.push_back(mu);
     sigmas.push_back(sigma);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
   }
 
   QVector<QVector<float> > data;

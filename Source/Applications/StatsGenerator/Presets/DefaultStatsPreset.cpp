@@ -79,7 +79,7 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
   qint32 count = binNumbers.count();
 
   // Remove all the current rows in the table model
-//  model->removeRows(0, model->rowCount());
+  //  model->removeRows(0, model->rowCount());
 
   float alpha = 5.0;
   float beta = 1.0;
@@ -91,7 +91,7 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
+  {
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
@@ -101,7 +101,7 @@ void DefaultStatsPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QV
     }
     alpha += 0.1f;
     beta += betaStep;
-   }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -137,13 +137,16 @@ void DefaultStatsPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QV
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
+  {
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
     alpha += 0.1f;
     beta += betaStep;
-   }
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -179,13 +182,16 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
   QStringList colorNames = QColor::colorNames();
   qint32 colorOffset = 21;
   for (qint32 i = 0; i < count; ++i)
-   {
+  {
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
     alpha += 0.1f;
     beta += betaStep;
-   }
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
+  }
 
   QVector<QVector<float> > data;
   data.push_back(alphas);
@@ -200,7 +206,7 @@ void DefaultStatsPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QV
 void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-	plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
+  plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
   if (NULL == model)
@@ -216,7 +222,7 @@ void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, 
   float mu, sigma;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> mus;
+      QVector<float> mus;
   QVector<float> sigmas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
@@ -229,6 +235,9 @@ void DefaultStatsPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, 
     mus.push_back(mu);
     sigmas.push_back(sigma);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
   }
 
   QVector<QVector<float> > data;

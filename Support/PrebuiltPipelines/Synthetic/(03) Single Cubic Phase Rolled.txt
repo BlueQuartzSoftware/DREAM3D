@@ -1,5 +1,5 @@
 [PipelineBuilder]
-Number_Filters=8
+Number_Filters=7
 Name=(03) Single Cubic Phase Rolled
 
 [0]
@@ -22,28 +22,22 @@ CsvOutputFile=
 Filter_Name=FindNeighbors
 
 [3]
-Filter_Name=InsertPrecipitatePhases
-PeriodicBoundaries=false
-WriteGoalAttributes=false
-CsvOutputFile=
-
-[4]
 Filter_Name=FindNumFields
 
-[5]
+[4]
 Filter_Name=MatchCrystallography
 MaxIterations=100000
 
-[6]
+[5]
 Filter_Name=GenerateIPFColors
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[7]
+[6]
 Filter_Name=DataContainerWriter
-OutputFile=Data/Output/TwoPhaseCubicHexParticlesEquiaxedOut.dream3d
+OutputFile=Data/Output/CubicSingleRolledOut.dream3d
 WriteVoxelData=true
 WriteSurfaceMeshData=false
 WriteXdmfFile=true
