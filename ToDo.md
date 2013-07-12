@@ -15,6 +15,12 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Version 4.3 Features/Bugs to Fix ##
 
++ Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
++ When running a pipeline have a method that an disable all of the GUI widgets and Menus that would change the pipeline while running
++ Add information for stats generator about the format of the ODF Files import function
++ Add feature in Stats Generator to read in a .ang or .ctf file for the ODF angles.
++ Add feature when reading ODF Euler Angle files to convert data from Radians to degrees.
++ Ghost data is generated in the ODF in Stats Generator for certain orientations (90,35,45 1000, 3)
 + Disable modifying pipeline while a pipeline is running
 + Disable adding of filters into the pipeline while it is running.
 + Write out Lattice Constants from EBSD data to XDMF data
@@ -190,6 +196,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 ## Items Completed ##
 
 ### Version 4.2 Fixed ###
+
++ StatsGenerator: Fixed array access out of bounds crash because we were not checking the bounds of the ColorNames array before accessing.
++ StatsGenerator: Fix Tab sequence on Primary Phase Grain Size Distribution Tab
 + Update the documentation for the disorientation coloring
 + Add help for the Euler Reference Frame Dialog in the "Import Orientation Data" Filter.
     - Have it pop open the Web browser to the proper file.
