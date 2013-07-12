@@ -13,10 +13,7 @@ YPoints=128
 ZPoints=128
 
 [1]
-Filter_Name=PackPrimaryPhases
-PeriodicBoundaries=false
-WriteGoalAttributes=false
-CsvOutputFile=
+Filter_Name=EstablishMatrixPhase
 
 [2]
 Filter_Name=FindNeighbors

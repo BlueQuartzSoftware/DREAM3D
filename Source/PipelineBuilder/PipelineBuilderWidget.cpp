@@ -885,6 +885,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
   }
 
   QString itemText = parent->text(0);
+  if (m_PipelineViewWidget->isEnabled() == false) { return; }
   if (itemText.compare(Detail::PrebuiltPipelines) == 0
       || itemText.compare(Detail::FavoritePipelines) == 0 )
   {
@@ -1060,6 +1061,7 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
+  if (m_PipelineViewWidget->isEnabled() == false) { return; }
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
   m_PipelineViewWidget->preflightPipeline();
 }
@@ -1158,6 +1160,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   // Save the preferences file NOW in case something happens
   emit fireWriteSettings();
 
+  m_PipelineViewWidget->setEnabled(false);
   clearMessagesTable();
 
   m_hasErrors = false;
@@ -1233,6 +1236,7 @@ void PipelineBuilderWidget::pipelineComplete()
                      QMessageBox::Critical);
   }
   m_GoBtn->setText("Go");
+  m_PipelineViewWidget->setEnabled(true);
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit pipelineEnded();
