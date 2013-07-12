@@ -36,12 +36,22 @@ To generate this view in ParaView the user should load the .vtk file and then ap
 
 -----
 
+4: The GBCD Data plotted using the [GMT](http://gmt.soest.hawaii.edu) package
+
+![GMT Output of Data](GMT_GBCD_Plot.png)
+
+------------
+
 ## Parameters ##
 
 | Name | Type |
 |------|------|  
 | Misorientation Angle | Floating Point value in DEGREES |  
-| Misorientation Axis | Floating point 1x3 vector that is the rotation axis |
+| Misorientation Axis | Floating point 1x3 vector that is the rotation axis |  
+| Regular Grid File Path | Vtk Rectilinear Grid |  
+|  Irregular grid  File Path | Vtk Point Data |  
+| Irregular Grid Sphere Coords | Vtk Point Data |  
+| GMT Plot file | .dat file |
 
 
 ## Required DataContainers ##
@@ -51,8 +61,8 @@ SurfaceMesh
 ## Required Arrays ##
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
-|------|--------------|-------------|---------|-----|
-| 5 Dimension GBCD Array | GBCDArray | The 5 parameter GBCD data | | FindGBCD |  
+|--------|--------------------|----------------|----------------|----------------------------------------|
+| 5 Dimension GBCD Array | GBCDArray | The 5 parameter GBCD data | Currently stored as Ensemble data in the Surface Mesh Data Container | FindGBCD |  
 
 
 
@@ -62,7 +72,7 @@ None
 
 ## Authors ##
 
-**Copyright:** 2013 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2013 Michael A. Groeber (AFRL), 2013 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
