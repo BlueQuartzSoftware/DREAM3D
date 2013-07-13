@@ -204,16 +204,22 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
-//    m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
-//  m_AspectRatioDistribution(false),
-//  m_AspectRatioDistributionFitType(DREAM3D::DistributionType::Beta),
-//  m_Omega3Distribution(false),
-//  m_Omega3DistributionFitType(DREAM3D::DistributionType::Beta),
-//  m_NeighborhoodDistribution(false),
-//  m_NeighborhoodDistributionFitType(DREAM3D::DistributionType::LogNormal),
-
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
-
+  {
+    addWarningMessage(getHumanLabel(), "The Size Distribution needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+  }
+  if (m_AspectRatioDistributionFitType != DREAM3D::DistributionType::Beta)
+  {
+    addWarningMessage(getHumanLabel(), "The Aspect Ratio needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+  }
+  if (m_Omega3DistributionFitType != DREAM3D::DistributionType::Beta)
+  {
+    addWarningMessage(getHumanLabel(), "The Omega 3 needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+  }
+  if (m_NeighborhoodDistributionFitType != DREAM3D::DistributionType::LogNormal)
+  {
+    addWarningMessage(getHumanLabel(), "The Neighborhood type needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+  }
 
 }
 

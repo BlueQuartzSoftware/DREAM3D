@@ -197,6 +197,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Version 4.2 Fixed ###
 
++ Added warning to GenerateEnsemble Statistics when the correct distribution types are not selected.
 + Fixed bug in MXAFileInfo where passing in an empty string to the "filename()" method would cause infinite recursion.
 + Incorrect Documentation for Find Twin Boundary Info
 + StatsGenerator: Fixed array access out of bounds crash because we were not checking the bounds of the ColorNames array before accessing.
