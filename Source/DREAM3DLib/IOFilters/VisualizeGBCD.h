@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   unsigned int* m_CrystalStructures;
-    float* m_GBCD;
+    double* m_GBCD;
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed

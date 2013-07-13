@@ -511,6 +511,15 @@ int FileNameExtensionTest()
   ext = MXAFileInfo::extension(testFileName);
   DREAM3D_REQUIRE_EQUAL(ext, "bin");
 
+  fnBase = "";
+  test = "";
+  testFileName = fnBase;
+  fnWoExt = MXAFileInfo::fileNameWithOutExtension(testFileName);
+  DREAM3D_REQUIRE_EQUAL(fnWoExt, test);
+  ext = MXAFileInfo::extension(testFileName);
+  DREAM3D_REQUIRE_EQUAL(ext, "");
+
+
   return err;
 }
 

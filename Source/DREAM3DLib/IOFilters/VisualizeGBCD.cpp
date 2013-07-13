@@ -240,7 +240,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       else
       {
         int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, float, FloatArrayType, ensembles, numComp)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
   }
@@ -373,10 +373,10 @@ void VisualizeGBCD::execute()
   float x, y, z;
   int xbin, ybin;
 
-  FloatArrayType::Pointer poleFigureArray = FloatArrayType::NullPointer();
-  poleFigureArray = FloatArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
+  DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
+  poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
   poleFigureArray->initializeWithValues(-1);
-  float* poleFigure = poleFigureArray->GetPointer(0);
+  double* poleFigure = poleFigureArray->GetPointer(0);
 
   FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
   xyzArray = FloatArrayType::CreateArray(gbcdSizes[3]*gbcdSizes[4], 3, "xyz");
@@ -678,7 +678,7 @@ void VisualizeGBCD::execute()
       {
         for (int64_t j = 0; j < (ypoints); j++)
         {
-          t = poleFigure[(j*xpoints)+i];
+          t = float(poleFigure[(j*xpoints)+i]);
           MXA::Endian::FromSystemToBig::convert<float>(t);
           gn[count] = t;
           count++;

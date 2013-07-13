@@ -70,7 +70,7 @@ endif()
 # calculate how many commits since the last "tag" was applied to the repository.
 # this basically gives us an always incrementing number for the patch level
 # and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "4.2")
+set(CMP_VERSION_MAJOR "4.3")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module
