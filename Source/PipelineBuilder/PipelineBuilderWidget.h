@@ -37,6 +37,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
+#include <QtCore/QFileInfo>
 #include <QtGui/QDropEvent>
 #include <QInputDialog>
 
@@ -155,6 +156,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
 
     QString getLastDirectory() const { return m_OpenDialogLastDirectory; }
     void setLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+
+    /**
+     * @brief Recursively adds all filters (.txt files) to the Prebuilt list
+     */
+    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
 
     /**
      * @brief Getter for the m_FavoritesActionList private variable
