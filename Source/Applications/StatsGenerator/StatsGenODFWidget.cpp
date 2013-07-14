@@ -63,7 +63,7 @@
 #include "DREAM3DLib/Common/StatsGen.h"
 
 #define SHOW_POLE_FIGURES 1
-#define COLOR_POLE_FIGURES 0
+#define COLOR_POLE_FIGURES 1
 
 
 // -----------------------------------------------------------------------------
@@ -590,7 +590,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
 #if SHOW_POLE_FIGURES
   // This is multi-threaded on appropriate hardware.
-  qint32 kRad[2] = {5, 5};
+  qint32 kRad[2] = {4, 4};
   qint32 pfSize[2] = {226, 226};
   QVector<PoleFigureData> data;
 
@@ -773,16 +773,16 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     for(size_t i = 0; i < numOrients; i++)
     {
       inFile >> e1 >> e2 >> e3 >> weight >> sigma;
-
       if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
       int row = m_ODFTableModel->rowCount() - 1;
       m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
 
-      m_ODFTableView->resizeColumnsToContents();
-      m_ODFTableView->scrollToBottom();
-      m_ODFTableView->setFocus();
+//      m_ODFTableView->resizeColumnsToContents();
+//      m_ODFTableView->scrollToBottom();
+//      m_ODFTableView->setFocus();
       QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
-      m_ODFTableView->setCurrentIndex(index);
+//      m_ODFTableView->setCurrentIndex(index);
+      std::cout << "reading line: " << i << std::endl;
     }
   }
 }

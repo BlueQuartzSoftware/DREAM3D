@@ -1,6 +1,6 @@
 [PipelineBuilder]
-Number_Filters=8
-Name=(05) SmallIN100 Alignment 2
+Number_Filters=6
+Name=(04) SmallIN100 Alignment
 
 [0]
 Filter_Name=ReadH5Ebsd
@@ -41,23 +41,17 @@ Filter_Name=FindCellQuats
 [3]
 Filter_Name=AlignSectionsMisorientation
 MisorientationTolerance=5
+WriteAlignmentShifts=true
+AlignmentShiftFileName=Data/Output/Small_IN100_AlignmentData.txt
 
 [4]
-Filter_Name=IdentifySample
-
-[5]
-Filter_Name=AlignSectionsFeatureCentroid
-UseReferenceSlice=true
-ReferenceSlice=0
-
-[6]
 Filter_Name=GenerateIPFColors
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[7]
+[5]
 Filter_Name=DataContainerWriter
 OutputFile=Data/Output/SmallIN100.dream3d
 WriteVoxelData=true

@@ -405,40 +405,50 @@ void PipelineBuilderWidget::readPrebuiltPipelines()
   prebuiltDir = prebuiltDir.absolutePath() + QDir::separator() + "PrebuiltPipelines";
 
   // So Now we have the top level Directory for the Prebuilts
-  // Get a list of all the directories
-  QFileInfoList dirList = prebuiltDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-  foreach(QFileInfo fi, dirList)
-  {
-    // At this point we have the first level of directories and we want to do 2 things:
-    // 1.Create an entry in the tree widget with this name
-    // 2.drop into the directory and look for all the .txt files and add entries for those items.
-    //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
-    // Add a tree widget item for this Prebuilt Group
-    QTreeWidgetItem* prebuiltDirItem = new QTreeWidgetItem(m_prebuilts);
-    prebuiltDirItem->setText(0, fi.baseName());
-    //prebuiltItem->setIcon(0, QIcon(":/bullet_ball_yellow.png"));
-    //prebuiltDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath()));
+  addFiltersRecursively(prebuiltDir, m_prebuilts);
+}
 
-    QDir dir(fi.absoluteFilePath());
-    QStringList filters;
-    filters << "*.txt";
-    QFileInfoList pblist = dir.entryInfoList(filters);
-    foreach(QFileInfo pbinfo, pblist)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem)
+{
+  QTreeWidgetItem* nextDirItem;
+
+  // Get a list of all the directories
+  QFileInfoList dirList = currentDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+  if ( dirList.size() > 0 )
+  {
+    foreach(QFileInfo fi, dirList)
     {
-      QString pbFilePath = pbinfo.absoluteFilePath();
-      QSettings pbPref(pbFilePath, QSettings::IniFormat);
-      pbPref.beginGroup(Detail::PipelineBuilderGroup);
-      QString pbName = pbPref.value("Name").toString();
-      pbPref.endGroup();
-      //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
-      // Add tree widget for this Prebuilt Pipeline
-      QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(prebuiltDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
-      prebuiltItem->setText(0, pbName);
-      prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
-      prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
+      // At this point we have the first level of directories and we want to do 2 things:
+      // 1.Create an entry in the tree widget with this name
+      // 2.drop into the directory and look for all the .txt files and add entries for those items.
+      //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
+      // Add a tree widget item for this Prebuilt Group
+      nextDirItem = new QTreeWidgetItem(currentDirItem);
+      nextDirItem->setText(0, fi.baseName());
+      addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem );   // Recursive call
     }
   }
 
+  QStringList filters;
+  filters << "*.txt";
+  QFileInfoList pblist = currentDir.entryInfoList(filters);
+  foreach(QFileInfo pbinfo, pblist)
+  {
+    QString pbFilePath = pbinfo.absoluteFilePath();
+    QSettings pbPref(pbFilePath, QSettings::IniFormat);
+    pbPref.beginGroup(Detail::PipelineBuilderGroup);
+    QString pbName = pbPref.value("Name").toString();
+    pbPref.endGroup();
+    //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
+    // Add tree widget for this Prebuilt Pipeline
+    QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
+    prebuiltItem->setText(0, pbName);
+    prebuiltItem->setIcon(0, QIcon(":/bullet_ball_blue.png"));
+    prebuiltItem->setData(0, Qt::UserRole, QVariant(pbinfo.absoluteFilePath()));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -875,6 +885,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetI
   }
 
   QString itemText = parent->text(0);
+  if (m_PipelineViewWidget->isEnabled() == false) { return; }
   if (itemText.compare(Detail::PrebuiltPipelines) == 0
       || itemText.compare(Detail::FavoritePipelines) == 0 )
   {
@@ -1050,6 +1061,7 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* item )
 {
+  if (m_PipelineViewWidget->isEnabled() == false) { return; }
   m_PipelineViewWidget->addFilter(item->data(Qt::UserRole).toString());
   m_PipelineViewWidget->preflightPipeline();
 }
@@ -1148,6 +1160,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   // Save the preferences file NOW in case something happens
   emit fireWriteSettings();
 
+  m_PipelineViewWidget->setEnabled(false);
   clearMessagesTable();
 
   m_hasErrors = false;
@@ -1223,6 +1236,7 @@ void PipelineBuilderWidget::pipelineComplete()
                      QMessageBox::Critical);
   }
   m_GoBtn->setText("Go");
+  m_PipelineViewWidget->setEnabled(true);
   setWidgetListEnabled(true);
   this->m_progressBar->setValue(0);
   emit pipelineEnded();

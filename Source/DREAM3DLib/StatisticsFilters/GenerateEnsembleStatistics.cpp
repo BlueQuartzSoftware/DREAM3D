@@ -72,9 +72,9 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_SizeDistribution(false),
   m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
   m_AspectRatioDistribution(false),
-  m_AspectRatioDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_AspectRatioDistributionFitType(DREAM3D::DistributionType::Beta),
   m_Omega3Distribution(false),
-  m_Omega3DistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_Omega3DistributionFitType(DREAM3D::DistributionType::Beta),
   m_NeighborhoodDistribution(false),
   m_NeighborhoodDistributionFitType(DREAM3D::DistributionType::LogNormal),
   m_CalculateODF(false),
@@ -134,7 +134,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-      if(m_SizeDistribution == true || m_Omega3Distribution == true
+   if(m_SizeDistribution == true || m_Omega3Distribution == true
          || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
@@ -195,7 +195,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
 
-      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     StatsDataArray::Pointer p = StatsDataArray::New();
@@ -203,6 +203,24 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
     m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
+
+  if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
+  {
+    addWarningMessage(getHumanLabel(), "The Size Distribution needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+  }
+  if (m_AspectRatioDistributionFitType != DREAM3D::DistributionType::Beta)
+  {
+    addWarningMessage(getHumanLabel(), "The Aspect Ratio needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+  }
+  if (m_Omega3DistributionFitType != DREAM3D::DistributionType::Beta)
+  {
+    addWarningMessage(getHumanLabel(), "The Omega 3 needs to be a Beta Distribution otherwise unpredictable results may occur.", -1000);
+  }
+  if (m_NeighborhoodDistributionFitType != DREAM3D::DistributionType::LogNormal)
+  {
+    addWarningMessage(getHumanLabel(), "The Neighborhood type needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
+  }
+
 }
 
 // -----------------------------------------------------------------------------

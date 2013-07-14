@@ -1075,4 +1075,6 @@ typedef DataArray<uint64_t>  UInt64ArrayType;
 typedef DataArray<float>  FloatArrayType;
 typedef DataArray<double>  DoubleArrayType;
 
+typedef DataArray<size_t>  SizeTArrayType;
+
 #endif //_DataArray_h_

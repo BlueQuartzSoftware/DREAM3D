@@ -484,8 +484,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>38</height>
+            <width>769</width>
+            <height>568</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -562,6 +562,18 @@ font-size: 12px;
    <header location="global">SGAxisODFWidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_Mu_SizeDistribution</tabstop>
+  <tabstop>m_Sigma_SizeDistribution</tabstop>
+  <tabstop>m_MinSigmaCutOff</tabstop>
+  <tabstop>m_MaxSigmaCutOff</tabstop>
+  <tabstop>m_BinStepSize</tabstop>
+  <tabstop>microstructurePresetCombo</tabstop>
+  <tabstop>m_GenerateDefaultData</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>distributionTypeCombo</tabstop>
+  <tabstop>scrollArea</tabstop>
+ </tabstops>
  <resources>
   <include location="../../../../Resources/icons/images/Icons.qrc"/>
  </resources>

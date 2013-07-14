@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,68 +33,59 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FindGBCD_H_
-#define _FindGBCD_H_
 
+#ifndef FindTwinBoundarySchmidFactors_H_
+#define FindTwinBoundarySchmidFactors_H_
+
+#include <vector>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
- * @class FindGBCD FindGBCD.h DREAM3DLib/SurfaceMeshFilters/FindGBCD.h
- * @brief This filter calculates the centroid of each triangle in the surface mesh.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
+ * @class FindTwinBoundarySchmidFactors FindTwinBoundarySchmidFactors.h DREAM3DLib/GenericFilters/FindTwinBoundarySchmidFactors.h
+ * @brief
+ * @author Michael A Groeber (AFRL)
+ * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
+class DREAM3DLib_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(FindGBCD)
-    DREAM3D_STATIC_NEW_MACRO(FindGBCD)
-    DREAM3D_TYPE_MACRO_SUPER(FindGBCD, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
+    DREAM3D_STATIC_NEW_MACRO(FindTwinBoundarySchmidFactors)
+    DREAM3D_TYPE_MACRO_SUPER(FindTwinBoundarySchmidFactors, AbstractFilter)
 
-    virtual ~FindGBCD();
+    virtual ~FindTwinBoundarySchmidFactors();
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
-    DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundaryArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTwinBoundarySchmidFactorsArrayName)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_INSTANCE_STRING_PROPERTY(TwinBoundarySchmidFactorsFile)
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getHumanLabel() { return "Find Twin Boundary Schmid Factors"; }
 
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const std::string getHumanLabel() { return "Find GBCD"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
     virtual void setupFilterParameters();
-
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -108,43 +99,33 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
     virtual void preflight();
 
-    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc);
-
   protected:
-    FindGBCD();
-
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param fields The number of fields
-    * @param ensembles The number of ensembles
-    */
-    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    FindTwinBoundarySchmidFactors();
 
   private:
-    double* m_SurfaceMeshFaceAreas;
-    int32_t* m_SurfaceMeshFaceLabels;
-    double* m_SurfaceMeshFaceNormals;
-    float* m_FieldEulerAngles;
+    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+
+    float* m_AvgQuats;
     int32_t* m_FieldPhases;
     unsigned int* m_CrystalStructures;
-    double* m_GBCD;
+    int32_t* m_SurfaceMeshFaceLabels;
+    double* m_SurfaceMeshFaceNormals;
+    bool* m_SurfaceMeshTwinBoundary;
+    float* m_SurfaceMeshTwinBoundarySchmidFactors;
 
-    FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
-    void operator=(const FindGBCD&); // Operator '=' Not Implemented
+    void dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    FindTwinBoundarySchmidFactors(const FindTwinBoundarySchmidFactors&); // Copy Constructor Not Implemented
+    void operator=(const FindTwinBoundarySchmidFactors&); // Operator '=' Not Implemented
 };
 
-#endif /* _FindGBCD_H_ */
+#endif /* FindTwinBoundarySchmidFactors_H_ */

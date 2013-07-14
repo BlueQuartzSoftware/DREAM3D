@@ -66,7 +66,7 @@ const static float m_pi = static_cast<float>(M_PI);
 AlignSections::AlignSections() :
   AbstractFilter(),
   m_WriteAlignmentShifts(true),
-  m_AlignmentShiftFileName("aligntest.txt")
+  m_AlignmentShiftFileName("")
 {
 
 }

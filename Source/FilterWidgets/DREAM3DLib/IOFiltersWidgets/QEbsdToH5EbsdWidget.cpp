@@ -117,8 +117,6 @@ QString QEbsdToH5EbsdWidget::getFilterGroup()
 AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
 {
   bool ok = false;
-    // First make sure we have good transformation angles and axis
-  setTransformationAngleAxis();
 
   // Now create the filter and start pushing values into the filter
   EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
@@ -271,7 +269,16 @@ void QEbsdToH5EbsdWidget::readOptions(QSettings &prefs)
   READ_BOOL_SETTING(prefs, m_, HEDMchecked, false)
   READ_BOOL_SETTING(prefs, m_, NoTranschecked, true)
 
-  setTransformationAngleAxis();
+
+  QEbsdReferenceFrameDialog d("", this);
+  d.setEbsdFileName("");
+  d.setTSLDefault(m_TSLchecked);
+  d.setHKLDefault(m_HKLchecked);
+  d.setHEDMDefault(m_HEDMchecked);
+  d.setNoTrans(m_NoTranschecked);
+  d.getSampleTranformation(m_SampleTransformationAngle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
+  d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -597,61 +604,10 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     m_HKLchecked = d.getHKLchecked();
     m_HEDMchecked = d.getHEDMchecked();
     m_NoTranschecked = d.getNoTranschecked();
-    setTransformationAngleAxis();
+    d.getSampleTranformation(m_SampleTransformationAngle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
+    d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
   }
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void QEbsdToH5EbsdWidget::setTransformationAngleAxis()
-{
-  if (m_TSLchecked == true)
-  {
-    m_SampleTransformationAngle = 180.0;
-    m_SampleTransformationAxis[0] = 0.0;
-    m_SampleTransformationAxis[1] = 1.0;
-    m_SampleTransformationAxis[2] = 0.0;
-    m_EulerTransformationAngle = 90.0;
-    m_EulerTransformationAxis[0] = 0.0;
-    m_EulerTransformationAxis[1] = 0.0;
-    m_EulerTransformationAxis[2] = 1.0;
-  }
-  else if (m_HKLchecked == true)
-  {
-    m_SampleTransformationAngle = 180.0;
-    m_SampleTransformationAxis[0] = 0.0;
-    m_SampleTransformationAxis[1] = 1.0;
-    m_SampleTransformationAxis[2] = 0.0;
-    m_EulerTransformationAngle = 0.0;
-    m_EulerTransformationAxis[0] = 0.0;
-    m_EulerTransformationAxis[1] = 0.0;
-    m_EulerTransformationAxis[2] = 1.0;
-  }
-  else if (m_HEDMchecked == true)
-  {
-    m_SampleTransformationAngle = 0.0;
-    m_SampleTransformationAxis[0] = 0.0;
-    m_SampleTransformationAxis[1] = 0.0;
-    m_SampleTransformationAxis[2] = 1.0;
-    m_EulerTransformationAngle = 0.0;
-    m_EulerTransformationAxis[0] = 0.0;
-    m_EulerTransformationAxis[1] = 0.0;
-    m_EulerTransformationAxis[2] = 1.0;
-  }
-  else if (m_NoTranschecked == true)
-  {
-    m_SampleTransformationAngle = 0.0;
-    m_SampleTransformationAxis[0] = 0.0;
-    m_SampleTransformationAxis[1] = 0.0;
-    m_SampleTransformationAxis[2] = 1.0;
-    m_EulerTransformationAngle = 0.0;
-    m_EulerTransformationAxis[0] = 0.0;
-    m_EulerTransformationAxis[1] = 0.0;
-    m_EulerTransformationAxis[2] = 1.0;
-  }
-}
-
 
 // -----------------------------------------------------------------------------
 //
