@@ -63,11 +63,11 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
-AlignSections(),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_ReferenceSlice(0),
-m_UseReferenceSlice(false),
-m_GoodVoxels(NULL)
+  AlignSections(),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_ReferenceSlice(0),
+  m_UseReferenceSlice(false),
+  m_GoodVoxels(NULL)
 {
   setupFilterParameters();
 }
@@ -101,7 +101,23 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
     option->setPropertyName("ReferenceSlice");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-  option->setUnits("");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Alignment Shift File");
+    option->setPropertyName("WriteAlignmentShifts");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Alignment File");
+    option->setPropertyName("AlignmentShiftFileName");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -120,6 +136,8 @@ void AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameter
 {
   writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
   writer->writeValue("ReferenceSlice", getReferenceSlice() );
+  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
 }
 // -----------------------------------------------------------------------------
 //
@@ -134,7 +152,7 @@ void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
@@ -175,7 +193,7 @@ void AlignSectionsFeatureCentroid::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Aligning Sections Complete");
+  notifyStatusMessage("Aligning Sections Complete");
 }
 
 
@@ -209,7 +227,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
   int count = 0;
   int slice = 0;
   int64_t point;
-//  int xspot, yspot;
+  //  int xspot, yspot;
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   std::vector<float> xCentroid(dims[2],0.0);
@@ -222,38 +240,38 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
     yCentroid[iter] = 0;
     std::stringstream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notifyStatusMessage(ss.str());
+    //  notifyStatusMessage(ss.str());
     slice = static_cast<int>( (dims[2] - 1) - iter );
     for (DimType l = 0; l < dims[1]; l++)
     {
       for (DimType n = 0; n < dims[0]; n++)
       {
-      point = static_cast<int>( ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n );
-          if(m_GoodVoxels[point] == true)
-      {
-      xCentroid[iter] = xCentroid[iter] + (float(n)*xRes);
-      yCentroid[iter] = yCentroid[iter] + (float(l)*yRes);
-            count++;
-      }
+        point = static_cast<int>( ((slice) * dims[0] * dims[1]) + (l * dims[0]) + n );
+        if(m_GoodVoxels[point] == true)
+        {
+          xCentroid[iter] = xCentroid[iter] + (float(n)*xRes);
+          yCentroid[iter] = yCentroid[iter] + (float(l)*yRes);
+          count++;
+        }
       }
     }
-  xCentroid[iter] = xCentroid[iter]/float(count);
-  yCentroid[iter] = yCentroid[iter]/float(count);
+    xCentroid[iter] = xCentroid[iter]/float(count);
+    yCentroid[iter] = yCentroid[iter]/float(count);
   }
   //int refSlice;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-  slice = static_cast<int>( (dims[2] - 1) - iter );
-  if(m_UseReferenceSlice == true)
-  {
-    xshifts[iter] = int((xCentroid[iter]-xCentroid[m_ReferenceSlice])/xRes);
-    yshifts[iter] = int((yCentroid[iter]-yCentroid[m_ReferenceSlice])/yRes);
-  }
-  else
-  {
-    xshifts[iter] = xshifts[iter-1] + int((xCentroid[iter]-xCentroid[iter-1])/xRes);
-    yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
-  }
+    slice = static_cast<int>( (dims[2] - 1) - iter );
+    if(m_UseReferenceSlice == true)
+    {
+      xshifts[iter] = int((xCentroid[iter]-xCentroid[m_ReferenceSlice])/xRes);
+      yshifts[iter] = int((yCentroid[iter]-yCentroid[m_ReferenceSlice])/yRes);
+    }
+    else
+    {
+      xshifts[iter] = xshifts[iter-1] + int((xCentroid[iter]-xCentroid[iter-1])/xRes);
+      yshifts[iter] = yshifts[iter-1] + int((yCentroid[iter]-yCentroid[iter-1])/yRes);
+    }
     if (getWriteAlignmentShifts() == true) {
       outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << " " << xCentroid[iter] << " " << yCentroid[iter] << endl;
     }

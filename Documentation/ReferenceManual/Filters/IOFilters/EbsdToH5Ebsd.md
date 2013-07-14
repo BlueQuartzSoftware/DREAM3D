@@ -38,6 +38,13 @@ DREAM.3D's origin follows the specimen's coordinate system so that the physical 
 
 Commercial EBSD acquisition systems do not typically follow this convention, and DREAM.3D needs input from the user so that the proper transformations to the data can be applied during the Reconstruction and other analysis. Commercial EBSD software packages allow for some initial transformations of the data, in which case the DREAM.3D environment does not have any way of determining if those transformations have already occurred. During the import process the user is asked a few questions regarding the orientation of the EBSD data in relation to the specimen coordinate system.
 
+-----
+
+![The Advance Reference Frame Dialog](EbsdToH5Ebsd_ReferenceFrameDialog.png)
+@image latex EbsdToH5Ebsd_ReferenceFrameDialog.png "The Advance Reference Frame Dialog" width=3in
+
+-----
+
 ### Setting the Spatial Reference Frame ###
 
 The next item that the user needs to do is to click the **Set Reference Frame** button to set the proper reference frame for the data set which will be written to the H5Ebsd file as meta data. Below are a number of examples showing the differences in the data sets that the different reference frames will have on the data set when the data is finally processed by DREAM3D.
@@ -46,15 +53,24 @@ The next item that the user needs to do is to click the **Set Reference Frame** 
 
 ![No Transform or Unknown Manufacturer or HEDM Data](NoUnknown_HEDM_RefFrame.png)
 
-@image latex NoUnknown_HEDM_RefFrame.png " " width=4in
+@image latex NoUnknown_HEDM_RefFrame.png "No Transform or Unknown Manufacturer or HEDM Data" width=4in
 
 ---
 
 ![TSL or HKL Transform](EDAX_HKL_RefFrame.png)
 
-@image latex EDAX_HKL_RefFrame.png " " width=4in
+@image latex EDAX_HKL_RefFrame.png "TSL or HKL Transform" width=4in
 
 ---
+
+### Preset Transformations ###
+
+| Manufacturer | Sample Reference Transformation | Euler Transformation |  
+|  ------	| ------	| ------	|  
+| TSL | 180 @ <010> | 90 @ <001> |
+| HKL | 180 @ <010> | 0 @ <001> |  
+| HEDM | 0 @ <001> | 0 @ <001>
+| No Transform | 0 @ <001> | 0 @ <001>
 
 ### Supported File Formats ###
 

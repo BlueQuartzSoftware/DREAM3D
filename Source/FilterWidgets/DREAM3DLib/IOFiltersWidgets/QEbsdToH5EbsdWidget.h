@@ -115,11 +115,6 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
 
     virtual void openHtmlHelpFile();
   protected:
-    /**
-     * @brief setTransformationAngleAxis Uses the booleans that represent which manufacturer of the
-     * EBSD data to set a specific sample and crystalographic transformation axis and angle.
-     */
-    void setTransformationAngleAxis();
 
 
   protected slots:

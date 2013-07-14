@@ -66,7 +66,7 @@ std::string MXA_FILESYSTEM_BASE_CLASS::extension(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 std::string MXA_FILESYSTEM_BASE_CLASS::filename(const std::string &fsPath)
 {
-
+  if (fsPath.size() == 0) { return std::string(""); }
   std::string::size_type slashPos = fsPath.find_last_of(MXA_FILESYSTEM_BASE_CLASS::Separator);
   if (slashPos == fsPath.size() - 1)
   {

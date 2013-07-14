@@ -72,7 +72,7 @@ void RolledPreset::displayUserInputDialog()
   if (ret == QDialog::Accepted)
   {
     // The user clicked the OK button so transfer the values from the dialog into this class
-	m_AspectRatio1 = d.getA()/d.getB();
+    m_AspectRatio1 = d.getA()/d.getB();
     m_AspectRatio2 = d.getA()/d.getC();
   }
   else
@@ -102,7 +102,7 @@ void RolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
@@ -114,6 +114,9 @@ void RolledPreset::initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
   }
 
   QVector<QVector<float> > data;
@@ -143,7 +146,7 @@ void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
@@ -155,6 +158,9 @@ void RolledPreset::initializeBOverATableModel(StatsGenPlotWidget* plot, QVector<
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
   }
 
   QVector<QVector<float> > data;
@@ -184,7 +190,7 @@ void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<
   float alpha, beta;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> alphas;
+      QVector<float> alphas;
   QVector<float> betas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
@@ -196,6 +202,9 @@ void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<
     alphas.push_back(alpha);
     betas.push_back(beta);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
   }
 
   QVector<QVector<float> > data;
@@ -210,7 +219,7 @@ void RolledPreset::initializeCOverATableModel(StatsGenPlotWidget* plot, QVector<
 void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers)
 {
   // Make sure the distribution is set correctly
-	plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
+  plot->setDistributionType(DREAM3D::DistributionType::LogNormal, false);
   // This line basically makes sure we have the distribution type we are looking for
   SGLogNormalTableModel* model = qobject_cast<SGLogNormalTableModel*> (plot->tableModel());
   if (NULL == model)
@@ -226,7 +235,7 @@ void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVecto
   float mu, sigma;
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<float> mus;
+      QVector<float> mus;
   QVector<float> sigmas;
   QVector<QString> colors;
   QStringList colorNames = QColor::colorNames();
@@ -239,6 +248,9 @@ void RolledPreset::initializeNeighborTableModel(StatsGenPlotWidget* plot, QVecto
     mus.push_back(mu);
     sigmas.push_back(sigma);
     colors.push_back(colorNames[colorOffset++]);
+    if (colorOffset == colorNames.size()) {
+      colorOffset = 21;
+    }
   }
 
   QVector<QVector<float> > data;

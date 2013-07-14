@@ -49,6 +49,9 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+
+typedef float real;
+
 /**
  * @class VisualizeGBCD VisualizeGBCD.h DREAM3DLib/SurfaceMeshFilters/VisualizeGBCD.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
@@ -70,6 +73,9 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(StereoOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SphericalOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GMTOutputFile)
 
 
     /**
@@ -97,7 +103,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -132,7 +138,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     std::vector<OrientationMath::Pointer> m_OrientationOps;
 
   unsigned int* m_CrystalStructures;
-    float* m_GBCD;
+    double* m_GBCD;
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed
@@ -168,6 +174,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
         }
       return err;
     }
+
 
     VisualizeGBCD(const VisualizeGBCD&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCD&); // Operator '=' Not Implemented
