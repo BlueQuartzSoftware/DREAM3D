@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
 
     virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v) = 0;
-    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v) = 0;
+    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v, int vectorPos) = 0;
 	virtual std::vector<ComparisonInput_t> readValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
-	virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v) = 0;
+	virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v, int vectorPos) = 0;
 	virtual std::vector<AxisAngleInput_t> readValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
   virtual std::set<std::string> readValue(const std::string name, std::set<std::string> v) = 0;
 

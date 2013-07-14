@@ -80,9 +80,9 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
 
     virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v);
     virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v);
-    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v);
+    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v, int vectorPos);
     virtual std::vector<ComparisonInput_t> readValue(const std::string name, std::vector<ComparisonInput_t> v);
-    virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v);
+    virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v, int vectorPos);
     virtual std::vector<AxisAngleInput_t> readValue(const std::string name, std::vector<AxisAngleInput_t> v);
     virtual std::set<std::string> readValue(const std::string name, std::set<std::string> v);
 

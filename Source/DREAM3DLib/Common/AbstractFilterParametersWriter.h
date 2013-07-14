@@ -83,9 +83,9 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual int writeValue(const std::string name, FloatVec3Widget_t v) = 0;
-    virtual int writeValue(const std::string name, ComparisonInput_t v) = 0;
+    virtual int writeValue(const std::string name, ComparisonInput_t v, int vectorPos) = 0;
     virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
-    virtual int writeValue(const std::string name, AxisAngleInput_t v) = 0;
+    virtual int writeValue(const std::string name, AxisAngleInput_t v, int vectorPos) = 0;
     virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
     virtual int writeValue(const std::string name, std::set<std::string> v) = 0;
 
