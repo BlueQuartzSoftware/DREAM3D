@@ -3,7 +3,7 @@
  */
 
 #include "GenericFilter.h"
-
+#include "DREAM3DLib/HDF5/H5FilterParametersConstants.h"
 
 #define StlFilePrefixDefaultValue "StlFilePrefixDefaultValue"
 #define MaxIterationsDefaultValue 92
@@ -336,33 +336,36 @@ void GenericFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 {
-  setStlFilePrefix( reader->readValue("StlFilePrefix", StlFilePrefixDefaultValue) );
-  setMaxIterations( reader->readValue("MaxIterations", MaxIterationsDefaultValue) );
-  setMisorientationTolerance( reader->readValue("MisorientationTolerance", MisorientationToleranceDefaultValue) );
-  setInputFile( reader->readValue("InputFile", InputFileDefaultValue) );
-  setInputPath( reader->readValue("InputPath", InputPathDefaultValue) );
-  setOutputFile( reader->readValue("OutputFile", OutputFileDefaultValue) );
-  setOutputPath( reader->readValue("OutputPath", OutputPathDefaultValue) );
-  setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", WriteAlignmentShiftsDefaultValue) );
-  setConversionType( reader->readValue("ConversionType", ConversionTypeDefaultValue) );
-  setSelectedCellArrayName( reader->readValue("SelectedCellArrayName", SelectedCellArrayNameDefaultValue) );
-  setSelectedFieldArrayName( reader->readValue("SelectedFieldArrayName", SelectedFieldArrayNameDefaultValue) );
-  setSelectedEnsembleArrayName( reader->readValue("SelectedEnsembleArrayName", SelectedEnsembleArrayNameDefaultValue) );
-  setSurfaceMeshPointArrayName( reader->readValue("SurfaceMeshPointArrayName", SurfaceMeshPointArrayNameDefaultValue) );
-  setSurfaceMeshFaceArrayName( reader->readValue("SurfaceMeshFaceArrayName", SurfaceMeshFaceArrayNameDefaultValue) );
-  setSurfaceMeshEdgeArrayName( reader->readValue("SurfaceMeshEdgeArrayName", SurfaceMeshEdgeArrayNameDefaultValue) );
-  setSolidMeshPointArrayName( reader->readValue("SolidMeshPointArrayName", SolidMeshPointArrayNameDefaultValue) );
-  setSolidMeshFaceArrayName( reader->readValue("SolidMeshFaceArrayName", SolidMeshFaceArrayNameDefaultValue) );
-  setSolidMeshEdgeArrayName( reader->readValue("SolidMeshEdgeArrayName", SolidMeshEdgeArrayNameDefaultValue) );
+  setStlFilePrefix( reader->readValue(H5FilterParameter::StlFilePrefixConstant, StlFilePrefixDefaultValue) );
+  setMaxIterations( reader->readValue(H5FilterParameter::MaxIterationsConstant, MaxIterationsDefaultValue) );
+  setMisorientationTolerance( reader->readValue(H5FilterParameter::MisorientationToleranceConstant, MisorientationToleranceDefaultValue) );
+  setInputFile( reader->readValue(H5FilterParameter::InputFileConstant, InputFileDefaultValue) );
+  setInputPath( reader->readValue(H5FilterParameter::InputPathConstant, InputPathDefaultValue) );
+  setOutputFile( reader->readValue(H5FilterParameter::OutputFileConstant, OutputFileDefaultValue) );
+  setOutputPath( reader->readValue(H5FilterParameter::OutputPathConstant, OutputPathDefaultValue) );
+  setWriteAlignmentShifts( reader->readValue(H5FilterParameter::WriteAlignmentShiftsConstant, WriteAlignmentShiftsDefaultValue) );
+  setConversionType( reader->readValue(H5FilterParameter::ConversionTypeConstant, ConversionTypeDefaultValue) );
+  setSelectedCellArrayName( reader->readValue(H5FilterParameter::SelectedCellArrayNameConstant, SelectedCellArrayNameDefaultValue) );
+  setSelectedFieldArrayName( reader->readValue(H5FilterParameter::SelectedFieldArrayNameConstant, SelectedFieldArrayNameDefaultValue) );
+  setSelectedEnsembleArrayName( reader->readValue(H5FilterParameter::SelectedEnsembleArrayNameConstant, SelectedEnsembleArrayNameDefaultValue) );
+  setSurfaceMeshPointArrayName( reader->readValue(H5FilterParameter::SurfaceMeshPointArrayNameConstant, SurfaceMeshPointArrayNameDefaultValue) );
+  setSurfaceMeshFaceArrayName( reader->readValue(H5FilterParameter::SurfaceMeshFaceArrayNameConstant, SurfaceMeshFaceArrayNameDefaultValue) );
+  setSurfaceMeshEdgeArrayName( reader->readValue(H5FilterParameter::SurfaceMeshEdgeArrayNameConstant, SurfaceMeshEdgeArrayNameDefaultValue) );
+  setSolidMeshPointArrayName( reader->readValue(H5FilterParameter::SolidMeshPointArrayNameConstant, SolidMeshPointArrayNameDefaultValue) );
+  setSolidMeshFaceArrayName( reader->readValue(H5FilterParameter::SolidMeshFaceArrayNameConstant, SolidMeshFaceArrayNameDefaultValue) );
+  setSolidMeshEdgeArrayName( reader->readValue(H5FilterParameter::SolidMeshEdgeArrayNameConstant, SolidMeshEdgeArrayNameDefaultValue) );
 
-  setDimensions( reader->readValue("Dimensions", m_Dimensions) );
-  setOrigin( reader->readValue("Origin", m_Origin) );
+  setDimensions( reader->readValue(H5FilterParameter::GenericTestDimensionsConstant, m_Dimensions) );
+  setOrigin( reader->readValue(H5FilterParameter::GenericTestOriginConstant, m_Origin) );
 
-  setCellComparisonInputs( reader->readValue("CellComparisonInputs", m_CellComparisonInputs) );
-  #error Read in Field, Ensemble.... Comparison Inputs
+  setCellComparisonInputs( reader->readValue(H5FilterParameter::CellComparisonInputsConstant, m_CellComparisonInputs) );
+  setFieldComparisonInputs( reader->readValue(H5FilterParameter::FieldComparisonInputsConstant, m_FieldComparisonInputs) );
+  setEnsembleComparisonInputs( reader->readValue(H5FilterParameter::EnsembleComparisonInputsConstant, m_EnsembleComparisonInputs) );
+  setPointComparisonInputs( reader->readValue(H5FilterParameter::PointComparisonInputsConstant, m_PointComparisonInputs) );
+  setFaceComparisonInputs( reader->readValue(H5FilterParameter::FaceComparisonInputsConstant, m_FaceComparisonInputs) );
+  setEdgeComparisonInputs( reader->readValue(H5FilterParameter::EdgeComparisonInputsConstant, m_EdgeComparisonInputs) );
 
-
-  setAxisAngleRotations( reader->readValue("AxisAngleRotations", m_AxisAngleRotations) );
+  setAxisAngleRotations( reader->readValue(H5FilterParameter::AxisAngleInputsConstant, m_AxisAngleRotations) );
 }
 
 // -----------------------------------------------------------------------------
@@ -373,30 +376,36 @@ void GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("StlFilePrefix", getStlFilePrefix() );
-  writer->writeValue("MaxIterations", getMaxIterations() );
-  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("InputPath", getInputPath() );
-  writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts() );
-  writer->writeValue("ConversionType", getConversionType() );
-  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
-  writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
-  writer->writeValue("SelectedEnsembleArrayName", getSelectedEnsembleArrayName() );
-  writer->writeValue("SurfaceMeshPointArrayName", getSurfaceMeshPointArrayName() );
-  writer->writeValue("SurfaceMeshFaceArrayName", getSurfaceMeshFaceArrayName() );
-  writer->writeValue("SurfaceMeshEdgeArrayName", getSurfaceMeshEdgeArrayName() );
-  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName() );
-  writer->writeValue("SolidMeshFaceArrayName", getSolidMeshFaceArrayName() );
-  writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName() );
-  writer->writeValue("Dimensions", getDimensions() );
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("CellComparisonInputs", getCellComparisonInputs() );
-  writer->writeValue("AxisAngleRotations", getAxisAngleRotations() );
+  writer->writeValue(H5FilterParameter::StlFilePrefixConstant, getStlFilePrefix() );
+  writer->writeValue(H5FilterParameter::MaxIterationsConstant, getMaxIterations() );
+  writer->writeValue(H5FilterParameter::MisorientationToleranceConstant, getMisorientationTolerance() );
+  writer->writeValue(H5FilterParameter::InputFileConstant, getInputFile() );
+  writer->writeValue(H5FilterParameter::InputPathConstant, getInputPath() );
+  writer->writeValue(H5FilterParameter::OutputFileConstant, getOutputFile() );
+  writer->writeValue(H5FilterParameter::OutputPathConstant, getOutputPath() );
+  writer->writeValue(H5FilterParameter::WriteAlignmentShiftsConstant, getWriteAlignmentShifts() );
+  writer->writeValue(H5FilterParameter::ConversionTypeConstant, getConversionType() );
+  writer->writeValue(H5FilterParameter::SelectedCellArrayNameConstant, getSelectedCellArrayName() );
+  writer->writeValue(H5FilterParameter::SelectedFieldArrayNameConstant, getSelectedFieldArrayName() );
+  writer->writeValue(H5FilterParameter::SelectedEnsembleArrayNameConstant, getSelectedEnsembleArrayName() );
+  writer->writeValue(H5FilterParameter::SurfaceMeshPointArrayNameConstant, getSurfaceMeshPointArrayName() );
+  writer->writeValue(H5FilterParameter::SurfaceMeshFaceArrayNameConstant, getSurfaceMeshFaceArrayName() );
+  writer->writeValue(H5FilterParameter::SurfaceMeshEdgeArrayNameConstant, getSurfaceMeshEdgeArrayName() );
+  writer->writeValue(H5FilterParameter::SolidMeshPointArrayNameConstant, getSolidMeshPointArrayName() );
+  writer->writeValue(H5FilterParameter::SolidMeshFaceArrayNameConstant, getSolidMeshFaceArrayName() );
+  writer->writeValue(H5FilterParameter::SolidMeshEdgeArrayNameConstant, getSolidMeshEdgeArrayName() );
 
+  writer->writeValue(H5FilterParameter::GenericTestDimensionsConstant, getDimensions() );
+  writer->writeValue(H5FilterParameter::GenericTestOriginConstant, getOrigin() );
 
+  writer->writeValue(H5FilterParameter::CellComparisonInputsConstant, getCellComparisonInputs() );
+  writer->writeValue(H5FilterParameter::FieldComparisonInputsConstant, getFieldComparisonInputs() );
+  writer->writeValue(H5FilterParameter::EnsembleComparisonInputsConstant, getEnsembleComparisonInputs() );
+  writer->writeValue(H5FilterParameter::PointComparisonInputsConstant, getPointComparisonInputs() );
+  writer->writeValue(H5FilterParameter::FaceComparisonInputsConstant, getFaceComparisonInputs() );
+  writer->writeValue(H5FilterParameter::EdgeComparisonInputsConstant, getEdgeComparisonInputs() );
+
+  writer->writeValue(H5FilterParameter::AxisAngleInputsConstant, getAxisAngleRotations() );
 }
 
 

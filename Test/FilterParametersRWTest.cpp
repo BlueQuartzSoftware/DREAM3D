@@ -710,9 +710,11 @@ void ThresholdExampleTest()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
+#if 0
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
+#endif
 
 
 
@@ -720,9 +722,11 @@ int main(int argc, char **argv)
       DREAM3D_REGISTER_TEST( GenericExampleTest() )
       DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
 
+#if 0
     #if REMOVE_TEST_FILES
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
+#endif
 
 
       PRINT_TEST_SUMMARY();

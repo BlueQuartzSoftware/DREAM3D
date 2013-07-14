@@ -40,6 +40,8 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
+#include "DREAM3DLib/HDF5/H5FilterParametersConstants.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -222,18 +224,27 @@ FloatVec3Widget_t H5FilterParametersReader::readValue(const std::string name, Fl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, ComparisonInput_t defaultValue)
+ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, ComparisonInput_t defaultValue, int vectorPos)
 {
   int err = 0;
   ComparisonInput_t v;
-  float value = defaultValue.compValue;
-  err = H5Lite::readScalarDataset(m_CurrentGroupId, name, value);
+
+  std::ostringstream convert1;
+  convert1 << vectorPos << H5FilterParameter::ArrayNameConstant;
+  std::string strAttribute1 = convert1.str();
+  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, strAttribute1, v.arrayName);
   if (err < 0) { return defaultValue; }
-  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, "ArrayName", v.arrayName);
+
+  std::ostringstream convert2;
+  convert2 << vectorPos << H5FilterParameter::CompOperatorConstant;
+  std::string strAttribute2 = convert2.str();
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.compOperator);
   if (err < 0) { return defaultValue; }
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompOperator", v.compOperator);
-  if (err < 0) { return defaultValue; }
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "CompValue", v.compValue);
+
+  std::ostringstream convert3;
+  convert3 << vectorPos << H5FilterParameter::CompValueConstant;
+  std::string strAttribute3 = convert3.str();
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.compValue);
   if (err < 0) { return defaultValue; }
   return v;
 }
@@ -245,13 +256,10 @@ std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::st
 {
   std::vector<ComparisonInput_t> comparisons;
   ComparisonInput_t cellComparisonDefault;
-  int numQFilters = static_cast<int>( readValue(name + "_NumComparisons", 0) );
-  std::stringstream ss;
+  int numQFilters = static_cast<int>( readValue(name, 0) );
   for(int i = 0; i < numQFilters; i++)
   {
-    ss << "Comparison-" << i;
-    comparisons.push_back( readValue(ss.str(), cellComparisonDefault) );
-    ss.str("");
+    comparisons.push_back( readValue(name, cellComparisonDefault, i) );
   }
   return comparisons;
 }
@@ -259,12 +267,34 @@ std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::st
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, AxisAngleInput_t v)
+AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, AxisAngleInput_t v, int vectorPos)
 {
   int err = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 4 };
-  err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+
+  std::ostringstream convert1;
+  convert1 << vectorPos << H5FilterParameter::AngleConstant;
+  std::string strAttribute1 = convert1.str();
+
+  std::ostringstream convert2;
+  convert2 << vectorPos << H5FilterParameter::HConstant;
+  std::string strAttribute2 = convert2.str();
+
+  std::ostringstream convert3;
+  convert3 << vectorPos << H5FilterParameter::KConstant;
+  std::string strAttribute3 = convert3.str();
+
+  std::ostringstream convert4;
+  convert4 << vectorPos << H5FilterParameter::LConstant;
+  std::string strAttribute4 = convert4.str();
+
+  //err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute1, v.angle);
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.h);
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.k);
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute4, v.l);
+
   return v;
 }
 
@@ -279,13 +309,10 @@ std::vector<AxisAngleInput_t> H5FilterParametersReader::readValue(const std::str
   axisAngleDummyInput.h = 0.0f;
   axisAngleDummyInput.k = 0.0f;
   axisAngleDummyInput.l = 0.0f;
-  int vectorSize = static_cast<int>( readValue(name + "_NumAxisAngleInputs", 0) );
-  std::stringstream ss;
+  int vectorSize = static_cast<int>( readValue(name, 0) );
   for(int i = 0; i < vectorSize; i++)
   {
-    ss << "AxisAngleInput-" << i;
-    axisAngleInputsVector.push_back( readValue(ss.str(), axisAngleDummyInput) );
-    ss.str("");
+    axisAngleInputsVector.push_back( readValue(name, axisAngleDummyInput, i) );
   }
   return axisAngleInputsVector;
 }
