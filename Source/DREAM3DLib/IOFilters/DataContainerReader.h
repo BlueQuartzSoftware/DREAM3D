@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-
+#include "DREAM3DLib/Common/FilterPipeline.h"
 
 /**
  * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -103,7 +103,21 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                 std::set<std::string> selectedFaceArrays,
                                                 std::set<std::string> selectedEdgeArrays);
+    /**
+     * @brief readExistingPipelineFromFile This will read the existing pipeline that is stored in the file and store it
+     * in the class instance for later writing to another dream3d data file
+     * @param fileId
+     * @return
+     */
+    int readExistingPipelineFromFile(hid_t fileId);
 
+    /**
+     * @brief writeExistingPipelineToFile
+     * @param writer
+     * @param index
+     * @return
+     */
+    int writeExistingPipelineToFile(AbstractFilterParametersWriter* writer, int index);
 
   protected:
     DataContainerReader();
@@ -132,6 +146,8 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     std::set<std::string> m_SelectedSolidMeshVertexArrays;
     std::set<std::string> m_SelectedSolidMeshFaceArrays;
     std::set<std::string> m_SelectedSolidMeshEdgeArrays;
+
+    FilterPipeline::Pointer m_PipelineFromFile;
 
     DataContainerReader(const DataContainerReader&); // Copy Constructor Not Implemented
     void operator=(const DataContainerReader&); // Operator '=' Not Implemented

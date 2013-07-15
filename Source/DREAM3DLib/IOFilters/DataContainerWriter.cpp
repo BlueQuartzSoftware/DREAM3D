@@ -386,10 +386,7 @@ int DataContainerWriter::writePipeline()
     currentFilter = currentFilter->getNextFilter();
   }
 
-  // Now write this filters Parameters to the dream3d file.
-  parametersWriter->openFilterGroup(this, index);
-  index = writeFilterParameters(parametersWriter.get(), index);
-  parametersWriter->closeFilterGroup();
+
 
   H5Gclose(pipelineGroupId);
   return 1;

@@ -707,6 +707,24 @@ void ThresholdExampleTest()
   H5Fclose(fid); // Closes the file
 }
 
+
+
+FilterPipeline::Pointer m_PipelineFromFile;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int readPipelineFromFile(hid_t fileId)
+{
+
+  m_PipelineFromFile->clear();
+
+
+
+
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -728,7 +746,7 @@ void FilterManagerTest()
   /* Get all the factories which should be at least 1 */
   FilterManager::Collection factories = fm->getFactories();
 
-  DREAM3D_REQUIRED(factories.size(), >=, 0)
+  DREAM3D_REQUIRED(factories.size(), >, 0)
 
 
 
