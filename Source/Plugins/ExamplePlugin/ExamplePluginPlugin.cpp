@@ -1,7 +1,12 @@
 /*
  * Your License or Copyright Information can go here
  */
+
 #include "ExamplePluginPlugin.h"
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "FilterWidgets/QFilterWidgetFactory.hpp"
@@ -57,4 +62,5 @@ void ExamplePluginPlugin::readSettings(QSettings &prefs)
 }
 
 #include "ExamplePluginFilters/RegisterKnownFilterWidgets.cpp"
+#include "ExamplePluginFilters/RegisterKnownFilters.cpp"
 

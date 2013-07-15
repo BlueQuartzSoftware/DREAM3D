@@ -46,17 +46,21 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 
-
+/**
+ * @brief The FilterManager class manages instances of filters and is mainly used to instantiate
+ * an instance of a filter given its human label or class name. This class uses the Factory design
+ * pattern.
+ */
 class DREAM3DLib_EXPORT FilterManager
 {
   public:
-     DREAM3D_SHARED_POINTERS(FilterManager)
+    DREAM3D_SHARED_POINTERS(FilterManager)
     DREAM3D_TYPE_MACRO(FilterManager)
 
     virtual ~FilterManager();
 
     typedef std::map<std::string, IFilterFactory::Pointer> Collection;
-  /**
+    /**
      * @brief Static instance to retrieve the global instance of this class
      * @return
      */
@@ -69,6 +73,11 @@ class DREAM3DLib_EXPORT FilterManager
      */
     static void RegisterFilterFactory(const std::string &name, IFilterFactory::Pointer factory);
 
+    /**
+     * @brief RegisterKnownFilters This filter registers a factory for each filter that is included
+     * in the core of DREAM3DLib. This method is called when the singleton instance of this class is
+     * first created.
+     */
     static void RegisterKnownFilters();
 
 
@@ -93,7 +102,7 @@ class DREAM3DLib_EXPORT FilterManager
      */
     Collection getFactories(const std::string &groupName, const std::string &subGroupName);
 
-  /**
+    /**
      * @brief Adds a Factory that creates QFilters
      * @param name
      * @param factory

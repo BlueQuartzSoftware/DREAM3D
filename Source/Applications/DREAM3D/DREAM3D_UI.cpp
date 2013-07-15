@@ -688,6 +688,7 @@ void DREAM3D_UI::loadPlugins()
       {
         m_LoadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilterWidgets();
+        ipPlugin->registerFilters();
       }
 
       m_PluginFileNames += fileName;
