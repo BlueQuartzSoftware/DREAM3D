@@ -134,7 +134,7 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
 {
   BOOST_ASSERT(writer != NULL);
   std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;

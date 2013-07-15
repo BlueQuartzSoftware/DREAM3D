@@ -378,9 +378,9 @@ int DataContainerWriter::writePipeline()
   int index = 0;
   while(NULL != currentFilter.get())
   {
-    parametersWriter->openOptionsGroup(previousFilter.get());
-    currentFilter->writeFilterParameters(parametersWriter.get());
-    parametersWriter->closeOptionsGroup();
+   // parametersWriter->openOptionsGroup(previousFilter.get());
+    index = currentFilter->writeFilterParameters(parametersWriter.get(), index);
+  //  parametersWriter->closeOptionsGroup();
     currentFilter = currentFilter->getNextFilter();
   }
 
