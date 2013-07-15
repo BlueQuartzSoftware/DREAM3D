@@ -252,9 +252,17 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 {
-  QSettings prefs(filePath, QSettings::IniFormat, this);
-  readSettings(prefs, true);
+  QFileInfo fi (filePath);
+  QString extension = fi.suffix();
+  if ( extension == "ini" || extension == "txt")
+  {
+    QSettings prefs(filePath, QSettings::IniFormat, this);
+    readSettings(prefs, true);
+  }
+  else if (extension == "dream3d")
+  {
 
+  }
 }
 
 // -----------------------------------------------------------------------------
