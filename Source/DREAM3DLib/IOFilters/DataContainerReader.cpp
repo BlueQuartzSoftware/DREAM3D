@@ -130,6 +130,8 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  index = writeExistingPipelineToFile(writer, index);
+  index++; // increment the index first
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );
@@ -270,6 +272,7 @@ void DataContainerReader::execute()
 
   err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
+  err = readExistingPipelineFromFile(fileId);
 
   /* READ THE VOXEL DATA TO THE HDF5 FILE */
   if (getVoxelDataContainer() != NULL && m_ReadVoxelData == true)
@@ -340,6 +343,44 @@ void DataContainerReader::execute()
   }
 
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
+{
+  int err = 0;
+  // HDF5: Open the "Pipeline" Group
+
+  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+
+  // Now you know how many items to loop over
+
+  // Loop over the items getting the "ClassName" attribute from each group
+
+  // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+
+  // Read the parameters
+
+  // add filter to the m_PipelineFromFile
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWriter* writer, int index)
+{
+  FilterPipeline::FilterContainerType container = m_PipelineFromFile->getFilterContainer();
+
+  for(FilterPipeline::FilterContainerType::iterator iter = container.begin(); iter != container.end(); ++iter)
+  {
+    index++; // Increment the index first
+    index = (*iter)->writeFilterParameters(writer, index);
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
