@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT OrientationMath
     virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt) = 0;
     virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7) = 0;
 
-	static std::vector<OrientationMath::Pointer> getOrientationOpsVector();
+    static std::vector<OrientationMath::Pointer> getOrientationOpsVector();
     static void axisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void axisAngletoQuat(float w, float n1, float n2, float n3, float *q);
@@ -105,19 +105,21 @@ class DREAM3DLib_EXPORT OrientationMath
     static void HomochorictoRod(float &r1, float &r2, float &r3);
     static void RodtoHomochoric(float &r1, float &r2, float &r3);
     static void RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3);
+
     static void QuattoAxisAngle(float *q, float &w, float &n1, float &n2, float &n3);
     static void QuattoMat(float *q, float g[3][3]);
     static void RodtoQuat(float *q, float r1, float r2, float r3);
     static void QuattoRod(float *q, float &r1, float &r2, float &r3);
     static void QuattoEuler(float *q, float &ea1, float &ea2, float &ea3);
     static void changeAxisReferenceFrame(float q[5], float &n1, float &n2, float &n3);
-	static void invertQuaternion(float *q);
+    static void invertQuaternion(float *q);
     static void multiplyQuaternions(float inQuat[5], float multQuat[5], float outQuat[5]);
     static void multiplyQuaternionVector(float inQuat[5], float inVec[3], float outVec[3]);
     static void normalizeQuat(float* qr);
     static void eulertoQuat(float *q, float ea1, float ea2, float ea3);
     static void eulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
     static void mattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3);
+
     static void eulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
     static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
     static float matrixMisorientation(float g1[3][3], float g2[3][3]);

@@ -60,6 +60,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
   ${DREAM3DLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Quaternion.hpp
 )
 
 set(DREAM3DLib_Common_SRCS
