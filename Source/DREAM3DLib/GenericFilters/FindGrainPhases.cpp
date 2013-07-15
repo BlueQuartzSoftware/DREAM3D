@@ -70,10 +70,10 @@ void FindGrainPhases::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainPhases::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindGrainPhases::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

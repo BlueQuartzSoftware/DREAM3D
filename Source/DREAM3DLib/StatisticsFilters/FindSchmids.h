@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

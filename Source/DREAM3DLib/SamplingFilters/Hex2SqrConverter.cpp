@@ -94,8 +94,7 @@ void Hex2SqrConverter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

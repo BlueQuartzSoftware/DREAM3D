@@ -82,11 +82,11 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

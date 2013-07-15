@@ -69,9 +69,10 @@ void FindSurfaceCells::readFilterParameters(AbstractFilterParametersReader* read
 //
 // -----------------------------------------------------------------------------
 void FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
+  writer->openFilterGroup(index);
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

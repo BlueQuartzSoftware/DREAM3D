@@ -119,8 +119,9 @@ void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("ComparisonOperator", getComparisonOperator() );
   writer->writeValue("ComparisonValue", getComparisonValue() );

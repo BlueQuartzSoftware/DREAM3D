@@ -119,8 +119,9 @@ void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );

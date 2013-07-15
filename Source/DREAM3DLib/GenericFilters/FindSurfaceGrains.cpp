@@ -65,10 +65,10 @@ void FindSurfaceGrains::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

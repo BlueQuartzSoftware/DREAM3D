@@ -102,10 +102,12 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

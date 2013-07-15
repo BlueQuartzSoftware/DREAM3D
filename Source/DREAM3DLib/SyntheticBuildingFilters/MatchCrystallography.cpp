@@ -124,10 +124,12 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MaxIterations", getMaxIterations() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

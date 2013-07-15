@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid, Grain Ids Only)"; }
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

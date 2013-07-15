@@ -70,10 +70,10 @@ void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

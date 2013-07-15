@@ -69,10 +69,10 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

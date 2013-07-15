@@ -226,8 +226,9 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("IterationSteps", getIterationSteps());
   writer->writeValue("ConstrainNodes", getNodeConstraints());
   writer->writeValue("ConstrainSurfaceNodes", getConstrainSurfaceNodes());

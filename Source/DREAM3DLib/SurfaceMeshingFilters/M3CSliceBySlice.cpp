@@ -373,8 +373,9 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
 }
 

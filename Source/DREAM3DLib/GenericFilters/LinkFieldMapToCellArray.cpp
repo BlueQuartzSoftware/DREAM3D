@@ -83,8 +83,9 @@ void LinkFieldMapToCellArray::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("SelectedCellDataArrayName", getSelectedCellDataArrayName() );
 }
 

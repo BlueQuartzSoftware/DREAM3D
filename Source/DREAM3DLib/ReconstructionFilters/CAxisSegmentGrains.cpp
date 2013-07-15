@@ -133,8 +133,9 @@ void CAxisSegmentGrains::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
 

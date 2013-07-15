@@ -116,10 +116,10 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

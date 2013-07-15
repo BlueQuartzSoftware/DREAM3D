@@ -150,8 +150,7 @@ void StandardizeEulerAngles::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }

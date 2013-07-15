@@ -101,10 +101,12 @@ void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

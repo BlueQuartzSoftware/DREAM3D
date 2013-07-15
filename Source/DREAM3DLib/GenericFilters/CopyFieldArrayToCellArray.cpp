@@ -85,8 +85,9 @@ void CopyFieldArrayToCellArray::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CopyFieldArrayToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void CopyFieldArrayToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
 }
 

@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Find Biased Fields (Bounding Box)"; }
 
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

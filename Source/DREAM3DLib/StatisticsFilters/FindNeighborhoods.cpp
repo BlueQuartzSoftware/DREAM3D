@@ -82,11 +82,11 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

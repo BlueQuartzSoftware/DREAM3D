@@ -94,8 +94,9 @@ void M3CEntireVolume::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer() );
 
 }

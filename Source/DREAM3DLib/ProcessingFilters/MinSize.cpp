@@ -100,8 +100,9 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
 }
 

@@ -130,10 +130,12 @@ void EBSDSegmentGrains::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

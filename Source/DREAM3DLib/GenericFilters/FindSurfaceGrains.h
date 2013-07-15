@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
 	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const std::string getHumanLabel() { return "Find Surface Fields"; }
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

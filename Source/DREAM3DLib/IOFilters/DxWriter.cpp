@@ -96,11 +96,13 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile());
   writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -88,8 +88,7 @@ void RenumberGrains::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenumberGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void RenumberGrains::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     virtual const std::string getHumanLabel() { return "Align Sections (Misorientation)"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

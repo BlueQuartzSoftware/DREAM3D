@@ -100,10 +100,12 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("LoadingDirection", getLoadingDir() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

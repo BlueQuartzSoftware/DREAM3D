@@ -105,8 +105,9 @@ void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("CoordinationNumber", getCoordinationNumber() );
   writer->writeValue("Loop", getLoop() );
 }

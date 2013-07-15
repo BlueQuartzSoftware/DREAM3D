@@ -104,8 +104,9 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("InputFile", getInputFile() );
 }
 

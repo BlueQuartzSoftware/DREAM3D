@@ -97,11 +97,11 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

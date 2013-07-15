@@ -100,11 +100,12 @@ void LosAlamosFFTWriter::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

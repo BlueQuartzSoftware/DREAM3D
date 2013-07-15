@@ -252,10 +252,10 @@ void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
