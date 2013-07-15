@@ -119,14 +119,16 @@ void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

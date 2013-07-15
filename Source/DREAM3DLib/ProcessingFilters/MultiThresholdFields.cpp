@@ -102,8 +102,9 @@ void MultiThresholdFields::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
 
   int numQFilters = static_cast<int>( m_ComparisonInputs.size() );
   writer->writeValue("NumComparisons",  numQFilters);
@@ -115,6 +116,8 @@ void MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter*
     ss.str("");
   }
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

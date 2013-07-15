@@ -68,9 +68,11 @@ void FindSurfaceCells::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

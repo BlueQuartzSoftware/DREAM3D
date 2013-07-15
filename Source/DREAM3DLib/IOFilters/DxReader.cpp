@@ -112,12 +112,14 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

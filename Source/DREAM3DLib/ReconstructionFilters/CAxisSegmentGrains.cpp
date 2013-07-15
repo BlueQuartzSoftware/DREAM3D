@@ -133,10 +133,12 @@ void CAxisSegmentGrains::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

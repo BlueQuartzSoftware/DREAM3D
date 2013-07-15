@@ -94,8 +94,9 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
+int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays());
   writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays());
   writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays());
@@ -107,6 +108,8 @@ void ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter
   writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays());
   writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays());
   writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays());
+  writer->closeFilterGroup();
+  return index;
 }
 
 

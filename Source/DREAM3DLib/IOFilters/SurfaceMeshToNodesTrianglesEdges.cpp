@@ -107,12 +107,14 @@ void SurfaceMeshToNodesTrianglesEdges::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToNodesTrianglesEdges::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SurfaceMeshToNodesTrianglesEdges::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputNodesFile", getOutputNodesFile() );
   writer->writeValue("OutputEdgesFile", getOutputEdgesFile() );
   writer->writeValue("OutputTrianglesFile", getOutputTrianglesFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

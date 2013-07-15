@@ -96,10 +96,12 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

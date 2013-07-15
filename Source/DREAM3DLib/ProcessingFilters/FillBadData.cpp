@@ -96,10 +96,12 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

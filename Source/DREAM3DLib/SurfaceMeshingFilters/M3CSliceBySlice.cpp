@@ -373,10 +373,12 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

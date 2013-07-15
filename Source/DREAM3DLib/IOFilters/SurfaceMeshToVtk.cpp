@@ -105,12 +105,14 @@ void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

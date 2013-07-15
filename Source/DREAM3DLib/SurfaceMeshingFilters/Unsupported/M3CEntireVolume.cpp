@@ -94,11 +94,13 @@ void M3CEntireVolume::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer() );
 
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -94,10 +94,12 @@ void AdjustVolume::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MaxIterations", getMaxIterations() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

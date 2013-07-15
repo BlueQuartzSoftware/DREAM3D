@@ -126,12 +126,14 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -371,9 +371,9 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue(H5FilterParameter::StlFilePrefixConstant, getStlFilePrefix() );
@@ -406,6 +406,9 @@ void GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue(H5FilterParameter::EdgeComparisonInputsConstant, getEdgeComparisonInputs() );
 
   writer->writeValue(H5FilterParameter::AxisAngleInputsConstant, getAxisAngleRotations() );
+
+  writer->closeFilterGroup();
+  return index;
 }
 
 

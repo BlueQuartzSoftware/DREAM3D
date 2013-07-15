@@ -263,9 +263,9 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
@@ -276,6 +276,8 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
   writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
   writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

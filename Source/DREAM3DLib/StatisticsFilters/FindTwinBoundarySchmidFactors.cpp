@@ -276,7 +276,7 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->writeValue("TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile() );
   writer->writeValue("LoadingDirection", getLoadingDir() );

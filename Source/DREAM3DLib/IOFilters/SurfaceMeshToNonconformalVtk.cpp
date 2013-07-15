@@ -93,11 +93,13 @@ void SurfaceMeshToNonconformalVtk::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

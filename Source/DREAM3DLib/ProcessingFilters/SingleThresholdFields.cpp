@@ -119,13 +119,15 @@ void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("ComparisonOperator", getComparisonOperator() );
   writer->writeValue("ComparisonValue", getComparisonValue() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

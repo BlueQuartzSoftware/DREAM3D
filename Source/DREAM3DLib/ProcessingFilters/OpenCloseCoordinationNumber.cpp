@@ -105,11 +105,13 @@ void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("CoordinationNumber", getCoordinationNumber() );
   writer->writeValue("Loop", getLoop() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

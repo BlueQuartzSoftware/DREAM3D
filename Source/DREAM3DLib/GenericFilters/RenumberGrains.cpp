@@ -88,8 +88,11 @@ void RenumberGrains::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenumberGrains::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int RenumberGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

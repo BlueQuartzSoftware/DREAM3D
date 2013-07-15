@@ -92,10 +92,12 @@ void H5VoxelFileReader::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

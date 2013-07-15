@@ -168,13 +168,15 @@ void ScaleVolume::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("ScaleFactor", getScaleFactor() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
   writer->writeValue("ApplyToSolidMesh", getApplyToSolidMesh() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

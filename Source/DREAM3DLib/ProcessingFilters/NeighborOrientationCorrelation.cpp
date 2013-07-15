@@ -121,12 +121,14 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("MinConfidence", getMinConfidence() );
   writer->writeValue("Level", getLevel() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -102,11 +102,13 @@ void FindKernelAvgMisorientations::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("KernelSize", getKernelSize() );
 
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -125,11 +125,13 @@ void FindDeformationStatistics::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("DeformationStatisticsFile", getDeformationStatisticsFile() );
   writer->writeValue("VtkOutputFile", getVtkOutputFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

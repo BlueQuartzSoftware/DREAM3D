@@ -164,9 +164,9 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );

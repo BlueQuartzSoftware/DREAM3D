@@ -89,9 +89,11 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

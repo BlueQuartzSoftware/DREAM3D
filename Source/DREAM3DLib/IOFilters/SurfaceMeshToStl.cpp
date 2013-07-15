@@ -96,11 +96,13 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
   writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

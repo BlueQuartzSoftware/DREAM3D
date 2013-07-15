@@ -56,6 +56,8 @@ m_GoalElementNumber(0)
 // -----------------------------------------------------------------------------
 DecimateSolidMesh::~DecimateSolidMesh()
 {
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -103,9 +105,9 @@ void DecimateSolidMesh::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DecimateSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int DecimateSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("GoalElementNumber", getGoalElementNumber() );
 }
 // -----------------------------------------------------------------------------

@@ -70,8 +70,11 @@ void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int FindGrainCentroids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

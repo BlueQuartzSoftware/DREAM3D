@@ -92,11 +92,13 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

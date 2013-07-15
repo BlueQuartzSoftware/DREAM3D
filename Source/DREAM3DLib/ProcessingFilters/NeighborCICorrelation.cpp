@@ -105,11 +105,13 @@ void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MinConfidence", getMinConfidence() );
   writer->writeValue("Loop", getLoop() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

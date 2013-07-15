@@ -101,9 +101,9 @@ void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-
+  writer->openFilterGroup(this, index);
   int numQFilters = static_cast<int>( m_ComparisonInputs.size() );
   writer->writeValue("NumComparisons",  numQFilters);
   std::stringstream ss;
@@ -114,6 +114,8 @@ void MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
     ss.str("");
   }
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

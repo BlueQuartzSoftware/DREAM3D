@@ -42,6 +42,12 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 
+
+#define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
+  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond);}
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -146,9 +152,9 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("X Voxels", getXVoxels() );
   writer->writeValue("Y Voxels", getYVoxels() );
@@ -156,10 +162,9 @@ void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWr
   writer->writeValue("X Res", getXRes() );
   writer->writeValue("Y Res", getYRes() );
   writer->writeValue("Z Res", getZRes() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
-
-#define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond); }
 
 // -----------------------------------------------------------------------------
 //

@@ -132,13 +132,15 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
   writer->writeValue("ReferenceSlice", getReferenceSlice() );
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
