@@ -144,9 +144,9 @@ void GrainFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("NRing", getNRing() );
@@ -154,6 +154,8 @@ void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("ComputeGaussianCurvature", getComputeGaussianCurvature() );
   writer->writeValue("ComputeMeanCurvature", getComputeMeanCurvature() );
   writer->writeValue("UseNormalsForCurveFitting", getUseNormalsForCurveFitting() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -94,8 +94,11 @@ void Hex2SqrConverter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

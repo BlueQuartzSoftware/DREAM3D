@@ -158,9 +158,9 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );
@@ -168,6 +168,8 @@ void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberGrains", getRenumberGrains() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

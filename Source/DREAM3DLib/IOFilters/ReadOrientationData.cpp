@@ -112,9 +112,9 @@ void ReadOrientationData::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
 }
 

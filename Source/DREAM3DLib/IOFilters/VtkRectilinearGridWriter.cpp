@@ -276,9 +276,9 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteGrainIds", getWriteGrainIds() );
   writer->writeValue("WriteParentIds", getWriteParentIds() );
@@ -298,6 +298,8 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteSchmidFactors", getWriteSchmidFactors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

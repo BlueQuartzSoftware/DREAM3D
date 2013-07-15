@@ -102,6 +102,7 @@ void FindBoundaryStrengths::setupFilterParameters()
   }
   setFilterParameters(parameters);
 }
+
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader* reader)
 {
@@ -110,10 +111,11 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("Loading", getLoading() );
+  return index;
 }
 
 // -----------------------------------------------------------------------------

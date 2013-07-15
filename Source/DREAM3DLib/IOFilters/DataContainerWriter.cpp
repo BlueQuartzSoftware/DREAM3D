@@ -142,14 +142,16 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteVoxelData", getWriteVoxelData() );
   writer->writeValue("WriteSurfaceMeshData", getWriteSurfaceMeshData() );
   writer->writeValue("WriteSolidMeshData", getWriteSolidMeshData() );
   writer->writeValue("WriteXdmfFile", getWriteXdmfFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -379,16 +381,15 @@ int DataContainerWriter::writePipeline()
   int index = 0;
   while(NULL != currentFilter.get())
   {
-   // parametersWriter->openOptionsGroup(previousFilter.get());
     index = currentFilter->writeFilterParameters(parametersWriter.get(), index);
-  //  parametersWriter->closeOptionsGroup();
+    index++; // We need to increment the index because what was returned was the index that was just written.
     currentFilter = currentFilter->getNextFilter();
   }
 
   // Now write this filters Parameters to the dream3d file.
-  parametersWriter->openOptionsGroup(this);
-  writeFilterParameters(parametersWriter.get());
-  parametersWriter->closeOptionsGroup();
+  parametersWriter->openFilterGroup(this, index);
+  index = writeFilterParameters(parametersWriter.get(), index);
+  parametersWriter->closeFilterGroup();
 
   H5Gclose(pipelineGroupId);
   return 1;

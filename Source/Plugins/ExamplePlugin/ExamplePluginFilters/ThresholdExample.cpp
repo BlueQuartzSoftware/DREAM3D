@@ -131,9 +131,10 @@ void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
- /* Place code that will write the inputs values into a file. reference the
+  writer->openFilterGroup(this, index);
+  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
   /* --- CellArrayComparisonSelectionWidget --- */
@@ -153,9 +154,9 @@ void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* wri
 
   /* --- EdgeArrayComparisonSelectionWidget --- */
   writer->writeValue("EdgeComparisonInputs", getEdgeComparisonInputs() );
+  writer->closeFilterGroup();
+  return index;  
 }
-
-
 
 // -----------------------------------------------------------------------------
 //

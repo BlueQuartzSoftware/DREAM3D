@@ -119,11 +119,13 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("InputGrainInfoFile", getInputGrainInfoFile() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

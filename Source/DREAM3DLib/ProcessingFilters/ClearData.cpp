@@ -135,15 +135,17 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );
   writer->writeValue("XMax", getXMax() );
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

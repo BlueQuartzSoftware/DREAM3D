@@ -91,9 +91,11 @@ void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -105,9 +105,9 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("NewZRes", getNewZRes() );
 }

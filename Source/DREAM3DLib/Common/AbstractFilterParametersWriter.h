@@ -65,8 +65,8 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual ~AbstractFilterParametersWriter();
 
-    virtual int openOptionsGroup(AbstractFilter* filter) = 0;
-    virtual int closeOptionsGroup() = 0;
+    virtual int openFilterGroup(AbstractFilter *filter, int index) = 0;
+    virtual int closeFilterGroup() = 0;
 
     virtual int writeValue(const std::string name, const std::string value) = 0;
 

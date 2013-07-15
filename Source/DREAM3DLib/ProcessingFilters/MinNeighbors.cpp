@@ -101,10 +101,12 @@ void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

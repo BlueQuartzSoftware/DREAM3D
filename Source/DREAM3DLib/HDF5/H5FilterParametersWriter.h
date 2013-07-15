@@ -60,8 +60,8 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
 
     DREAM3D_INSTANCE_PROPERTY(hid_t, GroupId)
 
-    virtual int openOptionsGroup(AbstractFilter* filter);
-    virtual int closeOptionsGroup();
+    virtual int openFilterGroup(AbstractFilter *filter, int index);
+    virtual int closeFilterGroup();
 
     virtual int writeValue(const std::string name, const std::string value);
 

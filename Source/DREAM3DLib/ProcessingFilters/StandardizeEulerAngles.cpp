@@ -65,7 +65,7 @@ class StandardizeEulerAnglesImpl
     //      numCells(numCells),
     //      numEnsembles(numEnsembles)
     {
-	  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+    m_OrientationOps = OrientationMath::getOrientationOpsVector();
     }
     virtual ~StandardizeEulerAnglesImpl(){}
 
@@ -150,9 +150,11 @@ void StandardizeEulerAngles::readFilterParameters(AbstractFilterParametersReader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int StandardizeEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

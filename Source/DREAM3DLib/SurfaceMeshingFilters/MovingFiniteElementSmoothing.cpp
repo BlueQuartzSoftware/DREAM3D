@@ -226,14 +226,16 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("IterationSteps", getIterationSteps());
   writer->writeValue("ConstrainNodes", getNodeConstraints());
   writer->writeValue("ConstrainSurfaceNodes", getConstrainSurfaceNodes());
   writer->writeValue("ConstrainQuadPoints", getConstrainQuadPoints());
   writer->writeValue("SmoothTripleLines", getSmoothTripleLines());
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

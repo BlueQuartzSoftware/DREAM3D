@@ -94,10 +94,12 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("Magnitude", getMagnitude() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

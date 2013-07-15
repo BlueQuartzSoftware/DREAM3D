@@ -128,13 +128,15 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );
   writer->writeValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );
   writer->writeValue("ReadSolidMeshData", getReadSolidMeshData() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

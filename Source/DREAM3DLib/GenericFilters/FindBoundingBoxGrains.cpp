@@ -69,8 +69,11 @@ void FindBoundingBoxGrains::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

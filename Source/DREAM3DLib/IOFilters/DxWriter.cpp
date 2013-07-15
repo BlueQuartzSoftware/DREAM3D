@@ -96,11 +96,13 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile());
   writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer());
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

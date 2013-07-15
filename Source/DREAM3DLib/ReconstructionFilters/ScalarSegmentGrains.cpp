@@ -135,11 +135,13 @@ void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("ScalarArrayName", getScalarArrayName() );
   writer->writeValue("ScalarTolerance", getScalarTolerance() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

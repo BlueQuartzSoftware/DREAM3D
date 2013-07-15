@@ -112,10 +112,12 @@ void FindGrainReferenceMisorientations::readFilterParameters(AbstractFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("ReferenceOrientation", getReferenceOrientation() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

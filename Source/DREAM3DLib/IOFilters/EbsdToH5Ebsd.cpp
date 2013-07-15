@@ -105,8 +105,11 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
+int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

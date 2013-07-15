@@ -53,7 +53,7 @@ TextFilterParametersWriter::~TextFilterParametersWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::openOptionsGroup(AbstractFilter* filter)
+int TextFilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
 {
   return 0;
 }
@@ -61,7 +61,7 @@ int TextFilterParametersWriter::openOptionsGroup(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::closeOptionsGroup()
+int TextFilterParametersWriter::closeFilterGroup()
 {
   return 0;
 }

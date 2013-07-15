@@ -119,13 +119,15 @@ void SingleThresholdCells::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(index);
+  writer->openFilterGroup(this, index);
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("ComparisonOperator", getComparisonOperator() );
   writer->writeValue("ComparisonValue", getComparisonValue() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->closeFilterGroup();
+  return index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

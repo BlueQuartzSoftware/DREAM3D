@@ -61,14 +61,14 @@ H5FilterParametersWriter::~H5FilterParametersWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::openOptionsGroup(AbstractFilter* filter)
+int H5FilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
 {
   int err = 0;
   if (m_GroupId <= 0)
   {
     return -1;
   }
-  std::string name = StringUtils::numToString(filter->getPipelineIndex());
+  std::string name = StringUtils::numToString(index);
   m_CurrentGroupId = H5Utilities::createGroup(m_GroupId, name);
   err = H5Lite::writeStringAttribute(m_GroupId, name, "ClassName", filter->getNameOfClass());
   err = H5Lite::writeStringAttribute(m_GroupId, name, "HumanLabel", filter->getHumanLabel());
@@ -78,7 +78,7 @@ int H5FilterParametersWriter::openOptionsGroup(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::closeOptionsGroup()
+int H5FilterParametersWriter::closeFilterGroup()
 {
   H5Gclose(m_CurrentGroupId);
   m_CurrentGroupId = -1;
