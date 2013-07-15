@@ -59,11 +59,43 @@
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Common/Quaternion.hpp"
+
+
 #include "FilterWidgets/FilterWidgetsLib.h"
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "PipelineBuilder/IFilterWidgetFactory.h"
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main (int argc, char  *argv[])
+{
+  FloatArrayType::Pointer quatArray = FloatArrayType::CreateArray(10, 4, "Quaternions");
+  QuaternionOpsF::Quaternion_t* quaternions = reinterpret_cast<QuaternionOpsF::Quaternion_t*>(quatArray->GetVoidPointer(0));
+  QuaternionOpsF::Quat_t* quats = reinterpret_cast<QuaternionOpsF::Quat_t*>(quatArray->GetVoidPointer(0));
+  QuaternionOpsF::Vec4_t* vec4s = reinterpret_cast<QuaternionOpsF::Vec4_t*>(quatArray->GetVoidPointer(0));
+  float* ptrs = reinterpret_cast<float*>(quatArray->GetVoidPointer(0));
+
+  QuaternionOpsF::Quaternion_t qtnOut;
+  QuaternionOpsF::Quat_t qOut;
+  QuaternionOpsF::Vec4_t v4Out;
+  float f[4];
+
+  QuaternionOpsF::Multiply(quaternions[0], quaternions[1], qtnOut);
+  QuaternionOpsF::Multiply(quats[0], quats[1], qOut);
+  QuaternionOpsF::Multiply(vec4s[0], vec4s[1], v4Out);
+  QuaternionOpsF::Multiply(ptrs, ptrs + 4, f);
+
+  return 0;
+}
+
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -82,7 +114,7 @@ int main (int argc, char  *argv[])
 }
 
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
