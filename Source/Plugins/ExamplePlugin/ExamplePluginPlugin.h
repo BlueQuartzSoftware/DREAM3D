@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef SURFACEMESHINGPLUGIN_H_
-#define SURFACEMESHINGPLUGIN_H_
+#ifndef _ExamplePlugin_H_
+#define _ExamplePlugin_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -36,6 +36,12 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
     virtual void registerFilterWidgets();
 
     /**
+    * @brief
+    */
+    virtual void registerFilters();
+
+
+    /**
      * @brief Writes the settings in the input gui to the Application's preference file
      * @param prefs A valid QSettings pointer.
      */
@@ -53,4 +59,4 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
     void operator=(const ExamplePluginPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* SURFACEMESHINGPLUGIN_H_ */
+#endif /* _ExamplePlugin_H_ */

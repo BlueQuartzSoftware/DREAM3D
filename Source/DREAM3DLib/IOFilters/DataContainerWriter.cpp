@@ -353,21 +353,41 @@ int DataContainerWriter::writePipeline()
 {
 
   // WRITE THE PIPELINE TO THE HDF5 FILE
-  H5FilterParametersWriter::Pointer optionsWriter = H5FilterParametersWriter::New();
+  H5FilterParametersWriter::Pointer parametersWriter = H5FilterParametersWriter::New();
   hid_t pipelineGroupId = H5Utilities::createGroup(m_FileId, DREAM3D::HDF5::PipelineGroupName);
-  optionsWriter->setGroupId(pipelineGroupId);
+  parametersWriter->setGroupId(pipelineGroupId);
 
-  AbstractFilter::Pointer preFilter = getPreviousFilter();
-  while (preFilter.get() != NULL)
+
+  // Now start walking BACKWARDS through the pipeline to find the first filter.
+  AbstractFilter::Pointer previousFilter = getPreviousFilter();
+  while (previousFilter.get() != NULL)
   {
-    optionsWriter->openOptionsGroup(preFilter.get());
-    preFilter->writeFilterParameters(optionsWriter.get());
-    optionsWriter->closeOptionsGroup();
-    preFilter = preFilter->getPreviousFilter();
+    if (NULL == previousFilter->getPreviousFilter())
+    {
+      break;
+    }
+    else
+    {
+      previousFilter = previousFilter->getPreviousFilter();
+    }
   }
-  optionsWriter->openOptionsGroup(this);
-  writeFilterParameters(optionsWriter.get());
-  optionsWriter->closeOptionsGroup();
+
+
+  // Now starting with the first filter in the pipeline, start the actual writing
+  AbstractFilter::Pointer currentFilter = previousFilter;
+  int index = 0;
+  while(NULL != currentFilter.get())
+  {
+    parametersWriter->openOptionsGroup(previousFilter.get());
+    currentFilter->writeFilterParameters(parametersWriter.get());
+    parametersWriter->closeOptionsGroup();
+    currentFilter = currentFilter->getNextFilter();
+  }
+
+  // Now write this filters Parameters to the dream3d file.
+  parametersWriter->openOptionsGroup(this);
+  writeFilterParameters(parametersWriter.get());
+  parametersWriter->closeOptionsGroup();
 
   H5Gclose(pipelineGroupId);
   return 1;

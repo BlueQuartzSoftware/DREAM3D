@@ -61,8 +61,8 @@ FilterManager::Pointer FilterManager::Instance()
 
   if (singleton.get() == NULL)
   {
-    singleton.reset (new FilterManager() );
-   // std::cout << "singleton.get(): " << singleton.get() << std::endl;
+    singleton.reset ( new FilterManager() );
+    singleton->RegisterKnownFilters();
   }
   return singleton;
 }
@@ -202,4 +202,7 @@ IFilterFactory::Pointer FilterManager::getFactoryForFilterHumanName(const std::s
 }
 
 
+/* This next line includes a file that is generated at CMake time and includes all the filter headers
+ * and code to register a factory instance for each filter.
+ */
 #include "DREAM3DLib/RegisterKnownFilters.cpp"

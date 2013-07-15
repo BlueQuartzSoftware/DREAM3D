@@ -113,7 +113,7 @@ file(WRITE ${RegisterKnownFiltersFile} "/* This file was AUTO GENERATED During t
 file(APPEND ${RegisterKnownFiltersFile} "/* The CMake code that generates this file is located in ${CMAKE_CURRENT_LIST_FILE}*/\n")
 file(APPEND ${RegisterKnownFiltersFile} "/* This file will be directly included in another source file. */\n")
 #file(APPEND ${RegisterKnownFiltersFile} "#include \"DREAM3DLib/Common/FilterManager.h\"\n")
-#file(APPEND ${RegisterKnownFiltersFile} "#include \"DREAM3DLib/Common/FilterFactory.hpp\"\n")
+file(APPEND ${RegisterKnownFiltersFile} "#include \"DREAM3DFilters.h\"\n")
 file(APPEND ${RegisterKnownFiltersFile} "\nvoid FilterManager::RegisterKnownFilters()\n{\n")
 
 # --------------------------------------------------------------------

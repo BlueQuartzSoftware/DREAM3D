@@ -160,6 +160,11 @@ class DREAM3DPluginInterface
     virtual void registerFilterWidgets() = 0;
 
     /**
+     * @brief registerFilters Registers all the filters for this plugin
+     */
+    virtual void registerFilters() = 0;
+
+    /**
      * @brief Writes the settings in the input gui to the Application's preference file
      * @param prefs A valid QSettings pointer.
      */
