@@ -128,8 +128,9 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );
   writer->writeValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );

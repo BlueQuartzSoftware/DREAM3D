@@ -287,8 +287,9 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("StlFilePrefix", getStlFilePrefix() );

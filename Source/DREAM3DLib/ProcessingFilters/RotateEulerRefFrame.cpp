@@ -163,8 +163,9 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("RotationAxis", getRotationAxis() );
   writer->writeValue("RotationAngle", getRotationAngle() );
 }

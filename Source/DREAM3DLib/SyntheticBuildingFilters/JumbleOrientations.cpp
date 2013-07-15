@@ -91,11 +91,11 @@ void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

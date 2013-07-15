@@ -170,8 +170,9 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );

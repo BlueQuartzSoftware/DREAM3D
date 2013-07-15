@@ -85,10 +85,10 @@ void FindODF::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

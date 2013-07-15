@@ -206,8 +206,9 @@ void GenerateFaceMisorientationColoring::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateFaceMisorientationColoring::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GenerateFaceMisorientationColoring::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */

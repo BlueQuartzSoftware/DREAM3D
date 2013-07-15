@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, IdentifyGlobAlpha)
 
     virtual void setupFilterParameters();
-  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

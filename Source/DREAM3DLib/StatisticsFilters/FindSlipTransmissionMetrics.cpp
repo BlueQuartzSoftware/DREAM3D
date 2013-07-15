@@ -89,8 +89,7 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }

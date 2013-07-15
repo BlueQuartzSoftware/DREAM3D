@@ -66,10 +66,10 @@ void QuickSolidMesh::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void QuickSolidMesh::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

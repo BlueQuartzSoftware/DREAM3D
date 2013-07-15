@@ -83,8 +83,7 @@ void SegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

@@ -100,8 +100,7 @@ void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void VtkGrainIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

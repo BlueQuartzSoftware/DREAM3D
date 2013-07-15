@@ -86,10 +86,10 @@ void FindMDF::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

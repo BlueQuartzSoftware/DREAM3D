@@ -112,8 +112,9 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );

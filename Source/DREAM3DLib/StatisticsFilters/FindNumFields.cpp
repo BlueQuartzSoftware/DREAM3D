@@ -68,10 +68,10 @@ void FindNumFields::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNumFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindNumFields::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

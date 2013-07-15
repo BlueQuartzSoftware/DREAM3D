@@ -92,10 +92,12 @@ void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

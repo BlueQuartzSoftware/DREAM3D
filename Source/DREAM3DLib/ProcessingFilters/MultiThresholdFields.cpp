@@ -102,8 +102,7 @@ void MultiThresholdFields::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
   int numQFilters = static_cast<int>( m_ComparisonInputs.size() );

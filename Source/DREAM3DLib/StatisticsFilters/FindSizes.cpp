@@ -80,10 +80,10 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

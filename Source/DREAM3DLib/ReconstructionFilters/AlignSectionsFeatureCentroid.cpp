@@ -132,13 +132,15 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
   writer->writeValue("ReferenceSlice", getReferenceSlice() );
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

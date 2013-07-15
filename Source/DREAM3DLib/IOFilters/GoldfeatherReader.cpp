@@ -108,8 +108,9 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
     writer->writeValue("InputFile", getInputFile() );

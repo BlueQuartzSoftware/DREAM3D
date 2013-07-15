@@ -118,10 +118,10 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

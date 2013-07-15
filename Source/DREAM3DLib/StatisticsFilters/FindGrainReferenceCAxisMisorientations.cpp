@@ -92,8 +92,7 @@ void FindGrainReferenceCAxisMisorientations::readFilterParameters(AbstractFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

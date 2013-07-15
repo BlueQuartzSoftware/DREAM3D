@@ -78,10 +78,10 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

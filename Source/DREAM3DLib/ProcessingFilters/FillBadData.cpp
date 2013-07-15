@@ -96,10 +96,12 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

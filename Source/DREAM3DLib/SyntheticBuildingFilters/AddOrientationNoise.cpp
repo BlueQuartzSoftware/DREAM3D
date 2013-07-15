@@ -94,10 +94,12 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("Magnitude", getMagnitude() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

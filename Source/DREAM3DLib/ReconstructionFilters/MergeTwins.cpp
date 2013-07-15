@@ -136,8 +136,9 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
 }

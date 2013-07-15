@@ -105,8 +105,7 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

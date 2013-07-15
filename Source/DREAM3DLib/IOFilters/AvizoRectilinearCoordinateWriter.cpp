@@ -95,8 +95,9 @@ void AvizoRectilinearCoordinateWriter::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
 }

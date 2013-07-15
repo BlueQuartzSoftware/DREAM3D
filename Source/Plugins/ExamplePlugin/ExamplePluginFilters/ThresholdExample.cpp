@@ -131,8 +131,7 @@ void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */

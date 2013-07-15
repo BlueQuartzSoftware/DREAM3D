@@ -115,8 +115,7 @@ void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 
 }

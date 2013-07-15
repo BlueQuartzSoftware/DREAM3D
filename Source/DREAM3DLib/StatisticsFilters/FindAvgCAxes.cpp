@@ -71,8 +71,7 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

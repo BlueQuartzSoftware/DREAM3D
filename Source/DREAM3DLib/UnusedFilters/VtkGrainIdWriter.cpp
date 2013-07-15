@@ -80,10 +80,12 @@ void VtkGrainIdWriter::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

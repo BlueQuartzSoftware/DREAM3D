@@ -76,8 +76,7 @@ void FindCellQuats::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

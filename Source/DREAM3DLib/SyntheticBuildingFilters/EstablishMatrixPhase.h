@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const std::string getHumanLabel() { return "Establish Matrix Phase"; }
 
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

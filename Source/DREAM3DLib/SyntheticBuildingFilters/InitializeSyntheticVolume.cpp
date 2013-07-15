@@ -146,8 +146,9 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("X Voxels", getXVoxels() );
   writer->writeValue("Y Voxels", getYVoxels() );

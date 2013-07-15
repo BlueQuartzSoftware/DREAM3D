@@ -119,8 +119,9 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
 }
 

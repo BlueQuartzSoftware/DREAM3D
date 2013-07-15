@@ -139,8 +139,9 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("FlattenMethod", getFlattenMethod() );
 }
 

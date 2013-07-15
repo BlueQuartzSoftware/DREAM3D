@@ -96,8 +96,9 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("InputFile", getInputFile() );
 }
 

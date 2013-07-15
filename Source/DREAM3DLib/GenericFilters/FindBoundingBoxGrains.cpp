@@ -69,10 +69,10 @@ void FindBoundingBoxGrains::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

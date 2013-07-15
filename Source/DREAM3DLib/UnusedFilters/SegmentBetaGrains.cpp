@@ -213,12 +213,14 @@ void SegmentBetaGrains::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SegmentBetaGrains::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SegmentBetaGrains::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

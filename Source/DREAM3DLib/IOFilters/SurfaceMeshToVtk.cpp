@@ -105,8 +105,9 @@ void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );

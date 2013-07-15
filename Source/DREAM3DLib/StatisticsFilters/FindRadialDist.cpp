@@ -102,10 +102,12 @@ void FindRadialDist::readFilterParameters(AbstractFilterParametersReader* reader
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("OutputFile", getOutputFile());
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

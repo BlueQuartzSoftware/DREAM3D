@@ -80,10 +80,10 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

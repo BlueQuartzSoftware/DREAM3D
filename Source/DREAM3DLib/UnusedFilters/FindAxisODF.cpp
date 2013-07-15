@@ -74,10 +74,10 @@ void FindAxisODF::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

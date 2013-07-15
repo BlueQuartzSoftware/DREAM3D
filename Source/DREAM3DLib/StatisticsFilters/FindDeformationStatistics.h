@@ -109,7 +109,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Find Deformation Statistics"; }
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

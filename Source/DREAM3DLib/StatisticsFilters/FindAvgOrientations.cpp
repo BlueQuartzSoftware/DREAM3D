@@ -75,8 +75,7 @@ void FindAvgOrientations::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+void FindAvgOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer\, int index)
 {
 }
 

@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
      virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
 
-  virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file

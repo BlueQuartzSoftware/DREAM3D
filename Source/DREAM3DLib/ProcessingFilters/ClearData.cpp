@@ -135,8 +135,9 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );

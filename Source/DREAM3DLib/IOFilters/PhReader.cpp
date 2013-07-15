@@ -126,8 +126,9 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
