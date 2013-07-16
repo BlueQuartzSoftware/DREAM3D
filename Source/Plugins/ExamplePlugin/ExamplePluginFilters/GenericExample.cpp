@@ -315,11 +315,14 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("SurfaceMeshFieldArrayName", getSurfaceMeshFieldArrayName());
   writer->writeValue("SurfaceMeshEnsembleArrayName", getSurfaceMeshEnsembleArrayName());
 
-  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName());
+  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName()); 
   writer->writeValue("SolidMeshFaceArrayName", getSolidMeshFaceArrayName());
   writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName());
 
   writer->writeValue("AxisAngleRotations", getAxisAngleRotations());
+
+  writer->closeFilterGroup();
+  return index;
 }
 
 
