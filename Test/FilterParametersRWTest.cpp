@@ -48,6 +48,7 @@
 #include "TestFileLocations.h"
 #include "TestFilters/GenericFilter.h"
 #include "TestFilters/ArraySelectionExample.h"
+#include "TestFilters/TestFilters.h"
 
 
 #define StlFilePrefixTestValue "StlFilePrefixTestValue"
@@ -769,7 +770,8 @@ void FilterManagerTest()
 
   DREAM3D_REQUIRED(factories.size(), >, 0)
 
-
+  Filt0::Pointer filt0 = Filt0::New();
+  Filt1::Pointer filt1 = Filt1::New();
 
 }
 

@@ -124,11 +124,13 @@ add_test(EbsdTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdTests)
 # FilterParametersRW Test
 # --------------------------------------------------------------------------
 set(FilterParametersRWTest_SRCS
-  ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp 
+  ${DREAM3DTest_SOURCE_DIR}/FilterParametersRWTest.cpp
   ${DREAM3DTest_SOURCE_DIR}/TestFilters/GenericFilter.h
   ${DREAM3DTest_SOURCE_DIR}/TestFilters/GenericFilter.cpp
   ${DREAM3DTest_SOURCE_DIR}/TestFilters/ArraySelectionExample.cpp
   ${DREAM3DTest_SOURCE_DIR}/TestFilters/ArraySelectionExample.h
+  ${DREAM3DTest_SOURCE_DIR}/TestFilters/TestFilters.h
+  ${DREAM3DTest_SOURCE_DIR}/TestFilters/TestFilters.cpp
 )
 add_executable(FilterParametersRWTest ${FilterParametersRWTest_SRCS} )
 target_link_libraries(FilterParametersRWTest DREAM3DLib)
