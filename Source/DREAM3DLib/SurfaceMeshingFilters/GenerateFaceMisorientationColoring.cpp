@@ -72,8 +72,8 @@ class CalculateFaceMisorientationColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {
-    m_OrientationOps = OrientationMath::getOrientationOpsVector();	  
-	  }
+    m_OrientationOps = OrientationMath::getOrientationOpsVector();
+    }
     virtual ~CalculateFaceMisorientationColorsImpl(){}
 
     /**
@@ -84,10 +84,10 @@ class CalculateFaceMisorientationColorsImpl
     void generate(size_t start, size_t end) const
     {
       int grain1, grain2, phase1, phase2;
-	  float q1[5];
-	  float q2[5];
-	  float w, n1, n2 ,n3;
-	  float radToDeg = 180.0/m_pi;
+    float q1[5];
+    float q2[5];
+    float w, n1, n2 ,n3;
+    float radToDeg = 180.0/m_pi;
       for (size_t i = start; i < end; i++)
       {
         grain1 = m_Labels[2*i];
@@ -100,39 +100,39 @@ class CalculateFaceMisorientationColorsImpl
         {
           if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
           {
-			q1[0] = m_Quats[5*grain1+0];
-			q1[1] = m_Quats[5*grain1+1];
-			q1[2] = m_Quats[5*grain1+2];
-			q1[3] = m_Quats[5*grain1+3];
-			q1[4] = m_Quats[5*grain1+4];
-			q2[0] = m_Quats[5*grain2+0];
-			q2[1] = m_Quats[5*grain2+1];
-			q2[2] = m_Quats[5*grain2+2];
-			q2[3] = m_Quats[5*grain2+3];
-			q2[4] = m_Quats[5*grain2+4];
+      q1[0] = m_Quats[5*grain1+0];
+      q1[1] = m_Quats[5*grain1+1];
+      q1[2] = m_Quats[5*grain1+2];
+      q1[3] = m_Quats[5*grain1+3];
+      q1[4] = m_Quats[5*grain1+4];
+      q2[0] = m_Quats[5*grain2+0];
+      q2[1] = m_Quats[5*grain2+1];
+      q2[2] = m_Quats[5*grain2+2];
+      q2[3] = m_Quats[5*grain2+3];
+      q2[4] = m_Quats[5*grain2+4];
             w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-			w=w*radToDeg;
-			m_Colors[3*i+0] = w*n1;
-			m_Colors[3*i+1] = w*n2;
-			m_Colors[3*i+2] = w*n3;
+      w=w*radToDeg;
+      m_Colors[3*i+0] = w*n1;
+      m_Colors[3*i+1] = w*n2;
+      m_Colors[3*i+2] = w*n3;
           }
           else if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
           {
-			q1[0] = m_Quats[5*grain1+0];
-			q1[1] = m_Quats[5*grain1+1];
-			q1[2] = m_Quats[5*grain1+2];
-			q1[3] = m_Quats[5*grain1+3];
-			q1[4] = m_Quats[5*grain1+4];
-			q2[0] = m_Quats[5*grain2+0];
-			q2[1] = m_Quats[5*grain2+1];
-			q2[2] = m_Quats[5*grain2+2];
-			q2[3] = m_Quats[5*grain2+3];
-			q2[4] = m_Quats[5*grain2+4];
+      q1[0] = m_Quats[5*grain1+0];
+      q1[1] = m_Quats[5*grain1+1];
+      q1[2] = m_Quats[5*grain1+2];
+      q1[3] = m_Quats[5*grain1+3];
+      q1[4] = m_Quats[5*grain1+4];
+      q2[0] = m_Quats[5*grain2+0];
+      q2[1] = m_Quats[5*grain2+1];
+      q2[2] = m_Quats[5*grain2+2];
+      q2[3] = m_Quats[5*grain2+3];
+      q2[4] = m_Quats[5*grain2+4];
             w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-			w=w*radToDeg;
-			m_Colors[3*i+0] = w*n1;
-			m_Colors[3*i+1] = w*n2;
-			m_Colors[3*i+2] = w*n3;
+      w=w*radToDeg;
+      m_Colors[3*i+0] = w*n1;
+      m_Colors[3*i+1] = w*n2;
+      m_Colors[3*i+2] = w*n3;
           }
         }
         else
@@ -209,9 +209,8 @@ void GenerateFaceMisorientationColoring::readFilterParameters(AbstractFilterPara
 int GenerateFaceMisorientationColoring::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->closeFilterGroup();
+  return index;
 }
 
 // -----------------------------------------------------------------------------

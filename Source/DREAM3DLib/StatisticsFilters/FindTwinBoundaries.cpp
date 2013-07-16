@@ -234,7 +234,10 @@ int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* wr
   writer->openFilterGroup(this, index);
   writer->writeValue("AxisTolerance", getAxisTolerance() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
+    writer->closeFilterGroup();
+  return index;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

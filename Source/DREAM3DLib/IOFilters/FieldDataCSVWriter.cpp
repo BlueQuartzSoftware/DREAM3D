@@ -109,6 +109,8 @@ int FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
   writer->openFilterGroup(this, index);
   writer->writeValue("FieldDataFile", getFieldDataFile() );
   writer->writeValue("WriteNeighborData", getWriteNeighborListData() );
+  writer->closeFilterGroup();
+  return index;
 }
 
 // -----------------------------------------------------------------------------

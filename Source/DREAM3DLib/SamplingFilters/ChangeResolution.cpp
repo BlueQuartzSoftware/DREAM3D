@@ -98,6 +98,8 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("Resolution", getResolution() );
+    writer->closeFilterGroup();
+  return index;
 }
 
 // -----------------------------------------------------------------------------

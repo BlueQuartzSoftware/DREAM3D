@@ -114,6 +114,8 @@ int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->openFilterGroup(this, index);
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );
+    writer->closeFilterGroup();
+  return index;
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +141,7 @@ void PerPhaseMinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-	m_Active[i] = true;
+  m_Active[i] = true;
     if(voxcounts[i] >= m_MinAllowedGrainSize || m_FieldPhases[i] != m_PhaseNumber) good = true;
   }
   if(good == false)
@@ -152,9 +154,9 @@ void PerPhaseMinSize::remove_smallgrains()
   {
     gnum = m_GrainIds[i];
     if(voxcounts[gnum] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
-	{
-		m_GrainIds[i] = -1;
-		m_Active[gnum] = false;
-	}
+  {
+    m_GrainIds[i] = -1;
+    m_Active[gnum] = false;
+  }
   }
 }

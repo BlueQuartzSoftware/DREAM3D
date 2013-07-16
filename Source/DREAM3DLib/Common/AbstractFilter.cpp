@@ -138,6 +138,7 @@ int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   BOOST_ASSERT(writer != NULL);
   std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;
+  return -1;
 }
 
 // -----------------------------------------------------------------------------

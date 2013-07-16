@@ -172,6 +172,8 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("StereoOutputFile", getStereoOutputFile() );
   writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
+  writer->closeFilterGroup();
+  return index;
 }
 
 // -----------------------------------------------------------------------------

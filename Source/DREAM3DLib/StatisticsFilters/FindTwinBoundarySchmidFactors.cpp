@@ -278,8 +278,11 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile() );
   writer->writeValue("LoadingDirection", getLoadingDir() );
+  writer->closeFilterGroup();
+  return index;
 }
 // -----------------------------------------------------------------------------
 //
