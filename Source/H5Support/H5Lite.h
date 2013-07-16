@@ -396,6 +396,7 @@ static herr_t writePointerDataset (hid_t loc_id,
   hid_t sid     = -1;
   herr_t retErr = 0;
 
+  if(NULL == data) { return -2;}
   hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
   if(dataType == -1)
   {
