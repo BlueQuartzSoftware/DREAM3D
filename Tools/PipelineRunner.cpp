@@ -60,6 +60,7 @@
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "FilterWidgets/FilterWidgetsLib.h"
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "PipelineBuilder/IFilterWidgetFactory.h"
@@ -70,15 +71,57 @@
 int main (int argc, char  *argv[])
 {
 
-  float q[5] = {0.0, 0.565907, -0.24196, 0.106982, -0.7808710};
+  // float q[5] = {0.0, 0.565907, -0.24196, 0.106982, -0.7808710};
+  float q[5] = { 0.0, -0.0914, .1828, .2742, .9397};
   float euler[3] = {0.0, 0.0, 0.0};
 
+  float symQuat1[5];
+  float symQuat2[5];
+  float symSampleQuat[5];
+  float outQuat[5];
+  float sampleQuat[5] = {0.0, 0.0, 0.0, 0.0, 1.0};
+  float finalQuat[5];
 
-  OrientationMath::QuattoEuler(q, euler[0], euler[1], euler[2]);
+  int count = 0;
+  CubicOps co;
 
-//2.6014, 1.32595, 3.40947
-  std::cout << "Quat:  " << q[1] << ", " << q[2] << ", " << q[3] << ", " << q[4] << std::endl;
-  std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
+  co.axisAngletoQuat(20.0*M_PI/180, -1,-2,-3, q);
+
+  std::cout << "q:  " << q[1] << ", " << q[2] << ", " << q[3] << ", " << q[4] << std::endl;
+
+  for(int i = 0; i < co.getNumSymOps(); ++i)
+  {
+    co.getQuatSymOp(i, symQuat1);
+    co.multiplyQuaternions( symQuat1, sampleQuat, symSampleQuat);
+    for(int j = 0; j < co.getNumSymOps(); ++j)
+    {
+
+      co.getQuatSymOp(j, symQuat2);
+      co.multiplyQuaternions( q, symQuat2, outQuat);
+      co.invertQuaternion(outQuat);
+      co.multiplyQuaternions( symSampleQuat, outQuat, finalQuat);
+
+      co.QuattoEuler(finalQuat, euler[0], euler[1], euler[2]);
+
+      if (finalQuat[4] >= finalQuat[3] && finalQuat[3] >= finalQuat[2] && finalQuat[2] >= finalQuat[1] && finalQuat[1] >= 0.0 )
+      {
+        std::cout << "Quat:  " << finalQuat[1] << ", " << finalQuat[2] << ", " << finalQuat[3] << ", " << finalQuat[4] << "       ";
+        std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
+        count++;
+      }
+
+      //    if (outQuat[4] < 0.0f)
+      //    {
+      //      outQuat[1] *= -1.0;
+      //      outQuat[2] *= -1.0;
+      //      outQuat[3] *= -1.0;
+      //      outQuat[4] *= -1.0;
+      //    }
+
+    }
+  }
+  std::cout << "count: " << count << std::endl;
+  return 0;
 }
 
 
@@ -146,13 +189,13 @@ void readSettings(QSettings &prefs)
     QString filterName = prefs.value("Filter_Name", "").toString();
 
     std::cout << "Adding Filter " << filterName.toStdString() << std::endl;
-//    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
-//    if(w) {
-//      w->blockSignals(true);
-//      w->readOptions(prefs);
-//      w->blockSignals(false);
-//      //w->emitParametersChanged();
-//    }
+    //    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
+    //    if(w) {
+    //      w->blockSignals(true);
+    //      w->readOptions(prefs);
+    //      w->blockSignals(false);
+    //      //w->emitParametersChanged();
+    //    }
     prefs.endGroup();
   }
 }
@@ -162,14 +205,14 @@ void readSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 int main (int argc, char const *argv[])
 {
-   // This code is NOT READY to run AT ALL. IT was just a PLACE TO START
+  // This code is NOT READY to run AT ALL. IT was just a PLACE TO START
   BOOST_ASSERT(false);
   QString configFile;
 
   try
   {
 
-   // Handle program options passed on command line.
+    // Handle program options passed on command line.
     TCLAP::CmdLine cmd("PipelineRunner", ' ', DREAM3DLib::Version::Complete());
 
     TCLAP::ValueArg<std::string> inputFileArg( "c", "config", "The text file containing the pipeline information.", true, "", "Pipeline Config File");
