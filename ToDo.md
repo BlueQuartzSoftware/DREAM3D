@@ -13,10 +13,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Version 4.3 Features/Bugs to Fix ##
 
++ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
 + Visualize GBCD not working in develop: Possible clash with GBCD Array versus IDataArray when that was being developed. Just verify with a clean run of the SmallIN100 Data set
 + Visualize GBCD, empty GMT file causes crash.
++ Pole Figure smoothing function in Visualize GBCD
++ Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
 + Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
-+ When running a pipeline have a method that an disable all of the GUI widgets and Menus that would change the pipeline while running
++ When running a pipeline have a method that can disable all of the GUI widgets and Menus that would change the pipeline while running
     - During Execution of the pipeline dim the filters except for the one that is currently running
     - Disable modifying pipeline while a pipeline is running
     - Disable adding of filters into the pipeline while it is running.
@@ -24,12 +27,15 @@ This is the list of things to do. It is written with the Markdown style so it ca
     - Add information for stats generator about the format of the ODF Files import function
     - Add feature in Stats Generator to read in a .ang or .ctf file for the ODF angles.
     - Add feature when reading ODF Euler Angle files to convert data from Radians to degrees.
+    - Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 + Ghost data is generated in the ODF in Stats Generator for certain orientations (90,35,45 1000, 3)
 + Write out Lattice Constants from EBSD data to XDMF data
 + Modify filter to dump Images by adding ability to dump images for XY, YZ, XZ planes to a folder.
 + Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 + Add Filter to set Phase/Ensemble data instead of reading it from a file (Custom Gui for this one).
++ On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
++ Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 
 
 ## Future Features to Implement ##
@@ -85,7 +91,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Statistics/Analysis/Other Algorithms ###
 
-
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -100,9 +105,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Look into using 2-pt statistics to advance the packing algorithms in the synthetic builder
 + Add a filter to calculate Kearn's number
 + Look into matching the Kearn's number when matching cystallography in the synthetic builder
-+ Add GBCD calculation filters from G. Rohrer
 + Add a filter to calculate 'clustering' statistics on 'marked' features
-+ Modify ODF/PF generation in stats generator to better combine random baseline with user inputs (also degree/radian checkbox)
 + Add/Finish filter to calculate slice-slice misorientation (in terms of axis-angle in sample ref frame)
 + Add filter to calculate microtexture function or equivalent
 + Look into creating a reverse Saltykov/Sahagian filter to predict 3D grain size distribution from 2D data
@@ -128,18 +131,13 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
 + ImageJ exporter codes
 + Add option to each filter to pause the pipeline. See DevelopmentNotes.md
-+ Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
 + Fix parent IDs not being initialized in merge twins, beta grains, etc.
-+ Pole Figure smoothing function in Visualize GBCD
-+ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
 + Disregard option in Segment Grains (more local merge twin filter)
 + more general grouping filter. Be able to specify orientations to group by and other stuff.
 + Option to use local orientation to use the Surface Mesh Face IPF coloring rather than use the average for the grain
 + Add "Tool" example program that shows writing a command line pipeline program
 + Add checks in MinSize and MinNeighbor filters to exit gracefully if minimum is larger than largest grain/num neighbors
 + Add in Xdmf wrapper for H5Ebsd so they can be easily viewed in ParaView
-+ On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
-+ Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 + Write program to read in Pipeline Files on the command line
 + Writing NonConformal Surface Mesh does not take into account values whose sign is dependent on the winding of the triangle.
 + Add in the HyperSlabArray class to use for some of the SurfaceMeshing Triangle/Node data
@@ -155,6 +153,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ###  Synthetic Building Filters ###
+
 + Add ability to read list of ellipsoids into packing algorithms
 + Look into bias near outside of box during synthetic building
 + Fix synthetic builder to note if volume is 2D and actually pack slices
@@ -174,20 +173,22 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Feature Request ###
 
-
 + A filter that finds all the twins in the microstructure and assigns them to another phase (phase 3), so that they can be visualized differently to the surrounding grains (phase 2) and grains that are untwined (phase 1).
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 
 ###  Surface Meshing ###
+
 + Add mesh decimation filter (surface or volume)
 + Add Marching TetraHedra surface Meshing Filter
 
 
 ###  MFE Smoothing ###
+
 + add ability to stop the smoothing
 + bug in edges file is stopping the use in the smoothing filter
 
 ###  Bruker EBSD System Support ###
+
 + BASE64 decoder
 + XML Parser for the SEM Image file
 + Create XML Parsing code for each file from the Bruker File Archive
