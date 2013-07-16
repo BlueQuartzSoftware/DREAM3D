@@ -719,7 +719,28 @@ int readPipelineFromFile(hid_t fileId)
   int err = 0;
   m_PipelineFromFile->clear();
 
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
+  // HDF5: Open the "Pipeline" Group
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  reader->setGroupId(pipelineGroupId);
+
+  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  int groupSize = 0;
+  int err = H5Lite::readScalarDataset(pipelineGroupId, "Group size", groupSize);
+
+  // Loop over the items getting the "ClassName" attribute from each group
+  std::string classNameStr = "";
+  for (int i=0; i<groupSize; i++)
+  {
+    int err = H5Lite::readStringAttribute(pipelineGroupId, "Group size", "ClassName", classNameStr);
+  }
+
+  // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+
+  // Read the parameters
+
+  // add filter to the m_PipelineFromFile
 
   return err;
 }
@@ -753,6 +774,17 @@ void FilterManagerTest()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ExistingPipelineTest(int filt0Pos, int filt1Pos, int pipelinePos)
+{
+  // Create our Pipeline object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  GenericFilter::Pointer filt = GenericFilter::New();
+}
+
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -772,6 +804,7 @@ int main(int argc, char **argv)
       DREAM3D_REGISTER_TEST( GenericExampleTest() )
       DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
       DREAM3D_REGISTER_TEST( FilterManagerTest() )
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(0, 1, 2) )
 
 #if 0
     #if REMOVE_TEST_FILES
