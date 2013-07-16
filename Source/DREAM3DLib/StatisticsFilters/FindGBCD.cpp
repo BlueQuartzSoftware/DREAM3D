@@ -320,6 +320,8 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("GBCDResolution", getGBCDRes() );
+    writer->closeFilterGroup();
+  return index;
 }
 
 // -----------------------------------------------------------------------------

@@ -716,12 +716,12 @@ FilterPipeline::Pointer m_PipelineFromFile;
 // -----------------------------------------------------------------------------
 int readPipelineFromFile(hid_t fileId)
 {
-
+  int err = 0;
   m_PipelineFromFile->clear();
 
 
 
-
+  return err;
 }
 
 
