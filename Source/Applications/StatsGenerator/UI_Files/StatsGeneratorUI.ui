@@ -245,14 +245,7 @@
     <addaction name="actionLicense_Information"/>
     <addaction name="actionStatsGenerator_Help"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-    <addaction name="action_OpenDREAM3D"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
