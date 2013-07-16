@@ -177,9 +177,6 @@ void WriteAbaqusSurfaceMesh::execute()
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = getSurfaceMeshDataContainer()->getFaces();
-
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
