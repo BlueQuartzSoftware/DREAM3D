@@ -355,29 +355,31 @@ class NeighborList : public IDataArray
 
       int32_t rank = 1;
       hsize_t dims[1] = { total };
-      err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
-      if(err < 0)
+      if (total > 0)
       {
-        return -605;
-      }
-      err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
-      if(err < 0)
-      {
-        return -606;
-      }
+        err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
+        if(err < 0)
+        {
+          return -605;
+        }
+        err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
+        if(err < 0)
+        {
+          return -606;
+        }
 
-      err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
-      if(err < 0)
-      {
-        return -607;
-      }
+        err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
+        if(err < 0)
+        {
+          return -607;
+        }
 
-      err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", DREAM3D::FieldData::NumNeighbors);
-      if(err < 0)
-      {
-        return -608;
+        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", DREAM3D::FieldData::NumNeighbors);
+        if(err < 0)
+        {
+          return -608;
+        }
       }
-
       return err;
     }
 
