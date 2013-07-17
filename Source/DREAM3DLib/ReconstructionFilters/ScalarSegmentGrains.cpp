@@ -63,6 +63,64 @@ const static float m_pi = static_cast<float>(M_PI);
 
 
 
+/* from http://www.newty.de/fpt/functor.html */
+// base class
+class CompareFunctor
+{
+public:
+
+  virtual bool operator()(size_t index, size_t neighIndex, size_t gnum)  // call using operator
+  {
+    return false;
+  }
+};
+
+
+template<class T>
+class TSpecificCompareFunctor : public CompareFunctor
+{
+  public:
+    TSpecificCompareFunctor(void* data, size_t length, T tolerance, int32_t* grainIds) :
+      m_Length(length),
+      m_Tolerance(tolerance),
+      m_GrainIds(grainIds)
+      {
+        m_Data = reinterpret_cast<T*>(data);
+      }
+    virtual ~TSpecificCompareFunctor(){};
+
+    virtual bool operator()(size_t referencepoint, size_t neighborpoint, size_t gnum)
+    {
+      // Sanity check the indices that are being passed in.
+      if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
+      
+      if(m_Data[referencepoint] >= m_Data[neighborpoint])
+      {
+        if ((m_Data[referencepoint]-m_Data[neighborpoint]) <= m_Tolerance) { 
+          m_GrainIds[neighborpoint] = gnum;
+          return true; 
+        }
+      }
+      else
+      {
+        if ((m_Data[neighborpoint]-m_Data[referencepoint]) <= m_Tolerance) { 
+          m_GrainIds[neighborpoint] = gnum;
+          return true; 
+        }
+      }
+      return false;
+    }
+  
+protected:
+   TSpecificCompareFunctor(){}
+
+private:
+   T* m_Data;       // The data that is being compared
+   size_t m_Length; // Length of the Data Array
+   T      m_Tolerance; // The tolerance of the comparison
+   int32_t* m_GrainIds; // The grain Ids
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -74,7 +132,8 @@ m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_ScalarTolerance(5.0f),
 m_RandomizeGrainIds(true),
 m_GrainIds(NULL),
-m_Active(NULL)
+m_Active(NULL),
+m_Compare(NULL)
 {
   setupFilterParameters();
 }
@@ -84,7 +143,9 @@ m_Active(NULL)
 // -----------------------------------------------------------------------------
 ScalarSegmentGrains::~ScalarSegmentGrains()
 {
-
+  if (m_Compare != NULL) {
+    delete m_Compare;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -109,7 +170,7 @@ void ScalarSegmentGrains::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-  option->setUnits("");
+    option->setUnits("");
     parameters.push_back(option);
   }
 #if 0
@@ -173,39 +234,6 @@ void ScalarSegmentGrains::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-bool compareData(IDataArray::Pointer inputData, int referencepoint, int neighborpoint, float tol)
-{
-  bool group = false;
-
-  std::string cellArrayName = inputData->GetName();
-
-  DataArray<T>* scalar = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (NULL == scalar)
-  {
-    return group;
-  }
-
-  T* sPtr = scalar->GetPointer(0);
-
-  int32_t numComp = scalar->GetNumberOfComponents();
-  if(numComp > 1) return group;
-
-
-  if(sPtr[referencepoint] >= sPtr[neighborpoint])
-  {
-  if ((sPtr[referencepoint]-sPtr[neighborpoint]) <= tol) group = true;
-  }
-  else
-  {
-  if ((sPtr[neighborpoint]-sPtr[referencepoint]) <= tol) group = true;
-  }
-  return group;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ScalarSegmentGrains::execute()
 {
   setErrorCondition(0);
@@ -228,8 +256,8 @@ void ScalarSegmentGrains::execute()
 
   std::stringstream ss;
 
-  inputData = m->getCellData(m_ScalarArrayName);
-  if (NULL == inputData.get())
+  m_InputData = m->getCellData(m_ScalarArrayName);
+  if (NULL == m_InputData.get())
   {
     ss.str("");
     ss << "Selected array '" << m_ScalarArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
@@ -244,6 +272,56 @@ void ScalarSegmentGrains::execute()
   for(int64_t i=0;i<totalPoints;i++)
   {
     m_GrainIds[i] = 0;
+  }
+
+  std::string dType = m_InputData->getTypeAsString();
+  if(m_InputData->GetNumberOfComponents() != 1)
+  {
+    m_Compare = new CompareFunctor(); // The default CompareFunctor which ALWAYS returns false for the comparison
+  }
+  else if (dType.compare("int8_t") == 0)
+  {
+    m_Compare = new TSpecificCompareFunctor<int8_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("uint8_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<uint8_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("bool") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<bool>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("int16_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<int16_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("uint16_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<uint16_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("int32_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<int32_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("uint32_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<uint32_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("int64_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<int64_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("uint64_t") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<uint64_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("float") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<float>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+  }
+  else if (dType.compare("double") == 0)
+  {
+    m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
 
   SegmentGrains::execute();
@@ -324,7 +402,7 @@ int ScalarSegmentGrains::getSeed(size_t gnum)
   int seed = -1;
   int randpoint = 0;
 
-  // Precalculate some constants
+  // Pre-calculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
 
   int counter = 0;
@@ -344,70 +422,12 @@ int ScalarSegmentGrains::getSeed(size_t gnum)
   }
   return seed;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 bool ScalarSegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
 {
-  bool group = false;
-//  float w = 10000.0;
-//  float q1[5];
-//  float q2[5];
-//  float n1, n2, n3;
-//  unsigned int phase1, phase2;
-
-  if(m_GrainIds[neighborpoint] == 0)
-  {
-    std::string dType = inputData->getTypeAsString();
-    if (dType.compare("int8_t") == 0)
-    {
-    group = compareData<int8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("uint8_t") == 0)
-    {
-    group = compareData<uint8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("bool") == 0)
-    {
-    group = compareData<bool>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("int16_t") == 0)
-    {
-    group = compareData<int16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("uint16_t") == 0)
-    {
-    group = compareData<uint16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("int32_t") == 0)
-    {
-    group = compareData<int32_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("uint32_t") == 0)
-    {
-    group = compareData<uint32_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("int64_t") == 0)
-    {
-    group = compareData<int64_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("uint64_t") == 0)
-    {
-    group = compareData<uint64_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("float") == 0)
-    {
-    group = compareData<float>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-    else if (dType.compare("double") == 0)
-    {
-    group = compareData<double>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
-    }
-      if (group == true)
-      {
-      m_GrainIds[neighborpoint] = gnum;
-      }
-  }
-
-  return group;
+  return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
+  //     | Functor  ||calling the operator() method of the CompareFunctor Class |
 }
