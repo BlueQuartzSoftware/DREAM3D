@@ -323,17 +323,27 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
       }
 
       // Only print 20 Triangles per line
-      if (lineCount == 20 || t == nTriangles-1)
+      if (lineCount == 20)
       {
-        fprintf(f, "%d\n", t);
+        fprintf(f, ", %d\n", t);
         lineCount = 0;
+      }
+      else if(lineCount == 0) // First value on the line
+      {
+        fprintf(f,"%d", t);
+        lineCount++;
       }
       else
       {
-        fprintf(f,"%d, ", t);
+        fprintf(f,", %d", t);
         lineCount++;
       }
 
+    }
+    // Make sure we have a new line at the end of the section
+    if (lineCount != 0)
+    {
+    fprintf(f, "\n");
     }
   }
   return err;
