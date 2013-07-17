@@ -193,7 +193,7 @@ void FindAvgOrientations::execute()
     q.y = m_AvgQuats[4*i+2]/m_AvgQuats[4*i];
     q.z = m_AvgQuats[4*i+3]/m_AvgQuats[4*i];
     q.w = m_AvgQuats[4*i+4]/m_AvgQuats[4*i];
-    QuaternionMathF::Normalize(q);
+    QuaternionMathF::UnitQuaternion(q);
     OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
     m_FieldEulerAngles[3*i] = ea1;
     m_FieldEulerAngles[3*i+1] = ea2;
