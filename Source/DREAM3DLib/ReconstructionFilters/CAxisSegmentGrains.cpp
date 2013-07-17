@@ -126,8 +126,11 @@ void CAxisSegmentGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CAxisSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+void CAxisSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

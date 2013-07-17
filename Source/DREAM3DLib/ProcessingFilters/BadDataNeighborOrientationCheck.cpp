@@ -105,8 +105,11 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParametersReader* reader)
+void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

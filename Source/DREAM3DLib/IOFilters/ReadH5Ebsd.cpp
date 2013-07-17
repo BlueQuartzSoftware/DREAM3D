@@ -114,8 +114,11 @@ ReadH5Ebsd::~ReadH5Ebsd()
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader)
+void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

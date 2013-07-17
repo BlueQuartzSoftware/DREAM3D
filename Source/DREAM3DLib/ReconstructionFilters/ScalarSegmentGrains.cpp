@@ -128,8 +128,11 @@ void ScalarSegmentGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

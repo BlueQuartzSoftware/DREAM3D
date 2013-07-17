@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class

@@ -327,8 +327,11 @@ void PackPrimaryPhases::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader)
+void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

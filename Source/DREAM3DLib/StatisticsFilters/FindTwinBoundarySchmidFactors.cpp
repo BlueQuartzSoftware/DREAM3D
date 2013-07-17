@@ -269,8 +269,11 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

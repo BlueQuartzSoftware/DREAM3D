@@ -112,8 +112,11 @@ void GroupMicroTextureRegions::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersReader* reader)
+void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

@@ -94,8 +94,11 @@ void MinNeighbors::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader)
+void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

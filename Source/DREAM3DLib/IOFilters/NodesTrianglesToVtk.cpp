@@ -112,8 +112,11 @@ void NodesTrianglesToVtk::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader)
+void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

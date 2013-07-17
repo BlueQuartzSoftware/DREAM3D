@@ -156,8 +156,11 @@ void RotateEulerRefFrame::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* reader)
+void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

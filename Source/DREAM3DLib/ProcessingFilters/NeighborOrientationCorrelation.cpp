@@ -114,8 +114,11 @@ void NeighborOrientationCorrelation::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParametersReader* reader)
+void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

@@ -366,8 +366,11 @@ void M3CSliceBySlice::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reader)
+void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

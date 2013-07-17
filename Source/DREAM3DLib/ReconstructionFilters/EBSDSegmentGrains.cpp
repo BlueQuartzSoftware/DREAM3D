@@ -123,8 +123,11 @@ void EBSDSegmentGrains::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EBSDSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader)
+void EBSDSegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
