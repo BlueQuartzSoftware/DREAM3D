@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
 
   private:
     int32_t* m_GrainIds;
-    bool* m_SurfaceVoxels;
+    int8_t* m_SurfaceVoxels;
     float* m_SurfaceVoxelFractions;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

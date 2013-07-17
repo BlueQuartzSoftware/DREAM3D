@@ -182,7 +182,7 @@ void SegmentGrains::execute()
             {
               voxelslist[size] = neighbor;
               size++;
-              if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
+              if(size >= voxelslist.size()) voxelslist.resize(size + size, -1);
             }
           }
         }

@@ -367,6 +367,10 @@ bool ScalarSegmentGrains::determineGrouping(int referencepoint, int neighborpoin
     {
     group = compareData<uint8_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
     }
+    else if (dType.compare("bool") == 0)
+    {
+    group = compareData<bool>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
+    }
     else if (dType.compare("int16_t") == 0)
     {
     group = compareData<int16_t>(inputData, referencepoint, neighborpoint, m_ScalarTolerance);
