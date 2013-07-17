@@ -171,7 +171,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
   writer->openFilterGroup(this, index);
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

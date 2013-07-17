@@ -128,7 +128,7 @@ int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParamete
   writer->writeValue("MinConfidence", getMinConfidence() );
   writer->writeValue("Level", getLevel() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

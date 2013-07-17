@@ -37,6 +37,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -163,6 +164,13 @@
 #define SelectedSolidMeshEdgeArraysString2 "SelectedSolidMeshEdgeArraysString2"
 #define SelectedSolidMeshEdgeArraysString3 "SelectedSolidMeshEdgeArraysString3"
 #define SelectedSolidMeshEdgeArraysString4 "SelectedSolidMeshEdgeArraysString4"
+
+enum TestCases
+{
+  Test1,
+  Test2,
+  Test3
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -727,21 +735,28 @@ int readPipelineFromFile(hid_t fileId)
   reader->setGroupId(pipelineGroupId);
 
   // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  int groupSize = 0;
-  int err = H5Lite::readScalarDataset(pipelineGroupId, "Group size", groupSize);
+  std::list<std::string> groupList;
+  err = H5Utilities::getGroupObjects(pipelineGroupId, H5O_TYPE_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   std::string classNameStr = "";
-  for (int i=0; i<groupSize; i++)
+  for (int i=0; i<groupList.size(); i++)
   {
-    int err = H5Lite::readStringAttribute(pipelineGroupId, "Group size", "ClassName", classNameStr);
+    std::stringstream ss;
+    ss << i;
+    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+
+    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    FilterManager::Pointer fm = FilterManager::Instance();
+    IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);
+    AbstractFilter::Pointer filter = ff->create();
+
+    // Read the parameters
+    filter->readFilterParameters( reader.get() );
+
+    // Add filter to m_PipelineFromFile
+    m_PipelineFromFile->pushBack(filter);
   }
-
-  // Instantiate a new filter using the FilterFactory based on the value of the className attribute
-
-  // Read the parameters
-
-  // add filter to the m_PipelineFromFile
 
   return err;
 }
@@ -779,12 +794,55 @@ void FilterManagerTest()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExistingPipelineTest(int filt0Pos, int filt1Pos, int pipelinePos)
+void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCases test_case)
 {
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-  GenericFilter::Pointer filt = GenericFilter::New();
+  Filt0::Pointer filt0 = Filt0::New();
+  Filt1::Pointer filt1 = Filt1::New();
+  DataContainerWriter::Pointer w = DataContainerWriter::New();
+
+  DataContainerReader::Pointer r = DataContainerReader::New();
+  r->setInputFile(inputFile);
+  
+
+  filt0->setFloat(13.1f);
+  filt0->setInteger(12);
+  filt1->setFloat(2.3f);
+  filt1->setInteger(4);
+  w->setOutputFile(outputFile);
+
+  if (test_case == Test1)
+  {
+    pipeline->pushBack(filt0);
+    pipeline->pushBack(filt1);
+    pipeline->pushBack(w);
+  }
+  else if (test_case == Test2)
+  {
+    pipeline->pushBack(r);
+    pipeline->pushBack(filt0);
+    pipeline->pushBack(filt1);
+    pipeline->pushBack(w);
+  }
+  else if (test_case == Test3)
+  {
+    pipeline->pushBack(filt0);
+    pipeline->pushBack(filt1);
+    pipeline->pushBack(r);
+    pipeline->pushBack(w);
+  }
+  else
+  {
+    return;
+  }
+
+  pipeline->execute();
+  int err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRED(err, >= , 0)
+
+
 }
 
 
@@ -793,6 +851,12 @@ void ExistingPipelineTest(int filt0Pos, int filt1Pos, int pipelinePos)
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
+  FilterFactory<Filt0>::Pointer Filt0Factory = FilterFactory<Filt0>::New();
+  FilterManager::Instance()->addFilterFactory("Filt0",Filt0Factory);
+
+  FilterFactory<Filt1>::Pointer Filt1Factory = FilterFactory<Filt1>::New();
+  FilterManager::Instance()->addFilterFactory("Filt1",Filt1Factory);
+
   int err = EXIT_SUCCESS;
 #if 0
 #if !REMOVE_TEST_FILES
@@ -802,11 +866,19 @@ int main(int argc, char **argv)
 
 
 
-      DREAM3D_REGISTER_TEST( ArraySelectionExampleTest() )
-      DREAM3D_REGISTER_TEST( GenericExampleTest() )
-      DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
-      DREAM3D_REGISTER_TEST( FilterManagerTest() )
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(0, 1, 2) )
+      //DREAM3D_REGISTER_TEST( ArraySelectionExampleTest() )
+      //DREAM3D_REGISTER_TEST( GenericExampleTest() )
+      //DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
+      //DREAM3D_REGISTER_TEST( FilterManagerTest() )
+
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1, 
+      "", Test1) )
+
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2, 
+      UnitTest::FilterParametersRWTest::TestFile_1, Test2) )
+
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3, 
+      UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
 
 #if 0
     #if REMOVE_TEST_FILES

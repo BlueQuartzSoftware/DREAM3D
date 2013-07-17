@@ -117,7 +117,7 @@ int FindGrainReferenceMisorientations::writeFilterParameters(AbstractFilterParam
   writer->openFilterGroup(this, index);
   writer->writeValue("ReferenceOrientation", getReferenceOrientation() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

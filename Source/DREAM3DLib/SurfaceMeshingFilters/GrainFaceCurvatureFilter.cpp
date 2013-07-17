@@ -155,7 +155,7 @@ int GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWrit
   writer->writeValue("ComputeMeanCurvature", getComputeMeanCurvature() );
   writer->writeValue("UseNormalsForCurveFitting", getUseNormalsForCurveFitting() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

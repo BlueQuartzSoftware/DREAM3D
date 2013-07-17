@@ -115,7 +115,7 @@ int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

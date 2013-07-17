@@ -235,7 +235,7 @@ int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParameters
   writer->writeValue("ConstrainQuadPoints", getConstrainQuadPoints());
   writer->writeValue("SmoothTripleLines", getSmoothTripleLines());
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

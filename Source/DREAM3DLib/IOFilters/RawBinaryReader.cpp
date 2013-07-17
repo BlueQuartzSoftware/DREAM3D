@@ -330,7 +330,7 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue("SkipHeaderBytes", getSkipHeaderBytes() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

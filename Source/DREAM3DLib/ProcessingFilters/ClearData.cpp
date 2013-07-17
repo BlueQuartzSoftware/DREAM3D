@@ -145,7 +145,7 @@ int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
