@@ -126,7 +126,6 @@ void DataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader)
 {
-
 }
 
 // -----------------------------------------------------------------------------
@@ -135,6 +134,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   index = writeExistingPipelineToFile(writer, index);
+
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );

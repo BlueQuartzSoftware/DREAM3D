@@ -805,12 +805,12 @@ void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCas
 
   DataContainerReader::Pointer r = DataContainerReader::New();
   r->setInputFile(inputFile);
-  
 
-  filt0->setFloat(13.1f);
-  filt0->setInteger(12);
-  filt1->setFloat(2.3f);
-  filt1->setInteger(4);
+
+  filt0->setFilt0_Float(13.1f);
+  filt0->setFilt0_Integer(12);
+  filt1->setFilt1_Float(2.3f);
+  filt1->setFilt1_Integer(4);
   w->setOutputFile(outputFile);
 
   if (test_case == Test1)
@@ -871,13 +871,13 @@ int main(int argc, char **argv)
       //DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
       //DREAM3D_REGISTER_TEST( FilterManagerTest() )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1, 
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1,
       "", Test1) )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2, 
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2,
       UnitTest::FilterParametersRWTest::TestFile_1, Test2) )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3, 
+      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3,
       UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
 
 #if 0
