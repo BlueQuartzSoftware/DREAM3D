@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 // -----------------------------------------------------------------------------
@@ -130,45 +131,32 @@ void FindAvgOrientations::execute()
   }
 
   size_t numgrains = m->getNumFieldTuples();
+  std::vector<float> counts(numgrains, 0.0);
+
   int phase;
   QuatF voxquat;
   QuatF curavgquat;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-#warning
-#if 0
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_AvgQuats[4*i] = 0.0;
-    m_AvgQuats[4*i+1] = 0.0;
-    m_AvgQuats[4*i+2] = 0.0;
-    m_AvgQuats[4*i+3] = 0.0;
-    m_AvgQuats[4*i+4] = 0.0;
+    QuaternionMathF::ElementWiseAssign(avgQuats[i],0.0);
   }
   //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
     {
-
+      counts[m_GrainIds[i]] += 1;
       phase = m_CellPhases[i];
-      voxquat[0] = m_Quats[i*5 + 0];
-      voxquat[1] = m_Quats[i*5 + 1];
-      voxquat[2] = m_Quats[i*5 + 2];
-      voxquat[3] = m_Quats[i*5 + 3];
-      voxquat[4] = m_Quats[i*5 + 4];
-      curavgquat[0] = 1;
-      curavgquat[1] = m_AvgQuats[4*m_GrainIds[i]+1]/m_AvgQuats[4*m_GrainIds[i]];
-      curavgquat[2] = m_AvgQuats[4*m_GrainIds[i]+2]/m_AvgQuats[4*m_GrainIds[i]];
-      curavgquat[3] = m_AvgQuats[4*m_GrainIds[i]+3]/m_AvgQuats[4*m_GrainIds[i]];
-      curavgquat[4] = m_AvgQuats[4*m_GrainIds[i]+4]/m_AvgQuats[4*m_GrainIds[i]];
-      if(m_AvgQuats[4*m_GrainIds[i]] == 0)
+      QuaternionMathF::Copy(quats[i], voxquat);
+      QuaternionMathF::Copy(avgQuats[i], curavgquat);
+      QuaternionMathF::ElementWiseDivide(curavgquat, counts[m_GrainIds[i]]);
+
+      if(counts[m_GrainIds[i]] == 1)
       {
-        curavgquat[0] = 1;
-        curavgquat[1] = 0;
-        curavgquat[2] = 0;
-        curavgquat[3] = 0;
-        curavgquat[4] = 1;
+        QuaternionMathF::Identity(curavgquat);
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
       for (int k = 0; k < 5; k++)
