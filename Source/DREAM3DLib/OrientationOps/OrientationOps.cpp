@@ -99,7 +99,7 @@ float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 
   QuaternionMathF::Copy(q2, q2inv);
 
-  QuaternionMathF::InvertQuaternion(q2inv);
+  QuaternionMathF::Conjugate(q2inv);
   QuaternionMathF::Multiply(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
@@ -198,7 +198,7 @@ void OrientationOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
   QuaternionMathF::Copy(qmax, q2);
   if(q2.w < 0)
   {
-    QuaternionMathF::ElementWiseMultiply(q2, -1.0f);
+    QuaternionMathF::Negate(q2);
   }
 }
 
@@ -225,7 +225,7 @@ void OrientationOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym,
   QuaternionMathF::Copy(qmax, qr);
   if(qr.w < 0)
   {
-    QuaternionMathF::ElementWiseMultiply(qr, -1.0f);
+    QuaternionMathF::Negate(qr);
   }
 }
 
