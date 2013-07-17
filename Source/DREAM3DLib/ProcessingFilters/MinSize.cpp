@@ -93,8 +93,11 @@ void MinSize::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MinSize::readFilterParameters(AbstractFilterParametersReader* reader)
+void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

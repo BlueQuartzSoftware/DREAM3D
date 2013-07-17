@@ -85,8 +85,11 @@ void SPParksWriter::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader)
+void SPParksWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

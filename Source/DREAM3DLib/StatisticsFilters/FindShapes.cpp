@@ -90,8 +90,11 @@ void FindShapes::setupFilterParameters()
 
 }
 // -----------------------------------------------------------------------------
-void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

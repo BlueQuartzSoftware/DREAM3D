@@ -256,8 +256,11 @@ void LaplacianSmoothing::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader)
+void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

@@ -82,8 +82,11 @@ void VoxelDataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void VoxelDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

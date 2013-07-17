@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief This function runs some sanity checks on the DataContainer and inputs

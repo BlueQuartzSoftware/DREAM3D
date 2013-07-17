@@ -167,7 +167,7 @@
 
 enum TestCases
 {
-  Test1,
+  Test1 = 0,
   Test2,
   Test3
 };
@@ -285,19 +285,19 @@ void ArraySelectionExampleTest()
 
       // We are done writing a file, now we need to read the file using raw HDF5 codes
 
-      hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
-      H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
-
-  err = reader->openOptionsGroup( filt.get() ); // Open the HDF5 Group for this filter
+  int index = 0;
+  err = reader->openFilterGroup( filt.get(), index ); // Open the HDF5 Group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
-      // This next line should read all the filter parameters into the filter.
-      filt->readFilterParameters( reader.get() );
+  // This next line should read all the filter parameters into the filter.
+  filt->readFilterParameters( reader.get() );
 
   std::set<std::string> set1Read = filt->getSelectedVoxelCellArrays();
   std::set<std::string>::iterator iter = set1Read.begin();
@@ -420,7 +420,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSolidMeshEdgeArraysString4, ==, *iter)
 
-      err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
+      err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
 
@@ -509,8 +509,8 @@ void GenericExampleTest()
 
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
-
-  err = reader->openOptionsGroup( filt.get() ); // Open the HDF5 Group for this filter
+  int index = 0;
+  err = reader->openFilterGroup( filt.get(), index); // Open the HDF5 Group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
@@ -563,7 +563,7 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(AxisAngles2KTestValue, ==, axisAngles2Read.k)
   DREAM3D_REQUIRED(AxisAngles2LTestValue, ==, axisAngles2Read.l)
 
-  err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
+  err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
 
@@ -634,8 +634,8 @@ void ThresholdExampleTest()
 
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
-
-  err = reader->openOptionsGroup( filt.get() ); // Open the HDF5 Group for this filter
+  int index = 0;
+  err = reader->openFilterGroup( filt.get(), index++ ); // Open the HDF5 Group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
@@ -708,7 +708,7 @@ void ThresholdExampleTest()
   DREAM3D_REQUIRED(EdgeComparisonInputsCompOperator2, ==, edgeComparisonInputs2.compOperator)
   DREAM3D_REQUIRED(EdgeComparisonInputsCompValue2, ==, edgeComparisonInputs2.compValue)
 
-  err = reader->closeOptionsGroup(); // Close the HDF5 group for this filter
+  err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
   DREAM3D_REQUIRED(err, >=, 0)
 
 
@@ -752,7 +752,7 @@ int readPipelineFromFile(hid_t fileId)
     AbstractFilter::Pointer filter = ff->create();
 
     // Read the parameters
-    filter->readFilterParameters( reader.get() );
+    filter->readFilterParameters( reader.get(), i );
 
     // Add filter to m_PipelineFromFile
     m_PipelineFromFile->pushBack(filter);
@@ -807,10 +807,10 @@ void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCas
   r->setInputFile(inputFile);
 
 
-  filt0->setFilt0_Float(13.1f);
-  filt0->setFilt0_Integer(12);
-  filt1->setFilt1_Float(2.3f);
-  filt1->setFilt1_Integer(4);
+  filt0->setFilt0_Float(13.1f + test_case);
+  filt0->setFilt0_Integer(12 + test_case);
+  filt1->setFilt1_Float(2.3f + test_case);
+  filt1->setFilt1_Integer(4 + test_case);
   w->setOutputFile(outputFile);
 
   if (test_case == Test1)
@@ -844,6 +844,9 @@ void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCas
 
 
 }
+
+//AbstractFilter::Pointer absFilter = pipeline->getFIlterAt(0);
+//Filt0* f0 = Filt0::SafePointerDownCast(absFilter.get());
 
 
 // -----------------------------------------------------------------------------

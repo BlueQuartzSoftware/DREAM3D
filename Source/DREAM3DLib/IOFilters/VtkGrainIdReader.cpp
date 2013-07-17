@@ -93,8 +93,11 @@ void VtkGrainIdReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

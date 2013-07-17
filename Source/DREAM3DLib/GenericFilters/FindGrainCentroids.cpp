@@ -63,8 +63,11 @@ FindGrainCentroids::~FindGrainCentroids()
 {
 }
 // -----------------------------------------------------------------------------
-void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindGrainCentroids::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

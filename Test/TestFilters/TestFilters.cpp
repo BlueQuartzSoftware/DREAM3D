@@ -60,11 +60,11 @@ void Filt0::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Filt0::readFilterParameters(AbstractFilterParametersReader* reader)
+void Filt0::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   float dummyFloat = 0.0f;
   int dummyInt = 0;
-  reader->openFilterGroup(index);
+  reader->openFilterGroup(this, index);
   setFilt0_Float( reader->readValue("Filt0_Float", dummyFloat) );
   setFilt0_Integer( reader->readValue("Filt0_Integer", dummyInt) );
   reader->closeFilterGroup();
@@ -179,12 +179,14 @@ void Filt1::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Filt1::readFilterParameters(AbstractFilterParametersReader* reader)
+void Filt1::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   float dummyFloat = 0.0f;
   int dummyInt = 0;
+  reader->openFilterGroup(this, index);
   setFilt1_Float( reader->readValue("Filt1_Float", dummyFloat) );
   setFilt1_Integer( reader->readValue("Filt1_Integer", dummyInt) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------

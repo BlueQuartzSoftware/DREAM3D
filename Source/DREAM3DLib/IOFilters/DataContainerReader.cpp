@@ -124,8 +124,11 @@ void DataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -380,12 +383,12 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
     AbstractFilter::Pointer filter = ff->create();
 
     // Read the parameters
-    filter->readFilterParameters( reader.get() );
+    filter->readFilterParameters( reader.get(), i);
 
     // Add filter to m_PipelineFromFile
     m_PipelineFromFile->pushBack(filter);
   }
-
+  err = H5Gclose(pipelineGroupId);
   return err;
 }
 
@@ -399,7 +402,6 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
   for(FilterPipeline::FilterContainerType::iterator iter = container.begin(); iter != container.end(); ++iter)
   {
     index = (*iter)->writeFilterParameters(writer, index);
-    index++;
   }
   return index;
 }

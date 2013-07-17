@@ -89,8 +89,11 @@ void SurfaceMeshToStl::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* reader)
+void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
