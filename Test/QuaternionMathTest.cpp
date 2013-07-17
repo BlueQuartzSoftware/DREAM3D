@@ -60,17 +60,22 @@ void TestQuat_t()
 
 
 
-  QuatF q1 = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
-  QuatF q2 = QuaternionMathF::New(0.0f, 1.0f, 0.0f, 2.0f);
+  QuatF p = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
+  QuatF q = QuaternionMathF::New(0.0f, 1.0f, 0.0f, 2.0f);
   QuatF out = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  QuatF out2 = QuaternionMathF::New(10.0f, 20.0f, 30.0f, 40.0f);
 
+  QuaternionMathF::Negate(out2);
+  DREAM3D_REQUIRE_EQUAL(out2.x, -10.0)
+  DREAM3D_REQUIRE_EQUAL(out2.y, -20.0)
+  DREAM3D_REQUIRE_EQUAL(out2.z, -30.0)
+  DREAM3D_REQUIRE_EQUAL(out2.w, -40.0)
 
-
-  QuaternionMathF::Copy(q1, out);
-  DREAM3D_REQUIRE_EQUAL(q1.x, out.x)
-  DREAM3D_REQUIRE_EQUAL(q1.y, out.y)
-  DREAM3D_REQUIRE_EQUAL(q1.z, out.z)
-  DREAM3D_REQUIRE_EQUAL(q1.w, out.w)
+  QuaternionMathF::Copy(p, out);
+  DREAM3D_REQUIRE_EQUAL(p.x, out.x)
+  DREAM3D_REQUIRE_EQUAL(p.y, out.y)
+  DREAM3D_REQUIRE_EQUAL(p.z, out.z)
+  DREAM3D_REQUIRE_EQUAL(p.w, out.w)
 
   QuaternionMathF::Identity(out);
   DREAM3D_REQUIRE_EQUAL(out.x, 0.0)
@@ -86,7 +91,7 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.w, 40.0)
 
 
-  QuaternionMathF::ElementWiseMultiply(out, -1.0f);
+  QuaternionMathF::ScalarMultiply(out, -1.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, -10.0)
   DREAM3D_REQUIRE_EQUAL(out.y, -20.0)
   DREAM3D_REQUIRE_EQUAL(out.z, -30.0)
@@ -99,32 +104,88 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.w, 5.0)
 
 
-  QuaternionMathF::ElementWiseAdd(out, 50.0f);
+  QuaternionMathF::ScalarAdd(out, 50.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, 55.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 55.0)
   DREAM3D_REQUIRE_EQUAL(out.z, 55.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 55.0)
 
-  QuaternionMathF::InvertQuaternion(out);
-  DREAM3D_REQUIRE_EQUAL(out.x, -55.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, -55.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, -55.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 55.0)
+// Conjugate Tests where conjugate of a Quaternion is q*
+// (q*)* = q
 
+  p.x = 1.0f; p.y = 2.0f; p.z = 3.0f; p.w = 1.0f;
+  QuaternionMathF::Conjugate(p);
+  DREAM3D_REQUIRE_EQUAL(p.x, -1.0)
+  DREAM3D_REQUIRE_EQUAL(p.y, -2.0)
+  DREAM3D_REQUIRE_EQUAL(p.z, -3.0)
+  DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
+  QuaternionMathF::Conjugate(p);
+  DREAM3D_REQUIRE_EQUAL(p.x, 1.0)
+  DREAM3D_REQUIRE_EQUAL(p.y, 2.0)
+  DREAM3D_REQUIRE_EQUAL(p.z, 3.0)
+  DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
 
-  QuaternionMathF::Multiply(q1, q2, out);
+// (pq)* = q*p*
+  q.x = 1.0f; q.y = 0.0f; q.z = 1.0f; q.w = 1.0f;
+  QuaternionMathF::Multiply(p, q, out);
+  QuaternionMathF::Conjugate(out);
+  QuaternionMathF::Conjugate(p);
+  QuaternionMathF::Conjugate(q);
+  QuaternionMathF::Multiply(q, p, out2);
+  DREAM3D_REQUIRE_EQUAL(out.x, out2.x)
+  DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
+  DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
+  DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
+
+//(p+q)* = p*+q*
+  p.x = 1.0f; p.y = 2.0f; p.z = 3.0f; p.w = 1.0f;
+  q.x = 1.0f; q.y = 0.0f; q.z = 1.0f; q.w = 1.0f;
+  QuaternionMathF::Add(p, q, out);
+  QuaternionMathF::Conjugate(out);
+  QuaternionMathF::Conjugate(p);
+  QuaternionMathF::Conjugate(q);
+  QuaternionMathF::Add(p, q, out2);
+  DREAM3D_REQUIRE_EQUAL(out.x, out2.x)
+  DREAM3D_REQUIRE_EQUAL(out.y, out2.y)
+  DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
+  DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
+
+// Multiplication Test
+// pq != qp
+  p.x = 1.0f; p.y = 0.0f; p.z = 0.0f; p.w = 1.0f;
+  q.x = 0.0f; q.y = 1.0f; q.z = 0.0f; q.w = 2.0f;
+
+  QuaternionMathF::Multiply(p, q, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.z, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-  QuaternionMathF::Multiply(q2, q1, out);
+  QuaternionMathF::Multiply(q, p, out);
   DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
   DREAM3D_REQUIRE_EQUAL(out.z, -1.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-  QuaternionMathF::Normalize(out);
+// Norm Test
+// N(q*) = N(q)
+  p.x = 1.0f; p.y = 0.0f; p.z = 0.0f; p.w = 1.0f;
+  q.x = 0.0f; q.y = 1.0f; q.z = 0.0f; q.w = 2.0f;
+  float norm = QuaternionMathF::Norm(p);
+  QuaternionMathF::Conjugate(p);
+  float cnorm =  QuaternionMathF::Norm(p);
+  DREAM3D_REQUIRE_EQUAL(norm, cnorm)
+
+// Length and Unit Quaternion Tests
+  p.x = 2.0f; p.y = 2.0f; p.z = 2.0f; p.w = 2.0f;
+  float length = QuaternionMathF::Length(p);
+  DREAM3D_REQUIRE_EQUAL(length, 4.0);
+  QuaternionMathF::UnitQuaternion(p);
+  DREAM3D_REQUIRE_EQUAL(p.x, 0.5)
+  DREAM3D_REQUIRE_EQUAL(p.y, 0.5)
+  DREAM3D_REQUIRE_EQUAL(p.z, 0.5)
+  DREAM3D_REQUIRE_EQUAL(p.w, 0.5)
+
 }
 
 // -----------------------------------------------------------------------------
