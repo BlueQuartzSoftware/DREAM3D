@@ -93,7 +93,7 @@ void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t 
   //int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -300, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -300, int8_t, Int32ArrayType, voxels, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceVoxelFractions, ss, float, FloatArrayType, 0, fields, 1)
 
@@ -157,7 +157,7 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
   {
     int gnum = m_GrainIds[j];
     voxcounts[gnum]++;
-    if(m_SurfaceVoxels[j] == 1) surfvoxcounts[gnum]++;
+    if(m_SurfaceVoxels[j] > 0) surfvoxcounts[gnum]++;
   }
   for (size_t i = 1; i < numgrains; i++)
   {
