@@ -25,8 +25,8 @@ class Filt0 : public AbstractFilter
 
     virtual ~Filt0();
 
-   DREAM3D_INSTANCE_PROPERTY(float, Float)
-   DREAM3D_INSTANCE_PROPERTY(int32_t, Integer)
+   DREAM3D_INSTANCE_PROPERTY(float, Filt0_Float)
+   DREAM3D_INSTANCE_PROPERTY(int32_t, Filt0_Integer)
 
 
     /**
@@ -108,8 +108,8 @@ class Filt1 : public AbstractFilter
 
     virtual ~Filt1();
 
-   DREAM3D_INSTANCE_PROPERTY(float, Float)
-   DREAM3D_INSTANCE_PROPERTY(int32_t, Integer)
+   DREAM3D_INSTANCE_PROPERTY(float, Filt1_Float)
+   DREAM3D_INSTANCE_PROPERTY(int32_t, Filt1_Integer)
 
 
     /**

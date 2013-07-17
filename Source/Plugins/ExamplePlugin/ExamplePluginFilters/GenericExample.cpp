@@ -280,7 +280,6 @@ void GenericExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader)
 {
-
 }
 
 // -----------------------------------------------------------------------------

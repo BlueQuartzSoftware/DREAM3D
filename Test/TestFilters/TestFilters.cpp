@@ -11,9 +11,9 @@
 //
 // -----------------------------------------------------------------------------
 Filt0::Filt0() :
-AbstractFilter(),
-m_Float(6.6f),
-m_Integer(15)
+  AbstractFilter(),
+  m_Filt0_Float(6.6f),
+  m_Filt0_Integer(15)
 {
   setupFilterParameters();
 }
@@ -33,20 +33,20 @@ void Filt0::setupFilterParameters()
   std::vector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
 
-   /*  For an Integer use this code*/
-   {
+  /*  For an Integer use this code*/
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Integer");
-    option->setPropertyName("Integer");
+    option->setPropertyName("Filt0_Integer");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
   }
-   /*  For a Floating point value use this code*/
-   {
+  /*  For a Floating point value use this code*/
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Float");
-    option->setPropertyName("Float");
+    option->setPropertyName("Filt0_Float");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
@@ -64,8 +64,10 @@ void Filt0::readFilterParameters(AbstractFilterParametersReader* reader)
 {
   float dummyFloat = 0.0f;
   int dummyInt = 0;
-  setFloat( reader->readValue("Float", dummyFloat) );
-  setInteger( reader->readValue("Integer", dummyInt) );
+  reader->openFilterGroup(index);
+  setFilt0_Float( reader->readValue("Filt0_Float", dummyFloat) );
+  setFilt0_Integer( reader->readValue("Filt0_Integer", dummyInt) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -77,8 +79,8 @@ int Filt0::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-    writer->writeValue("Float", getFloat() );
-    writer->writeValue("Integer", getInteger() );
+  writer->writeValue("Filt0_Float", getFilt0_Float() );
+  writer->writeValue("Filt0_Integer", getFilt0_Integer() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -89,8 +91,6 @@ int Filt0::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
 void Filt0::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
-
 }
 
 
@@ -123,16 +123,16 @@ void Filt0::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 Filt1::Filt1() :
-AbstractFilter(),
-m_Float(6.6f),
-m_Integer(15)
+  AbstractFilter(),
+  m_Filt1_Float(9.9f),
+  m_Filt1_Integer(123)
 {
   setupFilterParameters();
 }
@@ -152,8 +152,8 @@ void Filt1::setupFilterParameters()
   std::vector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
 
-   /*  For an Integer use this code*/
-   {
+  /*  For an Integer use this code*/
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Integer");
     option->setPropertyName("Integer");
@@ -161,8 +161,8 @@ void Filt1::setupFilterParameters()
     option->setValueType("int");
     options.push_back(option);
   }
-   /*  For a Floating point value use this code*/
-   {
+  /*  For a Floating point value use this code*/
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Float");
     option->setPropertyName("Float");
@@ -181,6 +181,10 @@ void Filt1::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void Filt1::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+  float dummyFloat = 0.0f;
+  int dummyInt = 0;
+  setFilt1_Float( reader->readValue("Filt1_Float", dummyFloat) );
+  setFilt1_Integer( reader->readValue("Filt1_Integer", dummyInt) );
 }
 
 // -----------------------------------------------------------------------------
@@ -192,8 +196,8 @@ int Filt1::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-    writer->writeValue("Float", getFloat() );
-    writer->writeValue("Integer", getInteger() );
+  writer->writeValue("Filt1_Float", getFilt1_Float() );
+  writer->writeValue("Filt1_Integer", getFilt1_Integer() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -204,8 +208,6 @@ int Filt1::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
 void Filt1::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
-
 }
 
 
@@ -238,5 +240,5 @@ void Filt1::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

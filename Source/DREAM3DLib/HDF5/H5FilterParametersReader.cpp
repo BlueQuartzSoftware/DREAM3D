@@ -61,7 +61,7 @@ H5FilterParametersReader::~H5FilterParametersReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersReader::openOptionsGroup(AbstractFilter* filter)
+int H5FilterParametersReader::openFilterGroup(AbstractFilter* filter, int index)
 {
   int err = 0;
   if (m_GroupId <= 0)
@@ -69,17 +69,15 @@ int H5FilterParametersReader::openOptionsGroup(AbstractFilter* filter)
     return -1;
   }
 
-  std::string name = StringUtils::numToString(filter->getPipelineIndex());
+  std::string name = StringUtils::numToString(index);
   m_CurrentGroupId = H5Gopen(m_GroupId, name.c_str(), H5P_DEFAULT);
-  //err = H5Lite::readStringAttribute(m_GroupId, name, "ClassName", filter->getNameOfClass());
-  //err = H5Lite::readStringAttribute(m_GroupId, name, "HumanLabel", filter->getHumanLabel());
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersReader::closeOptionsGroup()
+int H5FilterParametersReader::closeFilterGroup()
 {
   H5Gclose(m_CurrentGroupId);
   m_CurrentGroupId = -1;
