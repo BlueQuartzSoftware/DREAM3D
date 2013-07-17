@@ -53,7 +53,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
@@ -174,7 +174,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -67,30 +67,30 @@ class DREAM3DLib_EXPORT FindGrainReferenceMisorientations : public AbstractFilte
 
     virtual ~FindGrainReferenceMisorientations();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceMisorientationsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgMisorientationsArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Reference Misorientations"; }
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, ReferenceOrientation)
 
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceMisorientations : public AbstractFilte
     FindGrainReferenceMisorientations();
 
   private:
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

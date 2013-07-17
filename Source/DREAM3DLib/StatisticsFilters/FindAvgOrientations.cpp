@@ -58,7 +58,7 @@ FindAvgOrientations::FindAvgOrientations() :
   m_Quats(NULL),
   m_AvgQuats(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
 
 // -----------------------------------------------------------------------------
@@ -91,9 +91,9 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -134,7 +134,7 @@ void FindAvgOrientations::execute()
   float voxquat[5];
   float curavgquat[5];
 
-
+#error
   for (size_t i = 1; i < numgrains; i++)
   {
     m_AvgQuats[5*i] = 0.0;

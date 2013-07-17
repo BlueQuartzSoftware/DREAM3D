@@ -38,19 +38,23 @@
 #define TetragonalOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 namespace TetragonalMath {
   namespace Detail {
 
-    static const float TetraQuatSym[8][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
-                       {0.000000000f,1.000000000f,0.000000000f,0.000000000f,0.000000000f},
-                       {0.000000000f,0.000000000f,1.000000000f,0.000000000f,0.000000000f},
-                       {0.000000000f,0.000000000f,0.000000000f,1.000000000f,0.000000000f},
-				       {0.000000000f,0.000000000f,0.000000000f,0.707106781f,-0.707106781f},
-                       {0.000000000f,0.000000000f,0.000000000f,0.707106781f,0.707106781f},
-                       {0.000000000f,0.707106781f,0.707106781f,0.000000000f,0.000000000f},
-				       {0.000000000f,-0.707106781f,0.707106781f,0.000000000f,0.000000000f}};
+    static const QuaternionMathF::Quat_t TetraQuatSym[8] = {QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
+                                             QuaternionMathF::New(1.000000000f,0.000000000f,0.000000000f,0.000000000f),
+                                             QuaternionMathF::New(0.000000000f,1.000000000f,0.000000000f,0.000000000f),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000f),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,0.707106781f,-0.707106781f),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,0.707106781f,0.707106781f),
+                                             QuaternionMathF::New(0.707106781f,0.707106781f,0.000000000f,0.000000000f),
+                                             QuaternionMathF::New(-0.707106781f,0.707106781f,0.000000000f,0.000000000f)};
   }
 }
 /**
@@ -61,7 +65,7 @@ namespace TetragonalMath {
  * @date May 5, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT TetragonalOps : public OrientationMath
+class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
 {
   public:
     MXA_SHARED_POINTERS(TetragonalOps)
@@ -78,27 +82,27 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationMath
     virtual int getMDFSize() { return 23328; }
     virtual int getNumSymOps() { return 8; }
 
-    virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
-    virtual void getQuatSymOp(int i, float *q);
+    virtual float getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3);
+    virtual void getQuatSymOp(int i, QuaternionMathF::Quat_t &q);
     virtual void getRodSymOp(int i, float *r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float &r1,float &r2, float &r3);
-    virtual void getMDFFZRod(float &r1,float &r2, float &r3);
-    virtual void getNearestQuat( float *q1, float *q2);
-    virtual void getFZQuat(float *qr);
+    virtual void getODFFZRod(float &r1, float &r2, float &r3);
+    virtual void getMDFFZRod(float &r1, float &r2, float &r3);
+    virtual void getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2);
+    virtual void getFZQuat(QuaternionMathF::Quat_t &qr);
     virtual int getMisoBin(float r1, float r2, float r3);
-    virtual void determineEulerAngles( int choose, float &synea1, float &synea2, float &synea3);
+    virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime);
-    virtual void getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1);
-    virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt);
-    virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7);
+    virtual void getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime);
+    virtual void getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1);
+    virtual void getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt);
+    virtual void getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7);
 
   protected:
-    float _calcMisoQuat(const float quatsym[8][5], int numsym,
-                  float q1[5], float q2[5],
+    float _calcMisoQuat(const QuaternionMathF::Quat_t quatsym[8], int numsym,
+                  QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
                   float &n1, float &n2, float &n3);
 
   private:

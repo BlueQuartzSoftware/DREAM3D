@@ -36,7 +36,7 @@
 
 #include "FindSchmids.h"
 
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -46,23 +46,23 @@
 //
 // -----------------------------------------------------------------------------
 FindSchmids::FindSchmids() :
-AbstractFilter(),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-m_PolesArrayName(DREAM3D::FieldData::Poles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_Schmids(NULL),
-m_Poles(NULL),
-m_FieldPhases(NULL),
-m_AvgQuats(NULL),
-m_SlipSystems(NULL)
+  AbstractFilter(),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
+  m_PolesArrayName(DREAM3D::FieldData::Poles),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_SlipSystemsArrayName(DREAM3D::FieldData::SlipSystems),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_Schmids(NULL),
+  m_Poles(NULL),
+  m_FieldPhases(NULL),
+  m_AvgQuats(NULL),
+  m_SlipSystems(NULL)
 {
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
   m_LoadingDir.z = 1.0f;
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 }
@@ -114,7 +114,7 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, int32_t, Int32ArrayType, 0, fields, 3)
@@ -158,7 +158,9 @@ void FindSchmids::execute()
   }
 
   int ss = 0;
-  float q1[5];
+  QuaternionMathF::Quat_t q1;
+  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+
   float g[3][3];
   float sampleLoading[3];
   float crystalLoading[3];
@@ -167,20 +169,25 @@ void FindSchmids::execute()
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
+    QuaternionMathF::Copy(avgQuats[i], q1);
+    #error Fix This
     q1[0] = 1;
-      q1[1] = m_AvgQuats[5*i+1];
-      q1[2] = m_AvgQuats[5*i+2];
-      q1[3] = m_AvgQuats[5*i+3];
-      q1[4] = m_AvgQuats[5*i+4];
-    if(m_AvgQuats[5*i] == 0) q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
-
+//      q1[1] = m_AvgQuats[5*i+1];
+//      q1[2] = m_AvgQuats[5*i+2];
+//      q1[3] = m_AvgQuats[5*i+3];
+//      q1[4] = m_AvgQuats[5*i+4];
+    if(m_AvgQuats[5*i] == 0)
+    {
+      QuaternionMathF::Identity(q1);
+     //q1[1] = 0, q1[2] = 0, q1[3] = 0, q1[4] = 1;
+    }
     OrientationMath::QuattoMat(q1, g);
 
     sampleLoading[0] = m_LoadingDir.x;
     sampleLoading[1] = m_LoadingDir.y;
     sampleLoading[2] = m_LoadingDir.z;
 
-    MatrixMath::multiply3x3with3x1(g, sampleLoading, crystalLoading);
+    MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
     m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
 

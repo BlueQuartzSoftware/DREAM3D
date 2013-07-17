@@ -82,7 +82,7 @@ m_TJEuclideanDistances(NULL),
 m_QPEuclideanDistances(NULL),
 m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -150,7 +150,7 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
 

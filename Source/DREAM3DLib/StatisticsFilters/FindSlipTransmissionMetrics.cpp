@@ -63,7 +63,7 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   m_NeighborList(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -105,7 +105,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
@@ -113,10 +113,10 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-      ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
-      setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss.str(), -305);
+    ss.str("");
+    ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+    setErrorCondition(-305);
+    addErrorMessage(getHumanLabel(), ss.str(), -305);
   }
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
@@ -125,9 +125,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
-      ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
-      setErrorCondition(-308);
-       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    setErrorCondition(-308);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
@@ -136,9 +136,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
-      ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
-      setErrorCondition(-308);
-       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    setErrorCondition(-308);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
@@ -147,9 +147,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
-      ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
-      setErrorCondition(-308);
-       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    setErrorCondition(-308);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
@@ -158,9 +158,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
-      ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
-      setErrorCondition(-308);
-       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    setErrorCondition(-308);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -209,10 +209,10 @@ void FindSlipTransmissionMetrics::execute()
 
   float mprime, F1, F1spt, F7;
   int nname;
-  float q1[5], q2[5];
+  QuaternionMathF::Quat_t q1;
+  QuaternionMathF::Quat_t q2;
+  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
 
-  //  int mprimebin, F1bin, F1sptbin, F7bin, disbin;
-  // int actualpoints = 0;
 
   float LD[3];
   LD[0] = 0;
@@ -225,18 +225,21 @@ void FindSlipTransmissionMetrics::execute()
   mPrimelists.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-  F1lists[i].resize(neighborlist[i].size(),0);
-  F1sptlists[i].resize(neighborlist[i].size(),0);
-  F7lists[i].resize(neighborlist[i].size(),0);
-  mPrimelists[i].resize(neighborlist[i].size(),0);
+    F1lists[i].resize(neighborlist[i].size(),0);
+    F1sptlists[i].resize(neighborlist[i].size(),0);
+    F7lists[i].resize(neighborlist[i].size(),0);
+    mPrimelists[i].resize(neighborlist[i].size(),0);
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
-      for (int k = 0; k < 5; k++)
-      {
-        q1[k] = m_AvgQuats[5 * i + k];
-        q2[k] = m_AvgQuats[5 * nname + k];
-      }
+
+      QuaternionMathF::Copy(avgQuats[i], q1);
+      QuaternionMathF::Copy(avgQuats[nname], q1);
+//      for (int k = 0; k < 5; k++)
+//      {
+//        q1[k] = m_AvgQuats[5 * i + k];
+//        q2[k] = m_AvgQuats[5 * nname + k];
+//      }
       if(m_CrystalStructures[m_FieldPhases[i]] == m_CrystalStructures[m_FieldPhases[nname]] && m_FieldPhases[i] > 0)
       {
         m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getmPrime(q1, q2, LD, mprime);
@@ -255,7 +258,7 @@ void FindSlipTransmissionMetrics::execute()
       F1lists[i][j] = F1;
       F1sptlists[i][j] = F1spt;
       F7lists[i][j] = F7;
-  }
+    }
   }
 
   // We do this to create new set of List objects

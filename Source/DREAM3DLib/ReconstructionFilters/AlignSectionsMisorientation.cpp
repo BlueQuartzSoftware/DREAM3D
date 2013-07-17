@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -70,7 +70,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
 {
   Seed = MXA::getMilliSeconds();
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 
@@ -249,10 +249,11 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   //  int xspot, yspot;
   float w;
   float n1, n2, n3;
-  float q1[5];
-  float q2[5];
+  QuaternionMathF::Quat_t q1;
+  QuaternionMathF::Quat_t q2;
   int refposition = 0;
   int curposition = 0;
+  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
 
   unsigned int phase1, phase2;
   int progInt = 0;
@@ -313,15 +314,17 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                     w = 10000.0;
                     if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                     {
-                      q1[1] = m_Quats[refposition * 5 + 1];
-                      q1[2] = m_Quats[refposition * 5 + 2];
-                      q1[3] = m_Quats[refposition * 5 + 3];
-                      q1[4] = m_Quats[refposition * 5 + 4];
+                      QuaternionMathF::Copy(quats[refposition], q1);
+//                      q1[1] = m_Quats[refposition * 5 + 1];
+//                      q1[2] = m_Quats[refposition * 5 + 2];
+//                      q1[3] = m_Quats[refposition * 5 + 3];
+//                      q1[4] = m_Quats[refposition * 5 + 4];
                       phase1 = m_CrystalStructures[m_CellPhases[refposition]];
-                      q2[1] = m_Quats[curposition * 5 + 1];
-                      q2[2] = m_Quats[curposition * 5 + 2];
-                      q2[3] = m_Quats[curposition * 5 + 3];
-                      q2[4] = m_Quats[curposition * 5 + 4];
+                      QuaternionMathF::Copy(quats[curposition], q2);
+//                      q2[1] = m_Quats[curposition * 5 + 1];
+//                      q2[2] = m_Quats[curposition * 5 + 2];
+//                      q2[3] = m_Quats[curposition * 5 + 3];
+//                      q2[4] = m_Quats[curposition * 5 + 4];
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
                       if(phase1 == phase2 && phase1 < m_OrientationOps.size())
                       {

@@ -38,7 +38,7 @@
 #include <limits>
 
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 // -----------------------------------------------------------------------------
 //

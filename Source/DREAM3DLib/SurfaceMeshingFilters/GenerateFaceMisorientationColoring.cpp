@@ -36,7 +36,7 @@
 #include "GenerateFaceMisorientationColoring.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 
@@ -62,7 +62,7 @@ class CalculateFaceMisorientationColorsImpl
     float* m_Quats;
     float* m_Colors;
     unsigned int* m_CrystalStructures;
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures) :
@@ -72,7 +72,7 @@ class CalculateFaceMisorientationColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {
-    m_OrientationOps = OrientationMath::getOrientationOpsVector();	  
+    m_OrientationOps = OrientationOps::getOrientationOpsVector();	  
 	  }
     virtual ~CalculateFaceMisorientationColorsImpl(){}
 
@@ -265,7 +265,7 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
         GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
         typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
