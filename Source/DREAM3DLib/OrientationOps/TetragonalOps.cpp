@@ -130,7 +130,7 @@ float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
   QuatF q2inv;
 
    QuaternionMathF::Copy(q2, q2inv);
-   QuaternionMathF::InvertQuaternion(q2inv);
+   QuaternionMathF::Conjugate(q2inv);
 
    QuaternionMathF::Multiply(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
