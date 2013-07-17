@@ -217,7 +217,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->writeValue("RotationAxis", getRotationAxis() );
   writer->writeValue("RotationAngle", getRotationAngle() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

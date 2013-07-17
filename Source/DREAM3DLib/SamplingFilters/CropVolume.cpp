@@ -169,7 +169,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberGrains", getRenumberGrains() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

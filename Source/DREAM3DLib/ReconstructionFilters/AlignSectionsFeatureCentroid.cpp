@@ -140,7 +140,7 @@ int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameters
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -105,7 +105,7 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
   writer->openFilterGroup(this, index);
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

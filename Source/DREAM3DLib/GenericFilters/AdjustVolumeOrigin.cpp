@@ -178,7 +178,7 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
   writer->writeValue("ApplyToSolidMesh", getApplyToSolidMesh() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

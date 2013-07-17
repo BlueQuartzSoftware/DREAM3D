@@ -98,7 +98,7 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
   writer->writeValue("NewFieldArrayName", getNewFieldArrayName() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

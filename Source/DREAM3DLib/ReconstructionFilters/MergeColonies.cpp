@@ -207,7 +207,7 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("AngleTolerance", getAngleTolerance() );
   writer->writeValue("IdentifyGlobAlpha", getIdentifyGlobAlpha() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -129,7 +129,7 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->openFilterGroup(this, index);
   writer->writeValue("MaxIterations", getMaxIterations() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -44,6 +44,9 @@
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
+#include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 // -----------------------------------------------------------------------------
@@ -57,6 +60,7 @@ DataContainerReader::DataContainerReader() :
   m_ReadSolidMeshData(false),
   m_ReadAllArrays(true)
 {
+  m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
 }
 
@@ -131,14 +135,13 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   index = writeExistingPipelineToFile(writer, index);
-  index++; // increment the index first
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("ReadVoxelData", getReadVoxelData() );
   writer->writeValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );
   writer->writeValue("ReadSolidMeshData", getReadSolidMeshData() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the index after the one we just wrote to
 }
 
 // -----------------------------------------------------------------------------
@@ -351,19 +354,37 @@ void DataContainerReader::execute()
 int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
 {
   int err = 0;
+  m_PipelineFromFile->clear();
+
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+
   // HDF5: Open the "Pipeline" Group
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  reader->setGroupId(pipelineGroupId);
 
   // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-
-  // Now you know how many items to loop over
+  std::list<std::string> groupList;
+  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
+  std::string classNameStr = "";
+  for (int i=0; i<groupList.size(); i++)
+  {
+    std::stringstream ss;
+    ss << i;
+    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 
-  // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    FilterManager::Pointer fm = FilterManager::Instance();
+    IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);
+    AbstractFilter::Pointer filter = ff->create();
 
-  // Read the parameters
+    // Read the parameters
+    filter->readFilterParameters( reader.get() );
 
-  // add filter to the m_PipelineFromFile
+    // Add filter to m_PipelineFromFile
+    m_PipelineFromFile->pushBack(filter);
+  }
 
   return err;
 }
@@ -377,10 +398,10 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 
   for(FilterPipeline::FilterContainerType::iterator iter = container.begin(); iter != container.end(); ++iter)
   {
-    index++; // Increment the index first
     index = (*iter)->writeFilterParameters(writer, index);
+    index++;
   }
-  return 0;
+  return index;
 }
 
 // -----------------------------------------------------------------------------

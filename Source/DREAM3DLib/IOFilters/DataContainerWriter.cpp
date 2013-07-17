@@ -151,7 +151,7 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->writeValue("WriteSolidMeshData", getWriteSolidMeshData() );
   writer->writeValue("WriteXdmfFile", getWriteXdmfFile() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -382,7 +382,6 @@ int DataContainerWriter::writePipeline()
   while(NULL != currentFilter.get())
   {
     index = currentFilter->writeFilterParameters(parametersWriter.get(), index);
-    index++; // We need to increment the index because what was returned was the index that was just written.
     currentFilter = currentFilter->getNextFilter();
   }
 

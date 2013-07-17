@@ -129,7 +129,7 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("UseTransformations", getUseTransformations() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

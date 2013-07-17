@@ -105,7 +105,7 @@ int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   writer->openFilterGroup(this, index);
   writer->writeValue("LoadingDirection", getLoadingDir() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

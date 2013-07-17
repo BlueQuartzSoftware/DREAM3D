@@ -140,7 +140,7 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
    writer->writeValue("ColorsArrayName", getColorsArrayName() );
    writer->writeValue("ImageFormat", getImageFormat() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

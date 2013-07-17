@@ -118,7 +118,7 @@ int BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParamet
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("NumberofNeighbors", getNumberOfNeighbors() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

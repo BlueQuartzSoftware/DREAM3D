@@ -62,6 +62,10 @@ void Filt0::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void Filt0::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+  float dummyFloat = 0.0f;
+  int dummyInt = 0;
+  setFloat( reader->readValue("Float", dummyFloat) );
+  setInteger( reader->readValue("Integer", dummyInt) );
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +80,7 @@ int Filt0::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
     writer->writeValue("Float", getFloat() );
     writer->writeValue("Integer", getInteger() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -191,7 +195,7 @@ int Filt1::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
     writer->writeValue("Float", getFloat() );
     writer->writeValue("Integer", getInteger() );
   writer->closeFilterGroup();
-  return index; // we want to return the next index that was just written to
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
