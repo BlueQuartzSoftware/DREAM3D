@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /Users/mjackson/Desktop/DREAM3D/Source
+cd Source
 
 files=`find . -type f -name "*.cpp"`
 
@@ -29,7 +29,7 @@ for x in $files;
           mv "$x.tmp" "$x"
       done
       
-cd /Users/mjackson/Workspace/DREAM3D/Documentation/
+cd ../Documentation/
 
     files=`find . -type f -name "*.md"`
 
