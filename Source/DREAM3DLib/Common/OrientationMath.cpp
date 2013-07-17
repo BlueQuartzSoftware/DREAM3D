@@ -96,7 +96,7 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
    {
 	   q2inv[i] = q2[i];
    }
-   OrientationMath::invertQuaternion(q2inv);
+   OrientationMath::Conjugate(q2inv);
    OrientationMath::multiplyQuaternions(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
@@ -570,7 +570,7 @@ void OrientationMath::normalizeQuat(float* qr)
   qr[4] = static_cast<float>( qr[4]/norm );
 }
 
-void OrientationMath::invertQuaternion(float* q)
+void OrientationMath::Conjugate(float* q)
 {
   q[0] = q[0];
   q[1] = -q[1];

@@ -271,7 +271,7 @@ float &n1, float &n2, float &n3)
   //  float _1, _2,  _6;
 
   QuaternionMathF::Copy(q2, q2inv);
-  QuaternionMathF::InvertQuaternion(q2inv);
+  QuaternionMathF::Conjugate(q2inv);
 
   QuaternionMathF::Multiply(q2inv, q1, qc);
   QuaternionMathF::ElementWiseAbs(qc);
