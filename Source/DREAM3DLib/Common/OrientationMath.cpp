@@ -642,7 +642,7 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
   MULT_QUAT(inQuat, multQuat, outQuat);
 }
 
-void OrientationMath::multiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
+void OrientationMath::MultiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
 {
   float g[3][3];
   OrientationMath::QuattoMat(inQuat, g);

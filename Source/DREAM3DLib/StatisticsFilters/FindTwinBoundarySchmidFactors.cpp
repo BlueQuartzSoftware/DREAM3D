@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -64,7 +64,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
     float* m_TwinBoundarySchmidFactors;
     unsigned int* m_CrystalStructures;
     float* m_LoadDir;
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundarySchmidFactorsImpl(float* LoadingDir, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundarySchmidFactors) :
@@ -77,7 +77,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
       m_CrystalStructures(CrystalStructures),
       m_LoadDir(LoadingDir)
     {
-    m_OrientationOps = OrientationMath::getOrientationOpsVector();
+    m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
     virtual ~CalculateTwinBoundarySchmidFactorsImpl(){}
 
@@ -88,12 +88,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
       float g1[3][3];
       float schmid1, schmid2, schmid3;
       int plane =0;
-      unsigned int phase1, phase2;
-      float q1[5], q2[5];
+ //     unsigned int phase1, phase2;
+      QuaternionMathF::Quat_t q1;
+   //   QuaternionMathF::Quat_t q2;
+      QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+
       float n[3], b[3];
       float crystalLoading[3];
       float cosPhi, cosLambda;
-      float misq[5], sym_q[5], s_misq[5];
+//      float misq[5], sym_q[5], s_misq[5];
 
       for (size_t i = start; i < end; i++)
       {
@@ -108,30 +111,32 @@ class CalculateTwinBoundarySchmidFactorsImpl
           plane = 0;
           if(grain1 > grain2) grain = grain1;
           else grain = grain2;
-          for(int m=0;m<5;m++)
-          {
-            q1[m]=m_Quats[5*grain+m];
-          }
+
+          QuaternionMathF::Copy(quats[grain], q1);
+//          for(int m=0;m<5;m++)
+//          {
+//            q1[m]=m_Quats[5*grain+m];
+//          }
           //calculate crystal direction parallel to normal
           OrientationMath::QuattoMat(q1, g1);
-          MatrixMath::multiply3x3with3x1(g1,normal,n);
+          MatrixMath::Multiply3x3with3x1(g1,normal,n);
           //calculate crystal direction parallel to loading direction
-          MatrixMath::multiply3x3with3x1(g1, m_LoadDir, crystalLoading);
+          MatrixMath::Multiply3x3with3x1(g1, m_LoadDir, crystalLoading);
 
           if(n[2] < 0) n[0] = -n[0], n[1] = -n[1], n[2] = -n[2];
           if(n[0] > 0 && n[1] > 0)
           {
             plane = 1;
             n[0] = 1, n[1] = 1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+            cosPhi = fabs(MatrixMath::DotProduct(crystalLoading, n));
             b[0] = 1, b[1] = -1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid1 = cosPhi*cosLambda;
             b[0] = -1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid2 = cosPhi*cosLambda;
             b[0] = 0, b[1] = -1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid3 = cosPhi*cosLambda;
             m_TwinBoundarySchmidFactors[3*i] = schmid1;
             m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
@@ -141,15 +146,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             plane = 2;
             n[0] = 1, n[1] = -1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+            cosPhi = fabs(MatrixMath::DotProduct(crystalLoading, n));
             b[0] = 1, b[1] = 1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid1 = cosPhi*cosLambda;
             b[0] = 0, b[1] = 1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid2 = cosPhi*cosLambda;
             b[0] = -1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid3 = cosPhi*cosLambda;
             m_TwinBoundarySchmidFactors[3*i] = schmid1;
             m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
@@ -159,15 +164,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             plane = 3;
             n[0] = -1, n[1] = 1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+            cosPhi = fabs(MatrixMath::DotProduct(crystalLoading, n));
             b[0] = 1, b[1] = 1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid1 = cosPhi*cosLambda;
             b[0] = 1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid2 = cosPhi*cosLambda;
             b[0] = 0, b[1] = -1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid3 = cosPhi*cosLambda;
             m_TwinBoundarySchmidFactors[3*i] = schmid1;
             m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
@@ -177,15 +182,15 @@ class CalculateTwinBoundarySchmidFactorsImpl
           {
             plane = 4;
             n[0] = -1, n[1] = -1, n[2] = 1;
-            cosPhi = fabs(MatrixMath::dotProduct(crystalLoading, n));
+            cosPhi = fabs(MatrixMath::DotProduct(crystalLoading, n));
             b[0] = 1, b[1] = 0, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid1 = cosPhi*cosLambda;
             b[0] = 0, b[1] = 1, b[2] = 1;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid2 = cosPhi*cosLambda;
             b[0] = 1, b[1] = -1, b[2] = 0;
-            cosLambda = fabs(MatrixMath::dotProduct(crystalLoading, b));
+            cosLambda = fabs(MatrixMath::DotProduct(crystalLoading, b));
             schmid3 = cosPhi*cosLambda;
             m_TwinBoundarySchmidFactors[3*i] = schmid1;
             m_TwinBoundarySchmidFactors[3*i+1] = schmid2;
@@ -232,7 +237,7 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
   m_LoadingDir.z = 1.0f;
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -291,7 +296,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 

@@ -41,7 +41,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -111,7 +111,7 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
 }
 
 // -----------------------------------------------------------------------------
@@ -194,7 +194,7 @@ void JumbleOrientations::execute()
   float q[5];
   for (int i=1; i< totalFields; i++)
   {
-    OrientationMath::eulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
+    OrientationMath::EulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
     m_AvgQuats[5*i] = q[0];
     m_AvgQuats[5*i+1] = q[1];
     m_AvgQuats[5*i+2] = q[2];

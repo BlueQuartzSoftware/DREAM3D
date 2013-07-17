@@ -60,8 +60,8 @@
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/Quaternion.hpp"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Common/QuaternionMath.hpp"
 
 
 #include "FilterWidgets/FilterWidgetsLib.h"
@@ -75,9 +75,9 @@
 int main (int argc, char  *argv[])
 {
   FloatArrayType::Pointer quatArray = FloatArrayType::CreateArray(10, 4, "Quaternions");
-  QuaternionOpsF::Quaternion_t* quaternions = reinterpret_cast<QuaternionOpsF::Quaternion_t*>(quatArray->GetVoidPointer(0));
-  QuaternionOpsF::Quat_t* quats = reinterpret_cast<QuaternionOpsF::Quat_t*>(quatArray->GetVoidPointer(0));
-  QuaternionOpsF::Vec4_t* vec4s = reinterpret_cast<QuaternionOpsF::Vec4_t*>(quatArray->GetVoidPointer(0));
+  QuaternionMathF::Quaternion_t* quaternions = reinterpret_cast<QuaternionMathF::Quaternion_t*>(quatArray->GetVoidPointer(0));
+  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(quatArray->GetVoidPointer(0));
+  QuaternionMathF::Vec4_t* vec4s = reinterpret_cast<QuaternionMathF::Vec4_t*>(quatArray->GetVoidPointer(0));
   float* ptrs = reinterpret_cast<float*>(quatArray->GetVoidPointer(0));
 
   QuaternionOpsF::Quaternion_t qtnOut;

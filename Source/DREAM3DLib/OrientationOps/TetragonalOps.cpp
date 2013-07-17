@@ -38,7 +38,7 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 namespace TetragonalMath {
   namespace Detail {
@@ -59,7 +59,7 @@ namespace TetragonalMath {
                       {10000000000.0f,10000000000.0f,0.0},
                       {-10000000000.0f,10000000000.0f,0.0}};
 
-        static const float TetraMatSym[8][3][3] = 
+        static const float TetraMatSym[8][3][3] =
              {{{1.0, 0.0, 0.0},
               {0.0, 1.0, 0.0},
               {0.0, 0.0, 1.0}},
@@ -80,7 +80,7 @@ namespace TetragonalMath {
               {-1.0, 0.0, 0.0},
               {0.0, 0.0, 1.0}},
 
-              {{0.0, -1.0, 0.0},	
+              {{0.0, -1.0, 0.0},
               {1.0,  0.0, 0.0},
               {0.0,  0.0, 1.0}},
 
@@ -116,37 +116,34 @@ TetragonalOps::~TetragonalOps()
   // TODO Auto-generated destructor stub
 }
 
-float TetragonalOps::_calcMisoQuat(const float quatsym[8][5], int numsym,
-                                      float q1[5], float q2[5],
-                                      float &n1, float &n2, float &n3)
+float TetragonalOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[8], int numsym,
+                  QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+                  float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
     float n1min = 0.0f;
     float n2min = 0.0f;
     float n3min = 0.0f;
-  float qr[5];
-  float qc[5];
-   float q2inv[5];
+  QuaternionMathF::Quat_t qr;
+  QuaternionMathF::Quat_t qc;
+  QuaternionMathF::Quat_t q2inv;
 
-   for(int i=0;i<5;i++)
-   {
-	   q2inv[i] = q2[i];
-   }
-   OrientationMath::invertQuaternion(q2inv);
+   QuaternionMathF::Copy(q2, q2inv);
+   QuaternionMathF::InvertQuaternion(q2inv);
 
-   OrientationMath::multiplyQuaternions(q2inv, q1, qr);
+   QuaternionMathF::Multiply(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
-    MULT_QUAT(qr, quatsym[i], qc)
-    if (qc[4] < -1) {
-      qc[4] = -1;
+    QuaternionMathF::Multiply(qr, quatsym[i], qc);
+    if (qc.w < -1) {
+      qc.w = -1;
     }
-    else if (qc[4] > 1) {
-      qc[4] = 1;
+    else if (qc.w > 1) {
+      qc.w = 1;
     }
 
-  QuattoAxisAngle(qc, w, n1, n2, n3);
+ OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
   if (w > m_pi) {
       w = two_pi - w;
@@ -168,20 +165,20 @@ float TetragonalOps::_calcMisoQuat(const float quatsym[8][5], int numsym,
   return wmin;
 }
 
-float TetragonalOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
+float TetragonalOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
 {
   int numsym = 8;
 
   return _calcMisoQuat(TetraQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void TetragonalOps::getQuatSymOp(int i,float *q)
+void TetragonalOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
 {
-  q[0] = TetraQuatSym[i][0];
-  q[1] = TetraQuatSym[i][1];
-  q[2] = TetraQuatSym[i][2];
-  q[3] = TetraQuatSym[i][3];
-  q[4] = TetraQuatSym[i][4];
+  QuaternionMathF::Copy(TetraQuatSym[i], q);
+//  q.x = TetraQuatSym[i][0];
+//  q.y = TetraQuatSym[i][1];
+//  q.z = TetraQuatSym[i][2];
+//  q.w = TetraQuatSym[i][3];
 }
 
 void TetragonalOps::getRodSymOp(int i,float *r)
@@ -217,23 +214,23 @@ void TetragonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
   float FZn1, FZn2, FZn3;
 
   _calcRodNearestOrigin(TetraRodSym, 4, r1, r2, r3);
-  RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
   FZn1 = fabs(n1);
   FZn2 = fabs(n2);
   FZn3 = fabs(n3);
 
-  axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void TetragonalOps::getNearestQuat( float *q1, float *q2)
+void TetragonalOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
 {
   int numsym = 8;
 
   _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
 }
 
-void TetragonalOps::getFZQuat(float *qr)
+void TetragonalOps::getFZQuat(QuaternionMathF::Quat_t &qr)
 {
   int numsym = 8;
 
@@ -247,7 +244,7 @@ int TetragonalOps::getMisoBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-  RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = TetraDim1InitValue;
   dim[1] = TetraDim2InitValue;
@@ -280,9 +277,9 @@ void TetragonalOps::determineEulerAngles(int choose, float &synea1, float &synea
   phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getODFFZRod(r1, r2, r3);
-  RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
 
@@ -303,7 +300,7 @@ void TetragonalOps::determineRodriguesVector( int choose, float &r1, float &r2, 
   phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 
@@ -336,7 +333,7 @@ void TetragonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
+void TetragonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -373,7 +370,7 @@ void TetragonalOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPri
 }
 
 
-void TetragonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1)
+void TetragonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -393,7 +390,7 @@ void TetragonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, flo
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
   if(maxSF == true) maxSchmidFactor = 0;
 /*  for(int i=0;i<12;i++)
@@ -404,12 +401,12 @@ void TetragonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, flo
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath::normalize3x1(hkl1);
-    MatrixMath::normalize3x1(uvw1);
-    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::DotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::DotProduct(LD,hkl1);
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -423,12 +420,12 @@ void TetragonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, flo
         slipPlane[0] = CubicSlipPlanes[i][0];
         slipPlane[1] = CubicSlipPlanes[i][1];
         slipPlane[2] = CubicSlipPlanes[i][2];
-        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath::normalize3x1(hkl2);
-        MatrixMath::normalize3x1(uvw2);
-        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::DotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::DotProduct(LD,hkl2);
         schmidFactor2 = directionComponent2*planeComponent2;
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
@@ -444,7 +441,7 @@ void TetragonalOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, flo
   #endif
 }
 
-void TetragonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt)
+void TetragonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -463,7 +460,7 @@ void TetragonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, 
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
   if(maxSF == true) maxSchmidFactor = 0;
 /*  for(int i=0;i<12;i++)
@@ -474,12 +471,12 @@ void TetragonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, 
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath::normalize3x1(hkl1);
-    MatrixMath::normalize3x1(uvw1);
-    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::DotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::DotProduct(LD,hkl1);
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -494,15 +491,15 @@ void TetragonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, 
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath::normalize3x1(hkl2);
-        MatrixMath::normalize3x1(uvw2);
-        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::DotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::DotProduct(LD,hkl2);
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-        planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
@@ -519,7 +516,7 @@ void TetragonalOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, 
 
 }
 
-void TetragonalOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7)
+void TetragonalOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -536,7 +533,7 @@ void TetragonalOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, flo
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
 
 /*  for(int i=0;i<12;i++)
@@ -547,12 +544,12 @@ void TetragonalOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, flo
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath::normalize3x1(hkl1);
-    MatrixMath::normalize3x1(uvw1);
-    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::DotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::DotProduct(LD,hkl1);
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -566,12 +563,12 @@ void TetragonalOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, flo
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath::normalize3x1(hkl2);
-        MatrixMath::normalize3x1(uvw2);
-        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::DotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::DotProduct(LD,hkl2);
         schmidFactor2 = directionComponent2*planeComponent2;
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }

@@ -99,7 +99,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
   if(err == -302)
   {

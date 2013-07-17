@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 /*
  *
@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const std::string getHumanLabel() { return "Find Cell Quaternions"; }
 
     /**
@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     float* m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

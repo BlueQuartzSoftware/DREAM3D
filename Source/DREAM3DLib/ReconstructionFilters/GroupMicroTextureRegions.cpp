@@ -38,8 +38,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -59,25 +59,25 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 GroupMicroTextureRegions::GroupMicroTextureRegions() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_CAxisTolerance(1.0f),
-m_GrainIds(NULL),
-m_CellParentIds(NULL),
-m_FieldParentIds(NULL),
-m_AvgQuats(NULL),
-m_Active(NULL),
-m_FieldPhases(NULL),
-m_NeighborList(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CAxisTolerance(1.0f),
+  m_GrainIds(NULL),
+  m_CellParentIds(NULL),
+  m_FieldParentIds(NULL),
+  m_AvgQuats(NULL),
+  m_Active(NULL),
+  m_FieldPhases(NULL),
+  m_NeighborList(NULL),
+  m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 }
@@ -139,7 +139,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 4)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -150,9 +150,9 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
-      setErrorCondition(-304);
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
+    ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+    setErrorCondition(-304);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -190,14 +190,14 @@ void GroupMicroTextureRegions::execute()
   //Convert user defined tolerance to radians.
   m_CAxisTolerance = m_CAxisTolerance * m_pi/180.0f;
 
- notifyStatusMessage("Grouping MicroTexture Regions");
+  notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
- notifyStatusMessage("Characterizing MicroTexture Regions");
+  notifyStatusMessage("Characterizing MicroTexture Regions");
   characterize_micro_texture_regions();
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("GroupMicroTextureRegions Completed");
+  notifyStatusMessage("GroupMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -221,8 +221,10 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float c1[3];
   float c2[3];
   float caxis[3] = {0,0,1};
-  float q1[5];
-  float q2[5];
+  QuaternionMathF::Quat_t q1;
+  QuaternionMathF::Quat_t q2;
+  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
@@ -241,23 +243,24 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       {
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
-        q1[0] = 1;
-        q1[1] = m_AvgQuats[5*firstgrain+1];
-        q1[2] = m_AvgQuats[5*firstgrain+2];
-        q1[3] = m_AvgQuats[5*firstgrain+3];
-        q1[4] = m_AvgQuats[5*firstgrain+4];
+        QuaternionMathF::Copy(avgQuats[firstgrain], q1);
+//        q1[0] = 1;
+//        q1[1] = m_AvgQuats[5*firstgrain+1];
+//        q1[2] = m_AvgQuats[5*firstgrain+2];
+//        q1[3] = m_AvgQuats[5*firstgrain+3];
+//        q1[4] = m_AvgQuats[5*firstgrain+4];
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-      OrientationMath::QuattoMat(q1, g1);
-    //transpose the g matrix so when caxis is multiplied by it
-    //it will give the sample direction that the caxis is along
-    MatrixMath::transpose3x3(g1, g1t);
-    MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
-    //normalize so that the dot product can be taken below without
-    //dividing by the magnitudes (they would be 1)
-    MatrixMath::normalize3x1(c1);
+        OrientationMath::QuattoMat(q1, g1);
+        //transpose the g matrix so when caxis is multiplied by it
+        //it will give the sample direction that the caxis is along
+        MatrixMath::Transpose3x3(g1, g1t);
+        MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+        //normalize so that the dot product can be taken below without
+        //dividing by the magnitudes (they would be 1)
+        MatrixMath::Normalize3x1(c1);
 
 
-    for (int l = 0; l < size; l++)
+        for (int l = 0; l < size; l++)
         {
           angcur = 180.0f;
           size_t neigh = neighborlist[firstgrain][l];
@@ -266,21 +269,22 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
             if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
             {
-              q2[0] = 1;
-              q2[1] = m_AvgQuats[5*neigh+1];
-              q2[2] = m_AvgQuats[5*neigh+2];
-              q2[3] = m_AvgQuats[5*neigh+3];
-              q2[4] = m_AvgQuats[5*neigh+4];
-        OrientationMath::QuattoMat(q2, g2);
-        //transpose the g matrix so when caxis is multiplied by it
-        //it will give the sample direction that the caxis is along
-        MatrixMath::transpose3x3(g2, g2t);
-        MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
-        //normalize so that the dot product can be taken below without
-        //dividing by the magnitudes (they would be 1)
-        MatrixMath::normalize3x1(c2);
+              QuaternionMathF::Copy(avgQuats[neigh], q2);
+//              q2[0] = 1;
+//              q2[1] = m_AvgQuats[5*neigh+1];
+//              q2[2] = m_AvgQuats[5*neigh+2];
+//              q2[3] = m_AvgQuats[5*neigh+3];
+//              q2[4] = m_AvgQuats[5*neigh+4];
+              OrientationMath::QuattoMat(q2, g2);
+              //transpose the g matrix so when caxis is multiplied by it
+              //it will give the sample direction that the caxis is along
+              MatrixMath::Transpose3x3(g2, g2t);
+              MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
+              //normalize so that the dot product can be taken below without
+              //dividing by the magnitudes (they would be 1)
+              MatrixMath::Normalize3x1(c2);
 
-        w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+              w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
               w = acosf(w);
               if (w <= m_CAxisTolerance || (m_pi-w) <= m_CAxisTolerance)
               {
@@ -303,6 +307,9 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::characterize_micro_texture_regions()
 {
   VoxelDataContainer* m = getVoxelDataContainer();

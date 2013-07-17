@@ -37,197 +37,197 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
+const static float m_pi = static_cast<float>(M_PI);
 
-  const static float m_pi = static_cast<float>(M_PI);
+const float threesixty_over_pi = 360.0f/m_pi;
+const float oneeighty_over_pi = 180.0f/m_pi;
+const float sqrt_two = powf(2.0f, 0.5f);
 
-  const float threesixty_over_pi = 360.0f/m_pi;
-  const float oneeighty_over_pi = 180.0f/m_pi;
-  const float sqrt_two = powf(2.0f, 0.5f);
+const float acos_neg_one = acosf(-1.0f);
+const float acos_pos_one = acosf(1.0f);
 
-  const float acos_neg_one = acosf(-1.0f);
-  const float acos_pos_one = acosf(1.0f);
+static const float CubicDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+static const float CubicDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+static const float CubicDim3InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
+static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
+static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
+static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
 
-  static const float CubicDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-  static const float CubicDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-  static const float CubicDim3InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-  static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
-  static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
-  static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
+static const QuaternionMathF::Quat_t CubicQuatSym[24] = {
+  QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+  QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+  QuaternionMathF::New(0.707106781f, 0.000000000f, 0.000000000f, 0.707106781f),
+  QuaternionMathF::New(0.000000000f, 0.707106781f, 0.000000000f, 0.707106781f),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, 0.707106781f, 0.707106781f),
+  QuaternionMathF::New(-0.707106781f, 0.000000000f, 0.000000000f, 0.707106781f),
+  QuaternionMathF::New(0.000000000f, -0.707106781f, 0.000000000f, 0.707106781f),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, -0.707106781f, 0.707106781f),
+  QuaternionMathF::New(0.707106781f, 0.707106781f, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(-0.707106781f, 0.707106781f, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, 0.707106781f, 0.707106781f, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, -0.707106781f, 0.707106781f, 0.000000000f),
+  QuaternionMathF::New(0.707106781f, 0.000000000f, 0.707106781f, 0.000000000f),
+  QuaternionMathF::New(-0.707106781f, 0.000000000f, 0.707106781f, 0.000000000f),
+  QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+  QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+  QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+  QuaternionMathF::New(-0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f),
+  QuaternionMathF::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+  QuaternionMathF::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+  QuaternionMathF::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+  QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
 
-  static const float CubicQuatSym[24][5] = {
-                       {0.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f},
-                       {0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f},
-                       {0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f},
-                       {0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f},
-                       {0.000000000f, 0.707106781f, 0.000000000f, 0.000000000f, 0.707106781f},
-                       {0.000000000f, 0.000000000f, 0.707106781f, 0.000000000f, 0.707106781f},
-                       {0.000000000f, 0.000000000f, 0.000000000f, 0.707106781f, 0.707106781f},
-                       {0.000000000f, -0.707106781f, 0.000000000f, 0.000000000f, 0.707106781f},
-                       {0.000000000f, 0.000000000f, -0.707106781f, 0.000000000f, 0.707106781f},
-                       {0.000000000f, 0.000000000f, 0.000000000f, -0.707106781f, 0.707106781f},
-                       {0.000000000f, 0.707106781f, 0.707106781f, 0.000000000f, 0.000000000f},
-                       {0.000000000f, -0.707106781f, 0.707106781f, 0.000000000f, 0.000000000f},
-                       {0.000000000f, 0.000000000f, 0.707106781f, 0.707106781f, 0.000000000f},
-                       {0.000000000f, 0.000000000f, -0.707106781f, 0.707106781f, 0.000000000f},
-                       {0.000000000f, 0.707106781f, 0.000000000f, 0.707106781f, 0.000000000f},
-                       {0.000000000f, -0.707106781f, 0.000000000f, 0.707106781f, 0.000000000f},
-                       {0.000000000f, 0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f},
-                       {0.000000000f, -0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f},
-                       {0.000000000f, 0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f},
-                       {0.000000000f, -0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f},
-                       {0.000000000f, -0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f},
-                       {0.000000000f, 0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f},
-                       {0.000000000f, -0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f},
-                       {0.000000000f, 0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f}};
+static const float CubicRodSym[24][3] = {{0.0f, 0.0f,0.0f},
+                                         {10000000000.0f, 0.0f, 0.0f},
+                                         {0.0f, 10000000000.0f, 0.0f},
+                                         {0.0f, 0.0f, 10000000000.0f},
+                                         {1.0f, 0.0f, 0.0f},
+                                         {0.0f, 1.0f, 0.0f},
+                                         {0.0f, 0.0f, 1.0f},
+                                         {-1.0f, 0.0f, 0.0f},
+                                         {0.0f, -1.0f, 0.0f},
+                                         {0.0f, 0.0f, -1.0f},
+                                         {10000000000.0f, 10000000000.0f, 0.0f},
+                                         {-10000000000.0f, 10000000000.0f, 0.0f},
+                                         {0.0f, 10000000000.0f, 10000000000.0f},
+                                         {0.0f, -10000000000.0f, 10000000000.0f},
+                                         {10000000000.0f, 0.0f, 10000000000.0f},
+                                         {-10000000000.0f, 0.0f, 10000000000.0f},
+                                         {1.0f, 1.0f, 1.0f},
+                                         {-1.0f, -1.0f, -1.0f},
+                                         {1.0f, -1.0f, 1.0f},
+                                         {-1.0f, 1.0f, -1.0f},
+                                         {-1.0f, 1.0f, 1.0f},
+                                         {1.0f, -1.0f, -1.0f},
+                                         {-1.0f, -1.0f, 1.0f},
+                                         {1.0f, 1.0f, -1.0}};
 
-  static const float CubicRodSym[24][3] = {{0.0f, 0.0f,0.0f},
-                      {10000000000.0f, 0.0f, 0.0f},
-                      {0.0f, 10000000000.0f, 0.0f},
-                      {0.0f, 0.0f, 10000000000.0f},
-                      {1.0f, 0.0f, 0.0f},
-                      {0.0f, 1.0f, 0.0f},
-                      {0.0f, 0.0f, 1.0f},
-                      {-1.0f, 0.0f, 0.0f},
-                      {0.0f, -1.0f, 0.0f},
-                      {0.0f, 0.0f, -1.0f},
-                      {10000000000.0f, 10000000000.0f, 0.0f},
-                      {-10000000000.0f, 10000000000.0f, 0.0f},
-                      {0.0f, 10000000000.0f, 10000000000.0f},
-                      {0.0f, -10000000000.0f, 10000000000.0f},
-                      {10000000000.0f, 0.0f, 10000000000.0f},
-                      {-10000000000.0f, 0.0f, 10000000000.0f},
-                      {1.0f, 1.0f, 1.0f},
-                      {-1.0f, -1.0f, -1.0f},
-                      {1.0f, -1.0f, 1.0f},
-                      {-1.0f, 1.0f, -1.0f},
-                      {-1.0f, 1.0f, 1.0f},
-                      {1.0f, -1.0f, -1.0f},
-                      {-1.0f, -1.0f, 1.0f},
-                      {1.0f, 1.0f, -1.0}};
+static const float CubicSlipDirections[12][3] = {{0.0f,1.0f,-1.0f},
+                                                 {1.0f,0.0f,-1.0f},
+                                                 {1.0f,-1.0f,0.0f},
+                                                 {1.0f,-1.0f,0.0f},
+                                                 {1.0f,0.0f,1.0f},
+                                                 {0.0f,1.0f,1.0f},
+                                                 {1.0f,1.0f,0.0f},
+                                                 {0.0f,1.0f,1.0f},
+                                                 {1.0f,0.0f,-1.0f},
+                                                 {1.0f,1.0f,0.0f},
+                                                 {1.0f,0.0f,1.0f},
+                                                 {0.0f,1.0f,-1.0f}};
 
-    static const float CubicSlipDirections[12][3] = {{0.0f,1.0f,-1.0f},
-												{1.0f,0.0f,-1.0f},
-												{1.0f,-1.0f,0.0f},
-												{1.0f,-1.0f,0.0f},
-												{1.0f,0.0f,1.0f},
-												{0.0f,1.0f,1.0f},
-												{1.0f,1.0f,0.0f},
-												{0.0f,1.0f,1.0f},
-												{1.0f,0.0f,-1.0f},
-												{1.0f,1.0f,0.0f},
-												{1.0f,0.0f,1.0f},
-												{0.0f,1.0f,-1.0f}};
+static const float CubicSlipPlanes[12][3] = {{1.0f,1.0f,1.0f},
+                                             {1.0f,1.0f,1.0f},
+                                             {1.0f,1.0f,1.0f},
+                                             {1.0f,1.0f,-1.0f},
+                                             {1.0f,1.0f,-1.0f},
+                                             {1.0f,1.0f,-1.0f},
+                                             {1.0f,-1.0f,1.0f},
+                                             {1.0f,-1.0f,1.0f},
+                                             {1.0f,-1.0f,1.0f},
+                                             {-1.0f,1.0f,1.0f},
+                                             {-1.0f,1.0f,1.0f},
+                                             {-1.0f,1.0f,1.0f}};
 
-    static const float CubicSlipPlanes[12][3] = {{1.0f,1.0f,1.0f},
-												{1.0f,1.0f,1.0f},
-												{1.0f,1.0f,1.0f},
-												{1.0f,1.0f,-1.0f},
-												{1.0f,1.0f,-1.0f},
-												{1.0f,1.0f,-1.0f},
-												{1.0f,-1.0f,1.0f},
-												{1.0f,-1.0f,1.0f},
-												{1.0f,-1.0f,1.0f},
-												{-1.0f,1.0f,1.0f},
-												{-1.0f,1.0f,1.0f},
-												{-1.0f,1.0f,1.0f}};
+static const float CubicMatSym[24][3][3] =
+{{{1.0, 0.0, 0.0},
+  {0.0, 1.0, 0.0},
+  {0.0, 0.0, 1.0}},
 
-    static const float CubicMatSym[24][3][3] = 
-         {{{1.0, 0.0, 0.0},
-          {0.0, 1.0, 0.0},
-          {0.0, 0.0, 1.0}},
+ {{1.0, 0.0,  0.0},
+  {0.0, 0.0, -1.0},
+  {0.0, 1.0,  0.0}},
 
-          {{1.0, 0.0,  0.0},
-          {0.0, 0.0, -1.0},
-          {0.0, 1.0,  0.0}},
+ {{1.0,  0.0,  0.0},
+  {0.0, -1.0,  0.0},
+  {0.0,  0.0, -1.0}},
 
-          {{1.0,  0.0,  0.0},
-          {0.0, -1.0,  0.0},
-          {0.0,  0.0, -1.0}},
+ {{1.0,  0.0, 0.0},
+  {0.0,  0.0, 1.0},
+  {0.0, -1.0, 0.0}},
 
-          {{1.0,  0.0, 0.0},
-          {0.0,  0.0, 1.0},
-          {0.0, -1.0, 0.0}},
+ {{0.0, 0.0, -1.0},
+  {0.0, 1.0,  0.0},
+  {1.0, 0.0,  0.0}},
 
-          {{0.0, 0.0, -1.0},
-          {0.0, 1.0,  0.0},
-          {1.0, 0.0,  0.0}},
+ {{0.0, 0.0, 1.0},
+  {0.0, 1.0, 0.0},
+  {-1.0, 0.0, 0.0}},
 
-          {{0.0, 0.0, 1.0},
-          {0.0, 1.0, 0.0},
-          {-1.0, 0.0, 0.0}},
+ {{-1.0, 0.0,  0.0},
+  {0.0, 1.0,  0.0},
+  {0.0, 0.0, -1.0}},
 
-          {{-1.0, 0.0,  0.0},
-          {0.0, 1.0,  0.0},
-          {0.0, 0.0, -1.0}},
+ {{-1.0,  0.0, 0.0},
+  {0.0, -1.0, 0.0},
+  {0.0,  0.0, 1.0}},
 
-          {{-1.0,  0.0, 0.0},
-          {0.0, -1.0, 0.0},
-          {0.0,  0.0, 1.0}},
+ {{0.0, 1.0, 0.0},
+  {-1.0, 0.0, 0.0},
+  {0.0, 0.0, 1.0}},
 
-          {{0.0, 1.0, 0.0},
-          {-1.0, 0.0, 0.0},
-          {0.0, 0.0, 1.0}},
+ {{0.0, -1.0, 0.0},
+  {1.0,  0.0, 0.0},
+  {0.0,  0.0, 1.0}},
 
-          {{0.0, -1.0, 0.0},	
-          {1.0,  0.0, 0.0},
-          {0.0,  0.0, 1.0}},
+ {{0.0, -1.0, 0.0},
+  {0.0,  0.0, 1.0},
+  {-1.0,  0.0, 0.0}},
 
-          {{0.0, -1.0, 0.0},
-          {0.0,  0.0, 1.0},
-          {-1.0,  0.0, 0.0}},
+ {{0.0,  0.0, 1.0},
+  {-1.0,  0.0, 0.0},
+  {0.0, -1.0, 0.0}},
 
-          {{0.0,  0.0, 1.0},
-					{-1.0,  0.0, 0.0},
-          {0.0, -1.0, 0.0}},
+ {{0.0, -1.0,  0.0},
+  {0.0,  0.0, -1.0},
+  {1.0,  0.0,  0.0}},
 
-          {{0.0, -1.0,  0.0},
-					{0.0,  0.0, -1.0},
-					{1.0,  0.0,  0.0}},
+ {{0.0,  0.0, -1.0},
+  {1.0,  0.0,  0.0},
+  {0.0, -1.0,  0.0}},
 
-          {{0.0,  0.0, -1.0},
-					{1.0,  0.0,  0.0},
-					{0.0, -1.0,  0.0}},
+ {{0.0, 1.0,  0.0},
+  {0.0, 0.0, -1.0},
+  {-1.0, 0.0,  0.0}},
 
-          {{0.0, 1.0,  0.0},
-					{0.0, 0.0, -1.0},
-					{-1.0, 0.0,  0.0}},
+ {{0.0, 0.0, -1.0},
+  {-1.0, 0.0,  0.0},
+  {0.0, 1.0,  0.0}},
 
-          {{0.0, 0.0, -1.0},
-					{-1.0, 0.0,  0.0},
-					{0.0, 1.0,  0.0}},
+ {{0.0, 1.0, 0.0},
+  {0.0, 0.0, 1.0},
+  {1.0, 0.0, 0.0}},
 
-          {{0.0, 1.0, 0.0},
-					{0.0, 0.0, 1.0},
-					{1.0, 0.0, 0.0}},
+ {{0.0, 0.0, 1.0},
+  {1.0, 0.0, 0.0},
+  {0.0, 1.0, 0.0}},
 
-          {{0.0, 0.0, 1.0},
-					{1.0, 0.0, 0.0},
-					{0.0, 1.0, 0.0}},
+ {{0.0, 1.0,  0.0},
+  {1.0, 0.0,  0.0},
+  {0.0, 0.0, -1.0}},
 
-          {{0.0, 1.0,  0.0},
-					{1.0, 0.0,  0.0},
-					{0.0, 0.0, -1.0}},
+ {{-1.0, 0.0, 0.0},
+  {0.0, 0.0, 1.0},
+  {0.0, 1.0, 0.0}},
 
-          {{-1.0, 0.0, 0.0},
-					{0.0, 0.0, 1.0},
-					{0.0, 1.0, 0.0}},
+ {{0.0,  0.0, 1.0},
+  {0.0, -1.0, 0.0},
+  {1.0,  0.0, 0.0}},
 
-          {{0.0,  0.0, 1.0},
-					{0.0, -1.0, 0.0},
-					{1.0,  0.0, 0.0}},
+ {{-1.0,  0.0,  0.0},
+  {0.0,  0.0, -1.0},
+  {0.0, -1.0,  0.0}},
 
-          {{-1.0,  0.0,  0.0},
-					{0.0,  0.0, -1.0},
-					{0.0, -1.0,  0.0}},
+ {{0.0,  0.0, -1.0},
+  {0.0, -1.0,  0.0},
+  {-1.0,  0.0,  0.0}},
 
-          {{0.0,  0.0, -1.0},
-					{0.0, -1.0,  0.0},
-          {-1.0,  0.0,  0.0}},
-
-          {{0.0, -1.0,  0.0},
-          {-1.0,  0.0,  0.0},
-          {0.0,  0.0, -1.0}}};
+ {{0.0, -1.0,  0.0},
+  {-1.0,  0.0,  0.0},
+  {0.0,  0.0, -1.0}}};
 
 
 // -----------------------------------------------------------------------------
@@ -247,7 +247,7 @@ CubicOps::~CubicOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
+float CubicOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
 {
 
   int numsym = 24;
@@ -258,188 +258,183 @@ float CubicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubicOps::_calcMisoQuat(const float quatsym[24][5], int numsym,
-                                      float q1[5], float q2[5],
-                                      float &n1, float &n2, float &n3)
+float CubicOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[24], int numsym,
+QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float &n1, float &n2, float &n3)
 {
   float wmin=9999999.0f; //,na,nb,nc;
-   float q2inv[5];
-   float qc[5];
-   float qco[5];
-   int type = 1;
-   float sin_wmin_over_2 = 0.0;
- //  float _1, _2,  _6;
+  QuaternionMathF::Quat_t qco;
+  QuaternionMathF::Quat_t qc;
+  QuaternionMathF::Quat_t q2inv;
+  int type = 1;
+  float sin_wmin_over_2 = 0.0;
+  //  float _1, _2,  _6;
 
-   for(int i=0;i<5;i++)
-   {
-	   q2inv[i] = q2[i];
-   }
-   OrientationMath::invertQuaternion(q2inv);
+  QuaternionMathF::Copy(q2, q2inv);
+  QuaternionMathF::InvertQuaternion(q2inv);
 
-   OrientationMath::multiplyQuaternions(q2inv, q1, qc);
-   qc[1]=fabs(qc[1]);
-   qc[2]=fabs(qc[2]);
-   qc[3]=fabs(qc[3]);
-   qc[4]=fabs(qc[4]);
-   //if qc[1] is smallest
-   if ( qc[1] <= qc[2] && qc[1] <= qc[3] && qc[1] <= qc[4])
-   {
-      qco[1] = qc[1];
-    //if qc[2] is next smallest
-      if (qc[2] <= qc[3] && qc[2] <= qc[4])
-    {
-       qco[2] = qc[2];
-     if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
-     else qco[3] = qc[4], qco[4] = qc[3];
-    }
-    //if qc[3] is next smallest
-      else if (qc[3] <= qc[2] && qc[3] <= qc[4])
-    {
-       qco[2] = qc[3];
-     if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
-     else qco[3] = qc[4], qco[4] = qc[2];
-    }
-    //if qc[4] is next smallest
-    else
-    {
-       qco[2] = qc[4];
-     if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
-     else qco[3] = qc[3], qco[4] = qc[2];
-    }
-   }
- //if qc[2] is smallest
-   else if ( qc[2] <= qc[1] && qc[2] <= qc[3] && qc[2] <= qc[4])
-   {
-      qco[1] = qc[2];
-    //if qc[1] is next smallest
-      if (qc[1] <= qc[3] && qc[1] <= qc[4])
-    {
-       qco[2] = qc[1];
-     if(qc[3] <= qc[4]) qco[3] = qc[3], qco[4] = qc[4];
-     else qco[3] = qc[4], qco[4] = qc[3];
-    }
-    //if qc[3] is next smallest
-      else if (qc[3] <= qc[1] && qc[3] <= qc[4])
-    {
-       qco[2] = qc[3];
-     if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
-     else qco[3] = qc[4], qco[4] = qc[1];
-    }
-    //if qc[4] is next smallest
-    else
-    {
-       qco[2] = qc[4];
-     if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
-     else qco[3] = qc[3], qco[4] = qc[1];
-    }
-   }
- //if qc[3] is smallest
-   else if ( qc[3] <= qc[1] && qc[3] <= qc[2] && qc[3] <= qc[4])
-   {
-      qco[1] = qc[3];
-    //if qc[1] is next smallest
-      if (qc[1] <= qc[2] && qc[1] <= qc[4])
-    {
-       qco[2] = qc[1];
-     if(qc[2] <= qc[4]) qco[3] = qc[2], qco[4] = qc[4];
-     else qco[3] = qc[4], qco[4] = qc[2];
-    }
-    //if qc[2] is next smallest
-      else if (qc[2] <= qc[1] && qc[2] <= qc[4])
-    {
-       qco[2] = qc[2];
-     if(qc[1] <= qc[4]) qco[3] = qc[1], qco[4] = qc[4];
-     else qco[3] = qc[4], qco[4] = qc[1];
-    }
-    //if qc[4] is next smallest
-    else
-    {
-       qco[2] = qc[4];
-     if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
-     else qco[3] = qc[2], qco[4] = qc[1];
-    }
-   }
- //if qc[4] is smallest
-   else
-   {
-      qco[1] = qc[4];
-    //if qc[1] is next smallest
-      if (qc[1] <= qc[2] && qc[1] <= qc[3])
-    {
-       qco[2] = qc[1];
-     if(qc[2] <= qc[3]) qco[3] = qc[2], qco[4] = qc[3];
-     else qco[3] = qc[3], qco[4] = qc[2];
-    }
-    //if qc[2] is next smallest
-      else if (qc[2] <= qc[1] && qc[2] <= qc[3])
-    {
-       qco[2] = qc[2];
-     if(qc[1] <= qc[3]) qco[3] = qc[1], qco[4] = qc[3];
-     else qco[3] = qc[3], qco[4] = qc[1];
-    }
-    //if qc[3] is next smallest
-    else
-    {
-       qco[2] = qc[3];
-     if(qc[1] <= qc[2]) qco[3] = qc[1], qco[4] = qc[2];
-     else qco[3] = qc[2], qco[4] = qc[1];
-    }
-   }
-   wmin = qco[4];
-   if (((qco[3] + qco[4]) / (sqrt_two)) > wmin)
-   {
-     wmin = ((qco[3] + qco[4]) / (sqrt_two));
-	 type = 2;
-   }
-   if (((qco[1] + qco[2] + qco[3] + qco[4]) / 2) > wmin)
-   {
-     wmin = ((qco[1] + qco[2] + qco[3] + qco[4]) / 2);
-	 type = 3;
-   }
-   if (wmin < -1.0)
-   {
-   //  wmin = -1.0;
-     wmin = acos_neg_one;
-     sin_wmin_over_2 = sinf(wmin);
-   }
-   else if (wmin > 1.0)
-   {
-  //   wmin = 1.0;
-     wmin = acos_pos_one;
-     sin_wmin_over_2 = sinf(wmin);
-   }
-   else
-   {
-     wmin = acos(wmin);
-     sin_wmin_over_2 = sinf(wmin);
-   }
+  QuaternionMathF::Multiply(q2inv, q1, qc);
+  QuaternionMathF::ElementWiseAbs(qc);
 
-   if(type == 1)
-   {
-	   n1 = qco[1] / sin_wmin_over_2;
-	   n2 = qco[2] / sin_wmin_over_2;
-	   n3 = qco[3] / sin_wmin_over_2;
-   }
-   if(type == 2)
-   {
-	   n1 = ((qco[1] - qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n2 = ((qco[1] + qco[2]) / (sqrt_two)) / sin_wmin_over_2;
-	   n3 = ((qco[3] - qco[4]) / (sqrt_two)) / sin_wmin_over_2;
-   }
-   if(type == 3)
-   {
-	   n1 = ((qco[1] - qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n2 = ((qco[1] + qco[2] - qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-	   n3 = ((-qco[1] + qco[2] + qco[3] - qco[4]) / (2.0f)) / sin_wmin_over_2;
-   }
-   float denom = sqrt((n1*n1+n2*n2+n3*n3));
-   n1 = n1/denom;
-   n2 = n2/denom;
-   n3 = n3/denom;
-   if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-   if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-   wmin = 2.0f * wmin;
-   return wmin;
+  //if qc.x is smallest
+  if ( qc.x <= qc.y && qc.x <= qc.z && qc.x <= qc.w)
+  {
+    qco.x = qc.x;
+    //if qc.y is next smallest
+    if (qc.y <= qc.z && qc.y <= qc.w)
+    {
+      qco.y = qc.y;
+      if(qc.z <= qc.w) qco.z = qc.z, qco.w = qc.w;
+      else qco.z = qc.w, qco.w = qc.z;
+    }
+    //if qc.z is next smallest
+    else if (qc.z <= qc.y && qc.z <= qc.w)
+    {
+      qco.y = qc.z;
+      if(qc.y <= qc.w) qco.z = qc.y, qco.w = qc.w;
+      else qco.z = qc.w, qco.w = qc.y;
+    }
+    //if qc.w is next smallest
+    else
+    {
+      qco.y = qc.w;
+      if(qc.y <= qc.z) qco.z = qc.y, qco.w = qc.z;
+      else qco.z = qc.z, qco.w = qc.y;
+    }
+  }
+  //if qc.y is smallest
+  else if ( qc.y <= qc.x && qc.y <= qc.z && qc.y <= qc.w)
+  {
+    qco.x = qc.y;
+    //if qc.x is next smallest
+    if (qc.x <= qc.z && qc.x <= qc.w)
+    {
+      qco.y = qc.x;
+      if(qc.z <= qc.w) qco.z = qc.z, qco.w = qc.w;
+      else qco.z = qc.w, qco.w = qc.z;
+    }
+    //if qc.z is next smallest
+    else if (qc.z <= qc.x && qc.z <= qc.w)
+    {
+      qco.y = qc.z;
+      if(qc.x <= qc.w) qco.z = qc.x, qco.w = qc.w;
+      else qco.z = qc.w, qco.w = qc.x;
+    }
+    //if qc.w is next smallest
+    else
+    {
+      qco.y = qc.w;
+      if(qc.x <= qc.z) qco.z = qc.x, qco.w = qc.z;
+      else qco.z = qc.z, qco.w = qc.x;
+    }
+  }
+  //if qc.z is smallest
+  else if ( qc.z <= qc.x && qc.z <= qc.y && qc.z <= qc.w)
+  {
+    qco.x = qc.z;
+    //if qc.x is next smallest
+    if (qc.x <= qc.y && qc.x <= qc.w)
+    {
+      qco.y = qc.x;
+      if(qc.y <= qc.w) qco.z = qc.y, qco.w = qc.w;
+      else qco.z = qc.w, qco.w = qc.y;
+    }
+    //if qc.y is next smallest
+    else if (qc.y <= qc.x && qc.y <= qc.w)
+    {
+      qco.y = qc.y;
+      if(qc.x <= qc.w) qco.z = qc.x, qco.w = qc.w;
+      else qco.z = qc.w, qco.w = qc.x;
+    }
+    //if qc.w is next smallest
+    else
+    {
+      qco.y = qc.w;
+      if(qc.x <= qc.y) qco.z = qc.x, qco.w = qc.y;
+      else qco.z = qc.y, qco.w = qc.x;
+    }
+  }
+  //if qc.w is smallest
+  else
+  {
+    qco.x = qc.w;
+    //if qc.x is next smallest
+    if (qc.x <= qc.y && qc.x <= qc.z)
+    {
+      qco.y = qc.x;
+      if(qc.y <= qc.z) qco.z = qc.y, qco.w = qc.z;
+      else qco.z = qc.z, qco.w = qc.y;
+    }
+    //if qc.y is next smallest
+    else if (qc.y <= qc.x && qc.y <= qc.z)
+    {
+      qco.y = qc.y;
+      if(qc.x <= qc.z) qco.z = qc.x, qco.w = qc.z;
+      else qco.z = qc.z, qco.w = qc.x;
+    }
+    //if qc.z is next smallest
+    else
+    {
+      qco.y = qc.z;
+      if(qc.x <= qc.y) qco.z = qc.x, qco.w = qc.y;
+      else qco.z = qc.y, qco.w = qc.x;
+    }
+  }
+  wmin = qco.w;
+  if (((qco.z + qco.w) / (sqrt_two)) > wmin)
+  {
+    wmin = ((qco.z + qco.w) / (sqrt_two));
+    type = 2;
+  }
+  if (((qco.x + qco.y + qco.z + qco.w) / 2) > wmin)
+  {
+    wmin = ((qco.x + qco.y + qco.z + qco.w) / 2);
+    type = 3;
+  }
+  if (wmin < -1.0)
+  {
+    //  wmin = -1.0;
+    wmin = acos_neg_one;
+    sin_wmin_over_2 = sinf(wmin);
+  }
+  else if (wmin > 1.0)
+  {
+    //   wmin = 1.0;
+    wmin = acos_pos_one;
+    sin_wmin_over_2 = sinf(wmin);
+  }
+  else
+  {
+    wmin = acos(wmin);
+    sin_wmin_over_2 = sinf(wmin);
+  }
+
+  if(type == 1)
+  {
+    n1 = qco.x / sin_wmin_over_2;
+    n2 = qco.y / sin_wmin_over_2;
+    n3 = qco.z / sin_wmin_over_2;
+  }
+  if(type == 2)
+  {
+    n1 = ((qco.x - qco.y) / (sqrt_two)) / sin_wmin_over_2;
+    n2 = ((qco.x + qco.y) / (sqrt_two)) / sin_wmin_over_2;
+    n3 = ((qco.z - qco.w) / (sqrt_two)) / sin_wmin_over_2;
+  }
+  if(type == 3)
+  {
+    n1 = ((qco.x - qco.y + qco.z - qco.w) / (2.0f)) / sin_wmin_over_2;
+    n2 = ((qco.x + qco.y - qco.z - qco.w) / (2.0f)) / sin_wmin_over_2;
+    n3 = ((-qco.x + qco.y + qco.z - qco.w) / (2.0f)) / sin_wmin_over_2;
+  }
+  float denom = sqrt((n1*n1+n2*n2+n3*n3));
+  n1 = n1/denom;
+  n2 = n2/denom;
+  n3 = n3/denom;
+  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  wmin = 2.0f * wmin;
+  return wmin;
 
 }
 
@@ -450,13 +445,13 @@ void CubicOps::getODFFZRod(float &r1,float &r2, float &r3)
   _calcRodNearestOrigin(CubicRodSym, numsym, r1, r2, r3);
 }
 
-void CubicOps::getQuatSymOp(int i,float *q)
+void CubicOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
 {
-  q[0] = CubicQuatSym[i][0];
-  q[1] = CubicQuatSym[i][1];
-  q[2] = CubicQuatSym[i][2];
-  q[3] = CubicQuatSym[i][3];
-  q[4] = CubicQuatSym[i][4];
+  QuaternionMathF::Copy(CubicQuatSym[i], q);
+//  q.x = CubicQuatSym[i].x;
+//  q.y = CubicQuatSym[i].y;
+//  q.z = CubicQuatSym[i].z;
+//  q.w = CubicQuatSym[i].w;
 }
 
 void CubicOps::getRodSymOp(int i,float *r)
@@ -481,52 +476,52 @@ void CubicOps::getMatSymOp(int i,float g[3][3])
 
 void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
-	float w, n1, n2, n3;
-	float FZw, FZn1, FZn2, FZn3;
+  float w, n1, n2, n3;
+  float FZw, FZn1, FZn2, FZn3;
 
-	OrientationMath::_calcRodNearestOrigin(CubicRodSym, 24, r1, r2, r3);
-	OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  OrientationOps::_calcRodNearestOrigin(CubicRodSym, 24, r1, r2, r3);
+  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
-	FZw = w;
-	n1 = fabs(n1);
-	n2 = fabs(n2);
-	n3 = fabs(n3);
-	if(n1 > n2)
-	{
-		if(n1 > n3)
-		{
-			FZn1 = n1;
-			if (n2 > n3) FZn2 = n2, FZn3 = n3;
-			else FZn2 = n3, FZn3 = n2;
-		}
-		else FZn1 = n3, FZn2 = n1, FZn3 = n2;
-	}
-	else
-	{
-		if(n2 > n3)
-		{
-			FZn1 = n2;
-			if (n1 > n3) FZn2 = n1, FZn3 = n3;
-			else FZn2 = n3, FZn3 = n1;
-		}
-		else FZn1 = n3, FZn2 = n2, FZn3 = n1;
-	}
+  FZw = w;
+  n1 = fabs(n1);
+  n2 = fabs(n2);
+  n3 = fabs(n3);
+  if(n1 > n2)
+  {
+    if(n1 > n3)
+    {
+      FZn1 = n1;
+      if (n2 > n3) FZn2 = n2, FZn3 = n3;
+      else FZn2 = n3, FZn3 = n2;
+    }
+    else FZn1 = n3, FZn2 = n1, FZn3 = n2;
+  }
+  else
+  {
+    if(n2 > n3)
+    {
+      FZn1 = n2;
+      if (n1 > n3) FZn2 = n1, FZn3 = n3;
+      else FZn2 = n3, FZn3 = n1;
+    }
+    else FZn1 = n3, FZn2 = n2, FZn3 = n1;
+  }
 
-	OrientationMath::axisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void CubicOps::getNearestQuat( float *q1, float *q2)
+void CubicOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
 {
   int numsym = 24;
 
   _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 
-void CubicOps::getFZQuat(float *qr)
+void CubicOps::getFZQuat(QuaternionMathF::Quat_t &qr)
 {
   int numsym = 24;
 
-    _calcQuatNearestOrigin(CubicQuatSym, numsym, qr);
+  _calcQuatNearestOrigin(CubicQuatSym, numsym, qr);
 }
 
 int CubicOps::getMisoBin(float r1, float r2, float r3)
@@ -535,7 +530,7 @@ int CubicOps::getMisoBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-  RodtoHomochoric(r1, r2, r3);
+   OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
@@ -568,9 +563,9 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
   phi[2] = static_cast<float>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getODFFZRod(r1, r2, r3);
-  RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
 void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float &r3)
@@ -590,7 +585,7 @@ void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float 
   phi[2] = static_cast<float>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 int CubicOps::getOdfBin(float r1, float r2, float r3)
@@ -599,7 +594,7 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-  RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = CubicDim1InitValue;
   dim[1] = CubicDim2InitValue;
@@ -669,7 +664,7 @@ void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float
   if (schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 11;
 }
 
-void CubicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
+void CubicOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
 {
   float g1[3][3];
   float g2[3][3];
@@ -682,30 +677,30 @@ void CubicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
   float planeMisalignment=0, directionMisalignment=0;
   int ss1=0, ss2=0;
 
-  QuattoMat(q1, g1);
-  QuattoMat(q2, g2);
-  MatrixMath::transpose3x3(g1, g1);
-  MatrixMath::transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = fabs(MatrixMath::dotProduct(LD,uvw1));
-	  planeComponent1 = fabs(MatrixMath::dotProduct(LD,hkl1));
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor)
-	  {
-		  maxSchmidFactor = schmidFactor1;
-		  ss1 = i;
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor)
+    {
+      maxSchmidFactor = schmidFactor1;
+      ss1 = i;
+    }
   }
   slipDirection[0] = CubicSlipDirections[ss1][0];
   slipDirection[1] = CubicSlipDirections[ss1][1];
@@ -713,32 +708,32 @@ void CubicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
   slipPlane[0] = CubicSlipPlanes[ss1][0];
   slipPlane[1] = CubicSlipPlanes[ss1][1];
   slipPlane[2] = CubicSlipPlanes[ss1][2];
-  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-  MatrixMath::normalize3x1(hkl1);
-  MatrixMath::normalize3x1(uvw1);
+  MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+  MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+  MatrixMath::Normalize3x1(hkl1);
+  MatrixMath::Normalize3x1(uvw1);
 
   maxSchmidFactor = 0;
   for(int j=0;j<12;j++)
   {
-	  slipDirection[0] = CubicSlipDirections[j][0];
-	  slipDirection[1] = CubicSlipDirections[j][1];
-	  slipDirection[2] = CubicSlipDirections[j][2];
-	  slipPlane[0] = CubicSlipPlanes[j][0];
-	  slipPlane[1] = CubicSlipPlanes[j][1];
-	  slipPlane[2] = CubicSlipPlanes[j][2];
-	  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-	  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-	  MatrixMath::normalize3x1(hkl2);
-	  MatrixMath::normalize3x1(uvw2);
-	  directionComponent2 = fabs(MatrixMath::dotProduct(LD,uvw2));
-	  planeComponent2 = fabs(MatrixMath::dotProduct(LD,hkl2));
-	  schmidFactor2 = directionComponent2*planeComponent2;
-	  if(schmidFactor2 > maxSchmidFactor)
-	  {
-		  maxSchmidFactor = schmidFactor2;
-		  ss2 = j;
-	  }
+    slipDirection[0] = CubicSlipDirections[j][0];
+    slipDirection[1] = CubicSlipDirections[j][1];
+    slipDirection[2] = CubicSlipDirections[j][2];
+    slipPlane[0] = CubicSlipPlanes[j][0];
+    slipPlane[1] = CubicSlipPlanes[j][1];
+    slipPlane[2] = CubicSlipPlanes[j][2];
+    MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+    MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+    MatrixMath::Normalize3x1(hkl2);
+    MatrixMath::Normalize3x1(uvw2);
+    directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+    planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+    schmidFactor2 = directionComponent2*planeComponent2;
+    if(schmidFactor2 > maxSchmidFactor)
+    {
+      maxSchmidFactor = schmidFactor2;
+      ss2 = j;
+    }
   }
   slipDirection[0] = CubicSlipDirections[ss2][0];
   slipDirection[1] = CubicSlipDirections[ss2][1];
@@ -746,16 +741,16 @@ void CubicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
   slipPlane[0] = CubicSlipPlanes[ss2][0];
   slipPlane[1] = CubicSlipPlanes[ss2][1];
   slipPlane[2] = CubicSlipPlanes[ss2][2];
-  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-  MatrixMath::normalize3x1(hkl2);
-  MatrixMath::normalize3x1(uvw2);
-  planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
-  directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
+  MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+  MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+  MatrixMath::Normalize3x1(hkl2);
+  MatrixMath::Normalize3x1(uvw2);
+  planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
+  directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
   mPrime = planeMisalignment*directionMisalignment;
 }
 
-void CubicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1)
+void CubicOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
 {
   float g1[3][3];
   float g2[3][3];
@@ -768,62 +763,62 @@ void CubicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F
   float directionComponent2=0, planeComponent2=0;
   float maxF1=0;
 
-  QuattoMat(q1, g1);
-  QuattoMat(q2, g2);
-  MatrixMath::transpose3x3(g1, g1);
-  MatrixMath::transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
 
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   if(maxSF == true) maxSchmidFactor = 0;
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = fabs(MatrixMath::dotProduct(LD,uvw1));
-	  planeComponent1 = fabs(MatrixMath::dotProduct(LD,hkl1));
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor1;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-			  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-			  MatrixMath::normalize3x1(hkl2);
-			  MatrixMath::normalize3x1(uvw2);
-			  directionComponent2 = fabs(MatrixMath::dotProduct(LD,uvw2));
-			  planeComponent2 = fabs(MatrixMath::dotProduct(LD,hkl2));
-			  schmidFactor2 = directionComponent2*planeComponent2;
-			  directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-		  }
-		  F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F1 < maxF1) F1 = maxF1;
-			  else maxF1 = F1;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor1;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+        schmidFactor2 = directionComponent2*planeComponent2;
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+      }
+      F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
+      if(maxSF == false)
+      {
+        if(F1 < maxF1) F1 = maxF1;
+        else maxF1 = F1;
+      }
+    }
   }
 }
 
-void CubicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt)
+void CubicOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
 {
   float g1[3][3];
   float g2[3][3];
@@ -837,65 +832,65 @@ void CubicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float
   float directionComponent2=0, planeComponent2=0;
   float maxF1spt=0;
 
-  QuattoMat(q1, g1);
-  QuattoMat(q2, g2);
-  MatrixMath::transpose3x3(g1, g1);
-  MatrixMath::transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
 
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   if(maxSF == true) maxSchmidFactor = 0;
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = fabs(MatrixMath::dotProduct(LD,uvw1));
-	  planeComponent1 = fabs(MatrixMath::dotProduct(LD,hkl1));
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  totalPlaneMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor1;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-			  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-			  MatrixMath::normalize3x1(hkl2);
-			  MatrixMath::normalize3x1(uvw2);
-			  directionComponent2 = fabs(MatrixMath::dotProduct(LD,uvw2));
-			  planeComponent2 = fabs(MatrixMath::dotProduct(LD,hkl2));
-			  schmidFactor2 = directionComponent2*planeComponent2;
-			  directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-			  planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-			  totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
-		  }
-		  F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F1spt < maxF1spt) F1spt = maxF1spt;
-			  else maxF1spt = F1spt;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      totalPlaneMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor1;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+        schmidFactor2 = directionComponent2*planeComponent2;
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+        totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
+      }
+      F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
+      if(maxSF == false)
+      {
+        if(F1spt < maxF1spt) F1spt = maxF1spt;
+        else maxF1spt = F1spt;
+      }
+    }
   }
 }
 
-void CubicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7)
+void CubicOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
 {
   float g1[3][3];
   float g2[3][3];
@@ -908,56 +903,56 @@ void CubicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F
   float directionComponent2=0, planeComponent2=0;
   float maxF7=0;
 
-  QuattoMat(q1, g1);
-  QuattoMat(q2, g2);
-  MatrixMath::transpose3x3(g1, g1);
-  MatrixMath::transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
 
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   for(int i=0;i<12;i++)
   {
-	  slipDirection[0] = CubicSlipDirections[i][0];
-	  slipDirection[1] = CubicSlipDirections[i][1];
-	  slipDirection[2] = CubicSlipDirections[i][2];
-	  slipPlane[0] = CubicSlipPlanes[i][0];
-	  slipPlane[1] = CubicSlipPlanes[i][1];
-	  slipPlane[2] = CubicSlipPlanes[i][2];
-	  MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-	  MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-	  MatrixMath::normalize3x1(hkl1);
-	  MatrixMath::normalize3x1(uvw1);
-	  directionComponent1 = fabs(MatrixMath::dotProduct(LD,uvw1));
-	  planeComponent1 = fabs(MatrixMath::dotProduct(LD,hkl1));
-	  schmidFactor1 = directionComponent1*planeComponent1;
-	  if(schmidFactor1 > maxSchmidFactor || maxSF == false)
-	  {
-		  totalDirectionMisalignment = 0;
-		  if(maxSF == true) maxSchmidFactor = schmidFactor1;
-		  for(int j=0;j<12;j++)
-		  {
-			  slipDirection[0] = CubicSlipDirections[j][0];
-			  slipDirection[1] = CubicSlipDirections[j][1];
-			  slipDirection[2] = CubicSlipDirections[j][2];
-			  slipPlane[0] = CubicSlipPlanes[j][0];
-			  slipPlane[1] = CubicSlipPlanes[j][1];
-			  slipPlane[2] = CubicSlipPlanes[j][2];
-			  MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-			  MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-			  MatrixMath::normalize3x1(hkl2);
-			  MatrixMath::normalize3x1(uvw2);
-			  directionComponent2 = fabs(MatrixMath::dotProduct(LD,uvw2));
-			  planeComponent2 = fabs(MatrixMath::dotProduct(LD,hkl2));
-			  schmidFactor2 = directionComponent2*planeComponent2;
-			  directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-			  totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
-		  }
-		  F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;
-		  if(maxSF == false)
-		  {
-			  if(F7 < maxF7) F7 = maxF7;
-			  else maxF7 = F7;
-		  }
-	  }
+    slipDirection[0] = CubicSlipDirections[i][0];
+    slipDirection[1] = CubicSlipDirections[i][1];
+    slipDirection[2] = CubicSlipDirections[i][2];
+    slipPlane[0] = CubicSlipPlanes[i][0];
+    slipPlane[1] = CubicSlipPlanes[i][1];
+    slipPlane[2] = CubicSlipPlanes[i][2];
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    schmidFactor1 = directionComponent1*planeComponent1;
+    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    {
+      totalDirectionMisalignment = 0;
+      if(maxSF == true) maxSchmidFactor = schmidFactor1;
+      for(int j=0;j<12;j++)
+      {
+        slipDirection[0] = CubicSlipDirections[j][0];
+        slipDirection[1] = CubicSlipDirections[j][1];
+        slipDirection[2] = CubicSlipDirections[j][2];
+        slipPlane[0] = CubicSlipPlanes[j][0];
+        slipPlane[1] = CubicSlipPlanes[j][1];
+        slipPlane[2] = CubicSlipPlanes[j][2];
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+        schmidFactor2 = directionComponent2*planeComponent2;
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
+      }
+      F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;
+      if(maxSF == false)
+      {
+        if(F7 < maxF7) F7 = maxF7;
+        else maxF7 = F7;
+      }
+    }
   }
 }

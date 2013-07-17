@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"

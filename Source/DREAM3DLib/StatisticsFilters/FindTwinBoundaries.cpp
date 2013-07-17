@@ -43,10 +43,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -65,7 +65,7 @@ class CalculateTwinBoundaryImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundaryIncoherence;
     unsigned int* m_CrystalStructures;
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundaryIncoherence) :
@@ -79,8 +79,9 @@ class CalculateTwinBoundaryImpl
       m_TwinBoundaryIncoherence(TwinBoundaryIncoherence),
       m_CrystalStructures(CrystalStructures)
     {
-    m_OrientationOps = OrientationMath::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
+
     virtual ~CalculateTwinBoundaryImpl(){}
 
     void generate(size_t start, size_t end) const
@@ -90,12 +91,19 @@ class CalculateTwinBoundaryImpl
       float g1[3][3];
       float w;
       unsigned int phase1, phase2;
-      float q1[5], q2[5];
+      QuaternionMathF::Quat_t q1;
+      QuaternionMathF::Quat_t q2;
       float axisdiff111, angdiff60;
       float n[3];
       float incoherence;
       float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
-      float misq[5], sym_q[5], s1_misq[5], s2_misq[5];
+
+      QuaternionMathF::Quat_t misq;
+      QuaternionMathF::Quat_t sym_q;
+      QuaternionMathF::Quat_t s1_misq;
+      QuaternionMathF::Quat_t s2_misq;
+      QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+
       float xstl_norm[3], s_xstl_norm[3];
 
       for (size_t i = start; i < end; i++)
@@ -108,33 +116,36 @@ class CalculateTwinBoundaryImpl
         if(grain1 > 0 && grain2 > 0 && m_Phases[grain1] == m_Phases[grain2])
         {
           w = 10000.0;
-          for(int m=0;m<5;m++)
-          {
-            q1[m]=m_Quats[5*grain1+m];
-            q2[m]=m_Quats[5*grain2+m];
-          }
+
+          QuaternionMathF::Copy(quats[grain1], q1);
+          QuaternionMathF::Copy(quats[grain2], q2);
+//          for(int m=0;m<5;m++)
+//          {
+//            q1[m]=m_Quats[5*grain1+m];
+//            q2[m]=m_Quats[5*grain2+m];
+//          }
 
           phase1 = m_CrystalStructures[m_Phases[grain1]];
           phase2 = m_CrystalStructures[m_Phases[grain2]];
           if (phase1 == phase2)
           {
             int nsym = m_OrientationOps[phase1]->getNumSymOps();
-            OrientationMath::invertQuaternion(q2);
-            OrientationMath::multiplyQuaternions(q2, q1, misq);
+            QuaternionMathF::InvertQuaternion(q2);
+            QuaternionMathF::Multiply(q2, q1, misq);
             OrientationMath::QuattoMat(q1, g1);
-            MatrixMath::multiply3x3with3x1(g1,normal,xstl_norm);
+            MatrixMath::Multiply3x3with3x1(g1,normal,xstl_norm);
             for (int j = 0; j < nsym;j++)
             {
               m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
               //calculate crystal direction parallel to normal
-              OrientationMath::multiplyQuaternions(sym_q, misq, s1_misq);
-              OrientationMath::multiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
+              QuaternionMathF::Multiply(sym_q, misq, s1_misq);
+              OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
               for (int k=0; k< nsym;k++)
               {
                 //calculate the symmetric misorienation
                 m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
-                OrientationMath::invertQuaternion(sym_q);
-                OrientationMath::multiplyQuaternions(s1_misq, sym_q, s2_misq);
+                QuaternionMathF::InvertQuaternion(sym_q);
+                QuaternionMathF::Multiply(s1_misq, sym_q, s2_misq);
                 OrientationMath::QuattoAxisAngle(s2_misq, w, n1, n2, n3);
                 w = w*180.0/m_pi;
                 axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
@@ -145,7 +156,7 @@ class CalculateTwinBoundaryImpl
                   n[1] = n2;
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
-                  incoherence = 180.0*acos(MatrixMath::dotProduct(n, s_xstl_norm))/m_pi;
+                  incoherence = 180.0*acos(MatrixMath::DotProduct(n, s_xstl_norm))/m_pi;
                   if(incoherence < m_TwinBoundaryIncoherence[i]) m_TwinBoundaryIncoherence[i] = incoherence;
                 }
               }
@@ -183,7 +194,7 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   m_SurfaceMeshTwinBoundary(NULL),
   m_SurfaceMeshTwinBoundaryIncoherence(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -244,7 +255,7 @@ void FindTwinBoundaries::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 

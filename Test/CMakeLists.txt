@@ -91,11 +91,11 @@ add_test(MXAFileSystemPathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MXAFileSystemPa
 
 
 # --------------------------------------------------------------------------
-# StatsData Test
+# QuaternionMathTest.cpp Test
 # --------------------------------------------------------------------------
-#add_executable(StatsDataTest StatsDataTest.cpp )
-#target_link_libraries(StatsDataTest DREAM3DLib)
-#add_test(StatsDataTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsDataTest)
+add_executable(QuaternionMathTest QuaternionMathTest.cpp )
+target_link_libraries(QuaternionMathTest DREAM3DLib)
+add_test(QuaternionMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QuaternionMathTest)
 
 # --------------------------------------------------------------------------
 # ErrorMessageTest

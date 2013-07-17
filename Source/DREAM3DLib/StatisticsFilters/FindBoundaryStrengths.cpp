@@ -36,13 +36,18 @@
 
 #include "FindBoundaryStrengths.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-
+// MXA Includes
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
+
+// DREAM3D includes
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+
+
 
 
 const static float m_pi = static_cast<float>(M_PI);
@@ -69,7 +74,7 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_SurfaceMeshF7s(NULL),
   m_SurfaceMeshmPrimes(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   m_Loading.x = 1.0f;
   m_Loading.y = 1.0f;
@@ -164,7 +169,7 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -180,17 +185,6 @@ void FindBoundaryStrengths::preflight()
   dataCheckSurfaceMesh(true, 1,1 ,1);
 }
 
-
-class ScopedFileMonitor
-{
-  public:
-    ScopedFileMonitor(FILE* f) : m_File(f) {}
-    virtual ~ScopedFileMonitor() { fclose(m_File);}
-  private:
-    FILE* m_File;
-    ScopedFileMonitor(const ScopedFileMonitor&); // Copy Constructor Not Implemented
-    void operator=(const ScopedFileMonitor&); // Operator '=' Not Implemented
-};
 
 // -----------------------------------------------------------------------------
 //
@@ -221,13 +215,16 @@ void FindBoundaryStrengths::execute()
   float mPrime_1, mPrime_2, F1_1, F1_2, F1spt_1, F1spt_2, F7_1,  F7_2;
   int gname1, gname2;
   // int ss1, ss2;
-  float q1[5], q2[5];
+  QuaternionMathF::Quat_t q1;
+  QuaternionMathF::Quat_t q2;
+  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+
   float LD[3];
 
   LD[0] = m_Loading.x;
   LD[1] = m_Loading.y;
   LD[2] = m_Loading.z;
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   int nTriangles = sm->getNumFaceTuples();
   for (int i = 0; i < nTriangles; i++)
@@ -236,11 +233,14 @@ void FindBoundaryStrengths::execute()
     gname2 = m_SurfaceMeshFaceLabels[i*2 + 1];
     if(gname1 > 0 && gname2 > 0)
     {
-      for (int j = 0; j < 5; j++)
-      {
-        q1[j] = m_AvgQuats[5 * gname1 + j];
-        q2[j] = m_AvgQuats[5 * gname2 + j];
-      }
+
+      QuaternionMathF::Copy(avgQuats[gname1], q1);
+      QuaternionMathF::Copy(avgQuats[gname2], q2);
+//      for (int j = 0; j < 5; j++)
+//      {
+//        q1[j] = m_AvgQuats[5 * gname1 + j];
+//        q2[j] = m_AvgQuats[5 * gname2 + j];
+//      }
       if(m_CrystalStructures[m_FieldPhases[gname1]] == m_CrystalStructures[m_FieldPhases[gname2]]
          && m_FieldPhases[gname1] > 0)
       {
