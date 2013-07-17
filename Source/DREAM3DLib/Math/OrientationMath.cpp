@@ -121,7 +121,7 @@ void OrientationMath::AxisAngletoRod(float w, float n1, float n2, float n3, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::AxisAngletoQuat(float w, float n1, float n2, float n3, QuaternionMathF::Quat_t &q)
+void OrientationMath::AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF &q)
 {
   float denom;
 
@@ -242,7 +242,7 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::QuattoAxisAngle(QuaternionMathF::Quat_t &q, float &w, float &n1, float &n2, float &n3)
+void OrientationMath::QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, float &n3)
 {
   w = static_cast<float>( 2.0*acos(q.w) );
   n1 = q.x / sqrt(1-(q.w*q.w));
@@ -261,7 +261,7 @@ void OrientationMath::QuattoAxisAngle(QuaternionMathF::Quat_t &q, float &w, floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::QuattoMat(QuaternionMathF::Quat_t &q, float g[3][3])
+void OrientationMath::QuattoMat(QuatF &q, float g[3][3])
 {
    g[0][0] = (1 - (2 * q.y * q.y) - (2 * q.z * q.z));
    g[0][1] = ((2 * q.x * q.y) + (2 * q.z * q.w));
@@ -277,7 +277,7 @@ void OrientationMath::QuattoMat(QuaternionMathF::Quat_t &q, float g[3][3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::RodtoQuat(QuaternionMathF::Quat_t &q, float r1, float r2, float r3)
+void OrientationMath::RodtoQuat(QuatF &q, float r1, float r2, float r3)
 {
   float rmag, w;
 
@@ -298,7 +298,7 @@ void OrientationMath::RodtoQuat(QuaternionMathF::Quat_t &q, float r1, float r2, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::QuattoRod(QuaternionMathF::Quat_t &q, float &r1, float &r2, float &r3)
+void OrientationMath::QuattoRod(QuatF &q, float &r1, float &r2, float &r3)
 {
   float qmag, w;
   float n1, n2, n3;
@@ -319,7 +319,7 @@ void OrientationMath::QuattoRod(QuaternionMathF::Quat_t &q, float &r1, float &r2
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::QuattoEuler(QuaternionMathF::Quat_t &q, float &ea1, float &ea2, float &ea3)
+void OrientationMath::QuattoEuler(QuatF &q, float &ea1, float &ea2, float &ea3)
 {
   float diff, sum, tmp;
     diff=atan2(-q.y,-q.x);
@@ -339,7 +339,7 @@ void OrientationMath::QuattoEuler(QuaternionMathF::Quat_t &q, float &ea1, float 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::EulertoQuat(QuaternionMathF::Quat_t &q, float e1, float e2, float e3)
+void OrientationMath::EulertoQuat(QuatF &q, float e1, float e2, float e3)
 {
   float s, c, s1, c1, s2, c2;
   s = sinf(0.5f * e2);
@@ -430,7 +430,7 @@ void OrientationMath::RodtoEuler(float r1, float r2, float r3, float &ea1, float
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MultiplyQuaternionVector(QuaternionMathF::Quat_t &inQuat, float* inVec, float* outVec)
+void OrientationMath::MultiplyQuaternionVector(QuatF &inQuat, float* inVec, float* outVec)
 {
   float g[3][3];
   OrientationMath::QuattoMat(inQuat, g);
@@ -457,7 +457,7 @@ float OrientationMath::MatrixMisorientation(float g1[3][3], float g2[3][3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::ChangeAxisReferenceFrame(QuaternionMathF::Quat_t &q, float &n1, float &n2, float &n3)
+void OrientationMath::ChangeAxisReferenceFrame(QuatF &q, float &n1, float &n2, float &n3)
 {
   float g[3][3];
   float n[3];

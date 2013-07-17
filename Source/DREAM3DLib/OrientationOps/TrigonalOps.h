@@ -47,7 +47,7 @@
 
 namespace TrigonalMath {
   namespace Detail {
-    static const QuaternionMathF::Quat_t TrigQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+    static const QuatF TrigQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                             QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
                                             QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
                                             QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
@@ -77,27 +77,27 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
     virtual int getMDFSize() { return 31104; }
     virtual int getNumSymOps() { return 6; }
 
-    virtual float getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3);
-    virtual void getQuatSymOp(int i, QuaternionMathF::Quat_t &q);
+    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
+    virtual void getQuatSymOp(int i, QuatF &q);
     virtual void getRodSymOp(int i, float *r);
     virtual void getMatSymOp(int i, float g[3][3]);
     virtual void getODFFZRod(float &r1, float &r2, float &r3);
     virtual void getMDFFZRod(float &r1, float &r2, float &r3);
-    virtual void getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2);
-    virtual void getFZQuat(QuaternionMathF::Quat_t &qr);
+    virtual void getNearestQuat(QuatF &q1, QuatF &q2);
+    virtual void getFZQuat(QuatF &qr);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime);
-    virtual void getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1);
-    virtual void getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt);
-    virtual void getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7);
+    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime);
+    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
+    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
+    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
 
   protected:
-    float _calcMisoQuat(const QuaternionMathF::Quat_t quatsym[6], int numsym,
-                  QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+    float _calcMisoQuat(const QuatF quatsym[6], int numsym,
+                  QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
 
   private:

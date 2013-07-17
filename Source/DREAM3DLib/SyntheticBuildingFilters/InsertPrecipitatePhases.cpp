@@ -715,13 +715,14 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
 
 }
 
-void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-      // DataContainer* m = getVoxelDataContainer();
-
-      StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float r1 = 1;
   float a2 = 0, a3 = 0;

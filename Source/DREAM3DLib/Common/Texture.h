@@ -461,8 +461,8 @@ class DREAM3DLib_EXPORT Texture
       int choose1, choose2;
       float ea11, ea12, ea13;
       float ea21, ea22, ea23;
-      QuaternionMathF::Quat_t q1;
-      QuaternionMathF::Quat_t q2;
+      QuatF q1;
+      QuatF q2;
       float totaldensity;
       //    float denom;
       float r1, r2, r3;

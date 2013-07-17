@@ -91,18 +91,18 @@ class CalculateTwinBoundaryImpl
       float g1[3][3];
       float w;
       unsigned int phase1, phase2;
-      QuaternionMathF::Quat_t q1;
-      QuaternionMathF::Quat_t q2;
+      QuatF q1;
+      QuatF q2;
       float axisdiff111, angdiff60;
       float n[3];
       float incoherence;
       float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
 
-      QuaternionMathF::Quat_t misq;
-      QuaternionMathF::Quat_t sym_q;
-      QuaternionMathF::Quat_t s1_misq;
-      QuaternionMathF::Quat_t s2_misq;
-      QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+      QuatF misq;
+      QuatF sym_q;
+      QuatF s1_misq;
+      QuatF s2_misq;
+      QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
       float xstl_norm[3], s_xstl_norm[3];
 

@@ -55,7 +55,7 @@ static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
 static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
 static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
 
-static const QuaternionMathF::Quat_t CubicQuatSym[24] = {
+static const QuatF CubicQuatSym[24] = {
   QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
   QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
   QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
@@ -247,7 +247,7 @@ CubicOps::~CubicOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubicOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
+float CubicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
 
   int numsym = 24;
@@ -258,14 +258,14 @@ float CubicOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubicOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[24], int numsym,
-QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
+QuatF &q1, QuatF &q2,
 float &n1, float &n2, float &n3)
 {
   float wmin=9999999.0f; //,na,nb,nc;
-  QuaternionMathF::Quat_t qco;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t q2inv;
+  QuatF qco;
+  QuatF qc;
+  QuatF q2inv;
   int type = 1;
   float sin_wmin_over_2 = 0.0;
   //  float _1, _2,  _6;
@@ -445,7 +445,7 @@ void CubicOps::getODFFZRod(float &r1,float &r2, float &r3)
   _calcRodNearestOrigin(CubicRodSym, numsym, r1, r2, r3);
 }
 
-void CubicOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
+void CubicOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(CubicQuatSym[i], q);
 //  q.x = CubicQuatSym[i].x;
@@ -510,14 +510,14 @@ void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
   OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void CubicOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
+void CubicOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 24;
 
   _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 
-void CubicOps::getFZQuat(QuaternionMathF::Quat_t &qr)
+void CubicOps::getFZQuat(QuatF &qr)
 {
   int numsym = 24;
 
@@ -664,7 +664,7 @@ void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float
   if (schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 11;
 }
 
-void CubicOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
+void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   float g1[3][3];
   float g2[3][3];
@@ -750,7 +750,7 @@ void CubicOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q
   mPrime = planeMisalignment*directionMisalignment;
 }
 
-void CubicOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
+void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   float g1[3][3];
   float g2[3][3];
@@ -818,7 +818,7 @@ void CubicOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, f
   }
 }
 
-void CubicOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
+void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   float g1[3][3];
   float g2[3][3];
@@ -890,7 +890,7 @@ void CubicOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2
   }
 }
 
-void CubicOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
+void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   float g1[3][3];
   float g2[3][3];

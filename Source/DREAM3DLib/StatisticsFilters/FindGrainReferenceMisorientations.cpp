@@ -192,10 +192,10 @@ void FindGrainReferenceMisorientations::execute()
     }
   }
 
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
   float w;
@@ -261,8 +261,8 @@ void FindGrainReferenceMisorientations::execute()
           if(m_ReferenceOrientation == 0)
           {
             QuaternionMathF::Copy(avgQuats[point], q2);
-            #error
-            q2[0] = m_AvgQuats[5*m_GrainIds[point]];
+            #warning
+//            q2[0] = m_AvgQuats[5*m_GrainIds[point]];
 //            q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
 //            q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
 //            q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];

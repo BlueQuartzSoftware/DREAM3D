@@ -147,8 +147,8 @@ HexagonalOps::~HexagonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float HexagonalOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[12], int numsym,
-QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float HexagonalOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
+QuatF &q1, QuatF &q2,
 float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
@@ -156,9 +156,9 @@ float &n1, float &n2, float &n3)
   float n1min = 0.0f;
   float n2min = 0.0f;
   float n3min = 0.0f;
-  QuaternionMathF::Quat_t qr;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t q2inv;
+  QuatF qr;
+  QuatF qc;
+  QuatF q2inv;
   QuaternionMathF::Copy(q2, q2inv);
   QuaternionMathF::InvertQuaternion(q2inv);
 
@@ -195,14 +195,14 @@ float &n1, float &n2, float &n3)
   return wmin;
 }
 
-float HexagonalOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
+float HexagonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
   int numsym = 12;
 
   return _calcMisoQuat(HexQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void HexagonalOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
+void HexagonalOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(HexQuatSym[i], q);
 //  q.x = HexQuatSym[i][0];
@@ -280,14 +280,14 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
-void HexagonalOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
+void HexagonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 12;
 
   _calcNearestQuat(HexQuatSym, numsym, q1, q2);
 }
 
-void HexagonalOps::getFZQuat(QuaternionMathF::Quat_t &qr)
+void HexagonalOps::getFZQuat(QuatF &qr)
 {
   int numsym = 12;
 
@@ -667,7 +667,7 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
   if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
 }
 
-void HexagonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
+void HexagonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -706,7 +706,7 @@ void HexagonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_
 #endif
 }
 
-void HexagonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
+void HexagonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -778,7 +778,7 @@ void HexagonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q
 */
 #endif
 }
-void HexagonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
+void HexagonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -852,7 +852,7 @@ void HexagonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t
 #endif
 }
 
-void HexagonalOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
+void HexagonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
 #if 0

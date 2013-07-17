@@ -326,8 +326,8 @@ class EbsdColoring
                                      K refDir0, K refDir1, K refDir2,
                                      unsigned char* rgb)
     {
-      QuaternionMathF::Quat_t qc;
-      QuaternionMathF::Quat_t q1;
+      QuatF qc;
+      QuatF q1;
       float g[3][3];
       float p[3];
       float refDirection[3];
@@ -465,8 +465,8 @@ class EbsdColoring
                                      K refDir0, K refDir1, K refDir2,
                                      unsigned char* rgb)
     {
-      QuaternionMathF::Quat_t qc;
-      QuaternionMathF::Quat_t q1;
+      QuatF qc;
+      QuatF q1;
       float g[3][3];
       float p[3];
       float refDirection[3];
@@ -571,8 +571,8 @@ class EbsdColoring
                                      K refDir0, K refDir1, K refDir2,
                                      unsigned char* rgb)
     {
-      QuaternionMathF::Quat_t qc;
-      QuaternionMathF::Quat_t q1;
+      QuatF qc;
+      QuatF q1;
       float g[3][3];
       float p[3];
       float refDirection[3];

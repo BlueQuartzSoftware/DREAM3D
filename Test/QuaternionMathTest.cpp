@@ -36,7 +36,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -52,8 +52,6 @@ void RemoveTestFiles()
 #endif
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -62,11 +60,71 @@ void TestQuat_t()
 
 
 
-  QuaternionMathF::Quat_t q0;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t out;
-  QuaternionMathF::Multiply(q0, q1, out);
+  QuatF q1 = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
+  QuatF q2 = QuaternionMathF::New(0.0f, 1.0f, 0.0f, 2.0f);
+  QuatF out = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
 
+
+
+  QuaternionMathF::Copy(q1, out);
+  DREAM3D_REQUIRE_EQUAL(q1.x, out.x)
+  DREAM3D_REQUIRE_EQUAL(q1.y, out.y)
+  DREAM3D_REQUIRE_EQUAL(q1.z, out.z)
+  DREAM3D_REQUIRE_EQUAL(q1.w, out.w)
+
+  QuaternionMathF::Identity(out);
+  DREAM3D_REQUIRE_EQUAL(out.x, 0.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 0.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, 0.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 1.0)
+
+  out = QuaternionMathF::New(-10.0f, -20.0f, -30.0f, -40.0f);
+  QuaternionMathF::ElementWiseAbs(out);
+  DREAM3D_REQUIRE_EQUAL(out.x, 10.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 20.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, 30.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 40.0)
+
+
+  QuaternionMathF::ElementWiseMultiply(out, -1.0f);
+  DREAM3D_REQUIRE_EQUAL(out.x, -10.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, -20.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, -30.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, -40.0)
+
+  QuaternionMathF::ElementWiseAssign(out, 5.0f);
+  DREAM3D_REQUIRE_EQUAL(out.x, 5.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 5.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, 5.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 5.0)
+
+
+  QuaternionMathF::ElementWiseAdd(out, 50.0f);
+  DREAM3D_REQUIRE_EQUAL(out.x, 55.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 55.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, 55.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 55.0)
+
+  QuaternionMathF::InvertQuaternion(out);
+  DREAM3D_REQUIRE_EQUAL(out.x, -55.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, -55.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, -55.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 55.0)
+
+
+  QuaternionMathF::Multiply(q1, q2, out);
+  DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, 1.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
+
+  QuaternionMathF::Multiply(q2, q1, out);
+  DREAM3D_REQUIRE_EQUAL(out.x, 2.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 1.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, -1.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
+
+  QuaternionMathF::Normalize(out);
 }
 
 // -----------------------------------------------------------------------------

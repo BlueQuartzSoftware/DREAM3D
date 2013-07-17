@@ -249,11 +249,11 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   //  int xspot, yspot;
   float w;
   float n1, n2, n3;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
+  QuatF q1;
+  QuatF q2;
   int refposition = 0;
   int curposition = 0;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   unsigned int phase1, phase2;
   int progInt = 0;

@@ -158,8 +158,8 @@ void FindSchmids::execute()
   }
 
   int ss = 0;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF q1;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float g[3][3];
   float sampleLoading[3];
@@ -170,8 +170,8 @@ void FindSchmids::execute()
   for (size_t i = 1; i < numgrains; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    #error Fix This
-    q1[0] = 1;
+    #warning Fix This
+//    q1[0] = 1;
 //      q1[1] = m_AvgQuats[5*i+1];
 //      q1[2] = m_AvgQuats[5*i+2];
 //      q1[3] = m_AvgQuats[5*i+3];

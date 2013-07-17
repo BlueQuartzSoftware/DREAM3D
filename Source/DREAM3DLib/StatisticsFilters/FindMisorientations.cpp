@@ -174,9 +174,9 @@ void FindMisorientations::execute()
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
   // int mbin = 0;
   float w;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
   size_t numgrains = m->getNumFieldTuples();
@@ -190,8 +190,8 @@ void FindMisorientations::execute()
   for (size_t i = 1; i < numgrains; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    #error Fix This
-    q1[0] = m_AvgQuats[5*i];
+    #warning Fix This
+//    q1[0] = m_AvgQuats[5*i];
 //    q1[1] = m_AvgQuats[5*i+1];
 //    q1[2] = m_AvgQuats[5*i+2];
 //    q1[3] = m_AvgQuats[5*i+3];
@@ -203,8 +203,8 @@ void FindMisorientations::execute()
       w = 10000.0;
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
-      #error Fix This
-      q2[0] = m_AvgQuats[5*nname];
+      #warning Fix This
+//      q2[0] = m_AvgQuats[5*nname];
 //      q2[1] = m_AvgQuats[5*nname+1];
 //      q2[2] = m_AvgQuats[5*nname+2];
 //      q2[3] = m_AvgQuats[5*nname+3];

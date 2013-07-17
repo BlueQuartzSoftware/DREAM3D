@@ -117,8 +117,8 @@ TrigonalOps::~TrigonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float TrigonalOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[6], int numsym,
-QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float TrigonalOps::_calcMisoQuat(const QuatF quatsym[6], int numsym,
+QuatF &q1, QuatF &q2,
 float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
@@ -126,9 +126,9 @@ float &n1, float &n2, float &n3)
   float n1min = 0.0f;
   float n2min = 0.0f;
   float n3min = 0.0f;
-  QuaternionMathF::Quat_t qr;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t q2inv;
+  QuatF qr;
+  QuatF qc;
+  QuatF q2inv;
 
   QuaternionMathF::Copy(q2, q2inv);
   QuaternionMathF::InvertQuaternion(q2inv);
@@ -166,14 +166,14 @@ float &n1, float &n2, float &n3)
   return wmin;
 }
 
-float TrigonalOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
+float TrigonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
   int numsym = 6;
 
   return _calcMisoQuat(TrigQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void TrigonalOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
+void TrigonalOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(TrigQuatSym[i], q);
 //  q.x = TrigQuatSym[i][0];
@@ -252,14 +252,14 @@ void TrigonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
-void TrigonalOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
+void TrigonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 6;
 
   _calcNearestQuat(TrigQuatSym, numsym, q1, q2);
 }
 
-void TrigonalOps::getFZQuat(QuaternionMathF::Quat_t &qr)
+void TrigonalOps::getFZQuat(QuatF &qr)
 {
   int numsym = 6;
 
@@ -642,7 +642,7 @@ void TrigonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, fl
 #endif
 }
 
-void TrigonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
+void TrigonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -681,7 +681,7 @@ void TrigonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t
 #endif
 }
 
-void TrigonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
+void TrigonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -753,7 +753,7 @@ void TrigonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2
 */
 #endif
 }
-void TrigonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
+void TrigonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -827,7 +827,7 @@ void TrigonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t 
 #endif
 }
 
-void TrigonalOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
+void TrigonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
 #if 0

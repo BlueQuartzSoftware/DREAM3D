@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     MergeColonies();
 
     void merge_colonies();
-    int check_for_burgers(QuaternionMathF::Quat_t betaQuat, QuaternionMathF::Quat_t alphaQuat);
+    int check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
     void characterize_colonies();
     void identify_globAlpha();
 

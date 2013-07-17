@@ -221,9 +221,9 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float c1[3];
   float c2[3];
   float caxis[3] = {0,0,1};
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;

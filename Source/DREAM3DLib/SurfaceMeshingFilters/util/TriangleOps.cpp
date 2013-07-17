@@ -254,7 +254,7 @@ VectorType TriangleOps::computeNormal(DREAM3D::SurfaceMesh::Vert_t& n0, DREAM3D:
   w[1] = vert2[1] - vert0[1];
   w[2] = vert2[2] - vert0[2];
 
-  MatrixMath::crossProduct(u, w, normal);
+  MatrixMath::CrossProduct(u, w, normal);
   MatrixMath::NormalizeVector(normal);
 
   return VectorType(normal[0], normal[1], normal[2]);

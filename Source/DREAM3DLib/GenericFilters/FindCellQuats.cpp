@@ -136,8 +136,8 @@ void FindCellQuats::execute()
     return;
   }
 
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
-  QuaternionMathF::Quat_t qr;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  QuatF qr;
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {

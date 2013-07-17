@@ -116,8 +116,8 @@ TetragonalOps::~TetragonalOps()
   // TODO Auto-generated destructor stub
 }
 
-float TetragonalOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[8], int numsym,
-                  QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
+                  QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
@@ -125,9 +125,9 @@ float TetragonalOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[8], int
     float n1min = 0.0f;
     float n2min = 0.0f;
     float n3min = 0.0f;
-  QuaternionMathF::Quat_t qr;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t q2inv;
+  QuatF qr;
+  QuatF qc;
+  QuatF q2inv;
 
    QuaternionMathF::Copy(q2, q2inv);
    QuaternionMathF::InvertQuaternion(q2inv);
@@ -165,14 +165,14 @@ float TetragonalOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[8], int
   return wmin;
 }
 
-float TetragonalOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
+float TetragonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
   int numsym = 8;
 
   return _calcMisoQuat(TetraQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void TetragonalOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
+void TetragonalOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(TetraQuatSym[i], q);
 //  q.x = TetraQuatSym[i][0];
@@ -223,14 +223,14 @@ void TetragonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void TetragonalOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
+void TetragonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 8;
 
   _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
 }
 
-void TetragonalOps::getFZQuat(QuaternionMathF::Quat_t &qr)
+void TetragonalOps::getFZQuat(QuatF &qr)
 {
   int numsym = 8;
 
@@ -333,7 +333,7 @@ void TetragonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
+void TetragonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -370,7 +370,7 @@ void TetragonalOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat
 }
 
 
-void TetragonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
+void TetragonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -441,7 +441,7 @@ void TetragonalOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &
   #endif
 }
 
-void TetragonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
+void TetragonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
   #if 0
@@ -516,7 +516,7 @@ void TetragonalOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_
 
 }
 
-void TetragonalOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
+void TetragonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
   #if 0

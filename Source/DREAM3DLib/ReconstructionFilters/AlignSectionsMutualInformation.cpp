@@ -432,9 +432,9 @@ void AlignSectionsMutualInformation::form_grains_sections()
   int graincount = 1;
   int neighbor;
   // int currentpoint;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 //  float qs[5];
   float w;
   float n1;

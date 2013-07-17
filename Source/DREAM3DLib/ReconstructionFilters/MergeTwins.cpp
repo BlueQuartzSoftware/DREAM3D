@@ -282,9 +282,9 @@ void MergeTwins::merge_twins()
   float n1, n2, n3;
   float angtol = m_AngleTolerance;
   float axistol = static_cast<float>( m_AxisTolerance*M_PI/180.0f );
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
@@ -312,15 +312,15 @@ void MergeTwins::merge_twins()
           {
             w = 10000.0f;
             QuaternionMathF::Copy(avgQuats[firstgrain], q1);
-            #error Fix This
-            q1[0] = 1;
+            #warning Fix This
+//            q1[0] = 1;
 //            q1[1] = m_AvgQuats[5*firstgrain+1];
 //            q1[2] = m_AvgQuats[5*firstgrain+2];
 //            q1[3] = m_AvgQuats[5*firstgrain+3];
 //            q1[4] = m_AvgQuats[5*firstgrain+4];
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
             QuaternionMathF::Copy(avgQuats[neigh], q2);
-            q2[0] = 1;
+//            q2[0] = 1;
 //            q2[1] = m_AvgQuats[5*neigh+1];
 //            q2[2] = m_AvgQuats[5*neigh+2];
 //            q2[3] = m_AvgQuats[5*neigh+3];
