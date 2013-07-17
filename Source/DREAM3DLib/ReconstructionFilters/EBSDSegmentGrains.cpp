@@ -311,9 +311,9 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
 {
   bool group = false;
   float w = 10000.0;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float n1, n2, n3;
   unsigned int phase1, phase2;
 

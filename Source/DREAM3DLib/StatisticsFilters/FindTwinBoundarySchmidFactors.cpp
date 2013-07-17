@@ -89,9 +89,9 @@ class CalculateTwinBoundarySchmidFactorsImpl
       float schmid1, schmid2, schmid3;
       int plane =0;
  //     unsigned int phase1, phase2;
-      QuaternionMathF::Quat_t q1;
-   //   QuaternionMathF::Quat_t q2;
-      QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+      QuatF q1;
+   //   QuatF q2;
+      QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
       float n[3], b[3];
       float crystalLoading[3];

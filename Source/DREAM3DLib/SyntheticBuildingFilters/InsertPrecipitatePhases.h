@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     Int32ArrayType::Pointer initialize_packinggrid();
 
     void place_precipitates(Int32ArrayType::Pointer grainOwnersPtr);
-    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Precip* precip);
     void insert_precipitate(size_t grainNum);

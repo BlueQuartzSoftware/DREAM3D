@@ -78,36 +78,36 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual int getMDFSize() = 0;
     virtual int getNumSymOps() = 0;
 
-    virtual float getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3) = 0;
-    virtual void getQuatSymOp(int i, QuaternionMathF::Quat_t &q) = 0;
+    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3) = 0;
+    virtual void getQuatSymOp(int i, QuatF &q) = 0;
     virtual void getRodSymOp(int i, float *r) = 0;
     virtual void getMatSymOp(int i, float g[3][3]) = 0;
     virtual void getODFFZRod(float &r1, float &r2, float &r3) = 0;
     virtual void getMDFFZRod(float &r1, float &r2, float &r3) = 0;
-    virtual void getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2) = 0;
-    virtual void getFZQuat(QuaternionMathF::Quat_t &qr) = 0;
+    virtual void getNearestQuat(QuatF &q1, QuatF &q2) = 0;
+    virtual void getFZQuat(QuatF &qr) = 0;
     virtual int getMisoBin(float r1, float r2, float r3) = 0;
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3) = 0;
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3) = 0;
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys) = 0;
-    virtual void getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime) = 0;
-    virtual void getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1) = 0;
-    virtual void getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt) = 0;
-    virtual void getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7) = 0;
+    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime) = 0;
+    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1) = 0;
+    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt) = 0;
+    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7) = 0;
 
 
 
   protected:
     OrientationOps();
 
-    float _calcMisoQuat(const QuaternionMathF::Quat_t quatsym[24], int numsym,
-                  QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
+                  QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
 
     void _calcRodNearestOrigin(const float rodsym[24][3], int numsym, float &r1,float &r2, float &r3);
-    void _calcNearestQuat(const QuaternionMathF::Quat_t quatsym[24], int numsym, QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2);
-    void _calcQuatNearestOrigin(const QuaternionMathF::Quat_t quatsym[24], int numsym, QuaternionMathF::Quat_t &qr);
+    void _calcNearestQuat(const QuatF quatsym[24], int numsym, QuatF &q1, QuatF &q2);
+    void _calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF &qr);
 
     int _calcMisoBin(float dim[3], float bins[3], float step[3], float r1, float r2, float r3);
     void _calcDetermineHomochoricValues(float init[3], float step[3], float phi[3], int choose, float &r1, float &r2, float &r3);

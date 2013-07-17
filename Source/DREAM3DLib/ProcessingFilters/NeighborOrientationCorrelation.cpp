@@ -213,15 +213,15 @@ void NeighborOrientationCorrelation::execute()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
   float w = 10000.0;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
+  QuatF q1;
+  QuatF q2;
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
   std::vector<int> neighborDiffCount(totalPoints,0);
   std::vector<int> neighborSimCount(6,0);
   std::vector<int> bestNeighbor(totalPoints,-1);
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   while(currentLevel > m_Level)
   {

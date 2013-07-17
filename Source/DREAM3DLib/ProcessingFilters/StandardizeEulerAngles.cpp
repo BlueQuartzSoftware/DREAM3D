@@ -70,7 +70,7 @@ class StandardizeEulerAnglesImpl
     void convert(size_t start, size_t end) const
     {
       float ea1, ea2, ea3;
-      QuaternionMathF::Quat_t q;
+      QuatF q;
       int cellPhase = 0;
       unsigned int crystalStruct = 0;
       OrientationOps::Pointer ormath;

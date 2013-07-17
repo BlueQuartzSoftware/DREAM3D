@@ -166,8 +166,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->GetPointer(0);
 
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF q1;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   typedef DataArray<unsigned int> XTalType;
 
   float w;

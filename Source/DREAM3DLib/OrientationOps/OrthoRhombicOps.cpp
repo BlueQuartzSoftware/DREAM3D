@@ -58,7 +58,7 @@ static const float OrthoDim2StepValue = OrthoDim2InitValue/18.0f;
 static const float OrthoDim3StepValue = OrthoDim3InitValue/18.0f;
 
 
-static const QuaternionMathF::Quat_t OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
+static const QuatF OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
                                             QuaternionMathF::New(1.000000000f,0.000000000f,0.000000000f,0.000000000f),
                                             QuaternionMathF::New(0.000000000f,1.000000000f,0.000000000f,0.000000000f),
                                             QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000)};
@@ -98,8 +98,8 @@ OrthoRhombicOps::~OrthoRhombicOps()
   // TODO Auto-generated destructor stub
 }
 
-float OrthoRhombicOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[4], int numsym,
-QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
+QuatF &q1, QuatF &q2,
 float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
@@ -107,9 +107,9 @@ float &n1, float &n2, float &n3)
   float n1min = 0.0f;
   float n2min = 0.0f;
   float n3min = 0.0f;
-  QuaternionMathF::Quat_t qr;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t q2inv;
+  QuatF qr;
+  QuatF qc;
+  QuatF q2inv;
 
   QuaternionMathF::Copy(q2, q2inv);
   QuaternionMathF::InvertQuaternion(q2inv);
@@ -150,14 +150,14 @@ float &n1, float &n2, float &n3)
   return wmin;
 }
 
-float OrthoRhombicOps::getMisoQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float &n1, float &n2, float &n3)
+float OrthoRhombicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
   int numsym = 4;
 
   return _calcMisoQuat(OrthoQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void OrthoRhombicOps::getQuatSymOp(int i, QuaternionMathF::Quat_t &q)
+void OrthoRhombicOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(OrthoQuatSym[i], q);
 //  q.x = OrthoQuatSym[i][0];
@@ -209,14 +209,14 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void OrthoRhombicOps::getNearestQuat(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2)
+void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 4;
 
   _calcNearestQuat(OrthoQuatSym, numsym, q1, q2);
 }
 
-void OrthoRhombicOps::getFZQuat(QuaternionMathF::Quat_t &qr)
+void OrthoRhombicOps::getFZQuat(QuatF &qr)
 {
   int numsym = 4;
 
@@ -319,7 +319,7 @@ void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrthoRhombicOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], float &mPrime)
+void OrthoRhombicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -356,7 +356,7 @@ void OrthoRhombicOps::getmPrime(QuaternionMathF::Quat_t &q1, QuaternionMathF::Qu
 }
 
 
-void OrthoRhombicOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1)
+void OrthoRhombicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -427,7 +427,7 @@ void OrthoRhombicOps::getF1(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t
 #endif
 }
 
-void OrthoRhombicOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F1spt)
+void OrthoRhombicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -502,7 +502,7 @@ void OrthoRhombicOps::getF1spt(QuaternionMathF::Quat_t &q1, QuaternionMathF::Qua
 
 }
 
-void OrthoRhombicOps::getF7(QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2, float LD[3], bool maxSF, float &F7)
+void OrthoRhombicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
 #if 0

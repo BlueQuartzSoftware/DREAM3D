@@ -349,7 +349,7 @@ void VisualizeGBCD::execute()
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
-  QuaternionMathF::Quat_t qtest;
+  QuatF qtest;
   float w, n1, n2, n3;
   //  float dist;
   float theta, cosPhi, phi;

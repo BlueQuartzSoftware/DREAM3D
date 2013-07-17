@@ -84,8 +84,8 @@ OrientationOps::~OrientationOps()
 {
 }
 
-float OrientationOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[24], int numsym,
-                                    QuaternionMathF::Quat_t &q1, QuaternionMathF::Quat_t &q2,
+float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
+                                    QuatF &q1, QuatF &q2,
                                     float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
@@ -93,9 +93,9 @@ float OrientationOps::_calcMisoQuat(const QuaternionMathF::Quat_t quatsym[24], i
   float n1min = 0.0f;
   float n2min = 0.0f;
   float n3min = 0.0f;
-  QuaternionMathF::Quat_t qr;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t q2inv;
+  QuatF qr;
+  QuatF qc;
+  QuatF q2inv;
 
   QuaternionMathF::Copy(q2, q2inv);
 
@@ -167,14 +167,14 @@ void OrientationOps::_calcRodNearestOrigin(const float rodsym[24][3], int numsym
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationOps::_calcNearestQuat(const QuaternionMathF::Quat_t quatsym[24], int numsym,
-                                        QuaternionMathF::Quat_t &q1,
-                                        QuaternionMathF::Quat_t &q2)
+void OrientationOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
+                                        QuatF &q1,
+                                        QuatF &q2)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t qmax;
+  QuatF qc;
+  QuatF qmax;
 
   QuaternionMathF::Copy(q2, qc);
 
@@ -202,12 +202,12 @@ void OrientationOps::_calcNearestQuat(const QuaternionMathF::Quat_t quatsym[24],
   }
 }
 
-void OrientationOps::_calcQuatNearestOrigin(const QuaternionMathF::Quat_t quatsym[24], int numsym, QuaternionMathF::Quat_t &qr)
+void OrientationOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym, QuatF &qr)
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
-  QuaternionMathF::Quat_t qc;
-  QuaternionMathF::Quat_t qmax;
+  QuatF qc;
+  QuatF qmax;
 
   QuaternionMathF::Copy(qr, qc);
 

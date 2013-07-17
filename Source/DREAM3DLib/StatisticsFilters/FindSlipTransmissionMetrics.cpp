@@ -209,9 +209,9 @@ void FindSlipTransmissionMetrics::execute()
 
   float mprime, F1, F1spt, F7;
   int nname;
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
   float LD[3];

@@ -192,12 +192,12 @@ void CalculateTriangleGroupCurvatures::operator()() const
 
     // Cross Product of np and temp
     MatrixMath::NormalizeVector(np);
-    MatrixMath::crossProduct(np, temp, vp);
+    MatrixMath::CrossProduct(np, temp, vp);
     MatrixMath::NormalizeVector(vp);
 
     // get the third orthogonal vector
     double up[3] = {0.0, 0.0, 0.0};
-    MatrixMath::crossProduct(vp, np, up);
+    MatrixMath::CrossProduct(vp, np, up);
 
     // this constitutes a rotation matrix to a local coordinate system
     double rot[3][3] = {{up[0], up[1], up[2]},

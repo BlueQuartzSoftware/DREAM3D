@@ -270,7 +270,7 @@ void FindMDF::execute()
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+			OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 		    if ((nname > i || m_SurfaceFields[nname] == true))
 		    {
 			  mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);

@@ -288,7 +288,7 @@ void YSChoiAbaqusReader::execute()
   //Read grain info
   int numpoints;
   float q0, q1, q2, q3;
-  QuaternionMathF::Quat_t* avgQuats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_AvgQuats);
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   avgQuats[0].x = 0.0;
   avgQuats[0].y = 0.0;
   avgQuats[0].z = 0.0;
@@ -303,8 +303,8 @@ void YSChoiAbaqusReader::execute()
     avgQuats[i].w = q0;
   }
   float ea1, ea2, ea3;
-  QuaternionMathF::Quat_t q;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF q;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g[3][3];
   for(int i=0;i<(xpoints*ypoints*zpoints);i++)
   {

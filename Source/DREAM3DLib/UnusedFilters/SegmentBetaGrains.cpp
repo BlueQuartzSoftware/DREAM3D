@@ -443,7 +443,7 @@ bool SegmentBetaGrains::determineGrouping(int referencepoint, int neighborpoint,
 		}
 		else if (phase1 == Ebsd::CrystalStructure::Hexagonal)
 		{
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+			OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 			m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
 			OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 			w = w * (180.0f/m_pi);

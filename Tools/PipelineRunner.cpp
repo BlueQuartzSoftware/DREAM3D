@@ -61,60 +61,33 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/QuaternionMath.hpp"
-
 
 #include "FilterWidgets/FilterWidgetsLib.h"
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "PipelineBuilder/IFilterWidgetFactory.h"
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main (int argc, char  *argv[])
-{
-  FloatArrayType::Pointer quatArray = FloatArrayType::CreateArray(10, 4, "Quaternions");
-  QuaternionMathF::Quaternion_t* quaternions = reinterpret_cast<QuaternionMathF::Quaternion_t*>(quatArray->GetVoidPointer(0));
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(quatArray->GetVoidPointer(0));
-  QuaternionMathF::Vec4_t* vec4s = reinterpret_cast<QuaternionMathF::Vec4_t*>(quatArray->GetVoidPointer(0));
-  float* ptrs = reinterpret_cast<float*>(quatArray->GetVoidPointer(0));
-
-  QuaternionOpsF::Quaternion_t qtnOut;
-  QuaternionOpsF::Quat_t qOut;
-  QuaternionOpsF::Vec4_t v4Out;
-  float f[4];
-
-  QuaternionOpsF::Multiply(quaternions[0], quaternions[1], qtnOut);
-  QuaternionOpsF::Multiply(quats[0], quats[1], qOut);
-  QuaternionOpsF::Multiply(vec4s[0], vec4s[1], v4Out);
-  QuaternionOpsF::Multiply(ptrs, ptrs + 4, f);
-
-  return 0;
-}
 
 
-
-#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int main (int argc, char  *argv[])
 {
 
-  float q[5] = {0.0, 0.565907, -0.24196, 0.106982, -0.7808710};
+  QuatF q = QuaternionMathF::New(0.565907, -0.24196, 0.106982, -0.7808710);
   float euler[3] = {0.0, 0.0, 0.0};
 
 
   OrientationMath::QuattoEuler(q, euler[0], euler[1], euler[2]);
 
 //2.6014, 1.32595, 3.40947
-  std::cout << "Quat:  " << q[1] << ", " << q[2] << ", " << q[3] << ", " << q[4] << std::endl;
+  std::cout << "Quat:  " << q.x << ", " << q.y << ", " << q.z << ", " << q.w << std::endl;
   std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
 }
 
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

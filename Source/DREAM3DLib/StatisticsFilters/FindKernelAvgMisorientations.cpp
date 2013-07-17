@@ -161,9 +161,9 @@ void FindKernelAvgMisorientations::execute()
     return;
   }
 
-  QuaternionMathF::Quat_t q1;
-  QuaternionMathF::Quat_t q2;
-  QuaternionMathF::Quat_t* quats = reinterpret_cast<QuaternionMathF::Quat_t*>(m_Quats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   int numVoxel; // number of voxels in the grain...
   int good = 0;

@@ -72,26 +72,26 @@ class DREAM3DLib_EXPORT OrientationMath
 
     static void AxisAngletoHomochoric(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
     static void AxisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3);
-    static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuaternionMathF::Quat_t &q);
+    static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF &q);
     static void AxisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);
 
-    static void ChangeAxisReferenceFrame(QuaternionMathF::Quat_t &q, float &n1, float &n2, float &n3);
+    static void ChangeAxisReferenceFrame(QuatF &q, float &n1, float &n2, float &n3);
 
     static void HomochorictoRod(float &r1, float &r2, float &r3);
 
     static void RodtoAxisAngle(float r1, float r2, float r3, float &w, float &n1, float &n2, float &n3);
-    static void RodtoQuat(QuaternionMathF::Quat_t &q, float r1, float r2, float r3);
+    static void RodtoQuat(QuatF &q, float r1, float r2, float r3);
     static void RodtoHomochoric(float &r1, float &r2, float &r3);
     static void RodtoEuler(float r1, float r2, float r3, float &ea1, float &ea2, float &ea3);
 
 
-    static void QuattoAxisAngle(QuaternionMathF::Quat_t &q, float &w, float &n1, float &n2, float &n3);
-    static void QuattoMat(QuaternionMathF::Quat_t &q, float g[3][3]);
-    static void QuattoRod(QuaternionMathF::Quat_t &q, float &r1, float &r2, float &r3);
-    static void QuattoEuler(QuaternionMathF::Quat_t &q, float &ea1, float &ea2, float &ea3);
+    static void QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, float &n3);
+    static void QuattoMat(QuatF &q, float g[3][3]);
+    static void QuattoRod(QuatF &q, float &r1, float &r2, float &r3);
+    static void QuattoEuler(QuatF &q, float &ea1, float &ea2, float &ea3);
 
 
-    static void EulertoQuat(QuaternionMathF::Quat_t &q, float ea1, float ea2, float ea3);
+    static void EulertoQuat(QuatF &q, float ea1, float ea2, float ea3);
     static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
     static void EulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3);
 
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT OrientationMath
 
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 
-    static void MultiplyQuaternionVector(QuaternionMathF::Quat_t &inQuat, float inVec[3], float outVec[3]);
+    static void MultiplyQuaternionVector(QuatF &inQuat, float inVec[3], float outVec[3]);
 
   protected:
     OrientationMath();

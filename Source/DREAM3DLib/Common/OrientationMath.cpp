@@ -344,7 +344,7 @@ void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n
   r3 = n3 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
 }
 
-void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
+void OrientationMath::AxisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
   float denom;
 
@@ -664,14 +664,14 @@ void OrientationMath::MultiplyQuaternionVector(float* inQuat, float* inVec, floa
   //  vtemp[j] = inVec[j];
   //}
 
-  //MatrixMath::crossProduct(r, vtemp, temp);
+  //MatrixMath::CrossProduct(r, vtemp, temp);
 
   //for (j=0; j<3; j++)
   //{
   //  temp[j] += w * vtemp[j];
   //}
 
-  //MatrixMath::crossProduct(r, temp, temp2);
+  //MatrixMath::CrossProduct(r, temp, temp2);
 
   //for (j=0; j<3; j++)
   //{
