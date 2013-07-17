@@ -193,7 +193,7 @@ void WriteAbaqusSurfaceMesh::execute()
   FILE* f = fopen(m_OutputFile.c_str(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
-  err = writeHeader(f, nodesPtr->GetNumberOfTuples(), trianglePtr->GetNumberOfTuples(), uniqueSpins.size());
+  err = writeHeader(f, nodesPtr->GetNumberOfTuples(), trianglePtr->GetNumberOfTuples(), uniqueSpins.size()-1);
   err = writeNodes(f);
   err = writeTriangles(f);
   err = writeGrains(f);
@@ -304,6 +304,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
+    if(spin < 0) { continue; }
 
     fprintf(f, "*ELSET, ELSET=Grain%d\n", spin);
 
@@ -320,19 +321,19 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
       {
         continue; // We do not match either spin so move to the next triangle
       }
-      fprintf(f,"%d ", t);
-      lineCount++;
+
       // Only print 20 Triangles per line
-      if (lineCount == 20)
+      if (lineCount == 20 || t == nTriangles-1)
       {
-        fprintf(f, "\n");
+        fprintf(f, "%d\n", t);
         lineCount = 0;
       }
+      else
+      {
+        fprintf(f,"%d, ", t);
+        lineCount++;
+      }
 
-    }
-    if (lineCount != 0)
-    {
-    fprintf(f, "\n");
     }
   }
   return err;

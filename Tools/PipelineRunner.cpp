@@ -61,6 +61,8 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+
 #include "FilterWidgets/FilterWidgetsLib.h"
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "PipelineBuilder/IFilterWidgetFactory.h"
@@ -81,43 +83,44 @@ int main (int argc, char  *argv[])
   float outQuat[5];
   float sampleQuat[5] = {0.0, 0.0, 0.0, 0.0, 1.0};
   float finalQuat[5];
+  float out[5];
+  float userquat[5];
+  float output2[5];
+
 
   int count = 0;
   CubicOps co;
+  OrthoRhombicOps oo;
 
-  co.axisAngletoQuat(20.0*M_PI/180, -1,-2,-3, q);
+  co.axisAngletoQuat(20.0*M_PI/180, -1,2,3, userquat);
 
-  std::cout << "q:  " << q[1] << ", " << q[2] << ", " << q[3] << ", " << q[4] << std::endl;
+  std::cout << "q:  " <<userquat[1] << ", " << userquat[2] << ", " << userquat[3] << ", " << userquat[4] << std::endl;
 
   for(int i = 0; i < co.getNumSymOps(); ++i)
   {
     co.getQuatSymOp(i, symQuat1);
-    co.multiplyQuaternions( symQuat1, sampleQuat, symSampleQuat);
-    for(int j = 0; j < co.getNumSymOps(); ++j)
+    co.multiplyQuaternions(userquat, symQuat1, out);
+
+    for(int j = 0; j < oo.getNumSymOps(); ++j)
     {
 
-      co.getQuatSymOp(j, symQuat2);
-      co.multiplyQuaternions( q, symQuat2, outQuat);
-      co.invertQuaternion(outQuat);
-      co.multiplyQuaternions( symSampleQuat, outQuat, finalQuat);
+      oo.getQuatSymOp(j, symQuat2);
+      oo.multiplyQuaternions( symQuat2, out, output2);
 
-      co.QuattoEuler(finalQuat, euler[0], euler[1], euler[2]);
 
-      if (finalQuat[4] >= finalQuat[3] && finalQuat[3] >= finalQuat[2] && finalQuat[2] >= finalQuat[1] && finalQuat[1] >= 0.0 )
+      if (output2[4] < 0)
       {
-        std::cout << "Quat:  " << finalQuat[1] << ", " << finalQuat[2] << ", " << finalQuat[3] << ", " << finalQuat[4] << "       ";
-        std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
+        output2[1] *= -1.0;
+        output2[2] *= -1.0;
+        output2[3] *= -1.0;
+        output2[4] *= -1.0;
+      }
+      if (output2[4] >= output2[3] && output2[3] >= output2[2] && output2[2] >= output2[1] && output2[1] >= 0.0 )
+      {
+        std::cout << "Quat:  " << output2[1] << ", " << output2[2] << ", " << output2[3] << ", " << output2[4] << "       ";
+       // std::cout << "Euler: " << euler[0] << ", " << euler[1] << ", "  << euler[2] << std::endl;
         count++;
       }
-
-      //    if (outQuat[4] < 0.0f)
-      //    {
-      //      outQuat[1] *= -1.0;
-      //      outQuat[2] *= -1.0;
-      //      outQuat[3] *= -1.0;
-      //      outQuat[4] *= -1.0;
-      //    }
-
     }
   }
   std::cout << "count: " << count << std::endl;
