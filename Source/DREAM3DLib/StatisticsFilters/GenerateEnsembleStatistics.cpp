@@ -809,24 +809,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   for (size_t i = 1; i < numgrains; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
-    #warning Fix This
-//    q1[0] = m_AvgQuats[5*i];
-//    q1[1] = m_AvgQuats[5*i+1];
-//    q1[2] = m_AvgQuats[5*i+2];
-//    q1[3] = m_AvgQuats[5*i+3];
-//    q1[4] = m_AvgQuats[5*i+4];
     phase1 = m_CrystalStructures[m_FieldPhases[i]];
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
       nname = neighborlist[i][j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
-      #warning Fix This
-//      q2[0] = m_AvgQuats[5*nname];
-//      q2[1] = m_AvgQuats[5*nname+1];
-//      q2[2] = m_AvgQuats[5*nname+2];
-//      q2[3] = m_AvgQuats[5*nname+3];
-//      q2[4] = m_AvgQuats[5*nname+4];
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if (phase1 == phase2) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       if (phase1 == phase2)
