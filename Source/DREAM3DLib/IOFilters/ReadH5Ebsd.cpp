@@ -118,6 +118,7 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
+////!!##
   reader->closeFilterGroup();
 }
 
