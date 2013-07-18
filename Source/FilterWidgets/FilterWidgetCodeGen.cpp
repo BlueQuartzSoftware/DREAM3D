@@ -461,6 +461,7 @@ void parseSouceFileForMarker(const std::string filename, const std::string marke
     }
   }
 
+ // copyFile(tempfile, filename);
  // MXADir::remove(tempfile);
 
 }
@@ -911,7 +912,7 @@ void createSourceFile( const std::string &group,
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_" << prop << ") );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
@@ -936,7 +937,7 @@ void createSourceFile( const std::string &group,
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_Origin) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
@@ -944,7 +945,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
       fprintf(f, "    }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_AxisAngleRotations) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
@@ -953,7 +954,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
       fprintf(f, "    }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_" << prop << ") );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else
     {
@@ -965,7 +966,7 @@ void createSourceFile( const std::string &group,
 
 
   ss.str("");
-
+  replaceStream << "/* FILTER_PARAMTERS_WRITER_AUTO_GENERATED_CODE */" << std::endl;
   ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
   parseSouceFileForMarker(ss.str(), "////!!##", replaceStream.str());
 
