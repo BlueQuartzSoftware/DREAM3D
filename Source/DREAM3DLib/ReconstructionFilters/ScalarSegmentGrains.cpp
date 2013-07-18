@@ -68,6 +68,7 @@ const static float m_pi = static_cast<float>(M_PI);
 class CompareFunctor
 {
 public:
+  virtual ~CompareFunctor(){}
 
   virtual bool operator()(size_t index, size_t neighIndex, size_t gnum)  // call using operator
   {
@@ -428,6 +429,7 @@ int ScalarSegmentGrains::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 bool ScalarSegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
 {
+  if(m_GrainIds[neighborpoint] > 0) { return false; }
   return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
   //     | Functor  ||calling the operator() method of the CompareFunctor Class |
 }
