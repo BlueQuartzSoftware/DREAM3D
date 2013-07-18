@@ -106,8 +106,13 @@ void @ClassName@::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @ClassName@::readFilterParameters(AbstractFilterParametersReader* reader)
+void @ClassName@::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /*
+   Place code in here that will read the parameters from a file
+   */
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
