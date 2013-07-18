@@ -334,8 +334,10 @@ void GenericFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+
   setStlFilePrefix( reader->readValue(H5FilterParameter::StlFilePrefixConstant, StlFilePrefixDefaultValue) );
   setMaxIterations( reader->readValue(H5FilterParameter::MaxIterationsConstant, MaxIterationsDefaultValue) );
   setMisorientationTolerance( reader->readValue(H5FilterParameter::MisorientationToleranceConstant, MisorientationToleranceDefaultValue) );
@@ -366,6 +368,7 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader)
   setEdgeComparisonInputs( reader->readValue(H5FilterParameter::EdgeComparisonInputsConstant, m_EdgeComparisonInputs) );
 
   setAxisAngleRotations( reader->readValue(H5FilterParameter::AxisAngleInputsConstant, m_AxisAngleRotations) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
