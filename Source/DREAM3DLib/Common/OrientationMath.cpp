@@ -96,7 +96,7 @@ float OrientationMath::_calcMisoQuat(const float quatsym[24][5], int numsym,
    {
 	   q2inv[i] = q2[i];
    }
-   OrientationMath::invertQuaternion(q2inv);
+   OrientationMath::Conjugate(q2inv);
    OrientationMath::multiplyQuaternions(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
@@ -344,7 +344,7 @@ void OrientationMath::axisAngletoHomochoric(float w, float n1, float n2, float n
   r3 = n3 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
 }
 
-void OrientationMath::axisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
+void OrientationMath::AxisAngletoRod(float w, float n1, float n2, float n3, float &r1, float &r2, float &r3)
 {
   float denom;
 
@@ -570,7 +570,7 @@ void OrientationMath::normalizeQuat(float* qr)
   qr[4] = static_cast<float>( qr[4]/norm );
 }
 
-void OrientationMath::invertQuaternion(float* q)
+void OrientationMath::Conjugate(float* q)
 {
   q[0] = q[0];
   q[1] = -q[1];
@@ -642,7 +642,7 @@ void OrientationMath::multiplyQuaternions(float* inQuat, float* multQuat, float*
   MULT_QUAT(inQuat, multQuat, outQuat);
 }
 
-void OrientationMath::multiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
+void OrientationMath::MultiplyQuaternionVector(float* inQuat, float* inVec, float* outVec)
 {
   float g[3][3];
   OrientationMath::QuattoMat(inQuat, g);
@@ -664,14 +664,14 @@ void OrientationMath::multiplyQuaternionVector(float* inQuat, float* inVec, floa
   //  vtemp[j] = inVec[j];
   //}
 
-  //MatrixMath::crossProduct(r, vtemp, temp);
+  //MatrixMath::CrossProduct(r, vtemp, temp);
 
   //for (j=0; j<3; j++)
   //{
   //  temp[j] += w * vtemp[j];
   //}
 
-  //MatrixMath::crossProduct(r, temp, temp2);
+  //MatrixMath::CrossProduct(r, temp, temp2);
 
   //for (j=0; j<3; j++)
   //{

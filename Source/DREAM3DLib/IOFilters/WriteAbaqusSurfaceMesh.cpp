@@ -252,7 +252,7 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
   DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
   size_t numTri = trianglePtr->GetNumberOfTuples();
 
-  fprintf(f, "ELEMENT, TYPE=S3\n");
+  fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
   for(size_t i = 1; i <= numTri; ++i)
   {
 
@@ -322,18 +322,28 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
         continue; // We do not match either spin so move to the next triangle
       }
 
-      // Only print 20 Triangles per line
-      if (lineCount == 20 || t == nTriangles-1)
+      // Only print 15 Triangles per line
+      if (lineCount == 15)
       {
-        fprintf(f, "%d\n", t);
+        fprintf(f, ", %d\n", t);
         lineCount = 0;
+      }
+      else if(lineCount == 0) // First value on the line
+      {
+        fprintf(f,"%d", t);
+        lineCount++;
       }
       else
       {
-        fprintf(f,"%d, ", t);
+        fprintf(f,", %d", t);
         lineCount++;
       }
 
+    }
+    // Make sure we have a new line at the end of the section
+    if (lineCount != 0)
+    {
+    fprintf(f, "\n");
     }
   }
   return err;

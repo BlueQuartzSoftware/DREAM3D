@@ -44,7 +44,7 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 
 class StandardizeEulerAnglesImpl
@@ -52,10 +52,8 @@ class StandardizeEulerAnglesImpl
     float* m_CellEulerAngles;
     int* m_CellPhases;
     unsigned int* m_CrystalStructures;
-    //    int64_t numCells;
-    //    size_t numEnsembles;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs, int64_t numCells, size_t numEnsembles) :
@@ -65,23 +63,23 @@ class StandardizeEulerAnglesImpl
     //      numCells(numCells),
     //      numEnsembles(numEnsembles)
     {
-	  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+    m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
     virtual ~StandardizeEulerAnglesImpl(){}
 
     void convert(size_t start, size_t end) const
     {
       float ea1, ea2, ea3;
-      float q[5];
+      QuatF q;
       int cellPhase = 0;
       unsigned int crystalStruct = 0;
-      OrientationMath::Pointer ormath;
+      OrientationOps::Pointer ormath;
       for (size_t i = start; i < end; i++)
       {
         ea1 = m_CellEulerAngles[3*i];
         ea2 = m_CellEulerAngles[3*i+1];
         ea3 = m_CellEulerAngles[3*i+2];
-        OrientationMath::eulertoQuat(q, ea1, ea2, ea3);
+        OrientationMath::EulertoQuat(q, ea1, ea2, ea3);
         cellPhase = m_CellPhases[i];
         crystalStruct = m_CrystalStructures[cellPhase];
         if (crystalStruct == Ebsd::CrystalStructure::UnknownCrystalStructure) { continue; }

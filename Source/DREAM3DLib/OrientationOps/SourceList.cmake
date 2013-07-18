@@ -12,6 +12,7 @@
 
 
 set(DREAM3DLib_OrientationOps_HDRS
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrientationOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalOps.h
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.h
@@ -19,6 +20,7 @@ set(DREAM3DLib_OrientationOps_HDRS
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/TetragonalOps.h
 )
 set(DREAM3DLib_OrientationOps_SRCS
+  ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrientationOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/CubicOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/HexagonalOps.cpp
   ${DREAM3DLib_SOURCE_DIR}/OrientationOps/OrthoRhombicOps.cpp

@@ -47,42 +47,42 @@ const static float m_pi = static_cast<float>(M_PI);
 //
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
-AbstractFilter(),
-m_F1ArrayName(DREAM3D::FieldData::F1),
-m_F1sptArrayName(DREAM3D::FieldData::F1spt),
-m_F7ArrayName(DREAM3D::FieldData::F7),
-m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
-m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
-m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_PolesArrayName(DREAM3D::FieldData::Poles),
-m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-m_GrainIds(NULL),
-m_FieldPhases(NULL),
-m_NearestNeighbors(NULL),
-m_GrainReferenceMisorientations(NULL),
-m_KernelAverageMisorientations(NULL),
-m_AvgQuats(NULL),
-m_F1(NULL),
-m_F1spt(NULL),
-m_F7(NULL),
-m_mPrime(NULL),
-m_GrainAvgMisorientations(NULL),
-m_Poles(NULL),
-m_Schmids(NULL),
-m_GBEuclideanDistances(NULL),
-m_TJEuclideanDistances(NULL),
-m_QPEuclideanDistances(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_F1ArrayName(DREAM3D::FieldData::F1),
+  m_F1sptArrayName(DREAM3D::FieldData::F1spt),
+  m_F7ArrayName(DREAM3D::FieldData::F7),
+  m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
+  m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
+  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_GrainAvgMisorientationsArrayName(DREAM3D::FieldData::GrainAvgMisorientations),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_PolesArrayName(DREAM3D::FieldData::Poles),
+  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
+  m_GrainIds(NULL),
+  m_FieldPhases(NULL),
+  m_NearestNeighbors(NULL),
+  m_GrainReferenceMisorientations(NULL),
+  m_KernelAverageMisorientations(NULL),
+  m_AvgQuats(NULL),
+  m_F1(NULL),
+  m_F1spt(NULL),
+  m_F7(NULL),
+  m_mPrime(NULL),
+  m_GrainAvgMisorientations(NULL),
+  m_Poles(NULL),
+  m_Schmids(NULL),
+  m_GBEuclideanDistances(NULL),
+  m_TJEuclideanDistances(NULL),
+  m_QPEuclideanDistances(NULL),
+  m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -142,27 +142,27 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
@@ -195,14 +195,17 @@ void FindDeformationStatistics::execute()
     return;
   }
 
-//  std::string filename = m_OutputFile1;
+  //  std::string filename = m_OutputFile1;
   std::ofstream outFile;
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
   float kam, gbdist, tjdist, qpdist, sf, grm, mprime, F1, F1spt, F7;
   int gname, gname2;
-  float q1[5], q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
   int kmdist[20];
   int gamdist[20];
   float kmvgb[20][2];
@@ -223,24 +226,11 @@ void FindDeformationStatistics::execute()
   float gamvmprime[20][2];
   float kmvdis[20][2];
   float gamvdis[20][2];
-//  float kmvsfdistthresh[20][2];
-//  float gamvsfdistthresh[20][2];
-//  float kmvF1distthresh[20][2];
-//  float gamvF1distthresh[20][2];
-//  float kmvF1sptdistthresh[20][2];
-//  float gamvF1sptdistthresh[20][2];
-//  float kmvF7distthresh[20][2];
-//  float gamvF7distthresh[20][2];
-//  float kmvmprimedistthresh[20][2];
-//  float gamvmprimedistthresh[20][2];
-//  float kmvdisdistthresh[20][2];
-//  float gamvdisdistthresh[20][2];
-//  float kmvsfmmmprimethresh[20][2];
-//  float gamvsfmmmprimethresh[20][2];
+
   int kambin, grmbin, kambin2, grmbin2;
   int gbbin, tjbin, qpbin;
   int sfbin, mprimebin, F1bin, F1sptbin, F7bin, disbin;
- // int actualpoints = 0;
+  // int actualpoints = 0;
   for (int h = 0; h < 20; h++)
   {
     kmdist[h] = 0;
@@ -248,26 +238,26 @@ void FindDeformationStatistics::execute()
   }
   for (int i = 0; i < 20; i++)
   {
-     for (int j = 0; j < 2; j++)
-     {
-        kmvgb[i][j] = 0;
-        gamvgb[i][j] = 0;
-        kmvtj[i][j] = 0;
-        gamvtj[i][j] = 0;
-        kmvqp[i][j] = 0;
-        gamvqp[i][j] = 0;
-        kmvsf[i][j] = 0;
-        gamvsf[i][j] = 0;
-        kmvF1[i][j] = 0;
-        gamvF1[i][j] = 0;
-        kmvF1spt[i][j] = 0;
-        gamvF1spt[i][j] = 0;
-        kmvF7[i][j] = 0;
-        gamvF7[i][j] = 0;
-        kmvmprime[i][j] = 0;
-        gamvmprime[i][j] = 0;
-        kmvdis[i][j] = 0;
-        gamvdis[i][j] = 0;
+    for (int j = 0; j < 2; j++)
+    {
+      kmvgb[i][j] = 0;
+      gamvgb[i][j] = 0;
+      kmvtj[i][j] = 0;
+      gamvtj[i][j] = 0;
+      kmvqp[i][j] = 0;
+      gamvqp[i][j] = 0;
+      kmvsf[i][j] = 0;
+      gamvsf[i][j] = 0;
+      kmvF1[i][j] = 0;
+      gamvF1[i][j] = 0;
+      kmvF1spt[i][j] = 0;
+      gamvF1spt[i][j] = 0;
+      kmvF7[i][j] = 0;
+      gamvF7[i][j] = 0;
+      kmvmprime[i][j] = 0;
+      gamvmprime[i][j] = 0;
+      kmvdis[i][j] = 0;
+      gamvdis[i][j] = 0;
     }
   }
 
@@ -301,13 +291,17 @@ void FindDeformationStatistics::execute()
       avgF1 = avgF1 + m_F1[i];
       avgF1spt = avgF1spt + m_F1spt[i];
       avgF7 = avgF7 + m_F7[i];
-    avgmprime = avgmprime + m_mPrime[i];
+      avgmprime = avgmprime + m_mPrime[i];
       gname2 = m_NearestNeighbors[i * 3 + 0];
-      for (int j = 0; j < 5; j++)
-      {
-        q1[j] = m_AvgQuats[5 * gname + j];
-        q2[j] = m_AvgQuats[5 * gname2 + j];
-      }
+
+      QuaternionMathF::Copy(avgQuats[gname], q1);
+      QuaternionMathF::Copy(avgQuats[gname2], q2);
+
+//      for (int j = 0; j < 5; j++)
+//      {
+//        q1[j] = m_AvgQuats[5 * gname + j];
+//        q2[j] = m_AvgQuats[5 * gname2 + j];
+//      }
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
@@ -344,15 +338,17 @@ void FindDeformationStatistics::execute()
       qpdist = m_QPEuclideanDistances[i];
       gname2 = m_NearestNeighbors[i * 3 + 0];
       sf = m_Schmids[gname];
-    F1 = m_F1[i];
-    F1spt = m_F1spt[i];
-    F7 = m_F7[i];
-  mprime = m_mPrime[i];
-      for (int j = 0; j < 5; j++)
-      {
-        q1[j] = m_AvgQuats[5 * gname + j];
-        q2[j] = m_AvgQuats[5 * gname2 + j];
-      }
+      F1 = m_F1[i];
+      F1spt = m_F1spt[i];
+      F7 = m_F7[i];
+      mprime = m_mPrime[i];
+      QuaternionMathF::Copy(avgQuats[gname], q1);
+      QuaternionMathF::Copy(avgQuats[gname2], q2);
+//      for (int j = 0; j < 5; j++)
+//      {
+//        q1[j] = m_AvgQuats[5 * gname + j];
+//        q2[j] = m_AvgQuats[5 * gname2 + j];
+//      }
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
@@ -363,26 +359,26 @@ void FindDeformationStatistics::execute()
         w = 0;
       }
       if((kam/avgKAM) >= 1) kambin = 10+int(((kam/avgKAM)-1.0)/0.25);
-    else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
+      else kambin = 9-int(((avgKAM/kam)-1.0)/0.25);
       if((grm/avgGRM) >= 1) grmbin = 10+int(((grm/avgGRM)-1.0)/0.25);
-    else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
-    kambin2 = int(kam/0.25);
-    grmbin2 = int(grm/0.5);
+      else grmbin = 9-int(((avgGRM/grm)-1.0)/0.25);
+      kambin2 = int(kam/0.25);
+      grmbin2 = int(grm/0.5);
       gbbin = int(gbdist);
       tjbin = int(tjdist);
       qpbin = int(qpdist);
       if((sf/avgSF) >= 1) sfbin = 10+int(((sf/avgSF)-1.0)/0.25);
-    else sfbin = 9-int(((avgSF/sf)-1.0)/0.25);
+      else sfbin = 9-int(((avgSF/sf)-1.0)/0.25);
       if((w/avgDIS) >= 1) disbin = 10+int(((w/avgDIS)-1.0)/0.25);
-    else disbin = 9-int(((avgDIS/w)-1.0)/0.25);
+      else disbin = 9-int(((avgDIS/w)-1.0)/0.25);
       if((mprime/avgmprime) >= 1) mprimebin = 10+int(((mprime/avgmprime)-1.0)/0.25);
-    else mprimebin = 9-int(((avgmprime/mprime)-1.0)/0.25);
+      else mprimebin = 9-int(((avgmprime/mprime)-1.0)/0.25);
       if((F1/avgF1) >= 1) F1bin = 10+int(((F1/avgF1)-1.0)/0.25);
-    else F1bin = 9-int(((avgF1/F1)-1.0)/0.25);
+      else F1bin = 9-int(((avgF1/F1)-1.0)/0.25);
       if((F1spt/avgF1) >= 1) F1sptbin = 10+int(((F1spt/avgF1spt)-1.0)/0.25);
-    else F1sptbin = 9-int(((avgF1spt/F1spt)-1.0)/0.25);
+      else F1sptbin = 9-int(((avgF1spt/F1spt)-1.0)/0.25);
       if((F7/avgF7) >= 1) F7bin = 10+int(((F7/avgF7)-1.0)/0.25);
-    else F7bin = 9-int(((avgF7/F7)-1.0)/0.25);
+      else F7bin = 9-int(((avgF7/F7)-1.0)/0.25);
       if(kambin < 0) kambin = 0;
       if(kambin > 19) kambin = 19;
       if(grmbin < 0) grmbin = 0;
@@ -465,14 +461,14 @@ void FindDeformationStatistics::execute()
     if (kmvmprime[i][0] > 0) kmvmprime[i][1] = kmvmprime[i][1] / kmvmprime[i][0];
     if (kmvdis[i][0] > 0) kmvdis[i][1] = kmvdis[i][1] / kmvdis[i][0];
     outFile << kmvgb[i][0] << "	" << kmvgb[i][1] << "	"
-        << kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
-        << kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
-        << kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
-        << kmvF1[i][0] << "	" << kmvF1[i][1] << "	"
-        << kmvF1spt[i][0] << "	" << kmvF1spt[i][1] << "	"
-        << kmvF7[i][0] << "	" << kmvF7[i][1] << "	"
-        << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
-        << kmvdis[i][0] << "	" << kmvdis[i][1] << std::endl;
+                           << kmvtj[i][0] << "	" << kmvtj[i][1] << "	"
+                           << kmvqp[i][0] << "	" << kmvqp[i][1] << "	"
+                           << kmvsf[i][0] << "	" << kmvsf[i][1] << "	"
+                           << kmvF1[i][0] << "	" << kmvF1[i][1] << "	"
+                           << kmvF1spt[i][0] << "	" << kmvF1spt[i][1] << "	"
+                           << kmvF7[i][0] << "	" << kmvF7[i][1] << "	"
+                           << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
+                           << kmvdis[i][0] << "	" << kmvdis[i][1] << std::endl;
   }
   outFile << std::endl;
   outFile << std::endl;
@@ -491,25 +487,25 @@ void FindDeformationStatistics::execute()
     if (gamvmprime[i][0] > 0) gamvmprime[i][1] = gamvmprime[i][1] / gamvmprime[i][0];
     if (gamvdis[i][0] > 0) gamvdis[i][1] = gamvdis[i][1] / gamvdis[i][0];
     outFile << gamvgb[i][0] << "	" << gamvgb[i][1] << "	"
-        << gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
-        << gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
-        << gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
-        << gamvF1[i][0] << "	" << gamvF1[i][1] << "	"
-        << gamvF1spt[i][0] << "	" << gamvF1spt[i][1] << "	"
-        << gamvF7[i][0] << "	" << gamvF7[i][1] << "	"
-        << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
-        << gamvdis[i][0] << "	" << gamvdis[i][1] << std::endl;
+                            << gamvtj[i][0] << "	" << gamvtj[i][1] << "	"
+                            << gamvqp[i][0] << "	" << gamvqp[i][1] << "	"
+                            << gamvsf[i][0] << "	" << gamvsf[i][1] << "	"
+                            << gamvF1[i][0] << "	" << gamvF1[i][1] << "	"
+                            << gamvF1spt[i][0] << "	" << gamvF1spt[i][1] << "	"
+                            << gamvF7[i][0] << "	" << gamvF7[i][1] << "	"
+                            << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
+                            << gamvdis[i][0] << "	" << gamvdis[i][1] << std::endl;
   }
   outFile << std::endl;
   outFile << std::endl;
   outFile << "KAM DIST		GAM DIST" << std::endl;
   for (int i = 0; i < 20; i++)
   {
-        outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] << std::endl;
+    outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] << std::endl;
   }
   outFile.close();
 
- // std::string filename2 = m_OutputFile2;
+  // std::string filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
   vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
   if (NULL == vtkFile)
@@ -556,16 +552,16 @@ void FindDeformationStatistics::execute()
     }
 
     xFZ = static_cast<float>( x - (x * (z / (z + 1.0))) );
-      yFZ = static_cast<float>( y - (y * (z / (z + 1.0))) );
-      zFZ = 0.0;
-      fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
+    yFZ = static_cast<float>( y - (y * (z / (z + 1.0))) );
+    zFZ = 0.0;
+    fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
   fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumFieldTuples()-1, ((m->getNumFieldTuples()-1)*2));
-//  Store the Grain Ids so we don't have to re-read the triangles file again
+  //  Store the Grain Ids so we don't have to re-read the triangles file again
   for(size_t i=1;i<size;i++)
   {
-       fprintf(vtkFile, "1 %ld\n", (i-1));
+    fprintf(vtkFile, "1 %ld\n", (i-1));
   }
 
   // Write the CELL_TYPES into the file
@@ -584,10 +580,10 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)
   {
-      float miso = m_GrainAvgMisorientations[i];
-      fprintf(vtkFile, "%f\n", miso);
+    float miso = m_GrainAvgMisorientations[i];
+    fprintf(vtkFile, "%f\n", miso);
   }
   fclose(vtkFile);
 
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }

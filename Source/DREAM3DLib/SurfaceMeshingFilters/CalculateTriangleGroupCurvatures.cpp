@@ -46,7 +46,7 @@
 #include <Eigen/Dense>
 
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
 
@@ -191,13 +191,13 @@ void CalculateTriangleGroupCurvatures::operator()() const
     double vp[3] = {0.0, 0.0, 0.0};
 
     // Cross Product of np and temp
-    MatrixMath::normalizeVector(np);
-    MatrixMath::crossProduct(np, temp, vp);
-    MatrixMath::normalizeVector(vp);
+    MatrixMath::NormalizeVector(np);
+    MatrixMath::CrossProduct(np, temp, vp);
+    MatrixMath::NormalizeVector(vp);
 
     // get the third orthogonal vector
     double up[3] = {0.0, 0.0, 0.0};
-    MatrixMath::crossProduct(vp, np, up);
+    MatrixMath::CrossProduct(vp, np, up);
 
     // this constitutes a rotation matrix to a local coordinate system
     double rot[3][3] = {{up[0], up[1], up[2]},
@@ -208,11 +208,11 @@ void CalculateTriangleGroupCurvatures::operator()() const
     for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
     {
       ::memcpy(out, patchCentroids->GetPointer(m*3), 3*sizeof(double));
-      MatrixMath::multiply3x3with3x1(rot, patchCentroids->GetPointer(m*3), out);
+      MatrixMath::Multiply3x3with3x1(rot, patchCentroids->GetPointer(m*3), out);
       ::memcpy(patchCentroids->GetPointer(m*3), out, 3*sizeof(double));
 
       ::memcpy(out, patchNormals->GetPointer(m*3), 3*sizeof(double));
-      MatrixMath::multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
+      MatrixMath::Multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
       ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
 
       // We rotate the normals now but we dont use them yet. If we start using part 3 of Goldfeathers paper then we

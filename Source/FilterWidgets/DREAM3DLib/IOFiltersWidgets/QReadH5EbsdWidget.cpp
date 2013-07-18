@@ -374,7 +374,7 @@ void QReadH5EbsdWidget::updateFileInfoWidgets()
         msgBox.setInformativeText(iText);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
-        int ret = msgBox.exec();
+        msgBox.exec();
         m_Version4Warning = true;
 //        if (QMessageBox::Ok == ret)
 //        {

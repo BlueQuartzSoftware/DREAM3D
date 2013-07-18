@@ -71,7 +71,7 @@ FindGrainReferenceMisorientations::FindGrainReferenceMisorientations() :
   m_Quats(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 }
@@ -130,13 +130,13 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
 
   if(m_ReferenceOrientation == 0)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 5)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 4)
   }
   else if(m_ReferenceOrientation == 1)
   {
@@ -192,8 +192,11 @@ void FindGrainReferenceMisorientations::execute()
     }
   }
 
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
 
   float w;
   float n1, n2, n3;
@@ -249,30 +252,20 @@ void FindGrainReferenceMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          q1[1] = m_Quats[point*5 + 1];
-          q1[2] = m_Quats[point*5 + 2];
-          q1[3] = m_Quats[point*5 + 3];
-          q1[4] = m_Quats[point*5 + 4];
+          QuaternionMathF::Copy(quats[point], q1);
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           if(m_ReferenceOrientation == 0)
           {
-            q2[0] = m_AvgQuats[5*m_GrainIds[point]];
-            q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
-            q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
-            q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];
-            q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
+            QuaternionMathF::Copy(avgQuats[m_GrainIds[point]], q2);
           }
           else if(m_ReferenceOrientation == 1)
           {
             gnum = m_GrainIds[point];
-            q2[1] = m_Quats[m_Centers[gnum]*5 + 1];
-            q2[2] = m_Quats[m_Centers[gnum]*5 + 2];
-            q2[3] = m_Quats[m_Centers[gnum]*5 + 3];
-            q2[4] = m_Quats[m_Centers[gnum]*5 + 4];
+            QuaternionMathF::Copy(quats[m_Centers[gnum]], q2);
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+          OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w *(180.0f/m_pi);
           m_GrainReferenceMisorientations[point] = w;
@@ -291,7 +284,7 @@ void FindGrainReferenceMisorientations::execute()
   for (size_t i = 1; i < grainsSize; i++)
   {
     m_GrainAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
-    if(avgmiso[i][0] == 0) m_GrainAvgMisorientations[i] = 0.0;
+    if(avgmiso[i][0] == 0) { m_GrainAvgMisorientations[i] = 0.0; }
   }
 
   // Clean up all the heap allocated memory

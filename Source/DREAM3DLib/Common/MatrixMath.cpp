@@ -80,7 +80,7 @@ MatrixMath::~MatrixMath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatrixMath::crossProduct(double a[3], double b[3], double c[3])
+void MatrixMath::CrossProduct(double a[3], double b[3], double c[3])
 {
   c[0] = a[1] * b[2] - a[2] * b[1];
   c[1] = a[2] * b[0] - a[0] * b[2];
@@ -197,7 +197,7 @@ void MatrixMath::copy3x3(float g[3][3], float outMat[3][3])
   outMat[2][2] = g[2][2];
 }
 
-void MatrixMath::normalize3x3(float g[3][3])
+void MatrixMath::Normalize3x3(float g[3][3])
 {
   float denom;
   denom = g[0][0]*g[0][0]+g[1][0]*g[1][0]+g[2][0]*g[2][0];
@@ -239,7 +239,7 @@ void MatrixMath::normalize3x1(float g[3])
   if(g[2] > 1) g[2] = 1;
 }
 
-float MatrixMath::dotProduct(float a[3], float b[3])
+float MatrixMath::DotProduct(float a[3], float b[3])
 {
   float norm1 = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
   float norm2 = sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);

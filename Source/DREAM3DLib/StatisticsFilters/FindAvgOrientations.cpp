@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 // -----------------------------------------------------------------------------
@@ -58,7 +59,7 @@ FindAvgOrientations::FindAvgOrientations() :
   m_Quats(NULL),
   m_AvgQuats(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
 
 // -----------------------------------------------------------------------------
@@ -89,14 +90,14 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
@@ -130,79 +131,50 @@ void FindAvgOrientations::execute()
   }
 
   size_t numgrains = m->getNumFieldTuples();
-  int phase;
-  float voxquat[5];
-  float curavgquat[5];
+  std::vector<float> counts(numgrains, 0.0);
 
+  int phase;
+  QuatF voxquat;
+  QuatF curavgquat;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    m_AvgQuats[5*i] = 0.0;
-    m_AvgQuats[5*i+1] = 0.0;
-    m_AvgQuats[5*i+2] = 0.0;
-    m_AvgQuats[5*i+3] = 0.0;
-    m_AvgQuats[5*i+4] = 0.0;
+    QuaternionMathF::ElementWiseAssign(avgQuats[i],0.0);
   }
-  //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
     {
-
+      counts[m_GrainIds[i]] += 1;
       phase = m_CellPhases[i];
-      voxquat[0] = m_Quats[i*5 + 0];
-      voxquat[1] = m_Quats[i*5 + 1];
-      voxquat[2] = m_Quats[i*5 + 2];
-      voxquat[3] = m_Quats[i*5 + 3];
-      voxquat[4] = m_Quats[i*5 + 4];
-      curavgquat[0] = 1;
-      curavgquat[1] = m_AvgQuats[5*m_GrainIds[i]+1]/m_AvgQuats[5*m_GrainIds[i]];
-      curavgquat[2] = m_AvgQuats[5*m_GrainIds[i]+2]/m_AvgQuats[5*m_GrainIds[i]];
-      curavgquat[3] = m_AvgQuats[5*m_GrainIds[i]+3]/m_AvgQuats[5*m_GrainIds[i]];
-      curavgquat[4] = m_AvgQuats[5*m_GrainIds[i]+4]/m_AvgQuats[5*m_GrainIds[i]];
-      if(m_AvgQuats[5*m_GrainIds[i]] == 0)
+      QuaternionMathF::Copy(quats[i], voxquat);
+      QuaternionMathF::Copy(avgQuats[m_GrainIds[i]], curavgquat);
+      QuaternionMathF::ScalarDivide(curavgquat, counts[m_GrainIds[i]]);
+
+      if(counts[m_GrainIds[i]] == 1)
       {
-        curavgquat[0] = 1;
-        curavgquat[1] = 0;
-        curavgquat[2] = 0;
-        curavgquat[3] = 0;
-        curavgquat[4] = 1;
+        QuaternionMathF::Identity(curavgquat);
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
-      for (int k = 0; k < 5; k++)
-      {
-        m_AvgQuats[5*m_GrainIds[i]+k] = m_AvgQuats[5*m_GrainIds[i]+k] + voxquat[k];
-      }
+      QuaternionMathF::Add(avgQuats[m_GrainIds[i]], voxquat, avgQuats[m_GrainIds[i]]);
     }
   }
-  float q[5];
   float ea1, ea2, ea3;
   for (size_t i = 1; i < numgrains; i++)
   {
-    if(m_AvgQuats[5*i] == 0)
+    if(counts[i] == 0)
     {
-      m_AvgQuats[5*i] = 1;
-      m_AvgQuats[5*i+1] = 0;
-      m_AvgQuats[5*i+2] = 0;
-      m_AvgQuats[5*i+3] = 0;
-      m_AvgQuats[5*i+4] = 1;
+      QuaternionMathF::Identity(avgQuats[i]);
     }
-    q[1] = m_AvgQuats[5*i+1]/m_AvgQuats[5*i];
-    q[2] = m_AvgQuats[5*i+2]/m_AvgQuats[5*i];
-    q[3] = m_AvgQuats[5*i+3]/m_AvgQuats[5*i];
-    q[4] = m_AvgQuats[5*i+4]/m_AvgQuats[5*i];
-    OrientationMath::normalizeQuat(q);
-    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+    QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
+    QuaternionMathF::UnitQuaternion(avgQuats[i]);
+    OrientationMath::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
     m_FieldEulerAngles[3*i] = ea1;
     m_FieldEulerAngles[3*i+1] = ea2;
     m_FieldEulerAngles[3*i+2] = ea3;
-    m_AvgQuats[5*i+1] = q[1];
-    m_AvgQuats[5*i+2] = q[2];
-    m_AvgQuats[5*i+3] = q[3];
-    m_AvgQuats[5*i+4] = q[4];
-    m_AvgQuats[5*i] = 1;
   }
-
   notifyStatusMessage("Completed");
 }
 

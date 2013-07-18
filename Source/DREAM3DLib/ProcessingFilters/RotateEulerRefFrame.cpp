@@ -45,8 +45,8 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -68,7 +68,7 @@ class RotateEulerRefFrameImpl
     {
       float rotMat[3][3];
 
-      OrientationMath::axisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
+      OrientationMath::AxisAngletoMat(angle, axis.x, axis.y, axis.z, rotMat);
       float ea1=0, ea2=0, ea3=0;
       float ea1new=0, ea2new=0, ea3new=0;
       float g[3][3];
@@ -78,10 +78,10 @@ class RotateEulerRefFrameImpl
         ea1 = m_CellEulerAngles[3*i+0];
         ea2 = m_CellEulerAngles[3*i+1];
         ea3 = m_CellEulerAngles[3*i+2];
-        OrientationMath::eulertoMat(ea1, ea2, ea3, g);
-        MatrixMath::multiply3x3with3x3(g, rotMat, gNew);
-        MatrixMath::normalize3x3(gNew);
-        OrientationMath::mattoEuler(gNew, ea1new, ea2new, ea3new);
+        OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+        MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
+        MatrixMath::Normalize3x3(gNew);
+        OrientationMath::MattoEuler(gNew, ea1new, ea2new, ea3new);
         m_CellEulerAngles[3*i+0] = ea1new;
         m_CellEulerAngles[3*i+1] = ea2new;
 
