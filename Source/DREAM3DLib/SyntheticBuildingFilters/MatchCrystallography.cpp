@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -87,7 +87,7 @@ MatchCrystallography::MatchCrystallography() :
   m_PhaseTypes(NULL),
   m_NumFields(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -150,7 +150,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
       CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
       CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
 
 
 
@@ -251,26 +251,21 @@ void MatchCrystallography::execute()
       notifyStatusMessage("Initializing Arrays");
       initializeArrays(i);
       ss.str("");
-      if (getCancel() == true) { break;}
 
       ss << "Assigning Eulers to Phase " << i;
       notifyStatusMessage(ss.str());
       assign_eulers(i);
       ss.str("");
-      if (getCancel() == true) { break;}
 
       ss << "Measuring Misorientations of Phase " << i;
       notifyStatusMessage(ss.str());
       measure_misorientations(i);
       ss.str("");
-      if (getCancel() == true) { break;}
 
       ss << "Matching Crystallography of Phase " << i;
       notifyStatusMessage(ss.str());
       matchCrystallography(i);
       ss.str("");
-      if (getCancel() == true) { break;}
-
     }
   }
 
@@ -397,18 +392,16 @@ void MatchCrystallography::determine_boundary_areas()
 void MatchCrystallography::assign_eulers(int ensem)
 {
   DREAM3D_RANDOMNG_NEW()
-  VoxelDataContainer* m = getVoxelDataContainer();
+      VoxelDataContainer* m = getVoxelDataContainer();
   int numbins = 0;
   float totaldensity = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
-  float q[5];
+  QuatF q;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   float random;
   int choose, phase;
 
   int totalFields = m->getNumFieldTuples();
-  //size_t xtalCount = m->getNumEnsembleTuples();
-
-  //float threshold = 0.0f;
 
   std::stringstream ss;
   for (int i = 1; i < totalFields; i++)
@@ -434,12 +427,13 @@ void MatchCrystallography::assign_eulers(int ensem)
       m_FieldEulerAngles[3 * i] = synea1;
       m_FieldEulerAngles[3 * i + 1] = synea2;
       m_FieldEulerAngles[3 * i + 2] = synea3;
-      OrientationMath::eulertoQuat(q, synea1, synea2, synea3);
-      m_AvgQuats[5 * i] = q[0];
-      m_AvgQuats[5 * i + 1] = q[1];
-      m_AvgQuats[5 * i + 2] = q[2];
-      m_AvgQuats[5 * i + 3] = q[3];
-      m_AvgQuats[5 * i + 4] = q[4];
+      OrientationMath::EulertoQuat(q, synea1, synea2, synea3);
+      QuaternionMathF::Copy(q, avgQuats[i]);
+      //    m_AvgQuats[4 * i] = q[0];
+      //    m_AvgQuats[4 * i + 1] = q[1];
+      //    m_AvgQuats[4 * i + 2] = q[2];
+      //    m_AvgQuats[4 * i + 3] = q[3];
+      //    m_AvgQuats[4 * i + 4] = q[4];
       if(m_SurfaceFields[i] == false)
       {
         simodf->SetValue(choose, (simodf->GetValue(choose) + m_Volumes[i]/unbiasedvol[ensem]));
@@ -451,7 +445,7 @@ void MatchCrystallography::assign_eulers(int ensem)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::MC_LoopBody1(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5])
+void MatchCrystallography::MC_LoopBody1(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF &q1, QuatF &q2)
 {
   float w;
   float n1, n2, n3;
@@ -464,7 +458,7 @@ void MatchCrystallography::MC_LoopBody1(int grain, int ensem, int j, float neigh
   curmiso3 = misorientationlists[grain][3 * j + 2];
   curmisobin = m_OrientationOps[sym]->getMisoBin(curmiso1, curmiso2, curmiso3);
   w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
-  OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientationOps[sym]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange
       + (((actualmdf->GetValue(curmisobin) - simmdf->GetValue(curmisobin)) * (actualmdf->GetValue(curmisobin) - simmdf->GetValue(curmisobin)))
@@ -476,7 +470,10 @@ void MatchCrystallography::MC_LoopBody1(int grain, int ensem, int j, float neigh
             * (actualmdf->GetValue(newmisobin) - (simmdf->GetValue(newmisobin) + (neighsurfarea / totalSurfaceArea[ensem])))));
 }
 
-void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5])
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF &q1, QuatF &q2)
 {
   float w;
   float n1, n2, n3;
@@ -490,7 +487,7 @@ void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neigh
   curmiso3 = misorientationlists[grain][3 * j + 2];
   curmisobin = m_OrientationOps[sym]->getMisoBin(curmiso1, curmiso2, curmiso3);
   w = m_OrientationOps[sym]->getMisoQuat(q1, q2, n1, n2, n3);
-  OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientationOps[sym]->getMisoBin(n1, n2, n3);
   misorientationlists[grain][3 * j] = miso1;
   misorientationlists[grain][3 * j + 1] = miso2;
@@ -523,7 +520,12 @@ void MatchCrystallography::matchCrystallography(int ensem)
   int iterations = 0, badtrycount = 0;
   float random = 0;
   size_t counter = 0;
-  float q1[5], q2[5];
+
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+
   float ea1 = 0, ea2 = 0, ea3 = 0;
   float r1 = 0, r2 = 0, r3 = 0;
   float g1ea1 = 0, g1ea2 = 0, g1ea3 = 0, g2ea1 = 0, g2ea2 = 0, g2ea3 = 0;
@@ -539,8 +541,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
   if( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[ensem])) { numbins = 36 * 36 * 12; }
   while (badtrycount < (m_MaxIterations/10) && iterations < m_MaxIterations)
   {
-    if (getCancel() == true) { break;}
-
     std::stringstream ss;
     ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
     //      notifyStatusMessage(ss.str());
@@ -577,7 +577,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         ea1 = m_FieldEulerAngles[3 * selectedgrain1];
         ea2 = m_FieldEulerAngles[3 * selectedgrain1 + 1];
         ea3 = m_FieldEulerAngles[3 * selectedgrain1 + 2];
-        OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
         g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
         random = static_cast<float>( rg.genrand_res53() );
         int choose = 0;
@@ -590,7 +590,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         }
 
         m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
-        OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+        OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
 
         odfchange = ((actualodf->GetValue(choose) - simodf->GetValue(choose)) * (actualodf->GetValue(choose) - simodf->GetValue(choose)))
             - ((actualodf->GetValue(choose) - (simodf->GetValue(choose) + (m_Volumes[selectedgrain1] / unbiasedvol[ensem])))
@@ -609,7 +609,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
           ea1 = m_FieldEulerAngles[3 * neighbor];
           ea2 = m_FieldEulerAngles[3 * neighbor + 1];
           ea3 = m_FieldEulerAngles[3 * neighbor + 2];
-          OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+          OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
           float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
           MC_LoopBody1(selectedgrain1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
         }
@@ -621,10 +621,11 @@ void MatchCrystallography::matchCrystallography(int ensem)
           m_FieldEulerAngles[3 * selectedgrain1] = g1ea1;
           m_FieldEulerAngles[3 * selectedgrain1 + 1] = g1ea2;
           m_FieldEulerAngles[3 * selectedgrain1 + 2] = g1ea3;
-          m_AvgQuats[5 * selectedgrain1 + 1] = q1[1];
-          m_AvgQuats[5 * selectedgrain1 + 2] = q1[2];
-          m_AvgQuats[5 * selectedgrain1 + 3] = q1[3];
-          m_AvgQuats[5 * selectedgrain1 + 4] = q1[4];
+          QuaternionMathF::Copy(q1, avgQuats[selectedgrain1]);
+          //          m_AvgQuats[4 * selectedgrain1 + 1] = q1[1];
+          //          m_AvgQuats[4 * selectedgrain1 + 2] = q1[2];
+          //          m_AvgQuats[4 * selectedgrain1 + 3] = q1[3];
+          //          m_AvgQuats[4 * selectedgrain1 + 4] = q1[4];
           simodf->SetValue(choose, (simodf->GetValue(choose) + (m_Volumes[selectedgrain1] / unbiasedvol[ensem])));
           simodf->SetValue(g1odfbin, (simodf->GetValue(g1odfbin) - (m_Volumes[selectedgrain1] / unbiasedvol[ensem])));
           size_t size = 0;
@@ -635,7 +636,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             ea1 = m_FieldEulerAngles[3 * neighbor];
             ea2 = m_FieldEulerAngles[3 * neighbor + 1];
             ea3 = m_FieldEulerAngles[3 * neighbor + 2];
-            OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+            OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
             float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
             MC_LoopBody2(selectedgrain1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
           }
@@ -678,17 +679,19 @@ void MatchCrystallography::matchCrystallography(int ensem)
           g2ea1 = m_FieldEulerAngles[3 * selectedgrain2];
           g2ea2 = m_FieldEulerAngles[3 * selectedgrain2 + 1];
           g2ea3 = m_FieldEulerAngles[3 * selectedgrain2 + 2];
-          q1[1] = m_AvgQuats[5 * selectedgrain1 + 1];
-          q1[2] = m_AvgQuats[5 * selectedgrain1 + 2];
-          q1[3] = m_AvgQuats[5 * selectedgrain1 + 3];
-          q1[4] = m_AvgQuats[5 * selectedgrain1 + 4];
-          OrientationMath::eulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
+          QuaternionMathF::Copy(q1, avgQuats[selectedgrain1]);
+          //          q1[1] = m_AvgQuats[4 * selectedgrain1 + 1];
+          //          q1[2] = m_AvgQuats[4 * selectedgrain1 + 2];
+          //          q1[3] = m_AvgQuats[4 * selectedgrain1 + 3];
+          //          q1[4] = m_AvgQuats[4 * selectedgrain1 + 4];
+          OrientationMath::EulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
           g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
-          q1[1] = m_AvgQuats[5 * selectedgrain2 + 1];
-          q1[2] = m_AvgQuats[5 * selectedgrain2 + 2];
-          q1[3] = m_AvgQuats[5 * selectedgrain2 + 3];
-          q1[4] = m_AvgQuats[5 * selectedgrain2 + 4];
-          OrientationMath::eulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
+          QuaternionMathF::Copy(q1, avgQuats[selectedgrain2]);
+          //          q1[1] = m_AvgQuats[4 * selectedgrain2 + 1];
+          //          q1[2] = m_AvgQuats[4 * selectedgrain2 + 2];
+          //          q1[3] = m_AvgQuats[4 * selectedgrain2 + 3];
+          //          q1[4] = m_AvgQuats[4 * selectedgrain2 + 4];
+          OrientationMath::EulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
           odfchange = ((actualodf->GetValue(g1odfbin) - simodf->GetValue(g1odfbin)) * (actualodf->GetValue(g1odfbin) - simodf->GetValue(g1odfbin)))
@@ -708,7 +711,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
                           + (m_Volumes[selectedgrain1] / unbiasedvol[ensem])))));
 
           mdfchange = 0;
-          OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+          OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
           size_t size = 0;
           if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
           for (size_t j = 0; j < size; j++)
@@ -717,7 +720,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             ea1 = m_FieldEulerAngles[3 * neighbor];
             ea2 = m_FieldEulerAngles[3 * neighbor + 1];
             ea3 = m_FieldEulerAngles[3 * neighbor + 2];
-            OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+            OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
             float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
             if(neighbor != static_cast<int>(selectedgrain2) )
             {
@@ -725,7 +728,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             }
           }
 
-          OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+          OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
           size = 0;
           if(neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
           for (size_t j = 0; j < size; j++)
@@ -734,7 +737,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             ea1 = m_FieldEulerAngles[3 * neighbor];
             ea2 = m_FieldEulerAngles[3 * neighbor + 1];
             ea3 = m_FieldEulerAngles[3 * neighbor + 2];
-            OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+            OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
             float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
             if(neighbor != selectedgrain1)
             {
@@ -757,11 +760,12 @@ void MatchCrystallography::matchCrystallography(int ensem)
             simodf->SetValue(g2odfbin, (simodf->GetValue(g2odfbin) + (m_Volumes[selectedgrain1] / unbiasedvol[ensem])
                                         - (m_Volumes[selectedgrain2] / unbiasedvol[ensem])));
 
-            OrientationMath::eulertoQuat(q1, g2ea1, g2ea2, g2ea3);
-            m_AvgQuats[5 * selectedgrain1 + 1] = q1[1];
-            m_AvgQuats[5 * selectedgrain1 + 2] = q1[2];
-            m_AvgQuats[5 * selectedgrain1 + 3] = q1[3];
-            m_AvgQuats[5 * selectedgrain1 + 4] = q1[4];
+            OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+            QuaternionMathF::Copy(avgQuats[selectedgrain1], q1);
+            //            m_AvgQuats[4 * selectedgrain1 + 1] = q1[1];
+            //            m_AvgQuats[4 * selectedgrain1 + 2] = q1[2];
+            //            m_AvgQuats[4 * selectedgrain1 + 3] = q1[3];
+            //            m_AvgQuats[4 * selectedgrain1 + 4] = q1[4];
             size = 0;
             if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
             for (size_t j = 0; j < size; j++)
@@ -770,7 +774,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
               ea1 = m_FieldEulerAngles[3 * neighbor];
               ea2 = m_FieldEulerAngles[3 * neighbor + 1];
               ea3 = m_FieldEulerAngles[3 * neighbor + 2];
-              OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+              OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
               float neighsurfarea = neighborsurfacearealist[selectedgrain1][j];
               if(neighbor != selectedgrain2)
               {
@@ -778,11 +782,12 @@ void MatchCrystallography::matchCrystallography(int ensem)
               }
             }
 
-            OrientationMath::eulertoQuat(q1, g1ea1, g1ea2, g1ea3);
-            m_AvgQuats[5 * selectedgrain2 + 1] = q1[1];
-            m_AvgQuats[5 * selectedgrain2 + 2] = q1[2];
-            m_AvgQuats[5 * selectedgrain2 + 3] = q1[3];
-            m_AvgQuats[5 * selectedgrain2 + 4] = q1[4];
+            OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+            QuaternionMathF::Copy(q1, avgQuats[selectedgrain2]);
+//            m_AvgQuats[4 * selectedgrain2 + 1] = q1[1];
+//            m_AvgQuats[4 * selectedgrain2 + 2] = q1[2];
+//            m_AvgQuats[4 * selectedgrain2 + 3] = q1[3];
+//            m_AvgQuats[4 * selectedgrain2 + 4] = q1[4];
             size = 0;
             if(neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
             for (size_t j = 0; j < size; j++)
@@ -791,7 +796,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
               ea1 = m_FieldEulerAngles[3 * neighbor];
               ea2 = m_FieldEulerAngles[3 * neighbor + 1];
               ea3 = m_FieldEulerAngles[3 * neighbor + 2];
-              OrientationMath::eulertoQuat(q2, ea1, ea2, ea3);
+              OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
               float neighsurfarea = neighborsurfacearealist[selectedgrain2][j];
               if(neighbor != selectedgrain1)
               {
@@ -826,8 +831,10 @@ void MatchCrystallography::measure_misorientations(int ensem)
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
   unsigned int crys1;
   int mbin = 0;
   size_t totalFields = m->getNumFieldTuples();
@@ -837,8 +844,6 @@ void MatchCrystallography::measure_misorientations(int ensem)
   std::stringstream ss;
   for (size_t i = 1; i < totalFields; i++)
   {
-    if (getCancel() == true) { break;}
-
     if(m_FieldPhases[i] == ensem)
     {
       if(misorientationlists[i].size() != 0)
@@ -849,11 +854,11 @@ void MatchCrystallography::measure_misorientations(int ensem)
       {
         misorientationlists[i].resize(neighborlist[i].size() * 3, 0.0);
       }
-
-      q1[1] = m_AvgQuats[5 * i + 1];
-      q1[2] = m_AvgQuats[5 * i + 2];
-      q1[3] = m_AvgQuats[5 * i + 3];
-      q1[4] = m_AvgQuats[5 * i + 4];
+      QuaternionMathF::Copy(avgQuats[i], q1);
+//      q1[1] = m_AvgQuats[4 * i + 1];
+//      q1[2] = m_AvgQuats[4 * i + 2];
+//      q1[3] = m_AvgQuats[4 * i + 3];
+//      q1[4] = m_AvgQuats[4 * i + 4];
       crys1 = m_CrystalStructures[ensem];
       size_t size = 0;
       if(neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size())
@@ -868,12 +873,13 @@ void MatchCrystallography::measure_misorientations(int ensem)
         {
           w = 10000.0;
           float neighsurfarea = neighborsurfacearealist[i][j];
-          q2[1] = m_AvgQuats[5 * nname + 1];
-          q2[2] = m_AvgQuats[5 * nname + 2];
-          q2[3] = m_AvgQuats[5 * nname + 3];
-          q2[4] = m_AvgQuats[5 * nname + 4];
+          QuaternionMathF::Copy(avgQuats[nname], q2);
+//          q2[1] = m_AvgQuats[4 * nname + 1];
+//          q2[2] = m_AvgQuats[4 * nname + 2];
+//          q2[3] = m_AvgQuats[4 * nname + 3];
+//          q2[4] = m_AvgQuats[4 * nname + 4];
           w = m_OrientationOps[crys1]->getMisoQuat(q1, q2, n1, n2, n3);
-          OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+          OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
           misorientationlists[i][3 * j] = r1;
           misorientationlists[i][3 * j + 1] = r2;
           misorientationlists[i][3 * j + 2] = r3;

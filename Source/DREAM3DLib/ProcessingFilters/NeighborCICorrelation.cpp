@@ -59,7 +59,7 @@ m_MinConfidence(0.1),
 m_Loop(false),
 m_ConfidenceIndex(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 

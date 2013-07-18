@@ -101,7 +101,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   }
   if(m_CalculateMDF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
         m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
@@ -721,7 +721,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
       ea2 = m_FieldEulerAngles[3*i+1];
       ea3 = m_FieldEulerAngles[3*i+2];
       phase = m_CrystalStructures[m_FieldPhases[i]];
-      OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
       eulerodf[m_FieldPhases[i]]->SetValue(bin, (eulerodf[m_FieldPhases[i]]->GetValue(bin) + (m_Volumes[i] / totalvol[m_FieldPhases[i]])));
     }
@@ -771,8 +771,10 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
   int mbin = 0;
   float w;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   std::vector<float> totalSurfaceArea;
@@ -806,26 +808,30 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   float nsa;
   for (size_t i = 1; i < numgrains; i++)
   {
-    q1[0] = m_AvgQuats[5*i];
-    q1[1] = m_AvgQuats[5*i+1];
-    q1[2] = m_AvgQuats[5*i+2];
-    q1[3] = m_AvgQuats[5*i+3];
-    q1[4] = m_AvgQuats[5*i+4];
+    QuaternionMathF::Copy(avgQuats[i], q1);
+    #warning Fix This
+//    q1[0] = m_AvgQuats[5*i];
+//    q1[1] = m_AvgQuats[5*i+1];
+//    q1[2] = m_AvgQuats[5*i+2];
+//    q1[3] = m_AvgQuats[5*i+3];
+//    q1[4] = m_AvgQuats[5*i+4];
     phase1 = m_CrystalStructures[m_FieldPhases[i]];
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
       nname = neighborlist[i][j];
-      q2[0] = m_AvgQuats[5*nname];
-      q2[1] = m_AvgQuats[5*nname+1];
-      q2[2] = m_AvgQuats[5*nname+2];
-      q2[3] = m_AvgQuats[5*nname+3];
-      q2[4] = m_AvgQuats[5*nname+4];
+      QuaternionMathF::Copy(avgQuats[nname], q2);
+      #warning Fix This
+//      q2[0] = m_AvgQuats[5*nname];
+//      q2[1] = m_AvgQuats[5*nname+1];
+//      q2[2] = m_AvgQuats[5*nname+2];
+//      q2[3] = m_AvgQuats[5*nname+3];
+//      q2[4] = m_AvgQuats[5*nname+4];
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
-      if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+      if (phase1 == phase2) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
       if (phase1 == phase2)
       {
-        OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+        OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
         if ((nname > i || m_SurfaceFields[nname] == true))
         {
           mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
@@ -864,6 +870,10 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -908,7 +918,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     float ea3 = m_AxisEulerAngles[3 * i + 2];
     if(m_SurfaceFields[i] == 0)
     {
-      OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
       axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
