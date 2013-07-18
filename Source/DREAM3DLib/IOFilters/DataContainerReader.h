@@ -73,6 +73,8 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Read DREAM3D Data File"; }
 
+    FilterPipeline::Pointer getPipelinePointer() { return m_PipelineFromFile; }
+
     virtual void setupFilterParameters();
     /**
     * @brief This method will write the options to a file

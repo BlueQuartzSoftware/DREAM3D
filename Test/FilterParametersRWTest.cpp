@@ -172,6 +172,8 @@ enum TestCases
   Test3
 };
 
+FilterPipeline::Pointer m_PipelineFromFile;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -716,10 +718,6 @@ void ThresholdExampleTest()
   H5Fclose(fid); // Closes the file
 }
 
-
-
-FilterPipeline::Pointer m_PipelineFromFile;
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -790,7 +788,6 @@ void FilterManagerTest()
 
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -845,8 +842,92 @@ void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCas
 
 }
 
-//AbstractFilter::Pointer absFilter = pipeline->getFIlterAt(0);
-//Filt0* f0 = Filt0::SafePointerDownCast(absFilter.get());
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ExistingPipelineCheck(std::string fileName)
+{
+  // Create our Pipeline object
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer r = DataContainerReader::New();
+  r->setInputFile(fileName);
+
+  pipeline->pushBack(r);
+  pipeline->execute();
+  int err = pipeline->getErrorCondition();
+  DREAM3D_REQUIRED(err, >= , 0)
+
+  m_PipelineFromFile = FilterPipeline::New();
+  m_PipelineFromFile = r.get()->getPipelinePointer();
+
+  AbstractFilter::Pointer absFilter = AbstractFilter::New();
+  FilterPipeline::FilterContainerType container = m_PipelineFromFile->getFilterContainer();
+
+  DREAM3D_REQUIRED(container.size(), == , 11)
+
+  FilterPipeline::FilterContainerType::iterator iter = container.begin();
+
+  absFilter = *iter;
+  Filt0* f0_1 = Filt0::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(f0_1->getFilt0_Float(), == , 15.1f)
+  DREAM3D_REQUIRED(f0_1->getFilt0_Integer(), == , 14)
+  iter++;
+
+  absFilter = *iter;
+  Filt1* f1_1 = Filt1::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(f1_1->getFilt1_Float(), == , 4.3f)
+  DREAM3D_REQUIRED(f1_1->getFilt1_Integer(), == , 6)
+  iter++;
+
+  absFilter = *iter;
+  Filt0* f0_2 = Filt0::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(f0_2->getFilt0_Float(), == , 13.1f)
+  DREAM3D_REQUIRED(f0_2->getFilt0_Integer(), == , 12)
+  iter++;
+
+  absFilter = *iter;
+  Filt1* f1_2 = Filt1::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(f1_2->getFilt1_Float(), == , 2.3f)
+  DREAM3D_REQUIRED(f1_2->getFilt1_Integer(), == , 4)
+  iter++;
+
+  absFilter = *iter;
+  DataContainerWriter* w1 = DataContainerWriter::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(w1->getNameOfClass(), ==, "DataContainerWriter")
+  iter++;
+
+  absFilter = *iter;
+  DataContainerReader* r1 = DataContainerReader::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(r1->getNameOfClass(), ==, "DataContainerReader")
+  iter++;
+
+  absFilter = *iter;
+  Filt0* f0_3 = Filt0::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(f0_3->getFilt0_Float(), == , 14.1f)
+  DREAM3D_REQUIRED(f0_3->getFilt0_Integer(), == , 13)
+  iter++;
+
+  absFilter = *iter;
+  Filt1* f1_3 = Filt1::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(f1_3->getFilt1_Float(), == , 3.3f)
+  DREAM3D_REQUIRED(f1_3->getFilt1_Integer(), == , 5)
+  iter++;
+
+  absFilter = *iter;
+  DataContainerWriter* w2 = DataContainerWriter::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(w2->getNameOfClass(), ==, "DataContainerWriter")
+  iter++;
+
+  absFilter = *iter;
+  DataContainerReader* r2 = DataContainerReader::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(r2->getNameOfClass(), ==, "DataContainerReader")
+  iter++;
+
+  absFilter = *iter;
+  DataContainerWriter* w3 = DataContainerWriter::SafePointerDownCast(absFilter.get());
+  DREAM3D_REQUIRED(w3->getNameOfClass(), ==, "DataContainerWriter")
+}
 
 
 // -----------------------------------------------------------------------------
@@ -874,14 +955,13 @@ int main(int argc, char **argv)
       //DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
       //DREAM3D_REGISTER_TEST( FilterManagerTest() )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1,
-      "", Test1) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1, "", Test1) )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2,
-      UnitTest::FilterParametersRWTest::TestFile_1, Test2) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2, UnitTest::FilterParametersRWTest::TestFile_1, Test2) )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3,
-      UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3, UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
+
+      DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
 
 #if 0
     #if REMOVE_TEST_FILES
