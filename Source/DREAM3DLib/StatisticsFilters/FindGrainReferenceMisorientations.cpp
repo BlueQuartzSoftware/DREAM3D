@@ -253,29 +253,15 @@ void FindGrainReferenceMisorientations::execute()
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
           QuaternionMathF::Copy(quats[point], q1);
-//          q1[1] = m_Quats[point*5 + 1];
-//          q1[2] = m_Quats[point*5 + 2];
-//          q1[3] = m_Quats[point*5 + 3];
-//          q1[4] = m_Quats[point*5 + 4];
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           if(m_ReferenceOrientation == 0)
           {
-            QuaternionMathF::Copy(avgQuats[point], q2);
-            #warning
-//            q2[0] = m_AvgQuats[5*m_GrainIds[point]];
-//            q2[1] = m_AvgQuats[5*m_GrainIds[point]+1];
-//            q2[2] = m_AvgQuats[5*m_GrainIds[point]+2];
-//            q2[3] = m_AvgQuats[5*m_GrainIds[point]+3];
-//            q2[4] = m_AvgQuats[5*m_GrainIds[point]+4];
+            QuaternionMathF::Copy(avgQuats[m_GrainIds[point]], q2);
           }
           else if(m_ReferenceOrientation == 1)
           {
             gnum = m_GrainIds[point];
             QuaternionMathF::Copy(quats[m_Centers[gnum]], q2);
-//            q2[1] = m_Quats[m_Centers[gnum]*5 + 1];
-//            q2[2] = m_Quats[m_Centers[gnum]*5 + 2];
-//            q2[3] = m_Quats[m_Centers[gnum]*5 + 3];
-//            q2[4] = m_Quats[m_Centers[gnum]*5 + 4];
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
