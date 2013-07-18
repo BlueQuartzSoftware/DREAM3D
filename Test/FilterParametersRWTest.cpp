@@ -299,7 +299,7 @@ void ArraySelectionExampleTest()
   DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
-  filt->readFilterParameters( reader.get() );
+  filt->readFilterParameters( reader.get(), index);
 
   std::set<std::string> set1Read = filt->getSelectedVoxelCellArrays();
   std::set<std::string>::iterator iter = set1Read.begin();
@@ -516,7 +516,7 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
-  filt->readFilterParameters( reader.get() );
+  filt->readFilterParameters( reader.get(), index);
 
   // Now one by one, compare each of the filter parameters that you have stored in some constant somewhere to the values that are now in the filt variable.
   // Use DREAM3D_REQUIRED() to make sure each one is what you think it is.
@@ -641,7 +641,7 @@ void ThresholdExampleTest()
   DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
-  filt->readFilterParameters( reader.get() );
+  filt->readFilterParameters( reader.get(), index );
 
   // Test the CellComparisonInputs
   std::vector<ComparisonInput_t> cellComparisonInputsVectorRead = filt->getCellComparisonInputs();
