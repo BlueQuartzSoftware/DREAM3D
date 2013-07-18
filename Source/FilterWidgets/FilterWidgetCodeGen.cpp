@@ -56,6 +56,9 @@
 // Enabling this will create a pair of files that can be used to update
 // the "PreflightTest.cpp" unit test
 #define GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT 0
+#define GENERATE_FILTER_PARAMTERS_READER_CODE 1
+
+
 
 typedef std::map<std::string, std::set<std::string> >  FilterMapType;
 typedef std::set<std::string>  StringSetType;
@@ -69,6 +72,7 @@ std::string DREAM3D_SOURCE_DIR();
 std::string FILTER_INCLUDE_PREFIX();
 std::string DREAM3D_SOURCE_DIR();
 std::string DREAM3D_BINARY_DIR();
+std::string DREAM3DLIB_SOURCE_DIR();
 
 typedef std::map<std::string, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
 
@@ -376,6 +380,95 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
 
 }
 
+#if GENERATE_FILTER_PARAMTERS_READER_CODE
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+size_t nonPrintables(char* buf, size_t bufSize)
+{
+  size_t n = 0;
+  for (size_t i = 0; i < bufSize; ++i)
+  {
+    if (buf[i] < 33 && buf[i] > 0) { n++; }
+  }
+  return n;
+}
+
+
+int readLine(std::istream &in, char* buf, int bufSize)
+{
+
+  bool readAnotherLine = true;
+  size_t gcount = 0;
+  while ( readAnotherLine == true && in.gcount() != 0 && in) {
+    // Zero out the buffer
+    ::memset(buf, 0, bufSize);
+    // Read a line up to a '\n' which will catch windows and unix line endings but
+    // will leave a trailing '\r' at the end of the string
+    in.getline(buf, bufSize, '\n');
+    gcount = in.gcount();
+    if (gcount > 1 && buf[in.gcount()-2] == '\r')
+    {
+      buf[in.gcount()-2] = 0;
+    }
+    size_t len = strlen(buf);
+    size_t np = nonPrintables(buf, bufSize);
+    if (len != np)
+    {
+      readAnotherLine = false;
+    }
+
+  }
+  return static_cast<int>(in.gcount());
+}
+
+
+
+#define kBufferSize 1024
+void parseSouceFileForMarker(const std::string filename, const std::string marker)
+{
+
+  std::string tempfile = filename + "_tmp";
+  std::ofstream out(tempfile.c_str(), std::ios_base::binary);
+
+  std::cout << filename << std::endl;
+  std::ifstream instream;
+  instream.open(filename.c_str(), std::ios_base::binary);
+  if (!instream.is_open())
+  {
+    std::stringstream ss;
+    std::cout << " file could not be opened: " << filename << std::endl;
+    return;
+  }
+
+  char buf[kBufferSize];
+  ::memset(buf, 0, kBufferSize);
+  size_t gcount = 0;
+  while( instream.getline(buf, kBufferSize, '\n') )
+  {
+    gcount = instream.gcount();
+    if (gcount > 1 && buf[instream.gcount()-2] == '\r')
+    {
+      buf[instream.gcount()-2] = 0;
+    }
+    if (marker.compare(buf) == 0)
+    {
+      out << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+    }
+    else
+    {
+      out << std::string(buf) << std::endl;
+    }
+  }
+
+  MXADir::remove(tempfile);
+
+}
+
+
+#endif
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -385,8 +478,11 @@ void createSourceFile( const std::string &group,
                        const std::string &outputPath)
 {
   std::stringstream ss;
-  //  std::string completePath;
-  //  ss << FILTER_WIDGETS_BINARY_DIR() << "/" << outSubPath;
+
+  ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
+  parseSouceFileForMarker(ss.str(), "////!!##");
+
+
 
   std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
