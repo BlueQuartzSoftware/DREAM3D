@@ -38,6 +38,8 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 const static float m_pi = (float)M_PI;
 const static float two_pi = 2.0f * m_pi;
@@ -56,32 +58,32 @@ static const float OrthoDim2StepValue = OrthoDim2InitValue/18.0f;
 static const float OrthoDim3StepValue = OrthoDim3InitValue/18.0f;
 
 
-static const float OrthoQuatSym[4][5] = {{0.000000000f,0.000000000f,0.000000000f,0.000000000f,1.000000000f},
-                   {0.000000000f,1.000000000f,0.000000000f,0.000000000f,0.000000000f},
-                   {0.000000000f,0.000000000f,1.000000000f,0.000000000f,0.000000000f},
-                   {0.000000000f,0.000000000f,0.000000000f,1.000000000f,0.000000000}};
+static const QuatF OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
+                                            QuaternionMathF::New(1.000000000f,0.000000000f,0.000000000f,0.000000000f),
+                                            QuaternionMathF::New(0.000000000f,1.000000000f,0.000000000f,0.000000000f),
+                                            QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000)};
 
 static const float OrthoRodSym[4][3] = {{0.0f,0.0f,0.0f},
-                  {10000000000.0f,0.0f,0.0f},
-                  {0.0f,10000000000.0f,0.0f},
-                  {0.0f,0.0f,10000000000.0}};
+                                        {10000000000.0f,0.0f,0.0f},
+                                        {0.0f,10000000000.0f,0.0f},
+                                        {0.0f,0.0f,10000000000.0}};
 
-    static const float OrthoMatSym[4][3][3] = 
-         {{{1.0, 0.0, 0.0},
-          {0.0, 1.0, 0.0},
-          {0.0, 0.0, 1.0}},
+static const float OrthoMatSym[4][3][3] =
+{{{1.0, 0.0, 0.0},
+  {0.0, 1.0, 0.0},
+  {0.0, 0.0, 1.0}},
 
-          {{1.0, 0.0,  0.0},
-          {0.0, 0.0, -1.0},
-          {0.0, 1.0,  0.0}},
+ {{1.0, 0.0,  0.0},
+  {0.0, 0.0, -1.0},
+  {0.0, 1.0,  0.0}},
 
-          {{1.0,  0.0,  0.0},
-          {0.0, -1.0,  0.0},
-          {0.0,  0.0, -1.0}},
+ {{1.0,  0.0,  0.0},
+  {0.0, -1.0,  0.0},
+  {0.0,  0.0, -1.0}},
 
-          {{0.0, -1.0,  0.0},
-          {-1.0,  0.0,  0.0},
-          {0.0,  0.0, -1.0}}};
+ {{0.0, -1.0,  0.0},
+  {-1.0,  0.0,  0.0},
+  {0.0,  0.0, -1.0}}};
 
 
 
@@ -96,39 +98,39 @@ OrthoRhombicOps::~OrthoRhombicOps()
   // TODO Auto-generated destructor stub
 }
 
-float OrthoRhombicOps::_calcMisoQuat(const float quatsym[4][5], int numsym,
-                                      float q1[5], float q2[5],
-                                      float &n1, float &n2, float &n3)
+float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
+QuatF &q1, QuatF &q2,
+float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
-    float n1min = 0.0f;
-    float n2min = 0.0f;
-    float n3min = 0.0f;
-  float qr[5];
-  float qc[5];
-   float q2inv[5];
+  float n1min = 0.0f;
+  float n2min = 0.0f;
+  float n3min = 0.0f;
+  QuatF qr;
+  QuatF qc;
+  QuatF q2inv;
 
-   for(int i=0;i<5;i++)
-   {
-	   q2inv[i] = q2[i];
-   }
-   OrientationMath::invertQuaternion(q2inv);
+  QuaternionMathF::Copy(q2, q2inv);
+  QuaternionMathF::Conjugate(q2inv);
 
-   OrientationMath::multiplyQuaternions(q2inv, q1, qr);
+  QuaternionMathF::Multiply(q2inv, q1, qr);
+
   for (int i = 0; i < numsym; i++)
   {
-    MULT_QUAT(qr, quatsym[i], qc)
-    if (qc[4] < -1) {
-      qc[4] = -1;
+
+    QuaternionMathF::Multiply(qr, quatsym[i], qc);
+    //MULT_QUAT(qr, quatsym[i], qc)
+    if (qc.w < -1) {
+      qc.w = -1;
     }
-    else if (qc[4] > 1) {
-      qc[4] = 1;
+    else if (qc.w > 1) {
+      qc.w = 1;
     }
 
-  QuattoAxisAngle(qc, w, n1, n2, n3);
+    OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-  if (w > m_pi) {
+    if (w > m_pi) {
       w = two_pi - w;
     }
     if (w < wmin)
@@ -148,20 +150,21 @@ float OrthoRhombicOps::_calcMisoQuat(const float quatsym[4][5], int numsym,
   return wmin;
 }
 
-float OrthoRhombicOps::getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3)
+float OrthoRhombicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
   int numsym = 4;
 
   return _calcMisoQuat(OrthoQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void OrthoRhombicOps::getQuatSymOp(int i,float *q)
+void OrthoRhombicOps::getQuatSymOp(int i, QuatF &q)
 {
-  q[0] = OrthoQuatSym[i][0];
-  q[1] = OrthoQuatSym[i][1];
-  q[2] = OrthoQuatSym[i][2];
-  q[3] = OrthoQuatSym[i][3];
-  q[4] = OrthoQuatSym[i][4];
+  QuaternionMathF::Copy(OrthoQuatSym[i], q);
+//  q.x = OrthoQuatSym[i][0];
+//  q.y = OrthoQuatSym[i][1];
+//  q.z = OrthoQuatSym[i][2];
+//  q.w = OrthoQuatSym[i][3];
+
 }
 
 void OrthoRhombicOps::getRodSymOp(int i,float *r)
@@ -197,27 +200,27 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
   float FZn1, FZn2, FZn3;
 
   _calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
-  RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
   FZn1 = fabs(n1);
   FZn2 = fabs(n2);
   FZn3 = fabs(n3);
 
-  axisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void OrthoRhombicOps::getNearestQuat( float *q1, float *q2)
+void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 4;
 
   _calcNearestQuat(OrthoQuatSym, numsym, q1, q2);
 }
 
-void OrthoRhombicOps::getFZQuat(float *qr)
+void OrthoRhombicOps::getFZQuat(QuatF &qr)
 {
   int numsym = 4;
 
-    _calcQuatNearestOrigin(OrthoQuatSym, numsym, qr);
+  _calcQuatNearestOrigin(OrthoQuatSym, numsym, qr);
 
 }
 
@@ -227,7 +230,7 @@ int OrthoRhombicOps::getMisoBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-  RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
@@ -260,9 +263,9 @@ void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &syn
   phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getODFFZRod(r1, r2, r3);
-  RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
 
@@ -283,7 +286,7 @@ void OrthoRhombicOps::determineRodriguesVector( int choose, float &r1, float &r2
   phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 
@@ -316,10 +319,10 @@ void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrthoRhombicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime)
+void OrthoRhombicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
-  #if 0
+#if 0
   float g1[3][3];
   float g2[3][3];
   float h1, k1, l1, u1, v1, w1;
@@ -329,7 +332,7 @@ void OrthoRhombicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mP
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
-/*  h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
+  /*  h1 = CubicSlipSystems[ss1][0]*g1[0][0]+CubicSlipSystems[ss1][1]*g1[1][0]+CubicSlipSystems[ss1][2]*g1[2][0];
   k1 = CubicSlipSystems[ss1][0]*g1[0][1]+CubicSlipSystems[ss1][1]*g1[1][1]+CubicSlipSystems[ss1][2]*g1[2][1];
   l1 = CubicSlipSystems[ss1][0]*g1[0][2]+CubicSlipSystems[ss1][1]*g1[1][2]+CubicSlipSystems[ss1][2]*g1[2][2];
   u1 = CubicSlipSystems[ss1][3]*g1[0][0]+CubicSlipSystems[ss1][4]*g1[1][0]+CubicSlipSystems[ss1][5]*g1[2][0];
@@ -349,34 +352,34 @@ void OrthoRhombicOps::getmPrime(float q1[5], float q2[5], float LD[3], float &mP
   planemisalignment = fabs((h1*h2+k1*k2+l1*l2)/(denomhkl1*denomhkl2));
   directionmisalignment = fabs((u1*u2+v1*v2+w1*w2)/(denomuvw1*denomuvw2));
   mPrime = planemisalignment*directionmisalignment;
-  #endif
+#endif
 }
 
 
-void OrthoRhombicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1)
+void OrthoRhombicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
-  #if 0
+#if 0
 
   float g1[3][3];
   float g2[3][3];
-//  float hkl1[3], uvw1[3];
-//  float hkl2[3], uvw2[3];
-//  float slipDirection[3], slipPlane[3];
-//  float denomhkl1=0, denomhkl2=0, denomuvw1=0, denomuvw2=0;
-//  float directionMisalignment=0, totalDirectionMisalignment=0;
-//  float schmidFactor1=0, schmidFactor2=0;
-    float maxSchmidFactor=0;
-//  float directionComponent1=0, planeComponent1=0;
-//  float directionComponent2=0, planeComponent2=0;
-//  float maxF1=0;
+  //  float hkl1[3], uvw1[3];
+  //  float hkl2[3], uvw2[3];
+  //  float slipDirection[3], slipPlane[3];
+  //  float denomhkl1=0, denomhkl2=0, denomuvw1=0, denomuvw2=0;
+  //  float directionMisalignment=0, totalDirectionMisalignment=0;
+  //  float schmidFactor1=0, schmidFactor2=0;
+  float maxSchmidFactor=0;
+  //  float directionComponent1=0, planeComponent1=0;
+  //  float directionComponent2=0, planeComponent2=0;
+  //  float maxF1=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
   if(maxSF == true) maxSchmidFactor = 0;
-/*  for(int i=0;i<12;i++)
+  /*  for(int i=0;i<12;i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -384,12 +387,12 @@ void OrthoRhombicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, f
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath::normalize3x1(hkl1);
-    MatrixMath::normalize3x1(uvw1);
-    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::DotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::DotProduct(LD,hkl1);
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -403,12 +406,12 @@ void OrthoRhombicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, f
         slipPlane[0] = CubicSlipPlanes[i][0];
         slipPlane[1] = CubicSlipPlanes[i][1];
         slipPlane[2] = CubicSlipPlanes[i][2];
-        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath::normalize3x1(hkl2);
-        MatrixMath::normalize3x1(uvw2);
-        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::DotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::DotProduct(LD,hkl2);
         schmidFactor2 = directionComponent2*planeComponent2;
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
@@ -421,32 +424,32 @@ void OrthoRhombicOps::getF1(float q1[5], float q2[5], float LD[3], bool maxSF, f
     }
   }
 */
-  #endif
+#endif
 }
 
-void OrthoRhombicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt)
+void OrthoRhombicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
-  #if 0
+#if 0
   float g1[3][3];
   float g2[3][3];
-//  float hkl1[3], uvw1[3];
-//  float hkl2[3], uvw2[3];
-//  float slipDirection[3], slipPlane[3];
-//  float directionMisalignment=0, totalDirectionMisalignment=0;
-//  float planeMisalignment=0, totalPlaneMisalignment=0;
-//  float schmidFactor1=0, schmidFactor2=0;
-    float maxSchmidFactor=0;
-//  float directionComponent1=0, planeComponent1=0;
-//  float directionComponent2=0, planeComponent2=0;
-//  float maxF1spt=0;
+  //  float hkl1[3], uvw1[3];
+  //  float hkl2[3], uvw2[3];
+  //  float slipDirection[3], slipPlane[3];
+  //  float directionMisalignment=0, totalDirectionMisalignment=0;
+  //  float planeMisalignment=0, totalPlaneMisalignment=0;
+  //  float schmidFactor1=0, schmidFactor2=0;
+  float maxSchmidFactor=0;
+  //  float directionComponent1=0, planeComponent1=0;
+  //  float directionComponent2=0, planeComponent2=0;
+  //  float maxF1spt=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
   if(maxSF == true) maxSchmidFactor = 0;
-/*  for(int i=0;i<12;i++)
+  /*  for(int i=0;i<12;i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -454,12 +457,12 @@ void OrthoRhombicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath::normalize3x1(hkl1);
-    MatrixMath::normalize3x1(uvw1);
-    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::DotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::DotProduct(LD,hkl1);
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -474,15 +477,15 @@ void OrthoRhombicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath::normalize3x1(hkl2);
-        MatrixMath::normalize3x1(uvw2);
-        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::DotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::DotProduct(LD,hkl2);
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::dotProduct(uvw1,uvw2));
-        planeMisalignment = fabs(MatrixMath::dotProduct(hkl1,hkl2));
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
@@ -495,31 +498,31 @@ void OrthoRhombicOps::getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF
     }
   }
 */
-  #endif
+#endif
 
 }
 
-void OrthoRhombicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7)
+void OrthoRhombicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
-  #if 0
+#if 0
   float g1[3][3];
   float g2[3][3];
-//  float hkl1[3], uvw1[3];
-//  float hkl2[3], uvw2[3];
-//  float slipDirection[3], slipPlane[3];
-//  float directionMisalignment=0, totalDirectionMisalignment=0;
-//  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-//  float directionComponent1=0, planeComponent1=0;
-//  float directionComponent2=0, planeComponent2=0;
-//  float maxF7=0;
+  //  float hkl1[3], uvw1[3];
+  //  float hkl2[3], uvw2[3];
+  //  float slipDirection[3], slipPlane[3];
+  //  float directionMisalignment=0, totalDirectionMisalignment=0;
+  //  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
+  //  float directionComponent1=0, planeComponent1=0;
+  //  float directionComponent2=0, planeComponent2=0;
+  //  float maxF7=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
-  MatrixMath::normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
 
-/*  for(int i=0;i<12;i++)
+  /*  for(int i=0;i<12;i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -527,12 +530,12 @@ void OrthoRhombicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, f
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath::normalize3x1(hkl1);
-    MatrixMath::normalize3x1(uvw1);
-    directionComponent1 = MatrixMath::dotProduct(LD,uvw1);
-    planeComponent1 = MatrixMath::dotProduct(LD,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = MatrixMath::DotProduct(LD,uvw1);
+    planeComponent1 = MatrixMath::DotProduct(LD,hkl1);
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -546,12 +549,12 @@ void OrthoRhombicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, f
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath::normalize3x1(hkl2);
-        MatrixMath::normalize3x1(uvw2);
-        directionComponent2 = MatrixMath::dotProduct(LD,uvw2);
-        planeComponent2 = MatrixMath::dotProduct(LD,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = MatrixMath::DotProduct(LD,uvw2);
+        planeComponent2 = MatrixMath::DotProduct(LD,hkl2);
         schmidFactor2 = directionComponent2*planeComponent2;
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
@@ -564,5 +567,5 @@ void OrthoRhombicOps::getF7(float q1[5], float q2[5], float LD[3], bool maxSF, f
     }
   }
 */
-  #endif
+#endif
 }

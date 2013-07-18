@@ -47,7 +47,7 @@
 
 //#include "DREAM3DLib/Common/AbstractFilter.h"
 //#include "DREAM3DLib/Common/VoxelDataContainer.h"
-//#include "DREAM3DLib/Common/OrientationMath.h"
+//#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 //#include "DREAM3DLib/Common/NeighborList.hpp"
 
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"

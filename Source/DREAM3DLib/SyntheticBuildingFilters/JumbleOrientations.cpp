@@ -41,7 +41,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -53,17 +53,17 @@
 // -----------------------------------------------------------------------------
 
 JumbleOrientations::JumbleOrientations() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-m_GrainIds(NULL),
-m_CellEulerAngles(NULL),
-m_FieldPhases(NULL),
-m_FieldEulerAngles(NULL),
-m_AvgQuats(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_GrainIds(NULL),
+  m_CellEulerAngles(NULL),
+  m_FieldPhases(NULL),
+  m_FieldEulerAngles(NULL),
+  m_AvgQuats(NULL)
 {
   setupFilterParameters();
 }
@@ -106,12 +106,12 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
   VoxelDataContainer* m = getVoxelDataContainer();
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 5)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
 }
 
 // -----------------------------------------------------------------------------
@@ -146,62 +146,64 @@ void JumbleOrientations::execute()
     return;
   }
 
-    // Generate all the numbers up front
-    const int rangeMin = 1;
-    const int rangeMax = totalFields - 1;
-    typedef boost::uniform_int<int> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&,
-                                     NumberDistribution> Generator;
+  // Generate all the numbers up front
+  const int rangeMin = 1;
+  const int rangeMax = totalFields - 1;
+  typedef boost::uniform_int<int> NumberDistribution;
+  typedef boost::mt19937 RandomNumberGenerator;
+  typedef boost::variate_generator<RandomNumberGenerator&,
+      NumberDistribution> Generator;
 
-    NumberDistribution distribution(rangeMin, rangeMax);
-    RandomNumberGenerator generator;
-    Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+  NumberDistribution distribution(rangeMin, rangeMax);
+  RandomNumberGenerator generator;
+  Generator numberGenerator(generator, distribution);
+  generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
 
 
-    int r;
-    float temp1, temp2, temp3;
-    //--- Shuffle elements by randomly exchanging each with one other.
-    for (int i=1; i< totalFields; i++) 
-	{
-		bool good = false;
-        while(good == false)
-		{
-			good = true;
-			r = numberGenerator(); // Random remaining position.
-	        if (r >= totalFields) good = false;
-			if (m_FieldPhases[i] != m_FieldPhases[r]) good = false;
-		}
-        temp1 = m_FieldEulerAngles[3*i];
-        temp2 = m_FieldEulerAngles[3*i+1];
-        temp3 = m_FieldEulerAngles[3*i+2];
-        m_FieldEulerAngles[3*i] = m_FieldEulerAngles[3*r];
-        m_FieldEulerAngles[3*i+1] = m_FieldEulerAngles[3*r+1];
-        m_FieldEulerAngles[3*i+2] = m_FieldEulerAngles[3*r+2];
-        m_FieldEulerAngles[3*r] = temp1;
-        m_FieldEulerAngles[3*r+1] = temp2;
-        m_FieldEulerAngles[3*r+2] = temp3;
+  int r;
+  float temp1, temp2, temp3;
+  //--- Shuffle elements by randomly exchanging each with one other.
+  for (int i=1; i< totalFields; i++)
+  {
+    bool good = false;
+    while(good == false)
+    {
+      good = true;
+      r = numberGenerator(); // Random remaining position.
+      if (r >= totalFields) good = false;
+      if (m_FieldPhases[i] != m_FieldPhases[r]) good = false;
     }
+    temp1 = m_FieldEulerAngles[3*i];
+    temp2 = m_FieldEulerAngles[3*i+1];
+    temp3 = m_FieldEulerAngles[3*i+2];
+    m_FieldEulerAngles[3*i] = m_FieldEulerAngles[3*r];
+    m_FieldEulerAngles[3*i+1] = m_FieldEulerAngles[3*r+1];
+    m_FieldEulerAngles[3*i+2] = m_FieldEulerAngles[3*r+2];
+    m_FieldEulerAngles[3*r] = temp1;
+    m_FieldEulerAngles[3*r+1] = temp2;
+    m_FieldEulerAngles[3*r+2] = temp3;
+  }
 
   // Now adjust all the Euler angle values for each Voxel
   for(int64_t i = 0; i < totalPoints; ++i)
   {
-     m_CellEulerAngles[3*i] = m_FieldEulerAngles[3*(m_GrainIds[i])];
-     m_CellEulerAngles[3*i+1] = m_FieldEulerAngles[3*(m_GrainIds[i])+1];
-     m_CellEulerAngles[3*i+2] = m_FieldEulerAngles[3*(m_GrainIds[i])+2];
+    m_CellEulerAngles[3*i] = m_FieldEulerAngles[3*(m_GrainIds[i])];
+    m_CellEulerAngles[3*i+1] = m_FieldEulerAngles[3*(m_GrainIds[i])+1];
+    m_CellEulerAngles[3*i+2] = m_FieldEulerAngles[3*(m_GrainIds[i])+2];
   }
-  float q[5];
+  QuatF q;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   for (int i=1; i< totalFields; i++)
   {
-    OrientationMath::eulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
-    m_AvgQuats[5*i] = q[0];
-    m_AvgQuats[5*i+1] = q[1];
-    m_AvgQuats[5*i+2] = q[2];
-    m_AvgQuats[5*i+3] = q[3];
-    m_AvgQuats[5*i+4] = q[4];
+    OrientationMath::EulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
+    QuaternionMathF::Copy(q, avgQuats[i]);
+//    m_AvgQuats[5*i] = q[0];
+//    m_AvgQuats[5*i+1] = q[1];
+//    m_AvgQuats[5*i+2] = q[2];
+//    m_AvgQuats[5*i+3] = q[3];
+//    m_AvgQuats[5*i+4] = q[4];
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Jumbling Orientations Complete");
+  notifyStatusMessage("Jumbling Orientations Complete");
 }

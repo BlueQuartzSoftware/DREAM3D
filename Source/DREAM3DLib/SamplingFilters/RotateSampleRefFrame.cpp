@@ -44,8 +44,8 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 const static float m_pi = static_cast<float>(M_PI);
 
@@ -267,7 +267,7 @@ void RotateSampleRefFrame::preflight()
   float newcoords[3];
   float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
 
-  OrientationMath::axisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  OrientationMath::AxisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
   for(int i=0;i<8;i++)
   {
     if(i == 0) col = 0, row = 0, plane = 0;
@@ -281,7 +281,7 @@ void RotateSampleRefFrame::preflight()
     coords[0] = col*xRes;
     coords[1] = row*yRes;
     coords[2] = plane*zRes;
-    MatrixMath::multiply3x3with3x1(rotMat,coords,newcoords);
+    MatrixMath::Multiply3x3with3x1(rotMat,coords,newcoords);
     if(newcoords[0] < xMin) xMin = newcoords[0];
     if(newcoords[0] > xMax) xMax = newcoords[0];
     if(newcoords[1] < yMin) yMin = newcoords[1];
@@ -295,22 +295,22 @@ void RotateSampleRefFrame::preflight()
   float xAxisNew[3];
   float yAxisNew[3];
   float zAxisNew[3];
-  MatrixMath::multiply3x3with3x1(rotMat,xAxis,xAxisNew);
-  MatrixMath::multiply3x3with3x1(rotMat,yAxis,yAxisNew);
-  MatrixMath::multiply3x3with3x1(rotMat,zAxis,zAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat,xAxis,xAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat,yAxis,yAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat,zAxis,zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = fabs(MatrixMath::dotProduct(xAxis,xAxisNew));
-  if(fabs(MatrixMath::dotProduct(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,xAxisNew));
-  if(fabs(MatrixMath::dotProduct(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,xAxisNew));
+  closestAxis = fabs(MatrixMath::DotProduct(xAxis,xAxisNew));
+  if(fabs(MatrixMath::DotProduct(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::DotProduct(yAxis,xAxisNew));
+  if(fabs(MatrixMath::DotProduct(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::DotProduct(zAxis,xAxisNew));
   yResNew = yRes;
-  closestAxis = fabs(MatrixMath::dotProduct(yAxis,yAxisNew));
-  if(fabs(MatrixMath::dotProduct(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,yAxisNew));
-  if(fabs(MatrixMath::dotProduct(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,yAxisNew));
+  closestAxis = fabs(MatrixMath::DotProduct(yAxis,yAxisNew));
+  if(fabs(MatrixMath::DotProduct(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::DotProduct(xAxis,yAxisNew));
+  if(fabs(MatrixMath::DotProduct(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::DotProduct(zAxis,yAxisNew));
   zResNew = zRes;
-  closestAxis = fabs(MatrixMath::dotProduct(zAxis,zAxisNew));
-  if(fabs(MatrixMath::dotProduct(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,zAxisNew));
-  if(fabs(MatrixMath::dotProduct(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,zAxisNew));
+  closestAxis = fabs(MatrixMath::DotProduct(zAxis,zAxisNew));
+  if(fabs(MatrixMath::DotProduct(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::DotProduct(xAxis,zAxisNew));
+  if(fabs(MatrixMath::DotProduct(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::DotProduct(yAxis,zAxisNew));
 
   xpNew = ((xMax-xMin)/xResNew)+1;
   ypNew = ((yMax-yMin)/yResNew)+1;
@@ -381,7 +381,7 @@ void RotateSampleRefFrame::execute()
   float newcoords[3];
   float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
 
-  OrientationMath::axisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  OrientationMath::AxisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
   for(int i=0;i<8;i++)
   {
     if(i == 0) col = 0, row = 0, plane = 0;
@@ -395,7 +395,7 @@ void RotateSampleRefFrame::execute()
     coords[0] = col*xRes;
     coords[1] = row*yRes;
     coords[2] = plane*zRes;
-    MatrixMath::multiply3x3with3x1(rotMat,coords,newcoords);
+    MatrixMath::Multiply3x3with3x1(rotMat,coords,newcoords);
     if(newcoords[0] < xMin) xMin = newcoords[0];
     if(newcoords[0] > xMax) xMax = newcoords[0];
     if(newcoords[1] < yMin) yMin = newcoords[1];
@@ -409,22 +409,22 @@ void RotateSampleRefFrame::execute()
   float xAxisNew[3];
   float yAxisNew[3];
   float zAxisNew[3];
-  MatrixMath::multiply3x3with3x1(rotMat,xAxis,xAxisNew);
-  MatrixMath::multiply3x3with3x1(rotMat,yAxis,yAxisNew);
-  MatrixMath::multiply3x3with3x1(rotMat,zAxis,zAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat,xAxis,xAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat,yAxis,yAxisNew);
+  MatrixMath::Multiply3x3with3x1(rotMat,zAxis,zAxisNew);
   float closestAxis;
   xResNew = xRes;
-  closestAxis = fabs(MatrixMath::dotProduct(xAxis,xAxisNew));
-  if(fabs(MatrixMath::dotProduct(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,xAxisNew));
-  if(fabs(MatrixMath::dotProduct(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,xAxisNew));
+  closestAxis = fabs(MatrixMath::DotProduct(xAxis,xAxisNew));
+  if(fabs(MatrixMath::DotProduct(yAxis,xAxisNew)) > closestAxis) xResNew = yRes, closestAxis = fabs(MatrixMath::DotProduct(yAxis,xAxisNew));
+  if(fabs(MatrixMath::DotProduct(zAxis,xAxisNew)) > closestAxis) xResNew = zRes, closestAxis = fabs(MatrixMath::DotProduct(zAxis,xAxisNew));
   yResNew = yRes;
-  closestAxis = fabs(MatrixMath::dotProduct(yAxis,yAxisNew));
-  if(fabs(MatrixMath::dotProduct(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,yAxisNew));
-  if(fabs(MatrixMath::dotProduct(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::dotProduct(zAxis,yAxisNew));
+  closestAxis = fabs(MatrixMath::DotProduct(yAxis,yAxisNew));
+  if(fabs(MatrixMath::DotProduct(xAxis,yAxisNew)) > closestAxis) yResNew = xRes, closestAxis = fabs(MatrixMath::DotProduct(xAxis,yAxisNew));
+  if(fabs(MatrixMath::DotProduct(zAxis,yAxisNew)) > closestAxis) yResNew = zRes, closestAxis = fabs(MatrixMath::DotProduct(zAxis,yAxisNew));
   zResNew = zRes;
-  closestAxis = fabs(MatrixMath::dotProduct(zAxis,zAxisNew));
-  if(fabs(MatrixMath::dotProduct(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::dotProduct(xAxis,zAxisNew));
-  if(fabs(MatrixMath::dotProduct(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::dotProduct(yAxis,zAxisNew));
+  closestAxis = fabs(MatrixMath::DotProduct(zAxis,zAxisNew));
+  if(fabs(MatrixMath::DotProduct(xAxis,zAxisNew)) > closestAxis) zResNew = xRes, closestAxis = fabs(MatrixMath::DotProduct(xAxis,zAxisNew));
+  if(fabs(MatrixMath::DotProduct(yAxis,zAxisNew)) > closestAxis) zResNew = yRes, closestAxis = fabs(MatrixMath::DotProduct(yAxis,zAxisNew));
 
   xpNew = ((xMax-xMin)/xResNew)+1;
   ypNew = ((yMax-yMin)/yResNew)+1;
