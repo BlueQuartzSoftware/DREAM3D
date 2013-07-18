@@ -425,7 +425,7 @@ int readLine(std::istream &in, char* buf, int bufSize)
 
 
 #define kBufferSize 1024
-void parseSouceFileForMarker(const std::string filename, const std::string marker)
+void parseSouceFileForMarker(const std::string filename, const std::string marker, const std::string &replace)
 {
 
   std::string tempfile = filename + "_tmp";
@@ -453,7 +453,7 @@ void parseSouceFileForMarker(const std::string filename, const std::string marke
     }
     if (marker.compare(buf) == 0)
     {
-      out << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+      out << replace << std::endl;
     }
     else
     {
@@ -461,7 +461,7 @@ void parseSouceFileForMarker(const std::string filename, const std::string marke
     }
   }
 
-  MXADir::remove(tempfile);
+  //MXADir::remove(tempfile);
 
 }
 
@@ -478,11 +478,6 @@ void createSourceFile( const std::string &group,
                        const std::string &outputPath)
 {
   std::stringstream ss;
-
-  ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
-  parseSouceFileForMarker(ss.str(), "////!!##");
-
-
 
   std::string completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
@@ -820,7 +815,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "setInputPath( QString::fromStdString( reader->readValue(H5FilterParameter::InputPathConstant, \"\") ) );" << std::endl;
+      replaceStream << "set( QString::fromStdString( reader->readValue(H5FilterParameter::InputPathConstant, \"\") ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::OutputFileWidget)
     {
@@ -828,7 +823,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "setOutputFile( QString::fromStdString( reader->readValue(H5FilterParameter::OutputFileConstant, \"\") ) );" << std::endl;
+      replaceStream << "set" << prop << "( reader->readValue(\""<< prop << "\", \"\") );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
@@ -842,7 +837,7 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
-      replaceStream << "setWriteAlignmentShifts( reader->readValue(H5FilterParameter::WriteAlignmentShiftsConstant, false) );" << std::endl;
+      replaceStream << "set" << prop << "( reader->readValue(H5FilterParameter::WriteAlignmentShiftsConstant, false) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
@@ -1027,6 +1022,12 @@ void createSourceFile( const std::string &group,
     fprintf(f, "  }\n");
   }
   fprintf(f, "\n}\n");
+
+  ss.str("");
+  ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
+  parseSouceFileForMarker(ss.str(), "////!!##", replaceStream.str());
+
+
 
   // This template function will generate all the necessary code to set the name of each
   // required and created array.
