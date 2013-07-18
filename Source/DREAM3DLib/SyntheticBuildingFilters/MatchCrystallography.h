@@ -53,7 +53,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -129,8 +129,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     void determine_volumes();
     void determine_boundary_areas();
     void assign_eulers(int ensem);
-    void MC_LoopBody1(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
-    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, float q1[5], float q2[5]);
+    void MC_LoopBody1(int grain, int ensem, int j, float neighsurfarea, unsigned int sym, QuatF &q1, QuatF &q2);
+    void MC_LoopBody2(int grain, int phase, int j, float neighsurfarea, unsigned int sym, QuatF &q1, QuatF &q2);
     void matchCrystallography(int ensem);
     void measure_misorientations(int ensem);
 
@@ -174,7 +174,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     OrientationMath::Pointer m_CubicOps;
     OrientationMath::Pointer m_HexOps;
     OrientationMath::Pointer m_OrthoOps;
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
