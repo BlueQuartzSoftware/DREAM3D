@@ -129,6 +129,7 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
+////!!##
   reader->closeFilterGroup();
 }
 

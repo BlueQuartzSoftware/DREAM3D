@@ -82,6 +82,7 @@ void FindODF::readFilterParameters(AbstractFilterParametersReader* reader, int i
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
+////!!##
   reader->closeFilterGroup();
 }
 
