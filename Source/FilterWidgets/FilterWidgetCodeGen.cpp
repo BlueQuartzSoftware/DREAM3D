@@ -792,19 +792,19 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "setStlFilePrefix( QString::fromStdString( reader->readValue(H5FilterParameter::StlFilePrefixConstant, \"\") ) );" << std::endl;
+      replaceStream << "  set" << prop << "( QString::fromStdString( reader->readValue( \"" << prop << "\", get" << prop << "() ) ) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::IntWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "setMaxIterations( reader->readValue(H5FilterParameter::MaxIterationsConstant, 0) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::DoubleWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString());}\n", prop.c_str());
-      replaceStream << "setMisorientationTolerance( reader->readValue(H5FilterParameter::MisorientationToleranceConstant, 0) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::InputFileWidget)
     {
@@ -812,7 +812,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "setInputFile( QString::fromStdString( reader->readValue(H5FilterParameter::InputFileConstant, \"\") ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::InputPathWidget)
     {
@@ -820,7 +820,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "setInputPath( QString::fromStdString( reader->readValue(H5FilterParameter::InputPathConstant, \"\") ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::OutputFileWidget)
     {
@@ -828,7 +828,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "setOutputFile( QString::fromStdString( reader->readValue(H5FilterParameter::OutputFileConstant, \"\") ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
@@ -836,13 +836,13 @@ void createSourceFile( const std::string &group,
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "setOutputPath( QString::fromStdString( reader->readValue(H5FilterParameter::OutputPathConstant, \"\") ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
       fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
-      replaceStream << "setWriteAlignmentShifts( reader->readValue(H5FilterParameter::WriteAlignmentShiftsConstant, false) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", false) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
@@ -868,7 +868,7 @@ void createSourceFile( const std::string &group,
         fprintf(f, "     }\n");
       }
       fprintf(f, "   }\n");
-      replaceStream << "setConversionType( reader->readValue(H5FilterParameter::ConversionTypeConstant, 0) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
     }
     else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
              && opt->getWidgetType() <= FilterParameter::SolidMeshEdgeArrayNameSelectionWidget )
@@ -884,43 +884,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "       }\n");
       fprintf(f, "     }\n");
       fprintf(f, "   }\n");
-
-      if (opt->getWidgetType() == FilterParameter::VoxelCellArrayNameSelectionWidget)
-      {
-        replaceStream << "setSelectedCellArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SelectedCellArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::VoxelFieldArrayNameSelectionWidget)
-      {
-        replaceStream << "setSelectedFieldArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SelectedFieldArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::VoxelEnsembleArrayNameSelectionWidget)
-      {
-        replaceStream << "setSelectedEnsembleArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SelectedEnsembleArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget)
-      {
-        replaceStream << "setSurfaceMeshPointArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SurfaceMeshPointArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget)
-      {
-        replaceStream << "setSurfaceMeshFaceArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SurfaceMeshFaceArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget)
-      {
-        replaceStream << "setSurfaceMeshEdgeArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SurfaceMeshEdgeArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::SolidMeshVertexArrayNameSelectionWidget)
-      {
-        replaceStream << "setSolidMeshPointArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SolidMeshPointArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::SolidMeshFaceArrayNameSelectionWidget)
-      {
-        replaceStream << "setSolidMeshFaceArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SolidMeshFaceArrayNameConstant, \"\") ) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::SolidMeshEdgeArrayNameSelectionWidget)
-      {
-        replaceStream << "setSolidMeshEdgeArrayName( QString::fromStdString( reader->readValue(H5FilterParameter::SolidMeshEdgeArrayNameConstant, \"\") ) );" << std::endl;
-      }
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
@@ -952,7 +916,7 @@ void createSourceFile( const std::string &group,
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "setDimensions( reader->readValue(H5FilterParameter::GenericTestDimensionsConstant, m_Dimensions) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_" << prop << ") );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
@@ -977,7 +941,7 @@ void createSourceFile( const std::string &group,
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "setOrigin( reader->readValue(H5FilterParameter::GenericTestOriginConstant, m_Origin) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_Origin) );" << std::endl;
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
@@ -985,7 +949,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
       fprintf(f, "    }\n");
-      replaceStream << "setAxisAngleRotations( reader->readValue(H5FilterParameter::AxisAngleInputsConstant, m_AxisAngleRotations) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_AxisAngleRotations) );" << std::endl;
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
@@ -994,31 +958,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
       fprintf(f, "    }\n");
-
-      if (opt->getWidgetType() == FilterParameter::CellArrayComparisonSelectionWidget)
-      {
-        replaceStream << "setCellComparisonInputs( reader->readValue(H5FilterParameter::CellComparisonInputsConstant, m_CellComparisonInputs) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::FieldArrayComparisonSelectionWidget)
-      {
-        replaceStream << "setFieldComparisonInputs( reader->readValue(H5FilterParameter::FieldComparisonInputsConstant, m_FieldComparisonInputs) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::EnsembleArrayComparisonSelectionWidget)
-      {
-        replaceStream << "setEnsembleComparisonInputs( reader->readValue(H5FilterParameter::EnsembleComparisonInputsConstant, m_EnsembleComparisonInputs) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::PointArrayComparisonSelectionWidget)
-      {
-        replaceStream << "setPointComparisonInputs( reader->readValue(H5FilterParameter::PointComparisonInputsConstant, m_PointComparisonInputs) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::FaceArrayComparisonSelectionWidget)
-      {
-        replaceStream << "setFaceComparisonInputs( reader->readValue(H5FilterParameter::FaceComparisonInputsConstant, m_FaceComparisonInputs) );" << std::endl;
-      }
-      else if (opt->getWidgetType() == FilterParameter::EdgeArrayComparisonSelectionWidget)
-      {
-        replaceStream << "setEdgeComparisonInputs( reader->readValue(H5FilterParameter::EdgeComparisonInputsConstant, m_EdgeComparisonInputs) );" << std::endl;
-      }
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", m_" << prop << ") );" << std::endl;
     }
     else
     {
