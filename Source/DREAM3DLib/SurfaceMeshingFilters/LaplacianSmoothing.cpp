@@ -260,6 +260,7 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
+////!!##
   reader->closeFilterGroup();
 }
 
