@@ -313,6 +313,7 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
+////!!##
   reader->closeFilterGroup();
 }
 
