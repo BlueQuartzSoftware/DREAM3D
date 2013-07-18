@@ -126,7 +126,7 @@ class QuaternionMath
       q.w = q.w * v;
     }
 
-    static void ElementWiseDivide(Quaternion &q, T v)
+    static void ScalarDivide(Quaternion &q, T v)
     {
       q.x = q.x / v;
       q.y = q.y / v;

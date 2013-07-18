@@ -143,7 +143,6 @@ void FindAvgOrientations::execute()
   {
     QuaternionMathF::ElementWiseAssign(avgQuats[i],0.0);
   }
-  //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0 && m_CellPhases[i] > 0)
@@ -151,48 +150,31 @@ void FindAvgOrientations::execute()
       counts[m_GrainIds[i]] += 1;
       phase = m_CellPhases[i];
       QuaternionMathF::Copy(quats[i], voxquat);
-      QuaternionMathF::Copy(avgQuats[i], curavgquat);
-      QuaternionMathF::ElementWiseDivide(curavgquat, counts[m_GrainIds[i]]);
+      QuaternionMathF::Copy(avgQuats[m_GrainIds[i]], curavgquat);
+      QuaternionMathF::ScalarDivide(curavgquat, counts[m_GrainIds[i]]);
 
       if(counts[m_GrainIds[i]] == 1)
       {
         QuaternionMathF::Identity(curavgquat);
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
-      for (int k = 0; k < 5; k++)
-      {
-        m_AvgQuats[4*m_GrainIds[i]+k] = m_AvgQuats[4*m_GrainIds[i]+k] + voxquat[k];
-      }
+      QuaternionMathF::Add(avgQuats[m_GrainIds[i]], voxquat, avgQuats[m_GrainIds[i]]);
     }
   }
-  float QuatF q;
   float ea1, ea2, ea3;
   for (size_t i = 1; i < numgrains; i++)
   {
-    if(m_AvgQuats[4*i] == 0)
+    if(counts[i] == 0)
     {
-      m_AvgQuats[4*i] = 1;
-      m_AvgQuats[4*i+1] = 0;
-      m_AvgQuats[4*i+2] = 0;
-      m_AvgQuats[4*i+3] = 0;
-      m_AvgQuats[4*i+4] = 1;
+      QuaternionMathF::Identity(avgQuats[i]);
     }
-    q.x = m_AvgQuats[4*i+1]/m_AvgQuats[4*i];
-    q.y = m_AvgQuats[4*i+2]/m_AvgQuats[4*i];
-    q.z = m_AvgQuats[4*i+3]/m_AvgQuats[4*i];
-    q.w = m_AvgQuats[4*i+4]/m_AvgQuats[4*i];
-    QuaternionMathF::UnitQuaternion(q);
-    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
+    QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
+    QuaternionMathF::UnitQuaternion(avgQuats[i]);
+    OrientationMath::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
     m_FieldEulerAngles[3*i] = ea1;
     m_FieldEulerAngles[3*i+1] = ea2;
     m_FieldEulerAngles[3*i+2] = ea3;
-    m_AvgQuats[4*i+1] = q[1];
-    m_AvgQuats[4*i+2] = q[2];
-    m_AvgQuats[4*i+3] = q[3];
-    m_AvgQuats[4*i+4] = q[4];
-    m_AvgQuats[4*i] = 1;
   }
-#endif
   notifyStatusMessage("Completed");
 }
 
