@@ -153,21 +153,6 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
 
-# Create a Command line tool for the QtFilterTest
-#
-COMPILE_TOOL(
-    TARGET QtFilterTest
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/QtFilterTest.cpp ${DREAM3DTools_SOURCE_DIR}/QtFilterTest/QtFilter.cpp ${DREAM3DTools_SOURCE_DIR}/QtFilterTest/QtFilter.h
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib ${QT_QTCORE_LIBRARY}
-)
-
 # Create a Command line tool for the DocsToPdf
 if(0)
 set(DREAM3D_DOCS_PDF_FILENAME ${DREAM3DProj_BINARY_DIR}/DREAM3D_Filter_Docs.pdf)

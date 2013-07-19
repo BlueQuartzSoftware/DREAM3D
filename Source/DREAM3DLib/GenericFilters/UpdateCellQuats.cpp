@@ -41,7 +41,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
-const static float m_pi = static_cast<float>(M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +118,7 @@ void UpdateCellQuats::execute()
 
   int64_t totalPoints = m->getTotalPoints();
 
-  //getting the 5 component quaternions fromt he data container and down-casting them
+  //getting the 5 component quaternions from the data container and down-casting them
   IDataArray::Pointer Quats5 = m->getCellData(DREAM3D::CellData::Quats);
   if(Quats5->GetNumberOfComponents() != 5)
   {
@@ -137,6 +136,8 @@ void UpdateCellQuats::execute()
   }
 
   //copying the 5 component quaternions into the new 4 component quaternions
+  // This is a special case for dealing with this conversion. If you are dealing with
+  // quaternions then DO NOT USE THIS CODE as an example. Use another filter instead.
   for (int i = 0; i < totalPoints; i++)
   {
     for(int j=0;j<4;j++)
