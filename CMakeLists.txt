@@ -157,6 +157,9 @@ configure_file(${PROJECT_SOURCE_DIR}/License.txt.in
                 ${PROJECT_BINARY_DIR}/License.txt )
 configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt.in
                 ${PROJECT_BINARY_DIR}/ReadMe.txt )
+install(FILES ${PROJECT_BINARY_DIR}/ReadMe.txt
+        DESTINATION .
+        COMPONENT Applications)
 
 # Include some directories for the compiler
 include_directories(${PROJECT_BINARY_DIR})
