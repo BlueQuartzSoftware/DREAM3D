@@ -139,7 +139,7 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
 
-# Create a Command line tool for the PhToHDF5
+# Create a Command line tool for the PipelineRunner
 COMPILE_TOOL(
     TARGET PipelineRunner
     SOURCES ${DREAM3DTools_SOURCE_DIR}/PipelineRunner.cpp
