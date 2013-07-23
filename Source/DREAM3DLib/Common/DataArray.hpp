@@ -397,7 +397,6 @@ class DataArray : public IDataArray
 
       // Calculate the new size of the array to copy into
       size_t newSize = (GetNumberOfTuples() - idxs.size()) * NumberOfComponents ;
-      T* currentSrc = this->Array;
 
       // Create a new Array to copy into
       T* newArray = (T*)malloc(newSize * sizeof(T));
@@ -424,7 +423,7 @@ class DataArray : public IDataArray
 
       if(k == idxs.size()) // Only front elements are being dropped
       {
-        currentSrc = Array + (j * NumberOfComponents);
+        T* currentSrc = Array + (j * NumberOfComponents);
         ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
         _deallocate(); // We are done copying - delete the current Array
         this->Size = newSize;
@@ -460,7 +459,7 @@ class DataArray : public IDataArray
       for (size_t i = 0; i < srcIdx.size(); ++i)
       {
         currentDest = newArray + destIdx[i];
-        currentSrc = Array + srcIdx[i];
+        T* currentSrc = Array + srcIdx[i];
         size_t bytes = copyElements[i] * sizeof(T);
         ::memcpy(currentDest, currentSrc, bytes);
       }
@@ -914,10 +913,16 @@ class DataArray : public IDataArray
     {
       // We are going to splat 0xABABAB across the first value of the array as a debugging aid
       unsigned char* cptr = reinterpret_cast<unsigned char*>(this->Array);
-      if (sizeof(T) >= 1 && Size > 0) { cptr[0] = 0xAB; }
-      if (sizeof(T) >= 2 && Size > 0) { cptr[1] = 0xAB; }
-      if (sizeof(T) >= 4 && Size > 0) { cptr[2] = 0xAB; cptr[3] = 0xAB;}
-      if (sizeof(T) >= 8 && Size > 0) { cptr[4] = 0xAB; cptr[5] = 0xAB; cptr[6] = 0xAB; cptr[7] = 0xAB;}
+      if(NULL != cptr)
+      {
+        if(Size > 0)
+        {
+          if (sizeof(T) >= 1) { cptr[0] = 0xAB; }
+          if (sizeof(T) >= 2) { cptr[1] = 0xAB; }
+          if (sizeof(T) >= 4) { cptr[2] = 0xAB; cptr[3] = 0xAB;}
+          if (sizeof(T) >= 8) { cptr[4] = 0xAB; cptr[5] = 0xAB; cptr[6] = 0xAB; cptr[7] = 0xAB;}
+        }
+      }
 #if 0
       if (MUD_FLAP_0 != 0xABABABABABABABABul
           || MUD_FLAP_1 != 0xABABABABABABABABul

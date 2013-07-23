@@ -108,7 +108,7 @@ class RotateSampleRefFrameImpl
       //      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
-      size_t colOld, rowOld, planeOld;
+      int32_t colOld, rowOld, planeOld;
 
       for (size_t k = zStart; k < zEnd; k++)
       {
