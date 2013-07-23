@@ -368,8 +368,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   firstPrecipitateField = currentnumgrains;
   int phase;
   float precipboundaryfraction = 0.0;
-  float random;
-  int random2;
+  float random = 0.0f;
+  int random2 = 0;
   float xc, yc, zc;
   float oldxc, oldyc, oldzc;
   int randomgrain;

@@ -155,10 +155,10 @@ void AIMImageGraphicsDelegate::decreaseZoom()
   // Find the next scaling factor down
   if (m_CachedImage.isNull() == true) { return; }
   QSize imageSize = this->m_CachedImage.size();
-  int gvWidth = m_GraphicsView->size().width();
-  int gvHeight = m_GraphicsView->size().height();
-  gvWidth -= 4;
-  gvHeight -= 4;
+//  int gvWidth = m_GraphicsView->size().width();
+//  int gvHeight = m_GraphicsView->size().height();
+//  gvWidth -= 4;
+//  gvHeight -= 4;
   if (imageSize.width() > imageSize.height() )
   {
     for (int i = 0; i < ZOOM_INDEX_MAX - 1; ++i )

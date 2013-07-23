@@ -262,8 +262,8 @@ std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::st
 AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, AxisAngleInput_t v)
 {
 	int err = 0;
-	int32_t rank = 1;
-	hsize_t dims[1] = { 4 };
+//	int32_t rank = 1;
+//	hsize_t dims[1] = { 4 };
 	err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
 	return v;
 }

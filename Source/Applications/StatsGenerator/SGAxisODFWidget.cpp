@@ -104,43 +104,43 @@ SGAxisODFWidget::~SGAxisODFWidget()
 void SGAxisODFWidget::extractStatsData(VoxelDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
 
-  VectorOfFloatArray arrays;
+  VectorOfFloatArray arrays(0);
   if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
   {
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  else if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
     arrays = pp->getAxisODF_Weights();
   }
-  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  else if(phaseType == DREAM3D::PhaseType::TransformationPhase)
   {
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getAxisODF_Weights();
   }
   if (arrays.size() > 0 ) {
-  QVector<float> e1(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
+    QVector<float> e1(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    ::memcpy( &(e1.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e1.size() );
 
-  QVector<float> e2(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
+    QVector<float> e2(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    ::memcpy( &(e2.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e2.size() );
 
-  QVector<float> e3(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
+    QVector<float> e3(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    ::memcpy( &(e3.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*e3.size() );
 
-  QVector<float> weights(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
+    QVector<float> weights(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
-  QVector<float> sigmas(static_cast<int>(arrays[0]->GetNumberOfTuples()));
-  ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
+    QVector<float> sigmas(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    ::memcpy( &(sigmas.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*sigmas.size() );
 
-  if(e1.size() > 0)
-  {
-    // Load the data into the table model
-    m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
-  }
+    if(e1.size() > 0)
+    {
+      // Load the data into the table model
+      m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
+    }
   }
   updatePlots();
 }
