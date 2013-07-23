@@ -171,7 +171,6 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
   }
 
   // Reset the pointer back to the front of the array, and set dataArrayFront to NULL
-  dataArray = dataArrayFront;
   dataArrayFront = NULL;
 
   // If junkPlacement is set to END or BOTH, write junk to file

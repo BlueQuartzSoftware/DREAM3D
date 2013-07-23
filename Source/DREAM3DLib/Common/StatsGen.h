@@ -255,7 +255,7 @@ class DREAM3DLib_EXPORT StatsGen
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-        random = rg.genrand_res53();
+       // random = rg.genrand_res53();
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
         g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
@@ -432,7 +432,7 @@ class DREAM3DLib_EXPORT StatsGen
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-        random = rg.genrand_res53();
+    //    random = rg.genrand_res53();
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
         g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
@@ -568,7 +568,7 @@ class DREAM3DLib_EXPORT StatsGen
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
         OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-        random = rg.genrand_res53();
+    //    random = rg.genrand_res53();
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
         g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
