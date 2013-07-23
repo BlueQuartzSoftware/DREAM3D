@@ -487,6 +487,18 @@ void FindGBCD::execute()
   m_GBCDsizes[3] = int(0.5+(m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
   m_GBCDsizes[4] = int(0.5+(m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
 
+  //reset the 3rd and 4th dimensions using the square grid approach
+  float totalNormalBins = m_GBCDsizes[3]*m_GBCDsizes[4];
+  m_GBCDsizes[3] = int(sqrt(totalNormalBins));
+  m_GBCDsizes[4] = int(sqrt(totalNormalBins));
+  m_GBCDlimits[3] = -sqrt(m_pi/2.0);
+  m_GBCDlimits[4] = -sqrt(m_pi/2.0);
+  m_GBCDlimits[8] = sqrt(m_pi/2.0);
+  m_GBCDlimits[9] = sqrt(m_pi/2.0);
+  m_GBCDdeltas[3] = (m_GBCDlimits[8]-m_GBCDlimits[3])/float(m_GBCDsizes[3]);
+  m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
+
+
   CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4])
 
   uint64_t millis = MXA::getMilliSeconds();
