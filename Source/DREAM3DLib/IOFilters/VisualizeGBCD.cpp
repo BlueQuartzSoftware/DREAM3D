@@ -49,9 +49,6 @@
 const static float m_pi = static_cast<float>(M_PI);
 const static float m_pi2 = static_cast<float>(2*M_PI);
 
-#define WRITE_XYZ_POINTS 1
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -63,9 +60,6 @@ VisualizeGBCD::VisualizeGBCD() :
   m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
   m_MisAngle(60.0f),
   m_OutputFile(""),
-  m_StereoOutputFile(""),
-  m_SphericalOutputFile(""),
-  m_GMTOutputFile(""),
   m_CrystalStructures(NULL),
   m_GBCD(NULL),
   m_GBCDdimensions(NULL)
@@ -121,38 +115,6 @@ void VisualizeGBCD::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-#if WRITE_XYZ_POINTS
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Stereographic Projection");
-    option->setPropertyName("StereoOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.vtk");
-    option->setFileType("VTK File");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Spherical Data");
-    option->setPropertyName("SphericalOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.vtk");
-    option->setFileType("VTK File");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("GMT Output File");
-    option->setPropertyName("GMTOutputFile");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.dat");
-    option->setFileType("GMT File");
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-#endif
   setFilterParameters(parameters);
 }
 
@@ -172,8 +134,6 @@ void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("StereoOutputFile", getStereoOutputFile() );
-  writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
 }
 
 // -----------------------------------------------------------------------------
@@ -192,22 +152,6 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
-#if WRITE_XYZ_POINTS
-  if(getStereoOutputFile().empty() == true)
-  {
-    ss.str("");
-    ss << ClassName() << " needs the Stereographic Projection Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
-  }
-  if(getSphericalOutputFile().empty() == true)
-  {
-    ss.str("");
-    ss << ClassName() << " needs the Spherical Data Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
-  }
-#endif
 
   if(NULL == sm)
   {
@@ -367,39 +311,19 @@ void VisualizeGBCD::execute()
   float yres = 2.0/float(ypoints);
   float zres = (xres+yres)/2.0;
   float x, y, z;
+  float a, b;
   int xbin, ybin;
+  int abin, bbin;
+  float intensity;
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
   poleFigureArray->initializeWithValues(-1);
   double* poleFigure = poleFigureArray->GetPointer(0);
-
-  FloatArrayType::Pointer xyzArray = FloatArrayType::NullPointer();
-  xyzArray = FloatArrayType::CreateArray(gbcdSizes[3]*gbcdSizes[4], 3, "xyz");
-  xyzArray->initializeWithValues(0.0);
-  float* xyz = xyzArray->GetPointer(0);
-
-#if WRITE_XYZ_POINTS
-  size_t nPoints = 0;
-#endif
-  for (int64_t k = 0; k < (gbcdSizes[3]); k++)
-  {
-    for (int64_t l = 0; l < (gbcdSizes[4]); l++)
-    {
-      theta = float(k)*gbcdDeltas[3]+gbcdLimits[3]+(gbcdDeltas[3]/2.0);
-      cosPhi = float(l)*gbcdDeltas[4]+gbcdLimits[4]+(gbcdDeltas[4]/2.0);
-      phi = acosf(cosPhi);
-      xyz[3*(l*gbcdSizes[3]+k)+0] = cosf(theta)*sinf(phi);
-      xyz[3*(l*gbcdSizes[3]+k)+1] = sinf(theta)*sinf(phi);
-      xyz[3*(l*gbcdSizes[3]+k)+2] = cosPhi;
-    }
-  }
-
-  std::stringstream positions;
-  std::stringstream scalars;
-  std::stringstream sphericalPositions;
-
-  std::vector<float> gmtValues;
+  FloatArrayType::Pointer poleFigureCountsArray = FloatArrayType::NullPointer();
+  poleFigureCountsArray = FloatArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigureCounts");
+  poleFigureCountsArray->initializeWithValues(0);
+  float* poleFigureCounts = poleFigureCountsArray->GetPointer(0);
 
   for(int q=0;q<2;q++)
   {
@@ -443,13 +367,16 @@ void VisualizeGBCD::execute()
           //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
           int shift = (location1)+(location2*gbcdSizes[0])+(location3*gbcdSizes[0]*gbcdSizes[1]);
 
-          for (int64_t k = 0; k < (gbcdSizes[3]); k++)
+          for (int64_t k = 0; k < (xpoints); k++)
           {
-            for (int64_t l = 0; l < (gbcdSizes[4]); l++)
+            for (int64_t l = 0; l < (ypoints); l++)
             {
-              vec[0] = xyz[3*(l*gbcdSizes[3]+k)+0];
-              vec[1] = xyz[3*(l*gbcdSizes[3]+k)+1];
-              vec[2] = xyz[3*(l*gbcdSizes[3]+k)+2];
+              //get (x,y) for stereographic projection pixel
+              x = float(k)*xres;
+              y = float(l)*yres;
+              vec[2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
+              vec[0] = x*(1-vec[2]);
+              vec[1] = y*(1-vec[2]);
               //find symmetric poles using the first symmetry operator
               MatrixMath::Multiply3x3with3x1(sym1t, vec, rotNormal);
               if(q == 1)
@@ -461,167 +388,57 @@ void VisualizeGBCD::execute()
                 rotNormal[1] = -rotNormal2[1];
                 rotNormal[2] = -rotNormal2[2];
               }
-#if WRITE_XYZ_POINTS
-              sphericalPositions  << rotNormal[0] << " " << rotNormal[1] << " " << rotNormal[2] << "\n";
-              if(rotNormal[2] < 0) {
-                x = -rotNormal[0];
-                y = -rotNormal[1];
-                z = -rotNormal[2];
-              }
-              float lon = atan2(y, x) * 180.0/M_PI;
-              if (lon < 0.0)
+              if(rotNormal[2] < 0)
               {
-                lon =lon + 360.0;
-              }
-              float lat = asin(z) * 180/M_PI;
-              // IntReverse(rotNormal[0], rotNormal[1], rotNormal[2], lat, lon, h, NULL);
-              gmtValues.push_back(lon);
-              gmtValues.push_back(lat);
-#endif
-              if(rotNormal[2] < 0) {
                 rotNormal[0] = -rotNormal[0];
                 rotNormal[1] = -rotNormal[1];
                 rotNormal[2] = -rotNormal[2];
               }
-              //find x,y point in stereographic projection
-              x = rotNormal[0]/(rotNormal[2]+1);
-              y = rotNormal[1]/(rotNormal[2]+1);
-
-#if WRITE_XYZ_POINTS
-              positions << x << " " << y << " 0.0\n";
-              nPoints++;
-#endif
-              //shift projection from -1 to 1 to 0 to 2
-              x = x+1.0;
-              y = y+1.0;
-              //find bin in poleFigure array
-              xbin = int(x/xres);
-              ybin = int(y/yres);
-              if(xbin < 0) xbin = 0;
-              if(ybin < 0) ybin = 0;
-              if(xbin >= xpoints) xbin = xpoints-1;
-              if(ybin >= ypoints) ybin = ypoints-1;
-              poleFigure[(ybin*xpoints)+xbin] = m_GBCD[shift+(k*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(l*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-#if WRITE_XYZ_POINTS
-              scalars << poleFigure[(ybin*xpoints)+xbin] << "\n";
-              gmtValues.push_back(poleFigure[(ybin*xpoints)+xbin]);
-#endif
-            }
-          }
-        }
-      }
-    }
-  }
-
-#if WRITE_XYZ_POINTS
-  {
-    FILE* f = fopen(m_StereoOutputFile.c_str(), "wb");
-    // Write the correct header
-    fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "GBCD Stereograhic Projection irregular grid data\n");
-    fprintf(f, "ASCII"); fprintf(f, "\n");
-    fprintf(f, "DATASET POLYDATA\n");
-    fprintf(f, "POINTS %lu float\n", nPoints);
-    fprintf(f, "%s\n", positions.str().c_str());
-
-    fprintf(f, "\n");
-    fprintf(f, "POINT_DATA %lu\n", nPoints);
-    fprintf(f, "SCALARS GBCD float 1\n");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    fprintf(f, "%s\n", scalars.str().c_str());
-    fclose(f);
-  }
-
-  {
-    FILE* f = fopen(m_SphericalOutputFile.c_str(), "wb");
-    // Write the correct header
-    fprintf(f, "# vtk DataFile Version 2.0\n");
-    fprintf(f, "GBCD Spherical Data irregular grid\n");
-    fprintf(f, "ASCII"); fprintf(f, "\n");
-    fprintf(f, "DATASET POLYDATA\n");
-    fprintf(f, "POINTS %lu float\n", nPoints);
-    fprintf(f, "%s\n", sphericalPositions.str().c_str());
-
-    fprintf(f, "\n");
-    fprintf(f, "POINT_DATA %lu\n", nPoints);
-    fprintf(f, "SCALARS GBCD float 1\n");
-    fprintf(f, "LOOKUP_TABLE default\n");
-    fprintf(f, "%s\n", scalars.str().c_str());
-    fclose(f);
-  }
-
-// Write the GMT file
-  {
-    std::string parentPath = MXAFileInfo::parentPath(m_GMTOutputFile);
-    std::string basename = MXAFileInfo::fileNameWithOutExtension(m_GMTOutputFile);
-    std::string extension = MXAFileInfo::extension(m_GMTOutputFile);
-    std::string path = parentPath + MXAFileInfo::Separator + basename + std::string("_gmt_1.") + extension;
-
-    FILE* f = fopen(path.c_str(), "wb");
-    fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * 180/M_PI);
-    size_t size = gmtValues.size()/3;
-
-    for(size_t i = 0; i < size; i=i+3)
-    {
-      fprintf(f, "%f %f %f\n", gmtValues[i], gmtValues[i+1], gmtValues[i+2]);
-    }
-    fclose(f);
-  }
-
-
-
-#endif
-
-  int neighbors[4];
-  neighbors[0] = -1;
-  neighbors[1] = 1;
-  neighbors[2] = -xpoints;
-  neighbors[3] = xpoints;
-  int counter = 1;
-  int point, neighbor;
-  int good = 1;
-  std::vector<int> neighs(xpoints*ypoints,-1);
-  while(counter != 0)
-  {
-    counter = 0;
-    for (int64_t k = 0; k < (xpoints); k++)
-    {
-      for (int64_t l = 0; l < (ypoints); l++)
-      {
-        x = (k-xpointshalf)*(xres)+(xres/2.0);
-        y = (l-ypointshalf)*(yres)+(yres/2.0);
-        if((x*x+y*y) <= 1)
-        {
-          point = l*xpoints+k;
-          if(poleFigure[point] == -1)
-          {
-            counter++;
-            for(int m = 0; m< 4; m++)
-            {
-              good = 1;
-              if(k == 0 && m == 0) good = 0;
-              if(k == xpoints-1 && m == 1) good = 0;
-              if(l == 0 && m == 2) good = 0;
-              if(l == ypoints-1 && m == 3) good = 0;
-              if(good == 1)
+              //check to see if point is in s.h. or n.h.
+              if(rotNormal[2] <= 0.0)
               {
-                neighbor = point + neighbors[m];
-                if(poleFigure[neighbor] != -1) neighs[point] = neighbor;
+                if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
+                {
+                  a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*(sqrt(m_pi)/2.0);
+                  b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[1],rotNormal[0]));
+                }              
+                else
+                {
+                  a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[0],rotNormal[1]));
+                  b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*(sqrt(m_pi)/2.0);
+                }
               }
+              else
+              {
+                if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
+                {
+                  a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
+                  b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[1],rotNormal[0]));
+                }              
+                else
+                {
+                  a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[0],rotNormal[1]));
+                  b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
+                }
+              }
+              abin = int(a/gbcdDeltas[3]);
+              bbin = int(b/gbcdDeltas[4]);
+              intensity = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+              poleFigure[(l*xpoints)+k] += intensity; 
+              poleFigureCounts[(l*xpoints)+k] += 1.0; 
             }
           }
         }
       }
     }
-    for(int n = 0; n < (neighs.size()); n++)
+  }
+  for (int64_t k = 0; k < (xpoints); k++)
+  {
+    for (int64_t l = 0; l < (ypoints); l++)
     {
-      if(neighs[n] != -1 && poleFigure[n] == -1)
-      {
-        poleFigure[n] = poleFigure[neighs[n]];
-      }
+       poleFigure[(l*xpoints)+k] /= poleFigureCounts[(l*xpoints)+k]; 
     }
   }
-
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
