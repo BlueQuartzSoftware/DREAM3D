@@ -310,8 +310,8 @@ void FindShapes::find_moments2D()
   m_GrainMoments->Resize(numgrains);
   grainmoments = m_GrainMoments->GetPointer(0);
 
-  int xPoints, yPoints;
-  float xRes, yRes;
+  int xPoints = 0, yPoints = 0;
+  float xRes = 0.0f, yRes= 0.0f;
 
   if(m->getXPoints() == 1)
   {

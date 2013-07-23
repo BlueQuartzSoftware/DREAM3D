@@ -172,8 +172,8 @@ void ImportImageStack::execute()
 
   uint8_t* imagePtr = NULL;
 
-  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-  int progress = 0;
+//  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
+//  int progress = 0;
   int pixelBytes = 0;
   int totalPixels = 0;
   int height = 0;
@@ -184,8 +184,8 @@ void ImportImageStack::execute()
   for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     std::string imageFName = *filepath;
-    progress = static_cast<int>( z - m_ZStartIndex );
-    progress = (int)(100.0f * (float)(progress) / total);
+//    progress = static_cast<int>( z - m_ZStartIndex );
+//    progress = (int)(100.0f * (float)(progress) / total);
 
     ss.str("");
     ss << "Importing file " << imageFName;
@@ -218,7 +218,7 @@ void ImportImageStack::execute()
     }
 
     // Get the current position in the array to copy the image into
-    imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
+   // imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
     for(qint32 i = 0; i < height; ++i)
     {
       imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));

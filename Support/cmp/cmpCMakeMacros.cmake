@@ -1049,6 +1049,7 @@ function(cmpVersionStringsFromGit)
               #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
               #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
               #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
+            string(SUBSTRING ${VERSION_GEN_VER_PATCH} 1 -1 VERSION_GEN_VER_PATCH)
 
             set(${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
             set(${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
