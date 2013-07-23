@@ -150,15 +150,55 @@ class CalculateGBCDImpl
               MatrixMath::Multiply3x3with3x3(sym1,g1,g1s);
               //find symmetric crystal directions
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
-              //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
-              xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
-              if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += m_pi2;
-              xstl1_norm_sc[1] = xstl1_norm1[2];
+              ////calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
+              //xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
+              //if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += m_pi2;
+              //xstl1_norm_sc[1] = xstl1_norm1[2];
 
-              if (inversion == 1){
-                xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + m_pi;
-                if (xstl1_norm_sc_inv[0] > m_pi2) xstl1_norm_sc_inv[0] -= m_pi2;
-                xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
+              //if (inversion == 1){
+              //  xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + m_pi;
+              //  if (xstl1_norm_sc_inv[0] > m_pi2) xstl1_norm_sc_inv[0] -= m_pi2;
+              //  xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
+              //}
+
+              //check to see if point is in s.h. or n.h.
+              if(xstl1_norm1[2] <= 0.0)
+              {
+                if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+                {
+                  xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                  xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[1],xstl1_norm1[0]));
+                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the n.h., so the r-z term stays r+z
+                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[1],-xstl1_norm1[0]));
+                }              
+                else
+                {
+                  xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[0],xstl1_norm1[1]));
+                  xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the n.h., so the r-z term stays r+z
+                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[0],-xstl1_norm1[1]));
+                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                }
+              }
+              else
+              {
+                if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+                {
+                  xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                  xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[1],xstl1_norm1[0]));
+                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the s.h., so the r+z term stays r-z
+                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[1],-xstl1_norm1[0]));
+                }              
+                else
+                {
+                  xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[0],xstl1_norm1[1]));
+                  xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the s.h., so the r+z term stays r-z
+                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[0],-xstl1_norm1[1]));
+                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                }
               }
 
               for (k=0; k < nsym; k++)
@@ -268,6 +308,7 @@ FindGBCD::FindGBCD() :
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
   m_GBCDRes(9.0),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
@@ -275,7 +316,8 @@ FindGBCD::FindGBCD() :
   m_FieldEulerAngles(NULL),
   m_FieldPhases(NULL),
   m_CrystalStructures(NULL),
-    m_GBCD(NULL)
+  m_GBCD(NULL),
+  m_GBCDdimensions(NULL)
 {
   setupFilterParameters();
 }
@@ -357,6 +399,7 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
       CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 0, ensembles, 5)
     }
 
   }
@@ -500,6 +543,14 @@ void FindGBCD::execute()
 
 
   CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4])
+  for(int i=0;i<m->getNumEnsembleTuples();i++)
+  {
+    m_GBCDdimensions[5*i+0] = m_GBCDsizes[0];
+    m_GBCDdimensions[5*i+1] = m_GBCDsizes[1];
+    m_GBCDdimensions[5*i+2] = m_GBCDsizes[2];
+    m_GBCDdimensions[5*i+3] = m_GBCDsizes[3];
+    m_GBCDdimensions[5*i+4] = m_GBCDsizes[4];
+  }
 
   uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
