@@ -183,7 +183,8 @@ namespace DREAM3D
     const std::string PhaseName("PhaseName");
     const std::string MaterialName("MaterialName");
     const std::string LatticeConstants("LatticeConstants");
-  const std::string GBCD("GBCD");
+    const std::string GBCD("GBCD");
+    const std::string GBCDdimensions("GBCDdimensions");
   }
 
 

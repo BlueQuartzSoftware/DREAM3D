@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDdimensionsArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
@@ -142,6 +143,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     int32_t* m_FieldPhases;
     unsigned int* m_CrystalStructures;
     double* m_GBCD;
+    int32_t* m_GBCDdimensions;
 
     FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
     void operator=(const FindGBCD&); // Operator '=' Not Implemented

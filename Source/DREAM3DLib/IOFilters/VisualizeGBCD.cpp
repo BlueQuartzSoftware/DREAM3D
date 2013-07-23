@@ -60,13 +60,15 @@ VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
+  m_GBCDdimensionsArrayName(DREAM3D::EnsembleData::GBCDdimensions),
   m_MisAngle(60.0f),
   m_OutputFile(""),
   m_StereoOutputFile(""),
   m_SphericalOutputFile(""),
   m_GMTOutputFile(""),
   m_CrystalStructures(NULL),
-  m_GBCD(NULL)
+  m_GBCD(NULL),
+  m_GBCDdimensions(NULL)
 {
   m_MisAxis.x = 1;
   m_MisAxis.y = 1;
@@ -238,8 +240,9 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
         addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
       }
       else
-      {
-        int numComp = iDataArray->GetNumberOfComponents();
+      {        
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
+        int numComp = m_GBCDdimensions[5*1+0]*m_GBCDdimensions[5*1+1]*m_GBCDdimensions[5*1+2]*m_GBCDdimensions[5*1+3]*m_GBCDdimensions[5*1+4];
         GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
@@ -309,32 +312,25 @@ void VisualizeGBCD::execute()
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = cosf(1.0*m_pi);
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = 0.0;
-  gbcdLimits[4] = cosf(1.0*m_pi);
+  gbcdLimits[3] = -sqrt(m_pi/2.0);
+  gbcdLimits[4] = -sqrt(m_pi/2.0);
   gbcdLimits[5] = 2.0*m_pi;
   gbcdLimits[6] = cosf(0.0);
   gbcdLimits[7] = 2.0*m_pi;
-  gbcdLimits[8] = 2.0*m_pi;
-  gbcdLimits[9] = cosf(0.0);
+  gbcdLimits[8] = sqrt(m_pi/2.0);
+  gbcdLimits[9] = sqrt(m_pi/2.0);
 
-  //get num components of GBCD
-  int numComp = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD)->GetNumberOfComponents();
-  //determine the size of the 1,3,4 dimensions of the GBCD - 2,4 are dim/1.5
-  int dim = int(pow((numComp/(2.0*2.0*2.0)),(1.0/5.0))+0.5);
+  gbcdSizes[0] = m_GBCDdimensions[5*1+0];
+  gbcdSizes[1] = m_GBCDdimensions[5*1+1];
+  gbcdSizes[2] = m_GBCDdimensions[5*1+2];
+  gbcdSizes[3] = m_GBCDdimensions[5*1+3];
+  gbcdSizes[4] = m_GBCDdimensions[5*1+4];
 
-  gbcdSizes[0] = dim*2;
-  gbcdSizes[1] = dim;
-  gbcdSizes[2] = dim*2;
-  gbcdSizes[3] = dim*2;
-  gbcdSizes[4] = dim;
-
-  float binsize = gbcdLimits[5]/float(gbcdSizes[0]);
-  float binsize2 = binsize*(2.0/m_pi);
-  gbcdDeltas[0] = binsize;
-  gbcdDeltas[1] = binsize2;
-  gbcdDeltas[2] = binsize;
-  gbcdDeltas[3] = binsize;
-  gbcdDeltas[4] = binsize2;
+  gbcdDeltas[0] = gbcdLimits[5]/float(gbcdSizes[0]);
+  gbcdDeltas[1] = (gbcdLimits[6]-gbcdLimits[1])/float(gbcdSizes[1]);
+  gbcdDeltas[2] = gbcdLimits[7]/float(gbcdSizes[2]);
+  gbcdDeltas[3] = (gbcdLimits[8]-gbcdLimits[3])/float(gbcdSizes[3]);
+  gbcdDeltas[4] = (gbcdLimits[9]-gbcdLimits[4])/float(gbcdSizes[4]);
 
   float vec[3];
   float rotNormal[3];

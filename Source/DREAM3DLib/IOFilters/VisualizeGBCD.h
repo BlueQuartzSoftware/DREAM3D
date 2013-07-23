@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GBCDdimensionsArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, MisAngle)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
@@ -137,8 +138,9 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
   private:
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 
-  unsigned int* m_CrystalStructures;
+    unsigned int* m_CrystalStructures;
     double* m_GBCD;
+    int32_t* m_GBCDdimensions;
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed
