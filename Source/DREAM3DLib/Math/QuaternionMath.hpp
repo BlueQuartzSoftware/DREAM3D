@@ -112,10 +112,10 @@ class QuaternionMath
     // -----------------------------------------------------------------------------
     static void ElementWiseAbs(Quaternion &q)
     {
-      q.x = abs(q.x);
-      q.y = abs(q.y);
-      q.z = abs(q.z);
-      q.w = abs(q.w);
+      q.x = fabs(q.x);
+      q.y = fabs(q.y);
+      q.z = fabs(q.z);
+      q.w = fabs(q.w);
     }
 
     static void ScalarMultiply(Quaternion &q, T v)
