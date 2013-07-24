@@ -96,7 +96,6 @@ class CalculateGBCDImpl
       int m;
       int temp;
       int32_t gbcd_index;
-      int inversion = 1;
       int grain1, grain2;
       float g1ea[3], g2ea[3];
       float g1[3][3], g2[3][3];
@@ -150,55 +149,23 @@ class CalculateGBCDImpl
               MatrixMath::Multiply3x3with3x3(sym1,g1,g1s);
               //find symmetric crystal directions
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
-              ////calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
-              //xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
-              //if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += m_pi2;
-              //xstl1_norm_sc[1] = xstl1_norm1[2];
 
-              //if (inversion == 1){
-              //  xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + m_pi;
-              //  if (xstl1_norm_sc_inv[0] > m_pi2) xstl1_norm_sc_inv[0] -= m_pi2;
-              //  xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
-              //}
-
-              //check to see if point is in s.h. or n.h.
-              if(xstl1_norm1[2] <= 0.0)
+              //make sure the point is in the n.h.
+              if(xstl1_norm1[2] < 0.0)
               {
-                if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
-                {
-                  xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                  xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[1],xstl1_norm1[0]));
-                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the n.h., so the r-z term stays r+z
-                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[1],-xstl1_norm1[0]));
-                }              
-                else
-                {
-                  xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[0],xstl1_norm1[1]));
-                  xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the n.h., so the r-z term stays r+z
-                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[0],-xstl1_norm1[1]));
-                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                }
+                xstl1_norm1[0] *= -1;
+                xstl1_norm1[1] *= -1;
+                xstl1_norm1[2] *= -1;
               }
+              if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+              {
+                xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
+                xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan(xstl1_norm1[1]/xstl1_norm1[0]));
+              }              
               else
               {
-                if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
-                {
-                  xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                  xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[1],xstl1_norm1[0]));
-                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the s.h., so the r+z term stays r-z
-                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[0]/fabs(-xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[1],-xstl1_norm1[0]));
-                }              
-                else
-                {
-                  xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(xstl1_norm1[0],xstl1_norm1[1]));
-                  xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                  //note that the sign of the z comp is changed, but then the equation is changed since the inv will be in the s.h., so the r+z term stays r-z
-                  xstl1_norm_sc_inv[0] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan2(-xstl1_norm1[0],-xstl1_norm1[1]));
-                  xstl1_norm_sc_inv[1] = (-xstl1_norm1[1]/fabs(-xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                }
+                xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
+                xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
               }
 
               for (k=0; k < nsym; k++)
@@ -219,22 +186,7 @@ class CalculateGBCDImpl
                 gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
                 if (gbcd_index != -1)
                 {
-                  // Add the points and up the count on the gbcd histograms.  Broke this out
-                  // so that it could be protected in an openMP thread
-                  {
-                    m_Bins[(TRIcounter*1152)+SYMcounter] = gbcd_index;
-                  }
-                }
-                //if inversion is on, do the same for that
-                if (inversion == 1)
-                {
-                  gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc_inv);
-                  if (gbcd_index != -1)
-                  {
-                    {
-                      m_Bins[(TRIcounter*1152)+SYMcounter] = gbcd_index;
-                    }
-                  }
+                  m_Bins[(TRIcounter*1152)+SYMcounter] = gbcd_index;
                 }
                 SYMcounter++;
               }
@@ -399,7 +351,7 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
       CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 0, ensembles, 5)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 1, ensembles, 5)
     }
 
   }
