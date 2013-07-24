@@ -186,7 +186,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       else
       {        
         GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
-        int numComp = m_GBCDdimensions[5*1+0]*m_GBCDdimensions[5*1+1]*m_GBCDdimensions[5*1+2]*m_GBCDdimensions[5*1+3]*m_GBCDdimensions[5*1+4];
+        int numComp = iDataArray->GetNumberOfComponents();
         GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
@@ -318,7 +318,7 @@ void VisualizeGBCD::execute()
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
-  poleFigureArray->initializeWithValues(-1);
+  poleFigureArray->initializeWithValues(0);
   double* poleFigure = poleFigureArray->GetPointer(0);
   FloatArrayType::Pointer poleFigureCountsArray = FloatArrayType::NullPointer();
   poleFigureCountsArray = FloatArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigureCounts");
@@ -334,7 +334,6 @@ void VisualizeGBCD::execute()
       //take inverse of misorientation, then copy into misorientation variable to use for switching symmetry
       MatrixMath::Transpose3x3(dg, dgt);
       MatrixMath::Copy3x3(dgt, dg);
-
     }
     for(int i=0; i<n_sym; i++)
     {
@@ -352,8 +351,6 @@ void VisualizeGBCD::execute()
         MatrixMath::Multiply3x3with3x3(dg1,sym2t,dg2);
         //convert to euler angle
         OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath::EulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath::QuattoAxisAngle(qtest, w, n1, n2, n3);
 
         mis_euler1[1] = cosf(mis_euler1[1]);
 
@@ -372,60 +369,47 @@ void VisualizeGBCD::execute()
             for (int64_t l = 0; l < (ypoints); l++)
             {
               //get (x,y) for stereographic projection pixel
-              x = float(k)*xres;
-              y = float(l)*yres;
-              vec[2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
-              vec[0] = x*(1-vec[2]);
-              vec[1] = y*(1-vec[2]);
-              //find symmetric poles using the first symmetry operator
-              MatrixMath::Multiply3x3with3x1(sym1t, vec, rotNormal);
-              if(q == 1)
+              x = float(k-xpointshalf)*xres+(xres/2.0);
+              y = float(l-ypointshalf)*yres+(yres/2.0);
+              if((x*x+y*y) <= 1.0)
               {
-                //rotate symmetric pole by original misorientation
-                MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
-                //take negative of vector
-                rotNormal[0] = -rotNormal2[0];
-                rotNormal[1] = -rotNormal2[1];
-                rotNormal[2] = -rotNormal2[2];
-              }
-              if(rotNormal[2] < 0)
-              {
-                rotNormal[0] = -rotNormal[0];
-                rotNormal[1] = -rotNormal[1];
-                rotNormal[2] = -rotNormal[2];
-              }
-              //check to see if point is in s.h. or n.h.
-              if(rotNormal[2] <= 0.0)
-              {
-                if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
+                vec[2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
+                vec[0] = x*(1+vec[2]);
+                vec[1] = y*(1+vec[2]);
+                //find symmetric poles using the first symmetry operator
+                MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
+                if(q == 1)
                 {
-                  a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*(sqrt(m_pi)/2.0);
-                  b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[1],rotNormal[0]));
-                }              
-                else
-                {
-                  a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[0],rotNormal[1]));
-                  b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+rotNormal[2]))*(sqrt(m_pi)/2.0);
+                  //rotate symmetric pole by original misorientation
+                  MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
+                  //take negative of vector
+                  rotNormal[0] = -rotNormal2[0];
+                  rotNormal[1] = -rotNormal2[1];
+                  rotNormal[2] = -rotNormal2[2];
                 }
-              }
-              else
-              {
+                //make sure the point is in the n.h.
+                if(rotNormal[2] < 0)
+                {
+                  rotNormal[0] = -rotNormal[0];
+                  rotNormal[1] = -rotNormal[1];
+                  rotNormal[2] = -rotNormal[2];
+                }
                 if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
                 {
                   a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
-                  b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[1],rotNormal[0]));
+                  b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[1]/rotNormal[0]));
                 }              
                 else
                 {
-                  a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan2(rotNormal[0],rotNormal[1]));
+                  a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[0]/rotNormal[1]));
                   b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
                 }
+                abin = int(((a-gbcdLimits[3])/gbcdDeltas[3])+0.5);
+                bbin = int(((b-gbcdLimits[4])/gbcdDeltas[4])+0.5);
+                intensity = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                poleFigure[(l*xpoints)+k] += intensity; 
+                poleFigureCounts[(l*xpoints)+k] += 1.0; 
               }
-              abin = int(a/gbcdDeltas[3]);
-              bbin = int(b/gbcdDeltas[4]);
-              intensity = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-              poleFigure[(l*xpoints)+k] += intensity; 
-              poleFigureCounts[(l*xpoints)+k] += 1.0; 
             }
           }
         }
@@ -436,7 +420,13 @@ void VisualizeGBCD::execute()
   {
     for (int64_t l = 0; l < (ypoints); l++)
     {
-       poleFigure[(l*xpoints)+k] /= poleFigureCounts[(l*xpoints)+k]; 
+      //get (x,y) for stereographic projection pixel
+      x = float(k-xpointshalf)*xres+(xres/2.0);
+      y = float(l-ypointshalf)*yres+(yres/2.0);
+      if((x*x+y*y) <= 1.0)
+      {
+        poleFigure[(l*xpoints)+k] /= poleFigureCounts[(l*xpoints)+k]; 
+      }
     }
   }
 
