@@ -37,6 +37,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -51,6 +53,25 @@ void RemoveTestFiles()
  // MXADir::remove();
 #endif
 }
+
+void TestCubicOps()
+{
+   float e0[3] = {0.0f, 0.0f, 0.0f};
+   float e1[3] = {0.0f, 0.0f, 30.0f * M_PI/180.f};
+
+   QuaternionMathF::Quaternion q0 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+   QuaternionMathF::Quaternion q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+
+   OrientationMath::EulertoQuat(q0, e0[0], e0[1], e0[2]);
+   OrientationMath::EulertoQuat(q1, e1[0], e1[1], e1[2]);
+
+   CubicOps co;
+
+    float n[3] = {0.0, 0.0, 1.0f};
+    float w = co.getMisoQuat(q0, q1, n[0], n[1], n[2]);
+    std::cout << "w: "<< w * 180/M_PI << std::endl;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -83,14 +104,14 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, 0.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 1.0)
 
-  out = QuaternionMathF::New(-10.0f, -20.0f, -30.0f, -40.0f);
+  out = QuaternionMathF::New(-10.5f, -1.5f, -30.66f, -40.987f);
   QuaternionMathF::ElementWiseAbs(out);
-  DREAM3D_REQUIRE_EQUAL(out.x, 10.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 20.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, 30.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 40.0)
+  DREAM3D_REQUIRE_EQUAL(out.x, 10.5f)
+  DREAM3D_REQUIRE_EQUAL(out.y, 1.5f)
+  DREAM3D_REQUIRE_EQUAL(out.z, 30.66f)
+  DREAM3D_REQUIRE_EQUAL(out.w, 40.987f)
 
-
+  out = QuaternionMathF::New(10.0f, 20.0f, 30.0f, 40.0f);
   QuaternionMathF::ScalarMultiply(out, -1.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, -10.0)
   DREAM3D_REQUIRE_EQUAL(out.y, -20.0)
@@ -195,6 +216,7 @@ int main(int argc, char *argv[])
 {
   int err = EXIT_SUCCESS;
     DREAM3D_REGISTER_TEST( TestQuat_t() )
+  DREAM3D_REGISTER_TEST( TestCubicOps() )
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
