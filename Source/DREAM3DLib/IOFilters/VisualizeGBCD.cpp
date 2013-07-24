@@ -477,9 +477,9 @@ void VisualizeGBCD::execute()
       float* gn = new float[total];
       float t;
       int count = 0;
-      for (int64_t i = 0; i < (xpoints); i++)
+      for (int64_t j = 0; j < (ypoints); j++)
       {
-        for (int64_t j = 0; j < (ypoints); j++)
+        for (int64_t i = 0; i < (xpoints); i++)
         {
           t = float(poleFigure[(j*xpoints)+i]);
           MXA::Endian::FromSystemToBig::convert<float>(t);
