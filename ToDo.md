@@ -8,21 +8,18 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + StatsGen crashes if data is missing
 
 
-## Version 4.2 Features Bugs to Fix ##
-
-
 ## Version 4.3 Features/Bugs to Fix ##
 
-+ Rewrite the Quaternion Code to only use 4 Components and implement basic Quaternion Math functions
-+ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
-+ Pole Figure smoothing function in Visualize GBCD
++ Visualize GBCD
+	+ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
+	+  Pole Figure smoothing function in Visualize GBCD
 + Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
 + Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
 + PipelineView Widget
 	+ When running a pipeline have a method that can disable all of the GUI widgets and Menus that would change the pipeline while running
-    + During Execution of the pipeline dim the filters except for the one that is currently running
-    + Disable modifying pipeline while a pipeline is running
-    + Disable adding of filters into the pipeline while it is running.
+	+ During Execution of the pipeline dim the filters except for the one that is currently running
+	+ Disable modifying pipeline while a pipeline is running
+	+ Disable adding of filters into the pipeline while it is running.
 + StatsGenerator: ODF Tab
     - Add information for stats generator about the format of the ODF Files import function
     - Add feature in Stats Generator to read in a .ang or .ctf file for the ODF angles.
@@ -34,7 +31,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 + Add Filter to set Phase/Ensemble data instead of reading it from a file (Custom Gui for this one).
-+ Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
++ Finish Abaqus output file filter
 
 
 ## Future Features to Implement ##
@@ -198,7 +195,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Version 4.2 Fixed ###
 
-+ adding filters for volume fraction and surface area to volume ratio
++ Implement Experimental Abaqus output file filter
++ Rewrite the Quaternion Code to only use 4 Components and implement basic Quaternion Math functions
++ Adding filters for volume fraction and surface area to volume ratio
 + Fix bug in ScalarSegmentGrains where boolean arrays are not segmented correctly
 + On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Visualize GBCD, empty GMT file causes crash.
