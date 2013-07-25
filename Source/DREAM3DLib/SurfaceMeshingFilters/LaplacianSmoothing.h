@@ -45,7 +45,7 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
-#define OUTPUT_DEBUG_VTK_FILES 0
+#define OUTPUT_DEBUG_VTK_FILES 1
 
 
 /**
@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     DREAM3D_INSTANCE_PROPERTY(float, QuadPointLambda)
     DREAM3D_INSTANCE_PROPERTY(float, SurfaceTripleLineLambda)
     DREAM3D_INSTANCE_PROPERTY(float, SurfaceQuadPointLambda)
+    DREAM3D_INSTANCE_PROPERTY(bool, GenerateIterationOutputFiles)
 
 
     /* This class is designed to be subclassed so that thoes subclasses can add
@@ -112,7 +113,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
