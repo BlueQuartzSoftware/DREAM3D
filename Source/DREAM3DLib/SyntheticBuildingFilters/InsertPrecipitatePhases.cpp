@@ -58,7 +58,7 @@
 
 #include "DREAM3DLib/Common/PrecipitateStatsData.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -731,7 +731,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
   float vol = 0;
   int volgood = 0;
   float phi1, PHI, phi2;
-  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (m_pi));
+  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi));
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
   float avg = GSdist[0]->GetValue(0);

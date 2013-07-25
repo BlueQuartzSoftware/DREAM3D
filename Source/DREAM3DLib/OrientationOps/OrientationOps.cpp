@@ -42,33 +42,24 @@
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 
 
+namespace Detail
+{
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float two_pi = 2.0f * m_pi;
-const static float recip_pi = 1.0f/m_pi;
-const static float pi_over_180 = m_pi/180.0f;
+  const static float m_OnePointThree = 1.33333333333f;
 
-const static float m_OnePointThree = 1.33333333333f;
+  const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACosNeg1/2.0f) );
+  const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACos1/2.0f) );
+  const float sin_of_acos_neg_1 = sinf(DREAM3D::Constants::k_ACosNeg1);
+  const float sin_of_acos_pos_1 = sinf(DREAM3D::Constants::k_ACos1);
 
-const float threesixty_over_pi = 360.0f/m_pi;
-const float oneeighty_over_pi = 180.0f/m_pi;
-const float sqrt_two = powf(2.0f, 0.5f);
+  const float recip_sin_of_acos_neg_1 = 1.0f/sin_of_acos_neg_1;
+  const float recip_sin_of_acos_pos_1 = 1.0f/sin_of_acos_pos_1;
 
-const float acos_neg_one = acosf(-1.0f);
-const float acos_pos_one = acosf(1.0f);
-const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(acos_neg_one/2.0f) );
-const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(acos_pos_one/2.0f) );
-const float sin_of_acos_neg_1 = sinf(acos_neg_one);
-const float sin_of_acos_pos_1 = sinf(acos_pos_one);
-
-const float recip_sin_of_acos_neg_1 = 1.0f/sin_of_acos_neg_1;
-const float recip_sin_of_acos_pos_1 = 1.0f/sin_of_acos_pos_1;
-
-const static float SinOfHalf = sinf(0.5f);
-const static float CosOfHalf = cosf(0.5f);
-const static float SinOfZero = sinf(0.0f);
-const static float CosOfZero = cosf(0.0f);
-
+  const static float SinOfHalf = sinf(0.5f);
+  const static float CosOfHalf = cosf(0.5f);
+  const static float SinOfZero = sinf(0.0f);
+  const static float CosOfZero = cosf(0.0f);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -114,8 +105,8 @@ float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
 
     OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-    if (w > m_pi) {
-      w = two_pi - w;
+    if (w > DREAM3D::Constants::k_Pi) {
+      w = DREAM3D::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {

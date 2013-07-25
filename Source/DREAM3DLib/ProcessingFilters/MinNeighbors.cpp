@@ -45,7 +45,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\

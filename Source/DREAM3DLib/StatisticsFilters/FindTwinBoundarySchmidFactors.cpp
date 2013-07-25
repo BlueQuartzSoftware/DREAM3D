@@ -51,7 +51,7 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 class CalculateTwinBoundarySchmidFactorsImpl

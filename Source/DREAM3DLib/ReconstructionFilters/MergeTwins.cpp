@@ -53,7 +53,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -318,7 +318,7 @@ void MergeTwins::merge_twins()
             if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
             {
               w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-              w = w * (180.0f/m_pi);
+              w = w * (180.0f/DREAM3D::Constants::k_Pi);
               float axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
               float angdiff60 = fabs(w-60.0f);
               if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;

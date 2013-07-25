@@ -46,9 +46,6 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
-
 
 /**
  * @brief The CalculateAreasImpl class
@@ -152,12 +149,12 @@ class CalculateGBCDImpl
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
               //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
               xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
-              if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += m_pi2;
+              if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += DREAM3D::Constants::k_2Pi;
               xstl1_norm_sc[1] = xstl1_norm1[2];
 
               if (inversion == 1){
-                xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + m_pi;
-                if (xstl1_norm_sc_inv[0] > m_pi2) xstl1_norm_sc_inv[0] -= m_pi2;
+                xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + DREAM3D::Constants::k_Pi;
+                if (xstl1_norm_sc_inv[0] > DREAM3D::Constants::k_2Pi) xstl1_norm_sc_inv[0] -= DREAM3D::Constants::k_2Pi;
                 xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
               }
 
@@ -463,18 +460,18 @@ void FindGBCD::execute()
   int32_t* m_Bins = gbcdBinsArray->GetPointer(0);
 
   m_GBCDlimits[0] = 0.0;
-  m_GBCDlimits[1] = cosf(1.0*m_pi);
+  m_GBCDlimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);
   m_GBCDlimits[2] = 0.0;
   m_GBCDlimits[3] = 0.0;
-  m_GBCDlimits[4] = cosf(1.0*m_pi);
-  m_GBCDlimits[5] = 2.0*m_pi;
+  m_GBCDlimits[4] = cosf(1.0*DREAM3D::Constants::k_Pi);
+  m_GBCDlimits[5] = 2.0*DREAM3D::Constants::k_Pi;
   m_GBCDlimits[6] = cosf(0.0);
-  m_GBCDlimits[7] = 2.0*m_pi;
-  m_GBCDlimits[8] = 2.0*m_pi;
+  m_GBCDlimits[7] = 2.0*DREAM3D::Constants::k_Pi;
+  m_GBCDlimits[8] = 2.0*DREAM3D::Constants::k_Pi;
   m_GBCDlimits[9] = cosf(0.0);
 
-  float binsize = m_GBCDRes*m_pi/180.0;
-  float binsize2 = binsize*(2.0/m_pi);
+  float binsize = m_GBCDRes*DREAM3D::Constants::k_Pi/180.0;
+  float binsize2 = binsize*(2.0/DREAM3D::Constants::k_Pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
   m_GBCDdeltas[2] = binsize;

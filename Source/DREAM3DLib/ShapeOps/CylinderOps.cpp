@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -37,9 +37,6 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-
-
-const static float m_pi = (float)M_PI;
 
 // -----------------------------------------------------------------------------
 //
@@ -67,7 +64,7 @@ float CylinderOps::radcur1(std::map<ArgName, float> args)
   float bovera = args[B_OverA];
   float covera = args[C_OverA];
 
-  radcur1 = static_cast<float>( (volcur*(1.0/m_pi)*(1.0/bovera)*(1.0/covera)) );
+  radcur1 = static_cast<float>( (volcur*(1.0/DREAM3D::Constants::k_Pi)*(1.0/bovera)*(1.0/covera)) );
   radcur1 = powf(radcur1, 0.333333333333f);
   return radcur1;
 }

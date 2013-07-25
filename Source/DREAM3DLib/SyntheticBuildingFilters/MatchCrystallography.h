@@ -170,10 +170,6 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
 
     std::vector<std::vector<float> > misorientationlists;
-
-    OrientationMath::Pointer m_CubicOps;
-    OrientationMath::Pointer m_HexOps;
-    OrientationMath::Pointer m_OrthoOps;
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

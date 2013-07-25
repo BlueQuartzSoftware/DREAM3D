@@ -51,10 +51,10 @@ namespace TetragonalMath {
                                              QuaternionMathF::New(1.000000000f,0.000000000f,0.000000000f,0.000000000f),
                                              QuaternionMathF::New(0.000000000f,1.000000000f,0.000000000f,0.000000000f),
                                              QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000f),
-                                             QuaternionMathF::New(0.000000000f,0.000000000f,0.707106781f,-0.707106781f),
-                                             QuaternionMathF::New(0.000000000f,0.000000000f,0.707106781f,0.707106781f),
-                                             QuaternionMathF::New(0.707106781f,0.707106781f,0.000000000f,0.000000000f),
-                                             QuaternionMathF::New(-0.707106781f,0.707106781f,0.000000000f,0.000000000f)};
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,DREAM3D::Constants::k_1OverRoot2,-DREAM3D::Constants::k_1OverRoot2),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,DREAM3D::Constants::k_1OverRoot2,DREAM3D::Constants::k_1OverRoot2),
+                                             QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2,DREAM3D::Constants::k_1OverRoot2,0.000000000f,0.000000000f),
+                                             QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2,DREAM3D::Constants::k_1OverRoot2,0.000000000f,0.000000000f)};
   }
 }
 /**

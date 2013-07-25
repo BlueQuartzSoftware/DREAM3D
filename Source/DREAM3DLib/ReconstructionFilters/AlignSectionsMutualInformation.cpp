@@ -53,7 +53,7 @@
 
 
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -191,7 +191,7 @@ void AlignSectionsMutualInformation::execute()
   m_GrainIds = p->GetPointer(0);
 
   //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
   AlignSections::execute();
 
