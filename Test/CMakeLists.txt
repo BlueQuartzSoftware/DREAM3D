@@ -64,6 +64,24 @@ macro(MXA_ADD_TEST testname Exename)
 endmacro()
 
 # --------------------------------------------------------------------------
+# Pole Figure Test
+# --------------------------------------------------------------------------
+set(PFTest_SRCS
+    PFTest.cpp
+    ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.h
+    ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.cpp
+)
+# and finally this will run moc:
+QT4_WRAP_CPP( PFTest_Generated_MOC_SRCS
+             ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.h
+              )
+add_executable(PFTest ${PFTest_SRCS} ${PFTest_Generated_MOC_SRCS})
+target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+set_target_properties(PFTest PROPERTIES FOLDER Test)
+add_test(PFTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PFTest)
+
+
+# --------------------------------------------------------------------------
 # FilterPipelineTest
 # --------------------------------------------------------------------------
 add_executable(FilterPipelineTest FilterPipelineTest.cpp )

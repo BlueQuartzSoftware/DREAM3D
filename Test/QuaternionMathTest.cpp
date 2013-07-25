@@ -69,7 +69,6 @@ void TestCubicOps()
 
     float n[3] = {0.0, 0.0, 1.0f};
     float w = co.getMisoQuat(q0, q1, n[0], n[1], n[2]);
-    std::cout << "w: "<< w * 180/M_PI << std::endl;
 }
 
 
