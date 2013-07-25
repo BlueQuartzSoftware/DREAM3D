@@ -94,23 +94,24 @@ namespace TetragonalMath {
   }
 }
 
-const static float m_pi = (float)M_PI;
-const static float two_pi = 2.0f * m_pi;
-const static float recip_pi = 1.0f/m_pi;
-const static float pi_over_180 = m_pi/180.0f;
+
 const static float m_OnePointThree = 1.33333333333f;
-const float threesixty_over_pi = 360.0f/m_pi;
-const float oneeighty_over_pi = 180.0f/m_pi;
-const float sqrt_two = powf(2.0f, 0.5f);
+
 
 using namespace TetragonalMath::Detail;
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 TetragonalOps::TetragonalOps()
 {
   // TODO Auto-generated constructor stub
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 TetragonalOps::~TetragonalOps()
 {
   // TODO Auto-generated destructor stub
@@ -145,8 +146,8 @@ float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
 
  OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-  if (w > m_pi) {
-      w = two_pi - w;
+  if (w > DREAM3D::Constants::k_Pi) {
+      w = DREAM3D::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {

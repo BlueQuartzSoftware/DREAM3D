@@ -40,16 +40,16 @@
 
 #include "MXA/Common/LogTime.h"
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float two_pi = 2.0f * m_pi;
-const static float recip_pi = 1.0f/m_pi;
-const static float pi_over_180 = m_pi/180.0f;
+
+const static float two_pi = 2.0f * DREAM3D::Constants::k_Pi;
+const static float recip_pi = 1.0f/DREAM3D::Constants::k_Pi;
+const static float pi_over_180 = DREAM3D::Constants::k_Pi/180.0f;
 
 const static float m_OnePointThree = 1.33333333333f;
 
-const float threesixty_over_pi = 360.0f/m_pi;
-const float oneeighty_over_pi = 180.0f/m_pi;
-const float sqrt_two = powf(2.0f, 0.5f);
+const float threesixty_over_pi = 360.0f/DREAM3D::Constants::k_Pi;
+const float oneeighty_over_pi = 180.0f/DREAM3D::Constants::k_Pi;
+const float sqrt_two = sqrt(2.0);
 
 const float acos_neg_one = acosf(-1.0f);
 const float acos_pos_one = acosf(1.0f);
@@ -229,9 +229,9 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
   n2 = r2 / rmag;
   n3 = r3 / rmag;
   if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
-  if(w > m_pi)
+  if(w > DREAM3D::Constants::k_Pi)
   {
-  w = (2*m_pi)-w;
+  w = (2*DREAM3D::Constants::k_Pi)-w;
   n1 = -n1;
   n2 = -n2;
   n3 = -n3;
@@ -249,9 +249,9 @@ void OrientationMath::QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, 
   n2 = q.y / sqrt(1-(q.w*q.w));
   n3 = q.z / sqrt(1-(q.w*q.w));
   if(q.w == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
-  if(w > m_pi)
+  if(w > DREAM3D::Constants::k_Pi)
   {
-  w = (2*m_pi)-w;
+  w = (2*DREAM3D::Constants::k_Pi)-w;
   n1 = -n1;
   n2 = -n2;
   n3 = -n3;
@@ -393,8 +393,8 @@ void OrientationMath::MattoEuler(float g[3][3], float &ea1, float &ea2, float &e
   float sine1 = (g[2][0]/sin_ea2);
   ea3 = acos(cosine3);
   ea1 = acos(cosine1);
-  if(sine3 < 0) ea3 = (2.0f * m_pi)-ea3;
-  if(sine1 < 0) ea1 = (2.0f * m_pi)-ea1;
+  if(sine3 < 0) ea3 = (2.0f * DREAM3D::Constants::k_Pi)-ea3;
+  if(sine1 < 0) ea1 = (2.0f * DREAM3D::Constants::k_Pi)-ea1;
 }
 
 // -----------------------------------------------------------------------------

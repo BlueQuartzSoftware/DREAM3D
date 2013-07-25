@@ -46,12 +46,14 @@
 
 
 // Here the order of multiplication is q1*q2 not q2*q1
+#if 0
 #define MULT_QUAT(q1, q2, out)\
     out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
     out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
     out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
     out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
 
+#endif
 
 /*
  * @class OrientationMath OrientationMath.h DREAM3DLib/Common/OrientationMath.h
@@ -64,8 +66,8 @@
 class DREAM3DLib_EXPORT OrientationMath
 {
   public:
-    DREAM3D_SHARED_POINTERS(OrientationMath)
-    DREAM3D_TYPE_MACRO(OrientationMath)
+//    DREAM3D_SHARED_POINTERS(OrientationMath)
+//    DREAM3D_TYPE_MACRO(OrientationMath)
 
     virtual ~OrientationMath();
 

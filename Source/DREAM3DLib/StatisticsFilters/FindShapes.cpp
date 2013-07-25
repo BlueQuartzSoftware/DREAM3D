@@ -43,7 +43,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
 
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -271,7 +271,7 @@ void FindShapes::find_moments()
     }
   }
   }
-  float sphere = (2000.0f*m_pi*m_pi)/9.0f;
+  float sphere = (2000.0f*DREAM3D::Constants::k_Pi*DREAM3D::Constants::k_Pi)/9.0f;
   //constant for moments because voxels are broken into smaller voxels
   float konst1 =  (xRes / 2.0f) * (yRes / 2.0f) * (zRes / 2.0f);
   //constant for volumes because voxels are counted as one
@@ -453,9 +453,9 @@ void FindShapes::find_axes()
   graineigenvals[3*i+1] = r2;
   graineigenvals[3*i+2] = r3;
 
-    I1 = (15 * r1) / (4 * m_pi);
-    I2 = (15 * r2) / (4 * m_pi);
-    I3 = (15 * r3) / (4 * m_pi);
+    I1 = (15 * r1) / (4 * DREAM3D::Constants::k_Pi);
+    I2 = (15 * r2) / (4 * DREAM3D::Constants::k_Pi);
+    I3 = (15 * r3) / (4 * DREAM3D::Constants::k_Pi);
     A = (I1 + I2 - I3) / 2;
     B = (I1 + I3 - I2) / 2;
     C = (I2 + I3 - I1) / 2;
@@ -499,7 +499,7 @@ void FindShapes::find_axes2D()
     Ixy = grainmoments[i*6+2];
     float r1 = (Ixx + Iyy) / 2.0f + sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f - (Ixx * Iyy - Ixy * Ixy));
     float r2 = (Ixx + Iyy) / 2.0f - sqrt(((Ixx + Iyy) * (Ixx + Iyy)) / 4.0f - (Ixx * Iyy - Ixy * Ixy));
-    float preterm = 4.0f / m_pi;
+    float preterm = 4.0f / DREAM3D::Constants::k_Pi;
     preterm = powf(preterm, 0.25f);
     float postterm1 = r1 * r1 * r1 / r2;
     float postterm2 = r2 * r2 * r2 / r1;
@@ -658,8 +658,8 @@ void FindShapes::find_axiseulers()
     if (cosine1 <-1.0) cosine1 = -1.0;
     ea3 = acos(cosine3);
     ea1 = acos(cosine1);
-    if (sine3 < 0) ea3 = (2 * m_pi) - ea3;
-    if (sine1 < 0) ea1 = (2 * m_pi) - ea1;
+    if (sine3 < 0) ea3 = (2 * DREAM3D::Constants::k_Pi) - ea3;
+    if (sine1 < 0) ea1 = (2 * DREAM3D::Constants::k_Pi) - ea1;
 
     }
     m_AxisEulerAngles[3*i] = ea1;
@@ -692,7 +692,7 @@ void FindShapes::find_axiseulers2D()
     n2y = n2y / norm2;
     float cosine1 = n1x;
     float ea1 = acosf(cosine1);
-    if (ea1 > m_pi) ea1 = ea1 - m_pi;
+    if (ea1 > DREAM3D::Constants::k_Pi) ea1 = ea1 - DREAM3D::Constants::k_Pi;
     m_AxisEulerAngles[3*i] = ea1;
     m_AxisEulerAngles[3*i+1] = 0.0f;
     m_AxisEulerAngles[3*i+2] = 0.0f;

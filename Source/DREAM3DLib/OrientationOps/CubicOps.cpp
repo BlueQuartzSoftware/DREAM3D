@@ -39,39 +39,33 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
-
-const float threesixty_over_pi = 360.0f/m_pi;
-const float oneeighty_over_pi = 180.0f/m_pi;
-const float sqrt_two = powf(2.0f, 0.5f);
-
-const float acos_neg_one = acosf(-1.0f);
-const float acos_pos_one = acosf(1.0f);
-
-static const float CubicDim1InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-static const float CubicDim2InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-static const float CubicDim3InitValue = powf((0.75f*((m_pi/4.0f)-sinf((m_pi/4.0f)))),(1.0f/3.0f));
-static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
-static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
-static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
+namespace Detail
+{
+  static const float CubicDim1InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim2InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim3InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
+  static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
+  static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
+  static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
+}
 
 static const QuatF CubicQuatSym[24] = {
   QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
   QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
   QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
   QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-  QuaternionMathF::New(0.707106781f, 0.000000000f, 0.000000000f, 0.707106781f),
-  QuaternionMathF::New(0.000000000f, 0.707106781f, 0.000000000f, 0.707106781f),
-  QuaternionMathF::New(0.000000000f, 0.000000000f, 0.707106781f, 0.707106781f),
-  QuaternionMathF::New(-0.707106781f, 0.000000000f, 0.000000000f, 0.707106781f),
-  QuaternionMathF::New(0.000000000f, -0.707106781f, 0.000000000f, 0.707106781f),
-  QuaternionMathF::New(0.000000000f, 0.000000000f, -0.707106781f, 0.707106781f),
-  QuaternionMathF::New(0.707106781f, 0.707106781f, 0.000000000f, 0.000000000f),
-  QuaternionMathF::New(-0.707106781f, 0.707106781f, 0.000000000f, 0.000000000f),
-  QuaternionMathF::New(0.000000000f, 0.707106781f, 0.707106781f, 0.000000000f),
-  QuaternionMathF::New(0.000000000f, -0.707106781f, 0.707106781f, 0.000000000f),
-  QuaternionMathF::New(0.707106781f, 0.000000000f, 0.707106781f, 0.000000000f),
-  QuaternionMathF::New(-0.707106781f, 0.000000000f, 0.707106781f, 0.000000000f),
+  QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2),
+  QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, -DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2),
+  QuaternionMathF::New(0.000000000f, 0.000000000f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2),
+  QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(0.000000000f, -DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
+  QuaternionMathF::New(-DREAM3D::Constants::k_1OverRoot2, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, 0.000000000f),
   QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
   QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
   QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
@@ -381,9 +375,9 @@ float &n1, float &n2, float &n3)
     }
   }
   wmin = qco.w;
-  if (((qco.z + qco.w) / (sqrt_two)) > wmin)
+  if (((qco.z + qco.w) / (DREAM3D::Constants::k_Sqrt2)) > wmin)
   {
-    wmin = ((qco.z + qco.w) / (sqrt_two));
+    wmin = ((qco.z + qco.w) / (DREAM3D::Constants::k_Sqrt2));
     type = 2;
   }
   if (((qco.x + qco.y + qco.z + qco.w) / 2) > wmin)
@@ -394,13 +388,13 @@ float &n1, float &n2, float &n3)
   if (wmin < -1.0)
   {
     //  wmin = -1.0;
-    wmin = acos_neg_one;
+    wmin = DREAM3D::Constants::k_ACosNeg1;
     sin_wmin_over_2 = sinf(wmin);
   }
   else if (wmin > 1.0)
   {
     //   wmin = 1.0;
-    wmin = acos_pos_one;
+    wmin = DREAM3D::Constants::k_ACos1;
     sin_wmin_over_2 = sinf(wmin);
   }
   else
@@ -417,9 +411,9 @@ float &n1, float &n2, float &n3)
   }
   if(type == 2)
   {
-    n1 = ((qco.x - qco.y) / (sqrt_two)) / sin_wmin_over_2;
-    n2 = ((qco.x + qco.y) / (sqrt_two)) / sin_wmin_over_2;
-    n3 = ((qco.z - qco.w) / (sqrt_two)) / sin_wmin_over_2;
+    n1 = ((qco.x - qco.y) / (DREAM3D::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n2 = ((qco.x + qco.y) / (DREAM3D::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n3 = ((qco.z - qco.w) / (DREAM3D::Constants::k_Sqrt2)) / sin_wmin_over_2;
   }
   if(type == 3)
   {
@@ -532,12 +526,12 @@ int CubicOps::getMisoBin(float r1, float r2, float r3)
 
    OrientationMath::RodtoHomochoric(r1, r2, r3);
 
-  dim[0] = CubicDim1InitValue;
-  dim[1] = CubicDim2InitValue;
-  dim[2] = CubicDim3InitValue;
-  step[0] = CubicDim1StepValue;
-  step[1] = CubicDim2StepValue;
-  step[2] = CubicDim3StepValue;
+  dim[0] = Detail::CubicDim1InitValue;
+  dim[1] = Detail::CubicDim2InitValue;
+  dim[2] = Detail::CubicDim3InitValue;
+  step[0] = Detail::CubicDim1StepValue;
+  step[1] = Detail::CubicDim2StepValue;
+  step[2] = Detail::CubicDim3StepValue;
   bins[0] = 18.0f;
   bins[1] = 18.0f;
   bins[2] = 18.0f;
@@ -552,12 +546,12 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
   float phi[3];
   float r1, r2, r3;
 
-  init[0] = CubicDim1InitValue;
-  init[1] = CubicDim2InitValue;
-  init[2] = CubicDim3InitValue;
-  step[0] = CubicDim1StepValue;
-  step[1] = CubicDim2StepValue;
-  step[2] = CubicDim3StepValue;
+  init[0] = Detail::CubicDim1InitValue;
+  init[1] = Detail::CubicDim2InitValue;
+  init[2] = Detail::CubicDim3InitValue;
+  step[0] = Detail::CubicDim1StepValue;
+  step[1] = Detail::CubicDim2StepValue;
+  step[2] = Detail::CubicDim3StepValue;
   phi[0] = static_cast<float>(choose % 18);
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
@@ -574,12 +568,12 @@ void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float 
   float step[3];
   float phi[3];
 
-  init[0] = CubicDim1InitValue;
-  init[1] = CubicDim2InitValue;
-  init[2] = CubicDim3InitValue;
-  step[0] = CubicDim1StepValue;
-  step[1] = CubicDim2StepValue;
-  step[2] = CubicDim3StepValue;
+  init[0] = Detail::CubicDim1InitValue;
+  init[1] = Detail::CubicDim2InitValue;
+  init[2] = Detail::CubicDim3InitValue;
+  step[0] = Detail::CubicDim1StepValue;
+  step[1] = Detail::CubicDim2StepValue;
+  step[2] = Detail::CubicDim3StepValue;
   phi[0] = static_cast<float>(choose % 18);
   phi[1] = static_cast<float>((choose / 18) % 18);
   phi[2] = static_cast<float>(choose / (18 * 18));
@@ -596,12 +590,12 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
 
   OrientationMath::RodtoHomochoric(r1, r2, r3);
 
-  dim[0] = CubicDim1InitValue;
-  dim[1] = CubicDim2InitValue;
-  dim[2] = CubicDim3InitValue;
-  step[0] = CubicDim1StepValue;
-  step[1] = CubicDim2StepValue;
-  step[2] = CubicDim3StepValue;
+  dim[0] = Detail::CubicDim1InitValue;
+  dim[1] = Detail::CubicDim2InitValue;
+  dim[2] = Detail::CubicDim3InitValue;
+  step[0] = Detail::CubicDim1StepValue;
+  step[1] = Detail::CubicDim2StepValue;
+  step[2] = Detail::CubicDim3StepValue;
   bins[0] = 18.0f;
   bins[1] = 18.0f;
   bins[2] = 18.0f;

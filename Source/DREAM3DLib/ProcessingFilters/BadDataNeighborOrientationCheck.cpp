@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -167,7 +167,7 @@ void BadDataNeighborOrientationCheck::execute()
   }
   setErrorCondition(0);
 
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0;
+  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

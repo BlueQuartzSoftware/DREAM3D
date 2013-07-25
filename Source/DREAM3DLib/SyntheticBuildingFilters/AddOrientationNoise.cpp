@@ -46,7 +46,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -146,7 +146,7 @@ void AddOrientationNoise::execute()
     return;
   }
 
-  m_Magnitude = m_Magnitude*m_pi/180.0;
+  m_Magnitude = m_Magnitude*DREAM3D::Constants::k_Pi/180.0;
 
   add_orientation_noise();
 

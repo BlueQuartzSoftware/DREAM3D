@@ -47,7 +47,7 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -355,7 +355,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     if(m_BiasedFields[i] == false)
     {
       values[m_FieldPhases[i]][0].push_back(m_EquivalentDiameters[i]);
-      vol = (1.0/6.0)*m_pi*m_EquivalentDiameters[i]*m_EquivalentDiameters[i]*m_EquivalentDiameters[i];
+      vol = (1.0/6.0)*DREAM3D::Constants::k_Pi*m_EquivalentDiameters[i]*m_EquivalentDiameters[i]*m_EquivalentDiameters[i];
       fractions[m_FieldPhases[i]] = fractions[m_FieldPhases[i]] + vol;
       totalUnbiasedVolume = totalUnbiasedVolume + vol;
     }

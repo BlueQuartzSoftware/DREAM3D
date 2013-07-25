@@ -41,7 +41,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -305,7 +305,7 @@ void FindDeformationStatistics::execute()
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-        w = w *(180.0f/m_pi);
+        w = w *(180.0f/DREAM3D::Constants::k_Pi);
       }
       else
       {
@@ -352,7 +352,7 @@ void FindDeformationStatistics::execute()
       if(m_CrystalStructures[m_FieldPhases[gname]] == m_CrystalStructures[m_FieldPhases[gname2]] && m_FieldPhases[gname] > 0)
       {
         w = m_OrientationOps[m_CrystalStructures[m_FieldPhases[gname]]]->getMisoQuat(q1, q2, n1, n2, n3);
-        w = w *(180.0f/m_pi);
+        w = w *(180.0f/DREAM3D::Constants::k_Pi);
       }
       else
       {
