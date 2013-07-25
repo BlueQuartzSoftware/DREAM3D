@@ -36,6 +36,7 @@ set(DOCUMENTATION_SOURCE_FILES
   ${PROJECT_SOURCE_DIR}/Tutorials/SurfaceMeshing.md
   ${PROJECT_SOURCE_DIR}/Tutorials/SyntheticSinglePhase.md
   ${PROJECT_SOURCE_DIR}/Tutorials/CroppingData.md
+  ${PROJECT_SOURCE_DIR}/Tutorials/DownloadingExampleData.md
   ${PROJECT_SOURCE_DIR}/AuxiliaryTools/StatsGenerator.md
   ${PROJECT_SOURCE_DIR}/AuxiliaryTools/AuxiliaryTools.dox
 )
@@ -86,10 +87,10 @@ foreach( group ${DREAM3D_DOC_GROUPS_FILE_LIST} )
 endforeach()
 file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
-set(DOCUMENTATION_SOURCE_FILES 
-		"${DOCUMENTATION_SOURCE_FILES}" 
-		"${DREAM3DProj_BINARY_DIR}/createdarrayindex.md" 
-	${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
+set(DOCUMENTATION_SOURCE_FILES
+    "${DOCUMENTATION_SOURCE_FILES}"
+    "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md"
+  ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
 )
 
 
