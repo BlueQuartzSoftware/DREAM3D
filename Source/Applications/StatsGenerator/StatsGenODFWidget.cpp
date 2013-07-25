@@ -43,24 +43,26 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtGui/QAbstractItemDelegate>
+#include <QtCore/QVector>
 #include <QtCore/QtConcurrentMap>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QSettings>
-#include <QtCore/QVector>
+
 #include <QtGui/QCloseEvent>
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
+#include <QtGui/QAbstractItemDelegate>
 
 #include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/StatsGen.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
