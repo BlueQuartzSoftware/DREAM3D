@@ -40,46 +40,19 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
   return colorPoleFigure.generateColorPoleFigureImage(data);
 }
 
-
-
-int main(int argc, char *argv[])
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s, QVector<float> weights, QVector<float> sigmas, QString prefix)
 {
-
-  QApplication app(argc, argv);
-
-  QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
-  d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));
-
   int err = 0;
-  // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+  QVector<float> odf;
   QVector<float> x001;
   QVector<float> y001;
   QVector<float> x011;
   QVector<float> y011;
   QVector<float> x111;
   QVector<float> y111;
-
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
-  QVector<float> odf;
-
-
-  e1s.push_back(90.0);
-  e2s.push_back(35.0);
-  e3s.push_back(45.0);
-  weights.push_back(1000);
-  sigmas.push_back(3);
-
-  // Convert from Degrees to Radians
-  for(int i=0;i<e1s.size();i++)
-  {
-    e1s[i] = e1s[i]*M_PI/180.0;
-    e2s[i] = e2s[i]*M_PI/180.0;
-    e3s[i] = e3s[i]*M_PI/180.0;
-  }
 
   StatsGen sg;
   int size = 5000;
@@ -103,7 +76,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image1.bmp");
+      path.append("/").append(prefix).append("001.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -117,7 +90,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image2.bmp");
+      path.append(prefix).append("011.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -131,7 +104,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image3.bmp");
+      path.append(prefix).append("111.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -160,7 +133,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image1.bmp");
+      path.append(prefix).append("0001.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -175,7 +148,7 @@ int main(int argc, char *argv[])
 
       QImage image = generateODFPoleFigure(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image2.bmp");
+      path.append(prefix).append("11-20.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -189,7 +162,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image3.bmp");
+      path.append(prefix).append("10-10.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -203,5 +176,47 @@ int main(int argc, char *argv[])
 
   }
 
-  return 0;
+  return EXIT_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main(int argc, char *argv[])
+{
+
+  QApplication app(argc, argv);
+
+  QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
+  d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));
+
+  unsigned int err = 0;
+  // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+
+  err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "Random_");
+
+
+  e1s.push_back(90.0);
+  e2s.push_back(35.0);
+  e3s.push_back(45.0);
+  weights.push_back(1000);
+  sigmas.push_back(3);
+
+  // Convert from Degrees to Radians
+  for(int i=0;i<e1s.size();i++)
+  {
+    e1s[i] = e1s[i]*M_PI/180.0;
+    e2s[i] = e2s[i]*M_PI/180.0;
+    e3s[i] = e3s[i]*M_PI/180.0;
+  }
+
+  err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "Phantom_");
+
+  return EXIT_SUCCESS;
 }
