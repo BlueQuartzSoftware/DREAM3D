@@ -142,6 +142,8 @@ namespace DREAM3D
     static const double k_ACosNeg1 = acos(-1.0);
     static const double k_ACos1 = acos(1.0);
     static const double k_1Point3 = 1.0/3.0;
+
+
   }
 }
 

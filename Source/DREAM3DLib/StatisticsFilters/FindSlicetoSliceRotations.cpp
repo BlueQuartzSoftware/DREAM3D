@@ -206,7 +206,7 @@ void FindSlicetoSliceRotations::execute()
       for (DimType col = 0; col < xPoints; col++)
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
-        QuaternionMath<float>::Copy(quats[point], q1);
+        QuaternionMathF::Copy(quats[point], q1);
 //        q1[1] = m_Quats[point*5 + 1];
 //        q1[2] = m_Quats[point*5 + 2];
 //        q1[3] = m_Quats[point*5 + 3];
@@ -216,7 +216,7 @@ void FindSlicetoSliceRotations::execute()
             outNeighbor = point + neighpoints[5];
             if (m_CellPhases[point] == m_CellPhases[outNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[outNeighbor] == true)
             {
-                QuaternionMath<float>::Copy(quats[outNeighbor], q2);
+                QuaternionMathF::Copy(quats[outNeighbor], q2);
 //                q2[1] = m_Quats[outNeighbor*5 + 1];
 //                q2[2] = m_Quats[outNeighbor*5 + 2];
 //                q2[3] = m_Quats[outNeighbor*5 + 3];
@@ -224,7 +224,7 @@ void FindSlicetoSliceRotations::execute()
                 w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
                 if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
                 {
-                    OrientationMath<float>::ChangeAxisReferenceFrame(q1, n1, n2, n3);
+                    OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
                     outPlaneAngle = outPlaneAngle + w;
                     outPlaneAxisX = outPlaneAxisX + n1;
                     outPlaneAxisY = outPlaneAxisY + n2;
@@ -243,7 +243,7 @@ void FindSlicetoSliceRotations::execute()
           if(i == 3 && col == (xPoints - 1)) good = false;
           if(good == true && m_CellPhases[point] == m_CellPhases[inNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[inNeighbor] == true)
           {
-             QuaternionMath<float>::Copy(quats[inNeighbor], q2);
+             QuaternionMathF::Copy(quats[inNeighbor], q2);
 //             q2[1] = m_Quats[inNeighbor*5 + 1];
 //             q2[2] = m_Quats[inNeighbor*5 + 2];
 //             q2[3] = m_Quats[inNeighbor*5 + 3];
@@ -251,7 +251,7 @@ void FindSlicetoSliceRotations::execute()
              w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
              if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
              {
-                OrientationMath<float>::ChangeAxisReferenceFrame(q1, n1, n2, n3);
+                OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
                 inPlaneAngle = inPlaneAngle + w;
                 inPlaneAxisX = inPlaneAxisX + n1;
                 inPlaneAxisY = inPlaneAxisY + n2;

@@ -537,7 +537,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int size = 250;
 
   StatsGen sg;
-  err = sg.genLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
+  err = sg.GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -564,7 +564,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int numsizebins = 1;
   binsizes.clear();
   // QwtArray<int> numgrains;
-  err = sg.genCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  err = sg.GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return 0;
 }

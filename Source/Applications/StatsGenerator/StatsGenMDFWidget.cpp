@@ -65,7 +65,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/Common/Texture.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -170,9 +170,9 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
     // Allocate a new vector to hold the mdf data
     std::vector<float> mdf(5832);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::CalculateMDFData<std::vector<float>, CubicOps, float>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
-    err = sg.genCubicMDFPlotData<std::vector<float>, float>(mdf, x, y, size);
+    err = sg.GenCubicMDFPlotData(mdf, x, y, size);
     if (err < 0)
     {
       return;
@@ -183,9 +183,9 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
     // Allocate a new vector to hold the mdf data
     std::vector<float> mdf(15552);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::CalculateMDFData<std::vector<float>, HexagonalOps, float>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
-    err = sg.genHexMDFPlotData<std::vector<float>, float>(mdf, x, y, size);
+    err = sg.GenHexMDFPlotData(mdf, x, y, size);
     if (err < 0)
     {
       return;
@@ -242,11 +242,11 @@ std::vector<float> StatsGenMDFWidget::generateODFData()
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-    Texture::CalculateCubicODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
-    Texture::CalculateHexODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   return odf;
 }
@@ -385,11 +385,11 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
   unsigned long long int nElements = 0;
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure)) {
-    Texture::CalculateMDFData<std::vector<float>, CubicOps, float>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
     nElements = 18 * 18 * 18;
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure)) {
-    Texture::CalculateMDFData<std::vector<float>, HexagonalOps, float>(angles, axes, weights, odf, mdf);
+    Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
     nElements = 36 * 36 * 12;
   }
   if (mdf.size() > 0)

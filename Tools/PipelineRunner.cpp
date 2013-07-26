@@ -79,7 +79,7 @@ int main (int argc, char  *argv[])
   float euler[3] = {0.0, 0.0, 0.0};
 
 
-  OrientationMath<float>::QuattoEuler(q, euler[0], euler[1], euler[2]);
+  OrientationMath::QuattoEuler(q, euler[0], euler[1], euler[2]);
 
 //2.6014, 1.32595, 3.40947
   std::cout << "Quat:  " << q.x << ", " << q.y << ", " << q.z << ", " << q.w << std::endl;

@@ -43,7 +43,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "DREAM3DLib/Math/MatrixMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
 
@@ -355,7 +355,7 @@ void VisualizeGBCD::execute()
 
   m_MisAngle = m_MisAngle * DREAM3D::Constants::k_Pi/180.0f;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath<float>::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
+  OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
 
   //  int inversion = 1;
   //get number of symmetry operators
@@ -409,30 +409,30 @@ void VisualizeGBCD::execute()
     if(q == 1)
     {
       //copy original misorientation for use later
-      MatrixMath<float>::Copy3x3(dg, dgOrig);
+      MatrixMath::Copy3x3(dg, dgOrig);
       //take inverse of misorientation, then copy into misorientation variable to use for switching symmetry
-      MatrixMath<float>::Transpose3x3(dg, dgt);
-      MatrixMath<float>::Copy3x3(dgt, dg);
+      MatrixMath::Transpose3x3(dg, dgt);
+      MatrixMath::Copy3x3(dgt, dg);
 
     }
     for(int i=0; i<n_sym; i++)
     {
       //get symmetry operator1
       m_OrientationOps[1]->getMatSymOp(i, sym1);
-      MatrixMath<float>::Multiply3x3with3x3(sym1,dg,dg1);
+      MatrixMath::Multiply3x3with3x3(sym1,dg,dg1);
       //get transpose for rotation of directions
-      MatrixMath<float>::Transpose3x3(sym1, sym1t);
+      MatrixMath::Transpose3x3(sym1, sym1t);
       for(int j=0; j<n_sym; j++)
       {
         //get symmetry operator2
         m_OrientationOps[1]->getMatSymOp(j, sym2);
-        MatrixMath<float>::Transpose3x3(sym2,sym2t);
+        MatrixMath::Transpose3x3(sym2,sym2t);
         //calculate symmetric misorientation
-        MatrixMath<float>::Multiply3x3with3x3(dg1,sym2t,dg2);
+        MatrixMath::Multiply3x3with3x3(dg1,sym2t,dg2);
         //convert to euler angle
-        OrientationMath<float>::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath<float>::EulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath<float>::QuattoAxisAngle(qtest, w, n1, n2, n3);
+        OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        OrientationMath::EulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        OrientationMath::QuattoAxisAngle(qtest, w, n1, n2, n3);
 
         mis_euler1[1] = cosf(mis_euler1[1]);
 
@@ -454,11 +454,11 @@ void VisualizeGBCD::execute()
               vec[1] = xyz[3*(l*gbcdSizes[3]+k)+1];
               vec[2] = xyz[3*(l*gbcdSizes[3]+k)+2];
               //find symmetric poles using the first symmetry operator
-              MatrixMath<float>::Multiply3x3with3x1(sym1t, vec, rotNormal);
+              MatrixMath::Multiply3x3with3x1(sym1t, vec, rotNormal);
               if(q == 1)
               {
                 //rotate symmetric pole by original misorientation
-                MatrixMath<float>::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
+                MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
                 //take negative of vector
                 rotNormal[0] = -rotNormal2[0];
                 rotNormal[1] = -rotNormal2[1];

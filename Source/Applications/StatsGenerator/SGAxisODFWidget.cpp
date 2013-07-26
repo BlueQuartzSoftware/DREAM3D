@@ -59,7 +59,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/Common/Texture.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
@@ -173,7 +173,7 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
     e3s[i] = e3s[i]*M_PI/180.0;
   }
 
-  Texture::CalculateOrthoRhombicODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, aodf);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, aodf);
   if (aodf.size() > 0)
   {
     FloatArrayType::Pointer aodfData = FloatArrayType::FromStdVector(aodf, DREAM3D::HDF5::AxisOrientation);
@@ -508,9 +508,9 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 
   static const size_t odfsize = 46656;
   odf.resize(odfsize);
-  Texture::CalculateOrthoRhombicODFData<QwtArray<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
-  err = sg.genAxisODFPlotData<QwtArray<float>, float>(odf, x001, y001, x011, y011, x111, y111, size);
+  err = sg.GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message

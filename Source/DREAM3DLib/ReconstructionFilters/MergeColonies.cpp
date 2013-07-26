@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -55,10 +55,10 @@
 
 
 
-static const float unit110 = 1.0/sqrt(2.0);
-static const float unit111 = 1.0/sqrt(3.0);
-static const float unit112_1 = 1.0/sqrt(6.0);
-static const float unit112_2 = 2.0/sqrt(6.0);
+static const float unit110 = 1.0/sqrtf(2.0);
+static const float unit111 = 1.0/sqrtf(3.0);
+static const float unit112_1 = 1.0/sqrtf(6.0);
+static const float unit112_2 = 2.0/sqrtf(6.0);
 
 float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
                                       {-unit111, -unit112_1, unit110},
@@ -386,18 +386,18 @@ void MergeColonies::merge_colonies()
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
-            QuaternionMath<float>::Copy(avgQuats[firstgrain], q1);
+            QuaternionMathF::Copy(avgQuats[firstgrain], q1);
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-            QuaternionMath<float>::Copy(avgQuats[neigh], q2);
+            QuaternionMathF::Copy(avgQuats[neigh], q2);
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
 
             if (phase1 == phase2 &&
                 (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
             {
               w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-              OrientationMath<float>::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+              OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
               m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
-              OrientationMath<float>::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+              OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
               w = w * (180.0f/DREAM3D::Constants::k_Pi);
               //				float vecttol = 0.01f;
               //	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
@@ -486,31 +486,31 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 
   float gBeta[3][3];
   float gBetaT[3][3];
-  OrientationMath<float>::QuattoMat(betaQuat, gBeta);
+  OrientationMath::QuattoMat(betaQuat, gBeta);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
-  MatrixMath<float>::Transpose3x3(gBeta, gBetaT);
+  MatrixMath::Transpose3x3(gBeta, gBetaT);
 
   float gAlpha[3][3];
   float gAlphaT[3][3];
-  OrientationMath<float>::QuattoMat(alphaQuat, gAlpha);
+  OrientationMath::QuattoMat(alphaQuat, gAlpha);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
-  MatrixMath<float>::Transpose3x3(gAlpha, gAlphaT);
+  MatrixMath::Transpose3x3(gAlpha, gAlphaT);
 
   float mat[3][3];
   float a[3];
   float b[3];
   for(int i=0;i<12;i++)
   {
-    MatrixMath<float>::Multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
+    MatrixMath::Multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
     a[0] = mat[0][2];
     a[1] = mat[1][2];
     a[2] = mat[2][2];
     b[0] = gAlphaT[0][2];
     b[1] = gAlphaT[1][2];
     b[2] = gAlphaT[2][2];
-    dP = MatrixMath<float>::DotProduct(a, b);
+    dP = MatrixMath::DotProduct(a, b);
     angle = acos(dP);
     if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
     {
@@ -520,21 +520,21 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[0] = gAlphaT[0][0];
       b[1] = gAlphaT[1][0];
       b[2] = gAlphaT[2][0];
-      dP = MatrixMath<float>::DotProduct(a, b);
+      dP = MatrixMath::DotProduct(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
       b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
       b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
       b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
-      dP = MatrixMath<float>::DotProduct(a, b);
+      dP = MatrixMath::DotProduct(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
       b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
       b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
       b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
-      dP = MatrixMath<float>::DotProduct(a, b);
+      dP = MatrixMath::DotProduct(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;

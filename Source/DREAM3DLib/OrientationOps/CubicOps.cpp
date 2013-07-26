@@ -37,7 +37,7 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 namespace Detail
 {
@@ -474,7 +474,7 @@ void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
   float FZw, FZn1, FZn2, FZn3;
 
   OrientationOps::_calcRodNearestOrigin(CubicRodSym, 24, r1, r2, r3);
-  OrientationMath<float>::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
   FZw = w;
   n1 = fabs(n1);
@@ -501,7 +501,7 @@ void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
     else FZn1 = n3, FZn2 = n2, FZn3 = n1;
   }
 
-  OrientationMath<float>::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
 void CubicOps::getNearestQuat(QuatF &q1, QuatF &q2)
@@ -524,7 +524,7 @@ int CubicOps::getMisoBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-   OrientationMath<float>::RodtoHomochoric(r1, r2, r3);
+   OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -557,9 +557,9 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
   phi[2] = static_cast<float>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath<float>::HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getODFFZRod(r1, r2, r3);
-  OrientationMath<float>::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
 void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float &r3)
@@ -579,7 +579,7 @@ void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float 
   phi[2] = static_cast<float>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath<float>::HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 int CubicOps::getOdfBin(float r1, float r2, float r3)
@@ -588,7 +588,7 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-  OrientationMath<float>::RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -671,10 +671,10 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
   float planeMisalignment=0, directionMisalignment=0;
   int ss1=0, ss2=0;
 
-  OrientationMath<float>::QuattoMat(q1, g1);
-  OrientationMath<float>::QuattoMat(q2, g2);
-  MatrixMath<float>::Transpose3x3(g1, g1);
-  MatrixMath<float>::Transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
   for(int i=0;i<12;i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
@@ -683,12 +683,12 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath<float>::Normalize3x1(hkl1);
-    MatrixMath<float>::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath<float>::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath<float>::DotProduct(LD,hkl1));
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor)
     {
@@ -702,10 +702,10 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
   slipPlane[0] = CubicSlipPlanes[ss1][0];
   slipPlane[1] = CubicSlipPlanes[ss1][1];
   slipPlane[2] = CubicSlipPlanes[ss1][2];
-  MatrixMath<float>::Multiply3x3with3x1(g1,slipDirection,hkl1);
-  MatrixMath<float>::Multiply3x3with3x1(g1,slipPlane,uvw1);
-  MatrixMath<float>::Normalize3x1(hkl1);
-  MatrixMath<float>::Normalize3x1(uvw1);
+  MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+  MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+  MatrixMath::Normalize3x1(hkl1);
+  MatrixMath::Normalize3x1(uvw1);
 
   maxSchmidFactor = 0;
   for(int j=0;j<12;j++)
@@ -716,12 +716,12 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
     slipPlane[0] = CubicSlipPlanes[j][0];
     slipPlane[1] = CubicSlipPlanes[j][1];
     slipPlane[2] = CubicSlipPlanes[j][2];
-    MatrixMath<float>::Multiply3x3with3x1(g2,slipDirection,hkl2);
-    MatrixMath<float>::Multiply3x3with3x1(g2,slipPlane,uvw2);
-    MatrixMath<float>::Normalize3x1(hkl2);
-    MatrixMath<float>::Normalize3x1(uvw2);
-    directionComponent2 = fabs(MatrixMath<float>::DotProduct(LD,uvw2));
-    planeComponent2 = fabs(MatrixMath<float>::DotProduct(LD,hkl2));
+    MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+    MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+    MatrixMath::Normalize3x1(hkl2);
+    MatrixMath::Normalize3x1(uvw2);
+    directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+    planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
     schmidFactor2 = directionComponent2*planeComponent2;
     if(schmidFactor2 > maxSchmidFactor)
     {
@@ -735,12 +735,12 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
   slipPlane[0] = CubicSlipPlanes[ss2][0];
   slipPlane[1] = CubicSlipPlanes[ss2][1];
   slipPlane[2] = CubicSlipPlanes[ss2][2];
-  MatrixMath<float>::Multiply3x3with3x1(g2,slipDirection,hkl2);
-  MatrixMath<float>::Multiply3x3with3x1(g2,slipPlane,uvw2);
-  MatrixMath<float>::Normalize3x1(hkl2);
-  MatrixMath<float>::Normalize3x1(uvw2);
-  planeMisalignment = fabs(MatrixMath<float>::DotProduct(hkl1,hkl2));
-  directionMisalignment = fabs(MatrixMath<float>::DotProduct(uvw1,uvw2));
+  MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+  MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+  MatrixMath::Normalize3x1(hkl2);
+  MatrixMath::Normalize3x1(uvw2);
+  planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
+  directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
   mPrime = planeMisalignment*directionMisalignment;
 }
 
@@ -757,12 +757,12 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
   float directionComponent2=0, planeComponent2=0;
   float maxF1=0;
 
-  OrientationMath<float>::QuattoMat(q1, g1);
-  OrientationMath<float>::QuattoMat(q2, g2);
-  MatrixMath<float>::Transpose3x3(g1, g1);
-  MatrixMath<float>::Transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
 
-  MatrixMath<float>::Normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   if(maxSF == true) maxSchmidFactor = 0;
   for(int i=0;i<12;i++)
@@ -773,12 +773,12 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath<float>::Normalize3x1(hkl1);
-    MatrixMath<float>::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath<float>::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath<float>::DotProduct(LD,hkl1));
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -792,14 +792,14 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath<float>::Multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath<float>::Multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath<float>::Normalize3x1(hkl2);
-        MatrixMath<float>::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath<float>::DotProduct(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath<float>::DotProduct(LD,hkl2));
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath<float>::DotProduct(uvw1,uvw2));
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
@@ -826,12 +826,12 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
   float directionComponent2=0, planeComponent2=0;
   float maxF1spt=0;
 
-  OrientationMath<float>::QuattoMat(q1, g1);
-  OrientationMath<float>::QuattoMat(q2, g2);
-  MatrixMath<float>::Transpose3x3(g1, g1);
-  MatrixMath<float>::Transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
 
-  MatrixMath<float>::Normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   if(maxSF == true) maxSchmidFactor = 0;
   for(int i=0;i<12;i++)
@@ -842,12 +842,12 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath<float>::Normalize3x1(hkl1);
-    MatrixMath<float>::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath<float>::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath<float>::DotProduct(LD,hkl1));
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -862,15 +862,15 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath<float>::Multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath<float>::Multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath<float>::Normalize3x1(hkl2);
-        MatrixMath<float>::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath<float>::DotProduct(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath<float>::DotProduct(LD,hkl2));
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath<float>::DotProduct(uvw1,uvw2));
-        planeMisalignment = fabs(MatrixMath<float>::DotProduct(hkl1,hkl2));
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
@@ -897,12 +897,12 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
   float directionComponent2=0, planeComponent2=0;
   float maxF7=0;
 
-  OrientationMath<float>::QuattoMat(q1, g1);
-  OrientationMath<float>::QuattoMat(q2, g2);
-  MatrixMath<float>::Transpose3x3(g1, g1);
-  MatrixMath<float>::Transpose3x3(g2, g2);
+  OrientationMath::QuattoMat(q1, g1);
+  OrientationMath::QuattoMat(q2, g2);
+  MatrixMath::Transpose3x3(g1, g1);
+  MatrixMath::Transpose3x3(g2, g2);
 
-  MatrixMath<float>::Normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   for(int i=0;i<12;i++)
   {
@@ -912,12 +912,12 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath<float>::Multiply3x3with3x1(g1,slipPlane,uvw1);
-    MatrixMath<float>::Normalize3x1(hkl1);
-    MatrixMath<float>::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath<float>::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath<float>::DotProduct(LD,hkl1));
+    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
+    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Normalize3x1(hkl1);
+    MatrixMath::Normalize3x1(uvw1);
+    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -931,14 +931,14 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath<float>::Multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath<float>::Multiply3x3with3x1(g2,slipPlane,uvw2);
-        MatrixMath<float>::Normalize3x1(hkl2);
-        MatrixMath<float>::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath<float>::DotProduct(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath<float>::DotProduct(LD,hkl2));
+        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
+        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Normalize3x1(hkl2);
+        MatrixMath::Normalize3x1(uvw2);
+        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath<float>::DotProduct(uvw1,uvw2));
+        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;

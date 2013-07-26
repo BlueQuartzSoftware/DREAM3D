@@ -79,14 +79,14 @@ class StandardizeEulerAnglesImpl
         ea1 = m_CellEulerAngles[3*i];
         ea2 = m_CellEulerAngles[3*i+1];
         ea3 = m_CellEulerAngles[3*i+2];
-        OrientationMath<float>::EulertoQuat(q, ea1, ea2, ea3);
+        OrientationMath::EulertoQuat(q, ea1, ea2, ea3);
         cellPhase = m_CellPhases[i];
         crystalStruct = m_CrystalStructures[cellPhase];
         if (crystalStruct == Ebsd::CrystalStructure::UnknownCrystalStructure) { continue; }
         ormath = m_OrientationOps[crystalStruct];
         ormath->getFZQuat(q);
 
-        OrientationMath<float>::QuattoEuler(q, ea1, ea2, ea3);
+        OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
         m_CellEulerAngles[3*i] = ea1;
         m_CellEulerAngles[3*i+1] = ea2;
         m_CellEulerAngles[3*i+2] = ea3;
