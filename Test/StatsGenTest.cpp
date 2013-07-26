@@ -45,7 +45,7 @@
 
 #include "UnitTestSupport.hpp"
 
-void GenHexMDFPlotData()
+void genHexMDFPlotData()
 {
   StatsGen sg;
   int err = 0;
@@ -58,7 +58,7 @@ void GenHexMDFPlotData()
   std::vector<float> odf;
   static const size_t odfsize = 15552;
   odf.resize(odfsize);
-  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::CalculateHexODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
 
 
   // These are the output vectors
@@ -73,11 +73,11 @@ void GenHexMDFPlotData()
   // Allocate a new vector to hold the mdf data
   std::vector<float> mdf(15552);
   // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-  Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+  Texture::CalculateMDFData<std::vector<float>, HexagonalOps, float>(angles, axes, weights, odf, mdf);
 
   size = 1000;
   // Now generate the actual XY point data that gets plotted.
-  err = sg.GenHexMDFPlotData(mdf, x, y, size);
+  err = sg.genHexMDFPlotData<std::vector<float>, float>(mdf, x, y, size);
 
   DREAM3D_REQUIRE(err >= 0)
 }
@@ -95,7 +95,7 @@ void GenHexMDFPlotData()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST(GenHexMDFPlotData())
+  DREAM3D_REGISTER_TEST(genHexMDFPlotData())
 
   PRINT_TEST_SUMMARY();
   //return err;
@@ -109,15 +109,15 @@ int main(int argc, char **argv)
   std::vector<float> x;
   std::vector<float> y;
   int size = 1000;
-  err = sg.GenBetaPlotData(alpha, beta, x, y, size);
+  err = sg.genBetaPlotData(alpha, beta, x, y, size);
 
 
   float avg = 1.0f;
   float stdDev = 0.5f;
-  err = sg.GenLogNormalPlotData(avg, stdDev, x, y, size);
+  err = sg.genLogNormalPlotData(avg, stdDev, x, y, size);
 
   float k = 1.4f;
-  err = sg.GenPowerLawPlotData(alpha, k, beta, x, y, size);
+  err = sg.genPowerLawPlotData(alpha, k, beta, x, y, size);
 
 
   float mu = 1.0f;
@@ -130,32 +130,32 @@ int main(int argc, char **argv)
   err = sg.computeNumberOfBins(mu, sigma, cutoff, maxCutOff, binstep, max, min);
 
   std::vector<float> binsizes;
-  err = sg.GenCutOff(mu, sigma, cutoff, maxCutOff, binstep, x, y, max, size, binsizes);
+  err = sg.genCutOff(mu, sigma, cutoff, maxCutOff, binstep, x, y, max, size, binsizes);
 
-
-  std::vector<float> odf;
-  std::vector<float> x1;
-  std::vector<float> y1;
-  std::vector<float> x2;
-  std::vector<float> y2;
-  std::vector<float> x3;
-  std::vector<float> y3;
+  typedef std::vector<float> VectorF;
+  VectorF odf;
+  VectorF x1;
+  VectorF y1;
+  VectorF x2;
+  VectorF y2;
+  VectorF x3;
+  VectorF y3;
   int npoints = 1000;
-  err = sg.GenCubicODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = sg.genCubicODFPlotData<VectorF, float>(odf, x1, y1, x2, y2, x3, y3, npoints);
 
 
-  err = sg.GenHexODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = sg.genHexODFPlotData<VectorF, float>(odf, x1, y1, x2, y2, x3, y3, npoints);
 
 
-  err = sg.GenOrthoRhombicODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = sg.genOrthoRhombicODFPlotData<VectorF, float>(odf, x1, y1, x2, y2, x3, y3, npoints);
 
-  err = sg.GenAxisODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = sg.genAxisODFPlotData<VectorF, float>(odf, x1, y1, x2, y2, x3, y3, npoints);
 
   std::vector<float> mdf;
 
-  err = sg.GenCubicMDFPlotData(mdf, x, y, npoints);
+  err = sg.genCubicMDFPlotData<VectorF, float>(mdf, x, y, npoints);
 
-  err = sg.GenHexMDFPlotData(mdf, x, y, npoints);
+  err = sg.genHexMDFPlotData<VectorF, float>(mdf, x, y, npoints);
 
   return EXIT_SUCCESS;
 #endif

@@ -40,7 +40,7 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
@@ -211,24 +211,24 @@ void FindGrainReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          QuaternionMathF::Copy(quats[point], q1);
+          QuaternionMath<float>::Copy(quats[point], q1);
           //          q1[1] = m_Quats[point*5 + 1];
           //          q1[2] = m_Quats[point*5 + 2];
           //          q1[3] = m_Quats[point*5 + 3];
           //          q1[4] = m_Quats[point*5 + 4];
-          OrientationMath::QuattoMat(q1, g1);
+          OrientationMath<float>::QuattoMat(q1, g1);
           //transpose the g matricies so when caxis is multiplied by it
           //it will give the sample direction that the caxis is along
-          MatrixMath::Transpose3x3(g1, g1t);
-          MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+          MatrixMath<float>::Transpose3x3(g1, g1t);
+          MatrixMath<float>::Multiply3x3with3x1(g1t, caxis, c1);
           //normalize so that the magnitude is 1
-          MatrixMath::Normalize3x1(c1);
+          MatrixMath<float>::Normalize3x1(c1);
 
           AvgCAxis[0] = m_AvgCAxes[3*m_GrainIds[point]];
           AvgCAxis[1] = m_AvgCAxes[3*m_GrainIds[point]+1];
           AvgCAxis[2] = m_AvgCAxes[3*m_GrainIds[point]+2];
           //normalize so that the magnitude is 1
-          MatrixMath::Normalize3x1(AvgCAxis);
+          MatrixMath<float>::Normalize3x1(AvgCAxis);
 
           w = ((c1[0]*AvgCAxis[0])+(c1[1]*AvgCAxis[1])+(c1[2]*AvgCAxis[2]));
           if(w < -1) w = -1;

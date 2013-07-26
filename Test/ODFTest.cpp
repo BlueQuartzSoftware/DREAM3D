@@ -45,7 +45,7 @@
 #include <vector>
 
 
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.h"
 
 #define POPULATE_DATA(i, e1, e2, e3, w, s)\
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
   odf.resize(5832);
 
   // Calculate the ODF Data
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::CalculateCubicODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
 
 
   std::vector<float > x001;
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
   StatsGen sg;
   int size = 1000;
   int err = 0;
-  err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+  err = sg.genCubicODFPlotData<std::vector<float>, float>(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message

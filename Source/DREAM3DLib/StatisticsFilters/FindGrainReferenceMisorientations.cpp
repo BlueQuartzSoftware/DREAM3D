@@ -265,7 +265,7 @@ void FindGrainReferenceMisorientations::execute()
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
           w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-          OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+          OrientationMath<float>::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w *(180.0f/DREAM3D::Constants::k_Pi);
           m_GrainReferenceMisorientations[point] = w;
