@@ -45,6 +45,8 @@
 
 #include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
+
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
@@ -53,9 +55,6 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-
-
-using namespace std;
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -67,50 +66,47 @@ using namespace std;
  * @version 1.0
  */
 
-class DREAM3DLib_EXPORT Texture
+class Texture
 {
   public:
 
-  virtual ~Texture();
+  virtual ~Texture(){}
 
   /**
    * @brief This will calculate ODF data based on an array of weights that are
-   * passed in and a Cubic Crystal Structure. This is templated on the container
-   * type that holds the data. Containers that adhere to the STL Vector API
-   * should be usable. QVector falls into this category. The input data for the
+   * passed in and a Cubic Crystal Structure. The input data for the
    * euler angles is in Columnar fashion instead of row major format.
-   * @param e1s The first euler angles
-   * @param e2s The second euler angles
-   * @param e3s The third euler angles
-   * @param weights Array of weights values.
-   * @param sigmas Array of sigma values.
+   * @param e1s Pointer to first Euler Angles
+   * @param e2s Pointer to the second euler angles
+   * @param e3s Pointer to the third euler angles
+   * @param weights Pointer to the Array of weights values.
+   * @param sigmas Pointer to the Array of sigma values.
    * @param normalize Should the ODF data be normalized by the totalWeight value
    * before returning.
-   * @param odf (OUT) The ODF data that is generated from this function.
-   * @param totalweight (OUT) The TotalWeight value that is also calculated
+   * @param odf (OUT) Pointer to the ODF array that is generated from this function. NOTE: The memory
+   * for this MUST have already been allocated. Use CubicOps::k_OdfSize to allocate the proper amount
+   * @param numEntries The number of entries of Angle/Weight/Sigmas
    */
   template<typename T>
-  static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf)
+  static void CalculateCubicODFData(T* e1s, T* e2s, T* e3s,
+                                    T* weights, T* sigmas,
+                                    bool normalize, T* odf, size_t numEntries)
   {
       DREAM3D_RANDOMNG_NEW()
       CubicOps ops;
-      std::vector<int> textureBins(weights.size() );
+      std::vector<int> textureBins(numEntries);
       int *TextureBins = &(textureBins.front());
 
-      static const size_t odfsize = 5832;
-      //  float degtorad = M_PI/180.0;
       float addweight = 0;
       float totaladdweight = 0;
-      float totalweight = float(3 * odfsize);
-      odf.resize(odfsize);
+      float totalweight = float(3 * CubicOps::k_OdfSize);
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
       float dist, fraction;
       float r1, r2, r3;
 
-      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      for (size_t i = 0; i < numEntries; i++)
       {
         OrientationMath::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
         ops.getODFFZRod(r1, r2, r3);
@@ -118,11 +114,11 @@ class DREAM3DLib_EXPORT Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (size_t i = 0; i < odfsize; i++)
+      for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
       {
         odf[i] = 0;
       }
-      for (typename T::size_type i = 0; i < weights.size(); i++)
+      for (size_t i = 0; i < numEntries; i++)
       {
         bin = TextureBins[i];
         bin1 = bin % 18;
@@ -163,13 +159,13 @@ class DREAM3DLib_EXPORT Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (size_t i = 0; i < odfsize; i++)
+        for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (size_t i = 0; i < odfsize; i++)
+      for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -191,7 +187,7 @@ class DREAM3DLib_EXPORT Texture
       if(normalize == true)
       {
         // Normalize the odf
-        for (size_t i = 0; i < odfsize; i++)
+        for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / totalweight;
         }
@@ -526,7 +522,7 @@ class DREAM3DLib_EXPORT Texture
 
 
   protected:
-  Texture();
+  Texture(){}
 
   private:
   Texture(const Texture&); // Copy Constructor Not Implemented

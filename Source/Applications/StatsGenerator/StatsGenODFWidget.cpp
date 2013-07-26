@@ -56,7 +56,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
@@ -189,7 +189,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+      size_t numEntries = e1s.size();
+      odf.resize(CubicOps::k_OdfSize);
+      Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                &(weights.front()), &(sigmas.front()), true,
+                                &(odf.front()), numEntries);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
@@ -525,7 +529,7 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
 #if COLOR_POLE_FIGURES
   return colorPoleFigure.generateColorPoleFigureImage(data);
 #else
-    return colorPoleFigure.generatePoleFigureImage(data);
+  return colorPoleFigure.generatePoleFigureImage(data);
 #endif
 }
 
@@ -565,16 +569,18 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     e3s[i] = e3s[i]*M_PI/180.0;
   }
 
-  
-  int size = 5000;
+
+  int npoints = 5000;
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-    static const size_t odfsize = 5832;
-    // float totalweight = 0;
-    odf.resize(odfsize);
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = StatsGen::GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    odf.resize(CubicOps::k_OdfSize);
+    size_t numEntries = e1s.size();
+    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                &(weights.front()), &(sigmas.front()), true,
+                                &(odf.front()), numEntries);
+    err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                        &(y011.front()), &(x111.front()), &(y111.front()), npoints);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
@@ -582,7 +588,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
   }
   if (err == 1)
   {
@@ -779,11 +785,11 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       int row = m_ODFTableModel->rowCount() - 1;
       m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
 
-//      m_ODFTableView->resizeColumnsToContents();
-//      m_ODFTableView->scrollToBottom();
-//      m_ODFTableView->setFocus();
+      //      m_ODFTableView->resizeColumnsToContents();
+      //      m_ODFTableView->scrollToBottom();
+      //      m_ODFTableView->setFocus();
       QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
-//      m_ODFTableView->setCurrentIndex(index);
+      //      m_ODFTableView->setCurrentIndex(index);
       std::cout << "reading line: " << i << std::endl;
     }
   }

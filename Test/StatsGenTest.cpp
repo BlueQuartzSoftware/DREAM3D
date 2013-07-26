@@ -133,23 +133,24 @@ int main(int argc, char **argv)
   err = StatsGen::GenCutOff(mu, sigma, cutoff, maxCutOff, binstep, x, y, max, size, binsizes);
 
 
-  std::vector<float> odf;
-  std::vector<float> x1;
-  std::vector<float> y1;
-  std::vector<float> x2;
-  std::vector<float> y2;
-  std::vector<float> x3;
-  std::vector<float> y3;
-  int npoints = 1000;
-  err = StatsGen::GenCubicODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  std::vector<float> odf(CubicOps::k_OdfSize);
+  size_t npoints = 1000;
+  std::vector<float > x001(npoints * 3);
+  std::vector<float > y001(npoints * 3);
+  std::vector<float > x011(npoints * 6);
+  std::vector<float > y011(npoints * 6);
+  std::vector<float > x111(npoints * 4);
+  std::vector<float > y111(npoints * 4);
+  err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
 
 
-  err = StatsGen::GenHexODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
 
 
-  err = StatsGen::GenOrthoRhombicODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = StatsGen::GenOrthoRhombicODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
 
-  err = StatsGen::GenAxisODFPlotData(odf, x1, y1, x2, y2, x3, y3, npoints);
+  err = StatsGen::GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
 
   std::vector<float> mdf;
 

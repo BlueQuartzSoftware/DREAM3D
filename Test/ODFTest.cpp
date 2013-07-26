@@ -45,7 +45,7 @@
 #include <vector>
 
 
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define POPULATE_DATA(i, e1, e2, e3, w, s)\
@@ -59,33 +59,37 @@
 
 int main(int argc, char **argv)
 {
-  std::vector<float> odf;
+  // Resize the ODF vector properly for Cubic
+  std::vector<float> odf(CubicOps::k_OdfSize);
   std::vector<float> e1s(2);
   std::vector<float> e2s(2);
   std::vector<float> e3s(2);
   std::vector<float> weights(2);
   std::vector<float> sigmas(2);
 
-  POPULATE_DATA(0, 35, 45, 0, 1.0, 1.0)
-  POPULATE_DATA(1, 59, 37, 63, 1.0, 1.0)
-  // Resize the ODF vector properly for Cubic
-  odf.resize(5832);
+  POPULATE_DATA(0, 35, 45, 0, 1000.0, 2.0)
+  POPULATE_DATA(1, 59, 37, 63, 1000.0, 1.0)
 
   // Calculate the ODF Data
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+
+  size_t numEntries = e1s.size();
+  Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                &(weights.front()), &(sigmas.front()), true,
+                                &(odf.front()), numEntries);
+
+  size_t npoints = 1000;
+  std::vector<float > x001(npoints * 3);
+  std::vector<float > y001(npoints * 3);
+  std::vector<float > x011(npoints * 6);
+  std::vector<float > y011(npoints * 6);
+  std::vector<float > x111(npoints * 4);
+  std::vector<float > y111(npoints * 4);
 
 
-  std::vector<float > x001;
-  std::vector<float > y001;
-  std::vector<float > x011;
-  std::vector<float > y011;
-  std::vector<float > x111;
-  std::vector<float > y111;
 
-
-  int size = 1000;
   int err = 0;
-  err = StatsGen::GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+  err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
   if (err == 1)
   {
     //TODO: Present Error Message

@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 
 
 /**
@@ -202,57 +202,42 @@ class StatsGen
 
     /**
      * @brief  This method will generate ODF data for 3 scatter plots which are the
-     * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
-     * QVector falls into this category. The input data for the
-     * euler angles is in Columnar fashion instead of row major format.
-     * @param e1s The first euler angles (input)
-     * @param e2s The second euler angles (input)
-     * @param e3s The third euler angles (input)
-     * @param weights Array of weights values. (input)
-     * @param sigmas Array of sigma values. (input)
-     * @param x001 X Values of the [001] PF Scatter plot (Output)
-     * @param y001 Y Values of the [001] PF Scatter plot (Output)
-     * @param x011 X Values of the [011] PF Scatter plot (Output)
-     * @param y011 Y Values of the [011] PF Scatter plot (Output)
-     * @param x111 X Values of the [111] PF Scatter plot (Output)
-     * @param y111 Y Values of the [111] PF Scatter plot (Output)
-     * @param npoints The number of points for the Scatter Plot
+     * <001>, <011> and <111> directions.
+     * @param odf Pointer to ODF bin data which has been sized to CubicOps::k_OdfSize
+     * @param x001 [OUT] Pointer to X Values of the [001] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y001 [OUT] Pointer to Y Values of the [001] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param x011 [OUT] Pointer to X Values of the [011] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y011 [OUT] Pointer to Y Values of the [011] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param x111 [OUT] Pointer to X Values of the [111] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y111 [OUT] Pointer to Y Values of the [111] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param npoints The number of points for the Scatter Plot which is at least the number of elements used in the allocation of the various output arrays.
      */
-    template<typename Vector>
-    static int GenCubicODFPlotData(Vector odf, Vector &x001, Vector &y001, Vector &x011, Vector &y011, Vector &x111, Vector &y111, int npoints)
+    template<typename T>
+    static int GenCubicODFPlotData(const T* odf, T* x001, T* y001, T* x011, T* y011, T* x111, T* y111, size_t npoints)
     {
-      static const int odfsize = 5832;
 
       DREAM3D_RANDOMNG_NEW()
           int err = 0;
       int choose;
-      QuatF q1;
-      float ea1, ea2, ea3;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
-      float totaldensity;
-      float random, density;
-
-      x001.resize(npoints * 3);
-      y001.resize(npoints * 3);
-      x011.resize(npoints * 6);
-      y011.resize(npoints * 6);
-      x111.resize(npoints * 4);
-      y111.resize(npoints * 4);
+      typename QuaternionMath<T>::Quaternion q1;
+      T ea1, ea2, ea3;
+      T g[3][3];
+      T x, y, z;
+      T xpf, ypf;
+      T totaldensity;
+      T random, density;
 
       CubicOps ops;
-      float td1;
-      float* odfPtr = &(odf.front());
-      for (int i = 0; i < npoints; i++)
+      T td1;
+      //float* odfPtr = &(odf.front());
+      for (size_t i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (int j = 0; j < odfsize; j++)
+        for (int j = 0; j < CubicOps::k_OdfSize; j++)
         {
-          density = odfPtr[j];
+          density = odf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
@@ -808,7 +793,7 @@ class StatsGen
     template<typename Vector>
     static int GenCubicMDFPlotData(Vector mdf, Vector &xval, Vector &yval, int npoints)
     {
-      static const size_t mdfsize = 5832;
+
       float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
           int err = 0;
@@ -838,7 +823,7 @@ class StatsGen
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < mdfsize; j++)
+        for (size_t j = 0; j < CubicOps::k_MdfSize; j++)
         {
           density = mdfPtr[j];
           td1 = totaldensity;
