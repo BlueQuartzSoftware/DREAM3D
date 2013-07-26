@@ -49,6 +49,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -95,7 +96,7 @@ class Texture
       DREAM3D_RANDOMNG_NEW()
       CubicOps ops;
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-	  int32_t* TextureBins = textureBins->GetPointer(0);
+    int32_t* TextureBins = textureBins->GetPointer(0);
 
       float addweight = 0;
       float totaladdweight = 0;
@@ -215,9 +216,9 @@ class Texture
       bool normalize, T &odf)
   {
       DREAM3D_RANDOMNG_NEW()
-	  int numEntries = weights.size();
-	  Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-	  int32_t* TextureBins = textureBins->GetPointer(0);
+    int numEntries = weights.size();
+    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
+    int32_t* TextureBins = textureBins->GetPointer(0);
       static const size_t odfsize = 15552;
       //   float degtorad = M_PI/180.0;
       float addweight = 0;
@@ -341,8 +342,8 @@ class Texture
   {
     DREAM3D_RANDOMNG_NEW()
     int numEntries = weights.size();
-	Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-	int32_t* TextureBins = textureBins->GetPointer(0);
+  Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
+  int32_t* TextureBins = textureBins->GetPointer(0);
     static const size_t odfsize = 46656;
     float addweight = 0;
     float totaladdweight = 0;
