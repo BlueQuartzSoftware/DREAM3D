@@ -48,7 +48,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -188,7 +188,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   //Convert user defined tolerance to radians.
-  m_CAxisTolerance = m_CAxisTolerance * m_pi/180.0f;
+  m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi/180.0f;
 
   notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
@@ -286,7 +286,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 
               w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
               w = acosf(w);
-              if (w <= m_CAxisTolerance || (m_pi-w) <= m_CAxisTolerance)
+              if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
               {
                 parentnumbers[neigh] = parentcount;
                 microtexturelist.push_back(neigh);

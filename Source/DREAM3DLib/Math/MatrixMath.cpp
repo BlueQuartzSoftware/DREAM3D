@@ -35,16 +35,16 @@
 
 namespace Detail
 {
-  const static float m_pi = static_cast<float>(M_PI);
-  const static float two_pi = 2.0f * m_pi;
-  const static float recip_pi = 1.0f/m_pi;
-  const static float pi_over_180 = m_pi/180.0f;
+  
+  const static float two_pi = 2.0f * DREAM3D::Constants::k_Pi;
+  const static float recip_pi = 1.0f/DREAM3D::Constants::k_Pi;
+  const static float pi_over_180 = DREAM3D::Constants::k_Pi/180.0f;
 
   const static float m_OnePointThree = 1.33333333333f;
 
-  const float threesixty_over_pi = 360.0f/m_pi;
-  const float oneeighty_over_pi = 180.0f/m_pi;
-  const float sqrt_two = powf(2.0f, 0.5f);
+  const float threesixty_over_pi = 360.0f/DREAM3D::Constants::k_Pi;
+  const float oneeighty_over_pi = 180.0f/DREAM3D::Constants::k_Pi;
+  const float sqrt_two = sqrt(2.0);
 
   const float acos_neg_one = acosf(-1.0f);
   const float acos_pos_one = acosf(1.0f);

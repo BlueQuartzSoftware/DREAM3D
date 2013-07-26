@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -230,7 +230,7 @@ void FindKernelAvgMisorientations::execute()
 //                  q2[4] = m_Quats[neighbor*5 + 4];
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-                  w = w *(180.0f/m_pi);
+                  w = w *(180.0f/DREAM3D::Constants::k_Pi);
                   totalmisorientation = totalmisorientation + w;
                   numVoxel++;
                 }

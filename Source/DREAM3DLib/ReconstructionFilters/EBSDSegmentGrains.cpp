@@ -49,7 +49,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -193,7 +193,7 @@ void EBSDSegmentGrains::execute()
   notifyStatusMessage("Starting");
 
   //Convert user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi/180.0f;
   for(int64_t i=0;i<totalPoints;i++)
   {
     m_GrainIds[i] = 0;

@@ -371,6 +371,8 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(VoxelDataContainer
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Vertex, Selected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Face, Selected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Edge, Selected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Field, Selected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Ensemble, Selected)
 
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Vertex, Selected)
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Face, Selected)
@@ -391,6 +393,8 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VoxelDataContai
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Vertex, NonSelected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Face, NonSelected)
   REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Edge, NonSelected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Field, NonSelected)
+  REMOVE_ARRAYS_HELPER(surfaceMesh, smdc, Ensemble, NonSelected)
 
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Vertex, NonSelected)
   REMOVE_ARRAYS_HELPER(solidMesh, sdc, Face, NonSelected)

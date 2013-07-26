@@ -63,7 +63,7 @@
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -1177,7 +1177,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   float vol = 0;
   int volgood = 0;
   float phi1, PHI, phi2;
-  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (m_pi))/8.0f);
+  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi))/8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
   float avg = GSdist[0]->GetValue(0);

@@ -8,18 +8,20 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + StatsGen crashes if data is missing
 
 
+## Version 4.2 Features Bugs to Fix ##
+
 ## Version 4.3 Features/Bugs to Fix ##
 
 + Visualize GBCD
-	+ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
-	+  Pole Figure smoothing function in Visualize GBCD
+  + Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
+  +  Pole Figure smoothing function in Visualize GBCD
 + Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
 + Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
 + PipelineView Widget
-	+ When running a pipeline have a method that can disable all of the GUI widgets and Menus that would change the pipeline while running
-	+ During Execution of the pipeline dim the filters except for the one that is currently running
-	+ Disable modifying pipeline while a pipeline is running
-	+ Disable adding of filters into the pipeline while it is running.
+    + When running a pipeline have a method that can disable all of the GUI widgets and Menus that would change the pipeline while running
+    + During Execution of the pipeline dim the filters except for the one that is currently running
+    + Disable modifying pipeline while a pipeline is running
+    + Disable adding of filters into the pipeline while it is running.
 + StatsGenerator: ODF Tab
     - Add information for stats generator about the format of the ODF Files import function
     - Add feature in Stats Generator to read in a .ang or .ctf file for the ODF angles.
@@ -195,6 +197,12 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ### Version 4.2 Fixed ###
 
+#### 4.2.90 ###
++ Fixed bug where Quaternion::ElementWiseAbsd was casting to integers due to use of 'abs' instead of 'fabs'
++ Fixed bug in FindSurfaceVoxelFraction where the types used in the macros were not consistent.
+
+#### 4.2.88 ###
++ adding filters for volume fraction and surface area to volume ratio
 + Implement Experimental Abaqus output file filter
 + Rewrite the Quaternion Code to only use 4 Components and implement basic Quaternion Math functions
 + Adding filters for volume fraction and surface area to volume ratio

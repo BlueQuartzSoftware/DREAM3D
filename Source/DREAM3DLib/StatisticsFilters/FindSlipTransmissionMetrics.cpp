@@ -41,7 +41,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //

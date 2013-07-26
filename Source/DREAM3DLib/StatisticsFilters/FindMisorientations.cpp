@@ -43,7 +43,7 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -182,7 +182,7 @@ void FindMisorientations::execute()
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
 
-  float radToDeg = 180.0/m_pi;
+  float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;

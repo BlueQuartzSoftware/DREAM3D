@@ -43,9 +43,9 @@
 namespace HexagonalMath {
   namespace Detail {
 
-    static const float HexDim1InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim3InitValue = powf((0.75f*((float(M_PI)/6.0f)-sinf((float(M_PI)/6.0f)))),(1.0f/3.0f));
+    static const float HexDim1InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi)/2.0f)-sinf((float(DREAM3D::Constants::k_Pi)/2.0f)))),(1.0f/3.0f));
+    static const float HexDim2InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi)/2.0f)-sinf((float(DREAM3D::Constants::k_Pi)/2.0f)))),(1.0f/3.0f));
+    static const float HexDim3InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi)/6.0f)-sinf((float(DREAM3D::Constants::k_Pi)/6.0f)))),(1.0f/3.0f));
     static const float HexDim1StepValue = HexDim1InitValue/18.0f;
     static const float HexDim2StepValue = HexDim2InitValue/18.0f;
     static const float HexDim3StepValue = HexDim3InitValue/6.0f;
@@ -115,14 +115,7 @@ namespace HexagonalMath {
 }
 
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float two_pi = 2.0f * m_pi;
-const static float recip_pi = 1.0f/m_pi;
-const static float pi_over_180 = m_pi/180.0f;
 const static float m_OnePointThree = 1.33333333333f;
-const float threesixty_over_pi = 360.0f/m_pi;
-const float oneeighty_over_pi = 180.0f/m_pi;
-const float sqrt_two = powf(2.0f, 0.5f);
 
 using namespace HexagonalMath::Detail;
 
@@ -175,8 +168,8 @@ float &n1, float &n2, float &n3)
 
     OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-    if (w > m_pi) {
-      w = two_pi - w;
+    if (w > DREAM3D::Constants::k_Pi) {
+      w = DREAM3D::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {
@@ -253,7 +246,7 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
   n3 = n3/denom;
   if(n3 < 0) n1 = -n1, n2 = -n2, n3 = -n3;
   float newangle = 0;
-  float angle = 180.0f*atan2(n2, n1) * recip_pi;
+  float angle = 180.0f*atan2(n2, n1) * DREAM3D::Constants::k_1OverPi;
   if(angle < 0) angle = angle + 360.0f;
   FZn1 = n1;
   FZn2 = n2;
@@ -264,7 +257,7 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
     if (int(angle/30)%2 == 0)
     {
       newangle = angle - (30.0f*int(angle/30.0f));
-      newangle = newangle* pi_over_180;
+      newangle = newangle* DREAM3D::Constants::k_PiOver180;
       FZn1 = n1n2mag*cosf(newangle);
       FZn2 = n1n2mag*sinf(newangle);
     }
@@ -272,7 +265,7 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
     {
       newangle = angle - (30.0f*int(angle/30.0f));
       newangle = 30.0f - newangle;
-      newangle = newangle* pi_over_180;
+      newangle = newangle* DREAM3D::Constants::k_PiOver180;
       FZn1 = n1n2mag*cosf(newangle);
       FZn2 = n1n2mag*sinf(newangle);
     }

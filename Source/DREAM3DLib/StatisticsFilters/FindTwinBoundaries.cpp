@@ -51,7 +51,7 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 class CalculateTwinBoundaryImpl
@@ -147,7 +147,7 @@ class CalculateTwinBoundaryImpl
                 QuaternionMathF::Conjugate(sym_q);
                 QuaternionMathF::Multiply(s1_misq, sym_q, s2_misq);
                 OrientationMath::QuattoAxisAngle(s2_misq, w, n1, n2, n3);
-                w = w*180.0/m_pi;
+                w = w*180.0/DREAM3D::Constants::k_Pi;
                 axisdiff111 = acosf(fabs(n1)*0.57735f+fabs(n2)*0.57735f+fabs(n3)*0.57735f);
                 angdiff60 = fabs(w-60.0f);
                 if (axisdiff111 < m_AxisTol && angdiff60 < m_AngTol)
@@ -156,7 +156,7 @@ class CalculateTwinBoundaryImpl
                   n[1] = n2;
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
-                  incoherence = 180.0*acos(MatrixMath::DotProduct(n, s_xstl_norm))/m_pi;
+                  incoherence = 180.0*acos(MatrixMath::DotProduct(n, s_xstl_norm))/DREAM3D::Constants::k_Pi;
                   if(incoherence < m_TwinBoundaryIncoherence[i]) m_TwinBoundaryIncoherence[i] = incoherence;
                 }
               }

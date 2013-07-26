@@ -48,8 +48,7 @@
 #include <tbb/partitioner.h>
 #endif
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
+
 
 /**
  * @brief The CalculateNormalsImpl class is the actual code that does the computation and can be called either
@@ -89,7 +88,7 @@ class CalculateFaceMisorientationColorsImpl
       QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
       float w, n1, n2 ,n3;
-      float radToDeg = 180.0/m_pi;
+      float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
       for (size_t i = start; i < end; i++)
       {
         grain1 = m_Labels[2*i];
