@@ -142,11 +142,11 @@ void FindCellQuats::execute()
   for (int i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
-    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
-    QuaternionMathF::UnitQuaternion(qr);
+    OrientationMath<float>::EulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
+    QuaternionMath<float>::UnitQuaternion(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
-      QuaternionMathF::Identity(qr);
+      QuaternionMath<float>::Identity(qr);
     }
     else
     {
@@ -164,11 +164,11 @@ void FindCellQuats::execute()
       else
       {
         m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-        QuaternionMathF::UnitQuaternion(qr);
+        QuaternionMath<float>::UnitQuaternion(qr);
       }
     }
 
-    QuaternionMathF::Copy(qr, quats[i]);
+    QuaternionMath<float>::Copy(qr, quats[i]);
 //    m_Quats[i*4 + 0] = qr[1];
 //    m_Quats[i*4 + 1] = qr[2];
 //    m_Quats[i*4 + 2] = qr[3];

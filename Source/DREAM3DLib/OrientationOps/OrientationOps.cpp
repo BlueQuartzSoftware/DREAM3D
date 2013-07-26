@@ -75,6 +75,9 @@ OrientationOps::~OrientationOps()
 {
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
                                     QuatF &q1, QuatF &q2,
                                     float &n1, float &n2, float &n3)
@@ -103,7 +106,7 @@ float OrientationOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
       qc.w = 1;
     }
 
-    OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
+    OrientationMath<float>::QuattoAxisAngle(qc, w, n1, n2, n3);
 
     if (w > DREAM3D::Constants::k_Pi) {
       w = DREAM3D::Constants::k_2Pi - w;

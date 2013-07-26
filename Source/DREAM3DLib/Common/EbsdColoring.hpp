@@ -41,8 +41,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
@@ -195,19 +195,19 @@ class EbsdColoring
         phi = phi * EbsdColor::Detail::DegToRads;
         phi2 = phi2 * EbsdColor::Detail::DegToRads;
       }
-      float g[3][3]; // Rotation Matrix?
-      float cd[3];
-      float d[3];
+      T g[3][3]; // Rotation Matrix?
+      T cd[3];
+      T d[3];
 
       // 1) find rotation matrix from Euler angles
-      OrientationMath::EulertoMat(phi1, phi, phi2, g);
+      OrientationMath<T>::EulertoMat(phi1, phi, phi2, g);
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
       float refDirection[3];
       refDirection[0] = refDir0;
       refDirection[1] = refDir1;
       refDirection[2] = refDir2;
-      MatrixMath::Multiply3x3with3x1(g, refDirection, cd);
+      MatrixMath<T>::Multiply3x3with3x1(g, refDirection, cd);
 
       //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
       cd[0] = fabs(cd[0]);
@@ -326,29 +326,29 @@ class EbsdColoring
                                      K refDir0, K refDir1, K refDir2,
                                      unsigned char* rgb)
     {
-      QuatF qc;
-      QuatF q1;
-      float g[3][3];
-      float p[3];
-      float refDirection[3];
-      float d[3];
-      float theta, phi_local;
-      float _rgb[3] = { 0.0, 0.0, 0.0 };
+      typename QuaternionMath<T>::Quaternion qc;
+      typename QuaternionMath<T>::Quaternion q1;
+      T g[3][3];
+      T p[3];
+      T refDirection[3];
+      T d[3];
+      T theta, phi_local;
+      T _rgb[3] = { 0.0, 0.0, 0.0 };
 
-      OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+      OrientationMath<T>::EulertoQuat(q1, phi1, phi, phi2);
 
       for (int j = 0; j < 12; j++)
       {
         //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
-        QuaternionMathF::Multiply(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
+        QuaternionMath<T>::Multiply(q1, HexagonalMath::Detail::HexQuatSym[j], qc);
 
-        OrientationMath::QuattoMat(qc, g);
+        OrientationMath<T>::QuattoMat(qc, g);
 
         refDirection[0] = refDir0;
         refDirection[1] = refDir1;
         refDirection[2] = refDir2;
-        MatrixMath::Multiply3x3with3x1(g, refDirection, p);
-        MatrixMath::Normalize3x1(p);
+        MatrixMath<T>::Multiply3x3with3x1(g, refDirection, p);
+        MatrixMath<T>::Normalize3x1(p);
 
         if (p[2] < 0)
         {
@@ -359,7 +359,7 @@ class EbsdColoring
         d[0] = p[0];
         d[1] = p[1];
         d[2] = 0;
-        MatrixMath::Normalize3x1(d);
+        MatrixMath<T>::Normalize3x1(d);
         if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * EbsdColor::Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
@@ -465,8 +465,8 @@ class EbsdColoring
                                      K refDir0, K refDir1, K refDir2,
                                      unsigned char* rgb)
     {
-      QuatF qc;
-      QuatF q1;
+      typename QuaternionMath<T>::Quaternion qc;
+      typename QuaternionMath<T>::Quaternion q1;
       float g[3][3];
       float p[3];
       float refDirection[3];
@@ -474,20 +474,20 @@ class EbsdColoring
       float theta, phi_local;
       float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-      OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+      OrientationMath<T>::EulertoQuat(q1, phi1, phi, phi2);
 
       for (int j = 0; j < 6; j++)
       {
         //        q2 =  const_TrigagonalMath::Detail::TrigQuatSym[j];
-        QuaternionMathF::Multiply(q1, TrigonalMath::Detail::TrigQuatSym[j], qc);
+        QuaternionMath<T>::Multiply(q1, TrigonalMath::Detail::TrigQuatSym[j], qc);
 
-        OrientationMath::QuattoMat(qc, g);
+        OrientationMath<T>::QuattoMat(qc, g);
 
         refDirection[0] = refDir0;
         refDirection[1] = refDir1;
         refDirection[2] = refDir2;
-        MatrixMath::Multiply3x3with3x1(g, refDirection, p);
-        MatrixMath::Normalize3x1(p);
+        MatrixMath<T>::Multiply3x3with3x1(g, refDirection, p);
+        MatrixMath<T>::Normalize3x1(p);
 
         if (p[2] < 0)
         {
@@ -498,7 +498,7 @@ class EbsdColoring
         d[0] = p[0];
         d[1] = p[1];
         d[2] = 0;
-        MatrixMath::Normalize3x1(d);
+        MatrixMath<T>::Normalize3x1(d);
         if (atan2(d[1], d[0]) >= (-90.0 * EbsdColor::Detail::DegToRads) && atan2(d[1], d[0]) < (-30.0 * EbsdColor::Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
@@ -571,28 +571,28 @@ class EbsdColoring
                                      K refDir0, K refDir1, K refDir2,
                                      unsigned char* rgb)
     {
-      QuatF qc;
-      QuatF q1;
-      float g[3][3];
-      float p[3];
-      float refDirection[3];
-      float d[3];
-      float theta, phi_local;
-      float _rgb[3] = { 0.0, 0.0, 0.0 };
+      typename QuaternionMath<T>::Quaternion qc;
+      typename QuaternionMath<T>::Quaternion q1;
+      T g[3][3];
+      T p[3];
+      T refDirection[3];
+      T d[3];
+      T theta, phi_local;
+      T _rgb[3] = { 0.0, 0.0, 0.0 };
 
-      OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+      OrientationMath<T>::EulertoQuat(q1, phi1, phi, phi2);
 
       for (int j = 0; j < 12; j++)
       {
-        QuaternionMathF::Multiply(q1, TetragonalMath::Detail::TetraQuatSym[j], qc);
+        QuaternionMath<T>::Multiply(q1, TetragonalMath::Detail::TetraQuatSym[j], qc);
 
-        OrientationMath::QuattoMat(qc, g);
+        OrientationMath<T>::QuattoMat(qc, g);
 
         refDirection[0] = refDir0;
         refDirection[1] = refDir1;
         refDirection[2] = refDir2;
-        MatrixMath::Multiply3x3with3x1(g, refDirection, p);
-        MatrixMath::Normalize3x1(p);
+        MatrixMath<T>::Multiply3x3with3x1(g, refDirection, p);
+        MatrixMath<T>::Normalize3x1(p);
 
 
         if (p[2] < 0)
@@ -604,7 +604,7 @@ class EbsdColoring
         d[0] = p[0];
         d[1] = p[1];
         d[2] = 0;
-        MatrixMath::Normalize3x1(d);
+        MatrixMath<T>::Normalize3x1(d);
         if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (45.0 * EbsdColor::Detail::DegToRads))
         {
           theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);

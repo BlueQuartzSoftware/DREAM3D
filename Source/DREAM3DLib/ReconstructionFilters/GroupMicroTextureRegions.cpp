@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -243,21 +243,16 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       {
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
-        QuaternionMathF::Copy(avgQuats[firstgrain], q1);
-//        q1[0] = 1;
-//        q1[1] = m_AvgQuats[5*firstgrain+1];
-//        q1[2] = m_AvgQuats[5*firstgrain+2];
-//        q1[3] = m_AvgQuats[5*firstgrain+3];
-//        q1[4] = m_AvgQuats[5*firstgrain+4];
+        QuaternionMath<float>::Copy(avgQuats[firstgrain], q1);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-        OrientationMath::QuattoMat(q1, g1);
+        OrientationMath<float>::QuattoMat(q1, g1);
         //transpose the g matrix so when caxis is multiplied by it
         //it will give the sample direction that the caxis is along
-        MatrixMath::Transpose3x3(g1, g1t);
-        MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+        MatrixMath<float>::Transpose3x3(g1, g1t);
+        MatrixMath<float>::Multiply3x3with3x1(g1t, caxis, c1);
         //normalize so that the dot product can be taken below without
         //dividing by the magnitudes (they would be 1)
-        MatrixMath::Normalize3x1(c1);
+        MatrixMath<float>::Normalize3x1(c1);
 
 
         for (int l = 0; l < size; l++)
@@ -269,20 +264,15 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
             if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
             {
-              QuaternionMathF::Copy(avgQuats[neigh], q2);
-//              q2[0] = 1;
-//              q2[1] = m_AvgQuats[5*neigh+1];
-//              q2[2] = m_AvgQuats[5*neigh+2];
-//              q2[3] = m_AvgQuats[5*neigh+3];
-//              q2[4] = m_AvgQuats[5*neigh+4];
-              OrientationMath::QuattoMat(q2, g2);
+              QuaternionMath<float>::Copy(avgQuats[neigh], q2);
+              OrientationMath<float>::QuattoMat(q2, g2);
               //transpose the g matrix so when caxis is multiplied by it
               //it will give the sample direction that the caxis is along
-              MatrixMath::Transpose3x3(g2, g2t);
-              MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
+              MatrixMath<float>::Transpose3x3(g2, g2t);
+              MatrixMath<float>::Multiply3x3with3x1(g2t, caxis, c2);
               //normalize so that the dot product can be taken below without
               //dividing by the magnitudes (they would be 1)
-              MatrixMath::Normalize3x1(c2);
+              MatrixMath<float>::Normalize3x1(c2);
 
               w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
               w = acosf(w);

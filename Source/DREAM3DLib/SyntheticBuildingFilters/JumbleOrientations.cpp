@@ -195,8 +195,8 @@ void JumbleOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   for (int i=1; i< totalFields; i++)
   {
-    OrientationMath::EulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
-    QuaternionMathF::Copy(q, avgQuats[i]);
+    OrientationMath<float>::EulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
+    QuaternionMath<float>::Copy(q, avgQuats[i]);
 //    m_AvgQuats[5*i] = q[0];
 //    m_AvgQuats[5*i+1] = q[1];
 //    m_AvgQuats[5*i+2] = q[2];

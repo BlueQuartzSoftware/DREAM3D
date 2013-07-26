@@ -41,18 +41,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/OrientationMath.hpp"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
-#include "DREAM3DLib/Math/MatrixMath.h"
-
-/*
-// Here the order of multiplication is q1*q2 not q2*q1
-//#define MULT_QUAT(q1, q2, out)\
-//    out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
-//    out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
-//    out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
-//    out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
-*/
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 
 /*
  * @class OrientationOps OrientationOps.h DREAM3DLib/Common/OrientationOps.h

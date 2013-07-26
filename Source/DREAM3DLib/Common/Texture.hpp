@@ -47,7 +47,7 @@
 #include "MXA/Common/LogTime.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/OrientationMath.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -71,17 +71,17 @@ class DREAM3DLib_EXPORT Texture
 {
   public:
 
-  virtual ~Texture();
+    virtual ~Texture(){};
 
-  /**
+    /**
    * @brief This will calculate ODF data based on an array of weights that are
    * passed in and a Cubic Crystal Structure. This is templated on the container
    * type that holds the data. Containers that adhere to the STL Vector API
    * should be usable. QVector falls into this category. The input data for the
    * euler angles is in Columnar fashion instead of row major format.
-   * @param e1s The first euler angles
-   * @param e2s The second euler angles
-   * @param e3s The third euler angles
+   * @param e1s The first euler angles Array
+   * @param e2s The second euler angles Array
+   * @param e3s The third euler angles Array
    * @param weights Array of weights values.
    * @param sigmas Array of sigma values.
    * @param normalize Should the ODF data be normalized by the totalWeight value
@@ -89,29 +89,30 @@ class DREAM3DLib_EXPORT Texture
    * @param odf (OUT) The ODF data that is generated from this function.
    * @param totalweight (OUT) The TotalWeight value that is also calculated
    */
-  template<typename T>
-  static void calculateCubicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf)
-  {
+    template<typename Vector, typename T>
+    static void CalculateCubicODFData(Vector e1s, Vector e2s, Vector e3s,
+                                      Vector weights, Vector sigmas,
+                                      bool normalize, Vector &odf)
+    {
       DREAM3D_RANDOMNG_NEW()
-      CubicOps ops;
+          CubicOps ops;
       int *TextureBins;
       TextureBins = new int[weights.size()];
       static const size_t odfsize = 5832;
       //  float degtorad = M_PI/180.0;
-      float addweight = 0;
-      float totaladdweight = 0;
-      float totalweight = float(3 * odfsize);
+      T addweight = 0;
+      T totaladdweight = 0;
+      T totalweight = float(3 * odfsize);
       odf.resize(odfsize);
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
-      float dist, fraction;
-      float r1, r2, r3;
+      T dist, fraction;
+      T r1, r2, r3;
 
-      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      for (typename Vector::size_type i = 0; i < e1s.size(); i++)
       {
-        OrientationMath::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        OrientationMath<T>::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
@@ -121,7 +122,7 @@ class DREAM3DLib_EXPORT Texture
       {
         odf[i] = 0;
       }
-      for (typename T::size_type i = 0; i < weights.size(); i++)
+      for (typename Vector::size_type i = 0; i < weights.size(); i++)
       {
         bin = TextureBins[i];
         bin1 = bin % 18;
@@ -161,7 +162,7 @@ class DREAM3DLib_EXPORT Texture
       }
       if(totaladdweight > totalweight)
       {
-        float scale = (totaladdweight / totalweight);
+        T scale = (totaladdweight / totalweight);
         for (size_t i = 0; i < odfsize; i++)
         {
           odf[i] = odf[i] / scale;
@@ -182,7 +183,7 @@ class DREAM3DLib_EXPORT Texture
         ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
         ea2 = acos(2.0 * (random2 - 0.5));
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        OrientationMath<T>::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         odf[bin]++;
@@ -197,7 +198,7 @@ class DREAM3DLib_EXPORT Texture
       }
     }
 
-  /**
+    /**
    * @brief This will calculate ODF data based on an array of weights that are
    * passed in and a Hexagonal Crystal Structure. This is templated on the container
    * type that holds the data. Containers that adhere to the STL Vector API
@@ -213,29 +214,29 @@ class DREAM3DLib_EXPORT Texture
    * @param odf (OUT) The ODF data that is generated from this function.
    * @param totalweight (OUT) The TotalWeight value that is also calculated
    */
-  template<typename T>
-  static void calculateHexODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf)
-  {
+    template<typename Vector, typename T>
+    static void CalculateHexODFData(Vector e1s, Vector e2s, Vector e3s, Vector weights, Vector sigmas,
+                                    bool normalize, Vector &odf)
+    {
       DREAM3D_RANDOMNG_NEW()
-      int *TextureBins;
+          int *TextureBins;
       TextureBins = new int[weights.size()];
       static const size_t odfsize = 15552;
       //   float degtorad = M_PI/180.0;
-      float addweight = 0;
-      float totaladdweight = 0;
-      float totalweight = 3 * odfsize;
+      T addweight = 0;
+      T totaladdweight = 0;
+      T totalweight = 3 * odfsize;
       odf.resize(odfsize);
       int bin, addbin;
       int bin1, bin2, bin3;
       int addbin1, addbin2, addbin3;
-      float dist, fraction;
-//    float rmag, angle;
-      float r1, r2, r3;
+      T dist, fraction;
+      //    float rmag, angle;
+      T r1, r2, r3;
       HexagonalOps ops;
-      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      for (typename Vector::size_type i = 0; i < e1s.size(); i++)
       {
-        OrientationMath::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        OrientationMath<T>::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
@@ -245,7 +246,7 @@ class DREAM3DLib_EXPORT Texture
       {
         odf[i] = 0;
       }
-      for (typename T::size_type i = 0; i < e1s.size(); i++)
+      for (typename Vector::size_type i = 0; i < e1s.size(); i++)
       {
         bin = TextureBins[i];
         bin1 = bin % 36;
@@ -306,7 +307,7 @@ class DREAM3DLib_EXPORT Texture
         ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
         ea2 = acos(2.0 * (random2 - 0.5));
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        OrientationMath<T>::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         odf[bin]++;
@@ -321,7 +322,7 @@ class DREAM3DLib_EXPORT Texture
       }
     }
 
-  /**
+    /**
    * @brief This will calculate ODF data based on an array of weights that are
    * passed in and a OrthoRhombic Crystal Structure. This is templated on the container
    * type that holds the data. Containers that adhere to the STL Vector API
@@ -337,138 +338,138 @@ class DREAM3DLib_EXPORT Texture
    * @param odf (OUT) The ODF data that is generated from this function.
    * @param totalweight (OUT) The TotalWeight value that is also calculated
    */
-  template<typename T>
-  static void calculateOrthoRhombicODFData(T e1s, T e2s, T e3s, T weights, T sigmas,
-      bool normalize, T &odf)
-  {
-    DREAM3D_RANDOMNG_NEW()
-  int *TextureBins;
-    TextureBins = new int[weights.size()];
-    static const size_t odfsize = 46656;
-    float addweight = 0;
-    float totaladdweight = 0;
-    float totalweight = 3*odfsize;
-    odf.resize(odfsize);
-    int bin, addbin;
-    int bin1, bin2, bin3;
-    int addbin1, addbin2, addbin3;
-    float dist, fraction;
-    float r1, r2, r3;
-    OrthoRhombicOps ops;
-    for (typename T::size_type i = 0; i < e1s.size(); i++)
+    template<typename Vector, typename T>
+    static void CalculateOrthoRhombicODFData(Vector e1s, Vector e2s, Vector e3s, Vector weights, Vector sigmas,
+                                             bool normalize, Vector &odf)
     {
-        OrientationMath::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+      DREAM3D_RANDOMNG_NEW()
+          int *TextureBins;
+      TextureBins = new int[weights.size()];
+      static const size_t odfsize = 46656;
+      T addweight = 0;
+      T totaladdweight = 0;
+      T totalweight = 3*odfsize;
+      odf.resize(odfsize);
+      int bin, addbin;
+      int bin1, bin2, bin3;
+      int addbin1, addbin2, addbin3;
+      T dist, fraction;
+      T r1, r2, r3;
+      OrthoRhombicOps ops;
+      for (typename Vector::size_type i = 0; i < e1s.size(); i++)
+      {
+        OrientationMath<T>::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
       }
 
-    for (size_t i = 0; i < odfsize; i++)
-    {
-      odf[i] = 0;
-    }
-    for (typename T::size_type i = 0; i < e1s.size(); i++)
-    {
-      bin = TextureBins[i];
-      bin1 = bin % 36;
-      bin2 = (bin / 36) % 36;
-      bin3 = bin / (36 * 36);
-      for (int j = -sigmas[i]; j <= sigmas[i]; j++)
+      for (size_t i = 0; i < odfsize; i++)
       {
-        int jsqrd = j*j;
-        for (int k = -sigmas[i]; k <= sigmas[i]; k++)
+        odf[i] = 0;
+      }
+      for (typename Vector::size_type i = 0; i < e1s.size(); i++)
+      {
+        bin = TextureBins[i];
+        bin1 = bin % 36;
+        bin2 = (bin / 36) % 36;
+        bin3 = bin / (36 * 36);
+        for (int j = -sigmas[i]; j <= sigmas[i]; j++)
         {
-          int ksqrd = k*k;
-          for (int l = -sigmas[i]; l <= sigmas[i]; l++)
+          int jsqrd = j*j;
+          for (int k = -sigmas[i]; k <= sigmas[i]; k++)
           {
-            int lsqrd = l*l;
-            addbin1 = bin1 + int(j);
-            addbin2 = bin2 + int(k);
-            addbin3 = bin3 + int(l);
-            if (addbin1 < 0) addbin1 = addbin1 + 36;
-            if (addbin1 >= 36) addbin1 = addbin1 - 36;
-            if (addbin2 < 0) addbin2 = addbin2 + 36;
-            if (addbin2 >= 36) addbin2 = addbin2 - 36;
-            if (addbin3 < 0) addbin3 = addbin3 + 36;
-            if (addbin3 >= 36) addbin3 = addbin3 - 36;
-            addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-            dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
-            fraction = 1.0 - (float(dist / int(sigmas[i])) * float(dist / int(sigmas[i])));
-            if (dist <= int(sigmas[i]))
+            int ksqrd = k*k;
+            for (int l = -sigmas[i]; l <= sigmas[i]; l++)
             {
-              addweight = (weights[i] * fraction);
-        if(sigmas[i] == 0.0) addweight = weights[i];
-              odf[addbin] = odf[addbin]+addweight;
-        totaladdweight = totaladdweight + addweight;
+              int lsqrd = l*l;
+              addbin1 = bin1 + int(j);
+              addbin2 = bin2 + int(k);
+              addbin3 = bin3 + int(l);
+              if (addbin1 < 0) addbin1 = addbin1 + 36;
+              if (addbin1 >= 36) addbin1 = addbin1 - 36;
+              if (addbin2 < 0) addbin2 = addbin2 + 36;
+              if (addbin2 >= 36) addbin2 = addbin2 - 36;
+              if (addbin3 < 0) addbin3 = addbin3 + 36;
+              if (addbin3 >= 36) addbin3 = addbin3 - 36;
+              addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
+              dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
+              fraction = 1.0 - (float(dist / int(sigmas[i])) * float(dist / int(sigmas[i])));
+              if (dist <= int(sigmas[i]))
+              {
+                addweight = (weights[i] * fraction);
+                if(sigmas[i] == 0.0) addweight = weights[i];
+                odf[addbin] = odf[addbin]+addweight;
+                totaladdweight = totaladdweight + addweight;
+              }
             }
           }
         }
       }
-    }
-  if(totaladdweight > totalweight)
-  {
-    float scale = (totaladdweight/totalweight);
+      if(totaladdweight > totalweight)
+      {
+        float scale = (totaladdweight/totalweight);
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i]/scale;
+        }
+      }
+      float remainingweight = totalweight;
       for (size_t i = 0; i < odfsize; i++)
       {
-        odf[i] = odf[i]/scale;
+        remainingweight = remainingweight-odf[i];
       }
-  }
-    float remainingweight = totalweight;
-    for (size_t i = 0; i < odfsize; i++)
-    {
-      remainingweight = remainingweight-odf[i];
-    }
-  float random1, random2, random3;
-  float ea1, ea2, ea3;
-    for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
-    {
-    random1 = rg.genrand_res53();
-      random2 = rg.genrand_res53();
-      random3 = rg.genrand_res53();
-    ea1 = 2.0*DREAM3D::Constants::k_Pi*random1;
-    ea2 = acos(2.0*(random2-0.5));
-    ea3 = 2.0*DREAM3D::Constants::k_Pi*random3;
-    OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
-      ops.getODFFZRod(r1, r2, r3);
-      bin = ops.getOdfBin(r1, r2, r3);
-    odf[bin]++;
-    }
-    if (normalize == true)
-    {
-      // Normalize the odf
-      for (size_t i = 0; i < odfsize; i++)
+      float random1, random2, random3;
+      float ea1, ea2, ea3;
+      for (size_t i = 0; i < static_cast<size_t>(remainingweight); i++)
       {
-        odf[i] = odf[i] / totalweight;
+        random1 = rg.genrand_res53();
+        random2 = rg.genrand_res53();
+        random3 = rg.genrand_res53();
+        ea1 = 2.0*DREAM3D::Constants::k_Pi*random1;
+        ea2 = acos(2.0*(random2-0.5));
+        ea3 = 2.0*DREAM3D::Constants::k_Pi*random3;
+        OrientationMath<T>::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        ops.getODFFZRod(r1, r2, r3);
+        bin = ops.getOdfBin(r1, r2, r3);
+        odf[bin]++;
       }
+      if (normalize == true)
+      {
+        // Normalize the odf
+        for (size_t i = 0; i < odfsize; i++)
+        {
+          odf[i] = odf[i] / totalweight;
+        }
+      }
+
     }
 
-  }
 
-
-  template<typename T, class O>
-  static void calculateMDFData(T angles, T axes, T weights, T odf, T &mdf)
-  {
-      O orientationOps;
+    template<typename Vector, class Ops, typename T>
+    static void CalculateMDFData(Vector angles, Vector axes, Vector weights, Vector odf, Vector &mdf)
+    {
+      Ops orientationOps;
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
       mdf.resize(mdfsize);
       //    float radtodeg = 180.0 / M_PI;
 
       DREAM3D_RANDOMNG_NEW()
-      //  int err = 0;
-      int mbin;
-      float w = 0;
+          //  int err = 0;
+          int mbin;
+      T w = 0;
       int choose1, choose2;
-      float ea11, ea12, ea13;
-      float ea21, ea22, ea23;
-      QuatF q1;
-      QuatF q2;
-      float totaldensity;
+      T ea11, ea12, ea13;
+      T ea21, ea22, ea23;
+      typename QuaternionMath<T>::Quaternion q1;
+      typename QuaternionMath<T>::Quaternion q2;
+      T totaldensity;
       //    float denom;
-      float r1, r2, r3;
-      float n1, n2, n3;
-      float random1, random2, density;
-      float* odfPtr = NULL;
+      T r1, r2, r3;
+      T n1, n2, n3;
+      T random1, random2, density;
+      T* odfPtr = NULL;
 
       for (int i = 0; i < mdfsize; i++)
       {
@@ -478,7 +479,7 @@ class DREAM3DLib_EXPORT Texture
       int aSize = static_cast<int>(angles.size());
       for (int i = 0; i < aSize; i++)
       {
-        OrientationMath::AxisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
+        OrientationMath<T>::AxisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
         orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         mdf[mbin] = -int((weights[i] / float(mdfsize)) * 10000.0);
@@ -504,11 +505,11 @@ class DREAM3DLib_EXPORT Texture
           if(random2 >= d && random2 < totaldensity) choose2 = static_cast<int>(j);
         }
         orientationOps.determineEulerAngles(choose1, ea11, ea12, ea13);
-        OrientationMath::EulertoQuat(q1, ea11, ea12, ea13);
+        OrientationMath<T>::EulertoQuat(q1, ea11, ea12, ea13);
         orientationOps.determineEulerAngles(choose2, ea21, ea22, ea23);
-        OrientationMath::EulertoQuat(q2, ea21, ea22, ea23);
+        OrientationMath<T>::EulertoQuat(q2, ea21, ea22, ea23);
         w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
-        OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+        OrientationMath<T>::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
         orientationOps.getMDFFZRod(r1, r2, r3);
         mbin = orientationOps.getMisoBin(r1, r2, r3);
         if(mdf[mbin] >= 0) mdf[mbin]++;
@@ -525,11 +526,11 @@ class DREAM3DLib_EXPORT Texture
 
 
   protected:
-  Texture();
+    Texture(){};
 
   private:
-  Texture(const Texture&); // Copy Constructor Not Implemented
-  void operator=(const Texture&); // Operator '=' Not Implemented
+    Texture(const Texture&); // Copy Constructor Not Implemented
+    void operator=(const Texture&); // Operator '=' Not Implemented
 
 };
 

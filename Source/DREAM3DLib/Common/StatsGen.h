@@ -48,9 +48,8 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/Texture.h"
-
 
 /**
  * @class StatsGen StatsGen.h StatsGenerator/StatsGen.h
@@ -74,26 +73,26 @@ class DREAM3DLib_EXPORT StatsGen
      * @return Error Code. 0 is NO ERROR.
      */
     template<typename T>
-    int GenBetaPlotData(float alpha, float beta, T &x, T &y, int size)
+    int genBetaPlotData(float alpha, float beta, T &x, T &y, int size)
     {
       int err = 0;
-    float total = 0;
+      float total = 0;
       float betain, betaout;
       x.resize(size);
       y.resize(size);
-   //   value = alpha;
-   //   gammap = DREAM3DMath::Gamma(value);
-   //   value = beta;
-  //    gammaq = DREAM3DMath::Gamma(value);
-  //    value = alpha + beta;
-    //  gammapq = DREAM3DMath::Gamma(value);
+      //   value = alpha;
+      //   gammap = DREAM3DMath::Gamma(value);
+      //   value = beta;
+      //    gammaq = DREAM3DMath::Gamma(value);
+      //    value = alpha + beta;
+      //  gammapq = DREAM3DMath::Gamma(value);
       for (int i = 0; i < size; i++)
       {
         betain = (i * (1.0 / float(size))) + ((1.0 / float(size)) / 2.0);
         betaout = powf(betain, (alpha - 1)) * powf((1 - betain), (beta - 1));
         x[i] = betain;
         y[i] = betaout;
-    total = total + betaout;
+        total = total + betaout;
         if (betaout < 0) err = 1;
       }
       for (int i = 0; i < size; i++)
@@ -104,7 +103,7 @@ class DREAM3DLib_EXPORT StatsGen
     }
 
     template<typename T>
-    int GenLogNormalPlotData(float avg, float stdDev, T &x, T &y, int size)
+    int genLogNormalPlotData(float avg, float stdDev, T &x, T &y, int size)
     {
       int err = 0;
       float lognormin, lognormout, max, min;
@@ -126,7 +125,7 @@ class DREAM3DLib_EXPORT StatsGen
     }
 
     template<typename T>
-    int GenPowerLawPlotData(float alpha, float k, float beta, T &x, T &y, int size)
+    int genPowerLawPlotData(float alpha, float k, float beta, T &x, T &y, int size)
     {
       int err = 0;
       float in, out, max, min;
@@ -172,7 +171,7 @@ class DREAM3DLib_EXPORT StatsGen
      * @return
      */
     template<typename J, typename T>
-    int GenCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, T &x, T &y, J yMax, int &numsizebins, T &binsizes)
+    int genCutOff(J mu, J sigma, J minCutOff, J maxCutOff, J binstep, T &x, T &y, J yMax, int &numsizebins, T &binsizes)
     {
       J max, min;
       numsizebins = computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, binstep, max, min);
@@ -214,21 +213,21 @@ class DREAM3DLib_EXPORT StatsGen
      * @param y111 Y Values of the [111] PF Scatter plot (Output)
      * @param npoints The number of points for the Scatter Plot
      */
-    template<typename T>
-    int GenCubicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int npoints)
+    template<typename Vector, typename T>
+    int genCubicODFPlotData(Vector odf, Vector &x001, Vector &y001, Vector &x011, Vector &y011, Vector &x111, Vector &y111, int npoints)
     {
       static const int odfsize = 5832;
 
       DREAM3D_RANDOMNG_NEW()
-      int err = 0;
+          int err = 0;
       int choose;
       QuatF q1;
-      float ea1, ea2, ea3;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
-      float totaldensity;
-      float random, density;
+      T ea1, ea2, ea3;
+      T g[3][3];
+      T x, y, z;
+      T xpf, ypf;
+      T totaldensity;
+      T random, density;
 
       x001.resize(npoints * 3);
       y001.resize(npoints * 3);
@@ -238,8 +237,8 @@ class DREAM3DLib_EXPORT StatsGen
       y111.resize(npoints * 4);
 
       CubicOps ops;
-      float td1;
-      float* odfPtr = &(odf.front());
+      T td1;
+      T* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
@@ -253,9 +252,9 @@ class DREAM3DLib_EXPORT StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+        OrientationMath<T>::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-       // random = rg.genrand_res53();
+        // random = rg.genrand_res53();
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
         g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
@@ -393,20 +392,20 @@ class DREAM3DLib_EXPORT StatsGen
      * @param y1010 Y Values of the [1010] PF Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename T>
-    int GenHexODFPlotData(T odf, T &x0001, T &y0001, T &x1120, T &y1120, T &x1010, T &y1010, int npoints)
+    template<typename Vector, typename T>
+    int genHexODFPlotData(Vector odf, Vector &x0001, Vector &y0001, Vector &x1120, Vector &y1120, Vector &x1010, Vector &y1010, int npoints)
     {
       static const size_t odfsize = 15552;
       DREAM3D_RANDOMNG_NEW()
-      int err = 0;
+          int err = 0;
       int choose;
       float ea1, ea2, ea3;
-      QuatF q1;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
-      float totaldensity;
-      float random, density;
+      typename QuaternionMath<T>::Quaternion q1;
+      T g[3][3];
+      T x, y, z;
+      T xpf, ypf;
+      T totaldensity;
+      T random, density;
       HexagonalOps ops;
       x0001.resize(npoints * 1);
       y0001.resize(npoints * 1);
@@ -430,9 +429,9 @@ class DREAM3DLib_EXPORT StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+        OrientationMath<T>::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-    //    random = rg.genrand_res53();
+        //    random = rg.genrand_res53();
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
         g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
@@ -518,27 +517,27 @@ class DREAM3DLib_EXPORT StatsGen
      * @param y111 Y Values of the [111] axis PF Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename T>
-    int GenOrthoRhombicODFPlotData(T odf, T &x001, T &y001, T &x011, T &y011, T &x111, T &y111, int npoints)
+    template<typename Vector, typename T>
+    int genOrthoRhombicODFPlotData(Vector odf, Vector &x001, Vector &y001, Vector &x011, Vector &y011, Vector &x111, Vector &y111, int npoints)
     {
       static const size_t odfsize = 46656;
 #if 0
       These lines need to be run BEFORE you call this method
-      float totalweight = 0;
+          float totalweight = 0;
       T odf;
       odf.resize(odfsize);
       Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
 #endif
       DREAM3D_RANDOMNG_NEW()
-      int err = 0;
+          int err = 0;
       int choose;
       float ea1, ea2, ea3;
-      QuatF q1;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
-      float totaldensity;
-      float random, density;
+      typename QuaternionMath<T>::Quaternion q1;
+      T g[3][3];
+      T x, y, z;
+      T xpf, ypf;
+      T totaldensity;
+      T random, density;
       OrthoRhombicOps ops;
       x001.resize(npoints * 3);
       y001.resize(npoints * 3);
@@ -566,9 +565,9 @@ class DREAM3DLib_EXPORT StatsGen
           }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+        OrientationMath<T>::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
-    //    random = rg.genrand_res53();
+        //    random = rg.genrand_res53();
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
         g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
@@ -706,21 +705,21 @@ class DREAM3DLib_EXPORT StatsGen
      * @param yC Y Values of the C axis PF Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename T>
-    int GenAxisODFPlotData(T odf, T &xA, T &yA, T &xB, T &yB, T &xC, T &yC, int npoints)
+    template<typename Vector, typename T>
+    int genAxisODFPlotData(Vector odf, Vector &xA, Vector &yA, Vector &xB, Vector &yB, Vector &xC, Vector &yC, int npoints)
     {
       static const size_t odfsize = 46656;
 
       DREAM3D_RANDOMNG_NEW()
-      int err = 0;
+          int err = 0;
       int choose;
       float ea1, ea2, ea3;
       QuatF q1;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
-      float totaldensity;
-      float random, density;
+      T g[3][3];
+      T x, y, z;
+      T xpf, ypf;
+      T totaldensity;
+      T random, density;
       OrthoRhombicOps ops;
       xA.resize(npoints * 1);
       yA.resize(npoints * 1);
@@ -743,7 +742,7 @@ class DREAM3DLib_EXPORT StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+        OrientationMath<T>::EulertoQuat(q1, ea1, ea2, ea3);
         ops.getFZQuat(q1);
         g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
         g[1][0] = (2 * q1.x * q1.y + 2 * q1.z * q1.w);
@@ -763,7 +762,7 @@ class DREAM3DLib_EXPORT StatsGen
         if (z < 0) x = -x, y = -y, z = -z;
         xpf = y - (y * (z / (z + 1)));
         ypf = x - (x * (z / (z + 1)));
-      //  random = rg.Random();
+        //  random = rg.Random();
         xA[1 * i] = xpf;
         yA[1 * i] = ypf;
         x = g[0][1];
@@ -800,24 +799,24 @@ class DREAM3DLib_EXPORT StatsGen
      * @param y Y Values of the Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename T>
-    int GenCubicMDFPlotData(T mdf, T &xval, T &yval, int npoints)
+    template<typename Vector, typename T>
+    int genCubicMDFPlotData(Vector mdf, Vector &xval, Vector &yval, int npoints)
     {
       static const size_t mdfsize = 5832;
       float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
-      int err = 0;
-      float density;
-      float totaldensity;
+          int err = 0;
+      T density;
+      T totaldensity;
       int choose = 0;
       //    float angle;
-      float random;
-      float w;
-      float n1, n2, n3;
-      float r1, r2, r3;
-//      float ra1, ra2, ra3;
-//      float rb1, rb2, rb3;
-//      float rc1, rc2, rc3;
+      T random;
+      T w;
+      T n1, n2, n3;
+      T r1, r2, r3;
+      //      float ra1, ra2, ra3;
+      //      float rb1, rb2, rb3;
+      //      float rc1, rc2, rc3;
       CubicOps ops;
       xval.resize(13);
       yval.resize(13);
@@ -845,7 +844,7 @@ class DREAM3DLib_EXPORT StatsGen
           }
         }
         ops.determineRodriguesVector(choose, r1, r2, r3);
-        OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+        OrientationMath<T>::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
         w = w * radtodeg;
         yval[int(w / 5.0)]++;
       }
@@ -865,21 +864,21 @@ class DREAM3DLib_EXPORT StatsGen
      * @param npoints
      * @return
      */
-    template<typename T>
-    int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
+    template<typename Vector, typename T>
+    int genHexMDFPlotData(Vector mdf, Vector &xval, Vector &yval, int npoints)
     {
       static const size_t mdfsize = 15552;
       float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
-      int err = 0;
+          int err = 0;
       int choose = 0;
-      float density;
-      float totaldensity;
+      T density;
+      T totaldensity;
       //    float angle;
-      float random;
-      float w;
-      float n1, n2, n3;
-      float r1, r2, r3;
+      T random;
+      T w;
+      T n1, n2, n3;
+      T r1, r2, r3;
       HexagonalOps ops;
       xval.resize(20);
       yval.resize(20);
@@ -887,9 +886,9 @@ class DREAM3DLib_EXPORT StatsGen
       {
         yval[i] = 0;
       }
-//	  float ra1, ra2, ra3, rb1, rb2, rb3, rc1, rc2, rc3;
-      float td1;
-      float* mdfPtr = &(mdf.front());
+      //	  float ra1, ra2, ra3, rb1, rb2, rb3, rc1, rc2, rc3;
+      T td1;
+      T* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
@@ -903,7 +902,7 @@ class DREAM3DLib_EXPORT StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineRodriguesVector(choose, r1, r2, r3);
-        OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+        OrientationMath<T>::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
         w = w * radtodeg;
         size_t index = static_cast<size_t>(w / 5.0f);
         yval[index]++;

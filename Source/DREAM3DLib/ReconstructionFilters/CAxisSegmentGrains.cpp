@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -327,38 +327,28 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-    QuaternionMathF::Copy(quats[referencepoint], q1);
-//    q1[0] = 1;
-//    q1[1] = m_Quats[referencepoint * 5 + 1];
-//    q1[2] = m_Quats[referencepoint * 5 + 2];
-//    q1[3] = m_Quats[referencepoint * 5 + 3];
-//    q1[4] = m_Quats[referencepoint * 5 + 4];
+    QuaternionMath<float>::Copy(quats[referencepoint], q1);
 
     phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
-    QuaternionMathF::Copy(quats[neighborpoint], q2);
-//    q2[0] = 1;
-//    q2[1] = m_Quats[neighborpoint*5 + 1];
-//    q2[2] = m_Quats[neighborpoint*5 + 2];
-//    q2[3] = m_Quats[neighborpoint*5 + 3];
-//    q2[4] = m_Quats[neighborpoint*5 + 4];
+    QuaternionMath<float>::Copy(quats[neighborpoint], q2);
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
-      OrientationMath::QuattoMat(q1, g1);
-      OrientationMath::QuattoMat(q2, g2);
+      OrientationMath<float>::QuattoMat(q1, g1);
+      OrientationMath<float>::QuattoMat(q2, g2);
 
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
-      MatrixMath::Transpose3x3(g1, g1t);
-      MatrixMath::Transpose3x3(g2, g2t);
+      MatrixMath<float>::Transpose3x3(g1, g1t);
+      MatrixMath<float>::Transpose3x3(g2, g2t);
 
-      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-      MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
+      MatrixMath<float>::Multiply3x3with3x1(g1t, caxis, c1);
+      MatrixMath<float>::Multiply3x3with3x1(g2t, caxis, c2);
 
       //normalize so that the dot product can be taken below without
       //dividing by the magnitudes (they would be 1)
-      MatrixMath::Normalize3x1(c1);
-      MatrixMath::Normalize3x1(c2);
+      MatrixMath<float>::Normalize3x1(c1);
+      MatrixMath<float>::Normalize3x1(c2);
 
       w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
       w = acosf(w);

@@ -12,7 +12,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.h"
 
 #define PFTEST_NO_QOBJECT 1
@@ -93,8 +93,8 @@ int main(int argc, char *argv[])
     static const size_t odfsize = 5832;
     // float totalweight = 0;
     odf.resize(odfsize);
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    Texture::CalculateCubicODFData<QVector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+    err = sg.genCubicODFPlotData<QVector<float>, float>(odf, x001, y001, x011, y011, x111, y111, size);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -150,8 +150,8 @@ int main(int argc, char *argv[])
     static const size_t odfsize = 15552;
     // float totalweight = 0;
     odf.resize(odfsize);
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    Texture::CalculateHexODFData<QVector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+    err = sg.genHexODFPlotData<QVector<float>, float>(odf, x001, y001, x011, y011, x111, y111, size);
     if (err == 1)
     {
       return EXIT_FAILURE;

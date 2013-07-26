@@ -195,6 +195,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
+### Version 4.3 Fixed ###
+
++ Fixing bug where the Surface mesh field and ensemble data were not removed from the data container for preflight even if the user unchecked the selections in the GUI
++ Moved numerical constants to their own namespace and use mathematics to define the constants themselves.
+
 ### Version 4.2 Fixed ###
 
 #### 4.2.90 ###

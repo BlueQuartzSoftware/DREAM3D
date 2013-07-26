@@ -50,7 +50,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
@@ -188,7 +188,7 @@ class AssignVoxelsGapsImpl
                 coords[0] = coords[0] - xc;
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
-                MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+                MatrixMath<float>::Multiply3x3with3x1(ga, coords, coordsRotated);
                 float axis1comp = coordsRotated[0] * Invradcur[0];
                 float axis2comp = coordsRotated[1] * Invradcur[1];
                 float axis3comp = coordsRotated[2] * Invradcur[2];
@@ -536,7 +536,7 @@ void PackPrimaryPhases::execute()
     VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
     float avg = GSdist[0]->GetValue(0);
     float stdev = GSdist[1]->GetValue(0);
-    float denominatorConst = 1.0/sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+    float denominatorConst = 1.0/sqrt(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
     for (size_t j = 0; j < grainsizedist[i].size(); j++)
     {
       input = (float(j + 1) * grainsizediststep[i]) + (pp->getMinGrainDiameter() / 2.0f);
@@ -702,7 +702,7 @@ void PackPrimaryPhases::execute()
       float avg = Neighdist[0]->GetValue(j);
       float stdev = Neighdist[1]->GetValue(j);
       neighbordiststep[i] = 2;
-      float denominatorConst = 1.0/sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
+      float denominatorConst = 1.0/sqrt(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
       for (size_t k = 0; k < neighbordist[i][j].size(); k++)
       {
         input = (float(k + 1) * neighbordiststep[i]);
@@ -1728,7 +1728,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   float PHI = m_AxisEulerAngles[3*gnum+1];
   float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
-  OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+  OrientationMath<float>::EulertoMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
@@ -1767,7 +1767,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-        MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+        MatrixMath<float>::Multiply3x3with3x1(ga, coords, coordsRotated);
         float axis1comp = coordsRotated[0] * OneOverRadcur1;
         float axis2comp = coordsRotated[1] * OneOverRadcur2;
         float axis3comp = coordsRotated[2] * OneOverRadcur3;
@@ -1878,7 +1878,7 @@ void PackPrimaryPhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3*i+1];
     float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
-    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
+    OrientationMath<float>::EulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<DimType>( (xc - (xRes * 0.5)) / xRes );
     row = static_cast<DimType>( (yc - (yRes * 0.5)) / yRes );
     plane = static_cast<DimType>( (zc - (zRes * 0.5)) / zRes );

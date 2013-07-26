@@ -37,7 +37,7 @@
 
 
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
-#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -186,7 +186,7 @@ void GenerateIPFColors::execute()
   size_t index = 0;
 
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::NormalizeVector(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
+  MatrixMath<float>::NormalizeVector(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
 
   uint8_t hkl[3] = { 0, 0, 0 };
   // Write the IPF Coloring Cell Data
@@ -214,7 +214,7 @@ void GenerateIPFColors::execute()
       {
         EbsdColoring::GenerateTrigIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
-      }      
+      }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_High)
       {
         EbsdColoring::GenerateTetraIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],

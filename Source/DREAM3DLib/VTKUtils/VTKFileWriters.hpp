@@ -468,14 +468,14 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
       {
         if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
         {
-          OrientationMath::EulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
+          OrientationMath<float>::EulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
           m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
           EbsdColoring::GenerateCubicRodriguesColor(r1, r2, r3, &rgba[index]);
           //            EbsdColoring::GenerateRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
         }
         else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
         {
-          OrientationMath::EulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
+          OrientationMath<float>::EulertoRod(r1, r2, r3, eulers[3*i], eulers[3*i+1], eulers[3*i+2]);
           m_OrientationOps[crystruct[phase]]->getODFFZRod(r1, r2, r3);
           EbsdColoring::GenerateHexRodriguesColor(r1, r2, r3, &rgba[index]);
           //            EbsdColoring::GenerateHexRodriguesColor(rodvectors[3*i], rodvectors[3*i + 1], rodvectors[3*i + 2], &rgba[index]);
