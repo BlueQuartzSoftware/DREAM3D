@@ -38,7 +38,7 @@
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 const static float m_OnePointThree = 1.33333333333f;
@@ -128,7 +128,7 @@ float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
       qc.w = 1;
     }
 
-    OrientationMath<float>::QuattoAxisAngle(qc, w, n1, n2, n3);
+    OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
     if (w > DREAM3D::Constants::k_Pi) {
       w = DREAM3D::Constants::k_2Pi - w;
@@ -200,18 +200,15 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
   float FZn1, FZn2, FZn3;
 
   _calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
-  OrientationMath<float>::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+  OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
 
   FZn1 = fabs(n1);
   FZn2 = fabs(n2);
   FZn3 = fabs(n3);
 
-  OrientationMath<float>::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
   int numsym = 4;
@@ -219,9 +216,6 @@ void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(OrthoQuatSym, numsym, q1, q2);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void OrthoRhombicOps::getFZQuat(QuatF &qr)
 {
   int numsym = 4;
@@ -230,16 +224,13 @@ void OrthoRhombicOps::getFZQuat(QuatF &qr)
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int OrthoRhombicOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath<float>::RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
@@ -254,9 +245,6 @@ int OrthoRhombicOps::getMisoBin(float r1, float r2, float r3)
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
   float init[3];
@@ -275,14 +263,12 @@ void OrthoRhombicOps::determineEulerAngles(int choose, float &synea1, float &syn
   phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath<float>::HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getODFFZRod(r1, r2, r3);
-  OrientationMath<float>::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+  OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+
 void OrthoRhombicOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
@@ -300,20 +286,17 @@ void OrthoRhombicOps::determineRodriguesVector( int choose, float &r1, float &r2
   phi[2] = static_cast<float>(choose / (36 * 36));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
-  OrientationMath<float>::HomochorictoRod(r1, r2, r3);
+  OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
   float step[3];
 
-  OrientationMath<float>::RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = OrthoDim1InitValue;
   dim[1] = OrthoDim2InitValue;
@@ -328,9 +311,6 @@ int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
 
@@ -358,8 +338,8 @@ void OrthoRhombicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime
   u1 = CubicSlipSystems[ss1][3]*g1[0][0]+CubicSlipSystems[ss1][4]*g1[1][0]+CubicSlipSystems[ss1][5]*g1[2][0];
   v1 = CubicSlipSystems[ss1][3]*g1[0][1]+CubicSlipSystems[ss1][4]*g1[1][1]+CubicSlipSystems[ss1][5]*g1[2][1];
   w1 = CubicSlipSystems[ss1][3]*g1[0][2]+CubicSlipSystems[ss1][4]*g1[1][2]+CubicSlipSystems[ss1][5]*g1[2][2];
-  denomhkl1 = sqrt((h1*h1+k1*k1+l1*l1));
-  denomuvw1 = sqrt((u1*u1+v1*v1+w1*w1));
+  denomhkl1 = sqrtf((h1*h1+k1*k1+l1*l1));
+  denomuvw1 = sqrtf((u1*u1+v1*v1+w1*w1));
   h2 = CubicSlipSystems[ss2][0]*g2[0][0]+CubicSlipSystems[ss2][1]*g2[1][0]+CubicSlipSystems[ss2][2]*g2[2][0];
   k2 = CubicSlipSystems[ss2][0]*g2[0][1]+CubicSlipSystems[ss2][1]*g2[1][1]+CubicSlipSystems[ss2][2]*g2[2][1];
   l2 = CubicSlipSystems[ss2][0]*g2[0][2]+CubicSlipSystems[ss2][1]*g2[1][2]+CubicSlipSystems[ss2][2]*g2[2][2];
@@ -367,17 +347,15 @@ void OrthoRhombicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime
   v2 = CubicSlipSystems[ss2][3]*g2[0][1]+CubicSlipSystems[ss2][4]*g2[1][1]+CubicSlipSystems[ss2][5]*g2[2][1];
   w2 = CubicSlipSystems[ss2][3]*g2[0][2]+CubicSlipSystems[ss2][4]*g2[1][2]+CubicSlipSystems[ss2][5]*g2[2][2];
 */
-  denomhkl2 = sqrt((h2*h2+k2*k2+l2*l2));
-  denomuvw2 = sqrt((u2*u2+v2*v2+w2*w2));
+  denomhkl2 = sqrtf((h2*h2+k2*k2+l2*l2));
+  denomuvw2 = sqrtf((u2*u2+v2*v2+w2*w2));
   planemisalignment = fabs((h1*h2+k1*k2+l1*l2)/(denomhkl1*denomhkl2));
   directionmisalignment = fabs((u1*u2+v1*v2+w1*w2)/(denomuvw1*denomuvw2));
   mPrime = planemisalignment*directionmisalignment;
 #endif
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
+
 void OrthoRhombicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);

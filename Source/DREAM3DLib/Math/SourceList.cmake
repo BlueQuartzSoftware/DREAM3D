@@ -12,12 +12,13 @@
 
 
 set(DREAM3DLib_Math_HDRS
-  ${DREAM3DLib_SOURCE_DIR}/Math/OrientationMath.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Math/MatrixMath.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Math/OrientationMath.h
+  ${DREAM3DLib_SOURCE_DIR}/Math/MatrixMath.h
   ${DREAM3DLib_SOURCE_DIR}/Math/QuaternionMath.hpp
 )
 set(DREAM3DLib_Math_SRCS
-
+  ${DREAM3DLib_SOURCE_DIR}/Math/OrientationMath.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Math/MatrixMath.cpp
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Math" "${DREAM3DLib_Math_HDRS}" "${DREAM3DLib_Math_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

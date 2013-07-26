@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -38,7 +38,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/Common/Texture.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 
@@ -59,11 +59,11 @@ int main(int argc, char **argv)
   std::vector<float> sigmas;
   std::vector<float> odf;
 
-  Texture::CalculateCubicODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
-  Texture::CalculateHexODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
-  Texture::CalculateOrthoRhombicODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
-  Texture::CalculateMDFData<std::vector<float>, CubicOps, float>(e1s, e2s, e3s, weights, sigmas);
+  Texture::calculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
 
   return EXIT_SUCCESS;
 }

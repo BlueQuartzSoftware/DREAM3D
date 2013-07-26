@@ -141,7 +141,7 @@ void FindAvgOrientations::execute()
 
   for (size_t i = 1; i < numgrains; i++)
   {
-    QuaternionMath<float>::ElementWiseAssign(avgQuats[i],0.0);
+    QuaternionMathF::ElementWiseAssign(avgQuats[i],0.0);
   }
   for(int i = 0; i < totalPoints; i++)
   {
@@ -149,16 +149,16 @@ void FindAvgOrientations::execute()
     {
       counts[m_GrainIds[i]] += 1;
       phase = m_CellPhases[i];
-      QuaternionMath<float>::Copy(quats[i], voxquat);
-      QuaternionMath<float>::Copy(avgQuats[m_GrainIds[i]], curavgquat);
-      QuaternionMath<float>::ScalarDivide(curavgquat, counts[m_GrainIds[i]]);
+      QuaternionMathF::Copy(quats[i], voxquat);
+      QuaternionMathF::Copy(avgQuats[m_GrainIds[i]], curavgquat);
+      QuaternionMathF::ScalarDivide(curavgquat, counts[m_GrainIds[i]]);
 
       if(counts[m_GrainIds[i]] == 1)
       {
-        QuaternionMath<float>::Identity(curavgquat);
+        QuaternionMathF::Identity(curavgquat);
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
-      QuaternionMath<float>::Add(avgQuats[m_GrainIds[i]], voxquat, avgQuats[m_GrainIds[i]]);
+      QuaternionMathF::Add(avgQuats[m_GrainIds[i]], voxquat, avgQuats[m_GrainIds[i]]);
     }
   }
   float ea1, ea2, ea3;
@@ -166,11 +166,11 @@ void FindAvgOrientations::execute()
   {
     if(counts[i] == 0)
     {
-      QuaternionMath<float>::Identity(avgQuats[i]);
+      QuaternionMathF::Identity(avgQuats[i]);
     }
-    QuaternionMath<float>::ScalarDivide(avgQuats[i], counts[i]);
-    QuaternionMath<float>::UnitQuaternion(avgQuats[i]);
-    OrientationMath<float>::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
+    QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
+    QuaternionMathF::UnitQuaternion(avgQuats[i]);
+    OrientationMath::QuattoEuler(avgQuats[i], ea1, ea2, ea3);
     m_FieldEulerAngles[3*i] = ea1;
     m_FieldEulerAngles[3*i+1] = ea2;
     m_FieldEulerAngles[3*i+2] = ea3;

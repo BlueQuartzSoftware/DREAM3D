@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 #define DIMS "DIMENSIONS"
 #define RES "SPACING"
@@ -315,13 +315,17 @@ void YSChoiAbaqusReader::execute()
         g[j][k] = mat[i][j][k];
       }
     }
-    MatrixMath<float>::Normalize3x3(g);
+    MatrixMath::Normalize3x3(g);
     q.w = static_cast<float>( sqrt((1.0+g[0][0]+g[1][1]+g[2][2]))/2.0 );
     q.x = static_cast<float>( (g[1][2]-g[2][1])/(4.0*q.w) );
     q.y = static_cast<float>( (g[2][0]-g[0][2])/(4.0*q.w) );
     q.z = static_cast<float>( (g[0][1]-g[1][0])/(4.0*q.w) );
-    QuaternionMath<float>::Copy(q, quats[i]);
-    OrientationMath<float>::QuattoEuler(q, ea1, ea2, ea3);
+    QuaternionMathF::Copy(q, quats[i]);
+//    m_Quats[5*i+1] = q[1];
+//    m_Quats[5*i+2] = q[2];
+//    m_Quats[5*i+3] = q[3];
+//    m_Quats[5*i+4] = q[4];
+    OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
     m_CellEulerAngles[3*i] = ea1;
     m_CellEulerAngles[3*i + 1] = ea2;
     m_CellEulerAngles[3*i + 2] = ea3;

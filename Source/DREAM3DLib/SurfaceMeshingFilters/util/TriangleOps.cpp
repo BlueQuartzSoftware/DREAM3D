@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "TriangleOps.h"
 
-#include "DREAM3DLib/Math/MatrixMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
@@ -232,17 +232,17 @@ VectorType TriangleOps::computeNormal(DREAM3D::SurfaceMesh::Vert_t& n0, DREAM3D:
   double w[3];
   double normal[3];
 
-  vert0[0] = static_cast<double>(n0.pos[0]);
-  vert0[1] = static_cast<double>(n0.pos[1]);
-  vert0[2] = static_cast<double>(n0.pos[2]);
+  vert0[0] = static_cast<float>(n0.pos[0]);
+  vert0[1] = static_cast<float>(n0.pos[1]);
+  vert0[2] = static_cast<float>(n0.pos[2]);
 
-  vert1[0] = static_cast<double>(n1.pos[0]);
-  vert1[1] = static_cast<double>(n1.pos[1]);
-  vert1[2] = static_cast<double>(n1.pos[2]);
+  vert1[0] = static_cast<float>(n1.pos[0]);
+  vert1[1] = static_cast<float>(n1.pos[1]);
+  vert1[2] = static_cast<float>(n1.pos[2]);
 
-  vert2[0] = static_cast<double>(n2.pos[0]);
-  vert2[1] = static_cast<double>(n2.pos[1]);
-  vert2[2] = static_cast<double>(n2.pos[2]);
+  vert2[0] = static_cast<float>(n2.pos[0]);
+  vert2[1] = static_cast<float>(n2.pos[1]);
+  vert2[2] = static_cast<float>(n2.pos[2]);
 
   //
   // Compute the normal
@@ -254,8 +254,8 @@ VectorType TriangleOps::computeNormal(DREAM3D::SurfaceMesh::Vert_t& n0, DREAM3D:
   w[1] = vert2[1] - vert0[1];
   w[2] = vert2[2] - vert0[2];
 
-  MatrixMath<double>::CrossProduct(u, w, normal);
-  MatrixMath<double>::NormalizeVector(normal);
+  MatrixMath::CrossProduct(u, w, normal);
+  MatrixMath::NormalizeVector(normal);
 
   return VectorType(normal[0], normal[1], normal[2]);
 }

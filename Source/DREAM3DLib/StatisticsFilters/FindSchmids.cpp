@@ -36,7 +36,7 @@
 
 #include "FindSchmids.h"
 
-#include "DREAM3DLib/Math/MatrixMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -116,15 +116,15 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, int32_t, Int32ArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, int32_t, Int32ArrayType, 0, fields, 3)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
@@ -169,23 +169,23 @@ void FindSchmids::execute()
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
-    QuaternionMath<float>::Copy(avgQuats[i], q1);
-    OrientationMath<float>::QuattoMat(q1, g);
+    QuaternionMathF::Copy(avgQuats[i], q1);
+    OrientationMath::QuattoMat(q1, g);
 
     sampleLoading[0] = m_LoadingDir.x;
     sampleLoading[1] = m_LoadingDir.y;
     sampleLoading[2] = m_LoadingDir.z;
 
-    MatrixMath<float>::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
+    MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
     m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
 
-    m_Schmids[i] = schmid;
+      m_Schmids[i] = schmid;
     m_Poles[3*i] = int32_t(crystalLoading[0]*100);
     m_Poles[3*i+1] = int32_t(crystalLoading[1]*100);
     m_Poles[3*i+2] = int32_t(crystalLoading[2]*100);
     m_SlipSystems[i] = ss;
   }
 
-  notifyStatusMessage("FindSchmids Completed");
+ notifyStatusMessage("FindSchmids Completed");
 }

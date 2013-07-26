@@ -215,16 +215,16 @@ void FindBoundaryStrengths::execute()
   float mPrime_1, mPrime_2, F1_1, F1_2, F1spt_1, F1spt_2, F7_1,  F7_2;
   int gname1, gname2;
   // int ss1, ss2;
-  QuaternionMath<float>::Quaternion q1;
-  QuaternionMath<float>::Quaternion q2;
-  QuaternionMath<float>::Quaternion* avgQuats = reinterpret_cast<QuaternionMath<float>::Quaternion*>(m_AvgQuats);
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float LD[3];
 
   LD[0] = m_Loading.x;
   LD[1] = m_Loading.y;
   LD[2] = m_Loading.z;
-  MatrixMath<float>::Normalize3x1(LD);
+  MatrixMath::Normalize3x1(LD);
 
   int nTriangles = sm->getNumFaceTuples();
   for (int i = 0; i < nTriangles; i++)
@@ -234,8 +234,8 @@ void FindBoundaryStrengths::execute()
     if(gname1 > 0 && gname2 > 0)
     {
 
-      QuaternionMath<float>::Copy(avgQuats[gname1], q1);
-      QuaternionMath<float>::Copy(avgQuats[gname2], q2);
+      QuaternionMathF::Copy(avgQuats[gname1], q1);
+      QuaternionMathF::Copy(avgQuats[gname2], q2);
 //      for (int j = 0; j < 5; j++)
 //      {
 //        q1[j] = m_AvgQuats[5 * gname1 + j];

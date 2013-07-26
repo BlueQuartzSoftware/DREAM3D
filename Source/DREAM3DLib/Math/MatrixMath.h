@@ -1,6 +1,6 @@
 /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,71 +28,58 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-/**
- * @brief main.cpp This is mainly a test to make sure that the Texture.h
- * file will compile using strict STL containers
- * @param argc
- * @param argv
- * @return
+#ifndef _MatrixMath_H_
+#define _MatrixMath_H_
+
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+
+/*
+ * @class MatrixMath MatrixMath.h DREAM3DLib/Common/MatrixMath.h
+ * @brief This class performs Crystallographic Misorientation Calculations
+ * @author Michael A. Jackson (BlueQuartz Software)
+ * @author Michael A. Groeber (US Air Force Research Laboratory)
+ * @date Feb 19, 2011
+ * @version 1.0
  */
-#include <iostream>
-#include <vector>
-
-
-#include "DREAM3DLib/Common/Texture.h"
-#include "DREAM3DLib/Common/StatsGen.h"
-
-#define POPULATE_DATA(i, e1, e2, e3, w, s)\
-  e1s[i] = e1;\
-  e2s[i] = e2;\
-  e3s[i] = e3;\
-  weights[i] = w;\
-  sigmas[i] = s;
-
-
-
-int main(int argc, char **argv)
+class DREAM3DLib_EXPORT MatrixMath
 {
-  std::vector<float> odf;
-  std::vector<float> e1s(2);
-  std::vector<float> e2s(2);
-  std::vector<float> e3s(2);
-  std::vector<float> weights(2);
-  std::vector<float> sigmas(2);
+  public:
+    DREAM3D_SHARED_POINTERS(MatrixMath)
+    DREAM3D_TYPE_MACRO(MatrixMath)
 
-  POPULATE_DATA(0, 35, 45, 0, 1.0, 1.0)
-  POPULATE_DATA(1, 59, 37, 63, 1.0, 1.0)
-  // Resize the ODF vector properly for Cubic
-  odf.resize(5832);
+    virtual ~MatrixMath();
 
-  // Calculate the ODF Data
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+    static void Multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3]);
+    static void Multiply3x3with3x1(float g1[3][3], float g2[3], float outMat[3]);
+    static void Multiply3x3with3x1(const float g1[3][3], float g2[3], float outMat[3]);
+    static void Multiply3x3with3x1(double g1[3][3], double g2[3], double outMat[3]);
 
+    static void Transpose3x3(float g[3][3], float outMat[3][3]);
+    static void Copy3x3(float g[3][3], float outMat[3][3]);
+    static void Normalize3x3(float g[3][3]);
+    static void Normalize3x1(float g[3]);
+    static float DotProduct(float a[3], float b[3]);
 
-  std::vector<float > x001;
-  std::vector<float > y001;
-  std::vector<float > x011;
-  std::vector<float > y011;
-  std::vector<float > x111;
-  std::vector<float > y111;
-
-  StatsGen sg;
-  int size = 1000;
-  int err = 0;
-  err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
-  if (err == 1)
-  {
-    //TODO: Present Error Message
-    return 1;
-  }
+    static void CrossProduct(double a[3], double b[3], double c[3]);
 
 
-  return 0;
-}
 
+    static void NormalizeVector(double a[3]);
+    static void NormalizeVector(double &i, double &j, double &k);
+    static void NormalizeVector(float a[3]);
+    static void NormalizeVector(float &i, float &j, float &k);
+
+  protected:
+    MatrixMath();
+
+  private:
+    MatrixMath(const MatrixMath&); // Copy Constructor Not Implemented
+    void operator=(const MatrixMath&); // Operator '=' Not Implemented
+};
+
+#endif /* _MatrixMath_H_ */

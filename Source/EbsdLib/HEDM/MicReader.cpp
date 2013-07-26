@@ -502,7 +502,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 
   float xA, xB, xC, yA, yB, yC;
   int point;
-  float root3over2 = sqrt(3.0f)/2.0f;
+  float root3over2 = sqrtf(3.0f)/2.0f;
   int check1, check2, check3;
   for(size_t i = 0; i < totalDataRows; ++i)
   {

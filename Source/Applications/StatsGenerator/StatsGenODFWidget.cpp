@@ -56,7 +56,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/Common/Texture.h"
 #include "DREAM3DLib/Common/StatsGen.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
@@ -189,11 +189,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-    Texture::CalculateCubicODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
-    Texture::CalculateHexODFData<std::vector<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
   }
   if (odf.size() > 0)
   {
@@ -573,16 +573,16 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     static const size_t odfsize = 5832;
     // float totalweight = 0;
     odf.resize(odfsize);
-    Texture::CalculateCubicODFData<QwtArray<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.genCubicODFPlotData<QwtArray<float>, float>(odf, x001, y001, x011, y011, x111, y111, size);
+    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+    err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     static const size_t odfsize = 15552;
     // float totalweight = 0;
     odf.resize(odfsize);
-    Texture::CalculateHexODFData<QwtArray<float>, float>(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.genHexODFPlotData<QwtArray<float>, float>(odf, x001, y001, x011, y011, x111, y111, size);
+    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+    err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
   {

@@ -37,7 +37,7 @@
 #include "FindAvgCAxes.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
@@ -150,13 +150,13 @@ void FindAvgCAxes::execute()
 //      q1[3] = m_Quats[i*5 + 3];
 //      q1[4] = m_Quats[i*5 + 4];
 
-      OrientationMath<float>::QuattoMat(q1, g1);
+      OrientationMath::QuattoMat(q1, g1);
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
-      MatrixMath<float>::Transpose3x3(g1, g1t);
-      MatrixMath<float>::Multiply3x3with3x1(g1t, caxis, c1);
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
-      MatrixMath<float>::Normalize3x1(c1);
+      MatrixMath::Normalize3x1(c1);
       if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
 
       counter[m_GrainIds[i]]++;
