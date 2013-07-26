@@ -221,6 +221,20 @@ class DataArray : public IDataArray
     }
 
     /**
+     * @brief FromPointer
+     * @param data
+     * @param size
+     * @param name
+     * @return
+     */
+    static Pointer FromPointer(T* data, size_t size, const std::string &name)
+    {
+      Pointer p = CreateArray(size, name);
+      ::memcpy(p->GetPointer(0), data, size * sizeof(T));
+      return p;
+    }
+
+    /**
      * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from

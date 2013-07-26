@@ -383,12 +383,13 @@ class StatsGen
      * @param y1010 Y Values of the [1010] PF Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename Vector>
-    static int GenHexODFPlotData(Vector odf, Vector &x0001, Vector &y0001, Vector &x1120, Vector &y1120, Vector &x1010, Vector &y1010, int npoints)
+    template<typename T>
+    static int GenHexODFPlotData(T* odf, T* x0001, T* y0001,
+                                  T* x1120, T* y1120,
+                                  T* x1010, T* y1010, int npoints)
     {
-      static const size_t odfsize = 15552;
       DREAM3D_RANDOMNG_NEW()
-          int err = 0;
+      int err = 0;
       int choose;
       float ea1, ea2, ea3;
       QuatF q1;
@@ -398,23 +399,16 @@ class StatsGen
       float totaldensity;
       float random, density;
       HexagonalOps ops;
-      x0001.resize(npoints * 1);
-      y0001.resize(npoints * 1);
-      x1120.resize(npoints * 3);
-      y1120.resize(npoints * 3);
-      x1010.resize(npoints * 3);
-      y1010.resize(npoints * 3);
 
       float td1;
-      float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < odfsize; j++)
+        for (size_t j = 0; j < HexagonalOps::k_OdfSize; j++)
         {
-          density = odfPtr[j];
+          density = odf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
@@ -508,10 +502,9 @@ class StatsGen
      * @param y111 Y Values of the [111] axis PF Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename Vector>
-    static int GenOrthoRhombicODFPlotData(Vector odf, Vector &x001, Vector &y001, Vector &x011, Vector &y011, Vector &x111, Vector &y111, int npoints)
+    template<typename T>
+    static int GenOrthoRhombicODFPlotData(T* odf, T* x001, T* y001, T* x011, T* y011, T* x111, T* y111, int npoints)
     {
-      static const size_t odfsize = 46656;
 #if 0
       These lines need to be run BEFORE you call this method
           float totalweight = 0;
@@ -530,23 +523,16 @@ class StatsGen
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
-      x001.resize(npoints * 3);
-      y001.resize(npoints * 3);
-      x011.resize(npoints * 6);
-      y011.resize(npoints * 6);
-      x111.resize(npoints * 4);
-      y111.resize(npoints * 4);
 
       float td1;
-      float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < odfsize; j++)
+        for (size_t j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
         {
-          density = odfPtr[j];
+          density = odf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1)
@@ -696,10 +682,9 @@ class StatsGen
      * @param yC Y Values of the C axis PF Scatter plot (Output)
      * @param size The number of points for the Scatter Plot
      */
-    template<typename Vector>
-    static int GenAxisODFPlotData(Vector odf, Vector &xA, Vector &yA, Vector &xB, Vector &yB, Vector &xC, Vector &yC, int npoints)
+    template<typename T>
+    static int GenAxisODFPlotData(T* odf, T* xA, T* yA, T* xB, T* yB, T* xC, T* yC, int npoints)
     {
-      static const size_t odfsize = 46656;
 
       DREAM3D_RANDOMNG_NEW()
           int err = 0;
@@ -712,22 +697,15 @@ class StatsGen
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
-      xA.resize(npoints * 1);
-      yA.resize(npoints * 1);
-      xB.resize(npoints * 1);
-      yB.resize(npoints * 1);
-      xC.resize(npoints * 1);
-      yC.resize(npoints * 1);
       float td1;
-      float* odfPtr = &(odf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < odfsize; j++)
+        for (size_t j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
         {
-          density = odfPtr[j];
+          density = odf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
@@ -858,10 +836,10 @@ class StatsGen
     template<typename T>
     static int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
     {
-      static const size_t mdfsize = 15552;
+
       float radtodeg = 180.0f / float(M_PI);
       DREAM3D_RANDOMNG_NEW()
-          int err = 0;
+      int err = 0;
       int choose = 0;
       float density;
       float totaldensity;
@@ -885,7 +863,7 @@ class StatsGen
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < mdfsize; j++)
+        for (size_t j = 0; j < HexagonalOps::k_MdfSize; j++)
         {
           density = mdfPtr[j];
           td1 = totaldensity;

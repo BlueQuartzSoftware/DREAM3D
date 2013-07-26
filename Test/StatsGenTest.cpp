@@ -56,9 +56,9 @@ void GenHexMDFPlotData()
   std::vector<float> weights;
   std::vector<float> sigmas;
   std::vector<float> odf;
-  static const size_t odfsize = 15552;
-  odf.resize(odfsize);
-  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+
+  odf.resize(HexagonalOps::k_OdfSize);
+  Texture::CalculateHexODFData( &(e1s.front()), &(e2s.front()), &(e3s.front()), &(weights.front()), &(sigmas.front()), true, &(odf.front()), e1s.size());
 
 
   // These are the output vectors
@@ -71,9 +71,9 @@ void GenHexMDFPlotData()
 
 
   // Allocate a new vector to hold the mdf data
-  std::vector<float> mdf(15552);
+  std::vector<float> mdf(HexagonalOps::k_MdfSize);
   // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-  Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+  Texture::CalculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
 
   size = 1000;
   // Now generate the actual XY point data that gets plotted.
@@ -128,13 +128,14 @@ int main(int argc, char **argv)
   float max, min;
 
   err = StatsGen::ComputeNumberOfBins(mu, sigma, cutoff, maxCutOff, binstep, max, min);
+  size_t npoints = 1000;
 
   std::vector<float> binsizes;
   err = StatsGen::GenCutOff(mu, sigma, cutoff, maxCutOff, binstep, x, y, max, size, binsizes);
 
-
+  {
   std::vector<float> odf(CubicOps::k_OdfSize);
-  size_t npoints = 1000;
+
   std::vector<float > x001(npoints * 3);
   std::vector<float > y001(npoints * 3);
   std::vector<float > x011(npoints * 6);
@@ -143,14 +144,47 @@ int main(int argc, char **argv)
   std::vector<float > y111(npoints * 4);
   err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
                                      &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+  }
 
+  {
+  std::vector<float> odf(HexagonalOps::k_OdfSize);
 
-  err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
+  std::vector<float > x001(npoints * 1);
+  std::vector<float > y001(npoints * 1);
+  std::vector<float > x011(npoints * 3);
+  std::vector<float > y011(npoints * 3);
+  std::vector<float > x111(npoints * 3);
+  std::vector<float > y111(npoints * 3);
+  err = StatsGen::GenHexODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
 
+  }
 
-  err = StatsGen::GenOrthoRhombicODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
+{
+  std::vector<float> odf(OrthoRhombicOps::k_OdfSize);
 
-  err = StatsGen::GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
+  std::vector<float > x001(npoints * 3);
+  std::vector<float > y001(npoints * 3);
+  std::vector<float > x011(npoints * 6);
+  std::vector<float > y011(npoints * 6);
+  std::vector<float > x111(npoints * 4);
+  std::vector<float > y111(npoints * 4);
+  err = StatsGen::GenOrthoRhombicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+}
+
+{
+  std::vector<float> odf(OrthoRhombicOps::k_OdfSize);
+
+  std::vector<float > x001(npoints * 1);
+  std::vector<float > y001(npoints * 1);
+  std::vector<float > x011(npoints * 1);
+  std::vector<float > y011(npoints * 1);
+  std::vector<float > x111(npoints * 1);
+  std::vector<float > y111(npoints * 1);
+  err = StatsGen::GenAxisODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+}
 
   std::vector<float> mdf;
 
