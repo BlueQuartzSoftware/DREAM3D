@@ -56,6 +56,7 @@ const static float m_pi2 = static_cast<float>(2*M_PI);
 class CalculateGBCDImpl
 {
     size_t startOffset;
+    size_t numEntriesPerTri;
     int32_t* m_Labels;
     double* m_Normals;
     int32_t* m_Phases;
@@ -68,9 +69,10 @@ class CalculateGBCDImpl
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
-    CalculateGBCDImpl(size_t i, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
+    CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
                     int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       startOffset(i),
+      numEntriesPerTri(numMisoReps),
       m_Labels(Labels),
       m_Normals(Normals),
       m_Phases(Phases),
@@ -97,6 +99,7 @@ class CalculateGBCDImpl
       int temp;
       int32_t gbcd_index;
       int grain1, grain2;
+      int inversion = 1;
       float g1ea[3], g2ea[3];
       float g1[3][3], g2[3][3];
       float g1s[3][3], g2s[3][3];
@@ -107,6 +110,9 @@ class CalculateGBCDImpl
       float xstl1_norm0[3], xstl1_norm1[3], xstl1_norm_sc[2], xstl1_norm_sc_inv[2];
       int SYMcounter=0;
       int TRIcounter=start-startOffset;
+
+      QuatF qc;
+      float w, n1, n2, n3;
 
       for (size_t i = start; i < end; i++)
       {
@@ -150,13 +156,6 @@ class CalculateGBCDImpl
               //find symmetric crystal directions
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
 
-              //make sure the point is in the n.h.
-              if(xstl1_norm1[2] < 0.0)
-              {
-                xstl1_norm1[0] *= -1;
-                xstl1_norm1[1] *= -1;
-                xstl1_norm1[2] *= -1;
-              }
               if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
               {
                 xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
@@ -167,6 +166,7 @@ class CalculateGBCDImpl
                 xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
                 xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
               }
+
 
               for (k=0; k < nsym; k++)
               {
@@ -180,13 +180,15 @@ class CalculateGBCDImpl
                 MatrixMath::Multiply3x3with3x3(g1s,g2t,dg);
                 //translate matrix to euler angles
                 OrientationMath::MattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
+                OrientationMath::EulertoQuat(qc,euler_mis[0],euler_mis[1],euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
+                OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
                 //get the indexes that this point would be in the GBCD histogram
                 gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
                 if (gbcd_index != -1)
                 {
-                  m_Bins[(TRIcounter*1152)+SYMcounter] = gbcd_index;
+                  m_Bins[(TRIcounter*numEntriesPerTri)+SYMcounter] = gbcd_index;
                 }
                 SYMcounter++;
               }
@@ -434,7 +436,8 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  size_t faceChunkSize = 100000;
+  size_t faceChunkSize = 50000;
+  size_t numMisoReps = 1152;
   if(totalFaces < faceChunkSize) faceChunkSize = totalFaces;
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
@@ -450,7 +453,7 @@ void FindGBCD::execute()
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
-  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, 1152, "GBCDBins");
+  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
   int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
@@ -486,10 +489,10 @@ void FindGBCD::execute()
   float totalNormalBins = m_GBCDsizes[3]*m_GBCDsizes[4];
   m_GBCDsizes[3] = int(sqrt(totalNormalBins));
   m_GBCDsizes[4] = int(sqrt(totalNormalBins));
-  m_GBCDlimits[3] = -sqrt(m_pi/2.0);
-  m_GBCDlimits[4] = -sqrt(m_pi/2.0);
-  m_GBCDlimits[8] = sqrt(m_pi/2.0);
-  m_GBCDlimits[9] = sqrt(m_pi/2.0);
+  m_GBCDlimits[3] = -sqrt(m_pi);
+  m_GBCDlimits[4] = -sqrt(m_pi);
+  m_GBCDlimits[8] = sqrt(m_pi);
+  m_GBCDlimits[9] = sqrt(m_pi);
   m_GBCDdeltas[3] = (m_GBCDlimits[8]-m_GBCDlimits[3])/float(m_GBCDsizes[3]);
   m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
 
@@ -530,13 +533,13 @@ void FindGBCD::execute()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
-                        CalculateGBCDImpl(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateGBCDImpl serial(i, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
       serial.generate(i, i+faceChunkSize);
     }
 
@@ -556,9 +559,9 @@ void FindGBCD::execute()
 
     for(int j=0;j<faceChunkSize;j++)
     {
-      for(int k=0;k<1152;k++)
+      for(int k=0;k<numMisoReps;k++)
       {
-        m_GBCD[m_Bins[j*1152+k]] += m_SurfaceMeshFaceAreas[i+j];
+        m_GBCD[m_Bins[j*numMisoReps+k]] += m_SurfaceMeshFaceAreas[i+j];
         totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
       }
     }

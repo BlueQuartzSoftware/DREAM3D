@@ -256,13 +256,13 @@ void VisualizeGBCD::execute()
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = cosf(1.0*m_pi);
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = -sqrt(m_pi/2.0);
-  gbcdLimits[4] = -sqrt(m_pi/2.0);
+  gbcdLimits[3] = -sqrt(m_pi);
+  gbcdLimits[4] = -sqrt(m_pi);
   gbcdLimits[5] = 2.0*m_pi;
   gbcdLimits[6] = cosf(0.0);
   gbcdLimits[7] = 2.0*m_pi;
-  gbcdLimits[8] = sqrt(m_pi/2.0);
-  gbcdLimits[9] = sqrt(m_pi/2.0);
+  gbcdLimits[8] = sqrt(m_pi);
+  gbcdLimits[9] = sqrt(m_pi);
 
   gbcdSizes[0] = m_GBCDdimensions[5*1+0];
   gbcdSizes[1] = m_GBCDdimensions[5*1+1];
@@ -314,7 +314,8 @@ void VisualizeGBCD::execute()
   float a, b;
   int xbin, ybin;
   int abin, bbin;
-  float intensity;
+  float modX, modY;
+  float intensity1, intensity2, intensity3, intensity4, interpolatedIntensity;
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
@@ -355,9 +356,9 @@ void VisualizeGBCD::execute()
         mis_euler1[1] = cosf(mis_euler1[1]);
 
         //find bins in GBCD
-        int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
-        int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
-        int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
+        int location1 = (int) floorf((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
+        int location2 = (int) floorf((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
+        int location3 = (int) floorf((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
         //make sure that euler angles are within the GBCD space
         if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2])
         {
@@ -387,13 +388,6 @@ void VisualizeGBCD::execute()
                   rotNormal[1] = -rotNormal2[1];
                   rotNormal[2] = -rotNormal2[2];
                 }
-                //make sure the point is in the n.h.
-                if(rotNormal[2] < 0)
-                {
-                  rotNormal[0] = -rotNormal[0];
-                  rotNormal[1] = -rotNormal[1];
-                  rotNormal[2] = -rotNormal[2];
-                }
                 if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
                 {
                   a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
@@ -404,10 +398,19 @@ void VisualizeGBCD::execute()
                   a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[0]/rotNormal[1]));
                   b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
                 }
-                abin = int(((a-gbcdLimits[3])/gbcdDeltas[3])+0.5);
-                bbin = int(((b-gbcdLimits[4])/gbcdDeltas[4])+0.5);
-                intensity = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                poleFigure[(l*xpoints)+k] += intensity; 
+                abin = (int) floorf((a-gbcdLimits[3])/gbcdDeltas[3]);
+                bbin = (int) floorf((b-gbcdLimits[4])/gbcdDeltas[4]);
+                modX = ((a-gbcdLimits[3])/gbcdDeltas[3])-float(abin);
+                modY = ((b-gbcdLimits[4])/gbcdDeltas[4])-float(bbin);
+                intensity1 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                if(abin+1 < gbcdSizes[3]) intensity2 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                else intensity2 = intensity1;
+                if(bbin+1 < gbcdSizes[4]) intensity3 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                else intensity3 = intensity1;
+                if(abin+1 < gbcdSizes[3] && bbin+1 < gbcdSizes[4]) intensity4 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                else intensity4 = intensity2;
+                interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
+                poleFigure[(l*xpoints)+k] += interpolatedIntensity; 
                 poleFigureCounts[(l*xpoints)+k] += 1.0; 
               }
             }
@@ -416,6 +419,7 @@ void VisualizeGBCD::execute()
       }
     }
   }
+
   for (int64_t k = 0; k < (xpoints); k++)
   {
     for (int64_t l = 0; l < (ypoints); l++)
@@ -497,6 +501,7 @@ void VisualizeGBCD::execute()
 
     fclose(f);
   }
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
