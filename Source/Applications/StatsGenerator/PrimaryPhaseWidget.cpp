@@ -71,7 +71,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
@@ -505,8 +505,8 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
     return;
   }
 
-  StatsGen sg;
-  int n = sg.computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
+  
+  int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
 }
 
@@ -516,8 +516,8 @@ void PrimaryPhaseWidget::calculateNumberOfBins()
 int PrimaryPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize)
 {
   float max, min; // Only needed for the method. Not used otherwise.
-  StatsGen sg;
-  return sg.computeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
+  
+  return StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
 }
 
 // -----------------------------------------------------------------------------
@@ -536,8 +536,8 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int err = 0;
   int size = 250;
 
-  StatsGen sg;
-  err = sg.GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
+  
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -564,7 +564,7 @@ int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int numsizebins = 1;
   binsizes.clear();
   // QwtArray<int> numgrains;
-  err = sg.GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
+  err = StatsGen::GenCutOff<float, QwtArray<float> > (mu, sigma, minCutOff, maxCutOff, binStepSize, xCo, yCo, yMax, numsizebins, binsizes);
 
   return 0;
 }

@@ -64,7 +64,7 @@
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
@@ -503,14 +503,14 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
     e3s[i] = e3s[i] * M_PI / 180.0;
   }
 
-  StatsGen sg;
+  
   int size = 2500;
 
   static const size_t odfsize = 46656;
   odf.resize(odfsize);
   Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
-  err = sg.GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+  err = StatsGen::GenAxisODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message
