@@ -152,28 +152,16 @@ class CalculateGBCDImpl
               MatrixMath::Multiply3x3with3x3(sym1,g1,g1s);
               //find symmetric crystal directions
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
-<<<<<<< HEAD
 
               if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
               {
-                xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-                xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan(xstl1_norm1[1]/xstl1_norm1[0]));
+                xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+                xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[1]/xstl1_norm1[0]));
               }              
               else
               {
-                xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(m_pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
-                xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(m_pi)/2.0);
-=======
-              //calculate the crystal normals in aspherical coordinates ->[theta, cos(phi) ]
-              xstl1_norm_sc[0] = atan2f(xstl1_norm1[1], xstl1_norm1[0]);
-              if (xstl1_norm_sc[0] < 0) xstl1_norm_sc[0] += DREAM3D::Constants::k_2Pi;
-              xstl1_norm_sc[1] = xstl1_norm1[2];
-
-              if (inversion == 1){
-                xstl1_norm_sc_inv[0] = xstl1_norm_sc[0] + DREAM3D::Constants::k_Pi;
-                if (xstl1_norm_sc_inv[0] > DREAM3D::Constants::k_2Pi) xstl1_norm_sc_inv[0] -= DREAM3D::Constants::k_2Pi;
-                xstl1_norm_sc_inv[1] = -1.0*xstl1_norm_sc[1];
->>>>>>> 155f80b292b6af6b7fbc7aa11a38b6f9a4a9eb3f
+                xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
+                xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
               }
 
 
@@ -498,10 +486,10 @@ void FindGBCD::execute()
   float totalNormalBins = m_GBCDsizes[3]*m_GBCDsizes[4];
   m_GBCDsizes[3] = int(sqrt(totalNormalBins));
   m_GBCDsizes[4] = int(sqrt(totalNormalBins));
-  m_GBCDlimits[3] = -sqrt(m_pi);
-  m_GBCDlimits[4] = -sqrt(m_pi);
-  m_GBCDlimits[8] = sqrt(m_pi);
-  m_GBCDlimits[9] = sqrt(m_pi);
+  m_GBCDlimits[3] = -sqrt(DREAM3D::Constants::k_Pi);
+  m_GBCDlimits[4] = -sqrt(DREAM3D::Constants::k_Pi);
+  m_GBCDlimits[8] = sqrt(DREAM3D::Constants::k_Pi);
+  m_GBCDlimits[9] = sqrt(DREAM3D::Constants::k_Pi);
   m_GBCDdeltas[3] = (m_GBCDlimits[8]-m_GBCDlimits[3])/float(m_GBCDsizes[3]);
   m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
 
