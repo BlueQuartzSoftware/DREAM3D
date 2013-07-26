@@ -64,11 +64,19 @@ int main(int argc, char **argv)
   Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
                                  &(weights.front()), &(sigmas.front()), true,
                                  &(odf.front()), numEntries);
+  odf.resize(HexagonalOps::k_OdfSize);
+  Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
 
-  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
 
-  Texture::calculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
+  odf.resize(OrthoRhombicOps::k_OdfSize);
+  Texture::CalculateOrthoRhombicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
+
+
+  Texture::CalculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
 
   return EXIT_SUCCESS;
 }

@@ -186,10 +186,10 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
     e2s[i] = e2s[i] * M_PI / 180.0;
     e3s[i] = e3s[i] * M_PI / 180.0;
   }
+  size_t numEntries = e1s.size();
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-      size_t numEntries = e1s.size();
       odf.resize(CubicOps::k_OdfSize);
       Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
                                 &(weights.front()), &(sigmas.front()), true,
@@ -197,7 +197,10 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+    odf.resize(HexagonalOps::k_OdfSize);
+    Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                &(weights.front()), &(sigmas.front()), true,
+                                &(odf.front()), numEntries);
   }
   if (odf.size() > 0)
   {
@@ -561,6 +564,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     e2s[i] = e2s[i]*M_PI/180.0;
     e3s[i] = e3s[i]*M_PI/180.0;
   }
+  size_t numEntries = e1s.size();
 
 
   int npoints = 5000;
@@ -573,15 +577,14 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-	  // We now need to resize all the arrays here to make sure they are all allocated
+    // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(CubicOps::k_OdfSize);
-	x001.resize(npoints * 3);
-	y001.resize(npoints * 3);
-	x011.resize(npoints * 6);
-	y011.resize(npoints * 6);
-	x111.resize(npoints * 4);
-	y111.resize(npoints * 4);
-    size_t numEntries = e1s.size();
+    x001.resize(npoints * 3);
+    y001.resize(npoints * 3);
+    x011.resize(npoints * 6);
+    y011.resize(npoints * 6);
+    x111.resize(npoints * 4);
+    y111.resize(npoints * 4);
     Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
                                 weights.data(), sigmas.data(), true,
                                 odf.data(), numEntries);
@@ -591,11 +594,19 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
-    static const size_t odfsize = 15552;
-    // float totalweight = 0;
-    odf.resize(odfsize);
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
+    // We now need to resize all the arrays here to make sure they are all allocated
+    odf.resize(HexagonalOps::k_OdfSize);
+    x001.resize(npoints * 1);
+    y001.resize(npoints * 1);
+    x011.resize(npoints * 3);
+    y011.resize(npoints * 3);
+    x111.resize(npoints * 3);
+    y111.resize(npoints * 3);
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                weights.data(), sigmas.data(), true,
+                                odf.data(), numEntries);
+    err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
+                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
   }
   if (err == 1)
   {

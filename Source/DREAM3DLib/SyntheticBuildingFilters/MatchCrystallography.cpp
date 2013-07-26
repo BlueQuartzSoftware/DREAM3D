@@ -417,7 +417,7 @@ void MatchCrystallography::assign_eulers(int ensem)
       totaldensity = 0;
 
       if( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[phase]) ) { numbins = CubicOps::k_OdfSize; };
-      if( Ebsd::CrystalStructure::Check::IsHexagonal( m_CrystalStructures[phase] ) ) numbins = 15552;
+      if( Ebsd::CrystalStructure::Check::IsHexagonal( m_CrystalStructures[phase] ) ) { numbins = HexagonalOps::k_OdfSize; }
 
       for (int j = 0; j < numbins; j++)
       {

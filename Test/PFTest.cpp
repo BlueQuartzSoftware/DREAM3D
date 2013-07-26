@@ -60,17 +60,18 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
   qint32 kRad[2] = {4, 4};
   qint32 pfSize[2] = {226, 226};
   PoleFigureMaker colorPoleFigure;
+  size_t numEntries = e1s.size();
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
     std::cout << "Generating Cubic Pole Figure Images" << std::endl;
-    size_t numEntries = e1s.size();
+
     Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                weights.data(), sigmas.data(), true,
-                                odf.data(), numEntries);
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
 
     err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
-                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+                                        x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -123,11 +124,20 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     std::cout << "Generating Hex Pole Figure Images" << std::endl;
-    static const size_t odfsize = 15552;
-    // float totalweight = 0;
-    odf.resize(odfsize);
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
+
+    odf.resize(HexagonalOps::k_OdfSize);
+    x001.resize(npoints * 1);
+    y001.resize(npoints * 1);
+    x011.resize(npoints * 3);
+    y011.resize(npoints * 3);
+    x111.resize(npoints * 3);
+    y111.resize(npoints * 3);
+
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
+    err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
+                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -219,6 +229,14 @@ int main(int argc, char *argv[])
   }
 
   err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "Phantom_");
+
+  e1s[0] = 0.0;
+  e2s[0] = 0.0;
+  e3s[0] = 0.0;
+  weights[0] = 45;
+  sigmas[0] = 8;
+  err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "000_");
+
 
   return EXIT_SUCCESS;
 }
