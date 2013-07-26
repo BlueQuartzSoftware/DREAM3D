@@ -576,11 +576,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   {
     odf.resize(CubicOps::k_OdfSize);
     size_t numEntries = e1s.size();
-    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                &(weights.front()), &(sigmas.front()), true,
-                                &(odf.front()), numEntries);
-    err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                        &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                weights.data(), sigmas.data(), true,
+                                odf.data(), numEntries);
+
+    err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
+                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
