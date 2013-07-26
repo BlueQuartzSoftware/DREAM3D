@@ -40,32 +40,22 @@
 
 #include "MXA/Common/LogTime.h"
 
+namespace Detail
+{
+  const static float m_OnePointThree = 1.33333333333f;
+//  const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACosNeg1/2.0f) );
+//  const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACos1/2.0f) );
+//  const float sin_of_acos_neg_1 = sinf(DREAM3D::Constants::k_ACosNeg1);
+//  const float sin_of_acos_pos_1 = sinf(DREAM3D::Constants::k_ACos1);
 
-const static float two_pi = 2.0f * DREAM3D::Constants::k_Pi;
-const static float recip_pi = 1.0f/DREAM3D::Constants::k_Pi;
-const static float pi_over_180 = DREAM3D::Constants::k_Pi/180.0f;
+//  const float recip_sin_of_acos_neg_1 = 1.0f/sin_of_acos_neg_1;
+//  const float recip_sin_of_acos_pos_1 = 1.0f/sin_of_acos_pos_1;
 
-const static float m_OnePointThree = 1.33333333333f;
-
-const float threesixty_over_pi = 360.0f/DREAM3D::Constants::k_Pi;
-const float oneeighty_over_pi = 180.0f/DREAM3D::Constants::k_Pi;
-const float sqrt_two = sqrt(2.0);
-
-const float acos_neg_one = acosf(-1.0f);
-const float acos_pos_one = acosf(1.0f);
-const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(acos_neg_one/2.0f) );
-const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(acos_pos_one/2.0f) );
-const float sin_of_acos_neg_1 = sinf(acos_neg_one);
-const float sin_of_acos_pos_1 = sinf(acos_pos_one);
-
-const float recip_sin_of_acos_neg_1 = 1.0f/sin_of_acos_neg_1;
-const float recip_sin_of_acos_pos_1 = 1.0f/sin_of_acos_pos_1;
-
-const static float SinOfHalf = sinf(0.5f);
-const static float CosOfHalf = cosf(0.5f);
-const static float SinOfZero = sinf(0.0f);
-const static float CosOfZero = cosf(0.0f);
-
+//  const static float SinOfHalf = sinf(0.5f);
+//  const static float CosOfHalf = cosf(0.5f);
+//  const static float SinOfZero = sinf(0.0f);
+//  const static float CosOfZero = cosf(0.0f);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -202,7 +192,7 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   r3 = r3 / hmag;
   if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
   w = static_cast<float>( powf((8*hmag*hmag*hmag),(1.0f/3.0f)) );
-  x = m_OnePointThree*hmag*hmag*hmag;
+  x = Detail::m_OnePointThree*hmag*hmag*hmag;
   for(size_t i = 1; i < 10; i++)
   {
   w_new = w - ((x-w+sin(w))/(-1+cos(w)));
@@ -330,10 +320,10 @@ void OrientationMath::QuattoEuler(QuatF &q, float &ea1, float &ea2, float &ea3)
     tmp = sqrt(tmp);
     if(tmp > 1.0f) tmp=1.0f;
     ea2=2*acos(tmp);
-  ea1=ea1+two_pi;
-  ea3=ea3+two_pi;
-  ea1 = fmodf(ea1,two_pi);
-  ea3 = fmodf(ea3,two_pi);
+  ea1=ea1+DREAM3D::Constants::k_2Pi;
+  ea3=ea3+DREAM3D::Constants::k_2Pi;
+  ea1 = fmodf(ea1,DREAM3D::Constants::k_2Pi);
+  ea3 = fmodf(ea3,DREAM3D::Constants::k_2Pi);
 }
 
 // -----------------------------------------------------------------------------

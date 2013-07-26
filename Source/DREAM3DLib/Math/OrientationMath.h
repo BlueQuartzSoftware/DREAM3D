@@ -66,8 +66,6 @@
 class DREAM3DLib_EXPORT OrientationMath
 {
   public:
-//    DREAM3D_SHARED_POINTERS(OrientationMath)
-//    DREAM3D_TYPE_MACRO(OrientationMath)
 
     virtual ~OrientationMath();
 
