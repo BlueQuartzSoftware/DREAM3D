@@ -14,7 +14,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Texture.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define PFTEST_NO_QOBJECT 1
 
@@ -54,7 +54,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
   QVector<float> x111;
   QVector<float> y111;
 
-  StatsGen sg;
+  
   int size = 5000;
   unsigned int m_CrystalStructure = Ebsd::CrystalStructure::Cubic_High;
   qint32 kRad[2] = {4, 4};
@@ -68,7 +68,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
     // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    err = StatsGen::GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -125,7 +125,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
     // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
     if (err == 1)
     {
       return EXIT_FAILURE;

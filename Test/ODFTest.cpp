@@ -46,7 +46,7 @@
 
 
 #include "DREAM3DLib/Common/Texture.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define POPULATE_DATA(i, e1, e2, e3, w, s)\
   e1s[i] = e1;\
@@ -82,10 +82,10 @@ int main(int argc, char **argv)
   std::vector<float > x111;
   std::vector<float > y111;
 
-  StatsGen sg;
+
   int size = 1000;
   int err = 0;
-  err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+  err = StatsGen::GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   if (err == 1)
   {
     //TODO: Present Error Message

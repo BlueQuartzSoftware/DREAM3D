@@ -57,7 +57,7 @@
 #include <QtGui/QAbstractItemDelegate>
 
 #include "DREAM3DLib/Common/Texture.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
@@ -565,7 +565,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     e3s[i] = e3s[i]*M_PI/180.0;
   }
 
-  StatsGen sg;
+  
   int size = 5000;
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
@@ -574,7 +574,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    err = StatsGen::GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
@@ -582,7 +582,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
   }
   if (err == 1)
   {

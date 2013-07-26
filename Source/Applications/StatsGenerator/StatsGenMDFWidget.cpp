@@ -72,7 +72,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -149,7 +149,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 {
   int err = 0;
-  StatsGen sg;
+  
   int size = 100000;
 
   // These are the output vectors
@@ -172,7 +172,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
-    err = sg.GenCubicMDFPlotData(mdf, x, y, size);
+    err = StatsGen::GenCubicMDFPlotData(mdf, x, y, size);
     if (err < 0)
     {
       return;
@@ -185,7 +185,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
-    err = sg.GenHexMDFPlotData(mdf, x, y, size);
+    err = StatsGen::GenHexMDFPlotData(mdf, x, y, size);
     if (err < 0)
     {
       return;
