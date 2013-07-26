@@ -113,6 +113,7 @@ add_test(MXAFileSystemPathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MXAFileSystemPa
 # --------------------------------------------------------------------------
 add_executable(QuaternionMathTest QuaternionMathTest.cpp )
 target_link_libraries(QuaternionMathTest DREAM3DLib)
+set_target_properties(QuaternionMathTest PROPERTIES FOLDER Test)
 add_test(QuaternionMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QuaternionMathTest)
 
 # --------------------------------------------------------------------------
@@ -120,6 +121,7 @@ add_test(QuaternionMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QuaternionMathTest
 # --------------------------------------------------------------------------
 add_executable(ErrorMessageTest ErrorMessageTest.cpp )
 target_link_libraries(ErrorMessageTest DREAM3DLib)
+set_target_properties(ErrorMessageTest PROPERTIES FOLDER Test)
 add_test(ErrorMessageTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ErrorMessageTest)
 
 # --------------------------------------------------------------------------
@@ -224,7 +226,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
     target_link_libraries(FindNeighborsTest DREAM3DLib)
-  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+	set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------
@@ -232,7 +234,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
     target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-  set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
+    set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
     add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
 endif()
 
@@ -248,6 +250,7 @@ endif()
 add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
                                 ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
 set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
+
 # --------
 add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
 target_link_libraries(ODFTest DREAM3DLib)

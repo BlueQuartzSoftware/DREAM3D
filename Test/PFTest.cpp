@@ -1,10 +1,11 @@
 
 
 
-#include <QtCore/QCoreApplication>
+
 #include <QtCore/QVector>
 #include <QtCore/QDir>
 
+#include <QtGui/QApplication>
 #include <QtGui/QImage>
 
 #include "EbsdLib/EbsdLib.h"
@@ -44,7 +45,7 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
 int main(int argc, char *argv[])
 {
 
-  QCoreApplication app(argc, argv);
+  QApplication app(argc, argv);
 
   QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
   d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));

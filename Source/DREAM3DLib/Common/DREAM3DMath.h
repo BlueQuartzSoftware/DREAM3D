@@ -128,20 +128,20 @@ namespace DREAM3D
 {
   namespace Constants
   {
-    const static float k_Pi = static_cast<float>(M_PI);
-    static const float k_2Pi = 2.0 * M_PI;
-    static const float k_1OverPi = 1.0/M_PI;
-    static const float k_PiOver180 = M_PI/180.0;
-    static const float k_360OverPi = 360.0/M_PI;
-    static const float k_180OverPi = 180.0f/M_PI;
-    static const float k_Sqrt2 = sqrt(2.0);
-    static const float k_1OverRoot2 = 1.0/sqrt(2.0);
-    static const float k_1OverRoot3 = 1.0/sqrt(3.0);
-    static const float k_Root3Over2 = sqrt(3.0)/2.0;
+    static const float k_Pi = static_cast<float>(M_PI);
+    static const double k_2Pi = 2.0 * M_PI;
+    static const double k_1OverPi = 1.0/M_PI;
+    static const double k_PiOver180 = M_PI/180.0;
+    static const double k_360OverPi = 360.0/M_PI;
+    static const double k_180OverPi = 180.0/M_PI;
+    static const double k_Sqrt2 = sqrt(2.0);
+    static const double k_1OverRoot2 = 1.0/sqrt(2.0);
+    static const double k_1OverRoot3 = 1.0/sqrt(3.0);
+    static const double k_Root3Over2 = sqrt(3.0)/2.0;
 
-    static const float k_ACosNeg1 = acosf(-1.0f);
-    static const float k_ACos1 = acosf(1.0f);
-    static const float k_1Point3 = 1.0/3.0;
+    static const double k_ACosNeg1 = acos(-1.0);
+    static const double k_ACos1 = acos(1.0);
+    static const double k_1Point3 = 1.0/3.0;
   }
 }
 
