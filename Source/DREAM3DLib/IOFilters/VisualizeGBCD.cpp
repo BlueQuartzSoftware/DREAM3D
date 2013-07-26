@@ -257,11 +257,11 @@ void VisualizeGBCD::execute()
   gbcdLimits[2] = 0.0;
   gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi);
   gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi);
-  gbcdLimits[5] = 2.0*DREAM3D::Constants::k_Pi);
+  gbcdLimits[5] = 2.0*DREAM3D::Constants::k_Pi;
   gbcdLimits[6] = cosf(0.0);
-  gbcdLimits[7] = 2.0*DREAM3D::Constants::k_Pi);
-  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi));
-  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi));
+  gbcdLimits[7] = 2.0*DREAM3D::Constants::k_Pi;
+  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi);
+  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi);
 
   gbcdSizes[0] = m_GBCDdimensions[5*1+0];
   gbcdSizes[1] = m_GBCDdimensions[5*1+1];
@@ -393,13 +393,13 @@ void VisualizeGBCD::execute()
                   }
                   if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
                   {
-                    a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
-                    b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[1]/rotNormal[0]));
+                    a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+                    b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[1]/rotNormal[0]));
                   }              
                   else
                   {
-                    a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[0]/rotNormal[1]));
-                    b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
+                    a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[0]/rotNormal[1]));
+                    b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
                   }
                   abin = (int) floorf((a-gbcdLimits[3])/gbcdDeltas[3]);
                   bbin = (int) floorf((b-gbcdLimits[4])/gbcdDeltas[4]);
