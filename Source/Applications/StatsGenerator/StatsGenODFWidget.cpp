@@ -539,13 +539,6 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
 void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
-  // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
-  QwtArray<float> x001;
-  QwtArray<float> y001;
-  QwtArray<float> x011;
-  QwtArray<float> y011;
-  QwtArray<float> x111;
-  QwtArray<float> y111;
 
   QwtArray<float> e1s;
   QwtArray<float> e2s;
@@ -571,10 +564,23 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
 
   int npoints = 5000;
+  QwtArray<float> x001;
+  QwtArray<float> y001;
+  QwtArray<float> x011;
+  QwtArray<float> y011;
+  QwtArray<float> x111;
+  QwtArray<float> y111;
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
+	  // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(CubicOps::k_OdfSize);
+	x001.resize(npoints * 3);
+	y001.resize(npoints * 3);
+	x011.resize(npoints * 6);
+	y011.resize(npoints * 6);
+	x111.resize(npoints * 4);
+	y111.resize(npoints * 4);
     size_t numEntries = e1s.size();
     Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
                                 weights.data(), sigmas.data(), true,
