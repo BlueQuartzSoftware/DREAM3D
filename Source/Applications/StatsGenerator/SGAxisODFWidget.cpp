@@ -512,6 +512,12 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   int npoints = 2500;
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
+  x001.resize(npoints * 1);
+  y001.resize(npoints * 1);
+  x011.resize(npoints * 1);
+  y011.resize(npoints * 1);
+  x111.resize(npoints * 1);
+  y111.resize(npoints * 1);
 
   Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
                                         weights.data(), sigmas.data(), true,
