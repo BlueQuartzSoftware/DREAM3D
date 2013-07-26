@@ -51,7 +51,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -203,7 +203,7 @@ void AlignSectionsMisorientation::execute()
   }
 
   //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
   AlignSections::execute();
 

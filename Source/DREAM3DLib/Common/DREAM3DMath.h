@@ -116,15 +116,40 @@ lacking still.
 #define M_SQRT1_2      0.70710678118654752440  /* 1/sqrt(2) */
 #endif
 
-#ifndef M_2PI
-#define M_2PI           6.283185307179586232    /* 2*pi  */
-
-
 #ifndef M_PI
 #define M_PI        3.14159265358979323846  /* pi */
 #endif
 
+#ifndef M_2PI
+#define M_2PI           6.283185307179586232    /* 2*pi  */
 #endif
+
+namespace DREAM3D
+{
+  namespace Constants
+  {
+    static const float k_Pi = static_cast<float>(M_PI);
+    static const double k_2Pi = 2.0 * M_PI;
+    static const double k_1OverPi = 1.0/M_PI;
+    static const double k_PiOver180 = M_PI/180.0;
+    static const double k_360OverPi = 360.0/M_PI;
+    static const double k_180OverPi = 180.0/M_PI;
+    static const double k_Sqrt2 = sqrt(2.0);
+    static const double k_1OverRoot2 = 1.0/sqrt(2.0);
+    static const double k_1OverRoot3 = 1.0/sqrt(3.0);
+    static const double k_Root3Over2 = sqrt(3.0)/2.0;
+
+    static const double k_ACosNeg1 = acos(-1.0);
+    static const double k_ACos1 = acos(1.0);
+    static const double k_1Point3 = 1.0/3.0;
+
+
+  }
+}
+
+
+
+
 
 class DREAM3DMath
 {

@@ -53,7 +53,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 using namespace std;
 
@@ -95,8 +95,9 @@ class DREAM3DLib_EXPORT Texture
   {
       DREAM3D_RANDOMNG_NEW()
       CubicOps ops;
-      int *TextureBins;
-      TextureBins = new int[weights.size()];
+      std::vector<int> textureBins(weights.size() );
+      int *TextureBins = &(textureBins.front());
+
       static const size_t odfsize = 5832;
       //  float degtorad = M_PI/180.0;
       float addweight = 0;
@@ -179,9 +180,9 @@ class DREAM3DLib_EXPORT Texture
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
         random3 = rg.genrand_res53();
-        ea1 = 2.0 * m_pi * random1;
+        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
         ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * m_pi * random3;
+        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
         OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
@@ -218,8 +219,8 @@ class DREAM3DLib_EXPORT Texture
       bool normalize, T &odf)
   {
       DREAM3D_RANDOMNG_NEW()
-      int *TextureBins;
-      TextureBins = new int[weights.size()];
+      std::vector<int> textureBins(weights.size() );
+      int *TextureBins = &(textureBins.front());
       static const size_t odfsize = 15552;
       //   float degtorad = M_PI/180.0;
       float addweight = 0;
@@ -303,9 +304,9 @@ class DREAM3DLib_EXPORT Texture
         random1 = rg.genrand_res53();
         random2 = rg.genrand_res53();
         random3 = rg.genrand_res53();
-        ea1 = 2.0 * m_pi * random1;
+        ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
         ea2 = acos(2.0 * (random2 - 0.5));
-        ea3 = 2.0 * m_pi * random3;
+        ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
         OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
@@ -342,8 +343,8 @@ class DREAM3DLib_EXPORT Texture
       bool normalize, T &odf)
   {
     DREAM3D_RANDOMNG_NEW()
-  int *TextureBins;
-    TextureBins = new int[weights.size()];
+      std::vector<int> textureBins(weights.size() );
+      int *TextureBins = &(textureBins.front());
     static const size_t odfsize = 46656;
     float addweight = 0;
     float totaladdweight = 0;
@@ -425,9 +426,9 @@ class DREAM3DLib_EXPORT Texture
     random1 = rg.genrand_res53();
       random2 = rg.genrand_res53();
       random3 = rg.genrand_res53();
-    ea1 = 2.0*m_pi*random1;
+    ea1 = 2.0*DREAM3D::Constants::k_Pi*random1;
     ea2 = acos(2.0*(random2-0.5));
-    ea3 = 2.0*m_pi*random3;
+    ea3 = 2.0*DREAM3D::Constants::k_Pi*random3;
     OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
       ops.getODFFZRod(r1, r2, r3);
       bin = ops.getOdfBin(r1, r2, r3);

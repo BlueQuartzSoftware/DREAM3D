@@ -41,18 +41,11 @@
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
-const static float m_pi = (float)M_PI;
-const static float two_pi = 2.0f * m_pi;
-const static float recip_pi = 1.0f/m_pi;
-const static float pi_over_180 = m_pi/180.0f;
 const static float m_OnePointThree = 1.33333333333f;
-const float threesixty_over_pi = 360.0f/m_pi;
-const float oneeighty_over_pi = 180.0f/m_pi;
-const float sqrt_two = powf(2.0f, 0.5f);
 
-static const float OrthoDim1InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
-static const float OrthoDim2InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
-static const float OrthoDim3InitValue = powf((0.75f*((m_pi/2.0f)-sinf((m_pi/2.0f)))),(1.0f/3.0f));
+static const float OrthoDim1InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/2.0f)-sinf((DREAM3D::Constants::k_Pi/2.0f)))),(1.0f/3.0f));
+static const float OrthoDim2InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/2.0f)-sinf((DREAM3D::Constants::k_Pi/2.0f)))),(1.0f/3.0f));
+static const float OrthoDim3InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/2.0f)-sinf((DREAM3D::Constants::k_Pi/2.0f)))),(1.0f/3.0f));
 static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0f;
 static const float OrthoDim2StepValue = OrthoDim2InitValue/18.0f;
 static const float OrthoDim3StepValue = OrthoDim3InitValue/18.0f;
@@ -86,21 +79,28 @@ static const float OrthoMatSym[4][3][3] =
   {0.0,  0.0, -1.0}}};
 
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 OrthoRhombicOps::OrthoRhombicOps()
 {
   // TODO Auto-generated constructor stub
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 OrthoRhombicOps::~OrthoRhombicOps()
 {
   // TODO Auto-generated destructor stub
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float OrthoRhombicOps::_calcMisoQuat(const QuatF quatsym[4], int numsym,
-QuatF &q1, QuatF &q2,
-float &n1, float &n2, float &n3)
+                                    QuatF &q1, QuatF &q2,
+                                    float &n1, float &n2, float &n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -130,8 +130,8 @@ float &n1, float &n2, float &n3)
 
     OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
 
-    if (w > m_pi) {
-      w = two_pi - w;
+    if (w > DREAM3D::Constants::k_Pi) {
+      w = DREAM3D::Constants::k_2Pi - w;
     }
     if (w < wmin)
     {

@@ -194,7 +194,7 @@ namespace Ebsd {
 // -----------------------------------------------------------------------------
 //  These are the lower case versions of the constants for the ANG file
 // -----------------------------------------------------------------------------
-#define ANG_TEM_PIXPERUM_LOWER "tem_pixperum"
+#define ANG_TEM_PIXPERUM_LOWER "teDREAM3D::Constants::k_Pixperum"
 #define ANG_X_STAR_LOWER "x-star"
 #define ANG_Y_STAR_LOWER "y-star"
 #define ANG_Z_STAR_LOWER "z-star"

@@ -47,7 +47,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 typedef struct {
     size_t   xp;
@@ -238,7 +238,7 @@ void RotateSampleRefFrame::preflight()
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  m_RotationAngle = m_RotationAngle*m_pi/180.0;
+  m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
 
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;
@@ -352,7 +352,7 @@ void RotateSampleRefFrame::execute()
     return;
   }
 
-  m_RotationAngle = m_RotationAngle*m_pi/180.0;
+  m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
 
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;

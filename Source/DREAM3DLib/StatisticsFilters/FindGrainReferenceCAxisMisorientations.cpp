@@ -47,7 +47,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindAvgCAxes.h"
 #include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -234,7 +234,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
           if(w < -1) w = -1;
           if(w > 1) w = 1;
           w = acosf(w);
-          w = w *(180.0f/m_pi);
+          w = w *(180.0f/DREAM3D::Constants::k_Pi);
           if(w > 90.0) w = 180.0-w;
 
           m_GrainReferenceCAxisMisorientations[point] = w;

@@ -53,7 +53,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 static const float unit110 = 1.0/sqrtf(2.0);
 static const float unit111 = 1.0/sqrtf(3.0);
@@ -350,7 +350,7 @@ void MergeColonies::merge_colonies()
   NeighborList<int>& neighborlist = *m_NeighborList;
 
   //Converting the user defined tolerance to radians.
-  m_AxisTolerance = m_AxisTolerance*m_pi/180.0f;
+  m_AxisTolerance = m_AxisTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
   std::vector<int> colonylist;
   float w;
@@ -398,7 +398,7 @@ void MergeColonies::merge_colonies()
               OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
               m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
               OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-              w = w * (180.0f/m_pi);
+              w = w * (180.0f/DREAM3D::Constants::k_Pi);
               //				float vecttol = 0.01f;
               //	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
               //	            if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
@@ -482,7 +482,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 {
   float dP = 0.0;
   float angle = 0.0;
-  float radToDeg = 180.0f/m_pi;
+  float radToDeg = 180.0f/DREAM3D::Constants::k_Pi;
 
   float gBeta[3][3];
   float gBetaT[3][3];

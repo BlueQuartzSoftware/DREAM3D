@@ -46,8 +46,7 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
+
 
 
 // -----------------------------------------------------------------------------
@@ -254,15 +253,15 @@ void VisualizeGBCD::execute()
   float* gbcdLimits = gbcdLimitsArray->GetPointer(0);
 
   gbcdLimits[0] = 0.0;
-  gbcdLimits[1] = cosf(1.0*m_pi);
+  gbcdLimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = -sqrt(m_pi);
-  gbcdLimits[4] = -sqrt(m_pi);
-  gbcdLimits[5] = 2.0*m_pi;
+  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi);
+  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi);
+  gbcdLimits[5] = 2.0*DREAM3D::Constants::k_Pi);
   gbcdLimits[6] = cosf(0.0);
-  gbcdLimits[7] = 2.0*m_pi;
-  gbcdLimits[8] = sqrt(m_pi);
-  gbcdLimits[9] = sqrt(m_pi);
+  gbcdLimits[7] = 2.0*DREAM3D::Constants::k_Pi);
+  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi));
+  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi));
 
   gbcdSizes[0] = m_GBCDdimensions[5*1+0];
   gbcdSizes[1] = m_GBCDdimensions[5*1+1];
@@ -294,7 +293,7 @@ void VisualizeGBCD::execute()
   //  float dist;
   float theta, cosPhi, phi;
 
-  m_MisAngle = m_MisAngle * m_pi/180.0f;
+  m_MisAngle = m_MisAngle * DREAM3D::Constants::k_Pi/180.0f;
   //convert axis angle to matrix representation of misorientation
   OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
 

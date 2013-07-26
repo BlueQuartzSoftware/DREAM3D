@@ -48,7 +48,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 class RotateEulerRefFrameImpl
@@ -212,7 +212,7 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-  m_RotationAngle = m_RotationAngle*m_pi/180.0;
+  m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
