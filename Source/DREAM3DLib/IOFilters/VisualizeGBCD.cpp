@@ -369,49 +369,54 @@ void VisualizeGBCD::execute()
           {
             for (int64_t l = 0; l < (ypoints); l++)
             {
-              //get (x,y) for stereographic projection pixel
-              x = float(k-xpointshalf)*xres+(xres/2.0);
-              y = float(l-ypointshalf)*yres+(yres/2.0);
-              if((x*x+y*y) <= 1.0)
+              for (int64_t m = 0; m < 2; m++)
               {
-                vec[2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
-                vec[0] = x*(1+vec[2]);
-                vec[1] = y*(1+vec[2]);
-                //find symmetric poles using the first symmetry operator
-                MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
-                if(q == 1)
+                //get (x,y) for stereographic projection pixel
+                x = float(k-xpointshalf)*xres+(xres/2.0);
+                y = float(l-ypointshalf)*yres+(yres/2.0);
+                if((x*x+y*y) <= 1.0)
                 {
-                  //rotate symmetric pole by original misorientation
-                  MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
-                  //take negative of vector
-                  rotNormal[0] = -rotNormal2[0];
-                  rotNormal[1] = -rotNormal2[1];
-                  rotNormal[2] = -rotNormal2[2];
+                  vec[2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
+                  vec[0] = x*(1+vec[2]);
+                  vec[1] = y*(1+vec[2]);
+                  //look at s.h. points on second trip around
+                  if(m == 1) MatrixMath::Multiply3x1withConstant(vec, -1);
+                  //find symmetric poles using the first symmetry operator
+                  MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
+                  if(q == 1)
+                  {
+                    //rotate symmetric pole by original misorientation
+                    MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
+                    //take negative of vector
+                    rotNormal[0] = -rotNormal2[0];
+                    rotNormal[1] = -rotNormal2[1];
+                    rotNormal[2] = -rotNormal2[2];
+                  }
+                  if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
+                  {
+                    a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
+                    b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[1]/rotNormal[0]));
+                  }              
+                  else
+                  {
+                    a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[0]/rotNormal[1]));
+                    b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
+                  }
+                  abin = (int) floorf((a-gbcdLimits[3])/gbcdDeltas[3]);
+                  bbin = (int) floorf((b-gbcdLimits[4])/gbcdDeltas[4]);
+                  modX = ((a-gbcdLimits[3])/gbcdDeltas[3])-float(abin);
+                  modY = ((b-gbcdLimits[4])/gbcdDeltas[4])-float(bbin);
+                  intensity1 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                  if(abin+1 < gbcdSizes[3]) intensity2 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                  else intensity2 = intensity1;
+                  if(bbin+1 < gbcdSizes[4]) intensity3 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                  else intensity3 = intensity1;
+                  if(abin+1 < gbcdSizes[3] && bbin+1 < gbcdSizes[4]) intensity4 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
+                  else intensity4 = intensity2;
+                  interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
+                  poleFigure[(l*xpoints)+k] += interpolatedIntensity; 
+                  poleFigureCounts[(l*xpoints)+k] += 1.0; 
                 }
-                if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
-                {
-                  a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
-                  b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[1]/rotNormal[0]));
-                }              
-                else
-                {
-                  a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(m_pi))*atan(rotNormal[0]/rotNormal[1]));
-                  b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(m_pi)/2.0);
-                }
-                abin = (int) floorf((a-gbcdLimits[3])/gbcdDeltas[3]);
-                bbin = (int) floorf((b-gbcdLimits[4])/gbcdDeltas[4]);
-                modX = ((a-gbcdLimits[3])/gbcdDeltas[3])-float(abin);
-                modY = ((b-gbcdLimits[4])/gbcdDeltas[4])-float(bbin);
-                intensity1 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                if(abin+1 < gbcdSizes[3]) intensity2 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                else intensity2 = intensity1;
-                if(bbin+1 < gbcdSizes[4]) intensity3 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                else intensity3 = intensity1;
-                if(abin+1 < gbcdSizes[3] && bbin+1 < gbcdSizes[4]) intensity4 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                else intensity4 = intensity2;
-                interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
-                poleFigure[(l*xpoints)+k] += interpolatedIntensity; 
-                poleFigureCounts[(l*xpoints)+k] += 1.0; 
               }
             }
           }
