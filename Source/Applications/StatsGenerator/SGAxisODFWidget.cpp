@@ -59,7 +59,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"

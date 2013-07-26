@@ -40,19 +40,22 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/Common/PrecipitateStatsData.h"
 
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindNumFields.h"
 
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -413,7 +416,7 @@ void MatchCrystallography::assign_eulers(int ensem)
       choose = 0;
       totaldensity = 0;
 
-      if( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[phase]) ) numbins = 5832;
+      if( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[phase]) ) { numbins = CubicOps::k_OdfSize; };
       if( Ebsd::CrystalStructure::Check::IsHexagonal( m_CrystalStructures[phase] ) ) numbins = 15552;
 
       for (int j = 0; j < numbins; j++)

@@ -65,7 +65,7 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -149,7 +149,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 {
   int err = 0;
-  
+
   int size = 100000;
 
   // These are the output vectors
@@ -168,7 +168,7 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure) )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(5832);
+    std::vector<float> mdf(CubicOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
     // Now generate the actual XY point data that gets plotted.
@@ -242,7 +242,11 @@ std::vector<float> StatsGenMDFWidget::generateODFData()
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+    size_t numEntries = e1s.size();
+    odf.resize(CubicOps::k_OdfSize);
+    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                   &(weights.front()), &(sigmas.front()), true,
+                                   &(odf.front()), numEntries);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {

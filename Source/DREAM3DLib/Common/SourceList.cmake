@@ -51,7 +51,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.h
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StringDataArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/Texture.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/Texture.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ScopedFileMonitor.hpp
@@ -85,8 +85,6 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/TransformationStatsData.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/MatrixStatsData.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/BoundaryStatsData.cpp
-#  ${DREAM3DLib_SOURCE_DIR}/Common/StatsGen.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/Texture.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TextFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.cpp

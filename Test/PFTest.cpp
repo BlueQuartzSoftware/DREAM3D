@@ -13,7 +13,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define PFTEST_NO_QOBJECT 1
@@ -46,16 +46,16 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
 unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s, QVector<float> weights, QVector<float> sigmas, QString prefix)
 {
   int err = 0;
-  QVector<float> odf;
-  QVector<float> x001;
-  QVector<float> y001;
-  QVector<float> x011;
-  QVector<float> y011;
-  QVector<float> x111;
-  QVector<float> y111;
+  QVector<float> odf(CubicOps::k_OdfSize);
+  size_t npoints = 5000;
+  QVector<float > x001(npoints * 3);
+  QVector<float > y001(npoints * 3);
+  QVector<float > x011(npoints * 6);
+  QVector<float > y011(npoints * 6);
+  QVector<float > x111(npoints * 4);
+  QVector<float > y111(npoints * 4);
 
-  
-  int size = 5000;
+
   unsigned int m_CrystalStructure = Ebsd::CrystalStructure::Cubic_High;
   qint32 kRad[2] = {4, 4};
   qint32 pfSize[2] = {226, 226};
@@ -64,11 +64,13 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
     std::cout << "Generating Cubic Pole Figure Images" << std::endl;
-    static const size_t odfsize = 5832;
-    // float totalweight = 0;
-    odf.resize(odfsize);
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = StatsGen::GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    size_t numEntries = e1s.size();
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                weights.data(), sigmas.data(), true,
+                                odf.data(), numEntries);
+
+    err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
+                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -125,7 +127,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
     // float totalweight = 0;
     odf.resize(odfsize);
     Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+    err = StatsGen::GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
