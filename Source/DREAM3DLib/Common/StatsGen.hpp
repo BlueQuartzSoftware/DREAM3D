@@ -53,10 +53,12 @@
 
 
 /**
+ * @brief This class contains static functions to generate ODF and MDF data as X,Y points. This data can be discretized
+ * onto a regular grid which would result in standard ODF Pole Figures and a regular 2D MDF plot.
  * @class StatsGen StatsGen.h StatsGenerator/StatsGen.h
  * @author Michael A. Groeber US Air Force Research Laboratory
  * @date Dec 16, 2010
- * @version 1.0
+ * @version 1.2
  */
 class StatsGen
 {
@@ -97,8 +99,14 @@ class StatsGen
       return err;
     }
 
-    /**
-     * @brief
+     /**
+     * @brief GenLogNormalPlotData Generates Log Normal plot data
+     * @param avg The Average
+     * @param stdDev The standard deviation
+     * @param x The generated X values. Must conform to the STL vector API
+     * @param y The generated Y values. Must conform to the STL vector API
+     * @param size The number of values to create
+     * @return
      */
     template<typename Vector>
     static int GenLogNormalPlotData(float avg, float stdDev, Vector &x, Vector &y, int size)
@@ -123,7 +131,14 @@ class StatsGen
     }
 
     /**
-     * @brief
+     * @brief GenPowerLawPlotData
+     * @param alpha
+     * @param k
+     * @param beta
+     * @param x
+     * @param y
+     * @param size
+     * @return
      */
     template<typename Vector>
     static int GenPowerLawPlotData(float alpha, float k, float beta, Vector &x, Vector &y, int size)
@@ -370,17 +385,13 @@ class StatsGen
      * type is a std::vector conforming class type that holds the data.
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
-     * @param e1s The first euler angles (input)
-     * @param e2s The second euler angles (input)
-     * @param e3s The third euler angles (input)
-     * @param weights Array of weights values. (input)
-     * @param sigmas Array of sigma values. (input)
-     * @param x0001 X Values of the [0001] PF Scatter plot (Output)
-     * @param y0001 Y Values of the [0001] PF Scatter plot (Output)
-     * @param x1120 X Values of the [1120] PF Scatter plot (Output)
-     * @param y1120 Y Values of the [1120] PF Scatter plot (Output)
-     * @param x1010 X Values of the [1010] PF Scatter plot (Output)
-     * @param y1010 Y Values of the [1010] PF Scatter plot (Output)
+     * @param odf [input] The ODF data
+     * @param x0001 X Values of the [0001] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y0001 Y Values of the [0001] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param x1120 X Values of the [1120] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y1120 Y Values of the [1120] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param x1010 X Values of the [1010] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y1010 Y Values of the [1010] PF Scatter plot (Output). This memory must already be preallocated.
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
@@ -494,12 +505,12 @@ class StatsGen
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
      * @param odf The ODF Data
-     * @param x001 X Values of the [001] axis PF Scatter plot (Output)
-     * @param y001 Y Values of the [001] axis PF Scatter plot (Output)
-     * @param x011 X Values of the [011] axis PF Scatter plot (Output)
-     * @param y011 Y Values of the [011] axis PF Scatter plot (Output)
-     * @param x111 X Values of the [111] axis PF Scatter plot (Output)
-     * @param y111 Y Values of the [111] axis PF Scatter plot (Output)
+     * @param x001 X Values of the [001] axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y001 Y Values of the [001] axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param x011 X Values of the [011] axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y011 Y Values of the [011] axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param x111 X Values of the [111] axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param y111 Y Values of the [111] axis PF Scatter plot (Output). This memory must already be preallocated.
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
@@ -674,12 +685,12 @@ class StatsGen
      * @param e3s The third euler angles (input)
      * @param weights Array of weights values. (input)
      * @param sigmas Array of sigma values. (input)
-     * @param xA X Values of the A axis PF Scatter plot (Output)
-     * @param yA Y Values of the A axis PF Scatter plot (Output)
-     * @param xB X Values of the B axis PF Scatter plot (Output)
-     * @param yB Y Values of the B axis PF Scatter plot (Output)
-     * @param xC X Values of the C axis PF Scatter plot (Output)
-     * @param yC Y Values of the C axis PF Scatter plot (Output)
+     * @param xA X Values of the A axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param yA Y Values of the A axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param xB X Values of the B axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param yB Y Values of the B axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param xC X Values of the C axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param yC Y Values of the C axis PF Scatter plot (Output). This memory must already be preallocated.
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
@@ -756,20 +767,14 @@ class StatsGen
 
     /**
      * @brief  This method will generate MDF data for a Cubic material and
-     * generate 1 XY scatter plots. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
-     * QVector falls into this category. The input data for the
-     * euler angles is in Columnar fashion instead of row major format.
-     * @param angles The first euler angles (input)
-     * @param weights The second euler angles (input)
-     * @param axis The third euler angles (input)
-     * @param odf Array of weights values. (input)
-     * @param x X Values of the Scatter plot (Output)
-     * @param y Y Values of the Scatter plot (Output)
+     * generate 1 XY scatter plots.
+     * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize
+     * @param x [output] X Values of the Scatter plot. This memory must already be preallocated.
+     * @param y [outout] Y Values of the Scatter plot. This memory must already be preallocated.
      * @param size The number of points for the Scatter Plot
      */
-    template<typename Vector>
-    static int GenCubicMDFPlotData(Vector mdf, Vector &xval, Vector &yval, int npoints)
+    template<typename T>
+    static int GenCubicMDFPlotData(T* mdf, T* xval, T* yval, int npoints)
     {
 
       float radtodeg = 180.0f / float(M_PI);
@@ -778,24 +783,19 @@ class StatsGen
       float density;
       float totaldensity;
       int choose = 0;
-      //    float angle;
       float random;
       float w;
       float n1, n2, n3;
       float r1, r2, r3;
-      //      float ra1, ra2, ra3;
-      //      float rb1, rb2, rb3;
-      //      float rc1, rc2, rc3;
+
       CubicOps ops;
-      xval.resize(13);
-      yval.resize(13);
-      for (int i = 0; i < 13; i++)
+
+      for (int i = 0; i < npoints; i++)
       {
         yval[i] = 0;
       }
 
       float td1;
-      float* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
@@ -803,7 +803,7 @@ class StatsGen
         totaldensity = 0;
         for (size_t j = 0; j < CubicOps::k_MdfSize; j++)
         {
-          density = mdfPtr[j];
+          density = mdf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1)
@@ -817,7 +817,7 @@ class StatsGen
         w = w * radtodeg;
         yval[int(w / 5.0)]++;
       }
-      for (int i = 0; i < 13; i++)
+      for (int i = 0; i < npoints; i++)
       {
         xval[i] = i * 5.0 + 2.5;
         yval[i] = yval[i] / float(npoints);
@@ -826,15 +826,15 @@ class StatsGen
     }
 
     /**
-     * @brief
-     * @param mdf
-     * @param xval
-     * @param yval
-     * @param npoints
-     * @return
+     * @brief  This method will generate MDF data for a Hexagonal material and
+     * generate 1 XY scatter plots.
+     * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize
+     * @param x [output] X Values of the Scatter plot. This memory must already be preallocated.
+     * @param y [outout] Y Values of the Scatter plot. This memory must already be preallocated.
+     * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    static int GenHexMDFPlotData(T mdf, T &xval, T &yval, int npoints)
+    static int GenHexMDFPlotData(T* mdf, T* xval, T* yval, int npoints)
     {
 
       float radtodeg = 180.0f / float(M_PI);
@@ -843,21 +843,18 @@ class StatsGen
       int choose = 0;
       float density;
       float totaldensity;
-      //    float angle;
       float random;
       float w;
       float n1, n2, n3;
       float r1, r2, r3;
       HexagonalOps ops;
-      xval.resize(20);
-      yval.resize(20);
-      for (int i = 0; i < 20; i++)
+
+      for (int i = 0; i < npoints; i++)
       {
         yval[i] = 0;
       }
       //	  float ra1, ra2, ra3, rb1, rb2, rb3, rc1, rc2, rc3;
       float td1;
-      float* mdfPtr = &(mdf.front());
       for (int i = 0; i < npoints; i++)
       {
         random = rg.genrand_res53();
@@ -865,7 +862,7 @@ class StatsGen
         totaldensity = 0;
         for (size_t j = 0; j < HexagonalOps::k_MdfSize; j++)
         {
-          density = mdfPtr[j];
+          density = mdf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
@@ -876,7 +873,7 @@ class StatsGen
         size_t index = static_cast<size_t>(w / 5.0f);
         yval[index]++;
       }
-      for (int i = 0; i < 20; i++)
+      for (int i = 0; i < npoints; i++)
       {
         xval[i] = i * 5.0 + 2.5;
         yval[i] = yval[i] / float(npoints);
