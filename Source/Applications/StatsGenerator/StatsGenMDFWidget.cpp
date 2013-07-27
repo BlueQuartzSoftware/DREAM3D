@@ -150,7 +150,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
 {
   int err = 0;
 
- // int size = 100000;
+  int size = 100000;
 
   // These are the input vectors
   QVector<float> angles;
@@ -175,7 +175,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
     size_t npoints = 13;
     x.resize(npoints);
     y.resize(npoints);
-    err = StatsGen::GenCubicMDFPlotData(mdf.data(), x.data(), y.data(), npoints);
+    err = StatsGen::GenCubicMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
     if (err < 0)
     {
       return;
@@ -191,7 +191,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
     size_t npoints = 20;
     x.resize(npoints);
     y.resize(npoints);
-    err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints);
+    err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
     if (err < 0)
     {
       return;

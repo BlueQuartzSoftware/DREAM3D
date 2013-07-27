@@ -71,44 +71,28 @@ void GenHexMDFPlotData()
   // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
   Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
-  size = 20;
+  int npoints = 20;
   // Now generate the actual XY point data that gets plotted.
   // These are the output vectors
-  std::vector<float> x(size);
-  std::vector<float> y(size);
-  err = StatsGen::GenHexMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), size );
+  std::vector<float> x(npoints);
+  std::vector<float> y(npoints);
+  err = StatsGen::GenHexMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints, size );
 
   DREAM3D_REQUIRE(err >= 0)
 }
 
-
-
-/**
- * @brief This code is just here to make sure each of the methods in the StatsGen
- *  class gets compiled due to some compilers NOT compiling the templates unless
- *  they are explicitly instantiated.
- * @param argc
- * @param argv
- * @return
- */
-int main(int argc, char **argv)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestTextureStatsGen()
 {
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST(GenHexMDFPlotData())
-
-  PRINT_TEST_SUMMARY();
-  //return err;
-#if 1
-
-
-
   float alpha = 1.0;
   float beta = 1.0;
 
   std::vector<float> x;
   std::vector<float> y;
   int size = 1000;
-  err = StatsGen::GenBetaPlotData(alpha, beta, x, y, size);
+  int err = StatsGen::GenBetaPlotData(alpha, beta, x, y, size);
 
 
   float avg = 1.0f;
@@ -133,72 +117,105 @@ int main(int argc, char **argv)
   err = StatsGen::GenCutOff(mu, sigma, cutoff, maxCutOff, binstep, x, y, max, size, binsizes);
 
   {
-  std::vector<float> odf(CubicOps::k_OdfSize);
+    size_t numEntries = 0;
+    std::vector<float> e1s;
+    std::vector<float> e2s;
+    std::vector<float> e3s;
+    std::vector<float> weights;
+    std::vector<float> sigmas;
+    std::vector<float> odf(CubicOps::k_OdfSize);
+    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                   &(weights.front()), &(sigmas.front()), true,
+                                   &(odf.front()), numEntries);
 
-  std::vector<float > x001(npoints * 3);
-  std::vector<float > y001(npoints * 3);
-  std::vector<float > x011(npoints * 6);
-  std::vector<float > y011(npoints * 6);
-  std::vector<float > x111(npoints * 4);
-  std::vector<float > y111(npoints * 4);
-  err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+    std::vector<float > x001(npoints * 3);
+    std::vector<float > y001(npoints * 3);
+    std::vector<float > x011(npoints * 6);
+    std::vector<float > y011(npoints * 6);
+    std::vector<float > x111(npoints * 4);
+    std::vector<float > y111(npoints * 4);
+    err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                        &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+
+    // Now generate the actual XY point data that gets plotted.
+    // These are the output vectors
+    std::vector<float> angles;
+    std::vector<float> axes;
+    std::vector<float> mdf(CubicOps::k_MdfSize);
+
+    Texture::CalculateMDFData<float, CubicOps>(&(angles.front()), &(axes.front()), &(weights.front()), &(odf.front()), &(mdf.front()), angles.size());
+
+    npoints = 13;
+    x.resize(npoints);
+    y.resize(npoints);
+    size_t mdfSize = 100000;
+    err = StatsGen::GenCubicMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints, mdfSize );
+
+//    for(int i = 0; i < npoints; ++i)
+//    {
+//      std::cout << x[i] << " " << y[i] << std::endl;
+//    }
   }
 
   {
-  std::vector<float> odf(HexagonalOps::k_OdfSize);
+    std::vector<float> odf(HexagonalOps::k_OdfSize);
 
-  std::vector<float > x001(npoints * 1);
-  std::vector<float > y001(npoints * 1);
-  std::vector<float > x011(npoints * 3);
-  std::vector<float > y011(npoints * 3);
-  std::vector<float > x111(npoints * 3);
-  std::vector<float > y111(npoints * 3);
-  err = StatsGen::GenHexODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+    std::vector<float > x001(npoints * 1);
+    std::vector<float > y001(npoints * 1);
+    std::vector<float > x011(npoints * 3);
+    std::vector<float > y011(npoints * 3);
+    std::vector<float > x111(npoints * 3);
+    std::vector<float > y111(npoints * 3);
+    err = StatsGen::GenHexODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                      &(y011.front()), &(x111.front()), &(y111.front()), npoints);
 
   }
 
-{
-  std::vector<float> odf(OrthoRhombicOps::k_OdfSize);
+  {
+    std::vector<float> odf(OrthoRhombicOps::k_OdfSize);
 
-  std::vector<float > x001(npoints * 3);
-  std::vector<float > y001(npoints * 3);
-  std::vector<float > x011(npoints * 6);
-  std::vector<float > y011(npoints * 6);
-  std::vector<float > x111(npoints * 4);
-  std::vector<float > y111(npoints * 4);
-  err = StatsGen::GenOrthoRhombicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+    std::vector<float > x001(npoints * 3);
+    std::vector<float > y001(npoints * 3);
+    std::vector<float > x011(npoints * 6);
+    std::vector<float > y011(npoints * 6);
+    std::vector<float > x111(npoints * 4);
+    std::vector<float > y111(npoints * 4);
+    err = StatsGen::GenOrthoRhombicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                               &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+  }
+
+  {
+    std::vector<float> odf(OrthoRhombicOps::k_OdfSize);
+
+    std::vector<float > x001(npoints * 1);
+    std::vector<float > y001(npoints * 1);
+    std::vector<float > x011(npoints * 1);
+    std::vector<float > y011(npoints * 1);
+    std::vector<float > x111(npoints * 1);
+    std::vector<float > y111(npoints * 1);
+    err = StatsGen::GenAxisODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+                                       &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+  }
+
 }
 
+/**
+ * @brief This code is just here to make sure each of the methods in the StatsGen
+ *  class gets compiled due to some compilers NOT compiling the templates unless
+ *  they are explicitly instantiated.
+ * @param argc
+ * @param argv
+ * @return
+ */
+int main(int argc, char **argv)
 {
-  std::vector<float> odf(OrthoRhombicOps::k_OdfSize);
 
-  std::vector<float > x001(npoints * 1);
-  std::vector<float > y001(npoints * 1);
-  std::vector<float > x011(npoints * 1);
-  std::vector<float > y011(npoints * 1);
-  std::vector<float > x111(npoints * 1);
-  std::vector<float > y111(npoints * 1);
-  err = StatsGen::GenAxisODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
-}
+  int err = 0;
+  DREAM3D_REGISTER_TEST(TestTextureStatsGen())
+  DREAM3D_REGISTER_TEST(GenHexMDFPlotData())
 
-  std::vector<float> mdf;
+  PRINT_TEST_SUMMARY();
 
-  mdf.resize(CubicOps::k_MdfSize);
-  npoints = 13;
-  x.resize(npoints);
-  y.resize(npoints);
-  err = StatsGen::GenCubicMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints );
-
-  mdf.resize(HexagonalOps::k_MdfSize);
-  npoints = 20;
-  x.resize(npoints);
-  y.resize(npoints);
-  err = StatsGen::GenHexMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints );
 
   return EXIT_SUCCESS;
-#endif
 }
