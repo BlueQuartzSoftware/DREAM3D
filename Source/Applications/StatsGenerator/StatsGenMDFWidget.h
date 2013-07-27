@@ -80,9 +80,9 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(VoxelDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
 
-    std::vector<float> generateODFData();
+    QVector<float> generateODFData();
 
-    void updateMDFPlot(std::vector<float> &odf);
+    void updateMDFPlot(QVector<float> &odf);
 
     SGMDFTableModel* tableModel();
 

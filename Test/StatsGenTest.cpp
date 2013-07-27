@@ -61,10 +61,6 @@ void GenHexMDFPlotData()
   Texture::CalculateHexODFData( &(e1s.front()), &(e2s.front()), &(e3s.front()), &(weights.front()), &(sigmas.front()), true, &(odf.front()), e1s.size());
 
 
-  // These are the output vectors
-  std::vector<float> x;
-  std::vector<float> y;
-
   // These are the input vectors
   std::vector<float> angles;
   std::vector<float> axes;
@@ -73,11 +69,14 @@ void GenHexMDFPlotData()
   // Allocate a new vector to hold the mdf data
   std::vector<float> mdf(HexagonalOps::k_MdfSize);
   // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-  Texture::CalculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+  Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
-  size = 1000;
+  size = 20;
   // Now generate the actual XY point data that gets plotted.
-  err = StatsGen::GenHexMDFPlotData(mdf, x, y, size);
+  // These are the output vectors
+  std::vector<float> x(size);
+  std::vector<float> y(size);
+  err = StatsGen::GenHexMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), size );
 
   DREAM3D_REQUIRE(err >= 0)
 }
@@ -188,9 +187,17 @@ int main(int argc, char **argv)
 
   std::vector<float> mdf;
 
-  err = StatsGen::GenCubicMDFPlotData(mdf, x, y, npoints);
+  mdf.resize(CubicOps::k_MdfSize);
+  npoints = 13;
+  x.resize(npoints);
+  y.resize(npoints);
+  err = StatsGen::GenCubicMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints );
 
-  err = StatsGen::GenHexMDFPlotData(mdf, x, y, npoints);
+  mdf.resize(HexagonalOps::k_MdfSize);
+  npoints = 20;
+  x.resize(npoints);
+  y.resize(npoints);
+  err = StatsGen::GenHexMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints );
 
   return EXIT_SUCCESS;
 #endif

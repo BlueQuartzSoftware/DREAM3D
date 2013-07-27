@@ -435,16 +435,24 @@ class Texture
 
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    template<typename T, class O>
-    static void CalculateMDFData(T angles, T axes, T weights, T odf, T &mdf)
+    /**
+     * @brief CalculateMDFData Calculates MDF (Misorientation Distribution Function) data
+     * @param angles The angles
+     * @param axes The axes
+     * @param weights The weights
+     * @param odf The ODF which has been already computed and sized correctly in another function
+     * @param mdf [output] The MDF array to store the data whic has been preallocated already
+     * @param numEntries The number of elemnts in teh Angles/Axes/Weights arrays which should all the be same size or at least
+     * the value passed here is the minium size of all the arrays. The sizes of the ODF and MDF arrays are
+     * determined by calling the getODFSize and getMDFSize functions of the parameterized OrientationOps class.
+     */
+    template<typename T, class OrientationOps>
+    static void CalculateMDFData(T* angles, T* axes, T* weights, T* odf, T* mdf, size_t numEntries)
     {
-      O orientationOps;
+      OrientationOps orientationOps;
       const int odfsize = orientationOps.getODFSize();
       const int mdfsize = orientationOps.getMDFSize();
-      mdf.resize(mdfsize);
+
 
       DREAM3D_RANDOMNG_NEW()
 
@@ -456,18 +464,16 @@ class Texture
       QuatF q1;
       QuatF q2;
       float totaldensity;
-      //    float denom;
       float r1, r2, r3;
       float n1, n2, n3;
       float random1, random2, density;
-      float* odfPtr = NULL;
 
       for (int i = 0; i < mdfsize; i++)
       {
         mdf[i] = 0.0;
       }
       int remainingcount = 10000;
-      int aSize = static_cast<int>(angles.size());
+      int aSize = static_cast<int>(numEntries);
       for (int i = 0; i < aSize; i++)
       {
         OrientationMath::AxisAngletoRod(angles[i], axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], r1, r2, r3);
@@ -485,11 +491,9 @@ class Texture
         choose2 = 0;
 
         totaldensity = 0;
-        odfPtr = &(odf.front());
         for (int j = 0; j < odfsize; j++)
         {
-          density = *odfPtr;
-          ++odfPtr;
+          density = odf[j];
           float d = totaldensity;
           totaldensity = totaldensity + density;
           if(random1 >= d && random1 < totaldensity) choose1 = static_cast<int>(j);

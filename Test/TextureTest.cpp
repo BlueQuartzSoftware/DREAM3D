@@ -76,7 +76,14 @@ int main(int argc, char **argv)
                                  &(odf.front()), numEntries);
 
 
-  Texture::CalculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
+  int size = 1000;
+  // Now generate the actual XY point data that gets plotted.
+  // These are the output vectors
+  std::vector<float> angles;
+  std::vector<float> axes;
+  std::vector<float> mdf(CubicOps::k_MdfSize);
+
+  Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
   return EXIT_SUCCESS;
 }

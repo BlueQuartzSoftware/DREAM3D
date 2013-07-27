@@ -740,8 +740,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   if (m_MDFWidget != NULL)
   {
     m_MDFWidget->setEnabled(true);
-    std::vector<float> odfVec = odf.toStdVector();
-    m_MDFWidget->updateMDFPlot(odfVec);
+    m_MDFWidget->updateMDFPlot(odf);
   }
 }
 
