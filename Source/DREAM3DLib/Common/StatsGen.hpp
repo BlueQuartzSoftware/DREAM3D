@@ -771,10 +771,12 @@ class StatsGen
      * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize
      * @param x [output] X Values of the Scatter plot. This memory must already be preallocated.
      * @param y [outout] Y Values of the Scatter plot. This memory must already be preallocated.
+     * @param npoints The number of X,Y values
+     * @param size The number of samples
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    static int GenCubicMDFPlotData(T* mdf, T* xval, T* yval, int npoints)
+    static int GenCubicMDFPlotData(T* mdf, T* xval, T* yval, int npoints, int size)
     {
 
       float radtodeg = 180.0f / float(M_PI);
@@ -796,7 +798,7 @@ class StatsGen
       }
 
       float td1;
-      for (int i = 0; i < npoints; i++)
+      for (int i = 0; i < size; i++)
       {
         random = rg.genrand_res53();
         choose = 0;
@@ -834,7 +836,7 @@ class StatsGen
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    static int GenHexMDFPlotData(T* mdf, T* xval, T* yval, int npoints)
+    static int GenHexMDFPlotData(T* mdf, T* xval, T* yval, int npoints, int size)
     {
 
       float radtodeg = 180.0f / float(M_PI);
@@ -855,7 +857,7 @@ class StatsGen
       }
       //	  float ra1, ra2, ra3, rb1, rb2, rb3, rc1, rc2, rc3;
       float td1;
-      for (int i = 0; i < npoints; i++)
+      for (int i = 0; i < size; i++)
       {
         random = rg.genrand_res53();
         choose = 0;
