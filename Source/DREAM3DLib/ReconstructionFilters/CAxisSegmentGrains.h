@@ -47,7 +47,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     CAxisSegmentGrains();
 
   private:
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     int32_t* m_GrainIds;
     float* m_Quats;

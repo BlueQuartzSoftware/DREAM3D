@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -169,7 +169,7 @@ void FindSizes::find_sizes()
     graincounts[gnum]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = static_cast<double>( (4.0/3.0)*m_pi );
+  float vol_term = static_cast<double>( (4.0/3.0)*DREAM3D::Constants::k_Pi );
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
@@ -209,7 +209,7 @@ void FindSizes::find_sizes2D()
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
     m_Volumes[i] = (graincounts[i] * res_scalar);
-    radsquared = m_Volumes[i] / m_pi;
+    radsquared = m_Volumes[i] / DREAM3D::Constants::k_Pi;
     diameter = (2 * sqrt(radsquared));
     m_EquivalentDiameters[i] = diameter;
   }

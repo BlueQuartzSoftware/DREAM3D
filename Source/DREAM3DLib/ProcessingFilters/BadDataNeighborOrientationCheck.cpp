@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -65,7 +65,7 @@ m_GoodVoxels(NULL),
 m_CellPhases(NULL),
 m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -135,7 +135,7 @@ void BadDataNeighborOrientationCheck::dataCheck(bool preflight, size_t voxels, s
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -174,7 +174,7 @@ void BadDataNeighborOrientationCheck::execute()
   }
   setErrorCondition(0);
 
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0;
+  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -206,8 +206,9 @@ void BadDataNeighborOrientationCheck::execute()
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
   float w = 10000.0;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
@@ -233,18 +234,21 @@ void BadDataNeighborOrientationCheck::execute()
       if (good == 1 && m_GoodVoxels[neighbor] == true)
       {
       phase1 = m_CrystalStructures[m_CellPhases[i]];
-      q1[0] = 1;
-      q1[1] = m_Quats[i * 5 + 1];
-      q1[2] = m_Quats[i * 5 + 2];
-      q1[3] = m_Quats[i* 5 + 3];
-      q1[4] = m_Quats[i * 5 + 4];
+      QuaternionMathF::Copy(quats[i], q1);
+
+//      q1[0] = 1;
+//      q1[1] = m_Quats[i * 5 + 1];
+//      q1[2] = m_Quats[i * 5 + 2];
+//      q1[3] = m_Quats[i * 5 + 3];
+//      q1[4] = m_Quats[i * 5 + 4];
 
       phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-      q2[0] = 1;
-      q2[1] = m_Quats[neighbor*5 + 1];
-      q2[2] = m_Quats[neighbor*5 + 2];
-      q2[3] = m_Quats[neighbor*5 + 3];
-      q2[4] = m_Quats[neighbor*5 + 4];
+      QuaternionMathF::Copy(quats[neighbor], q2);
+//      q2[0] = 1;
+//      q2[1] = m_Quats[neighbor*5 + 1];
+//      q2[2] = m_Quats[neighbor*5 + 2];
+//      q2[3] = m_Quats[neighbor*5 + 3];
+//      q2[4] = m_Quats[neighbor*5 + 4];
 
       if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
       if (w < m_MisorientationTolerance)
@@ -287,18 +291,20 @@ void BadDataNeighborOrientationCheck::execute()
         if (good == 1 && m_GoodVoxels[neighbor] == false)
         {
         phase1 = m_CrystalStructures[m_CellPhases[i]];
-        q1[0] = 1;
-        q1[1] = m_Quats[i * 5 + 1];
-        q1[2] = m_Quats[i * 5 + 2];
-        q1[3] = m_Quats[i* 5 + 3];
-        q1[4] = m_Quats[i * 5 + 4];
+        QuaternionMathF::Copy(quats[i], q1);
+//        q1[0] = 1;
+//        q1[1] = m_Quats[i * 5 + 1];
+//        q1[2] = m_Quats[i * 5 + 2];
+//        q1[3] = m_Quats[i * 5 + 3];
+//        q1[4] = m_Quats[i * 5 + 4];
 
         phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-        q2[0] = 1;
-        q2[1] = m_Quats[neighbor*5 + 1];
-        q2[2] = m_Quats[neighbor*5 + 2];
-        q2[3] = m_Quats[neighbor*5 + 3];
-        q2[4] = m_Quats[neighbor*5 + 4];
+        QuaternionMathF::Copy(quats[neighbor], q1);
+//        q2[0] = 1;
+//        q2[1] = m_Quats[neighbor*5 + 1];
+//        q2[2] = m_Quats[neighbor*5 + 2];
+//        q2[3] = m_Quats[neighbor*5 + 3];
+//        q2[4] = m_Quats[neighbor*5 + 4];
 
         if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         if (w < m_MisorientationTolerance)

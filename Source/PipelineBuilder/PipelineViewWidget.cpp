@@ -558,7 +558,6 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
         {
           m_FilterWidgetLayout->insertWidget(count - 1, m_FilterBeingDragged);
           setSelectedFilterWidget(m_FilterBeingDragged);
-          didInsert = true;
         }
       }
     }

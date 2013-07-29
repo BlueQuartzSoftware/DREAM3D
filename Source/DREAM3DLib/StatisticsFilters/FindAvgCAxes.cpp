@@ -37,7 +37,7 @@
 #include "FindAvgCAxes.h"
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
@@ -46,15 +46,15 @@
 //
 // -----------------------------------------------------------------------------
 FindAvgCAxes::FindAvgCAxes() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
-m_GrainIds(NULL),
-m_Quats(NULL),
-m_AvgCAxes(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
+  m_GrainIds(NULL),
+  m_Quats(NULL),
+  m_AvgCAxes(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
 
 // -----------------------------------------------------------------------------
@@ -92,9 +92,9 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   VoxelDataContainer* m = getVoxelDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -128,11 +128,10 @@ void FindAvgCAxes::execute()
 
   size_t numgrains = m->getNumFieldTuples();
   //int phase;
-  float q1[5];
+  QuatF q1;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3];
   float g1t[3][3];
- // float n1, n2, n3;
-//  unsigned int phase1, phase2;
   float caxis[3] = {0,0,1};
   float c1[3];
 
@@ -145,49 +144,50 @@ void FindAvgCAxes::execute()
     m_AvgCAxes[3*i+1] = 0.0;
     m_AvgCAxes[3*i+2] = 0.0;
   }
-//  float qr[5];
+  //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0)
     {
-      q1[0] = m_Quats[i*5 + 0];
-      q1[1] = m_Quats[i*5 + 1];
-      q1[2] = m_Quats[i*5 + 2];
-      q1[3] = m_Quats[i*5 + 3];
-      q1[4] = m_Quats[i*5 + 4];
+      QuaternionMathF::Copy(quats[i], q1);
+//      q1[0] = m_Quats[i*5 + 0];
+//      q1[1] = m_Quats[i*5 + 1];
+//      q1[2] = m_Quats[i*5 + 2];
+//      q1[3] = m_Quats[i*5 + 3];
+//      q1[4] = m_Quats[i*5 + 4];
 
       OrientationMath::QuattoMat(q1, g1);
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
-      MatrixMath::transpose3x3(g1, g1t);
-      MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
-      MatrixMath::normalize3x1(c1);
-    if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
+      MatrixMath::Normalize3x1(c1);
+      if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
 
-    counter[m_GrainIds[i]]++;
-    m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
-    m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
-    m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
+      counter[m_GrainIds[i]]++;
+      m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
+      m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
+      m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
     }
   }
   for (size_t i = 1; i < numgrains; i++)
   {
     if(counter[i] == 0)
     {
-    m_AvgCAxes[3*i] = 0;
-    m_AvgCAxes[3*i+1] = 0;
-    m_AvgCAxes[3*i+2] = 1;
+      m_AvgCAxes[3*i] = 0;
+      m_AvgCAxes[3*i+1] = 0;
+      m_AvgCAxes[3*i+2] = 1;
     }
     else
     {
-    m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
-    m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
-    m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
+      m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
+      m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
+      m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
     }
   }
 
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }
 
 

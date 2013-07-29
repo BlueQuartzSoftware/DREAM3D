@@ -38,7 +38,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -50,7 +50,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -188,7 +188,7 @@ void SegmentGrains::execute()
             {
               voxelslist[size] = neighbor;
               size++;
-              if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
+              if(size >= voxelslist.size()) voxelslist.resize(size + size, -1);
             }
           }
         }

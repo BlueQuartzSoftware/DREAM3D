@@ -42,7 +42,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
@@ -58,7 +58,7 @@
 
 #include "DREAM3DLib/Common/PrecipitateStatsData.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -374,8 +374,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   firstPrecipitateField = currentnumgrains;
   int phase;
   float precipboundaryfraction = 0.0;
-  float random;
-  int random2;
+  float random = 0.0f;
+  int random2 = 0;
   float xc, yc, zc;
   float oldxc, oldyc, oldzc;
   int randomgrain;
@@ -721,13 +721,14 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
 
 }
 
-void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps)
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-      // DataContainer* m = getVoxelDataContainer();
-
-      StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -736,7 +737,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
   float vol = 0;
   int volgood = 0;
   float phi1, PHI, phi2;
-  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (m_pi));
+  float fourThirdsPi =  static_cast<float>((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi));
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
   float avg = GSdist[0]->GetValue(0);
@@ -1242,7 +1243,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   float PHI = m_AxisEulerAngles[3*gnum+1];
   float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
-  OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+  OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
@@ -1277,7 +1278,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-        MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+        MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
         float axis1comp = coordsRotated[0] / radcur1;
         float axis2comp = coordsRotated[1] / radcur2;
         float axis3comp = coordsRotated[2] / radcur3;
@@ -1373,7 +1374,7 @@ void InsertPrecipitatePhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3*i+1];
     float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
-    OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
     plane = static_cast<size_t>( (zc - (zRes / 2.0f)) / zRes );
@@ -1434,7 +1435,7 @@ void InsertPrecipitatePhases::assign_voxels()
             coords[0] = coords[0] - xc;
             coords[1] = coords[1] - yc;
             coords[2] = coords[2] - zc;
-            MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+            MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
             float axis1comp = coordsRotated[0] / radcur1;
             float axis2comp = coordsRotated[1] / radcur2;
             float axis3comp = coordsRotated[2] / radcur3;
@@ -1554,7 +1555,7 @@ void InsertPrecipitatePhases::assign_gaps()
       float PHI = m_AxisEulerAngles[3*i+1];
       float phi2 = m_AxisEulerAngles[3*i+2];
       float ga[3][3];
-      OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+      OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
       column = static_cast<DimType>( (xc - (xRes / 2.0f)) / xRes );
       row = static_cast<DimType>( (yc - (yRes / 2.0f)) / yRes );
       plane = static_cast<DimType>( (zc - (zRes / 2.0f)) / zRes );
@@ -1617,7 +1618,7 @@ void InsertPrecipitatePhases::assign_gaps()
                 coords[0] = coords[0] - xc;
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
-                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+                MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
                 float axis1comp = coordsRotated[0] / radcur1;
                 float axis2comp = coordsRotated[1] / radcur2;
                 float axis3comp = coordsRotated[2] / radcur3;

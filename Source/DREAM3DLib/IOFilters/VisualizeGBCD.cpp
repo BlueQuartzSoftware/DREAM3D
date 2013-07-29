@@ -43,11 +43,10 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
+
 
 #define WRITE_XYZ_POINTS 1
 
@@ -72,7 +71,7 @@ VisualizeGBCD::VisualizeGBCD() :
   m_MisAxis.y = 1;
   m_MisAxis.z = 1;
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -165,6 +164,7 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
   reader->closeFilterGroup();
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("StereoOutputFile", getStereoOutputFile() );
   writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
   writer->closeFilterGroup();
-  return index;
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -313,14 +313,14 @@ void VisualizeGBCD::execute()
   float* gbcdLimits = gbcdLimitsArray->GetPointer(0);
 
   gbcdLimits[0] = 0.0;
-  gbcdLimits[1] = cosf(1.0*m_pi);
+  gbcdLimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);
   gbcdLimits[2] = 0.0;
   gbcdLimits[3] = 0.0;
-  gbcdLimits[4] = cosf(1.0*m_pi);
-  gbcdLimits[5] = 2.0*m_pi;
+  gbcdLimits[4] = cosf(1.0*DREAM3D::Constants::k_Pi);
+  gbcdLimits[5] = 2.0*DREAM3D::Constants::k_Pi;
   gbcdLimits[6] = cosf(0.0);
-  gbcdLimits[7] = 2.0*m_pi;
-  gbcdLimits[8] = 2.0*m_pi;
+  gbcdLimits[7] = 2.0*DREAM3D::Constants::k_Pi;
+  gbcdLimits[8] = 2.0*DREAM3D::Constants::k_Pi;
   gbcdLimits[9] = cosf(0.0);
 
   //get num components of GBCD
@@ -335,7 +335,7 @@ void VisualizeGBCD::execute()
   gbcdSizes[4] = dim;
 
   float binsize = gbcdLimits[5]/float(gbcdSizes[0]);
-  float binsize2 = binsize*(2.0/m_pi);
+  float binsize2 = binsize*(2.0/DREAM3D::Constants::k_Pi);
   gbcdDeltas[0] = binsize;
   gbcdDeltas[1] = binsize2;
   gbcdDeltas[2] = binsize;
@@ -355,14 +355,14 @@ void VisualizeGBCD::execute()
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
-  float qtest[5];
+  QuatF qtest;
   float w, n1, n2, n3;
   //  float dist;
   float theta, cosPhi, phi;
 
-  m_MisAngle = m_MisAngle * m_pi/180.0f;
+  m_MisAngle = m_MisAngle * DREAM3D::Constants::k_Pi/180.0f;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath::axisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
+  OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
 
   //  int inversion = 1;
   //get number of symmetry operators
@@ -416,29 +416,29 @@ void VisualizeGBCD::execute()
     if(q == 1)
     {
       //copy original misorientation for use later
-      MatrixMath::copy3x3(dg, dgOrig);
+      MatrixMath::Copy3x3(dg, dgOrig);
       //take inverse of misorientation, then copy into misorientation variable to use for switching symmetry
-      MatrixMath::transpose3x3(dg, dgt);
-      MatrixMath::copy3x3(dgt, dg);
+      MatrixMath::Transpose3x3(dg, dgt);
+      MatrixMath::Copy3x3(dgt, dg);
 
     }
     for(int i=0; i<n_sym; i++)
     {
       //get symmetry operator1
       m_OrientationOps[1]->getMatSymOp(i, sym1);
-      MatrixMath::multiply3x3with3x3(sym1,dg,dg1);
+      MatrixMath::Multiply3x3with3x3(sym1,dg,dg1);
       //get transpose for rotation of directions
-      MatrixMath::transpose3x3(sym1, sym1t);
+      MatrixMath::Transpose3x3(sym1, sym1t);
       for(int j=0; j<n_sym; j++)
       {
         //get symmetry operator2
         m_OrientationOps[1]->getMatSymOp(j, sym2);
-        MatrixMath::transpose3x3(sym2,sym2t);
+        MatrixMath::Transpose3x3(sym2,sym2t);
         //calculate symmetric misorientation
-        MatrixMath::multiply3x3with3x3(dg1,sym2t,dg2);
+        MatrixMath::Multiply3x3with3x3(dg1,sym2t,dg2);
         //convert to euler angle
-        OrientationMath::mattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-        OrientationMath::eulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
+        OrientationMath::EulertoQuat(qtest, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
         OrientationMath::QuattoAxisAngle(qtest, w, n1, n2, n3);
 
         mis_euler1[1] = cosf(mis_euler1[1]);
@@ -461,11 +461,11 @@ void VisualizeGBCD::execute()
               vec[1] = xyz[3*(l*gbcdSizes[3]+k)+1];
               vec[2] = xyz[3*(l*gbcdSizes[3]+k)+2];
               //find symmetric poles using the first symmetry operator
-              MatrixMath::multiply3x3with3x1(sym1t, vec, rotNormal);
+              MatrixMath::Multiply3x3with3x1(sym1t, vec, rotNormal);
               if(q == 1)
               {
                 //rotate symmetric pole by original misorientation
-                MatrixMath::multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
+                MatrixMath::Multiply3x3with3x1(dgOrig, rotNormal, rotNormal2);
                 //take negative of vector
                 rotNormal[0] = -rotNormal2[0];
                 rotNormal[1] = -rotNormal2[1];

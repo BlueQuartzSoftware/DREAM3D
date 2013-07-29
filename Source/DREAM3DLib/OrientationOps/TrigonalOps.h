@@ -38,17 +38,21 @@
 #define TrigonalOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 
 namespace TrigonalMath {
   namespace Detail {
-    static const float TrigQuatSym[6][5] = {{0.000000000f, 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f},
-                         {0.000000000f, 0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f},
-                         {0.000000000f, 0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f},
-						 {0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f},
- 						 {0.000000000f, -0.500000000f, 0.86602540f, 0.000000000f, 0.000000000f},
-                         {0.000000000f, -0.500000000f, -0.866025400f, 0.000000000f, 0.000000000}};
+    static const QuatF TrigQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
+                                            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
+                                            QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+                                            QuaternionMathF::New(-0.500000000f, 0.86602540f, 0.000000000f, 0.000000000f),
+                                            QuaternionMathF::New(-0.500000000f, -0.866025400f, 0.000000000f, 0.000000000)};
   }
 }
 /**
@@ -59,7 +63,7 @@ namespace TrigonalMath {
  * @date May 5, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT TrigonalOps : public OrientationMath
+class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
 {
   public:
     MXA_SHARED_POINTERS(TrigonalOps)
@@ -73,27 +77,27 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationMath
     virtual int getMDFSize() { return 31104; }
     virtual int getNumSymOps() { return 6; }
 
-    virtual float getMisoQuat( float q1[5],float q2[5],float &n1min,float &n2min,float &n3min);
-    virtual void getQuatSymOp(int i, float *q);
+    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
+    virtual void getQuatSymOp(int i, QuatF &q);
     virtual void getRodSymOp(int i, float *r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float &r1,float &r2, float &r3);
-    virtual void getMDFFZRod(float &r1,float &r2, float &r3);
-    virtual void getNearestQuat(float *q1, float *q2);
-    virtual void getFZQuat(float *qr);
+    virtual void getODFFZRod(float &r1, float &r2, float &r3);
+    virtual void getMDFFZRod(float &r1, float &r2, float &r3);
+    virtual void getNearestQuat(QuatF &q1, QuatF &q2);
+    virtual void getFZQuat(QuatF &qr);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime);
-    virtual void getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1);
-    virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt);
-    virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7);
+    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime);
+    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
+    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
+    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
 
   protected:
-    float _calcMisoQuat(const float quatsym[6][5], int numsym,
-                  float q1[5], float q2[5],
+    float _calcMisoQuat(const QuatF quatsym[6], int numsym,
+                  QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
 
   private:

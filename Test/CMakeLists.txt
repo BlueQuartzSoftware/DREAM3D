@@ -64,6 +64,24 @@ macro(MXA_ADD_TEST testname Exename)
 endmacro()
 
 # --------------------------------------------------------------------------
+# Pole Figure Test
+# --------------------------------------------------------------------------
+set(PFTest_SRCS
+    PFTest.cpp
+    ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.h
+    ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.cpp
+)
+# and finally this will run moc:
+QT4_WRAP_CPP( PFTest_Generated_MOC_SRCS
+             ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.h
+              )
+add_executable(PFTest ${PFTest_SRCS} ${PFTest_Generated_MOC_SRCS})
+target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+set_target_properties(PFTest PROPERTIES FOLDER Test)
+add_test(PFTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PFTest)
+
+
+# --------------------------------------------------------------------------
 # FilterPipelineTest
 # --------------------------------------------------------------------------
 add_executable(FilterPipelineTest FilterPipelineTest.cpp )
@@ -91,17 +109,19 @@ add_test(MXAFileSystemPathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MXAFileSystemPa
 
 
 # --------------------------------------------------------------------------
-# StatsData Test
+# QuaternionMathTest.cpp Test
 # --------------------------------------------------------------------------
-#add_executable(StatsDataTest StatsDataTest.cpp )
-#target_link_libraries(StatsDataTest DREAM3DLib)
-#add_test(StatsDataTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/StatsDataTest)
+add_executable(QuaternionMathTest QuaternionMathTest.cpp )
+target_link_libraries(QuaternionMathTest DREAM3DLib)
+set_target_properties(QuaternionMathTest PROPERTIES FOLDER Test)
+add_test(QuaternionMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QuaternionMathTest)
 
 # --------------------------------------------------------------------------
 # ErrorMessageTest
 # --------------------------------------------------------------------------
 add_executable(ErrorMessageTest ErrorMessageTest.cpp )
 target_link_libraries(ErrorMessageTest DREAM3DLib)
+set_target_properties(ErrorMessageTest PROPERTIES FOLDER Test)
 add_test(ErrorMessageTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ErrorMessageTest)
 
 # --------------------------------------------------------------------------
@@ -215,7 +235,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
     target_link_libraries(FindNeighborsTest DREAM3DLib)
-  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+	set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------
@@ -223,7 +243,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
     target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-  set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
+    set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
     add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
 endif()
 
@@ -239,6 +259,7 @@ endif()
 add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
                                 ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
 set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
+
 # --------
 add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
 target_link_libraries(ODFTest DREAM3DLib)

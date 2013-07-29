@@ -161,6 +161,7 @@ LaplacianSmoothing::LaplacianSmoothing() :
   m_QuadPointLambda(0.0),
   m_SurfaceTripleLineLambda(0.0),
   m_SurfaceQuadPointLambda(0.0),
+  m_GenerateIterationOutputFiles(false),
   m_DoConnectivityFilter(false)
 {
   setupFilterParameters();
@@ -551,11 +552,12 @@ int LaplacianSmoothing::edgeBasedSmoothing()
       ncon[i] = 0;//reset for next iteration
     }
 
-#if OUTPUT_DEBUG_VTK_FILES
-    std::stringstream testFile;
-    testFile << "/tmp/Laplacian_" << q << ".vtk";
-    writeVTKFile(testFile.str());
-#endif
+    if(m_GenerateIterationOutputFiles)
+    {
+      std::stringstream testFile;
+      testFile << "LaplacianSmoothing_" << q << ".vtk";
+      writeVTKFile(testFile.str());
+    }
   }
 
 
@@ -709,9 +711,11 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
-  bool m_WriteConformalMesh = true;
   std::stringstream ss;
 
+  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
+  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   FILE* vtkFile = NULL;
   vtkFile = fopen(outputVtkFile.c_str(), "wb");
@@ -768,11 +772,11 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
   int triangleCount = 0;
   int end = triangles.GetNumberOfTuples();
-  int grainInterest = 25;
+  int grainInterest = 9;
   for(int i = 0; i < end; ++i)
   {
-    DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(i);
-    if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
+    //DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(i);
+    if (faceLabels[i*2] == grainInterest || faceLabels[i*2+1] == grainInterest)
     {
       ++triangleCount;
     }
@@ -789,8 +793,8 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
-    DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(tid);
-    if (tri->labels[0] == grainInterest || tri->labels[1] == grainInterest)
+    //DREAM3D::SurfaceMesh::Face_t* tri = triangles.GetPointer(tid);
+    if (faceLabels[tid*2] == grainInterest || faceLabels[tid*2+1] == grainInterest)
     {
       tData[1] = triangles[tid].verts[0];
       tData[2] = triangles[tid].verts[1];
@@ -806,23 +810,10 @@ void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
         MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
         MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
         fwrite(tData, sizeof(int), 4, vtkFile);
-        //      if (false == m_WriteConformalMesh)
-        //      {
-        //        tData[0] = tData[1];
-        //        tData[1] = tData[3];
-        //        tData[3] = tData[0];
-        //        tData[0] = 3;
-        //        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-        //        fwrite(tData, sizeof(int), 4, vtkFile);
-        //      }
       }
       else
       {
         fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
-        //      if (false == m_WriteConformalMesh)
-        //      {
-        //        fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
-        //      }
       }
     }
   }

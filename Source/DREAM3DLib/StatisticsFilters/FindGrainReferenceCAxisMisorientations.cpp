@@ -40,32 +40,32 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgCAxes.h"
 #include "DREAM3DLib/StatisticsFilters/FindEuclideanDistMap.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindGrainReferenceCAxisMisorientations::FindGrainReferenceCAxisMisorientations() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
-m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
-m_GrainAvgCAxisMisorientationsArrayName(DREAM3D::FieldData::GrainAvgCAxisMisorientations),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_GrainReferenceCAxisMisorientations(NULL),
-m_AvgCAxes(NULL),
-m_GrainAvgCAxisMisorientations(NULL),
-m_Quats(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
+  m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
+  m_GrainAvgCAxisMisorientationsArrayName(DREAM3D::FieldData::GrainAvgCAxisMisorientations),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_GrainReferenceCAxisMisorientations(NULL),
+  m_AvgCAxes(NULL),
+  m_GrainAvgCAxisMisorientations(NULL),
+  m_Quats(NULL)
 {
   setupFilterParameters();
 }
@@ -113,15 +113,15 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, -303, float, FloatArrayType, fields, 3)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, -303, float, FloatArrayType, fields, 3)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgCAxisMisorientations, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgCAxisMisorientations, ss, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -157,24 +157,23 @@ void FindGrainReferenceCAxisMisorientations::execute()
     return;
   }
 
-//  float** avgmiso = new float *[m->getNumFieldTuples()];
-//  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
-//  {
-//    avgmiso[i] = new float[2];
-//    for (int j = 0; j < 2; j++)
-//    {
-//      avgmiso[i][j] = 0.0;
-//    }
-//  }
+  //  float** avgmiso = new float *[m->getNumFieldTuples()];
+  //  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  //  {
+  //    avgmiso[i] = new float[2];
+  //    for (int j = 0; j < 2; j++)
+  //    {
+  //      avgmiso[i][j] = 0.0;
+  //    }
+  //  }
   size_t numFields = m->getNumFieldTuples();
   int avgMisoComps = 2;
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->GetPointer(0);
 
-  float q1[5];
-  //float q2[5];
-
+  QuatF q1;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   typedef DataArray<unsigned int> XTalType;
 
   float w;
@@ -218,31 +217,31 @@ void FindGrainReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
-      q1[0] = 1;
-          q1[1] = m_Quats[point*5 + 1];
-          q1[2] = m_Quats[point*5 + 2];
-          q1[3] = m_Quats[point*5 + 3];
-          q1[4] = m_Quats[point*5 + 4];
-        OrientationMath::QuattoMat(q1, g1);
-        //transpose the g matricies so when caxis is multiplied by it
-        //it will give the sample direction that the caxis is along
-        MatrixMath::transpose3x3(g1, g1t);
-        MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
-        //normalize so that the magnitude is 1
-        MatrixMath::normalize3x1(c1);
+          QuaternionMathF::Copy(quats[point], q1);
+          //          q1[1] = m_Quats[point*5 + 1];
+          //          q1[2] = m_Quats[point*5 + 2];
+          //          q1[3] = m_Quats[point*5 + 3];
+          //          q1[4] = m_Quats[point*5 + 4];
+          OrientationMath::QuattoMat(q1, g1);
+          //transpose the g matricies so when caxis is multiplied by it
+          //it will give the sample direction that the caxis is along
+          MatrixMath::Transpose3x3(g1, g1t);
+          MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+          //normalize so that the magnitude is 1
+          MatrixMath::Normalize3x1(c1);
 
           AvgCAxis[0] = m_AvgCAxes[3*m_GrainIds[point]];
           AvgCAxis[1] = m_AvgCAxes[3*m_GrainIds[point]+1];
           AvgCAxis[2] = m_AvgCAxes[3*m_GrainIds[point]+2];
-        //normalize so that the magnitude is 1
-        MatrixMath::normalize3x1(AvgCAxis);
+          //normalize so that the magnitude is 1
+          MatrixMath::Normalize3x1(AvgCAxis);
 
-        w = ((c1[0]*AvgCAxis[0])+(c1[1]*AvgCAxis[1])+(c1[2]*AvgCAxis[2]));
-      if(w < -1) w = -1;
-      if(w > 1) w = 1;
-        w = acosf(w);
-      w = w *(180.0f/m_pi);
-      if(w > 90.0) w = 180.0-w;
+          w = ((c1[0]*AvgCAxis[0])+(c1[1]*AvgCAxis[1])+(c1[2]*AvgCAxis[2]));
+          if(w < -1) w = -1;
+          if(w > 1) w = 1;
+          w = acosf(w);
+          w = w *(180.0f/DREAM3D::Constants::k_Pi);
+          if(w > 90.0) w = 180.0-w;
 
           m_GrainReferenceCAxisMisorientations[point] = w;
           index = m_GrainIds[point] * avgMisoComps;
@@ -266,11 +265,11 @@ void FindGrainReferenceCAxisMisorientations::execute()
   }
 
   // Clean up all the heap allocated memory
-//  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
-//  {
-//    delete[] avgmiso[i];
-//  }
-//  delete avgmiso;
+  //  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  //  {
+  //    delete[] avgmiso[i];
+  //  }
+  //  delete avgmiso;
 
   notifyStatusMessage("Completed");
 }

@@ -50,6 +50,9 @@
 
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
+
+class CompareFunctor;
+
 /**
  * @class ScalarSegmentGrains ScalarSegmentGrains.h DREAM3DLib/ReconstructionFilters/ScalarSegmentGrains.h
  * @brief
@@ -106,13 +109,14 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     ScalarSegmentGrains();
 
   private:
-	IDataArray::Pointer inputData;
+	  IDataArray::Pointer m_InputData;
     
-	int32_t* m_GrainIds;
-    bool* m_Active;
+	  int32_t*  m_GrainIds;
+    bool*     m_Active;
+    CompareFunctor* m_Compare;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
+    
 
     ScalarSegmentGrains(const ScalarSegmentGrains&); // Copy Constructor Not Implemented
     void operator=(const ScalarSegmentGrains&); // Operator '=' Not Implemented

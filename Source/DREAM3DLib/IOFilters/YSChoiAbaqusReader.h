@@ -37,7 +37,7 @@
 #include "MXA/Common/MXAEndian.h"
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/FileReader.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 

@@ -49,7 +49,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     Int32ArrayType::Pointer initialize_packinggrid();
 
     void place_precipitates(Int32ArrayType::Pointer grainOwnersPtr);
-    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationMath::Pointer OrthoOps);
+    void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
 
     void transfer_attributes(int gnum, Precip* precip);
     void insert_precipitate(size_t grainNum);

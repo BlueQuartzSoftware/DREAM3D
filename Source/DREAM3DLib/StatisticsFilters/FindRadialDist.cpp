@@ -49,7 +49,7 @@
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -281,7 +281,7 @@ void FindRadialDist::find_radialdist()
       {
         if(j < int(distToSurface[i]/binSize))
         {
-          volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*m_pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*m_pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
+          volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] = volume[int(m_EquivalentDiameters[i]/ESDStepSize)][j] + ((4.0/3.0)*DREAM3D::Constants::k_Pi*float((j+1)*binSize)*float((j+1)*binSize)*float((j+1)*binSize)) - ((4.0/3.0)*DREAM3D::Constants::k_Pi*float(j*binSize)*float(j*binSize)*float(j*binSize));
         }
       }
       x = m_Centroids[3*i];

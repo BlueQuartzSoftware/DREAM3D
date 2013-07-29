@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     FindSchmids();
 
   private:
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

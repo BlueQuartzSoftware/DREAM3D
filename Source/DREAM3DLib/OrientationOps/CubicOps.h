@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -39,7 +39,11 @@
 
 
 #include "MXA/Common/MXASetGetMacros.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 /**
  * @class CubicOps CubicOps.h DREAM3DLib/Common/OrientationOps/CubicOps.h
@@ -49,12 +53,11 @@
  * @date May 5, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT CubicOps : public OrientationMath
+class DREAM3DLib_EXPORT CubicOps : public OrientationOps
 {
   public:
     MXA_SHARED_POINTERS(CubicOps)
-    MXA_TYPE_MACRO(CubicOps)
-    //MXA_STATIC_NEW_SUPERCLASS(OrientationMath, CubicOps)
+    MXA_TYPE_MACRO_SUPER(CubicOps, OrientationOps)
     MXA_STATIC_NEW_MACRO(CubicOps)
 
     CubicOps();
@@ -64,31 +67,32 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationMath
     virtual int getMDFSize() { return 5832; }
     virtual int getNumSymOps() { return 24; }
 
-    virtual float getMisoQuat( float q1[5],float q2[5],float &n1,float &n2,float &n3);
-    virtual void getQuatSymOp(int i, float *q);
+    virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
+    virtual void getQuatSymOp(int i, QuatF &q);
     virtual void getRodSymOp(int i, float *r);
     virtual void getMatSymOp(int i, float g[3][3]);
-    virtual void getODFFZRod(float &r1,float &r2, float &r3);
-    virtual void getMDFFZRod(float &r1,float &r2, float &r3);
-    virtual void getNearestQuat(float *q1, float *q2);
-    virtual void getFZQuat(float *qr);
+    virtual void getODFFZRod(float &r1, float &r2, float &r3);
+    virtual void getMDFFZRod(float &r1, float &r2, float &r3);
+    virtual void getNearestQuat(QuatF &q1, QuatF &q2);
+    virtual void getFZQuat(QuatF &qr);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
-	virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
-    virtual void getmPrime(float q1[5], float q2[5], float LD[3], float &mPrime);
-    virtual void getF1(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1);
-    virtual void getF1spt(float q1[5], float q2[5], float LD[3], bool maxSF, float &F1spt);
-    virtual void getF7(float q1[5], float q2[5], float LD[3], bool maxSF, float &F7);
+    virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys);
+    virtual void getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime);
+    virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
+    virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
+    virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
+
+
+
 
 
 protected:
-    float _calcMisoQuat(const float quatsym[24][5], int numsym,
-                  float q1[5], float q2[5],
+    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
+                  QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
-
-
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
     void operator=(const CubicOps&); // Operator '=' Not Implemented

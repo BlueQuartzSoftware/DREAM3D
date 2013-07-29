@@ -43,7 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   unsigned int* m_CrystalStructures;
     double* m_GBCD;

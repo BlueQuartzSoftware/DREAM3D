@@ -349,8 +349,8 @@ void EbsdToH5Ebsd::execute()
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
   int64_t z = m_ZStartIndex;
-  int64_t xDim, yDim;
-  float xRes, yRes;
+  int64_t xDim = 0, yDim = 0;
+  float xRes = 0.0f, yRes = 0.0f;
   /* There is a frailness about the z index and the file list. The programmer
    * using this code MUST ensure that the list of files that is sent into this
    * class is in the appropriate order to match up with the z index (slice index)

@@ -32,11 +32,9 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/NeighborList.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.h
   ${DREAM3DLib_SOURCE_DIR}/Common/PipelineMessage.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.h
@@ -79,10 +77,8 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArray.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/MatrixMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/OrientationMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/PhaseType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/ShapeType.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/StatsDataArray.cpp

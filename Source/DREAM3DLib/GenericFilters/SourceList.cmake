@@ -22,6 +22,7 @@ set(_PublicFilters
   CopyFieldArrayToCellArray
   FindBoundingBoxGrains
   FindCellQuats
+  UpdateCellQuats
   FindGrainCentroids
   FindGrainPhases
   FindSurfaceCells

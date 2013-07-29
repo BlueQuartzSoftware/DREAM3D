@@ -35,11 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GBCDTriangleDumper.h"
 
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2*M_PI);
 
 
 // -----------------------------------------------------------------------------

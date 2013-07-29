@@ -146,8 +146,10 @@ void FindGrainCentroids::find_centroids()
   VoxelDataContainer* m = getVoxelDataContainer();
   float x, y, z;
   size_t numgrains = m->getNumFieldTuples();
+  if (numgrains == 0) { return; }
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);
+  
   graincenters = m_GrainCenters->GetPointer(0);
 
   int xPoints = static_cast<int>(m->getXPoints());
@@ -201,6 +203,7 @@ void FindGrainCentroids::find_centroids2D()
   float x, y;
  // int col, row;
   size_t numgrains = m->getNumFieldTuples();
+  if (0 == numgrains) { return; }
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);
   graincenters = m_GrainCenters->GetPointer(0);

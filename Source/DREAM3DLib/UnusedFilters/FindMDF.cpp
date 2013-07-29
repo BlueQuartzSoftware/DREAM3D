@@ -106,7 +106,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
   TEST_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, err, -302, bool, BoolArrayType, fields, 1)
   if(err == -302)
   {
@@ -277,7 +277,7 @@ void FindMDF::execute()
 		  if (phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
 		  if (phase1 == phase2)
 		  {
-			OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+			OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
 		    if ((nname > i || m_SurfaceFields[nname] == true))
 		    {
 			  mbin = m_OrientationOps[phase1]->getMisoBin(r1, r2, r3);
