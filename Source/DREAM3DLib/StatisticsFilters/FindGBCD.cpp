@@ -59,6 +59,8 @@ class CalculateGBCDImpl
     int32_t* m_Phases;
     float* m_Eulers;
     int32_t* m_Bins;
+    float* m_BinConts;
+    bool* m_HemiCheck;
     float* m_GBCDdeltas;
     int* m_GBCDsizes;
     float* m_GBCDlimits;
@@ -67,7 +69,7 @@ class CalculateGBCDImpl
 
   public:
     CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
-                    int32_t* Bins, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
+                    int32_t* Bins, float* BinConts, bool* HemiCheck, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       startOffset(i),
       numEntriesPerTri(numMisoReps),
       m_Labels(Labels),
@@ -75,6 +77,8 @@ class CalculateGBCDImpl
       m_Phases(Phases),
       m_Eulers(Eulers),
       m_Bins(Bins),
+      m_BinConts(BinConts),
+      m_HemiCheck(HemiCheck),
       m_GBCDdeltas(GBCDdeltas),
       m_GBCDsizes(GBCDsizes),
       m_GBCDlimits(GBCDlimits),
@@ -94,7 +98,7 @@ class CalculateGBCDImpl
       int k;//, k4;
       int m;
       int temp;
-      int32_t gbcd_index;
+      bool gbcd_indices_good;
       int grain1, grain2;
       int inversion = 1;
       float g1ea[3], g2ea[3];
@@ -105,6 +109,10 @@ class CalculateGBCDImpl
       float euler_mis[3];
       float normal[3];
       float xstl1_norm0[3], xstl1_norm1[3], xstl1_norm_sc[2], xstl1_norm_sc_inv[2];
+      int32_t gbcd_indices[4];
+      float indexConts[4];
+      float sqCoord[2], sqCoordInv[2];
+      bool nhCheck, nhCheckInv;
       int SYMcounter=0;
       int TRIcounter=start-startOffset;
 
@@ -153,17 +161,18 @@ class CalculateGBCDImpl
               //find symmetric crystal directions
               MatrixMath::Multiply3x3with3x1(sym1, xstl1_norm0,xstl1_norm1);
 
-              if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+              //get coordinates in square projection of crystal normal parallel to boundary normal
+              nhCheck = getSquareCoord(xstl1_norm1, sqCoord);
+              if(inversion == 1)
               {
-                xstl1_norm_sc[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
-                xstl1_norm_sc[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[1]/xstl1_norm1[0]));
-              }              
+                MatrixMath::Multiply3x1withConstant(xstl1_norm1, -1.0);
+                nhCheckInv = getSquareCoord(xstl1_norm1, sqCoordInv);
+              }
               else
               {
-                xstl1_norm_sc[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
-                xstl1_norm_sc[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0-xstl1_norm1[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+                //if inversion is off, then just use same normal...will not affect after normalization
+                nhCheckInv = getSquareCoord(xstl1_norm1, sqCoordInv);
               }
-
 
               for (k=0; k < nsym; k++)
               {
@@ -177,15 +186,29 @@ class CalculateGBCDImpl
                 MatrixMath::Multiply3x3with3x3(g1s,g2t,dg);
                 //translate matrix to euler angles
                 OrientationMath::MattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
-                OrientationMath::EulertoQuat(qc,euler_mis[0],euler_mis[1],euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
-                OrientationMath::QuattoAxisAngle(qc, w, n1, n2, n3);
-
+                
                 //get the indexes that this point would be in the GBCD histogram
-                gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, xstl1_norm_sc);
-                if (gbcd_index != -1)
+                gbcd_indices_good = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoord, gbcd_indices, indexConts);
+                if (gbcd_indices_good == true)
                 {
-                  m_Bins[(TRIcounter*numEntriesPerTri)+SYMcounter] = gbcd_index;
+                  m_HemiCheck[(TRIcounter*numEntriesPerTri)+SYMcounter] = nhCheck;
+                  for(int m=0;m<4;m++)
+                  {
+                    m_Bins[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = gbcd_indices[m];
+                    m_BinConts[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = indexConts[m];
+                  }
+                }
+                SYMcounter++;
+                gbcd_indices_good = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoordInv, gbcd_indices, indexConts);
+                if (gbcd_indices_good == true)
+                {
+                  m_HemiCheck[(TRIcounter*numEntriesPerTri)+SYMcounter] = nhCheckInv;
+                  for(int m=0;m<4;m++)
+                  {
+                    m_Bins[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = gbcd_indices[m];
+                    m_BinConts[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = indexConts[m];
+                  }
                 }
                 SYMcounter++;
               }
@@ -203,7 +226,7 @@ class CalculateGBCDImpl
     }
 #endif
 
-    int32_t GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* xstl_norm_sc) const
+    bool GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* sqCoord, int32_t* gbcd_indices, float* indexConts) const
     {
       int32_t gbcd_index;
       int i, index[5];
@@ -213,14 +236,14 @@ class CalculateGBCDImpl
 
       //concatonate the normalized euler angles and normalized spherical corrdinate normal
       for (i=0; i<3; i++) mis_eulerNorm[i] = eulerN[i];
-      for (i=0; i<2; i++) mis_eulerNorm[i+3] = xstl_norm_sc[i];
+      for (i=0; i<2; i++) mis_eulerNorm[i+3] = sqCoord[i];
       //Check for a valid point in the GBCD space
       for (i=0; i<5; i++){
         if (mis_eulerNorm[i] < gbcdlimits[i]) flag_good = 0;
         if (mis_eulerNorm[i] > gbcdlimits[i+5]) flag_good = 0;
       }
 
-      if (flag_good == 0) return -1; //does not fit in the gbcd space
+      if (flag_good == 0) return false; //does not fit in the gbcd space
 
       n1 =  gbcdsz[0];
       n1n2 = n1*( gbcdsz[1]);
@@ -228,21 +251,61 @@ class CalculateGBCDImpl
       n1n2n3n4 = n1n2n3*( gbcdsz[3]);
 
       //determine the bin that the point should go into.
-      for (i=0;i < 5; i++){
+      for (i=0;i < 5; i++)
+      {
         index[i] = (int) floorf((mis_eulerNorm[i] - gbcdlimits[i])/gbcddelta[i]);
-        //printf("%1i ",index[j]);
-        if (index[i] >  (gbcdsz[i]-1)) {
+        if (index[i] >  (gbcdsz[i]-1)) 
+        {
           index[i] =  (gbcdsz[i]-1);
         }
-        if (index[i] <  0) {
+        if (index[i] <  0) 
+        {
           index[i] =  0;
         }
       }
-      gbcd_index = index[0]+n1*index[1]+
-          n1n2*index[2]+n1n2n3*index[3] +
-          n1n2n3n4*index[4];
 
-      return gbcd_index;
+      int modIndex3, modIndex4;
+      if(index[3] < gbcdsz[3]-1) modIndex3 = index[3]+1;
+      else modIndex3 = index[3]+1-gbcdsz[3];
+      if(index[4] < gbcdsz[4]-1) modIndex4 = index[4]+1;
+      else modIndex4 = index[4]+1-gbcdsz[4];
+
+      gbcd_indices[0] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*index[3] + n1n2n3n4*index[4];
+      gbcd_indices[1] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*modIndex3 + n1n2n3n4*index[4];
+      gbcd_indices[2] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*index[3] + n1n2n3n4*modIndex4;
+      gbcd_indices[3] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*modIndex3 + n1n2n3n4*modIndex4;
+
+      float mod3 = ((mis_eulerNorm[3] - gbcdlimits[3])/gbcddelta[3]) - (int) floorf((mis_eulerNorm[3] - gbcdlimits[3])/gbcddelta[3]);
+      float mod4 = ((mis_eulerNorm[4] - gbcdlimits[4])/gbcddelta[4]) - (int) floorf((mis_eulerNorm[4] - gbcdlimits[4])/gbcddelta[4]);
+
+      indexConts[0] = (1-mod3)*(1-mod4);
+      indexConts[1] = (mod3)*(1-mod4);
+      indexConts[2] = (1-mod3)*(mod4);
+      indexConts[3] = (mod3)*(mod4);
+
+      return true;
+    }
+
+    bool getSquareCoord(float* xstl1_norm1, float* sqCoord) const
+    {
+      bool nhCheck = false;
+      float adjust = 1.0;
+      if(xstl1_norm1[2] >= 0.0)
+      {
+        adjust = -1.0;
+        nhCheck = true;
+      }
+      if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
+      {
+        sqCoord[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+        sqCoord[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[1]/xstl1_norm1[0]));
+      }              
+      else
+      {
+        sqCoord[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
+        sqCoord[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+      }
+      return nhCheck;
     }
 };
 
@@ -433,14 +496,16 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  size_t faceChunkSize = 50000;
-  size_t numMisoReps = 1152;
+  size_t faceChunkSize = 10000;
+  size_t numMisoReps = 2304;
   if(totalFaces < faceChunkSize) faceChunkSize = totalFaces;
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::NullPointer();
   FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
   Int32ArrayType::Pointer gbcdBinsArray = Int32ArrayType::NullPointer();
+  FloatArrayType::Pointer gbcdBinContsArray = FloatArrayType::NullPointer();
+  BoolArrayType::Pointer gbcdHemiCheckArray = BoolArrayType::NullPointer();
   gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->SetNumberOfComponents(1);
   gbcdDeltasArray->initializeWithZeros();
@@ -450,12 +515,18 @@ void FindGBCD::execute()
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
-  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDBins");
+  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, numMisoReps*4, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
+  gbcdBinContsArray = FloatArrayType::CreateArray(faceChunkSize, numMisoReps*4, "GBCDBins");
+  gbcdBinContsArray->initializeWithZeros();
+  gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDHemiCheck");
+  gbcdHemiCheckArray->initializeWithValues(false);
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
   int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
   int32_t* m_Bins = gbcdBinsArray->GetPointer(0);
+  float* m_BinConts = gbcdBinContsArray->GetPointer(0);
+  bool* m_HemiCheck = gbcdHemiCheckArray->GetPointer(0);
 
   m_GBCDlimits[0] = 0.0;
   m_GBCDlimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);
@@ -484,17 +555,17 @@ void FindGBCD::execute()
 
   //reset the 3rd and 4th dimensions using the square grid approach
   float totalNormalBins = m_GBCDsizes[3]*m_GBCDsizes[4];
-  m_GBCDsizes[3] = int(sqrt(totalNormalBins));
-  m_GBCDsizes[4] = int(sqrt(totalNormalBins));
-  m_GBCDlimits[3] = -sqrt(DREAM3D::Constants::k_Pi);
-  m_GBCDlimits[4] = -sqrt(DREAM3D::Constants::k_Pi);
-  m_GBCDlimits[8] = sqrt(DREAM3D::Constants::k_Pi);
-  m_GBCDlimits[9] = sqrt(DREAM3D::Constants::k_Pi);
+  m_GBCDsizes[3] = int(sqrt(totalNormalBins/2.0));
+  m_GBCDsizes[4] = int(sqrt(totalNormalBins/2.0));
+  m_GBCDlimits[3] = -sqrt(DREAM3D::Constants::k_Pi/2.0);
+  m_GBCDlimits[4] = -sqrt(DREAM3D::Constants::k_Pi/2.0);
+  m_GBCDlimits[8] = sqrt(DREAM3D::Constants::k_Pi/2.0);
+  m_GBCDlimits[9] = sqrt(DREAM3D::Constants::k_Pi/2.0);
   m_GBCDdeltas[3] = (m_GBCDlimits[8]-m_GBCDlimits[3])/float(m_GBCDsizes[3]);
   m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
 
 
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4])
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
   for(int i=0;i<m->getNumEnsembleTuples();i++)
   {
     m_GBCDdimensions[5*i+0] = m_GBCDsizes[0];
@@ -513,8 +584,9 @@ void FindGBCD::execute()
   startMillis = millis;
   int lastIteration = 0;
   int numIterationsPerTime = 0;
+  int hemisphere = 0;
 
-  double totalFaceArea = 0.0;
+  double totalFaceArea[2] = {0.0,0.0};
   ss.str("");
   ss << "Calculating GBCD: 0/" << totalFaces << " Completed";
   for(size_t i=0;i<totalFaces;i=i+faceChunkSize)
@@ -530,13 +602,13 @@ void FindGBCD::execute()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
-                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_BinConts, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_BinConts, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
       serial.generate(i, i+faceChunkSize);
     }
 
@@ -558,8 +630,13 @@ void FindGBCD::execute()
     {
       for(int k=0;k<numMisoReps;k++)
       {
-        m_GBCD[m_Bins[j*numMisoReps+k]] += m_SurfaceMeshFaceAreas[i+j];
-        totalFaceArea += m_SurfaceMeshFaceAreas[i+j];
+        hemisphere = 0;
+        if(m_HemiCheck[(j*numMisoReps)+k] == false) hemisphere = 1;
+        for(int l=0;l<4;l++)
+        {
+          m_GBCD[2*m_Bins[(j*numMisoReps*4)+(k*4)+l]+hemisphere] += (m_SurfaceMeshFaceAreas[i+j]*m_BinConts[(j*numMisoReps*4)+(k*4)+l]);
+          totalFaceArea[hemisphere] += (m_SurfaceMeshFaceAreas[i+j]*m_BinConts[(j*numMisoReps*4)+(k*4)+l]);
+        }
       }
     }
   }
@@ -569,10 +646,11 @@ void FindGBCD::execute()
   notifyStatusMessage(ss.str());
 
   int totalBins = m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4];
-  double MRDfactor = double(totalBins)/totalFaceArea;
+  double MRDfactor[2] = {double(totalBins)/totalFaceArea[0],double(totalBins)/totalFaceArea[1]};
   for(int i=0;i<totalBins;i++)
   {
-    m_GBCD[i] *= MRDfactor;
+    m_GBCD[2*i+0] *= MRDfactor[0];
+    m_GBCD[2*i+1] *= MRDfactor[1];
   }
 
   /* Let the GUI know we are done with this filter */
