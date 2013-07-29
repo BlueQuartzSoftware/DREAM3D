@@ -139,7 +139,8 @@ namespace DREAM3D
     const std::string F7("F7");
     const std::string mPrime("mPrime");
     const std::string EulerAngles("EulerAngles");
-    const std::string FieldEulerAngles("EulerAngles");
+    const std::string FieldEulerAngles("FieldEulerAngles");
+    const std::string SurfaceVoxelFractions("SurfaceVoxelFractions");
     const std::string AxisEulerAngles("AxisEulerAngles");
     const std::string SurfaceFields("SurfaceFields");
     const std::string BiasedFields("BiasedFields");
@@ -171,6 +172,7 @@ namespace DREAM3D
   namespace EnsembleData
   {
     const std::string NumFields("NumFields");
+    const std::string VolFractions("VolFractions");
     const std::string TotalSurfaceAreas("TotalSurfaceAreas");
     const std::string CrystalStructures("CrystalStructures");
     const std::string PhaseTypes("PhaseTypes");

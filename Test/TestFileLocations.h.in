@@ -143,6 +143,11 @@ namespace UnitTest
     const std::string TestFile_2("@MXA_TEMP_DIR@FilterParametersRWTest/TestFile_2.h5");
     const std::string TestFile_3("@MXA_TEMP_DIR@FilterParametersRWTest/TestFile_3.h5");
   }
+
+  namespace PFTest
+  {
+    const std::string TestDir("@DREAM3DTest_BINARY_DIR@/PoleFigureTest/");
+  }
 }
 
 // -----------------------------------------------------------------------------

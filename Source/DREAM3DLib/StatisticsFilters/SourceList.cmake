@@ -29,9 +29,11 @@ set(_PublicFilters
   FindNeighborhoods
   FindNeighbors
   FindNumFields
+  FindVolFractions
   FindSchmids
   FindShapes
   FindSizes
+  FindSurfaceVoxelFractions
   FindSlipTransmissionMetrics
   FindGBCD
   FindTwinBoundaries

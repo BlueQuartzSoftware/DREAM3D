@@ -42,8 +42,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -53,7 +53,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 static const float unit110 = 1.0/sqrtf(2.0);
 static const float unit111 = 1.0/sqrtf(3.0);
@@ -141,7 +141,7 @@ MergeColonies::MergeColonies() :
   m_NeighborList(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 }
@@ -232,7 +232,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
       GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -356,14 +356,17 @@ void MergeColonies::merge_colonies()
   NeighborList<int>& neighborlist = *m_NeighborList;
 
   //Converting the user defined tolerance to radians.
-  m_AxisTolerance = m_AxisTolerance*m_pi/180.0f;
+  m_AxisTolerance = m_AxisTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
   std::vector<int> colonylist;
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
@@ -389,27 +392,19 @@ void MergeColonies::merge_colonies()
           if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
-            q1[0] = 1;
-            q1[1] = m_AvgQuats[5*firstgrain+1];
-            q1[2] = m_AvgQuats[5*firstgrain+2];
-            q1[3] = m_AvgQuats[5*firstgrain+3];
-            q1[4] = m_AvgQuats[5*firstgrain+4];
+            QuaternionMathF::Copy(avgQuats[firstgrain], q1);
             phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
-            q2[0] = 1;
-            q2[1] = m_AvgQuats[5*neigh+1];
-            q2[2] = m_AvgQuats[5*neigh+2];
-            q2[3] = m_AvgQuats[5*neigh+3];
-            q2[4] = m_AvgQuats[5*neigh+4];
+            QuaternionMathF::Copy(avgQuats[neigh], q2);
             phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
 
             if (phase1 == phase2 &&
                 (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
             {
               w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-              OrientationMath::axisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+              OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
               m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
               OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-              w = w * (180.0f/m_pi);
+              w = w * (180.0f/DREAM3D::Constants::k_Pi);
               //				float vecttol = 0.01f;
               //	            if (fabs(fabs(r1) - 0.0000f) < vecttol && fabs(fabs(r2) - 0.0000f) < vecttol && fabs(fabs(r3) - 0.0922f) < vecttol) colony = 1;
               //	            if (fabs(fabs(r1) - 0.9957f) < vecttol && fabs(fabs(r2) - 0.0917f) < vecttol && fabs(fabs(r3) - 0.0000f) < vecttol) colony = 1;
@@ -473,6 +468,9 @@ void MergeColonies::merge_colonies()
   numParents = parentcount+1;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeColonies::characterize_colonies()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -483,39 +481,42 @@ void MergeColonies::characterize_colonies()
   }
 }
 
-int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 {
   float dP = 0.0;
   float angle = 0.0;
-  float radToDeg = 180.0f/m_pi;
+  float radToDeg = 180.0f/DREAM3D::Constants::k_Pi;
 
   float gBeta[3][3];
   float gBetaT[3][3];
   OrientationMath::QuattoMat(betaQuat, gBeta);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
-  MatrixMath::transpose3x3(gBeta, gBetaT);
+  MatrixMath::Transpose3x3(gBeta, gBetaT);
 
   float gAlpha[3][3];
   float gAlphaT[3][3];
   OrientationMath::QuattoMat(alphaQuat, gAlpha);
   //transpose gBeta so the sample direction is the output when
   //gBeta is multiplied by the crystal directions below
-  MatrixMath::transpose3x3(gAlpha, gAlphaT);
+  MatrixMath::Transpose3x3(gAlpha, gAlphaT);
 
   float mat[3][3];
   float a[3];
   float b[3];
   for(int i=0;i<12;i++)
   {
-    MatrixMath::multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
+    MatrixMath::Multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
     a[0] = mat[0][2];
     a[1] = mat[1][2];
     a[2] = mat[2][2];
     b[0] = gAlphaT[0][2];
     b[1] = gAlphaT[1][2];
     b[2] = gAlphaT[2][2];
-    dP = MatrixMath::dotProduct(a, b);
+    dP = MatrixMath::DotProduct(a, b);
     angle = acos(dP);
     if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
     {
@@ -525,21 +526,21 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
       b[0] = gAlphaT[0][0];
       b[1] = gAlphaT[1][0];
       b[2] = gAlphaT[2][0];
-      dP = MatrixMath::dotProduct(a, b);
+      dP = MatrixMath::DotProduct(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
       b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
       b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
       b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
-      dP = MatrixMath::dotProduct(a, b);
+      dP = MatrixMath::DotProduct(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
       b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
       b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
       b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
-      dP = MatrixMath::dotProduct(a, b);
+      dP = MatrixMath::DotProduct(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
@@ -549,6 +550,9 @@ int MergeColonies::check_for_burgers(float betaQuat[5], float alphaQuat[5])
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void MergeColonies::identify_globAlpha()
 {
   VoxelDataContainer* m = getVoxelDataContainer();

@@ -252,7 +252,7 @@ int FilterPipeline::preflightPipeline()
   setErrorCondition(0);
   int preflightError = 0;
   std::stringstream ss;
-
+  int err = 0;
 
   // Start looping through the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
@@ -265,13 +265,11 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setVoxelDataContainer(NULL);
     (*filter)->setSurfaceMeshDataContainer(NULL);
     (*filter)->setSolidMeshDataContainer(NULL);
-    int err = (*filter)->getErrorCondition();
     std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
     // Loop through all the messages making sure they are all error messages. If they are all
     // warning messages we are going to let the preflight pass. Hopefully if the warning
     // turns into an error the filter will handle it correctly and gracefully fail with
     // a nice message to the user.
-    err = 0;
     for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
     {
        if ( (*iter).getMessageType() == PipelineMessage::Error)

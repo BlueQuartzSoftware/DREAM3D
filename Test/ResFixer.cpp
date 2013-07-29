@@ -106,7 +106,6 @@ std::string AngResFixer::headerWord(char* buf, size_t length)
     ++i;
   }
   size_t wordStart = i;
-  size_t wordEnd = i+1;
   while(1)
   {
     if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
@@ -114,7 +113,7 @@ std::string AngResFixer::headerWord(char* buf, size_t length)
     else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
     else { break;}
   }
-  wordEnd = i;
+  size_t wordEnd = i;
 
   std::string word( &(buf[wordStart]), wordEnd - wordStart);
   return word;

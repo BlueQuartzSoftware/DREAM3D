@@ -396,6 +396,7 @@ static herr_t writePointerDataset (hid_t loc_id,
   hid_t sid     = -1;
   herr_t retErr = 0;
 
+  if(NULL == data) { return -2;}
   hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
   if(dataType == -1)
   {
@@ -1116,7 +1117,7 @@ static herr_t readVectorDataset(hid_t loc_id,
       if (rank > 0) {
         std::vector<hsize_t> dims;
         dims.resize(rank);// Allocate enough room for the dims
-        rank = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
+        err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
         hsize_t numElements = 1;
         for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
           numElements = numElements * (*iter);
@@ -1186,7 +1187,7 @@ static herr_t readScalarDataset(hid_t loc_id,
       if (rank > 0) {
         std::vector<hsize_t> dims;
         dims.resize(rank);// Allocate enough room for the dims
-        rank = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
+        err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
         hsize_t numElements = 1;
         for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
           numElements = numElements * (*iter);

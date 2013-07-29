@@ -43,11 +43,11 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
+
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 /**
  * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const std::string getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
@@ -90,8 +90,8 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, IdentifyGlobAlpha)
 
     virtual void setupFilterParameters();
-  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     MergeColonies();
 
     void merge_colonies();
-  int check_for_burgers(float betaQuat[5], float alphaQuat[5]);
+    int check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
     void characterize_colonies();
     void identify_globAlpha();
 
@@ -126,9 +126,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     unsigned int* m_CrystalStructures;
 
     std::vector<int> parentnumbers;
-  int numParents;
+    int numParents;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

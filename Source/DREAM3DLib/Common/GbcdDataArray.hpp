@@ -657,7 +657,8 @@ class GbcdDataArray : public IDataArray
      */
     GbcdDataArray(size_t dim0, size_t dim1, size_t dim2, size_t dim3, size_t dim4, bool ownsData = true) :
       Array(NULL),
-      _ownsData(ownsData)
+      _ownsData(ownsData),
+      m_IsAllocated(false)
     {
       m_Dims[0] = dim0;
       m_Dims[1] = dim1;
@@ -678,7 +679,8 @@ class GbcdDataArray : public IDataArray
      */
     GbcdDataArray(size_t* dims, bool ownsData = true) :
       Array(NULL),
-      _ownsData(ownsData)
+      _ownsData(ownsData),
+      m_IsAllocated(false)
     {
 
       m_Dims[0] = dims[0];

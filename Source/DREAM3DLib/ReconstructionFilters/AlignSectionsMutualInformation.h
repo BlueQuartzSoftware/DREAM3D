@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
 
@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationMath::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

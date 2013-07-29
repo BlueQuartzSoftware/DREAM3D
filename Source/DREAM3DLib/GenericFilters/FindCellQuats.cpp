@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -57,8 +57,8 @@ FindCellQuats::FindCellQuats() :
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
-  
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 4)
 
 }
 
@@ -142,19 +142,17 @@ void FindCellQuats::execute()
     return;
   }
 
-  float qr[5];
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  QuatF qr;
   int phase = -1;
   for (int i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
-    OrientationMath::eulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
-    OrientationMath::normalizeQuat(qr);
+    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3*i], m_CellEulerAngles[3*i + 1], m_CellEulerAngles[3*i + 2]);
+    QuaternionMathF::UnitQuaternion(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
-      qr[1] = 0.0;
-      qr[2] = 0.0;
-      qr[3] = 0.0;
-      qr[4] = 1.0;
+      QuaternionMathF::Identity(qr);
     }
     else
     {
@@ -172,15 +170,15 @@ void FindCellQuats::execute()
       else
       {
         m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-        OrientationMath::normalizeQuat(qr);
+        QuaternionMathF::UnitQuaternion(qr);
       }
     }
 
-    m_Quats[i*5 + 0] = 1.0f;
-    m_Quats[i*5 + 1] = qr[1];
-    m_Quats[i*5 + 2] = qr[2];
-    m_Quats[i*5 + 3] = qr[3];
-    m_Quats[i*5 + 4] = qr[4];
+    QuaternionMathF::Copy(qr, quats[i]);
+//    m_Quats[i*4 + 0] = qr[1];
+//    m_Quats[i*4 + 1] = qr[2];
+//    m_Quats[i*4 + 2] = qr[3];
+//    m_Quats[i*4 + 3] = qr[4];
   }
 
   notifyStatusMessage("Complete");

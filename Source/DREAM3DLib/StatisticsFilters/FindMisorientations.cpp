@@ -43,7 +43,7 @@
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -61,7 +61,7 @@ FindMisorientations::FindMisorientations()  :
   m_MisorientationList(NULL),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 5)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -181,34 +181,29 @@ void FindMisorientations::execute()
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
   // int mbin = 0;
   float w;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
 
-  float radToDeg = 180.0/m_pi;
+  float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
 
   size_t nname;
   // float nsa;
   misorientationlists.resize(numgrains);
   for (size_t i = 1; i < numgrains; i++)
   {
-    q1[0] = m_AvgQuats[5*i];
-    q1[1] = m_AvgQuats[5*i+1];
-    q1[2] = m_AvgQuats[5*i+2];
-    q1[3] = m_AvgQuats[5*i+3];
-    q1[4] = m_AvgQuats[5*i+4];
+    QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FieldPhases[i]];
     misorientationlists[i].resize(neighborlist[i].size(), -1.0);
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
       nname = neighborlist[i][j];
-      q2[0] = m_AvgQuats[5*nname];
-      q2[1] = m_AvgQuats[5*nname+1];
-      q2[2] = m_AvgQuats[5*nname+2];
-      q2[3] = m_AvgQuats[5*nname+3];
-      q2[4] = m_AvgQuats[5*nname+4];
+      QuaternionMathF::Copy(avgQuats[nname], q2);
       phase2 = m_CrystalStructures[m_FieldPhases[nname]];
       if (phase1 == phase2)
       {

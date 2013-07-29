@@ -50,7 +50,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
@@ -63,7 +63,7 @@
 #include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -188,7 +188,7 @@ class AssignVoxelsGapsImpl
                 coords[0] = coords[0] - xc;
                 coords[1] = coords[1] - yc;
                 coords[2] = coords[2] - zc;
-                MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+                MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
                 float axis1comp = coordsRotated[0] * Invradcur[0];
                 float axis2comp = coordsRotated[1] * Invradcur[1];
                 float axis3comp = coordsRotated[2] * Invradcur[2];
@@ -1184,7 +1184,7 @@ void PackPrimaryPhases::generate_grain(int phase, int Seed, Field* field, unsign
   float vol = 0;
   int volgood = 0;
   float phi1, PHI, phi2;
-  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (m_pi))/8.0f);
+  float fourThirdsPiOverEight =  static_cast<float>(((4.0f / 3.0f) * (DREAM3D::Constants::k_Pi))/8.0f);
   PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
   VectorOfFloatArray GSdist = pp->getGrainSizeDistribution();
   float avg = GSdist[0]->GetValue(0);
@@ -1735,7 +1735,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   float PHI = m_AxisEulerAngles[3*gnum+1];
   float phi2 = m_AxisEulerAngles[3*gnum+2];
   float ga[3][3];
-  OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+  OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3*gnum];
   yc = m_Centroids[3*gnum+1];
   zc = m_Centroids[3*gnum+2];
@@ -1774,7 +1774,7 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-        MatrixMath::multiply3x3with3x1(ga, coords, coordsRotated);
+        MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
         float axis1comp = coordsRotated[0] * OneOverRadcur1;
         float axis2comp = coordsRotated[1] * OneOverRadcur2;
         float axis3comp = coordsRotated[2] * OneOverRadcur3;
@@ -1885,7 +1885,7 @@ void PackPrimaryPhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3*i+1];
     float phi2 = m_AxisEulerAngles[3*i+2];
     float ga[3][3];
-    OrientationMath::eulertoMat(phi1, PHI, phi2, ga);
+    OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<DimType>( (xc - (xRes * 0.5)) / xRes );
     row = static_cast<DimType>( (yc - (yRes * 0.5)) / yRes );
     plane = static_cast<DimType>( (zc - (zRes * 0.5)) / zRes );

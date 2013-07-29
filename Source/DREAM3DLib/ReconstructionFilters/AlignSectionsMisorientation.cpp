@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -51,7 +51,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 // -----------------------------------------------------------------------------
 //
@@ -70,7 +70,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
 {
   Seed = MXA::getMilliSeconds();
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 
@@ -165,7 +165,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
@@ -209,7 +209,7 @@ void AlignSectionsMisorientation::execute()
   }
 
   //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
   AlignSections::execute();
 
@@ -255,10 +255,11 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   //  int xspot, yspot;
   float w;
   float n1, n2, n3;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
   int refposition = 0;
   int curposition = 0;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   unsigned int phase1, phase2;
   int progInt = 0;
@@ -319,15 +320,17 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
                     w = 10000.0;
                     if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                     {
-                      q1[1] = m_Quats[refposition * 5 + 1];
-                      q1[2] = m_Quats[refposition * 5 + 2];
-                      q1[3] = m_Quats[refposition * 5 + 3];
-                      q1[4] = m_Quats[refposition * 5 + 4];
+                      QuaternionMathF::Copy(quats[refposition], q1);
+//                      q1[1] = m_Quats[refposition * 5 + 1];
+//                      q1[2] = m_Quats[refposition * 5 + 2];
+//                      q1[3] = m_Quats[refposition * 5 + 3];
+//                      q1[4] = m_Quats[refposition * 5 + 4];
                       phase1 = m_CrystalStructures[m_CellPhases[refposition]];
-                      q2[1] = m_Quats[curposition * 5 + 1];
-                      q2[2] = m_Quats[curposition * 5 + 2];
-                      q2[3] = m_Quats[curposition * 5 + 3];
-                      q2[4] = m_Quats[curposition * 5 + 4];
+                      QuaternionMathF::Copy(quats[curposition], q2);
+//                      q2[1] = m_Quats[curposition * 5 + 1];
+//                      q2[2] = m_Quats[curposition * 5 + 2];
+//                      q2[3] = m_Quats[curposition * 5 + 3];
+//                      q2[4] = m_Quats[curposition * 5 + 4];
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
                       if(phase1 == phase2 && phase1 < m_OrientationOps.size())
                       {

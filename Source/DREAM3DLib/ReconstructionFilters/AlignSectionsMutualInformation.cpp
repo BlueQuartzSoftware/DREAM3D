@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -53,7 +53,7 @@
 
 
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -77,7 +77,7 @@ m_CrystalStructures(NULL)
 {
   Seed = MXA::getMilliSeconds();
 
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   graincounts = NULL;
   INIT_DataArray(m_GrainCounts, int);
@@ -151,7 +151,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
@@ -197,7 +197,7 @@ void AlignSectionsMutualInformation::execute()
   m_GrainIds = p->GetPointer(0);
 
   //Converting the user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance*m_pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
   AlignSections::execute();
 
@@ -438,8 +438,9 @@ void AlignSectionsMutualInformation::form_grains_sections()
   int graincount = 1;
   int neighbor;
   // int currentpoint;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 //  float qs[5];
   float w;
   float n1;
@@ -469,7 +470,6 @@ void AlignSectionsMutualInformation::form_grains_sections()
   {
     std::stringstream ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
- //   notifyStatusMessage(ss.str());
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)
@@ -507,11 +507,12 @@ void AlignSectionsMutualInformation::form_grains_sections()
           int currentpoint = voxelslist[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
-          q1[0] = 1;
-          q1[1] = m_Quats[currentpoint * 5 + 1];
-          q1[2] = m_Quats[currentpoint * 5 + 2];
-          q1[3] = m_Quats[currentpoint * 5 + 3];
-          q1[4] = m_Quats[currentpoint * 5 + 4];
+          QuaternionMathF::Copy(quats[currentpoint], q1);
+//          q1[0] = 1;
+//          q1[1] = m_Quats[currentpoint * 5 + 1];
+//          q1[2] = m_Quats[currentpoint * 5 + 2];
+//          q1[3] = m_Quats[currentpoint * 5 + 3];
+//          q1[4] = m_Quats[currentpoint * 5 + 4];
           phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
           for (int i = 0; i < 4; i++)
           {
@@ -524,13 +525,17 @@ void AlignSectionsMutualInformation::form_grains_sections()
             if(good == 1 && m_GrainIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = 10000.0;
-              q2[0] = 1;
-              q2[1] = m_Quats[neighbor * 5 + 1];
-              q2[2] = m_Quats[neighbor * 5 + 2];
-              q2[3] = m_Quats[neighbor * 5 + 3];
-              q2[4] = m_Quats[neighbor * 5 + 4];
+              QuaternionMathF::Copy(quats[neighbor], q2);
+//              q2[0] = 1;
+//              q2[1] = m_Quats[neighbor * 5 + 1];
+//              q2[2] = m_Quats[neighbor * 5 + 2];
+//              q2[3] = m_Quats[neighbor * 5 + 3];
+//              q2[4] = m_Quats[neighbor * 5 + 4];
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-              if(phase1 == phase2) w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+              if(phase1 == phase2)
+              {
+                w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
+              }
               if(w < m_MisorientationTolerance)
               {
                 m_GrainIds[neighbor] = graincount;

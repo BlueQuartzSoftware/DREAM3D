@@ -139,7 +139,7 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
 
-# Create a Command line tool for the PhToHDF5
+# Create a Command line tool for the PipelineRunner
 COMPILE_TOOL(
     TARGET PipelineRunner
     SOURCES ${DREAM3DTools_SOURCE_DIR}/PipelineRunner.cpp
@@ -150,7 +150,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} FilterWidgetsLib PipelineBuilderLib
+    LINK_LIBRARIES DREAM3DLib
 )
 
 # Create a Command line tool for the DocsToPdf

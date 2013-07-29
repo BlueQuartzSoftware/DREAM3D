@@ -38,7 +38,7 @@
 
 
 
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -56,14 +56,6 @@
 void TestQuatMath()
 {
 
-  float q1[5] = { 0.0f, 0.0, 0.0, 0.22495, .97437};
-  float q2[5] = { 0.0f, .343, -.2185, .90933, 0.08756 };
-  float out[5] = { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-
-  MULT_QUAT(q1, q2, out);
-
-
-  std::cout << "Done" << std::endl;
 }
 
 

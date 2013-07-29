@@ -45,7 +45,7 @@
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 /**
  * @brief The CalculateDihedralAnglesImpl class
@@ -70,7 +70,7 @@ class CalculateDihedralAnglesImpl
       DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
-    float radToDeg = 180.0/m_pi;
+    float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
 
     float ABx, ABy, ABz, ACx, ACy, ACz, BCx, BCy, BCz;
     float magAB, magAC, magBC;

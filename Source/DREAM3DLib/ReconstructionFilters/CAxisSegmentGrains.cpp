@@ -42,8 +42,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MatrixMath.h"
-#include "DREAM3DLib/Common/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
@@ -51,7 +51,7 @@
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-const static float m_pi = static_cast<float>(M_PI);
+
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -80,7 +80,7 @@ m_GoodVoxels(NULL),
 m_Active(NULL),
 m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationMath::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
 }
@@ -158,7 +158,7 @@ void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields,
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType,  true, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
@@ -199,7 +199,7 @@ void CAxisSegmentGrains::execute()
   }
 
   //Convert user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * m_pi/180.0f;
+  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi/180.0f;
   for(int64_t i=0;i<totalPoints;i++)
   {
     m_GrainIds[i] = 0;
@@ -317,8 +317,9 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 {
   bool group = false;
   float w = 10000.0;
-  float q1[5];
-  float q2[5];
+  QuatF q1;
+  QuatF q2;
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3];
   float g2[3][3];
   float g1t[3][3];
@@ -332,18 +333,20 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   if(m_GrainIds[neighborpoint] == 0 && m_GoodVoxels[neighborpoint] == true)
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-    q1[0] = 1;
-    q1[1] = m_Quats[referencepoint * 5 + 1];
-    q1[2] = m_Quats[referencepoint * 5 + 2];
-    q1[3] = m_Quats[referencepoint * 5 + 3];
-    q1[4] = m_Quats[referencepoint * 5 + 4];
+    QuaternionMathF::Copy(quats[referencepoint], q1);
+//    q1[0] = 1;
+//    q1[1] = m_Quats[referencepoint * 5 + 1];
+//    q1[2] = m_Quats[referencepoint * 5 + 2];
+//    q1[3] = m_Quats[referencepoint * 5 + 3];
+//    q1[4] = m_Quats[referencepoint * 5 + 4];
 
     phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
-    q2[0] = 1;
-    q2[1] = m_Quats[neighborpoint*5 + 1];
-    q2[2] = m_Quats[neighborpoint*5 + 2];
-    q2[3] = m_Quats[neighborpoint*5 + 3];
-    q2[4] = m_Quats[neighborpoint*5 + 4];
+    QuaternionMathF::Copy(quats[neighborpoint], q2);
+//    q2[0] = 1;
+//    q2[1] = m_Quats[neighborpoint*5 + 1];
+//    q2[2] = m_Quats[neighborpoint*5 + 2];
+//    q2[3] = m_Quats[neighborpoint*5 + 3];
+//    q2[4] = m_Quats[neighborpoint*5 + 4];
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
@@ -352,23 +355,23 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
 
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
-      MatrixMath::transpose3x3(g1, g1t);
-      MatrixMath::transpose3x3(g2, g2t);
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Transpose3x3(g2, g2t);
 
-      MatrixMath::multiply3x3with3x1(g1t, caxis, c1);
-      MatrixMath::multiply3x3with3x1(g2t, caxis, c2);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
 
       //normalize so that the dot product can be taken below without
       //dividing by the magnitudes (they would be 1)
-      MatrixMath::normalize3x1(c1);
-      MatrixMath::normalize3x1(c2);
+      MatrixMath::Normalize3x1(c1);
+      MatrixMath::Normalize3x1(c2);
 
       w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
       w = acosf(w);
-      if (w <= m_MisorientationTolerance || (m_pi-w) <= m_MisorientationTolerance)
+      if (w <= m_MisorientationTolerance || (DREAM3D::Constants::k_Pi-w) <= m_MisorientationTolerance)
       {
-      group = true;
-      m_GrainIds[neighborpoint] = gnum;
+        group = true;
+        m_GrainIds[neighborpoint] = gnum;
       }
 
     }
