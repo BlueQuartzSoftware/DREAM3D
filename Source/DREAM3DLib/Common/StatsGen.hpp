@@ -771,9 +771,8 @@ class StatsGen
      * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize
      * @param x [output] X Values of the Scatter plot. This memory must already be preallocated.
      * @param y [outout] Y Values of the Scatter plot. This memory must already be preallocated.
-     * @param npoints The number of X,Y values
-     * @param size The number of samples
-     * @param size The number of points for the Scatter Plot
+     * @param npoints The number of XY points for the Scatter Plot
+     * @param size The number of samples of the MDF to take
      */
     template<typename T>
     static int GenCubicMDFPlotData(T* mdf, T* xval, T* yval, int npoints, int size)
@@ -830,10 +829,11 @@ class StatsGen
     /**
      * @brief  This method will generate MDF data for a Hexagonal material and
      * generate 1 XY scatter plots.
-     * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize
+     * @param mdf [input] This is the input MDF data which is already computed and of lenght CubicOps::k_MdfSize. This memory must already be preallocated.
      * @param x [output] X Values of the Scatter plot. This memory must already be preallocated.
      * @param y [outout] Y Values of the Scatter plot. This memory must already be preallocated.
-     * @param size The number of points for the Scatter Plot
+     * @param npoints The number of XY points for the Scatter Plot
+     * @param size The number of samples of the MDF to take
      */
     template<typename T>
     static int GenHexMDFPlotData(T* mdf, T* xval, T* yval, int npoints, int size)
