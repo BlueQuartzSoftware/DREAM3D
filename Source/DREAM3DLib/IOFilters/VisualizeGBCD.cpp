@@ -255,13 +255,13 @@ void VisualizeGBCD::execute()
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi);
-  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi);
+  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi/2.0);
+  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi/2.0);
   gbcdLimits[5] = 2.0*DREAM3D::Constants::k_Pi;
   gbcdLimits[6] = cosf(0.0);
   gbcdLimits[7] = 2.0*DREAM3D::Constants::k_Pi;
-  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi);
-  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi);
+  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi/2.0);
+  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi/2.0);
 
   gbcdSizes[0] = m_GBCDdimensions[5*1+0];
   gbcdSizes[1] = m_GBCDdimensions[5*1+1];
@@ -301,8 +301,8 @@ void VisualizeGBCD::execute()
   //get number of symmetry operators
   int n_sym = m_OrientationOps[1]->getNumSymOps();
 
-  int xpoints = 500;
-  int ypoints = 500;
+  int xpoints = 200;
+  int ypoints = 200;
   int zpoints = 1;
   int xpointshalf = xpoints/2;
   int ypointshalf = ypoints/2;
@@ -313,8 +313,11 @@ void VisualizeGBCD::execute()
   float a, b;
   int xbin, ybin;
   int abin, bbin;
+  int abinMod, bbinMod;
   float modX, modY;
   float intensity1, intensity2, intensity3, intensity4, interpolatedIntensity;
+  int hemisphere = 0;
+  float adjust = 1.0;
 
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
@@ -324,6 +327,28 @@ void VisualizeGBCD::execute()
   poleFigureCountsArray = FloatArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigureCounts");
   poleFigureCountsArray->initializeWithValues(0);
   float* poleFigureCounts = poleFigureCountsArray->GetPointer(0);
+  FloatArrayType::Pointer vecsArray = FloatArrayType::NullPointer();
+  vecsArray = FloatArrayType::CreateArray(xpoints*ypoints, 3, "Vecs");
+  vecsArray->initializeWithValues(-1000);
+  float* vecs = vecsArray->GetPointer(0);
+
+  int count = 0;
+  for (int64_t k = 0; k < (xpoints); k++)
+  {
+    for (int64_t l = 0; l < (ypoints); l++)
+    {
+      //get (x,y) for stereographic projection pixel
+      x = float(k-xpointshalf)*xres+(xres/2.0);
+      y = float(l-ypointshalf)*yres+(yres/2.0);
+      if((x*x+y*y) <= 1.0)
+      {
+        vecs[3*count+2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
+        vecs[3*count+0] = x*(1+vecs[3*count+2]);
+        vecs[3*count+1] = y*(1+vecs[3*count+2]);
+      }
+      count++;
+    }
+  }
 
   for(int q=0;q<2;q++)
   {
@@ -364,22 +389,23 @@ void VisualizeGBCD::execute()
           //calculate slot in the flattened GBCD that corresponds to the misorientation and then the next m_GBCDsizes[3]*m_GBCDsizes[4] slots are the phi,theta bins
           int shift = (location1)+(location2*gbcdSizes[0])+(location3*gbcdSizes[0]*gbcdSizes[1]);
 
+          count = 0;
           for (int64_t k = 0; k < (xpoints); k++)
           {
             for (int64_t l = 0; l < (ypoints); l++)
             {
-              for (int64_t m = 0; m < 2; m++)
+              if(vecs[3*count+0] != -1000)
               {
-                //get (x,y) for stereographic projection pixel
-                x = float(k-xpointshalf)*xres+(xres/2.0);
-                y = float(l-ypointshalf)*yres+(yres/2.0);
-                if((x*x+y*y) <= 1.0)
+                vec[0] = vecs[3*count+0];
+                vec[1] = vecs[3*count+1];
+                vec[2] = vecs[3*count+2];
+                for (int64_t m = 0; m < 2; m++)
                 {
-                  vec[2] = -((x*x+y*y)-1)/((x*x+y*y)+1);
-                  vec[0] = x*(1+vec[2]);
-                  vec[1] = y*(1+vec[2]);
                   //look at s.h. points on second trip around
-                  if(m == 1) MatrixMath::Multiply3x1withConstant(vec, -1);
+                  if(m == 1)
+                  {
+                    MatrixMath::Multiply3x1withConstant(vec, -1);
+                  }
                   //find symmetric poles using the first symmetry operator
                   MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
                   if(q == 1)
@@ -391,32 +417,43 @@ void VisualizeGBCD::execute()
                     rotNormal[1] = -rotNormal2[1];
                     rotNormal[2] = -rotNormal2[2];
                   }
+                  adjust = 1.0;
+                  hemisphere = 1;
+                  if(rotNormal[2] >= 0.0)
+                  {
+                    adjust = -1.0;
+                    hemisphere = 0;
+                  }
                   if(fabs(rotNormal[0]) >= fabs(rotNormal[1]))
                   {
-                    a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
-                    b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[1]/rotNormal[0]));
+                    a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+                    b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[1]/rotNormal[0]));
                   }              
                   else
                   {
-                    a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[0]/rotNormal[1]));
-                    b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0-rotNormal[2]))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+                    a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[0]/rotNormal[1]));
+                    b = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
                   }
-                  abin = (int) floorf((a-gbcdLimits[3])/gbcdDeltas[3]);
-                  bbin = (int) floorf((b-gbcdLimits[4])/gbcdDeltas[4]);
-                  modX = ((a-gbcdLimits[3])/gbcdDeltas[3])-float(abin);
-                  modY = ((b-gbcdLimits[4])/gbcdDeltas[4])-float(bbin);
-                  intensity1 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                  if(abin+1 < gbcdSizes[3]) intensity2 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                  else intensity2 = intensity1;
-                  if(bbin+1 < gbcdSizes[4]) intensity3 = m_GBCD[shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                  else intensity3 = intensity1;
-                  if(abin+1 < gbcdSizes[3] && bbin+1 < gbcdSizes[4]) intensity4 = m_GBCD[shift+((abin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+((bbin+1)*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3])];
-                  else intensity4 = intensity2;
+                  modX = ((a-gbcdLimits[3])/gbcdDeltas[3]);
+                  modY = ((b-gbcdLimits[4])/gbcdDeltas[4]);
+                  abin = (int) modX;
+                  bbin = (int) modY;
+                  modX -= abin;
+                  modY -= bbin;
+                  if(abin < gbcdSizes[3]-1) abinMod = abin+1;
+                  else abinMod = abin+1-gbcdSizes[3];
+                  if(bbin < gbcdSizes[4]-1) bbinMod = bbin+1;
+                  else bbinMod = bbin+1-gbcdSizes[4];
+                  intensity1 = m_GBCD[2*(shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3]))+hemisphere];
+                  intensity2 = m_GBCD[2*(shift+(abinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3]))+hemisphere];
+                  intensity3 = m_GBCD[2*(shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3]))+hemisphere];
+                  intensity4 = m_GBCD[2*(shift+(abinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3]))+hemisphere];
                   interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
                   poleFigure[(l*xpoints)+k] += interpolatedIntensity; 
                   poleFigureCounts[(l*xpoints)+k] += 1.0; 
                 }
               }
+              count++;
             }
           }
         }
