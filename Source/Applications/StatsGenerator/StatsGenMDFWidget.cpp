@@ -65,14 +65,14 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #include "StatsGenerator/TableModels/SGMDFTableModel.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -138,7 +138,7 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
-  std::vector<float> odf = generateODFData();
+  QVector<float> odf = generateODFData();
 
   updateMDFPlot(odf);
 }
@@ -146,33 +146,36 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
+void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
 {
   int err = 0;
-  StatsGen sg;
+
   int size = 100000;
 
-  // These are the output vectors
-  std::vector<float> x;
-  std::vector<float> y;
-
   // These are the input vectors
-  std::vector<float> angles;
-  std::vector<float> axes;
-  std::vector<float> weights;
+  QVector<float> angles;
+  QVector<float> axes;
+  QVector<float> weights;
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle).toStdVector();
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight).toStdVector();
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis).toStdVector();
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
+
+  // These are the output vectors
+  QVector<float> x;
+  QVector<float> y;
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure) )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(5832);
+    std::vector<float> mdf(CubicOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
+    Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     // Now generate the actual XY point data that gets plotted.
-    err = sg.GenCubicMDFPlotData(mdf, x, y, size);
+    size_t npoints = 13;
+    x.resize(npoints);
+    y.resize(npoints);
+    err = StatsGen::GenCubicMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
     if (err < 0)
     {
       return;
@@ -181,11 +184,14 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure) )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(15552);
+    std::vector<float> mdf(HexagonalOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
-    Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+    Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     // Now generate the actual XY point data that gets plotted.
-    err = sg.GenHexMDFPlotData(mdf, x, y, size);
+    size_t npoints = 20;
+    x.resize(npoints);
+    y.resize(npoints);
+    err = StatsGen::GenHexMDFPlotData(mdf.data(), x.data(), y.data(), npoints, size);
     if (err < 0)
     {
       return;
@@ -194,10 +200,10 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 
   QwtArray<double> xD(static_cast<int>(x.size()));
   QwtArray<double> yD(static_cast<int>(x.size()));
-  for (std::vector<float>::size_type i = 0; i < x.size(); ++i)
+  for (qint32 i = 0; i < x.size(); ++i)
   {
-    xD[i] = static_cast<double>(x[i]);
-    yD[i] = static_cast<double>(y[i]);
+    xD[i] = static_cast<double>(x.at(i));
+    yD[i] = static_cast<double>(y.at(i));
   }
 
 
@@ -217,36 +223,44 @@ void StatsGenMDFWidget::updateMDFPlot(std::vector<float> &odf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> StatsGenMDFWidget::generateODFData()
+QVector<float> StatsGenMDFWidget::generateODFData()
 {
-  std::vector<float> e1s;
-  std::vector<float> e2s;
-  std::vector<float> e3s;
-  std::vector<float> weights;
-  std::vector<float> sigmas;
-  std::vector<float> odf;
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  QVector<float> odf;
 
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2).toStdVector();
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3).toStdVector();
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(std::vector<float>::size_type i=0;i<e1s.size();i++)
+  for(qint32 i=0;i<e1s.size();i++)
   {
     e1s[i] = e1s[i]*M_PI/180.0;
     e2s[i] = e2s[i]*M_PI/180.0;
     e3s[i] = e3s[i]*M_PI/180.0;
   }
+  size_t numEntries = e1s.size();
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+
+    odf.resize(CubicOps::k_OdfSize);
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+    odf.resize(HexagonalOps::k_OdfSize);
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
   }
   return odf;
 }
@@ -367,34 +381,38 @@ void StatsGenMDFWidget::extractStatsData(VoxelDataContainer::Pointer m, int inde
 int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType)
 {
   int retErr = 0;
-  std::vector<float> x;
-  std::vector<float> y;
+  QVector<float> x;
+  QVector<float> y;
 
-  std::vector<float> angles;
-  std::vector<float> axes;
-  std::vector<float> weights;
+  QVector<float> angles;
+  QVector<float> axes;
+  QVector<float> weights;
 
-  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle).toStdVector();
-  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight).toStdVector();
-  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis).toStdVector();
+  angles = m_MDFTableModel->getData(SGMDFTableModel::Angle);
+  weights = m_MDFTableModel->getData(SGMDFTableModel::Weight);
+  axes = m_MDFTableModel->getData(SGMDFTableModel::Axis);
 
   // Generate the ODF Data from the current values in the ODFTableModel
-  std::vector<float> odf = generateODFData();
-  std::vector<float> mdf;
+  QVector<float> odf = generateODFData();
+  QVector<float> mdf;
 
   unsigned long long int nElements = 0;
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure)) {
-    Texture::calculateMDFData<std::vector<float>, CubicOps>(angles, axes, weights, odf, mdf);
+  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  {
+    mdf.resize(CubicOps::k_MdfSize);
+    Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     nElements = 18 * 18 * 18;
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure)) {
-    Texture::calculateMDFData<std::vector<float>, HexagonalOps>(angles, axes, weights, odf, mdf);
+  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  {
+    mdf.resize(HexagonalOps::k_MdfSize);
+    Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     nElements = 36 * 36 * 12;
   }
   if (mdf.size() > 0)
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromStdVector(mdf, DREAM3D::HDF5::MisorientationBins);
+    FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), DREAM3D::HDF5::MisorientationBins);
     if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
@@ -413,12 +431,12 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
 
     if(angles.size() > 0)
     {
-      FloatArrayType::Pointer anglesArray = FloatArrayType::FromStdVector(angles, DREAM3D::HDF5::Angle);
+      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::HDF5::Angle);
 
-      FloatArrayType::Pointer axisArray = FloatArrayType::FromStdVector(axes, DREAM3D::HDF5::Axis);
+      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::HDF5::Axis);
       axisArray->SetNumberOfComponents(3);
 
-      FloatArrayType::Pointer weightArray = FloatArrayType::FromStdVector(weights, DREAM3D::HDF5::Weight);
+      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::HDF5::Weight);
 
       VectorOfFloatArray mdfWeights;
       mdfWeights.push_back(anglesArray);
