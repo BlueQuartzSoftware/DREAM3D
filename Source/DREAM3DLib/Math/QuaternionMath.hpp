@@ -40,9 +40,20 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 
 /**
- * @brief
- * @author
- * @version
+ * @brief This class performs calculations on a Quaternion or pair of Quaternions. The class is templated on the type
+ * of primitive used and there are a few convenience typedefs for float and double Quaternions. Inside the class definition
+ * is a typedef for the Quaternion struct itself. If you want to create a Quaternion there are a few ways to do it.
+ * @code
+ *  // As a normal stack allocated variable
+ *  QuaternionMath<float>::Quaternion quat;
+ *  quat.x = 0, quat.y = 0, quat.z = 0, quat.w = 1;
+ *  // Inline using the static convenience constructor which initializes the quaternion with the arguments to the "New" method.
+ *  QuaternionMath<float>::Quaternion quat = QuaternionMath::New(1, 2, 3, 4);
+ * @endcode
+ *
+ * The memory layout for the quaternion is such that x, y, z, w is the order in memory.
+ * @author Michael A. Jackson
+ * @version 1.0
  */
 template<typename T>
 class QuaternionMath
@@ -63,20 +74,6 @@ class QuaternionMath
         T w;
     } Quaternion;
 
-    /**
-    * @brief
-    */
-//    typedef struct {
-//        T d[4];
-//    } Vec4_t;
-
-    /**
-    * @brief The Union of the 2 structures
-    */
-//    typedef union {
-//        Quaternion quat;
-//        Vec4_t vec4;
-//    } Quaternion_t;
 
     // -----------------------------------------------------------------------------
 
@@ -91,6 +88,10 @@ class QuaternionMath
     }
 
     // -----------------------------------------------------------------------------
+    /**
+     * @brief Identity Sets the quaternion q to the identity quaternion (<0,0,0>,1)
+     * @param q
+     */
     static void Identity(Quaternion &q)
     {
       q.x = 0.0;
@@ -100,7 +101,11 @@ class QuaternionMath
     }
 
     // -----------------------------------------------------------------------------
-
+    /**
+     * @brief Copy Copies the values from src into dest
+     * @param src
+     * @param dest
+     */
     static void Copy(const Quaternion &src, Quaternion &dest)
     {
       dest.x = src.x;
@@ -110,6 +115,11 @@ class QuaternionMath
     }
 
     // -----------------------------------------------------------------------------
+
+    /**
+     * @brief ElementWiseAbs inline assigns the absolute value of each element to itself
+     * @param q
+     */
     static void ElementWiseAbs(Quaternion &q)
     {
       q.x = fabs(q.x);
@@ -118,6 +128,11 @@ class QuaternionMath
       q.w = fabs(q.w);
     }
 
+    /**
+     * @brief ScalarMultiply Multiplies each element in the quaternion by the argument v
+     * @param q
+     * @param v
+     */
     static void ScalarMultiply(Quaternion &q, T v)
     {
       q.x = q.x * v;
@@ -126,6 +141,11 @@ class QuaternionMath
       q.w = q.w * v;
     }
 
+    /**
+     * @brief ScalarDivide Divides each element in the quaternion by the argument v
+     * @param q
+     * @param v
+     */
     static void ScalarDivide(Quaternion &q, T v)
     {
       q.x = q.x / v;
@@ -212,7 +232,8 @@ class QuaternionMath
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Multiply
+     * @brief Multiply Multiplies 2 quaternions according to quaternion multiplication. Note that the order of the quaternions
+     * is critical as Quaternioin multiplication is NOT cummunitive i.e., A * B != B * A
      * @param q1
      * @param q2
      * @param out
@@ -228,7 +249,7 @@ class QuaternionMath
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Conjugate
+     * @brief Conjugate Converts quaternion q into its conjugate.
      * @param q
      */
     static void Conjugate(Quaternion &q)
@@ -242,7 +263,7 @@ class QuaternionMath
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Norm
+     * @brief Norm Computes and returns the "norm" of the quaternion
      * @param q
      */
     static T Norm(Quaternion &q)
@@ -252,7 +273,7 @@ class QuaternionMath
 
 
     /**
-     * @brief Length
+     * @brief Length Computes are returns the "length" of the quaternion which is the square root of the norm.
      * @param q
      */
     static T Length(Quaternion &q)
@@ -262,7 +283,7 @@ class QuaternionMath
 
     // -----------------------------------------------------------------------------
     /**
-    * @brief UnitQuaternion (Normalize)
+    * @brief UnitQuaternion (Normalize) Converts the quaternion into its normalized values
     * @param qr
     */
     static void UnitQuaternion(Quaternion &qr)
@@ -287,86 +308,21 @@ class QuaternionMath
  * @brief QuaternionMathF Typedef for 32 bit floats for convenience
  */
 typedef QuaternionMath<float> QuaternionMathF;
+
+/**
+ * @brief QuaternionMathD Typedef for 64 bit floats for convenience
+ */
 typedef QuaternionMath<double> QuaternionMathD;
 
 /**
  * @brief QuatF 32 Bit Floating point Quaternion for convenience.
  */
 typedef QuaternionMath<float>::Quaternion  QuatF;
-typedef QuaternionMath<double>::Quaternion  QuatD;
+/**
+ * @brief QuatD 64 Bit Floating point Quaternion for convenience.
+ */
+ typedef QuaternionMath<double>::Quaternion  QuatD;
 
 
 #endif /* _QuaternionMath_H_ */
 
-//    static void Multiply(const Quaternion_t &q1, const Quaternion_t &q2, Quaternion_t &out)
-//    {
-//      out.quat.x = q2.quat.x * q1.quat.w + q2.quat.w * q1.quat.x + q2.quat.z * q1.quat.y - q2.quat.y * q1.quat.z;
-//      out.quat.y = q2.quat.y * q1.quat.w + q2.quat.w * q1.quat.y + q2.quat.x * q1.quat.z - q2.quat.z * q1.quat.x;
-//      out.quat.z = q2.quat.z * q1.quat.w + q2.quat.w * q1.quat.z + q2.quat.y * q1.quat.x - q2.quat.x * q1.quat.y;
-//      out.quat.w = q2.quat.w * q1.quat.w - q2.quat.x * q1.quat.x - q2.quat.y * q1.quat.y - q2.quat.z * q1.quat.z;
-//    }
-//    static void Multiply(const Vec4_t &q1, const Vec4_t &q2, Vec4_t &out)
-//    {
-//      out.d[0] = q2.d[0] * q1.d[3] + q2.d[3] * q1.d[0] + q2.d[2] * q1.d[1] - q2.d[1] * q1.d[2];
-//      out.d[1] = q2.d[1] * q1.d[3] + q2.d[3] * q1.d[1] + q2.d[0] * q1.d[2] - q2.d[2] * q1.d[0];
-//      out.d[2] = q2.d[2] * q1.d[3] + q2.d[3] * q1.d[2] + q2.d[1] * q1.d[0] - q2.d[0] * q1.d[1];
-//      out.d[3] = q2.d[3] * q1.d[3] - q2.d[0] * q1.d[0] - q2.d[1] * q1.d[1] - q2.d[2] * q1.d[2];
-//    }
-//    static void Multiply(const T* q1, const T* q2, T* out)
-//    {
-//      out[0] = q2[0] * q1[3] + q2[3] * q1[0] + q2[2] * q1[1] - q2[1] * q1[2];
-//      out[1] = q2[1] * q1[3] + q2[3] * q1[1] + q2[0] * q1[2] - q2[2] * q1[0];
-//      out[2] = q2[2] * q1[3] + q2[3] * q1[2] + q2[1] * q1[0] - q2[0] * q1[1];
-//      out[3] = q2[3] * q1[3] - q2[0] * q1[0] - q2[1] * q1[1] - q2[2] * q1[2];
-//    }
-
-//    static void InvertQuaternion(Quaternion_t &q)
-//    {
-//      q.quat.x = -q.quat.x;
-//      q.quat.y = -q.quat.y;
-//      q.quat.z = -q.quat.z;
-//      q.quat.w = q.quat.w;
-//    }
-//    static void InvertQuaternion(Vec4_t &q)
-//    {
-//      q.d[0] = -q.d[0];
-//      q.d[1] = -q.d[1];
-//      q.d[2] = -q.d[2];
-//      q.d[3] = q.d[3];
-//    }
-
-//    static void InvertQuaternion(T* q)
-//    {
-//      q[0] = -q[0];
-//      q[1] = -q[1];
-//      q[2] = -q[2];
-//      q[3] = q[3];
-//    }
-//    static void Normalize(Quaternion_t &qr)
-//    {
-//      double norm = (qr.quat.x*qr.quat.x) + (qr.quat.y*qr.quat.y) + (qr.quat.z*qr.quat.z) + (qr.quat.w*qr.quat.w);
-//      norm = sqrt(norm);
-//      qr.quat.x = static_cast<T>( qr.quat.x/norm );
-//      qr.quat.y = static_cast<T>( qr.quat.y/norm );
-//      qr.quat.z = static_cast<T>( qr.quat.z/norm );
-//      qr.quat.w = static_cast<T>( qr.quat.w/norm );
-//    }
-//    static void Normalize(Vec4_t &qr)
-//    {
-//      double norm = (qr[0]*qr[0]) + (qr[1]*qr[1]) + (qr[2]*qr[2]) + (qr[3]*qr[3]);
-//      norm = sqrt(norm);
-//      qr.d[0] = static_cast<T>( qr.d[0]/norm );
-//      qr.d[1] = static_cast<T>( qr.d[1]/norm );
-//      qr.d[2] = static_cast<T>( qr.d[2]/norm );
-//      qr.d[3] = static_cast<T>( qr.d[3]/norm );
-//    }
-
-//    static void Normalize(T* qr)
-//    {
-//      double norm = (qr[0]*qr[0]) + (qr[1]*qr[1]) + (qr[2]*qr[2]) + (qr[3]*qr[3]);
-//      norm = sqrt(norm);
-//      qr[1] = static_cast<T>( qr[1]/norm );
-//      qr[2] = static_cast<T>( qr[2]/norm );
-//      qr[3] = static_cast<T>( qr[3]/norm );
-//      qr[4] = static_cast<T>( qr[4]/norm );
-//    }

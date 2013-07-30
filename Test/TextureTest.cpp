@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -38,7 +38,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include "DREAM3DLib/Common/Texture.h"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 
@@ -59,11 +59,31 @@ int main(int argc, char **argv)
   std::vector<float> sigmas;
   std::vector<float> odf;
 
-  Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-  Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-  Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
+  size_t numEntries = e1s.size();
+  odf.resize(CubicOps::k_OdfSize);
+  Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
+  odf.resize(HexagonalOps::k_OdfSize);
+  Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
 
-  Texture::calculateMDFData<std::vector<float>, CubicOps>(e1s, e2s, e3s, weights, sigmas);
+
+  odf.resize(OrthoRhombicOps::k_OdfSize);
+  Texture::CalculateOrthoRhombicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
+
+
+  int size = 1000;
+  // Now generate the actual XY point data that gets plotted.
+  // These are the output vectors
+  std::vector<float> angles;
+  std::vector<float> axes;
+  std::vector<float> mdf(CubicOps::k_MdfSize);
+
+  Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
   return EXIT_SUCCESS;
 }
