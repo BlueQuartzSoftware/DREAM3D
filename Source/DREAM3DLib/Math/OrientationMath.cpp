@@ -377,10 +377,11 @@ void OrientationMath::MattoEuler(float g[3][3], float &ea1, float &ea2, float &e
 {
   ea2 = acos(g[2][2]);
   float sin_ea2 = sin(ea2);
-  float cosine3 = (g[1][2]/sin_ea2);
-  float sine3 = (g[0][2]/sin_ea2);
-  float cosine1 = (-g[2][1]/sin_ea2);
-  float sine1 = (g[2][0]/sin_ea2);
+  float oneOverSinEa2 = 1.0/sin_ea2;
+  float cosine3 = (g[1][2]*oneOverSinEa2);
+  float sine3 = (g[0][2]*oneOverSinEa2);
+  float cosine1 = (-g[2][1]*oneOverSinEa2);
+  float sine1 = (g[2][0]*oneOverSinEa2);
   ea3 = acos(cosine3);
   ea1 = acos(cosine1);
   if(sine3 < 0) ea3 = (2.0f * DREAM3D::Constants::k_Pi)-ea3;
@@ -393,12 +394,12 @@ void OrientationMath::MattoEuler(float g[3][3], float &ea1, float &ea2, float &e
 void OrientationMath::EulertoRod(float &r1, float &r2, float &r3, float ea1, float ea2, float ea3)
 {
   float sum, diff, csum, cdiff, sdiff, t2;
-  sum = (ea1+ea3)/2.0f;
-  diff = (ea1-ea3)/2.0f;
+  sum = (ea1+ea3)*0.5;
+  diff = (ea1-ea3)*0.5;
   csum = cosf(sum);
   cdiff = cosf(diff);
   sdiff = sinf(diff);
-  t2 = tanf(ea2/2.0f);
+  t2 = tanf(ea2*0.5);
   r1 = t2*cdiff/csum;
   r2 = t2*sdiff/csum;
   r3 = tanf(sum);
