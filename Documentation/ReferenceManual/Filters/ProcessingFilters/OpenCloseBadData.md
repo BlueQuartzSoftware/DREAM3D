@@ -8,10 +8,10 @@ Processing Filters (Cleanup)
 Bad data refers to a **Cell** that has a _GrainId_ of *0*, which means the **Cell** has failed some sort of test and been marked 
 as a *bad* **Cell**. 
 
-If the bad data is _dilated_, the filter grows the bad data by one **Cell** in an iterative sequence for a user defined number of
+If the bad data is _dilated_, the filter grows the bad data by one **Cell** (in the directions specified by the user) in an iterative sequence for a user defined number of
  iterations.  During the *dilate* process the _GrainId_ of any **Cell** neighboring a *bad* Cell** will be changed to *0*.  
 
-If the bad data is _eroded_ option, the filter shrinks the bad data by one **Cell** in an iterative sequence for a user defined number of
+If the bad data is _eroded_ option, the filter shrinks the bad data by one **Cell** (in the directions specified by the user) in an iterative sequence for a user defined number of
  iterations.  During the *erode* process the _GrainId_ of the *bad* **Cell** is changed from *0* to the _GrainId_ of the majority
  of its neighbors. If there is a tie between two _GrainIds_, then one of the *GrainIds*, chosen randomly, will be assigned to the *bad* **Cell**.
 
@@ -38,8 +38,9 @@ Running the _erode-dilate_ operations in pairs can
 
 | Name | Type |
 |------|------|
-| Direction of Operation | Dilate or Erode |
+| Operation | Dilate or Erode |
 | Number of Iterations | The number of iterations to use for the filter |
+| Application Direction | The directions in which the operation is applied |
 
 ## Required DataContainers ##
 Voxel
