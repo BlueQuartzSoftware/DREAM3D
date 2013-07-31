@@ -69,18 +69,20 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
 {
   public:
     MXA_SHARED_POINTERS(TetragonalOps)
-    MXA_TYPE_MACRO(TetragonalOps)
- //   MXA_STATIC_NEW_SUPERCLASS(OrientationMath, TetragonalOps)
+    MXA_TYPE_MACRO_SUPER(TetragonalOps, OrientationOps)
     MXA_STATIC_NEW_MACRO(TetragonalOps)
 
 
     TetragonalOps();
     virtual ~TetragonalOps();
 
-    //FIXME: These need actual values assigned to them.
-    virtual int getODFSize() { return 23328; }
-    virtual int getMDFSize() { return 23328; }
-    virtual int getNumSymOps() { return 8; }
+    static const int k_OdfSize = 23328;
+    static const int k_MdfSize = 23328;
+    static const int k_NumSymQuats = 8;
+
+    virtual int getODFSize() { return k_OdfSize; }
+    virtual int getMDFSize() { return k_MdfSize; }
+    virtual int getNumSymOps() { return k_NumSymQuats; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);

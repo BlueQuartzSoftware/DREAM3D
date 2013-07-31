@@ -67,15 +67,19 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
 {
   public:
     MXA_SHARED_POINTERS(TrigonalOps)
-    MXA_TYPE_MACRO(TrigonalOps)
+    MXA_TYPE_MACRO_SUPER(TrigonalOps, OrientationOps)
     MXA_STATIC_NEW_MACRO(TrigonalOps)
 
     TrigonalOps();
     virtual ~TrigonalOps();
 
-    virtual int getODFSize() { return 31104; }
-    virtual int getMDFSize() { return 31104; }
-    virtual int getNumSymOps() { return 6; }
+    static const int k_OdfSize = 31104;
+    static const int k_MdfSize = 31104;
+    static const int k_NumSymQuats = 6;
+
+    virtual int getODFSize() { return k_OdfSize; }
+    virtual int getMDFSize() { return k_MdfSize; }
+    virtual int getNumSymOps() { return k_NumSymQuats; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);

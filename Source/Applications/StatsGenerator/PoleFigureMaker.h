@@ -58,7 +58,7 @@ class PoleFigureData : QObject
       kernelRadius[0] = 3;      kernelRadius[1] = 3;
     }
 
-    PoleFigureData(QVector<float> xData, QVector<float> yData, const QString &s, qint32* kernelRad, qint32* size) :
+    PoleFigureData(QVector<float> &xData, QVector<float> &yData, const QString &s, qint32* kernelRad, qint32* size) :
     xData(xData),
     yData(yData),
     label(s)
