@@ -116,7 +116,12 @@ void SingleThresholdCells::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
+  setComparisonOperator( reader->readValue("ComparisonOperator", 0) );
+  setComparisonValue( reader->readValue("ComparisonValue", 0) );
+  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

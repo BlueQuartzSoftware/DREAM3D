@@ -274,7 +274,10 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setTwinBoundarySchmidFactorsFile( reader->readValue( "TwinBoundarySchmidFactorsFile", getTwinBoundarySchmidFactorsFile() ) );
+  setLoadingDir( reader->readValue("LoadingDir", getLoadingDir() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

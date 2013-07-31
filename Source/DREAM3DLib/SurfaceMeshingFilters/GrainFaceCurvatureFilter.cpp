@@ -141,7 +141,13 @@ void GrainFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setNRing( reader->readValue("NRing", 0) );
+  setComputePrincipalDirectionVectors( reader->readValue("ComputePrincipalDirectionVectors", false) );
+  setComputeGaussianCurvature( reader->readValue("ComputeGaussianCurvature", false) );
+  setComputeMeanCurvature( reader->readValue("ComputeMeanCurvature", false) );
+  setUseNormalsForCurveFitting( reader->readValue("UseNormalsForCurveFitting", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

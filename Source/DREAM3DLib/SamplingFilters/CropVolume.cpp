@@ -155,7 +155,16 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setXMin( reader->readValue("XMin", 0) );
+  setYMin( reader->readValue("YMin", 0) );
+  setZMin( reader->readValue("ZMin", 0) );
+  setXMax( reader->readValue("XMax", 0) );
+  setYMax( reader->readValue("YMax", 0) );
+  setZMax( reader->readValue("ZMax", 0) );
+  setRenumberGrains( reader->readValue("RenumberGrains", false) );
+  setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

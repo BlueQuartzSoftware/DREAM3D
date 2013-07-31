@@ -310,7 +310,19 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setInputFile( reader->readValue( "InputFile", getInputFile() ) );
+  setScalarType( reader->readValue("ScalarType", 0) );
+  setDimensionality( reader->readValue("Dimensionality", 0) );
+  setNumberOfComponents( reader->readValue("NumberOfComponents", 0) );
+  setEndian( reader->readValue("Endian", 0) );
+  setDimensions( reader->readValue("Dimensions", getDimensions() ) );
+  setOrigin( reader->readValue("Origin", getOrigin() ) );
+  setResolution( reader->readValue("Resolution", getResolution() ) );
+  setOverRideOriginResolution( reader->readValue("OverRideOriginResolution", false) );
+  setSkipHeaderBytes( reader->readValue("SkipHeaderBytes", 0) );
+  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

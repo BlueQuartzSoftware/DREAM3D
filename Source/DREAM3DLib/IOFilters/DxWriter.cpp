@@ -93,7 +93,10 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
+  setAddSurfaceLayer( reader->readValue("AddSurfaceLayer", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

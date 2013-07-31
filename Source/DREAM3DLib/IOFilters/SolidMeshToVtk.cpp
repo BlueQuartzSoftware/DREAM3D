@@ -91,7 +91,10 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
+  setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

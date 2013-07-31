@@ -106,7 +106,10 @@ void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setDirection( reader->readValue("Direction", 0) );
+  setNumIterations( reader->readValue("NumIterations", 0) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
