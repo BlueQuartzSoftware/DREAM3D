@@ -153,6 +153,7 @@ namespace DREAM3D
     const std::string EquivalentDiameters("EquivalentDiameters");
     const std::string Schmids("Schmids");
     const std::string SlipSystems("SlipSystems");
+    const std::string LargestCrossSections("LargestCrossSections");
     const std::string AspectRatios("AspectRatios");
     const std::string AxisLengths("AxisLengths");
     const std::string Omega3s("Omega3s");

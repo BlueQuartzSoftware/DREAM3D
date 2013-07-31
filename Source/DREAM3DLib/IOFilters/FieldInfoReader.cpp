@@ -44,6 +44,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -57,11 +58,13 @@ FieldInfoReader::FieldInfoReader() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_RenumberGrains(true),
   m_GrainIds(NULL),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
   m_FieldPhases(NULL),
-  m_FieldEulerAngles(NULL)
+  m_FieldEulerAngles(NULL),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -97,6 +100,14 @@ void FieldInfoReader::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Renumber Grains");
+    option->setPropertyName("RenumberGrains");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -115,6 +126,7 @@ void FieldInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("CreateCellLevelArrays", getCreateCellLevelArrays() );
+  writer->writeValue("RenumberGrains", getRenumberGrains() );
 }
 
 // -----------------------------------------------------------------------------
@@ -147,6 +159,7 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 }
@@ -205,6 +218,10 @@ int  FieldInfoReader::readFile()
   size_t totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, totalPoints, numgrains + 1, totalEnsembles);
 
+  // Create and initialize the Field Active Array with a default value of true
+  BoolArrayType::Pointer fieldActive = BoolArrayType::CreateArray(numgrains+1, DREAM3D::FieldData::Active);
+  fieldActive->initializeWithValues(true);
+
   // Initialize arrays to hold the data for the Euler Data
   FloatArrayType::Pointer fieldEulerData = FloatArrayType::CreateArray(numgrains+1, 3, DREAM3D::FieldData::EulerAngles);
   fieldEulerData->SetNumberOfComponents(3);
@@ -216,6 +233,12 @@ int  FieldInfoReader::readFile()
   for(int i=0;i<numgrains;i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
+    if(gnum >= fieldActive->GetSize())
+    {
+      fieldActive->Resize(gnum+1);
+      fieldPhaseData->Resize(gnum+1);
+      fieldEulerData->Resize(gnum+1);
+    }
     fieldEulerData->SetValue(3*gnum, ea1);
     fieldEulerData->SetValue(3*gnum+1, ea2);
     fieldEulerData->SetValue(3*gnum+2, ea3);
@@ -224,6 +247,7 @@ int  FieldInfoReader::readFile()
   }
   m->addFieldData(DREAM3D::FieldData::EulerAngles, fieldEulerData);
   m->addFieldData(DREAM3D::FieldData::Phases, fieldPhaseData);
+  m->addFieldData(DREAM3D::FieldData::Active, fieldActive);
 
   if (m_CreateCellLevelArrays == true)
   {
@@ -242,6 +266,40 @@ int  FieldInfoReader::readFile()
     m->addCellData(DREAM3D::CellData::EulerAngles, cellEulerData);
     m->addCellData(DREAM3D::CellData::Phases, cellPhaseData);
   }
+
+  if (m_RenumberGrains == true)
+  {
+    totalPoints = m->getTotalPoints();
+    size_t totalFields = m->getNumFieldTuples();
+    if (0 == totalFields)
+    {
+      notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
+      notifyStatusMessage("Completed");
+      return -999;
+    }
+    dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+
+    std::stringstream ss;
+
+    // Find the unique set of grain ids
+    for (size_t i = 1; i < totalFields; ++i)
+    {
+      m_Active[i] = false;
+    }
+    for (int64_t i = 0; i < totalPoints; ++i)
+    {
+      m_Active[m_GrainIds[i]] = true;
+    }
+
+    RenumberGrains::Pointer renum = RenumberGrains::New();
+    renum->setVoxelDataContainer(m);
+    renum->setObservers(getObservers());
+    renum->setMessagePrefix(getMessagePrefix());
+    renum->execute();
+    setErrorCondition(renum->getErrorCondition());
+    addErrorMessages(renum->getPipelineMessages());
+  }
+
   notifyStatusMessage("Complete");
   return 0;
 }

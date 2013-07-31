@@ -34,12 +34,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef OpenCloseBadData_H_
-#define OpenCloseBadData_H_
+#ifndef FindLargestCrossSections_H_
+#define FindLargestCrossSections_H_
 
 #include <vector>
 #include <string>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -47,45 +46,40 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
-
 
 /**
- * @class OpenCloseBadData OpenCloseBadData.h DREAM3DLib/ReconstructionFilters/OpenCloseBadData.h
+ * @class FindLargestCrossSections FindLargestCrossSections.h DREAM3DLib/GenericFilters/FindLargestCrossSections.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
+class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(OpenCloseBadData)
-    DREAM3D_STATIC_NEW_MACRO(OpenCloseBadData)
-    DREAM3D_TYPE_MACRO_SUPER(OpenCloseBadData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindLargestCrossSections)
+    DREAM3D_STATIC_NEW_MACRO(FindLargestCrossSections)
+    DREAM3D_TYPE_MACRO_SUPER(FindLargestCrossSections, AbstractFilter)
 
-    virtual ~OpenCloseBadData();
+    virtual ~FindLargestCrossSections();
 
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Required Cell Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+	//------ Created Field Data
+	DREAM3D_INSTANCE_STRING_PROPERTY(LargestCrossSectionsArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction)
-    DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
-    DREAM3D_INSTANCE_PROPERTY(bool, xDirOn)
-    DREAM3D_INSTANCE_PROPERTY(bool, yDirOn)
-    DREAM3D_INSTANCE_PROPERTY(bool, zDirOn)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Erode/Dilate Bad Data"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getHumanLabel() { return "Find Field Largest Cross-Section Areas"; }
+
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
 
     virtual void setupFilterParameters();
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
     
     /**
     * @brief This method will read the options from a file
@@ -93,25 +87,22 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader);
 
-
     virtual void execute();
     virtual void preflight();
 
   protected:
-    OpenCloseBadData();
+    FindLargestCrossSections();
+    void find_sizes();
 
 
   private:
-    int32_t* m_Neighbors;
     int32_t* m_GrainIds;
-
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+    float* m_LargestCrossSections;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    OpenCloseBadData(const OpenCloseBadData&); // Copy Constructor Not Implemented
-    void operator=(const OpenCloseBadData&); // Operator '=' Not Implemented
+    FindLargestCrossSections(const FindLargestCrossSections&); // Copy Constructor Not Implemented
+    void operator=(const FindLargestCrossSections&); // Operator '=' Not Implemented
 };
 
-#endif /* OpenCloseBadData_H_ */
+#endif /* FindLargestCrossSections_H_ */
