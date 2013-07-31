@@ -72,6 +72,9 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Direction)
     DREAM3D_INSTANCE_PROPERTY(int, NumIterations)
+    DREAM3D_INSTANCE_PROPERTY(bool, xDirOn)
+    DREAM3D_INSTANCE_PROPERTY(bool, yDirOn)
+    DREAM3D_INSTANCE_PROPERTY(bool, zDirOn)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
@@ -100,7 +103,6 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
 
   private:
     int32_t* m_Neighbors;
-
     int32_t* m_GrainIds;
 
     std::vector<std::vector<int> > voxellists;

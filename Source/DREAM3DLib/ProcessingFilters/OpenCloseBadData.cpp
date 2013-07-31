@@ -57,6 +57,9 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_Direction(0),
 m_NumIterations(1),
+m_xDirOn(true),
+m_yDirOn(true),
+m_zDirOn(true),
 m_Neighbors(NULL),
 m_GrainIds(NULL)
 {
@@ -96,6 +99,30 @@ void OpenCloseBadData::setupFilterParameters()
     option->setValueType("int");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("X Direction");
+    option->setPropertyName("xDirOn");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Y Direction");
+    option->setPropertyName("yDirOn");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Z Direction");
+    option->setPropertyName("zDirOn");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -114,6 +141,9 @@ void OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
+  writer->writeValue("X Direction", getxDirOn() );
+  writer->writeValue("Y Direction", getyDirOn() );
+  writer->writeValue("Z Direction", getzDirOn() );
 }
 
 // -----------------------------------------------------------------------------
@@ -207,71 +237,70 @@ void OpenCloseBadData::execute()
   {
     for (int k = 0; k < dims[2]; k++)
     {
-    kstride = static_cast<int>( dims[0]*dims[1]*k );
+      kstride = static_cast<int>( dims[0]*dims[1]*k );
       for (int j = 0; j < dims[1]; j++)
       {
-      jstride = static_cast<int>( dims[0]*j );
+        jstride = static_cast<int>( dims[0]*j );
         for (int i = 0; i < dims[0]; i++)
         {
-        count = kstride+jstride+i;
-        std::stringstream ss;
-        grainname = m_GrainIds[count];
-        if (grainname == 0)
-        {
-			current = 0;
-			most = 0;
-			for (int l = 0; l < 6; l++)
-			{
-			  good = 1;
-			  neighpoint = static_cast<int>( count + neighpoints[l] );
-			  if (l == 0 && k == 0) good = 0;
-			  if (l == 5 && k == (dims[2] - 1)) good = 0;
-			  if (l == 1 && j == 0) good = 0;
-			  if (l == 4 && j == (dims[1] - 1)) good = 0;
-			  if (l == 2 && i == 0) good = 0;
-			  if (l == 3 && i == (dims[0] - 1)) good = 0;
-			  if (good == 1)
-			  {
-				  grain = m_GrainIds[neighpoint];
-				  if (m_Direction == 0 && grain > 0)
-				  {
-					m_Neighbors[neighpoint] = count;
-				  }
-				  if ((grain > 0 && m_Direction == 1))
-				  {
-					n[grain]++;
-					current = n[grain];
-					if (current > most)
-					{
-					  most = current;
-					  m_Neighbors[count] = neighpoint;
-					}
-				  }
-			  }
-			}
-			if (m_Direction == 1)
-			{
-			  for (int l = 0; l < 6; l++)
-			  {
-  				good = 1;
-				neighpoint = static_cast<int>( count + neighpoints[l] );
-				if (l == 0 && k == 0) good = 0;
-				if (l == 5 && k == (dims[2] - 1)) good = 0;
-				if (l == 1 && j == 0) good = 0;
-				if (l == 4 && j == (dims[1] - 1)) good = 0;
-				if (l == 2 && i == 0) good = 0;
-				if (l == 3 && i == (dims[0] - 1)) good = 0;
-				if (good == 1)
-				{
-					grain = m_GrainIds[neighpoint];
-					n[grain] = 0;
-				}
-			  }
-			}
+          count = kstride+jstride+i;
+          std::stringstream ss;
+          grainname = m_GrainIds[count];
+          if (grainname == 0)
+          {
+            current = 0;
+            most = 0;
+            for (int l = 0; l < 6; l++)
+            {
+              good = 1;
+              neighpoint = static_cast<int>( count + neighpoints[l] );
+              if (l == 0 && (k == 0 || m_zDirOn == false)) good = 0;
+              else if (l == 5 && (k == (dims[2] - 1) || m_zDirOn == false)) good = 0;
+              else if (l == 1 && (j == 0 || m_yDirOn == false)) good = 0;
+              else if (l == 4 && (j == (dims[1] - 1) || m_yDirOn == false)) good = 0;
+              else if (l == 2 && (i == 0 || m_xDirOn == false)) good = 0;
+              else if (l == 3 && (i == (dims[0] - 1) || m_xDirOn == false)) good = 0;
+              if (good == 1)
+              {
+                grain = m_GrainIds[neighpoint];
+                if (m_Direction == 0 && grain > 0)
+                {
+                  m_Neighbors[neighpoint] = count;
+                }
+                if ((grain > 0 && m_Direction == 1))
+                {
+                  n[grain]++;
+                  current = n[grain];
+                  if (current > most)
+                  {
+                    most = current;
+                    m_Neighbors[count] = neighpoint;
+                  }
+                }
+              }
+            }
+            if (m_Direction == 1)
+            {
+              for (int l = 0; l < 6; l++)
+              {
+                good = 1;
+                neighpoint = static_cast<int>( count + neighpoints[l] );
+                if (l == 0 && k == 0) good = 0;
+                if (l == 5 && k == (dims[2] - 1)) good = 0;
+                if (l == 1 && j == 0) good = 0;
+                if (l == 4 && j == (dims[1] - 1)) good = 0;
+                if (l == 2 && i == 0) good = 0;
+                if (l == 3 && i == (dims[0] - 1)) good = 0;
+                if (good == 1)
+                {
+                  grain = m_GrainIds[neighpoint];
+                  n[grain] = 0;
+                }
+              }
+            }
+          }
         }
       }
-    }
-
     }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (int j = 0; j < totalPoints; j++)
@@ -281,14 +310,14 @@ void OpenCloseBadData::execute()
       if (neighbor >= 0)
       {
         if ( (grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1)
-            || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
+          || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
         {
-            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-            {
-              std::string name = *iter;
-              IDataArray::Pointer p = m->getCellData(*iter);
-              p->CopyTuple(neighbor, j);
-            }
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            std::string name = *iter;
+            IDataArray::Pointer p = m->getCellData(*iter);
+            p->CopyTuple(neighbor, j);
+          }
         }
       }
     }
