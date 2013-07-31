@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef COLORPOLEFIGURE_H_
-#define COLORPOLEFIGURE_H_
+#ifndef _PoleFigureGeneration_H_
+#define _PoleFigureGeneration_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
@@ -58,7 +58,7 @@ class PoleFigureData : QObject
       kernelRadius[0] = 3;      kernelRadius[1] = 3;
     }
 
-    PoleFigureData(QVector<float> xData, QVector<float> yData, const QString &s, qint32* kernelRad, qint32* size) :
+    PoleFigureData(QVector<float> &xData, QVector<float> &yData, const QString &s, qint32* kernelRad, qint32* size) :
     xData(xData),
     yData(yData),
     label(s)
@@ -112,11 +112,11 @@ class PoleFigureData : QObject
  * @date Nov 4, 2011
  * @version 1.0
  */
-class PoleFigureMaker
+class PoleFigureGeneration
 {
   public:
-    PoleFigureMaker();
-    virtual ~PoleFigureMaker();
+    PoleFigureGeneration();
+    virtual ~PoleFigureGeneration();
 
     QImage generateColorPoleFigureImage(const PoleFigureData &config);
 
@@ -140,9 +140,9 @@ class PoleFigureMaker
     bool m_KernelWeightsInited;
 
 
-    PoleFigureMaker(const PoleFigureMaker&); // Copy Constructor Not Implemented
-    void operator=(const PoleFigureMaker&); // Operator '=' Not Implemented
+    PoleFigureGeneration(const PoleFigureGeneration&); // Copy Constructor Not Implemented
+    void operator=(const PoleFigureGeneration&); // Operator '=' Not Implemented
 };
 
 
-#endif /* COLORPOLEFIGURE_H_ */
+#endif /* _PoleFigureGeneration_H_ */

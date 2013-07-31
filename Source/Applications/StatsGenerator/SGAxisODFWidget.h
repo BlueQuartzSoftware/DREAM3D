@@ -62,7 +62,7 @@
 #include "DREAM3DLib/Common/TransformationStatsData.h"
 
 
-#include "PoleFigureMaker.h"
+#include "QtSupport/PoleFigureGeneration.h"
 
 class SGODFTableModel;
 class StatsGenMDFWidget;

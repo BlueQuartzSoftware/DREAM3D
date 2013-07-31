@@ -124,7 +124,7 @@ add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/Filte
                                             ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
                                             ${${PLUGIN_NAME}_Project_SRCS}
                                             )
-target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
 
 
 # Now run the code to generate the header files which will over write the place

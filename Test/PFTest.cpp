@@ -18,7 +18,7 @@
 
 #define PFTEST_NO_QOBJECT 1
 
-#include "StatsGenerator/PoleFigureMaker.h"
+#include "QtSupport/PoleFigureGeneration.h"
 
 #include "TestFileLocations.h"
 
@@ -36,14 +36,15 @@ void poleFigureGenerationComplete()
 // -----------------------------------------------------------------------------
 QImage generateODFPoleFigure(const PoleFigureData &data)
 {
-  PoleFigureMaker colorPoleFigure;
+  PoleFigureGeneration colorPoleFigure;
   return colorPoleFigure.generateColorPoleFigureImage(data);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s, QVector<float> weights, QVector<float> sigmas, QString prefix)
+unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s,
+                             QVector<float> weights, QVector<float> sigmas, QString prefix)
 {
   int err = 0;
   QVector<float> odf(CubicOps::k_OdfSize);
@@ -59,7 +60,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
   unsigned int m_CrystalStructure = Ebsd::CrystalStructure::Cubic_High;
   qint32 kRad[2] = {4, 4};
   qint32 pfSize[2] = {226, 226};
-  PoleFigureMaker colorPoleFigure;
+  PoleFigureGeneration colorPoleFigure;
   size_t numEntries = e1s.size();
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
