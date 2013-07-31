@@ -70,7 +70,7 @@
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define SG_ERROR_CHECK(name)\
     std::cout << "Error writing HDF5 data to " << name << std::endl;\
@@ -492,8 +492,8 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-  StatsGen sg;
-  err = sg.GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
+  
+  err = StatsGen::GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -539,8 +539,8 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-  StatsGen sg;
-  err = sg.GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
+  
+  err = StatsGen::GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message
@@ -586,8 +586,8 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax
   int size = 256;
   QwtArray<float> x;
   QwtArray<float> y;
-  StatsGen sg;
-  err = sg.GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
+  
+  err = StatsGen::GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
   if (err == 1)
   {
     //TODO: Present Error Message

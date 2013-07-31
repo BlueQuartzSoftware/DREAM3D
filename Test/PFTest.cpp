@@ -13,8 +13,8 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Texture.h"
-#include "DREAM3DLib/Common/StatsGen.h"
+#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define PFTEST_NO_QOBJECT 1
 
@@ -40,62 +40,38 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
   return colorPoleFigure.generateColorPoleFigureImage(data);
 }
 
-
-
-int main(int argc, char *argv[])
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s, QVector<float> weights, QVector<float> sigmas, QString prefix)
 {
-
-  QApplication app(argc, argv);
-
-  QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
-  d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));
-
   int err = 0;
-  // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
-  QVector<float> x001;
-  QVector<float> y001;
-  QVector<float> x011;
-  QVector<float> y011;
-  QVector<float> x111;
-  QVector<float> y111;
-
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
-  QVector<float> odf;
+  QVector<float> odf(CubicOps::k_OdfSize);
+  size_t npoints = 5000;
+  QVector<float > x001(npoints * 3);
+  QVector<float > y001(npoints * 3);
+  QVector<float > x011(npoints * 6);
+  QVector<float > y011(npoints * 6);
+  QVector<float > x111(npoints * 4);
+  QVector<float > y111(npoints * 4);
 
 
-  e1s.push_back(90.0);
-  e2s.push_back(35.0);
-  e3s.push_back(45.0);
-  weights.push_back(1000);
-  sigmas.push_back(3);
-
-  // Convert from Degrees to Radians
-  for(int i=0;i<e1s.size();i++)
-  {
-    e1s[i] = e1s[i]*M_PI/180.0;
-    e2s[i] = e2s[i]*M_PI/180.0;
-    e3s[i] = e3s[i]*M_PI/180.0;
-  }
-
-  StatsGen sg;
-  int size = 5000;
   unsigned int m_CrystalStructure = Ebsd::CrystalStructure::Cubic_High;
   qint32 kRad[2] = {4, 4};
   qint32 pfSize[2] = {226, 226};
   PoleFigureMaker colorPoleFigure;
+  size_t numEntries = e1s.size();
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
     std::cout << "Generating Cubic Pole Figure Images" << std::endl;
-    static const size_t odfsize = 5832;
-    // float totalweight = 0;
-    odf.resize(odfsize);
-    Texture::calculateCubicODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenCubicODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
+
+    err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
+                                        x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -103,7 +79,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image1.bmp");
+      path.append("/").append(prefix).append("001.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -117,7 +93,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image2.bmp");
+      path.append(prefix).append("011.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -131,7 +107,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image3.bmp");
+      path.append(prefix).append("111.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -148,11 +124,20 @@ int main(int argc, char *argv[])
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     std::cout << "Generating Hex Pole Figure Images" << std::endl;
-    static const size_t odfsize = 15552;
-    // float totalweight = 0;
-    odf.resize(odfsize);
-    Texture::calculateHexODFData(e1s, e2s, e3s, weights, sigmas, true, odf);
-    err = sg.GenHexODFPlotData(odf, x001, y001, x011, y011, x111, y111, size);
+
+    odf.resize(HexagonalOps::k_OdfSize);
+    x001.resize(npoints * 1);
+    y001.resize(npoints * 1);
+    x011.resize(npoints * 3);
+    y011.resize(npoints * 3);
+    x111.resize(npoints * 3);
+    y111.resize(npoints * 3);
+
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
+    err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
+                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -160,7 +145,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image1.bmp");
+      path.append(prefix).append("0001.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -175,7 +160,7 @@ int main(int argc, char *argv[])
 
       QImage image = generateODFPoleFigure(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image2.bmp");
+      path.append(prefix).append("11-20.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -189,7 +174,7 @@ int main(int argc, char *argv[])
     {
       QImage image = generateODFPoleFigure(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));
       QString path = QString::fromStdString(UnitTest::PFTest::TestDir);
-      path.append("/image3.bmp");
+      path.append(prefix).append("10-10.bmp");
       bool saved = image.save(path);
       if (!saved)
       {
@@ -203,5 +188,55 @@ int main(int argc, char *argv[])
 
   }
 
-  return 0;
+  return EXIT_SUCCESS;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main(int argc, char *argv[])
+{
+
+  QApplication app(argc, argv);
+
+  QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
+  d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));
+
+  unsigned int err = 0;
+  // std::cout << "StatsGenODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+
+  err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "Random_");
+
+
+  e1s.push_back(90.0);
+  e2s.push_back(35.0);
+  e3s.push_back(45.0);
+  weights.push_back(1000);
+  sigmas.push_back(3);
+
+  // Convert from Degrees to Radians
+  for(int i=0;i<e1s.size();i++)
+  {
+    e1s[i] = e1s[i]*M_PI/180.0;
+    e2s[i] = e2s[i]*M_PI/180.0;
+    e3s[i] = e3s[i]*M_PI/180.0;
+  }
+
+  err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "Phantom_");
+
+  e1s[0] = 0.0;
+  e2s[0] = 0.0;
+  e3s[0] = 0.0;
+  weights[0] = 45;
+  sigmas[0] = 8;
+  err = makePoleFigures(e1s, e2s, e3s, weights, sigmas, "000_");
+
+
+  return EXIT_SUCCESS;
 }
