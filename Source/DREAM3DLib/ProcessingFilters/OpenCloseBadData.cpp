@@ -81,7 +81,7 @@ void OpenCloseBadData::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Direction of Operation");
+    option->setHumanLabel("Operation");
     option->setPropertyName("Direction");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
