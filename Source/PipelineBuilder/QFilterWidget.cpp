@@ -1757,7 +1757,7 @@ void QFilterWidget::updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
 // -----------------------------------------------------------------------------
 void QFilterWidget::arrayNameComboBoxUpdated(QComboBox* cb)
 {
-
+  AbstractFilter::Pointer filt = AbstractFilter::New();
 }
 
 

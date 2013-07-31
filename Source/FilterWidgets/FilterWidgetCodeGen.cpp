@@ -233,6 +233,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   fprintf(f, "    QString getFilterGroup();\n\n");
   fprintf(f, "    QString getFilterSubGroup();\n\n");
   fprintf(f, "    virtual void openHtmlHelpFile();\n\n");
+  fprintf(f, "    virtual void getGuiParametersFromFilter(AbstractFilter::Pointer filt);\n\n");
 
   bool implementArrayNameComboBoxUpdated = false;
   bool implementPreflightAboutToExecute = true;
@@ -550,6 +551,25 @@ void createSourceFile( const std::string &group,
   fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.c_str(), filter.c_str());
   fprintf(f, "{\n");
   fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
+  fprintf(f, "     getGuiParametersFromFilter(filter);\n");
+
+  // Generate code to get all the array names and set the local variables that hold those names
+  //appendArrayNameConstructorCode<T>(t, f);
+
+  // Finish Writing the remainder of the constructor code
+  fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
+  fprintf(f, "     m_FilterSubGroup = QString::fromStdString(filter->getSubGroupName());\n");
+  fprintf(f, "     setupGui();\n");
+  fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
+  fprintf(f, "}\n\n");
+
+  fprintf(f, "\n// -----------------------------------------------------------------------------\n");
+  fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.c_str(), filter.c_str());
+
+  // Write getGuiParametersFromFilter(filter) function
+  fprintf(f, "\n// -----------------------------------------------------------------------------\n");
+  fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter::Pointer filt)\n{\n", filter.c_str());
+  fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>( filt.get() );\n", filter.c_str(), filter.c_str(), filter.c_str());
   // Loop on all the options getting the defaults from a fresh instance of the filter class
   for (size_t i = 0; i < options.size(); ++i)
   {
@@ -571,7 +591,7 @@ void createSourceFile( const std::string &group,
       implementAxisAngleWidget = true;
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+      && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "    //ComparisonSelectionWidget: Do we need to preset something from the filter maybe?\n");
       implementComparisonSelectionWidget = true;
@@ -581,19 +601,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
     }
   }
-
-  // Generate code to get all the array names and set the local variables that hold those names
-  //appendArrayNameConstructorCode<T>(t, f);
-
-  // Finish Writing the remainder of the constructor code
-  fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
-  fprintf(f, "     m_FilterSubGroup = QString::fromStdString(filter->getSubGroupName());\n");
-  fprintf(f, "     setupGui();\n");
-  fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
-  fprintf(f, "}\n\n");
-
-  fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.c_str(), filter.c_str());
+  fprintf(f, "}\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "QString Q%sWidget::getFilterGroup() {\n  return m_FilterGroup;\n}\n\n", filter.c_str() );
