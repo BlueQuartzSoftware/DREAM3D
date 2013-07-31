@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     virtual ~CropVolume();
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Required Field Data
+    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XMin)

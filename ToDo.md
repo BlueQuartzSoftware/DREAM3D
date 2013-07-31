@@ -195,7 +195,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Items Completed ##
 
-### Version 4.2 Fixed ###
+### Develop Version 4.3 Fixed ###
+
+
+
+### Develop Version 4.2 Fixed ###
 
 #### 4.2.90 ###
 + Fixed bug where Quaternion::ElementWiseAbsd was casting to integers due to use of 'abs' instead of 'fabs'
