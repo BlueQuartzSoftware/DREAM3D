@@ -68,10 +68,11 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(LargestCrossSectionsArrayName)
 
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Sizes"; }
+    virtual const std::string getHumanLabel() { return "Find Field Largest Cross-Section Areas"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

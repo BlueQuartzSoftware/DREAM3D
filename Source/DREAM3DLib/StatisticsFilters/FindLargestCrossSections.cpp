@@ -49,6 +49,7 @@ FindLargestCrossSections::FindLargestCrossSections() :
 AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_LargestCrossSectionsArrayName(DREAM3D::FieldData::LargestCrossSections),
+m_Plane(0),
 m_GrainIds(NULL),
 m_LargestCrossSections(NULL)
 {
@@ -67,6 +68,21 @@ FindLargestCrossSections::~FindLargestCrossSections()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::setupFilterParameters()
 {
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
+    option->setHumanLabel("Plane of Interest");
+    option->setPropertyName("Plane");
+    option->setWidgetType(FilterParameter::ChoiceWidget);
+    option->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("XY");
+    choices.push_back("XZ");
+    choices.push_back("YZ");
+    option->setChoices(choices);
+    parameters.push_back(option);
+  }
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersReader* reader)
@@ -79,6 +95,7 @@ void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersRead
 void FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
+  writer->writeValue("Plane", getPlane() );
 }
 // -----------------------------------------------------------------------------
 //
@@ -151,32 +168,48 @@ void FindLargestCrossSections::find_sizes()
   DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");
   double* graincounts = m_GrainCounts->GetPointer(0);
 
-  int xpoints = m->getXPoints();
-  int ypoints = m->getYPoints();
-  int zpoints = m->getZPoints();
-  for(int i = 0; i < zpoints; i++)
+  int outPlane, inPlane1, inPlane2;
+  float res_scalar, area;
+  
+  if(m_Plane == 0)
+  {
+    outPlane = m->getZPoints();
+    inPlane1 = m->getXPoints();
+    inPlane2 = m->getYPoints();
+    res_scalar = m->getXRes()*m->getYRes();
+  }
+  if(m_Plane == 1)
+  {
+    outPlane = m->getYPoints();
+    inPlane1 = m->getXPoints();
+    inPlane2 = m->getZPoints();
+    res_scalar = m->getXRes()*m->getZRes();
+  }
+  if(m_Plane == 2)
+  {
+    outPlane = m->getXPoints();
+    inPlane1 = m->getYPoints();
+    inPlane2 = m->getZPoints();
+    res_scalar = m->getYRes()*m->getZRes();
+  }
+  for(int i = 0; i < outPlane; i++)
   {
     for (size_t i = 0; i < numgrains * 1; i++)
     {
       graincounts[i] = 0.0f;
     }
-    for (int j = 0; j < xpoints; j++)
+    for (int j = 0; j < inPlane1; j++)
     {
-      for(int k = 0; k < ypoints; k++)
+      for(int k = 0; k < inPlane2; k++)
       {
         int gnum = m_GrainIds[j];
         graincounts[gnum]++;
       }
     }
-    float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-    float vol_term = static_cast<double>( (4.0/3.0)*DREAM3D::Constants::k_Pi );
     for (size_t i = 1; i < numgrains; i++)
     {
-      m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
-      m_Volumes[i] = (graincounts[i] * res_scalar);
-      radcubed = m_Volumes[i] / vol_term;
-      diameter = 2.0f * powf(radcubed, 0.3333333333f);
-      m_EquivalentDiameters[i] = diameter;
+      area = graincounts[i] * res_scalar;
+      if(area > m_LargestCrossSections[i]) m_LargestCrossSections[i] = area;
     }
   }
 }
