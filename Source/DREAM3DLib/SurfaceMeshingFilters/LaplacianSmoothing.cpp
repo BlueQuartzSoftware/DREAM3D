@@ -261,7 +261,15 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setIterationSteps( reader->readValue("IterationSteps", 0) );
+  setLambda( reader->readValue("Lambda", 0) );
+  setTripleLineLambda( reader->readValue("TripleLineLambda", 0) );
+  setQuadPointLambda( reader->readValue("QuadPointLambda", 0) );
+  setSurfacePointLambda( reader->readValue("SurfacePointLambda", 0) );
+  setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", 0) );
+  setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", 0) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

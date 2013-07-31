@@ -1759,3 +1759,12 @@ void QFilterWidget::arrayNameComboBoxUpdated(QComboBox* cb)
 {
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QFilterWidget::getParametersFromFilter(AbstractFilter* filt)
+{
+
+}

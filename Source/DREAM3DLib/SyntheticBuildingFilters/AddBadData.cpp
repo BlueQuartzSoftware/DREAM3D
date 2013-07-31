@@ -113,7 +113,12 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setPoissonNoise( reader->readValue("PoissonNoise", false) );
+  setPoissonVolFraction( reader->readValue("PoissonVolFraction", 0) );
+  setBoundaryNoise( reader->readValue("BoundaryNoise", false) );
+  setBoundaryVolFraction( reader->readValue("BoundaryVolFraction", 0) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

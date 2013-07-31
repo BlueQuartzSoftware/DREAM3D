@@ -93,7 +93,10 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setOutputStlDirectory( reader->readValue( "OutputStlDirectory", getOutputStlDirectory() ) );
+  setOutputStlPrefix( reader->readValue( "OutputStlPrefix", getOutputStlPrefix() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

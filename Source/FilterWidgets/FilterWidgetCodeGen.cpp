@@ -425,44 +425,48 @@ int readLine(std::istream &in, char* buf, int bufSize)
 
 
 #define kBufferSize 1024
-void parseSouceFileForMarker(const std::string filename, const std::string marker, const std::string &replace)
+void parseSourceFileForMarker(const std::string filename, const std::string marker, const std::string &replace)
 {
 
   std::string tempfile = filename + "_tmp";
-  std::ofstream out(tempfile.c_str(), std::ios_base::binary);
-
-  std::cout << filename << std::endl;
-  std::ifstream instream;
-  instream.open(filename.c_str(), std::ios_base::binary);
-  if (!instream.is_open())
   {
-    std::stringstream ss;
-    std::cout << " file could not be opened: " << filename << std::endl;
-    return;
-  }
+      std::ofstream out(tempfile.c_str(), std::ios_base::binary);
 
-  char buf[kBufferSize];
-  ::memset(buf, 0, kBufferSize);
-  size_t gcount = 0;
-  while( instream.getline(buf, kBufferSize, '\n') )
+      std::cout << filename << std::endl;
+      std::ifstream instream;
+      instream.open(filename.c_str(), std::ios_base::binary);
+      if (!instream.is_open())
+      {
+        std::stringstream ss;
+        std::cout << " file could not be opened: " << filename << std::endl;
+        return;
+      }
+
+    char buf[kBufferSize];
+    ::memset(buf, 0, kBufferSize);
+    size_t gcount = 0;
+    while( instream.getline(buf, kBufferSize, '\n') )
+    {
+      gcount = instream.gcount();
+      if (gcount > 1 && buf[instream.gcount()-2] == '\r')
+      {
+        buf[instream.gcount()-2] = 0;
+      }
+      if (marker.compare(buf) == 0)
+      {
+        out << replace;
+      }
+      else
+      {
+        out << std::string(buf) << std::endl;
+      }
+    }
+  }
+  copyFile(tempfile, filename);
+  if ( !MXADir::remove(tempfile) )
   {
-    gcount = instream.gcount();
-    if (gcount > 1 && buf[instream.gcount()-2] == '\r')
-    {
-      buf[instream.gcount()-2] = 0;
-    }
-    if (marker.compare(buf) == 0)
-    {
-      out << replace;
-    }
-    else
-    {
-      out << std::string(buf) << std::endl;
-    }
+    std::cout << "FILE NOT REMOVED: " << tempfile << std::endl;
   }
-
- // copyFile(tempfile, filename);
- // MXADir::remove(tempfile);
 
 }
 
@@ -775,6 +779,7 @@ void createSourceFile( const std::string &group,
   // fprintf(f, "  std::cout << \"Reading Prefs for Filter  %s \" << std::endl;\n", filter.c_str());
 
   std::stringstream replaceStream;
+  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << std::endl;
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
@@ -788,7 +793,7 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( QString::fromStdString( reader->readValue( \"" << prop << "\", get" << prop << "() ) ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
     }
     else if(opt->getWidgetType() == FilterParameter::IntWidget)
     {
@@ -855,6 +860,7 @@ void createSourceFile( const std::string &group,
         fprintf(f, "      cb->addItem(str_%s);\n", prop.c_str() );
         fprintf(f, "      cb->setCurrentIndex(cb->count() -1 );\n");
         fprintf(f, "    }\n");
+        replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
       }
       else
       {
@@ -862,9 +868,9 @@ void createSourceFile( const std::string &group,
         fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
         fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
         fprintf(f, "     }\n");
+        replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
       }
       fprintf(f, "   }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
     }
     else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
              && opt->getWidgetType() <= FilterParameter::SolidMeshEdgeArrayNameSelectionWidget )
@@ -965,10 +971,12 @@ void createSourceFile( const std::string &group,
   fprintf(f, "\n}\n");
 
 
+#if 0
   ss.str("");
-  replaceStream << "/* FILTER_PARAMTERS_WRITER_AUTO_GENERATED_CODE */" << std::endl;
+  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/" << std::endl;
   ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
-  parseSouceFileForMarker(ss.str(), "////!!##", replaceStream.str());
+  parseSourceFileForMarker(ss.str(), "////!!##", replaceStream.str());
+#endif
 
   // This template function will generate all the necessary code to set the name of each
   // required and created array.
@@ -1030,11 +1038,13 @@ void createSourceFile( const std::string &group,
   fprintf(f, "void Q%sWidget::openHtmlHelpFile()\n{\n", filter.c_str());
   fprintf(f, "\tDREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(\"%s\", this);\n", lower.c_str());
   fprintf(f, "}\n");
-
-
-
-
   fprintf(f, "\n\n");
+
+
+
+
+
+  // Close the file we are currently writing
   fclose(f);
 
   // Now compare the file just generated with any possible existing file
