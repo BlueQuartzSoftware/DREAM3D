@@ -68,15 +68,10 @@ endmacro()
 # --------------------------------------------------------------------------
 set(PFTest_SRCS
     PFTest.cpp
-    ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.h
-    ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.cpp
 )
 # and finally this will run moc:
-QT4_WRAP_CPP( PFTest_Generated_MOC_SRCS
-             ${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator/PoleFigureMaker.h
-              )
 add_executable(PFTest ${PFTest_SRCS} ${PFTest_Generated_MOC_SRCS})
-target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
 set_target_properties(PFTest PROPERTIES FOLDER Test)
 add_test(PFTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PFTest)
 
@@ -226,7 +221,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
     target_link_libraries(FindNeighborsTest DREAM3DLib)
-	set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------

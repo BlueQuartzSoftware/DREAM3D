@@ -62,7 +62,6 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
-    ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.cpp
     ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/PrecipitatePhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.cpp
@@ -83,7 +82,6 @@ SET(StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
-    ${StatsGenerator_SOURCE_DIR}/PoleFigureMaker.h
     ${StatsGenerator_SOURCE_DIR}/PrimaryPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/PrecipitatePhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.h

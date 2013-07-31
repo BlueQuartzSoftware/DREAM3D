@@ -49,9 +49,9 @@ function(COMPILE_TOOL)
     )
 
 endfunction()
+
 #
 #-------------------------------------------------------------------------------
-
 # Create a Command line tool for the AxisAngle Widget
 include_directories(${DREAM3DProj_BINARY_DIR}/PipelineBuilder)
 COMPILE_TOOL(
@@ -66,6 +66,24 @@ COMPILE_TOOL(
     INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES PipelineBuilderLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
 )
+
+
+#-------------------------------------------------------------------------------
+# Create a Command line tool for the AxisAngle Widget
+
+COMPILE_TOOL(
+    TARGET MakePoleFigure
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/MakePoleFigure.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport
+)
+
 
 # Create a Command line tool for the AngReaderTest
 COMPILE_TOOL(
