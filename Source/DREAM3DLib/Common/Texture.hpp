@@ -383,7 +383,7 @@ class Texture
               if (addbin3 < 0) addbin3 = addbin3 + 36;
               if (addbin3 >= 36) addbin3 = addbin3 - 36;
               addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
-              dist = sqrt(jsqrd + ksqrd + lsqrd);
+              dist = sqrtf(jsqrd + ksqrd + lsqrd);
               fraction = 1.0 - (float(dist / int(sigmas[i])) * float(dist / int(sigmas[i])));
               if (dist <= int(sigmas[i]))
               {
