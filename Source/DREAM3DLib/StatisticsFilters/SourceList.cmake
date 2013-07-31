@@ -33,6 +33,7 @@ set(_PublicFilters
   FindSchmids
   FindShapes
   FindSizes
+  FindLargestCrossSections
   FindSurfaceVoxelFractions
   FindSlipTransmissionMetrics
   FindGBCD

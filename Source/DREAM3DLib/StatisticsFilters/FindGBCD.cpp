@@ -59,7 +59,6 @@ class CalculateGBCDImpl
     int32_t* m_Phases;
     float* m_Eulers;
     int32_t* m_Bins;
-    float* m_BinConts;
     bool* m_HemiCheck;
     float* m_GBCDdeltas;
     int* m_GBCDsizes;
@@ -69,7 +68,7 @@ class CalculateGBCDImpl
 
   public:
     CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
-                    int32_t* Bins, float* BinConts, bool* HemiCheck, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
+                    int32_t* Bins, bool* HemiCheck, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
       startOffset(i),
       numEntriesPerTri(numMisoReps),
       m_Labels(Labels),
@@ -77,7 +76,6 @@ class CalculateGBCDImpl
       m_Phases(Phases),
       m_Eulers(Eulers),
       m_Bins(Bins),
-      m_BinConts(BinConts),
       m_HemiCheck(HemiCheck),
       m_GBCDdeltas(GBCDdeltas),
       m_GBCDsizes(GBCDsizes),
@@ -90,10 +88,6 @@ class CalculateGBCDImpl
 
     void generate(size_t start, size_t end) const
     {
-
-      //DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
-      //DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
-
       int j;//, j4;
       int k;//, k4;
       int m;
@@ -108,16 +102,13 @@ class CalculateGBCDImpl
       float g2t[3][3], dg[3][3];
       float euler_mis[3];
       float normal[3];
-      float xstl1_norm0[3], xstl1_norm1[3], xstl1_norm_sc[2], xstl1_norm_sc_inv[2];
-      int32_t gbcd_indices[4];
-      float indexConts[4];
+      float xstl1_norm0[3], xstl1_norm1[3];
+      int gbcd_index;
       float sqCoord[2], sqCoordInv[2];
       bool nhCheck, nhCheckInv;
       int SYMcounter=0;
       int TRIcounter=start-startOffset;
-
-      QuatF qc;
-      float w, n1, n2, n3;
+      int TRIcounterShift;
 
       for (size_t i = start; i < end; i++)
       {
@@ -129,6 +120,7 @@ class CalculateGBCDImpl
         normal[2] = m_Normals[3*i+2];
         if(m_Phases[grain1] == m_Phases[grain2])
         {
+          TRIcounterShift = (TRIcounter*numEntriesPerTri);
           for(int q=0;q<2;q++)
           {
             if(q == 1)
@@ -165,13 +157,16 @@ class CalculateGBCDImpl
               nhCheck = getSquareCoord(xstl1_norm1, sqCoord);
               if(inversion == 1)
               {
-                MatrixMath::Multiply3x1withConstant(xstl1_norm1, -1.0);
-                nhCheckInv = getSquareCoord(xstl1_norm1, sqCoordInv);
+                sqCoordInv[0] = -sqCoord[0];
+                sqCoordInv[1] = -sqCoord[1];
+                if(nhCheck == false) nhCheckInv = true;
+                else nhCheckInv = false;
               }
               else
               {
-                //if inversion is off, then just use same normal...will not affect after normalization
-                nhCheckInv = getSquareCoord(xstl1_norm1, sqCoordInv);
+                sqCoordInv[0] = sqCoord[0];
+                sqCoordInv[1] = sqCoord[1];
+                nhCheckInv = nhCheck;
               }
 
               for (k=0; k < nsym; k++)
@@ -189,26 +184,18 @@ class CalculateGBCDImpl
                 euler_mis[1] = cosf(euler_mis[1]);
                 
                 //get the indexes that this point would be in the GBCD histogram
-                gbcd_indices_good = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoord, gbcd_indices, indexConts);
-                if (gbcd_indices_good == true)
+                gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoord);
+                if (gbcd_index != -1)
                 {
-                  m_HemiCheck[(TRIcounter*numEntriesPerTri)+SYMcounter] = nhCheck;
-                  for(int m=0;m<4;m++)
-                  {
-                    m_Bins[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = gbcd_indices[m];
-                    m_BinConts[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = indexConts[m];
-                  }
+                  m_HemiCheck[TRIcounterShift+SYMcounter] = nhCheck;
+                  m_Bins[TRIcounterShift+SYMcounter] = gbcd_index;
                 }
                 SYMcounter++;
-                gbcd_indices_good = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoordInv, gbcd_indices, indexConts);
-                if (gbcd_indices_good == true)
+                gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoordInv);
+                if (gbcd_index != -1)
                 {
-                  m_HemiCheck[(TRIcounter*numEntriesPerTri)+SYMcounter] = nhCheckInv;
-                  for(int m=0;m<4;m++)
-                  {
-                    m_Bins[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = gbcd_indices[m];
-                    m_BinConts[(TRIcounter*numEntriesPerTri*4)+(SYMcounter*4)+m] = indexConts[m];
-                  }
+                  m_HemiCheck[TRIcounterShift+SYMcounter] = nhCheckInv;
+                  m_Bins[TRIcounterShift+SYMcounter] = gbcd_index;
                 }
                 SYMcounter++;
               }
@@ -226,7 +213,7 @@ class CalculateGBCDImpl
     }
 #endif
 
-    bool GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* sqCoord, int32_t* gbcd_indices, float* indexConts) const
+    int GBCDIndex (float* gbcddelta, int* gbcdsz, float* gbcdlimits, float* eulerN, float* sqCoord) const
     {
       int32_t gbcd_index;
       int i, index[5];
@@ -243,7 +230,7 @@ class CalculateGBCDImpl
         if (mis_eulerNorm[i] > gbcdlimits[i+5]) flag_good = 0;
       }
 
-      if (flag_good == 0) return false; //does not fit in the gbcd space
+      if (flag_good == 0) return -1; //does not fit in the gbcd space
 
       n1 =  gbcdsz[0];
       n1n2 = n1*( gbcdsz[1]);
@@ -253,7 +240,7 @@ class CalculateGBCDImpl
       //determine the bin that the point should go into.
       for (i=0;i < 5; i++)
       {
-        index[i] = (int) floorf((mis_eulerNorm[i] - gbcdlimits[i])/gbcddelta[i]);
+        index[i] = (int) ((mis_eulerNorm[i] - gbcdlimits[i])/gbcddelta[i]);
         if (index[i] >  (gbcdsz[i]-1)) 
         {
           index[i] =  (gbcdsz[i]-1);
@@ -264,26 +251,9 @@ class CalculateGBCDImpl
         }
       }
 
-      int modIndex3, modIndex4;
-      if(index[3] < gbcdsz[3]-1) modIndex3 = index[3]+1;
-      else modIndex3 = index[3]+1-gbcdsz[3];
-      if(index[4] < gbcdsz[4]-1) modIndex4 = index[4]+1;
-      else modIndex4 = index[4]+1-gbcdsz[4];
+      gbcd_index = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*index[3] + n1n2n3n4*index[4];
 
-      gbcd_indices[0] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*index[3] + n1n2n3n4*index[4];
-      gbcd_indices[1] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*modIndex3 + n1n2n3n4*index[4];
-      gbcd_indices[2] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*index[3] + n1n2n3n4*modIndex4;
-      gbcd_indices[3] = index[0] + n1*index[1] + n1n2*index[2] + n1n2n3*modIndex3 + n1n2n3n4*modIndex4;
-
-      float mod3 = ((mis_eulerNorm[3] - gbcdlimits[3])/gbcddelta[3]) - (int) floorf((mis_eulerNorm[3] - gbcdlimits[3])/gbcddelta[3]);
-      float mod4 = ((mis_eulerNorm[4] - gbcdlimits[4])/gbcddelta[4]) - (int) floorf((mis_eulerNorm[4] - gbcdlimits[4])/gbcddelta[4]);
-
-      indexConts[0] = (1-mod3)*(1-mod4);
-      indexConts[1] = (mod3)*(1-mod4);
-      indexConts[2] = (1-mod3)*(mod4);
-      indexConts[3] = (mod3)*(mod4);
-
-      return true;
+      return gbcd_index;
     }
 
     bool getSquareCoord(float* xstl1_norm1, float* sqCoord) const
@@ -297,13 +267,13 @@ class CalculateGBCDImpl
       }
       if(fabs(xstl1_norm1[0]) >= fabs(xstl1_norm1[1]))
       {
-        sqCoord[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
-        sqCoord[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[1]/xstl1_norm1[0]));
+        sqCoord[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi/2.0);
+        sqCoord[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xstl1_norm1[1]/xstl1_norm1[0]));
       }              
       else
       {
-        sqCoord[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(xstl1_norm1[0]/xstl1_norm1[1]));
-        sqCoord[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
+        sqCoord[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xstl1_norm1[0]/xstl1_norm1[1]));
+        sqCoord[1] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi/2.0);
       }
       return nhCheck;
     }
@@ -496,7 +466,7 @@ void FindGBCD::execute()
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
-  size_t faceChunkSize = 10000;
+  size_t faceChunkSize = 50000;
   size_t numMisoReps = 2304;
   if(totalFaces < faceChunkSize) faceChunkSize = totalFaces;
 
@@ -504,7 +474,6 @@ void FindGBCD::execute()
   FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::NullPointer();
   Int32ArrayType::Pointer gbcdBinsArray = Int32ArrayType::NullPointer();
-  FloatArrayType::Pointer gbcdBinContsArray = FloatArrayType::NullPointer();
   BoolArrayType::Pointer gbcdHemiCheckArray = BoolArrayType::NullPointer();
   gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->SetNumberOfComponents(1);
@@ -515,17 +484,14 @@ void FindGBCD::execute()
   gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->SetNumberOfComponents(1);
   gbcdSizesArray->initializeWithZeros();
-  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, numMisoReps*4, "GBCDBins");
+  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDBins");
   gbcdBinsArray->initializeWithZeros();
-  gbcdBinContsArray = FloatArrayType::CreateArray(faceChunkSize, numMisoReps*4, "GBCDBins");
-  gbcdBinContsArray->initializeWithZeros();
   gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDHemiCheck");
   gbcdHemiCheckArray->initializeWithValues(false);
   float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
   int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
   float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
   int32_t* m_Bins = gbcdBinsArray->GetPointer(0);
-  float* m_BinConts = gbcdBinContsArray->GetPointer(0);
   bool* m_HemiCheck = gbcdHemiCheckArray->GetPointer(0);
 
   m_GBCDlimits[0] = 0.0;
@@ -602,13 +568,13 @@ void FindGBCD::execute()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i+faceChunkSize),
-                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_BinConts, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_BinConts, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FieldEulerAngles, m_FieldPhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
       serial.generate(i, i+faceChunkSize);
     }
 
@@ -632,11 +598,8 @@ void FindGBCD::execute()
       {
         hemisphere = 0;
         if(m_HemiCheck[(j*numMisoReps)+k] == false) hemisphere = 1;
-        for(int l=0;l<4;l++)
-        {
-          m_GBCD[2*m_Bins[(j*numMisoReps*4)+(k*4)+l]+hemisphere] += (m_SurfaceMeshFaceAreas[i+j]*m_BinConts[(j*numMisoReps*4)+(k*4)+l]);
-          totalFaceArea[hemisphere] += (m_SurfaceMeshFaceAreas[i+j]*m_BinConts[(j*numMisoReps*4)+(k*4)+l]);
-        }
+        m_GBCD[2*m_Bins[(j*numMisoReps)+(k)]+hemisphere] += (m_SurfaceMeshFaceAreas[i+j]);
+        totalFaceArea[hemisphere] += (m_SurfaceMeshFaceAreas[i+j]);
       }
     }
   }

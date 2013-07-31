@@ -64,6 +64,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -72,6 +73,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -106,6 +108,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     float* m_CellEulerAngles;
     int32_t* m_FieldPhases;
     float* m_FieldEulerAngles;
+    bool* m_Active;
 
     FieldInfoReader(const FieldInfoReader&); //Not Implemented
     void operator=(const FieldInfoReader&); //Not Implemented
