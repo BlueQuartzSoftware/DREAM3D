@@ -163,7 +163,8 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     void getColorCorrespondingTovalue(float val,
                                       float &r, float &g, float &b,
                                       float max, float min);
-    void writeImage(const std::string filename, DoubleArrayType* poleFigurePtr, int dimension);
+    void writeImage(const std::string outputPath, DoubleArrayType* poleFigurePtr, int dimension, QString label);
+    QImage paintImage(int imageWidth, int imageHeight, QString label, QImage image);
 
 
   private:

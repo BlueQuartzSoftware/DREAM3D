@@ -264,20 +264,22 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
   stereoIntensity->initializeWithZeros();
   double* intensity = stereoIntensity->GetPointer(0);
 
-  for (int64_t k = 0; k < (xpoints); k++)
-  {
-    for (int64_t l = 0; l < (ypoints); l++)
+
+    for (int64_t y = 0; y < ypoints; y++)
     {
+      for (int64_t x = 0; x < xpoints; x++)
+      {
       //get (x,y) for stereographic projection pixel
-      xtmp = float(k-xpointshalf)*xres+(xres/2.0);
-      ytmp = float(l-ypointshalf)*yres+(yres/2.0);
+      xtmp = float(x-xpointshalf)*xres+(xres/2.0);
+      ytmp = float(y-ypointshalf)*yres+(yres/2.0);
+      int index = y * xpoints + x;
       if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
       {
         xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
         xyz[0] = xtmp*(1+xyz[2]);
         xyz[1] = ytmp*(1+xyz[2]);
 
-        int index = l * xpoints + k;
+
         for( int64_t m = 0; m < 2; m++)
         {
           if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
