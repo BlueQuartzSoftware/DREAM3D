@@ -74,8 +74,9 @@ GeneratePoleFigureImages::GeneratePoleFigureImages() :
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
-  m_ImageSize(256),
-  m_KernelSize(4),
+  m_ImageSize(512),
+  m_LambertSize(75),
+  m_NumColors(32),
   m_EulersArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -152,14 +153,22 @@ void GeneratePoleFigureImages::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setPropertyName("KernelSize");
-    option->setHumanLabel("Kernel Size");
+    option->setPropertyName("LambertSize");
+    option->setHumanLabel("Lambert Image Size");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-    option->setUnits("Pixels");
     parameters.push_back(option);
   }
-  setFilterParameters(parameters);
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setPropertyName("NumColors");
+    option->setHumanLabel("Number of Colors");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    parameters.push_back(option);
+  }
+
+    setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -182,7 +191,7 @@ void GeneratePoleFigureImages::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("EulersArrayName", getEulersArrayName() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->writeValue("ImageSize", getImageSize() );
-  writer->writeValue("KernelSize", getKernelSize() );
+  writer->writeValue("LabertSize", getLambertSize() );
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +250,6 @@ void GeneratePoleFigureImages::preflight()
 void GeneratePoleFigureImages::execute()
 {
   int err = 0;
-//  std::stringstream ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -251,9 +259,6 @@ void GeneratePoleFigureImages::execute()
     return;
   }
   setErrorCondition(0);
-
-
-
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
@@ -286,7 +291,7 @@ void GeneratePoleFigureImages::execute()
 // -----------------------------------------------------------------------------
 ModifiedLambertProjection::Pointer GeneratePoleFigureImages::createModifiedLambertProjection(FloatArrayType *coords, int dimension, float resolution)
 {
-  std::cout << "createModifiedLambertProjection...." << std::endl;
+  notifyStatusMessage("Creating Modified Lambert Projections");
   size_t npoints = coords->GetNumberOfTuples();
   bool nhCheck = false;
   float sqCoord[2];
@@ -315,7 +320,7 @@ ModifiedLambertProjection::Pointer GeneratePoleFigureImages::createModifiedLambe
     }
   }
 
- // squareProj->normalizeSquares();
+  // squareProj->normalizeSquares();
 
   return squareProj;
 }
@@ -326,7 +331,7 @@ ModifiedLambertProjection::Pointer GeneratePoleFigureImages::createModifiedLambe
 // -----------------------------------------------------------------------------
 DoubleArrayType::Pointer GeneratePoleFigureImages::createPoleFigure(ModifiedLambertProjection::Pointer proj, int poleFigureDim)
 {
-  std::cout << "createPoleFigure..." << std::endl;
+  notifyStatusMessage("Creating Pole Figures from Modified Lambert Projections");
   int xpoints = poleFigureDim;
   int ypoints = poleFigureDim;
 
@@ -362,7 +367,7 @@ DoubleArrayType::Pointer GeneratePoleFigureImages::createPoleFigure(ModifiedLamb
         {
           if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
           nhCheck = proj->getSquareCoord(xyz, sqCoord);
-          int sqIndex = proj->getSquareIndex(sqCoord);
+          //   int sqIndex = proj->getSquareIndex(sqCoord);
 
           if (nhCheck == true)
           {
@@ -391,6 +396,7 @@ DoubleArrayType::Pointer GeneratePoleFigureImages::createPoleFigure(ModifiedLamb
 // -----------------------------------------------------------------------------
 void GeneratePoleFigureImages::generateCubicSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
+  notifyStatusMessage("Calculating Euler Angle Projection to Unit Sphere");
   size_t nOrientations = eulers->GetNumberOfTuples();
   QuaternionMath<float>::Quaternion q1;
   CubicOps ops;
@@ -492,7 +498,7 @@ int GeneratePoleFigureImages::writeCoords(FILE* f, const char* axis, const char*
 void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleArrayType *poleFigurePtr, int dimension)
 {
 
-  std::cout << "writeVtkFile: " << filename << std::endl;
+  notifyStatusMessage("Writing VTK File");
   double* poleFigure = poleFigurePtr->GetPointer(0);
   int xpoints = dimension;
   int ypoints = dimension;
@@ -607,7 +613,8 @@ void GeneratePoleFigureImages::getColorCorrespondingTovalue(float val,
 // -----------------------------------------------------------------------------
 void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
-  std::cout << "writeImage: " << filename << std::endl;
+  notifyStatusMessage("Writing Image");
+
   size_t npoints = poleFigurePtr->GetNumberOfTuples();
   double max = std::numeric_limits<double>::min();
   double min = std::numeric_limits<double>::max();
@@ -622,33 +629,49 @@ void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArra
 
   int imageWidth = dimension;
   int imageHeight = dimension;
+  // This figures out if we are "inside" the circle or not
+  float radSqrd = (float)(imageWidth/2.0f) * (imageWidth/2.0f);
+  float cX = imageWidth/2.0f;  // Center x
+  float cY = imageHeight/2.0f; // Center y
+  float delta = 0.0;
 
+  //if (max < 14) { max = 14; }
   QImage image (imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
   image.fill(0);
-  qint32 numColors = 9;
+ // qint32 numColors = max + 1;
+  qint32 numColors = getNumColors() + 1;
+  qint32 colorRange = getNumColors();
 
   QVector<QColor> colorTable(numColors);
-  qint32 range = 8;
+  qint32 range = max - min;
 
   float r, g, b;
-  for (int i = 0; i < numColors; i++)
+  for (int i = 0; i < getNumColors(); i++)
   {
-    //int val = min + ((float)i / (float)numColors) * (float)range;
-    int val = 0 + ((float)i / (float)numColors) * (float)range;
-    //getColorCorrespondingTovalue(val, r, g, b, max, min);
-    getColorCorrespondingTovalue(val, r, g, b, 8, 0);
+    //int val = min + ((float)i / numColors) * range;
+    int val = ((float)i / (float)numColors) * colorRange;
+    getColorCorrespondingTovalue(i, r, g, b, getNumColors(), 0);
     colorTable[i] = QColor(r*255, g*255, b*255, 255);
   }
   // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  // colorTable[0] = QColor(255, 255, 255, 255);
+  colorTable[getNumColors()] = QColor(255, 255, 255, 255);
 
   for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
   {
     for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
     {
-      double intensity = poleFigurePtr->GetValue(yCoord * imageWidth + xCoord);
-      intensity = (intensity - min) / (max - min) * (numColors-1);
-      image.setPixel(xCoord, yCoord, colorTable[(int)(intensity)].rgba());
+      delta = (xCoord-cX)*(xCoord-cX) + (yCoord-cY)*(yCoord-cY);
+      if (delta > radSqrd)
+      {
+        image.setPixel(xCoord, yCoord, colorTable[getNumColors()].rgba());
+      }
+      else
+      {
+        quint32 colorIndex = quint32(poleFigurePtr->GetValue(yCoord * imageWidth + xCoord));
+        colorIndex = (colorIndex-min) / (max - min) * getNumColors();
+
+        image.setPixel(xCoord, yCoord, colorTable[colorIndex].rgba());
+      }
     }
   }
 
@@ -667,7 +690,7 @@ void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArra
 // -----------------------------------------------------------------------------
 void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
 {
-  std::cout << "generateCubicPoleFigures..." << std::endl;
+  notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
   int numOrientations = eulers->GetNumberOfTuples();
 
 
@@ -679,7 +702,7 @@ void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
   // this is size for CUBIC ONLY, <111> Family
   FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
 
-  int dimension = 50;
+  int dimension = getLambertSize();
   float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
   int poleFigureDim = getImageSize();
 
@@ -744,7 +767,7 @@ QString GeneratePoleFigureImages::generateImagePath( QString label)
     parent.mkpath(fi.absolutePath());
   }
 
- return path;
+  return path;
 }
 
 // -----------------------------------------------------------------------------
@@ -764,5 +787,5 @@ QString GeneratePoleFigureImages::generateVtkPath( QString label)
     parent.mkpath(fi.absolutePath());
   }
 
- return path;
+  return path;
 }

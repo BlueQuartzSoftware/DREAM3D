@@ -268,7 +268,8 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
     DREAM3D_INSTANCE_PROPERTY(int, ImageSize)
-    DREAM3D_INSTANCE_PROPERTY(int, KernelSize)
+    DREAM3D_INSTANCE_PROPERTY(int, LambertSize)
+    DREAM3D_INSTANCE_PROPERTY(int, NumColors)
     DREAM3D_INSTANCE_STRING_PROPERTY(EulersArrayName)
 
 
