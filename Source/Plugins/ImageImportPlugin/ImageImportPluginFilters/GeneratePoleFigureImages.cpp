@@ -43,6 +43,8 @@
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 
+#include <QtGui/QPainter>
+#include <QtGui/QFont>
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
@@ -323,69 +325,54 @@ void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
   ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), dimension, resolution, sphereRadius);
   // Now create the intensity image that will become the actual Pole figure image
   DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<001>");
   QString path = generateVtkPath("001");
   writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("001");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  writeImage(m_OutputPath, poleFigurePtr.get(), poleFigureDim, "001");
 
   // Generate the <011> pole figure
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), dimension, resolution, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<011>");
   path = generateVtkPath("011");
   writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("011");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  writeImage(m_OutputPath, poleFigurePtr.get(), poleFigureDim, "011");
 
   // Generate the <111> pole figure
   lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), dimension, resolution, sphereRadius);
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<111>");
   path = generateVtkPath("111");
   writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("111");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-}
-
-
-/**
- * @brief This function writes a set of Axis coordinates to that are needed
- * for a Rectilinear Grid based data set.
- * @param f The "C" FILE* pointer to the file being written to.
- * @param axis The name of the Axis that is being written
- * @param type The type of primitive being written (float, int, ...)
- * @param npoints The total number of points in the array
- * @param min The minimum value of the axis
- * @param max The maximum value of the axis
- * @param step The step value between each point on the axis.
- */
-
-int GeneratePoleFigureImages::writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
-{
-  int err = 0;
-  fprintf(f, "%s %lld %s\n", axis, npoints, type);
-  float* data = new float[npoints];
-  float d;
-  for (int idx = 0; idx < npoints; ++idx)
-  {
-    d = idx * step + min;
-    MXA::Endian::FromSystemToBig::convert<float>(d);
-    data[idx] = d;
-  }
-  size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
-  delete[] data;
-  if (totalWritten != static_cast<size_t>(npoints) )
-  {
-    std::cout << "Error Writing Binary VTK Data into file " << std::endl;
-    fclose(f);
-    return -1;
-  }
-  return err;
+  writeImage(m_OutputPath, poleFigurePtr.get(), poleFigureDim, "111");
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleArrayType *poleFigurePtr, int dimension)
+QString GeneratePoleFigureImages::generateVtkPath( QString label)
+{
+  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
+
+  path.append(".vtk");
+
+  path = QDir::toNativeSeparators(path);
+  QFileInfo fi(path);
+  QDir parent(fi.absolutePath());
+  if (parent.exists() == false)
+  {
+    parent.mkpath(fi.absolutePath());
+  }
+
+  return path;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
 
   notifyStatusMessage("Writing VTK File");
@@ -398,73 +385,9 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleA
   int err = VtkRectilinearGridWriter::WriteDataArrayToFile(filename, poleFigurePtr, dims, res, "double", true);
   if (err < 0)
   {
-
+    setErrorCondition(-99003);
+    notifyErrorMessage("Error writing the VTK file for the Pole Figure", getErrorCondition());
   }
-#if 0
-  double* poleFigure = poleFigurePtr->GetPointer(0);
-  int xpoints = dimension;
-  int ypoints = dimension;
-  int zpoints = 1;
-  float xres = 2.0 / (float)(xpoints);
-  float yres = 2.0 / (float)(ypoints);
-  float zres = (xres+yres)/2.0;
-
-  std::stringstream ss;
-  FILE* f = NULL;
-  f = fopen(filename.c_str(), "wb");
-  if(NULL == f)
-  {
-
-    ss.str("");
-    ss << "Could not open GBCD viz file " << filename << " for writing. Please check access permissions and the path to the output location exists";
-    //  notifyErrorMessage(ss.str(), getErrorCondition());
-    std::cout << ss.str() << std::endl;
-    return;
-  }
-
-
-
-  // Write the correct header
-  fprintf(f, "# vtk DataFile Version 2.0\n");
-  fprintf(f, "data set from DREAM3D\n");
-  fprintf(f, "BINARY"); fprintf(f, "\n");
-  fprintf(f, "DATASET RECTILINEAR_GRID\n");
-  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints+1, ypoints+1, zpoints+1);
-
-  // Write the Coords
-  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
-  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, (-float(ypoints)*yres/2.0), yres);
-  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, (-float(zpoints)*zres/2.0), zres);
-
-  size_t total = xpoints * ypoints * zpoints;
-  fprintf(f, "CELL_DATA %d\n", (int)total);
-
-  fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  {
-    float* gn = new float[total];
-    float t;
-    int count = 0;
-    for (int64_t j = 0; j < (ypoints); j++)
-    {
-      for (int64_t i = 0; i < (xpoints); i++)
-      {
-        t = float(poleFigure[(j*xpoints)+i]);
-        MXA::Endian::FromSystemToBig::convert<float>(t);
-        gn[count] = t;
-        count++;
-      }
-    }
-    int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
-    delete[] gn;
-    if (totalWritten != (total))  {
-      std::cout << "Error Writing Binary VTK Data into file " << filename << std::endl;
-      fclose(f);
-    }
-  }
-
-  fclose(f);
-  #endif
 }
 
 
@@ -514,9 +437,14 @@ void GeneratePoleFigureImages::getColorCorrespondingTovalue(float val,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
+void GeneratePoleFigureImages::writeImage(const std::string outputPath, DoubleArrayType *poleFigurePtr, int dimension, QString label)
 {
-  notifyStatusMessage("Writing Image");
+  std::stringstream ss;
+  ss << "Writing Image " << poleFigurePtr->GetName();
+  notifyStatusMessage(ss.str());
+
+  QString filename = generateImagePath(label);
+
 
   size_t npoints = poleFigurePtr->GetNumberOfTuples();
   double max = std::numeric_limits<double>::min();
@@ -525,25 +453,29 @@ void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArra
   for(size_t i = 0; i < npoints; ++i)
   {
     value = poleFigurePtr->GetValue(i);
+    if (value < 0) {continue;}
     if (value > max) { max = value;}
     if (value < min) { min = value;}
   }
 
+  //std::cout << "Min: " << min << "   Max: " << max << std::endl;
 
-  int imageWidth = dimension;
-  int imageHeight = dimension;
-  // This figures out if we are "inside" the circle or not
-  float radSqrd = (float)(imageWidth/2.0f) * (imageWidth/2.0f);
-  float cX = imageWidth/2.0f;  // Center x
-  float cY = imageHeight/2.0f; // Center y
-  float delta = 0.0;
+  int xpoints = dimension;
+  int ypoints = dimension;
+
+  int xpointshalf = xpoints / 2;
+  int ypointshalf = ypoints / 2;
+
+  float xres = 2.0 / (float)(xpoints);
+  float yres = 2.0 / (float)(ypoints);
+  float xtmp, ytmp;
 
   //if (max < 14) { max = 14; }
-  QImage image (imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+  QImage image (xpoints, ypoints, QImage::Format_ARGB32_Premultiplied);
   image.fill(0);
  // qint32 numColors = max + 1;
   qint32 numColors = getNumColors() + 1;
-  qint32 colorRange = getNumColors();
+ // qint32 colorRange = getNumColors();
 
   QVector<QColor> colorTable(numColors);
   //qint32 range = max - min;
@@ -559,31 +491,44 @@ void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArra
   // Index 0 is all white which is every pixel outside of the Pole Figure circle
   colorTable[getNumColors()] = QColor(255, 255, 255, 255);
 
-  for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
+  //*********************** NOTE ************************************
+  // In the below loop over the Pole Figure Image we are swapping the
+  // X & Y coordinates when we place the RGBA value into the image. This
+  // is because for some reason the data is rotated 90 degrees. Since
+  // the image is square we can easily do this swap and effectively
+  // rotate the image 90 degrees.
+  for (int64_t y = 0; y < ypoints; y++)
   {
-    for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
+    for (int64_t x = 0; x < xpoints; x++)
     {
-      delta = (xCoord-cX)*(xCoord-cX) + (yCoord-cY)*(yCoord-cY);
-      if (delta > radSqrd)
+      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
+      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
+      if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
       {
-        image.setPixel(xCoord, yCoord, colorTable[getNumColors()].rgba());
+        qint32 cindex = qint32(poleFigurePtr->GetValue(y * xpoints + x));
+        qint32 colorIndex = (cindex-min) / (max - min) * getNumColors();
+        image.setPixel(x, y, colorTable[colorIndex].rgba());
       }
-      else
+      else // Outside the Circle - Set pixel to White
       {
-        quint32 colorIndex = quint32(poleFigurePtr->GetValue(yCoord * imageWidth + xCoord));
-        colorIndex = (colorIndex-min) / (max - min) * getNumColors();
-
-        image.setPixel(xCoord, yCoord, colorTable[colorIndex].rgba());
+        image.setPixel(x, y, colorTable[getNumColors()].rgba());
       }
     }
   }
 
   // Flip the image so the (-1, -1) is in the lower left
-  image = image.mirrored(true, false);
-  bool saved = image.save(QString::fromStdString(filename));
+  image = image.mirrored(false, true);
+
+  QString imageLabel = "<" + label + ">";
+  image = paintImage(xpoints, ypoints, imageLabel, image);
+
+  bool saved = image.save(filename);
   if(!saved)
   {
-    std::cout << "did NOT save QImage at path: " << filename << std::endl;
+    setErrorCondition(-90011);
+    ss.str("");
+    ss << "The Pole Figure image file '" << filename.toStdString() << "' was not saved.";
+    notifyErrorMessage(ss.str(), getErrorCondition());
   }
 }
 
@@ -621,22 +566,78 @@ QString GeneratePoleFigureImages::generateImagePath( QString label)
   return path;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString GeneratePoleFigureImages::generateVtkPath( QString label)
+QImage GeneratePoleFigureImages::paintImage(int imageWidth, int imageHeight, QString label, QImage image)
 {
-  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
+  int pxHigh = 0;
+  int pxWide = 0;
 
-  path.append(".vtk");
-
-  path = QDir::toNativeSeparators(path);
-  QFileInfo fi(path);
-  QDir parent(fi.absolutePath());
-  if (parent.exists() == false)
+  QFont font("Ariel", 24, QFont::Bold);
   {
-    parent.mkpath(fi.absolutePath());
+    QPainter painter;
+    QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
+    pImage.fill(0xFFFFFFFF); // All white background
+    painter.begin(&pImage);
+
+    painter.setFont(font);
+    QFontMetrics metrics = painter.fontMetrics();
+    pxHigh = metrics.height();
+    pxWide = metrics.width(QString("TD"));
+    painter.end();
   }
 
-  return path;
+
+  int pxOffset = 2 * pxWide;
+  int pyOffset = 2 * pxHigh;
+  // Get a QPainter object to add some more details to the image
+
+
+  int pImageWidth = imageWidth + pxOffset * 2;
+  int pImageHeight = imageHeight + pyOffset * 2;
+
+  QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
+  pImage.fill(0xFFFFFFFF); // All white background
+
+  // Create a Painter backed by a QImage to draw into
+  QPainter painter;
+  painter.begin(&pImage);
+  painter.setRenderHint(QPainter::Antialiasing, true);
+
+  painter.setFont(font);
+  QFontMetrics metrics = painter.fontMetrics();
+  pxHigh = metrics.height();
+  pxWide = metrics.width(QString("TD"));
+
+  QPoint point(pxOffset, pyOffset);
+  painter.drawImage(point, image); // Draw the image we just generated into the QPainter's canvas
+
+  qint32 penWidth = 2;
+  painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+
+  QPainterPath circle;
+  QPointF center(pImageWidth / 2, pImageHeight / 2);
+  circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
+  painter.drawPath(circle);
+
+  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "RD");
+
+  pxWide = metrics.width(QString("RD"));
+  painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "TD");
+
+  pxWide = metrics.width(label);
+  painter.drawText(pImageWidth / 2 - pxWide / 2, pxHigh, label);
+
+  // Draw slightly transparent lines
+  penWidth = 1;
+  painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
+  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
+
+  painter.end();
+  // Scale the image down to 225 pixels
+  return pImage;//.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
+
