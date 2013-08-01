@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 
   protected:
     FindLargestCrossSections();
-    void find_sizes();
+    void find_crosssections();
 
 
   private:

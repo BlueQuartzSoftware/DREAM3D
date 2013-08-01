@@ -142,7 +142,7 @@ void FindLargestCrossSections::execute()
   }
 
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_sizes();
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_crosssections();
   else
   {
     setErrorCondition(-999);
@@ -155,7 +155,7 @@ void FindLargestCrossSections::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindLargestCrossSections::find_sizes()
+void FindLargestCrossSections::find_crosssections()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
@@ -170,6 +170,9 @@ void FindLargestCrossSections::find_sizes()
 
   int outPlane, inPlane1, inPlane2;
   float res_scalar, area;
+  int stride1, stride2, stride3;
+  int istride, jstride, kstride;
+  int point, gnum;
   
   if(m_Plane == 0)
   {
@@ -177,6 +180,9 @@ void FindLargestCrossSections::find_sizes()
     inPlane1 = m->getXPoints();
     inPlane2 = m->getYPoints();
     res_scalar = m->getXRes()*m->getYRes();
+    stride1 = inPlane1*inPlane2;
+    stride2 = 1;
+    stride3 = inPlane1;
   }
   if(m_Plane == 1)
   {
@@ -184,6 +190,9 @@ void FindLargestCrossSections::find_sizes()
     inPlane1 = m->getXPoints();
     inPlane2 = m->getZPoints();
     res_scalar = m->getXRes()*m->getZRes();
+    stride1 = inPlane1;
+    stride2 = 1;
+    stride3 = inPlane1*inPlane2;
   }
   if(m_Plane == 2)
   {
@@ -191,6 +200,9 @@ void FindLargestCrossSections::find_sizes()
     inPlane1 = m->getYPoints();
     inPlane2 = m->getZPoints();
     res_scalar = m->getYRes()*m->getZRes();
+    stride1 = 1;
+    stride2 = inPlane1;
+    stride3 = inPlane1*inPlane2;
   }
   for(int i = 0; i < outPlane; i++)
   {
@@ -198,11 +210,15 @@ void FindLargestCrossSections::find_sizes()
     {
       graincounts[i] = 0.0f;
     }
+    istride = i*stride1;
     for (int j = 0; j < inPlane1; j++)
     {
+      jstride = j*stride2;
       for(int k = 0; k < inPlane2; k++)
       {
-        int gnum = m_GrainIds[j];
+        kstride = k*stride3;
+        point = istride + jstride + kstride;
+        gnum = m_GrainIds[point];
         graincounts[gnum]++;
       }
     }
