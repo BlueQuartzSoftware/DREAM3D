@@ -144,12 +144,12 @@ class Texture
               //if(addbin3 < 0) addbin3 = addbin3 + 18;
               //if(addbin3 >= 18) addbin3 = addbin3 - 18;
               int good = 1;
-              if(addbin1 < 0) good = 0;;
-              if(addbin1 >= 18) good = 0;;
-              if(addbin2 < 0) good = 0;;
-              if(addbin2 >= 18) good = 0;;
-              if(addbin3 < 0) good = 0;;
-              if(addbin3 >= 18) good = 0;;
+              if(addbin1 < 0) good = 0;
+              if(addbin1 >= 18) good = 0;
+              if(addbin2 < 0) good = 0;
+              if(addbin2 >= 18) good = 0;
+              if(addbin3 < 0) good = 0;
+              if(addbin3 >= 18) good = 0;
               addbin = (addbin3 * 18 * 18) + (addbin2 * 18) + (addbin1);
               dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
               fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
@@ -264,16 +264,23 @@ class Texture
               addbin1 = bin1 + int(j);
               addbin2 = bin2 + int(k);
               addbin3 = bin3 + int(l);
-              if(addbin1 < 0) addbin1 = addbin1 + 36;
-              if(addbin1 >= 36) addbin1 = addbin1 - 36;
-              if(addbin2 < 0) addbin2 = addbin2 + 36;
-              if(addbin2 >= 36) addbin2 = addbin2 - 36;
-              if(addbin3 < 0) addbin3 = addbin3 + 12;
-              if(addbin3 >= 12) addbin3 = addbin3 - 12;
+              //if(addbin1 < 0) addbin1 = addbin1 + 36;
+              //if(addbin1 >= 36) addbin1 = addbin1 - 36;
+              //if(addbin2 < 0) addbin2 = addbin2 + 36;
+              //if(addbin2 >= 36) addbin2 = addbin2 - 36;
+              //if(addbin3 < 0) addbin3 = addbin3 + 12;
+              //if(addbin3 >= 12) addbin3 = addbin3 - 12;
+              int good = 1;
+              if(addbin1 < 0) good = 0;
+              if(addbin1 >= 36) good = 0;
+              if(addbin2 < 0) good = 0;
+              if(addbin2 >= 36) good = 0;
+              if(addbin3 < 0) good = 0;
+              if(addbin3 >= 12) good = 0;
               addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
               dist = powf((jsqrd + ksqrd + lsqrd), 0.5);
               fraction = 1.0 - (double(dist / int(sigmas[i])) * double(dist / int(sigmas[i])));
-              if(dist <= int(sigmas[i]))
+              if(dist <= int(sigmas[i]) && good == 1)
               {
                 addweight = (weights[i] * fraction);
                 if(sigmas[i] == 0.0) addweight = weights[i];
@@ -383,16 +390,23 @@ class Texture
               addbin1 = bin1 + int(j);
               addbin2 = bin2 + int(k);
               addbin3 = bin3 + int(l);
-              if (addbin1 < 0) addbin1 = addbin1 + 36;
-              if (addbin1 >= 36) addbin1 = addbin1 - 36;
-              if (addbin2 < 0) addbin2 = addbin2 + 36;
-              if (addbin2 >= 36) addbin2 = addbin2 - 36;
-              if (addbin3 < 0) addbin3 = addbin3 + 36;
-              if (addbin3 >= 36) addbin3 = addbin3 - 36;
+              //if (addbin1 < 0) addbin1 = addbin1 + 36;
+              //if (addbin1 >= 36) addbin1 = addbin1 - 36;
+              //if (addbin2 < 0) addbin2 = addbin2 + 36;
+              //if (addbin2 >= 36) addbin2 = addbin2 - 36;
+              //if (addbin3 < 0) addbin3 = addbin3 + 36;
+              //if (addbin3 >= 36) addbin3 = addbin3 - 36;
+              int good = 1;
+              if (addbin1 < 0) good = 0;
+              if (addbin1 >= 36) good = 0;
+              if (addbin2 < 0) good = 0;
+              if (addbin2 >= 36) good = 0;
+              if (addbin3 < 0) good = 0;
+              if (addbin3 >= 36) good = 0;
               addbin = (addbin3 * 36 * 36) + (addbin2 * 36) + (addbin1);
               dist = sqrtf(jsqrd + ksqrd + lsqrd);
               fraction = 1.0 - (float(dist / int(sigmas[i])) * float(dist / int(sigmas[i])));
-              if (dist <= int(sigmas[i]))
+              if (dist <= int(sigmas[i]) && good == 1)
               {
                 addweight = (weights[i] * fraction);
                 if(sigmas[i] == 0.0) addweight = weights[i];

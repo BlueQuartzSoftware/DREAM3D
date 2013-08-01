@@ -959,6 +959,7 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
   size_t nOrientations = eulers->GetNumberOfTuples();
   QuaternionMath<float>::Quaternion q1;
   CubicOps ops;
+  float gTemp[3][3];
   float g[3][3];
   float* currentEuler = NULL;
   float direction[3] = {0.0, 0.0, 0.0};
@@ -985,7 +986,8 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
 
     OrientationMath::EulertoQuat(q1, currentEuler);
     ops.getFZQuat(q1);
-    OrientationMath::QuattoMat(q1, g);
+    OrientationMath::QuattoMat(q1, gTemp);
+    MatrixMath::Transpose3x3(gTemp, g);
 
     // -----------------------------------------------------------------------------
     // 001 Family

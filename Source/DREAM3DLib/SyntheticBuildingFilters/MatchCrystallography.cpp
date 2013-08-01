@@ -422,8 +422,9 @@ void MatchCrystallography::assign_eulers(int ensem)
       for (int j = 0; j < numbins; j++)
       {
         float density = actualodf->GetValue(j);
+        float td1 = totaldensity;
         totaldensity = totaldensity + density;
-        if(random >= totaldensity) choose = j;
+        if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
       }
 
       m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, synea1, synea2, synea3);
