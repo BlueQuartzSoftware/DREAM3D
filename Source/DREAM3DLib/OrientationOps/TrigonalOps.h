@@ -41,6 +41,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -98,6 +99,7 @@ class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
     virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
+    virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[6], int numsym,

@@ -44,8 +44,9 @@
 
 #define WRITE_RECTILINEAR_GRID_HEADER(FILE_TYPE, ptr, xpoints, ypoints, zpoints)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
-  fprintf(f, "data set from DREAM3D\n");\
-  fprintf(f, FILE_TYPE); fprintf(f, "\n");\
+  fprintf(f, "Data set from DREAM3D\n");\
+  fprintf(f, FILE_TYPE);\
+  fprintf(f, "\n");\
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
 

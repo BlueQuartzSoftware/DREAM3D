@@ -517,6 +517,9 @@ void TetragonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, floa
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TetragonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
@@ -583,4 +586,13 @@ void TetragonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &
   }
 */
   #endif
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+{
+  BOOST_ASSERT(false);
 }

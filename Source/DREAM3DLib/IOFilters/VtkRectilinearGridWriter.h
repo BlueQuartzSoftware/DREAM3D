@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
 
     virtual void setupFilterParameters();
@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -137,39 +137,6 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
-
-
-  protected:
-    VtkRectilinearGridWriter();
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
-
-
-  private:
-    int32_t* m_GrainIds;
-    int32_t* m_ParentIds;
-    int32_t* m_CellPhases;
-    int32_t* m_BC;
-    int32_t* m_GlobAlpha;
-    float* m_ImageQuality;
-  float* m_ConfidenceIndex;
-    bool*    m_GoodVoxels;
-    float*   m_CellEulerAngles;
-    float*   m_GBEuclideanDistances;
-    float*   m_TJEuclideanDistances;
-    float*   m_QPEuclideanDistances;
-    float*   m_GrainReferenceRotations;
-    float*   m_GrainReferenceMisorientations;
-    float*   m_GrainReferenceCAxisMisorientations;
-    float*   m_KernelAverageMisorientations;
-    float*   m_EquivalentDiameters;
-    float*   m_Schmids;
-
-
-    VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
-    void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
-
-    int write(const std::string &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed
@@ -183,11 +150,11 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
      * @param step The step value between each point on the axis.
      */
     template<typename T>
-    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step)
+    static int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
     {
       int err = 0;
       fprintf(f, "%s %lld %s\n", axis, npoints, type);
-      if (m_WriteBinaryFile == true)
+      if (binary == true)
       {
         T* data = new T[npoints];
         T d;
@@ -220,6 +187,105 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       }
       return err;
     }
+
+
+    /**
+     * @brief WriteDataArrayToFile
+     * @param filename
+     * @param data
+     * @param dims
+     * @param res
+     * @param dataType
+     * @param writeBinary
+     * @return
+     */
+    template<typename T>
+    static int WriteDataArrayToFile(const std::string &filename, DataArray<T>* data, size_t* dims, float* res,
+                                    const std::string &dataType, bool writeBinary )
+    {
+      int err = 0;
+      FILE* f = NULL;
+      f = fopen(filename.c_str(), "wb");
+      if(NULL == f)
+      {
+        std::cout << "Could not open file for writing" << std::endl;
+        std::cout << "  FileName: " << filename << std::endl;
+        std::cout << "  Dataset Name: " << data->GetName() << std::endl;
+        return -1;
+      }
+      // Write the correct header
+      if(writeBinary == true)
+      {
+        WRITE_RECTILINEAR_GRID_HEADER("BINARY", NULL, (dims[0] + 1), (dims[1] + 1), (dims[2] + 1) )
+      }
+      else
+      {
+        WRITE_RECTILINEAR_GRID_HEADER("ASCII", NULL, (dims[0] + 1), (dims[1] + 1), (dims[2] + 1) )
+      }
+
+      // Write the XCoords
+      VtkRectilinearGridWriter::WriteCoords(f, "X_COORDINATES", "float", dims[0] + 1, 0.0f - res[0] * 0.5f, (float)(dims[0] + 1 * res[0]), res[0], writeBinary);
+      VtkRectilinearGridWriter::WriteCoords(f, "Y_COORDINATES", "float", dims[1] + 1, 0.0f - res[1] * 0.5f, (float)(dims[1] + 1 * res[1] ), res[1], writeBinary);
+      VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", dims[2] + 1, 0.0f - res[2] * 0.5f, (float)(dims[2] + 1 * res[2]), res[2], writeBinary);
+
+      size_t total = dims[0] * dims[1] * dims[2];
+      int numComp = data->GetNumberOfComponents();
+      fprintf(f, "CELL_DATA %d\n", (int)total);
+
+      fprintf(f, "SCALARS %s %s %d\n", data->GetName().c_str(), dataType.c_str(),numComp);
+      fprintf(f, "LOOKUP_TABLE default\n");
+#ifdef MXA_LITTLE_ENDIAN
+      data->byteSwapElements();
+#endif
+      int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
+      if (totalWritten != (total))
+      {
+        std::cout << "Error Writing Binary VTK Data:" << std::endl;
+        std::cout << "  FileName: " << filename << std::endl;
+        std::cout << "  Dataset Name: " << data->GetName() << std::endl;
+      }
+#ifdef MXA_LITTLE_ENDIAN
+      data->byteSwapElements();
+#endif
+      // Close the file
+      fclose(f);
+      return err;
+    }
+
+
+
+  protected:
+    VtkRectilinearGridWriter();
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+
+  private:
+    int32_t* m_GrainIds;
+    int32_t* m_ParentIds;
+    int32_t* m_CellPhases;
+    int32_t* m_BC;
+    int32_t* m_GlobAlpha;
+    float* m_ImageQuality;
+    float* m_ConfidenceIndex;
+    bool*    m_GoodVoxels;
+    float*   m_CellEulerAngles;
+    float*   m_GBEuclideanDistances;
+    float*   m_TJEuclideanDistances;
+    float*   m_QPEuclideanDistances;
+    float*   m_GrainReferenceRotations;
+    float*   m_GrainReferenceMisorientations;
+    float*   m_GrainReferenceCAxisMisorientations;
+    float*   m_KernelAverageMisorientations;
+    float*   m_EquivalentDiameters;
+    float*   m_Schmids;
+
+
+    VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
+    void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
+
+    int write(const std::string &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
+
 
 
 };

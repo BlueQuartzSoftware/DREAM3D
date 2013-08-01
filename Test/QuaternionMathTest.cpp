@@ -54,6 +54,9 @@ void RemoveTestFiles()
 #endif
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestCubicOps()
 {
    float e0[3] = {0.0f, 0.0f, 0.0f};
@@ -214,7 +217,7 @@ void TestQuat_t()
 int main(int argc, char *argv[])
 {
   int err = EXIT_SUCCESS;
-    DREAM3D_REGISTER_TEST( TestQuat_t() )
+  DREAM3D_REGISTER_TEST( TestQuat_t() )
   DREAM3D_REGISTER_TEST( TestCubicOps() )
 
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )

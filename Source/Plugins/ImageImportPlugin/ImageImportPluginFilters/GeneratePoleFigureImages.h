@@ -45,206 +45,9 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 
 #include "QtSupport/PoleFigureGeneration.h"
-
-#define SET_DIRECTION(i, j, k)\
-  direction[0] = i; direction[1] = j; direction[2] = k;
-
-
-class ModifiedLambertProjection
-{
-  public:
-    DREAM3D_SHARED_POINTERS(ModifiedLambertProjection)
-    DREAM3D_STATIC_NEW_MACRO(ModifiedLambertProjection)
-    DREAM3D_TYPE_MACRO(ModifiedLambertProjection)
-
-    virtual ~ModifiedLambertProjection()
-    {}
-
-    enum Square
-    {
-      NorthSquare = 0,
-      SouthSquare = 1
-    };
-
-
-    DREAM3D_INSTANCE_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
-    DREAM3D_INSTANCE_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
-
-
-
-    DREAM3D_GET_PROPERTY(int, Dimension)
-    DREAM3D_GET_PROPERTY(float, Resolution)
-    DREAM3D_GET_PROPERTY(float, SphereRadius)
-
-    void initializeSquares(int dims, float resolution, float sphereRadius)
-    {
-      m_Dimension = dims;
-      m_Resolution = resolution;
-      m_SphereRadius = sphereRadius;
-      m_NorthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "NorthSquare");
-      m_NorthSquare->initializeWithZeros();
-      m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "SouthSquare");
-      m_SouthSquare->initializeWithZeros();
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void addValue(unsigned int square, int index, double value)
-    {
-      if (square == NorthSquare)
-      {
-        double v = m_NorthSquare->GetValue(index) + value;
-        m_NorthSquare->SetValue(index, v);
-      }
-      else
-      {
-        double v = m_SouthSquare->GetValue(index) + value;
-        m_SouthSquare->SetValue(index, v);
-      }
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    double getValue(unsigned int square, int index)
-    {
-      if (square == NorthSquare)
-      {
-        return m_NorthSquare->GetValue(index);
-      }
-      else
-      {
-        return m_SouthSquare->GetValue(index);
-      }
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    double getInterpolatedValue(unsigned int square, float* sqCoord)
-    {
-      int abinMod, bbinMod;
-      float modX = ( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-      float modY = ( (sqCoord[1] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-      int abin = (int) modX;
-      int bbin = (int) modY;
-      modX -= abin;
-      modY -= bbin;
-      if(abin < m_Dimension-1) abinMod = abin+1;
-      else abinMod = abin+1-m_Dimension;
-      if(bbin < m_Dimension-1) bbinMod = bbin+1;
-      else bbinMod = bbin+1-m_Dimension;
-      if (square == NorthSquare)
-      {
-         float intensity1 = m_NorthSquare->GetValue((abin)+(bbin*m_Dimension));
-         float intensity2 = m_NorthSquare->GetValue((abinMod)+(bbin*m_Dimension));
-         float intensity3 = m_NorthSquare->GetValue((abin)+(bbinMod*m_Dimension));
-         float intensity4 = m_NorthSquare->GetValue((abinMod)+(bbinMod*m_Dimension));
-         float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
-         return interpolatedIntensity;
-      }
-      else
-      {
-         float intensity1 = m_SouthSquare->GetValue((abin)+(bbin*m_Dimension));
-         float intensity2 = m_SouthSquare->GetValue((abinMod)+(bbin*m_Dimension));
-         float intensity3 = m_SouthSquare->GetValue((abin)+(bbinMod*m_Dimension));
-         float intensity4 = m_SouthSquare->GetValue((abinMod)+(bbinMod*m_Dimension));
-         float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
-         return interpolatedIntensity;
-      }
-    }
-
-    /**
-     * @brief getSquareCoord
-     * @param xyz The input XYZ coordinate on the unit sphere.
-     * @param sqCoord [output] The XY coordinate in the Modified Lambert Square
-     * @return If the point was in the north or south squares
-     */
-    bool getSquareCoord(float* xyz, float* sqCoord)
-    {
-      bool nhCheck = false;
-      float adjust = 1.0;
-      if(xyz[2] >= 0.0)
-      {
-        adjust = -1.0;
-        nhCheck = true;
-      }
-      if(fabs(xyz[0]) >= fabs(xyz[1]))
-      {
-        sqCoord[0] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
-        sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xyz[1]/xyz[0]));
-      }
-      else
-      {
-        sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xyz[0]/xyz[1]));
-        sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
-      }
-      return nhCheck;
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int getSquareIndex(float* sqCoord)
-    {
-      int x = (int)( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-      int y = (int)( (sqCoord[1] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-
-      return y * m_Dimension + x;
-    }
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void normalizeSquares()
-    {
-
-      size_t npoints = m_NorthSquare->GetNumberOfTuples();
-      double nTotal = 0;
-      double sTotal = 0;
-
-      double* north = m_NorthSquare->GetPointer(0);
-      double* south = m_SouthSquare->GetPointer(0);
-
-
-      for(size_t i = 0; i < npoints; ++i)
-      {
-        nTotal = nTotal + north[i];
-        sTotal = sTotal + south[i];
-      }
-
-      for(size_t i = 0; i < npoints; ++i)
-      {
-        north[i] = north[i]/nTotal;
-        south[i] = south[i]/sTotal;
-      }
-
-    }
-
-  protected:
-    ModifiedLambertProjection() :
-      m_Dimension(0),
-      m_Resolution(0.0f),
-      m_SphereRadius(1.0f)
-    {
-
-    }
-
-  private:
-    int m_Dimension;
-    float m_Resolution;
-    float m_SphereRadius;
-
-
-
-    ModifiedLambertProjection(const ModifiedLambertProjection&); // Copy Constructor Not Implemented
-    void operator=(const ModifiedLambertProjection&); // Operator '=' Not Implemented
-};
-
 
 
 /**
@@ -332,13 +135,6 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     */
     virtual void preflight();
 
-    /**
-     * @brief saveImage This will do the actual saving of the data to an Image on the disk
-     * @param ipfColors
-     * @param slice
-     * @return
-     */
-    int saveImage(uint8_t* ipfColors, size_t slice, size_t* dims);
 
   protected:
     GeneratePoleFigureImages();
@@ -353,19 +149,21 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    ModifiedLambertProjection::Pointer createModifiedLambertProjection(FloatArrayType* coords, int dimension, float resolution);
-    DoubleArrayType::Pointer createPoleFigure(ModifiedLambertProjection::Pointer proj, int poleFigureDim);
-    void generateCubicSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111);
+    /**
+     * @brief generateCubicPoleFigures
+     * @param eulers
+     */
+    void generateCubicPoleFigures(FloatArrayType *eulers);
+
+    QString generateVtkPath( QString label);
     int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
     void writeVtkFile(const std::string filename,  DoubleArrayType* poleFigurePtr, int dimension);
+
+    QString generateImagePath( QString label);
     void getColorCorrespondingTovalue(float val,
                                       float &r, float &g, float &b,
                                       float max, float min);
     void writeImage(const std::string filename, DoubleArrayType* poleFigurePtr, int dimension);
-    void generateCubicPoleFigures(FloatArrayType *eulers);
-    QString generateImagePath( QString label);
-    QString generateVtkPath( QString label);
-
 
 
   private:

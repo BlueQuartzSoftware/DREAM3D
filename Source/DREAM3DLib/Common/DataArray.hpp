@@ -780,8 +780,8 @@ class DataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
-    const std::string &label)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
+                                                    const std::string &groupPath, const std::string &label)
     {
       if (Array == NULL) { return -85648; }
       std::stringstream dimStr;
@@ -790,7 +790,7 @@ class DataArray : public IDataArray
       GetXdmfTypeAndSize(xdmfTypeName, precision);
       if (0 == precision)
       {
-        out << "<!-- " << GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+        out << "<!-- " << GetName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
         return -100;
       }
 
