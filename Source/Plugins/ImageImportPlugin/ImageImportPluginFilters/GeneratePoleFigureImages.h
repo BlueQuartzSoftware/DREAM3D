@@ -41,11 +41,176 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "QtSupport/PoleFigureGeneration.h"
+
+#define SET_DIRECTION(i, j, k)\
+  direction[0] = i; direction[1] = j; direction[2] = k;
+
+
+class ModifiedLambertProjection
+{
+  public:
+    DREAM3D_SHARED_POINTERS(ModifiedLambertProjection)
+    DREAM3D_STATIC_NEW_MACRO(ModifiedLambertProjection)
+    DREAM3D_TYPE_MACRO(ModifiedLambertProjection)
+
+    virtual ~ModifiedLambertProjection()
+    {}
+
+    enum Square
+    {
+      NorthSquare = 0,
+      SouthSquare = 1
+    };
+
+
+    DREAM3D_INSTANCE_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
+    DREAM3D_INSTANCE_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
+
+
+
+    DREAM3D_GET_PROPERTY(int, Dimension)
+    DREAM3D_GET_PROPERTY(float, Resolution)
+    DREAM3D_GET_PROPERTY(float, SphereRadius)
+
+    void initializeSquares(int dims, float resolution, float sphereRadius)
+    {
+      m_Dimension = dims;
+      m_Resolution = resolution;
+      m_SphereRadius = sphereRadius;
+      m_NorthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "NorthSquare");
+      m_NorthSquare->initializeWithZeros();
+      m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "SouthSquare");
+      m_SouthSquare->initializeWithZeros();
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void addValue(unsigned int square, int index, double value)
+    {
+      if (square == NorthSquare)
+      {
+        double v = m_NorthSquare->GetValue(index) + value;
+        m_NorthSquare->SetValue(index, v);
+      }
+      else
+      {
+        double v = m_SouthSquare->GetValue(index) + value;
+        m_SouthSquare->SetValue(index, v);
+      }
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    double getValue(unsigned int square, int index)
+    {
+      if (square == NorthSquare)
+      {
+        return m_NorthSquare->GetValue(index);
+      }
+      else
+      {
+        return m_SouthSquare->GetValue(index);
+      }
+    }
+
+
+    /**
+     * @brief getSquareCoord
+     * @param xyz The input XYZ coordinate on the unit sphere.
+     * @param sqCoord [output] The XY coordinate in the Modified Lambert Square
+     * @return If the point was in the north or south squares
+     */
+    bool getSquareCoord(float* xyz, float* sqCoord)
+    {
+      bool nhCheck = false;
+      float adjust = 1.0;
+      if(xyz[2] >= 0.0)
+      {
+        adjust = -1.0;
+        nhCheck = true;
+      }
+      if(fabs(xyz[0]) >= fabs(xyz[1]))
+      {
+        sqCoord[0] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
+        sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((0.5 * DREAM3D::Constants::k_SqrtPi)*atan(xyz[1]/xyz[0]));
+      }
+      else
+      {
+        sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((0.5 * DREAM3D::Constants::k_SqrtPi)*atan(xyz[0]/xyz[1]));
+        sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
+      }
+      return nhCheck;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    int getSquareIndex(float* sqCoord)
+    {
+      int x = (int)( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
+      int y = (int)( (sqCoord[1] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
+
+      return y * m_Dimension + x;
+    }
+
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void normalizeSquares()
+    {
+
+      size_t npoints = m_NorthSquare->GetNumberOfTuples();
+      double nTotal = 0;
+      double sTotal = 0;
+
+      double* north = m_NorthSquare->GetPointer(0);
+      double* south = m_SouthSquare->GetPointer(0);
+
+
+      for(size_t i = 0; i < npoints; ++i)
+      {
+        nTotal = nTotal + north[i];
+        sTotal = sTotal + south[i];
+      }
+
+      for(size_t i = 0; i < npoints; ++i)
+      {
+        north[i] = north[i]/nTotal;
+        south[i] = south[i]/sTotal;
+      }
+
+    }
+
+  protected:
+    ModifiedLambertProjection() :
+      m_Dimension(0),
+      m_Resolution(0.0f),
+      m_SphereRadius(1.0f)
+    {
+
+    }
+
+  private:
+    int m_Dimension;
+    float m_Resolution;
+    float m_SphereRadius;
+
+
+
+    ModifiedLambertProjection(const ModifiedLambertProjection&); // Copy Constructor Not Implemented
+    void operator=(const ModifiedLambertProjection&); // Operator '=' Not Implemented
+};
+
+
 
 /**
  * @class GeneratePoleFigureImages GeneratePoleFigureImages.h /IOFilters/GeneratePoleFigureImages.h
@@ -78,9 +243,9 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     enum ImageFormatType
     {
       TifImageType = 0,
-      BmpImageType = 1,
-      PngImageType = 2,
-      JpgImageType = 3
+          BmpImageType = 1,
+          PngImageType = 2,
+          JpgImageType = 3
     };
 
     /**
@@ -152,10 +317,20 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    void generateCubicPoleFigures(FloatArrayType::Pointer e0, FloatArrayType::Pointer e1, FloatArrayType::Pointer e2,
-                                                        FloatArrayType::Pointer weights, FloatArrayType::Pointer sigmas);
+    ModifiedLambertProjection::Pointer createModifiedLambertProjection(FloatArrayType* coords, int dimension, float resolution);
+    DoubleArrayType::Pointer createPoleFigure(ModifiedLambertProjection::Pointer proj, int poleFigureDim);
+    void generateCubicSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111);
+    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
+    void writeVtkFile(const std::string filename,  DoubleArrayType* poleFigurePtr, int dimension);
+    void getColorCorrespondingTovalue(float val,
+                                      float &r, float &g, float &b,
+                                      float max, float min);
+    void writeImage(const std::string filename, DoubleArrayType* poleFigurePtr, int dimension);
+    void generateCubicPoleFigures(FloatArrayType *eulers);
+    QString generateImagePath( QString label);
+    QString generateVtkPath( QString label);
 
-    int generateImage(PoleFigureData data, QString label);
+
 
   private:
     float* m_CellEulerAngles;
