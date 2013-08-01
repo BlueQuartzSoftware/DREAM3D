@@ -140,7 +140,7 @@ void SegmentGrains::execute()
   bool good = 0;
   DimType col, row, plane;
   size_t size = 0;
-  size_t initialVoxelsListSize = 1000;
+  size_t initialVoxelsListSize = 10000;
   std::vector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
@@ -182,7 +182,7 @@ void SegmentGrains::execute()
             {
               voxelslist[size] = neighbor;
               size++;
-              if(size >= voxelslist.size()) voxelslist.resize(size + size, -1);
+              if(size >= voxelslist.size()) voxelslist.resize(size + initialVoxelsListSize, -1);
             }
           }
         }
