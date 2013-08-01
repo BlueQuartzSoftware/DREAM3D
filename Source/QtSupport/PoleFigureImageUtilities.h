@@ -33,13 +33,14 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _PoleFigureGeneration_H_
-#define _PoleFigureGeneration_H_
+#ifndef _PoleFigureImageUtilities_H_
+#define _PoleFigureImageUtilities_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
 #include <QtGui/QImage>
 
+#include "DREAM3DLib/Common/DataArray.hpp"
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
  * @brief
@@ -112,11 +113,11 @@ class PoleFigureData : QObject
  * @date Nov 4, 2011
  * @version 1.0
  */
-class PoleFigureGeneration
+class PoleFigureImageUtilities
 {
   public:
-    PoleFigureGeneration();
-    virtual ~PoleFigureGeneration();
+    PoleFigureImageUtilities();
+    virtual ~PoleFigureImageUtilities();
 
     QImage generateColorPoleFigureImage(const PoleFigureData &config);
 
@@ -126,13 +127,13 @@ class PoleFigureGeneration
     int countPixelNeighbors(int imageWidth, int imageHeight, int pX, int pY,
                             QVector<qint32> &data, QVector<qint32> &counts,
                             int kX, int kY, bool genmask = false);
-    void getColorCorrespondingTovalue(float val,
-                                      float &r, float &g, float &b,
-                                      float max, float min);
 
     void generateKernelWeigths(int kernelWidth, int kernelHeight);
 
-    QImage paintImage(int width, int imageHeight, QString label, QImage image);
+    static QImage PaintOverlay(int width, int imageHeight, QString label, QImage image);
+
+    static QImage CreateQImage(DoubleArrayType *poleFigurePtr, int imageDimension, int nColors, QString label, bool includeOverlay);
+
 
   private:
 
@@ -140,9 +141,9 @@ class PoleFigureGeneration
     bool m_KernelWeightsInited;
 
 
-    PoleFigureGeneration(const PoleFigureGeneration&); // Copy Constructor Not Implemented
-    void operator=(const PoleFigureGeneration&); // Operator '=' Not Implemented
+    PoleFigureImageUtilities(const PoleFigureImageUtilities&); // Copy Constructor Not Implemented
+    void operator=(const PoleFigureImageUtilities&); // Operator '=' Not Implemented
 };
 
 
-#endif /* _PoleFigureGeneration_H_ */
+#endif /* _PoleFigureImageUtilities_H_ */

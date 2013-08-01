@@ -48,7 +48,9 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "QtSupport/PoleFigureGeneration.h"
+
+#include "QtSupport/PoleFigureImageUtilities.h"
+
 
 #include "MXA/MXA.h"
 #include "MXA/Common/MXAEndian.h"
@@ -58,16 +60,14 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
 #define SET_DIRECTION(i, j, k)\
   direction[0] = i; direction[1] = j; direction[2] = k;
@@ -299,52 +299,28 @@ void GeneratePoleFigureImages::execute()
 void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
 {
   notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
-  int numOrientations = eulers->GetNumberOfTuples();
+
+  DoubleArrayType::Pointer poleFigure001 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure011 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure111 = DoubleArrayType::NullPointer();
+  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure001, poleFigure011, poleFigure111);
 
 
-  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 3, 3, "TEMP_<001>_xyzCoords");
-  // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<011>_xyzCoords");
-  // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
-
-  int dimension = getLambertSize();
-  float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
-  int poleFigureDim = getImageSize();
-  float sphereRadius = 1.0f;
-
-  // Generate the coords on the sphere
-  CubicOps ops;
-  ops.generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
-
-
-
-  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), dimension, resolution, sphereRadius);
-  // Now create the intensity image that will become the actual Pole figure image
-  DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<001>");
+  // Generate the <001> pole figure
   QString path = generateVtkPath("001");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  writeImage(m_OutputPath, poleFigurePtr.get(), poleFigureDim, "001");
+  writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure001.get(), getImageSize(), "001");
 
-  // Generate the <011> pole figure
-  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), dimension, resolution, sphereRadius);
-  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<011>");
+
+  // Generate the <011> pole figure image
   path = generateVtkPath("011");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  writeImage(m_OutputPath, poleFigurePtr.get(), poleFigureDim, "011");
+  writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure011.get(), getImageSize(), "011");
 
-  // Generate the <111> pole figure
-  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), dimension, resolution, sphereRadius);
-  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
-  poleFigurePtr->SetName("PoleFigure_<111>");
+  // Generate the <111> pole figure image
   path = generateVtkPath("111");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  writeImage(m_OutputPath, poleFigurePtr.get(), poleFigureDim, "111");
+  writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure111.get(), getImageSize(), "111");
 }
 
 
@@ -391,137 +367,20 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename, DoubleAr
 }
 
 
-///getColorCorrespondingToValue ////////////////////////////////////////////////
-//
-// Assumes you've already generated min and max -- the extrema for the data
-// to which you're applying the color map. Then define the number of colorNodes
-// and make sure there's a row of three float values (representing r, g, and b
-// in a 0.0-1.0 range) for each node. Then call this method for with parameter
-// val some float value between min and max inclusive. The corresponding rgb
-// values will be returned in the reference-to-float parameters r, g, and b.
-//
-////////////////////////////////////////////////////////////////////////////////
-void GeneratePoleFigureImages::getColorCorrespondingTovalue(float val,
-                                                            float &r, float &g, float &b,
-                                                            float max, float min)
-{
-  static const int numColorNodes = 8;
-  float color[numColorNodes][3] =
-  {
-    {0.0f, 1.0f/255.0f, 253.0f/255.0f},    // blue
-    {105.0f/255.0f, 145.0f/255.0f, 2.0f/255.0f},    // yellow
-    {1.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
-    {180.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f},
-    {255.0f/255.0f, 215.0f/255.0f, 6.0f/255.0f},
-    {255.0f/255.0f, 143.0f/255.0f, 1.0f/255.0f},
-    {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
-    {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
-  };
-  float range = max - min;
-  for (int i = 0; i < (numColorNodes - 1); i++)
-  {
-    float currFloor = min + ((float)i / (numColorNodes - 1)) * range;
-    float currCeil = min + ((float)(i + 1) / (numColorNodes - 1)) * range;
-
-    if((val >= currFloor) && (val <= currCeil))
-    {
-      float currFraction = (val - currFloor) / (currCeil - currFloor);
-      r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
-      g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
-      b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
-    }
-  }
-}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeImage(const std::string outputPath, DoubleArrayType *poleFigurePtr, int dimension, QString label)
+void GeneratePoleFigureImages::writeImage(const std::string outputPath, DoubleArrayType *intensity, int dimension, QString label)
 {
   std::stringstream ss;
-  ss << "Writing Image " << poleFigurePtr->GetName();
+  ss << "Writing Image " << intensity->GetName();
   notifyStatusMessage(ss.str());
 
+  QImage image = PoleFigureImageUtilities::CreateQImage(intensity, dimension, getNumColors(), label, true);
+
   QString filename = generateImagePath(label);
-
-
-  size_t npoints = poleFigurePtr->GetNumberOfTuples();
-  double max = std::numeric_limits<double>::min();
-  double min = std::numeric_limits<double>::max();
-  double value = 0.0;
-  for(size_t i = 0; i < npoints; ++i)
-  {
-    value = poleFigurePtr->GetValue(i);
-    if (value < 0) {continue;}
-    if (value > max) { max = value;}
-    if (value < min) { min = value;}
-  }
-
-  //std::cout << "Min: " << min << "   Max: " << max << std::endl;
-
-  int xpoints = dimension;
-  int ypoints = dimension;
-
-  int xpointshalf = xpoints / 2;
-  int ypointshalf = ypoints / 2;
-
-  float xres = 2.0 / (float)(xpoints);
-  float yres = 2.0 / (float)(ypoints);
-  float xtmp, ytmp;
-
-  //if (max < 14) { max = 14; }
-  QImage image (xpoints, ypoints, QImage::Format_ARGB32_Premultiplied);
-  image.fill(0);
- // qint32 numColors = max + 1;
-  qint32 numColors = getNumColors() + 1;
- // qint32 colorRange = getNumColors();
-
-  QVector<QColor> colorTable(numColors);
-  //qint32 range = max - min;
-
-  float r, g, b;
-  for (int i = 0; i < getNumColors(); i++)
-  {
-    //int val = min + ((float)i / numColors) * range;
-    //int val = ((float)i / (float)numColors) * colorRange;
-    getColorCorrespondingTovalue(i, r, g, b, getNumColors(), 0);
-    colorTable[i] = QColor(r*255, g*255, b*255, 255);
-  }
-  // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[getNumColors()] = QColor(255, 255, 255, 255);
-
-  //*********************** NOTE ************************************
-  // In the below loop over the Pole Figure Image we are swapping the
-  // X & Y coordinates when we place the RGBA value into the image. This
-  // is because for some reason the data is rotated 90 degrees. Since
-  // the image is square we can easily do this swap and effectively
-  // rotate the image 90 degrees.
-  for (int64_t y = 0; y < ypoints; y++)
-  {
-    for (int64_t x = 0; x < xpoints; x++)
-    {
-      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
-      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
-      if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
-      {
-        qint32 cindex = qint32(poleFigurePtr->GetValue(y * xpoints + x));
-        qint32 colorIndex = (cindex-min) / (max - min) * getNumColors();
-        image.setPixel(x, y, colorTable[colorIndex].rgba());
-      }
-      else // Outside the Circle - Set pixel to White
-      {
-        image.setPixel(x, y, colorTable[getNumColors()].rgba());
-      }
-    }
-  }
-
-  // Flip the image so the (-1, -1) is in the lower left
-  image = image.mirrored(false, true);
-
-  QString imageLabel = "<" + label + ">";
-  image = paintImage(xpoints, ypoints, imageLabel, image);
-
   bool saved = image.save(filename);
   if(!saved)
   {
@@ -564,80 +423,5 @@ QString GeneratePoleFigureImages::generateImagePath( QString label)
   }
 
   return path;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QImage GeneratePoleFigureImages::paintImage(int imageWidth, int imageHeight, QString label, QImage image)
-{
-  int pxHigh = 0;
-  int pxWide = 0;
-
-  QFont font("Ariel", 24, QFont::Bold);
-  {
-    QPainter painter;
-    QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
-    pImage.fill(0xFFFFFFFF); // All white background
-    painter.begin(&pImage);
-
-    painter.setFont(font);
-    QFontMetrics metrics = painter.fontMetrics();
-    pxHigh = metrics.height();
-    pxWide = metrics.width(QString("TD"));
-    painter.end();
-  }
-
-
-  int pxOffset = 2 * pxWide;
-  int pyOffset = 2 * pxHigh;
-  // Get a QPainter object to add some more details to the image
-
-
-  int pImageWidth = imageWidth + pxOffset * 2;
-  int pImageHeight = imageHeight + pyOffset * 2;
-
-  QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
-  pImage.fill(0xFFFFFFFF); // All white background
-
-  // Create a Painter backed by a QImage to draw into
-  QPainter painter;
-  painter.begin(&pImage);
-  painter.setRenderHint(QPainter::Antialiasing, true);
-
-  painter.setFont(font);
-  QFontMetrics metrics = painter.fontMetrics();
-  pxHigh = metrics.height();
-  pxWide = metrics.width(QString("TD"));
-
-  QPoint point(pxOffset, pyOffset);
-  painter.drawImage(point, image); // Draw the image we just generated into the QPainter's canvas
-
-  qint32 penWidth = 2;
-  painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-
-  QPainterPath circle;
-  QPointF center(pImageWidth / 2, pImageHeight / 2);
-  circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
-  painter.drawPath(circle);
-
-  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "RD");
-
-  pxWide = metrics.width(QString("RD"));
-  painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "TD");
-
-  pxWide = metrics.width(label);
-  painter.drawText(pImageWidth / 2 - pxWide / 2, pxHigh, label);
-
-  // Draw slightly transparent lines
-  penWidth = 1;
-  painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-  painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
-  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
-
-  painter.end();
-  // Scale the image down to 225 pixels
-  return pImage;//.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 

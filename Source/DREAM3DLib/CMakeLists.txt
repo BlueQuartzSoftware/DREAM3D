@@ -85,6 +85,7 @@ D3DCompileDir(OrientationOps)
 D3DCompileDir(DistributionAnalysisOps)
 D3DCompileDir(ShapeOps)
 D3DCompileDir(VTKUtils)
+D3DCompileDir(Utilities)
 
 
 #-------
